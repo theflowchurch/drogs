@@ -1047,7 +1047,7 @@ function RegistrationForm({
           <span className="reg-eyebrow">
             {state.year} / ANNUAL REGISTRATION
           </span>
-          <h1>{review ? "Review your details." : "Role of Good Standing."}</h1>
+          <h1>{review ? "Review your details." : "Roll of Good Standing."}</h1>
           <p>
             {review
               ? "Check your details before submitting your annual registration."
@@ -1879,7 +1879,7 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
   );
 }
 const directoryHeading = (role) =>
-  `Directory · ${role === "bishop" ? "Bishops" : "Pastors"} Role of Good Standing`;
+  `Directory · ${role === "bishop" ? "Bishops" : "Pastors"} Roll of Good Standing`;
 function Directory({ state, year, role, setRole }) {
   const [filter, setFilter] = useState({
       q: "",
