@@ -66,7 +66,7 @@ with sync_playwright() as p:
         # Close the registration dialog before managing integration keys.
         page.get_by_role('button',name='Close',exact=True).click()
         page.get_by_role('button',name='Accounts',exact=True).click()
-        page.get_by_label('Find an account',exact=True).fill('browser-bishop@example.com')
+        page.get_by_label('Find an account',exact=True).fill('browser-member@example.com')
         page.get_by_role('button',name='Search accounts',exact=True).click()
         expect(page.get_by_text('1 matching accounts',exact=False)).to_be_visible()
         page.get_by_role('button',name='View logins (1)',exact=True).click()
