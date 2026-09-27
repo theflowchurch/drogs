@@ -31,7 +31,9 @@ const supabase = () =>
   (client = createClient(url, key, {
     auth: { storageKey: "drogs-registration-auth" },
   }));
-const sessionKey = "drogs-registration-demo-account";
+// Member and office sessions are separate on this device, like their cookies would be.
+const sessionKey = (office) =>
+  `drogs-registration-demo-account:${office ? "office" : "member"}`;
 // Once an account exists on this device, signing in again should not ask for
 // the email a second time. In connected mode the session cookie does this and
 // a new sign-in still needs the one-time code; only the demo remembers locally.
@@ -74,7 +76,7 @@ export async function currentActor(office = false) {
     throw Error("Both Supabase URL and public key must be configured.");
   if (!live)
     return JSON.parse(
-      sessionStorage.getItem(sessionKey) ||
+      sessionStorage.getItem(sessionKey(office)) ||
         localStorage.getItem(rememberedKey(office)) ||
         "null",
     );
@@ -107,7 +109,7 @@ export function demoSignIn(email, office = false) {
   email = normalEmail(email);
   const p = read().profiles.find((p) => normalEmail(p.email) === email);
   const actor = { id: p?.id || crypto.randomUUID(), email, office };
-  sessionStorage.setItem(sessionKey, JSON.stringify(actor));
+  sessionStorage.setItem(sessionKey(office), JSON.stringify(actor));
   localStorage.setItem(rememberedKey(office), JSON.stringify(actor));
   return actor;
 }
@@ -119,7 +121,7 @@ export async function signOut(office = false, forget = true) {
     const { error } = await supabase().auth.signOut();
     check(error);
   } else {
-    sessionStorage.removeItem(sessionKey);
+    sessionStorage.removeItem(sessionKey(office));
     if (forget) localStorage.removeItem(rememberedKey(office));
   }
 }

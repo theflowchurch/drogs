@@ -226,7 +226,8 @@ export default function RegistrationApp({
       .currentActor(office)
       .then((current) => {
         setActor(current);
-        if (current) setGate(true);
+        // A signed-in member does not pass the office or directory gate.
+        if (current && (!gated || (office && current.office))) setGate(true);
       })
       .catch((e) => setError(e.message));
     const until = Number(
@@ -236,10 +237,10 @@ export default function RegistrationApp({
   }, []);
   useEffect(() => {
     if (actor) {
-      setGate(true);
+      if (!gated || (office && actor.office)) setGate(true);
       refresh().catch((e) => setError(e.message));
     }
-  }, [actor, refresh]);
+  }, [actor, refresh, gated, office]);
   useEffect(() => {
     if (!actor) return;
     const update = () => refresh().catch((e) => setError(e.message));
