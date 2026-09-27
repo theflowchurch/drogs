@@ -20,7 +20,7 @@ The application starts with **zero registrations**, but not with an empty direct
 ## Registration and annual lists
 
 - New and returning members enter an email address. Hostinger mode verifies one-time email codes through SMTP and stores accounts in MySQL. The optional Supabase adapter is retained.
-- Required details: role, first name, last name, email, phone, date of birth, country, city, organization, denomination where applicable, and an official-attire photo. Pastors do not pick a bishop; their name is matched against every approved bishop's annual list. While typing their country, the form already shows the annual commitment with an indicative local-currency amount.
+- Required details: role, first name, last name, email, phone, date of birth, country, city, organization, denomination where applicable, and an official-attire photo. Pastors type their bishop’s first name and surname (both required, so a single common name cannot be confused); if exactly one approved bishop has that full name, the pastor is placed under them, and the pastor’s own name is matched against the annual lists. While typing their country, the form already shows the annual commitment with an indicative local-currency amount.
 - Organizations: First Love, United Denominations, DHMM, FLOW, Healing Jesus Campaign. Outreach is no longer a registration option.
 - Drafts can be saved; applicants review details and confirm accuracy before submission.
 - The office verifies bishop accounts and optionally links each account to the correct legacy bishop reference. Approval unlocks the bishop’s annual list and $100 USD commitment.

@@ -31,10 +31,12 @@ const profile = (actor, role = "pastor", name = "John Doe") => ({
   organization: "First Love",
   photo: `${actor.id}/portrait/image.jpg`,
   bishopId: "B1",
+  bishopFirstName: "Ama",
+  bishopLastName: "Bishop",
 });
 function setup() {
   let s = emptyState();
-  s = applyAction(s, bishop, "submit", profile(bishop, "bishop", "A Bishop"));
+  s = applyAction(s, bishop, "submit", profile(bishop, "bishop", "Ama Bishop"));
   s = applyAction(s, office, "approveBishop", {
     userId: bishop.id,
     referenceId: "B1",
@@ -220,7 +222,7 @@ test("confirming an existing record updates it, and the directory marks who is u
     {
       id: "B1",
       role: "bishop",
-      name: "A Bishop",
+      name: "Ama Bishop",
       title: "Bishop",
       organization: "First Love",
       denomination: "First Love Church",
@@ -320,17 +322,38 @@ test("a pastor registers without choosing a bishop and is matched or claimed", (
     rows: [{ name: "John Doe", email: pastor.email }],
   });
   // Matched against every approved bishop's list, then assigned to that bishop.
-  s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: "" });
+  s = applyAction(s, pastor, "submit", {
+    ...profile(pastor),
+    bishopId: "",
+    bishopFirstName: "Bishop",
+    bishopLastName: "Ama",
+  });
   const matched = s.registrations.find((r) => r.userId === pastor.id);
   assert.equal(matched.status, "confirmed");
-  assert.equal(matched.data.bishopId, "B1");
+  assert.equal(
+    matched.data.bishopId,
+    "B1",
+    "the typed name, in either order, resolves the bishop",
+  );
 
   // Not on any list: unclaimed, visible to approved bishops, claimable by one.
   const lone = { id: "p2", email: "mary@example.com" };
   s = applyAction(s, lone, "submit", {
     ...profile(lone, "pastor", "Mary Owusu"),
     bishopId: "",
+    bishopFirstName: "Unknown",
+    bishopLastName: "Person",
   });
+  const third = { id: "p3", email: "x@example.com" };
+  assert.throws(
+    () =>
+      applyAction(s, third, "submit", {
+        ...profile(third),
+        bishopId: "",
+        bishopLastName: "",
+      }),
+    /first name and surname/,
+  );
   assert.equal(s.registrations.find((r) => r.userId === lone.id).status, "unclaimed");
   assert.ok(
     visibleState(s, bishop, []).registrations.some((r) => r.userId === lone.id),

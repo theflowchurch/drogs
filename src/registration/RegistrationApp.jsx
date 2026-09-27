@@ -835,10 +835,10 @@ function Participant({
               <dt>Date of birth</dt>
               <dd>{current.data.dob}</dd>
             </div>
-            {current.data.role === "pastor" && bishop && (
+            {current.data.role === "pastor" && (
               <div>
                 <dt>Bishop</dt>
-                <dd>{bishop.name}</dd>
+                <dd>{bishop?.name || current.data.bishopName}</dd>
               </div>
             )}
           </dl>
@@ -897,7 +897,8 @@ function RegistrationForm({
         organization: "",
         photo: "",
         bishopId: "",
-        bishopName: "",
+        bishopFirstName: "",
+        bishopLastName: "",
       },
       ...initial,
       email: registrationEmail(actor.email, initial?.email),
@@ -1112,6 +1113,31 @@ function RegistrationForm({
                   />
                 </Field>
                 <CommitmentPreview role={data.role} country={data.country} />
+                {data.role === "pastor" && (
+                  <>
+                    <Field
+                      label="Your bishop’s first name"
+                      hint="Type both names exactly as your bishop is known, so we can compare them with their annual list."
+                    >
+                      <input
+                        required
+                        minLength={2}
+                        autoComplete="off"
+                        value={data.bishopFirstName}
+                        onChange={(e) => set("bishopFirstName", e.target.value)}
+                      />
+                    </Field>
+                    <Field label="Your bishop’s surname">
+                      <input
+                        required
+                        minLength={2}
+                        autoComplete="off"
+                        value={data.bishopLastName}
+                        onChange={(e) => set("bishopLastName", e.target.value)}
+                      />
+                    </Field>
+                  </>
+                )}
                 <Field label="Photo in official attire" wide>
                   {data.photo && (
                     <Media
@@ -1456,7 +1482,7 @@ function ProfileDetails({ record, directory = [] }) {
                 [
                   "Bishop",
                   directory.find((b) => b.id === p.bishopId)?.name ||
-                    "Not yet assigned",
+                    `${p.bishopName || "Not given"} (as typed, not yet matched)`,
                 ],
               ]
             : []),
@@ -2150,7 +2176,7 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
               <small>
                 Bishop:{" "}
                 {state.directory.find((b) => b.id === r.data.bishopId)?.name ||
-                  "not yet assigned"}
+                  `${r.data.bishopName || "not given"} (typed, not matched)`}
               </small>
             </div>
             <Badge status="unclaimed" />
@@ -2182,7 +2208,7 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
                 ? "Check the registration against this bishop’s list. A spelling difference can be resolved by linking the correct entry below."
                 : office
                   ? "No bishop has claimed this pastor yet. Assign one below, or wait for a bishop to confirm them."
-                  : "Nobody has claimed this pastor yet. If they are under your oversight, confirm them below to add them to your list."}
+                  : `This pastor named “${selected.data.bishopName || "no bishop"}” but that did not match an approved bishop. If they are under your oversight, confirm them below to add them to your list.`}
             </p>
           </div>
           {canEdit && (

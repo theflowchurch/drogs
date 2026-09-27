@@ -73,6 +73,8 @@ test("PostgreSQL registration workflow enforces isolation, claims, payment locks
       organization: "First Love",
       photo: `${ids[who]}/portrait/test.jpg`,
       bishopId: "B1",
+      bishopFirstName: "Test",
+      bishopLastName: "Bishop",
     });
     const upload = async (who, kind = "portrait") => {
       await as(who);

@@ -53,8 +53,10 @@ export function validateProfile(p, email, { draft = false } = {}) {
     organization: p.organization || "",
     photo: p.photo || "",
     bishopId: p.bishopId || "",
-    bishopName: String(p.bishopName || "").trim(),
+    bishopFirstName: String(p.bishopFirstName || "").trim(),
+    bishopLastName: String(p.bishopLastName || "").trim(),
   };
+  q.bishopName = [q.bishopFirstName, q.bishopLastName].filter(Boolean).join(" ");
   if (!["bishop", "pastor"].includes(q.role))
     throw Error("Choose Bishop or Pastor.");
   if (!draft) {
@@ -79,14 +81,21 @@ export function validateProfile(p, email, { draft = false } = {}) {
     if (!ORGANIZATIONS.includes(q.organization))
       throw Error("Choose your organization.");
     if (!q.photo) throw Error("Upload your official-attire photo.");
+    // Both names of the bishop are required so one common first name cannot
+    // be mistaken for another bishop when the lists are compared.
+    if (
+      q.role === "pastor" &&
+      (q.bishopFirstName.length < 2 || q.bishopLastName.length < 2)
+    )
+      throw Error("Enter your bishop’s first name and surname.");
   }
-  // Pastors no longer pick a bishop: their name is matched against every
-  // approved bishop's annual list, and the office can assign one if needed.
   if (q.bishopId === "missing") q.bishopId = "";
   if (!(DENOMINATIONS[q.organization] || []).length) q.denomination = "";
   if (q.role === "bishop") {
     q.bishopId = "";
     q.bishopName = "";
+    q.bishopFirstName = "";
+    q.bishopLastName = "";
   }
   return q;
 }
@@ -103,6 +112,20 @@ export const approvedBishop = (state, id) =>
     (p) => p.id === id && p.role === "bishop" && p.bishopApproved,
   );
 export const bishopKey = (bishop) => bishop.referenceId || bishop.id;
+// The bishop the pastor named, when exactly one approved bishop has that full
+// name in either order. Anything ambiguous is left for the office.
+export function bishopNamed(state, name) {
+  const wanted = normalName(name);
+  if (!wanted) return null;
+  const reversed = wanted.split(" ").reverse().join(" ");
+  const found = state.profiles.filter(
+    (p) =>
+      p.role === "bishop" &&
+      p.bishopApproved &&
+      [wanted, reversed].includes(normalName(p.name)),
+  );
+  return found.length === 1 ? found[0] : null;
+}
 export function matchFor(state, registration) {
   const p = registration.data,
     bishop = bishopFor(state, p.bishopId);
@@ -137,6 +160,10 @@ function reconcile(state) {
     if (assigned) {
       r.status = assigned.status === "active" ? "confirmed" : "removed";
       continue;
+    }
+    if (!bishopFor(state, r.data.bishopId)) {
+      const named = bishopNamed(state, r.data.bishopName);
+      if (named) r.data.bishopId = bishopKey(named);
     }
     const match = matchFor(state, r);
     if (match) {
@@ -330,7 +357,6 @@ export function applyAction(
         "Only the selected bishop or office can confirm this pastor.",
       );
     r.data.bishopId = bishopKey(bishop);
-    r.data.bishopName = "";
     let row = state.rosters.find(
       (x) =>
         x.id === payload.rosterId &&
@@ -365,7 +391,6 @@ export function applyAction(
     if (!bishopFor(state, payload.bishopId))
       throw Error("Select an approved bishop.");
     r.data.bishopId = payload.bishopId;
-    r.data.bishopName = "";
   } else if (action === "linkReference") {
     const row = state.rosters.find(
       (r) => r.id === payload.rosterId && r.year === state.year,
