@@ -1944,3 +1944,20 @@ p {
   padding: 10px 22px;
   min-height: 40px;
 }
+.reg-account.signin .reg-hero-title {
+  font-size: clamp(56px, 9vw, 132px);
+  letter-spacing: -4px;
+  gap: 34px;
+  line-height: 1;
+}
+.reg-account.signin .reg-hero-title img {
+  height: clamp(110px, 16vw, 230px);
+}
+@media (max-width: 700px) {
+  .reg-account.signin .reg-hero-title {
+    flex-direction: column;
+    text-align: center;
+    gap: 18px;
+    letter-spacing: -2px;
+  }
+}
