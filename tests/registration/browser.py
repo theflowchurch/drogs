@@ -15,7 +15,7 @@ with sync_playwright() as p:
   if page.get_by_label('Platform password').is_visible():
    page.get_by_label('Platform password').fill('1234');page.get_by_role('button',name='Enter DROGS').click()
   page.get_by_label('Email address',exact=True).fill(email)
-  page.get_by_role('button',name='Continue with demo account').click()
+  page.get_by_role('button',name='Continue',exact=True).click()
   page.locator('main').wait_for()
  def signout():
   page.get_by_role('button',name='Sign out',exact=True).click();page.get_by_label('Platform password').wait_for()

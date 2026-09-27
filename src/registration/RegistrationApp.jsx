@@ -341,8 +341,8 @@ export default function RegistrationApp({ office = false }) {
       </header>
       {!api.live && (
         <div className="reg-demo">
-          Demo · saved in this browser only · email delivery and shared accounts
-          are not connected ·{" "}
+          Saved in this browser only · email delivery and shared accounts are
+          not connected ·{" "}
           <a href="https://drogs.dagministry.org/">
             live site: drogs.dagministry.org
           </a>
@@ -428,7 +428,7 @@ export default function RegistrationApp({ office = false }) {
                   ? "Confirmed registrations enter the directory. Unclaimed pastors stay in their own review queue."
                   : actor.email}
               </p>
-              <small>{api.live ? "Secure account" : "Demo account"}</small>
+              <small>{api.live ? "Secure account" : "Local account"}</small>
             </div>
           </aside>
           <main className="reg-main" aria-busy={busy}>
@@ -586,7 +586,7 @@ function HelpButton({ actor, run }) {
               <p>
                 {api.supportAvailable
                   ? "Someone will look at it and reply to the address you gave."
-                  : "This is the browser demo, so nothing was actually sent. On the live site this reaches the office by email."}
+                  : "This copy is not connected to the office mailbox, so nothing was sent. On drogs.dagministry.org this reaches the office by email."}
               </p>
             </div>
           ) : (
@@ -685,7 +685,7 @@ function Account({ office, run, busy, onActor }) {
         <p>
           {api.live
             ? "We’ll send a one-time sign-in code. New members create their account here; returning members use the same email."
-            : "Explore the new registration flow with a demo account. No email is sent in this version."}
+            : "Enter your email to open your account. This copy is not connected to email delivery."}
         </p>
         <ol className="reg-steps">
           <li>
@@ -742,7 +742,7 @@ function Account({ office, run, busy, onActor }) {
           {busy
             ? "Please wait…"
             : !api.live
-              ? "Continue with demo account"
+              ? "Continue"
               : sent
                 ? "Verify and sign in"
                 : "Send sign-in code"}{" "}
@@ -763,7 +763,7 @@ function Account({ office, run, busy, onActor }) {
         <p className="reg-small">
           {api.live
             ? "Your email is your account identity. Keep using the same address each year."
-            : "Demo accounts and uploads remain on this device. Use sample information while testing."}
+            : "Accounts and uploads remain on this device until the site is connected."}
         </p>
       </form>
     </section>
