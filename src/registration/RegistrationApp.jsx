@@ -288,6 +288,16 @@ export default function RegistrationApp({
     return () => clearTimeout(timer);
   }, [notice]);
   const isOffice = api.live ? Boolean(state?.office) : Boolean(actor?.office);
+  const registering = state
+    ? !state.registrations.some(
+        (r) => r.userId === actor?.id && r.year === state.year && r.status !== "draft",
+      )
+    : null;
+  useEffect(() => {
+    if (gated || !actor || registering === null) return;
+    if (!signup && registering) location.replace(`${base}/signup/`);
+    if (signup && !registering) location.replace(`${base}/`);
+  }, [gated, actor, registering, signup]);
   const profile = state?.profiles.find((p) => p.id === actor?.id);
   const current = state?.registrations.find(
     (r) => r.userId === actor?.id && r.year === state.year,
@@ -318,6 +328,7 @@ export default function RegistrationApp({
       setState(null);
       setGate(!gated);
       sessionStorage.removeItem("drogs-registration-gate");
+      if (!gated) location.assign(`${base}/`);
     });
   }
   if (api.configError)
@@ -354,11 +365,7 @@ export default function RegistrationApp({
             <a className="reg-text" href={`${base}/`}>
               Already have an account? Sign in ↗
             </a>
-          ) : (
-            <a className="reg-text" href={`${base}/signup/`}>
-              Create an account ↗
-            </a>
-          )}
+          ) : null}
         </div>
       </header>
       {!api.live && (
@@ -760,12 +767,7 @@ function Account({ office, signup = false, run, busy, onActor }) {
               <b>03</b> Confirm and pay
             </li>
           </ol>
-        ) : (
-          <p className="reg-account-switch">
-            New to Kuriake Castle?{" "}
-            <a href={`${base}/signup/`}>Create an account →</a>
-          </p>
-        )}
+        ) : null}
       </div>
       <form
         className="reg-card"
@@ -1023,6 +1025,62 @@ function RegistrationForm({
       </div>
       <div className="reg-form-layout">
         <aside className="reg-form-aside">
+          <div className="reg-upload-card">
+            {data.photo ? (
+              <Media
+                path={data.photo}
+                alt="Your uploaded portrait"
+                className="reg-upload-preview"
+              />
+            ) : (
+              <div className="reg-silhouette" aria-hidden="true">
+                <svg viewBox="0 0 120 150">
+                  <circle cx="60" cy="48" r="30" />
+                  <path d="M10 150c0-34 22-56 50-56s50 22 50 56z" />
+                </svg>
+                <span>Upload your photo</span>
+              </div>
+            )}
+          <Field label="Photo in official attire" wide>
+            {data.photo && (
+              <Media
+                path={data.photo}
+                alt="Your uploaded portrait"
+                className="reg-upload-preview"
+              />
+            )}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              disabled={fileBusy}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file)
+                  run(async () => {
+                    setFileBusy(true);
+                    try {
+                      set("photo", await api.upload(actor, file));
+                    } finally {
+                      setFileBusy(false);
+                    }
+                  });
+              }}
+            />
+            <small>
+              {fileBusy
+                ? "Uploading…"
+                : data.photo
+                  ? "Photo uploaded. Choose a new image to replace it."
+                  : "JPG, PNG or WebP · up to 5 MB."}
+            </small>
+          </Field>
+            <p>
+              {data.role === "bishop"
+                ? "Bishops wear their official red jacket; a collar alone is not sufficient."
+                : "Wear your official pastoral attire."}{" "}
+              Face the camera, plain background, face fully visible.
+            </p>
+          </div>
           <div className="reg-amount">
             <span>Annual commitment</span>
             <strong>
@@ -1035,21 +1093,6 @@ function RegistrationForm({
             <hr />
             <b>Non-refundable</b>
             <p>Payment opens after your registration is confirmed.</p>
-          </div>
-          <div className="reg-guidance">
-            <h3>Your official portrait</h3>
-            <img
-              src={`${base}/${data.role === "bishop" ? "assets/brand/bishop-example.jpg" : "assets/pastors/reconciled-5.webp"}`}
-              alt={`Example ${data.role} portrait in official attire`}
-            />
-            <p>
-              {data.role === "bishop"
-                ? "Bishops must wear their official red jacket. A collar alone is not sufficient."
-                : "Wear your official pastoral attire."}{" "}
-              Face the camera, use a plain background and keep your face fully
-              visible.
-            </p>
-            <small>JPG, PNG or WebP · up to 5 MB</small>
           </div>
         </aside>
         <section className="reg-card reg-form-card">
@@ -1215,39 +1258,6 @@ function RegistrationForm({
                     </Field>
                   </>
                 )}
-                <Field label="Photo in official attire" wide>
-                  {data.photo && (
-                    <Media
-                      path={data.photo}
-                      alt="Your uploaded portrait"
-                      className="reg-upload-preview"
-                    />
-                  )}
-                  <input
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    disabled={fileBusy}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file)
-                        run(async () => {
-                          setFileBusy(true);
-                          try {
-                            set("photo", await api.upload(actor, file));
-                          } finally {
-                            setFileBusy(false);
-                          }
-                        });
-                    }}
-                  />
-                  <small>
-                    {fileBusy
-                      ? "Uploading…"
-                      : data.photo
-                        ? "Photo uploaded. Choose a new image to replace it."
-                        : "Use the example alongside as a guide."}
-                  </small>
-                </Field>
               </div>
               <div className="reg-form-actions">
                 <button

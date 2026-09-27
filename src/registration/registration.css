@@ -1866,3 +1866,49 @@ p {
 .reg-paystack .reg-primary {
   background: #0a282e;
 }
+
+/* Registration sidebar: your photo first, then the commitment */
+.reg-upload-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+.reg-upload-card .reg-upload-preview,
+.reg-silhouette {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4/4.6;
+  border-radius: 14px;
+  object-fit: cover;
+  object-position: center 22%;
+  margin-bottom: 14px;
+}
+.reg-silhouette {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  background: #e9efee;
+  color: #8aa0a2;
+  border: 1px dashed #c9d7d5;
+}
+.reg-silhouette svg {
+  width: 46%;
+  fill: #c5d2d1;
+}
+.reg-silhouette span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6a7f83;
+}
+.reg-upload-card .reg-field {
+  margin: 0;
+}
+.reg-upload-card > p {
+  margin: 12px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
