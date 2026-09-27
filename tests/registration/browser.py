@@ -14,6 +14,7 @@ with sync_playwright() as p:
   page.goto(BASE+('/admin/' if office else '/'));page.wait_for_load_state('networkidle')
   if page.get_by_label('Access code').is_visible():
    page.get_by_label('Access code').fill('1234');page.get_by_role('button',name='Enter →').click()
+  if page.get_by_role('button',name='Sign in',exact=True).is_visible():page.get_by_role('button',name='Sign in',exact=True).click()
   page.get_by_label('Email address',exact=True).fill(email)
   page.get_by_role('button',name='Continue →').click()
   page.locator('main').wait_for()

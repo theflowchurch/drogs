@@ -1921,3 +1921,26 @@ p {
   font-size: clamp(40px, 5vw, 64px);
   letter-spacing: -2px;
 }
+
+/* Landing: the castle beside its name, nothing else */
+.reg-account.signin {
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  min-height: calc(100svh - 90px);
+}
+.reg-hero-title {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 0;
+  color: #fff;
+}
+.reg-hero-title img {
+  height: 84px;
+  width: auto;
+}
+.reg-signin-button {
+  padding: 10px 22px;
+  min-height: 40px;
+}

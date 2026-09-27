@@ -183,7 +183,8 @@ export default function RegistrationApp({
   // Members sign in with their email; only the office and the browse-only
   // directory sit behind an access code.
   const gated = office || browse;
-  const [directoryRole, setDirectoryRole] = useState("bishop"),
+  const [signinOpen, setSigninOpen] = useState(false),
+    [directoryRole, setDirectoryRole] = useState("bishop"),
     [gate, setGate] = useState(!gated),
     [actor, setActor] = useState(null),
     [state, setState] = useState(null),
@@ -366,7 +367,11 @@ export default function RegistrationApp({
             <a className="reg-text" href={`${base}/`}>
               Already have an account? Sign in ↗
             </a>
-          ) : null}
+          ) : (
+            <button className="reg-primary reg-signin-button" onClick={() => setSigninOpen(true)}>
+              Sign in
+            </button>
+          )}
         </div>
       </header>
       {!api.live && (
@@ -441,6 +446,8 @@ export default function RegistrationApp({
           run={run}
           busy={busy}
           onActor={setActor}
+          open={signinOpen}
+          onClose={() => setSigninOpen(false)}
         />
       ) : !actor ? (
         <div className="reg-loading" role="status">
@@ -728,25 +735,110 @@ function Gate({ office, onEnter }) {
     </section>
   );
 }
-function Account({ office, signup = false, run, busy, onActor }) {
+function AccountForm({ office, signup = false, run, busy, onActor }) {
   const [email, setEmail] = useState(""),
     [sent, setSent] = useState(false),
     [token, setToken] = useState("");
   return (
-    <section className={`reg-account ${signup ? "signup" : "signin"}`}>
+<form
+  className="reg-card"
+  onSubmit={(e) => {
+    e.preventDefault();
+    run(async () => {
+      if (!api.live) {
+        onActor(api.demoSignIn(email, office));
+        return;
+      }
+      if (sent) onActor(await api.verifyCode(email, token));
+      else {
+        await api.requestCode(email);
+        setSent(true);
+      }
+    });
+  }}
+>
+  <Field label="Email address">
+    <input
+      type="email"
+      required
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      readOnly={sent}
+      autoComplete="email"
+    />
+  </Field>
+  {sent && (
+    <Field label="One-time email code">
+      <input
+        value={token}
+        onChange={(e) => setToken(e.target.value)}
+        autoComplete="one-time-code"
+        inputMode="numeric"
+        required
+        pattern="[0-9]{6,10}"
+      />
+    </Field>
+  )}
+  <button className="reg-primary full" disabled={busy}>
+    {busy
+      ? "Please wait…"
+      : !api.live
+        ? "Continue"
+        : sent
+          ? signup
+            ? "Verify and create account"
+            : "Verify and sign in"
+          : signup
+            ? "Send code"
+            : "Send sign-in code"}{" "}
+    →
+  </button>
+  {sent && (
+    <button
+      type="button"
+      className="reg-text"
+      onClick={() => {
+        setSent(false);
+        setToken("");
+      }}
+    >
+      Change email or resend code
+    </button>
+  )}
+  {signup && (
+    <p className="reg-small">
+      {api.live
+        ? "Your email is your account identity. Keep using the same address each year."
+        : "Accounts and uploads remain on this device until the site is connected."}
+    </p>
+  )}
+  {signup && (
+    <p className="reg-small">
+      Already registered? <a href={`${base}/`}>Sign in</a>
+    </p>
+  )}
+</form>
+  );
+}
+// The landing page is only the castle and its name over the photograph; the
+// green Sign in button in the header opens the email form.
+function Account({ office, signup = false, run, busy, onActor, open = false, onClose }) {
+  const [sent] = useState(false);
+  return (
+    <section className={`reg-account ${signup || office ? "signup" : "signin"}`}>
       <div
         className="reg-hero-image"
         style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
         aria-hidden="true"
       />
-      <div>
-        <img
-          className="reg-account-mark"
-          src={`${base}/assets/brand/castle-icon.png`}
-          alt=""
-        />
-        {signup || office ? (
-          <>
+      {signup || office ? (
+        <>
+          <div>
+            <img
+              className="reg-account-mark"
+              src={`${base}/assets/brand/castle-icon.png`}
+              alt=""
+            />
             <span className="reg-eyebrow">
               {office ? "OFFICE ACCESS" : "NEW ACCOUNT"}
             </span>
@@ -756,102 +848,35 @@ function Account({ office, signup = false, run, busy, onActor }) {
                 ? "Enter your email and we’ll send a one-time code. Then register your details and complete your commitment."
                 : "Enter your email to create your account on this device."}
             </p>
-          </>
-        ) : (
-          <h1>Kuriake Castle</h1>
-        )}
-        {signup ? (
-          <ol className="reg-steps">
-            <li>
-              <b>01</b> Create your account
-            </li>
-            <li>
-              <b>02</b> Register your details
-            </li>
-            <li>
-              <b>03</b> Confirm and pay
-            </li>
-          </ol>
-        ) : null}
-      </div>
-      <form
-        className="reg-card"
-        onSubmit={(e) => {
-          e.preventDefault();
-          run(async () => {
-            if (!api.live) {
-              onActor(api.demoSignIn(email, office));
-              return;
-            }
-            if (sent) onActor(await api.verifyCode(email, token));
-            else {
-              await api.requestCode(email);
-              setSent(true);
-            }
-          });
-        }}
-      >
-        <Field label="Email address">
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            readOnly={sent}
-            autoComplete="email"
-          />
-        </Field>
-        {sent && (
-          <Field label="One-time email code">
-            <input
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              autoComplete="one-time-code"
-              inputMode="numeric"
-              required
-              pattern="[0-9]{6,10}"
-            />
-          </Field>
-        )}
-        <button className="reg-primary full" disabled={busy}>
-          {busy
-            ? "Please wait…"
-            : !api.live
-              ? "Continue"
-              : sent
-                ? signup
-                  ? "Verify and create account"
-                  : "Verify and sign in"
-                : signup
-                  ? "Send code"
-                  : "Send sign-in code"}{" "}
-          →
-        </button>
-        {sent && (
-          <button
-            type="button"
-            className="reg-text"
-            onClick={() => {
-              setSent(false);
-              setToken("");
-            }}
-          >
-            Change email or resend code
-          </button>
-        )}
-        {signup && (
-          <p className="reg-small">
-            {api.live
-              ? "Your email is your account identity. Keep using the same address each year."
-              : "Accounts and uploads remain on this device until the site is connected."}
-          </p>
-        )}
-        {signup && (
-          <p className="reg-small">
-            Already registered? <a href={`${base}/`}>Sign in</a>
-          </p>
-        )}
-      </form>
+            {signup && (
+              <ol className="reg-steps">
+                <li>
+                  <b>01</b> Create your account
+                </li>
+                <li>
+                  <b>02</b> Register your details
+                </li>
+                <li>
+                  <b>03</b> Confirm and pay
+                </li>
+              </ol>
+            )}
+          </div>
+          <AccountForm office={office} signup={signup} run={run} busy={busy} onActor={onActor} />
+        </>
+      ) : (
+        <>
+          <h1 className="reg-hero-title">
+            <img src={`${base}/assets/brand/castle-icon.png`} alt="" />
+            Kuriake Castle
+          </h1>
+          {open && (
+            <Dialog title="Sign in" onClose={onClose}>
+              <AccountForm office={office} run={run} busy={busy} onActor={onActor} />
+            </Dialog>
+          )}
+        </>
+      )}
     </section>
   );
 }
