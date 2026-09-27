@@ -1376,4 +1376,4 @@ p {
 .reg-account-table td small {color:#6b665d}
 .reg-account-status {text-transform:capitalize}
 .reg-accounts li {padding:10px 0}
-@media(max-width:650px){.reg-account-search{align-items:stretch;flex-direction:column}.reg-account-toolbar{align-items:start}.reg-account-table{max-width:100%}}
+@media(max-width:650px){.reg-account-search{align-items:stretch;flex-direction:column}.reg-account-toolbar{align-items:start;flex-direction:column;min-width:0;width:100%}.reg-account-toolbar>*{max-width:100%;overflow-wrap:anywhere}.reg-account-table{max-width:100%}}
