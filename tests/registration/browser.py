@@ -12,13 +12,13 @@ with sync_playwright() as p:
  page.on('pageerror',lambda e:errors.append(str(e)))
  def open_account(email,office=False):
   page.goto(BASE+('/admin/' if office else '/'));page.wait_for_load_state('networkidle')
-  if page.get_by_label('Platform password').is_visible():
-   page.get_by_label('Platform password').fill('1234');page.get_by_role('button',name='Enter Kuriake Castle').click()
+  if page.get_by_label('Access code').is_visible():
+   page.get_by_label('Access code').fill('1234');page.get_by_role('button',name='Enter →').click()
   page.get_by_label('Email address',exact=True).fill(email)
   page.get_by_role('button',name='Continue →').click()
   page.locator('main').wait_for()
  def signout():
-  page.get_by_role('button',name='Sign out',exact=True).click();page.get_by_label('Platform password').wait_for()
+  page.get_by_role('button',name='Sign out',exact=True).click();page.get_by_label('Access code').wait_for()
  def register(name,role='pastor',bishop='B1'):
   page.get_by_label('Registering as').select_option(role)
   page.get_by_label('Organization',exact=True).select_option('First Love')

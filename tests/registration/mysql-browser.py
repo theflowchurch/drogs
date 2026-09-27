@@ -23,8 +23,8 @@ with sync_playwright() as p:
         page.wait_for_load_state('networkidle')
         expect(page.get_by_text('Demo ·', exact=False)).not_to_be_visible()
         if admin:
-            page.get_by_label('Admin code', exact=True).fill('admin-test-code')
-            page.get_by_role('button', name='Enter Kuriake Castle').click()
+            page.get_by_label('Access code', exact=True).fill('admin-test-code')
+            page.get_by_role('button', name='Enter →').click()
         else:
             page.get_by_label('Email address', exact=True).fill('browser-member@example.com')
             page.get_by_role('button', name='Send code').click()

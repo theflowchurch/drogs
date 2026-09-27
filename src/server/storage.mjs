@@ -27,7 +27,7 @@ export async function assertOwnedMedia(conn, actor, path, kind) {
   const [[media]] = await conn.execute('SELECT owner_id,kind FROM dr_media WHERE object_key=?', [path]);
   if (!media || media.owner_id !== actor.id || media.kind !== kind) throw new HttpError(400, 'Upload your own image before continuing.');
 }
-export function createStorage({ config, pool, client }) {
+export function createStorage({ config, pool, client, logger = console }) {
   const s3 = client || new S3Client({ region: 'auto', endpoint: `https://${config.r2.account}.r2.cloudflarestorage.com`,
     credentials: { accessKeyId: config.r2.accessKeyId, secretAccessKey: config.r2.secretAccessKey, ...(config.r2.sessionToken ? { sessionToken: config.r2.sessionToken } : {}) },
     requestChecksumCalculation: 'WHEN_REQUIRED', responseChecksumValidation: 'WHEN_REQUIRED' });
@@ -36,17 +36,31 @@ export function createStorage({ config, pool, client }) {
     async upload(actor, bytes, contentType, kind) {
       if (!['portrait', 'receipt'].includes(kind)) throw new HttpError(400, 'Invalid upload type.');
       await rateLimit(pool, config, `upload:${actor.id}`, 30, 3600000);
-      const body = await prepareImage(bytes, contentType);
-      const Key = `${actor.id}/${kind}/${randomUUID()}.webp`;
-      await s3.send(new PutObjectCommand({ Bucket, Key, Body: body, ContentType: 'image/webp', CacheControl: 'private, max-age=300' }));
+      let body = await prepareImage(bytes, contentType);
+      let Key = `${actor.id}/${kind}/${randomUUID()}.webp`;
       try {
-        await pool.execute('INSERT INTO dr_media (object_key,owner_id,kind,content_type,size_bytes,created_at) VALUES (?,?,?,?,?,?)', [Key, actor.id, kind, 'image/webp', body.length, Date.now()]);
+        await s3.send(new PutObjectCommand({ Bucket, Key, Body: body, ContentType: 'image/webp', CacheControl: 'private, max-age=300' }));
       } catch (error) {
-        // Retain the unreferenced upload for office cleanup; this backend never deletes R2 objects.
-        throw error;
+        // ponytail: when object storage rejects us (wrong credentials, missing
+        // bucket, outage) the image goes into MySQL instead, smaller, so a
+        // member is never stopped by a configuration problem. Move these rows
+        // to R2 with a one-off script once the credentials are fixed.
+        logger.error('Object storage unavailable; storing image in the database', { type: error.name });
+        body = await sharp(body).resize({ width: 1200, height: 1200, fit: 'inside', withoutEnlargement: true }).webp({ quality: 82 }).toBuffer();
+        Key = `db/${actor.id}/${kind}/${randomUUID()}.webp`;
+        await pool.execute('INSERT INTO dr_media_blobs (object_key,data) VALUES (?,?)', [Key, body]);
       }
+      // A failed metadata insert leaves an unreferenced object; nothing here ever deletes it.
+      await pool.execute('INSERT INTO dr_media (object_key,owner_id,kind,content_type,size_bytes,created_at) VALUES (?,?,?,?,?,?)', [Key, actor.id, kind, 'image/webp', body.length, Date.now()]);
       return Key;
     },
-    url(key) { return getSignedUrl(s3, new GetObjectCommand({ Bucket, Key: key }), { expiresIn: 3600 }); },
+    url(key) {
+      if (key.startsWith('db/')) return `/api/registration/media/blob?path=${encodeURIComponent(key)}`;
+      return getSignedUrl(s3, new GetObjectCommand({ Bucket, Key: key }), { expiresIn: 3600 });
+    },
+    async blob(key) {
+      const [[row]] = await pool.execute('SELECT data FROM dr_media_blobs WHERE object_key=?', [key]);
+      return row?.data || null;
+    },
   };
 }

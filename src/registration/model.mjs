@@ -486,6 +486,29 @@ export function applyAction(
     r.proof = payload.proof;
     r.nonrefundableAt = now;
     r.paymentSubmittedAt = now;
+  } else if (action === "recordPaystack") {
+    // Only the server calls this, after Paystack confirmed the reference.
+    const r = state.registrations.find(
+      (r) => r.userId === actor.id && r.year === state.year,
+    );
+    if (r?.status !== "confirmed")
+      throw Error("Payment unlocks after confirmation.");
+    if (r.payment === "verified")
+      throw Error("This payment has already been verified.");
+    if (
+      state.registrations.some((x) => x.paystackReference === payload.reference)
+    )
+      throw Error("This payment reference has already been used.");
+    if (!(Number(payload.amount) >= Number(payload.expectedMinor)))
+      throw Error("The amount paid is less than the annual commitment.");
+    r.payment = "verified";
+    r.paymentMethod = "paystack";
+    r.paystackReference = String(payload.reference);
+    r.paystackAmount = Number(payload.amount);
+    r.paystackCurrency = String(payload.currency || "");
+    r.nonrefundableAt = now;
+    r.paymentSubmittedAt = now;
+    r.paymentReviewedAt = now;
   } else if (action === "reviewPayment") {
     office();
     const r = registration();

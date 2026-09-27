@@ -368,3 +368,41 @@ test("a pastor registers without choosing a bishop and is matched or claimed", (
   assert.equal(claimed.status, "confirmed");
   assert.equal(claimed.data.bishopId, "B1");
 });
+
+test("a Paystack payment is recorded only once, only when enough was paid", () => {
+  let s = setup();
+  s = applyAction(s, bishop, "addRoster", {
+    rows: [{ name: "John Doe", email: pastor.email }],
+  });
+  s = applyAction(s, pastor, "submit", profile(pastor));
+  assert.equal(s.registrations.find((r) => r.userId === pastor.id).status, "confirmed");
+  assert.throws(
+    () =>
+      applyAction(s, pastor, "recordPaystack", {
+        reference: "ref-1",
+        amount: 40_00,
+        currency: "GHS",
+        expectedMinor: 575_00,
+      }),
+    /less than/,
+  );
+  s = applyAction(s, pastor, "recordPaystack", {
+    reference: "ref-1",
+    amount: 580_00,
+    currency: "GHS",
+    expectedMinor: 575_00,
+  });
+  const paid = s.registrations.find((r) => r.userId === pastor.id);
+  assert.equal(paid.payment, "verified");
+  assert.equal(paid.paymentMethod, "paystack");
+  assert.throws(
+    () =>
+      applyAction(s, pastor, "recordPaystack", {
+        reference: "ref-1",
+        amount: 580_00,
+        currency: "GHS",
+        expectedMinor: 575_00,
+      }),
+    /already/,
+  );
+});

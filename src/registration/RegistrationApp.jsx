@@ -690,19 +690,19 @@ function Gate({ office, onEnter }) {
           }}
         >
           <label className="sr-only" htmlFor="entrance">
-            {office ? "Admin code" : "Website code"}
+            Access code
           </label>
           <input
             id="entrance"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder={office ? "Enter admin code" : "Enter website code"}
+            placeholder="Kuriake Castle"
             type="password"
             required
             autoComplete="current-password"
           />
           <button className="reg-primary">
-            Enter Kuriake Castle <span>→</span>
+            Enter <span>→</span>
           </button>
         </form>
         {error && <p role="alert">{error}</p>}
@@ -1039,7 +1039,7 @@ function RegistrationForm({
           <div className="reg-guidance">
             <h3>Your official portrait</h3>
             <img
-              src={`${base}/${data.role === "bishop" ? "assets/outreach/brian-masuku.png" : "assets/pastors/reconciled-5.webp"}`}
+              src={`${base}/${data.role === "bishop" ? "assets/brand/bishop-example.jpg" : "assets/pastors/reconciled-5.webp"}`}
               alt={`Example ${data.role} portrait in official attire`}
             />
             <p>
@@ -1287,7 +1287,7 @@ function RegistrationForm({
                   </figure>
                   <figure>
                     <img
-                      src={`${base}/${data.role === "bishop" ? "assets/outreach/brian-masuku.png" : "assets/pastors/reconciled-5.webp"}`}
+                      src={`${base}/${data.role === "bishop" ? "assets/brand/bishop-example.jpg" : "assets/pastors/reconciled-5.webp"}`}
                       alt={
                         data.role === "bishop"
                           ? "Required bishop red-jacket example"
@@ -1395,6 +1395,56 @@ function CommitmentPreview({ role, country }) {
     </p>
   );
 }
+// Card or mobile money through Paystack's inline checkout. The amount is charged
+// in GHS at the same indicative rate the member sees; the server confirms the
+// reference with Paystack before the payment is recorded.
+function PaystackButton({ current, actor, run, refresh, rate, currency }) {
+  const [ready, setReady] = useState(Boolean(globalThis.PaystackPop));
+  useEffect(() => {
+    if (globalThis.PaystackPop) return setReady(true);
+    const script = document.createElement("script");
+    script.src = "https://js.paystack.co/v1/inline.js";
+    script.async = true;
+    script.onload = () => setReady(true);
+    document.body.appendChild(script);
+  }, []);
+  const ghs = rate && currency === "GHS" ? current.amount * rate : null;
+  const usdOnly = !ghs;
+  return (
+    <div className="reg-paystack">
+      <button
+        type="button"
+        className="reg-primary full"
+        disabled={!ready}
+        onClick={() =>
+          run(async () => {
+            const reference = await new Promise((resolve, reject) => {
+              const handler = globalThis.PaystackPop.setup({
+                key: api.paystackKey,
+                email: actor.email,
+                amount: Math.round((usdOnly ? current.amount : ghs) * 100),
+                currency: usdOnly ? "USD" : "GHS",
+                channels: ["card", "mobile_money", "bank", "bank_transfer"],
+                metadata: { custom_fields: [{ display_name: "Kuriake Castle", variable_name: "registration", value: `${current.year} ${current.data.role} ${current.data.name}` }] },
+                callback: (response) => resolve(response.reference),
+                onClose: () => reject(Error("Payment window closed before completing.")),
+              });
+              handler.openIframe();
+            });
+            await api.paystackVerify(reference);
+            await refresh();
+          }, "Payment received. Thank you for your commitment.")
+        }
+      >
+        Pay {ghs ? `GHS ${Math.round(ghs).toLocaleString()}` : `$${current.amount}`} by card or mobile money →
+      </button>
+      <small className="reg-small">
+        Secure checkout by Paystack: cards, MTN / Telecel / AT mobile money, bank.
+        {ghs ? ` Charged in Ghana cedis at today’s indicative rate for $${current.amount} USD.` : ""}
+      </small>
+    </div>
+  );
+}
 function Payment({ current, actor, run, refresh }) {
   const [proof, setProof] = useState(current.proof || ""),
     [ack, setAck] = useState(false),
@@ -1456,6 +1506,9 @@ function Payment({ current, actor, run, refresh }) {
               {!api.live ? " You can test a sample receipt below." : ""}
             </p>
           )}
+          {api.paystackKey && current.payment !== "pending" && (
+            <PaystackButton current={current} actor={actor} run={run} refresh={refresh} rates={rates} currency={currency} rate={rate} />
+          )}
           {current.paymentNote && (
             <p className="reg-status-message unclaimed">
               {current.paymentNote}
@@ -1494,13 +1547,11 @@ function Payment({ current, actor, run, refresh }) {
                     if (!file) return;
                     run(async () => {
                       const check = await checkReceiptImage(file);
-                      if (check.verdict === "photograph") {
-                        setReceiptNote("");
-                        throw Error(check.reason);
-                      }
                       setProof(await api.upload(actor, file, "receipt"));
                       setReceiptNote(
-                        check.verdict === "unclear" ? check.reason : "",
+                        ["photograph", "unclear"].includes(check.verdict)
+                          ? check.reason
+                          : "",
                       );
                     });
                   }}

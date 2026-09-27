@@ -8,7 +8,7 @@ if (!dev) process.env.NODE_ENV = 'production';
 if (process.env.NEXT_PUBLIC_REGISTRATION_BACKEND !== 'mysql') throw Error('Set NEXT_PUBLIC_REGISTRATION_BACKEND=mysql before building and starting Hostinger.');
 if (process.env.NEXT_PUBLIC_BASE_PATH) throw Error('Hostinger must use an empty NEXT_PUBLIC_BASE_PATH.');
 const { configuration } = await import('../src/server/config.mjs');
-const { createPool } = await import('../src/server/database.mjs');
+const { createPool, migrate } = await import('../src/server/database.mjs');
 const { createAuth } = await import('../src/server/auth.mjs');
 const { createStorage } = await import('../src/server/storage.mjs');
 const { createApi } = await import('../src/server/api.mjs');
@@ -20,6 +20,7 @@ if (!dev) {
 }
 const config = configuration();
 const pool = createPool(config);
+await migrate(pool); // idempotent: creates any missing dr_ tables
 await pool.query('SELECT current_year FROM dr_settings WHERE id=1');
 const mailer = nodemailer.createTransport(config.smtp);
 const auth = createAuth({ pool, config, mailer });

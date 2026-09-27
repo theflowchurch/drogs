@@ -24,6 +24,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   const pool = mysql.createPool({ ...options, database: db, connectionLimit: 5 });
   const mediaDir = await mkdtemp(`${tmpdir()}/drogs-mysql-test-`);
   const mails = [], objects = new Map();
+  let failStorage = false;
   const config = { origin: 'https://drogs.dagministry.org', secure: true, secret: 't'.repeat(64), admins: ['office@example.com', 'browser-office@example.com'], siteCode: '1234', adminCode: 'admin-test-code', from: 'no-reply@example.com', r2: { account: 'a'.repeat(32), bucket: 'test-private', accessKeyId: 'test', secretAccessKey: 'test' } };
   const mailer = { sendMail: async mail => { mails.push(mail); await writeFile(`${mediaDir}/mail.json`, JSON.stringify(mails), { mode: 0o600 }); } };
   const auth = createAuth({ pool, config, mailer });
@@ -31,6 +32,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   config.telegram = { token: 'test-token', chat: '-100' };
   const client = new S3Client({ region: 'auto', endpoint: `https://${config.r2.account}.r2.cloudflarestorage.com`, credentials: { accessKeyId: 'test', secretAccessKey: 'test' },
     requestChecksumCalculation: 'WHEN_REQUIRED', requestHandler: { handle: async request => {
+      if (failStorage) { const e = Error('The request signature we calculated does not match'); e.name = 'SignatureDoesNotMatch'; throw e; }
       if (request.method === 'PUT') {
         objects.set(request.path, request.body);
         await writeFile(`${mediaDir}/${Buffer.from(request.path).toString('hex')}`, request.body);
@@ -180,6 +182,18 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('keys/revoke', bishop.cookie, { id: issued.data.key.id })).status, 403);
     assert.equal((await call('keys/revoke', office.cookie, { id: issued.data.key.id })).status, 200);
     assert.equal((await external('registrations')).status, 401);
+    // When object storage rejects the credentials the image is kept in MySQL and still served.
+    failStorage = true;
+    const fallback = await upload(pastor, 'receipt');
+    failStorage = false;
+    assert.ok(fallback.startsWith('db/'), 'fallback keys are marked');
+    const fallbackUrl = await call(`media?path=${encodeURIComponent(fallback)}`, pastor.cookie);
+    assert.equal(fallbackUrl.status, 200); assert.match(fallbackUrl.data.url, /\/api\/registration\/media\/blob\?path=/);
+    const blob = await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: pastor.cookie } }));
+    assert.equal(blob.status, 200); assert.equal(blob.headers.get('content-type'), 'image/webp'); assert.ok((await blob.arrayBuffer()).byteLength > 100);
+    assert.equal((await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: stranger.cookie } }))).status, 403, 'strangers cannot read a stored image');
+    assert.equal((await call('paystack/verify', pastor.cookie, { reference: 'abc123' })).status, 503, 'Paystack is off until the secret key is configured');
+
     // "Any issues?" reports reach the office by email, with a Telegram heads-up.
     assert.equal((await call('support', '', { message: 'Cannot upload my receipt.' })).status, 401);
     assert.equal((await call('support', bishop.cookie, { message: 'no' })).status, 400);

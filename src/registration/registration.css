@@ -1857,3 +1857,12 @@ p {
     padding: 56px 24px;
   }
 }
+
+.reg-paystack {
+  margin: 12px 0 18px;
+  display: grid;
+  gap: 8px;
+}
+.reg-paystack .reg-primary {
+  background: #0a282e;
+}
