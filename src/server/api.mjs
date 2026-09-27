@@ -63,8 +63,8 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (request.headers.get('sec-fetch-site') === 'cross-site') throw new HttpError(403, 'Cross-site requests are not allowed.');
       if (path === '/api/registration/auth/request' && method === 'POST') {
         const { email } = await jsonBody(request);
-        await auth.requestCode(emailAddress(email), url.origin);
-        return json({ ok: true });
+        const requested = await auth.requestCode(emailAddress(email), url.origin);
+        return json({ ok: true, codeRequired: requested?.codeRequired !== false });
       }
       if (path === '/api/registration/auth/access' && method === 'POST') {
         const { code, office = false } = await jsonBody(request);

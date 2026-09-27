@@ -751,8 +751,11 @@ function AccountForm({ office, signup = false, run, busy, onActor }) {
       }
       if (sent) onActor(await api.verifyCode(email, token));
       else {
-        await api.requestCode(email);
-        setSent(true);
+        const requested = await api.requestCode(email);
+        // When the server does not ask for a code, the email alone signs in.
+        if (requested?.codeRequired === false)
+          onActor(await api.verifyCode(email, ""));
+        else setSent(true);
       }
     });
   }}

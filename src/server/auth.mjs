@@ -52,6 +52,7 @@ export function createAuth({ pool, config, mailer }) {
       });
     },
     async requestCode(email, origin = config.origin) {
+      if (!config.requireEmailCode) return { codeRequired: false };
       await rateLimit(pool, config, `otp-minute:${email}`, 1, 60000);
       await rateLimit(pool, config, `otp-hour:${email}`, 5, 3600000);
       await rateLimit(pool, config, 'otp-global', 500, 3600000);
@@ -67,18 +68,24 @@ export function createAuth({ pool, config, mailer }) {
       }
     },
     async verifyCode(email, code) {
-      if (typeof code !== 'string' || !/^\d{6}$/.test(code)) throw new HttpError(400, 'Enter the six-digit code from your email.');
-      await rateLimit(pool, config, `verify:${email}`, 20, 3600000);
+      const open = !config.requireEmailCode;
+      // With codes off, an email alone signs in; office addresses are excluded so the
+      // admin access code stays the only way to office privileges.
+      if (open && config.admins.includes(email)) throw new HttpError(403, 'Office accounts sign in with the admin code at /admin/.');
+      if (!open && (typeof code !== 'string' || !/^\d{6}$/.test(code))) throw new HttpError(400, 'Enter the six-digit code from your email.');
+      await rateLimit(pool, config, `verify:${email}`, open ? 60 : 20, 3600000);
       const result = await transaction(pool, async conn => {
-        const [[otp]] = await conn.execute('SELECT * FROM dr_otp WHERE email=? FOR UPDATE', [email]);
-        if (!otp || Number(otp.expires_at) <= Date.now() || otp.attempts >= 5) return null;
-        const expected = Buffer.from(otp.code_hash, 'hex');
-        const supplied = Buffer.from(digest(config.secret, `otp:${email}:${code}`), 'hex');
-        if (expected.length !== supplied.length || !timingSafeEqual(expected, supplied)) {
-          await conn.execute('UPDATE dr_otp SET attempts=attempts+1 WHERE email=?', [email]);
-          return null; // Commit failed-attempt count; do not throw and roll it back.
+        if (!open) {
+          const [[otp]] = await conn.execute('SELECT * FROM dr_otp WHERE email=? FOR UPDATE', [email]);
+          if (!otp || Number(otp.expires_at) <= Date.now() || otp.attempts >= 5) return null;
+          const expected = Buffer.from(otp.code_hash, 'hex');
+          const supplied = Buffer.from(digest(config.secret, `otp:${email}:${code}`), 'hex');
+          if (expected.length !== supplied.length || !timingSafeEqual(expected, supplied)) {
+            await conn.execute('UPDATE dr_otp SET attempts=attempts+1 WHERE email=?', [email]);
+            return null; // Commit failed-attempt count; do not throw and roll it back.
+          }
+          await conn.execute('DELETE FROM dr_otp WHERE email=?', [email]);
         }
-        await conn.execute('DELETE FROM dr_otp WHERE email=?', [email]);
         const [created] = await conn.execute('INSERT IGNORE INTO dr_users (id,email) VALUES (?,?)', [randomUUID(), email]);
         const [[user]] = await conn.execute('SELECT id,email FROM dr_users WHERE email=?', [email]);
         const now = Date.now();

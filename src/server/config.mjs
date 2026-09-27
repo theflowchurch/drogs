@@ -31,6 +31,8 @@ export function configuration(env = process.env) {
     // Optional: a Telegram heads-up alongside the office email for issue reports.
     // Optional: Paystack secret key enables card / mobile-money payments (public key is NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY).
     paystack: env.PAYSTACK_SECRET_KEY?.trim() || null,
+    // Email one-time codes are off unless REQUIRE_EMAIL_CODE=true: members sign in with just their email.
+    requireEmailCode: env.REQUIRE_EMAIL_CODE === 'true',
     telegram: env.TELEGRAM_BOT_TOKEN?.trim() && env.TELEGRAM_CHAT_ID?.trim()
       ? { token: env.TELEGRAM_BOT_TOKEN.trim(), chat: env.TELEGRAM_CHAT_ID.trim() } : null,
     r2: { account: env.R2_ACCOUNT_ID, bucket: env.R2_BUCKET, accessKeyId: env.R2_ACCESS_KEY_ID, secretAccessKey: env.R2_SECRET_ACCESS_KEY, sessionToken: env.R2_SESSION_TOKEN || undefined },
