@@ -342,7 +342,10 @@ export default function RegistrationApp({ office = false }) {
       {!api.live && (
         <div className="reg-demo">
           Demo · saved in this browser only · email delivery and shared accounts
-          are not connected
+          are not connected ·{" "}
+          <a href="https://drogs.dagministry.org/">
+            live site: drogs.dagministry.org
+          </a>
         </div>
       )}
       {error && (

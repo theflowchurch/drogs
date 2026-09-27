@@ -5,20 +5,20 @@ import { configuration } from '../../src/server/config.mjs';
 import { readBody, createApi } from '../../src/server/api.mjs';
 import { prepareImage, canReadMedia } from '../../src/server/storage.mjs';
 import { sessionCookie } from '../../src/server/auth.mjs';
-const env = { DB_HOST: 'localhost', DB_NAME: 'db', DB_USER: 'user', DB_PASSWORD: 'test', APP_URL: 'https://drogsdagministry.org', SESSION_SECRET: 'x'.repeat(64), ADMIN_EMAILS: 'office@example.com', SITE_ACCESS_CODE: '1234', ADMIN_ACCESS_CODE: 'admin-test-code', SMTP_HOST: 'smtp.example.com', SMTP_USER: 'user', SMTP_PASSWORD: 'test', SMTP_FROM: 'office@example.com', R2_ACCOUNT_ID: 'a'.repeat(32), R2_BUCKET: 'private', R2_ACCESS_KEY_ID: 'test', R2_SECRET_ACCESS_KEY: 'test' };
+const env = { DB_HOST: 'localhost', DB_NAME: 'db', DB_USER: 'user', DB_PASSWORD: 'test', APP_URL: 'https://drogs.dagministry.org', SESSION_SECRET: 'x'.repeat(64), ADMIN_EMAILS: 'office@example.com', SITE_ACCESS_CODE: '1234', ADMIN_ACCESS_CODE: 'admin-test-code', SMTP_HOST: 'smtp.example.com', SMTP_USER: 'user', SMTP_PASSWORD: 'test', SMTP_FROM: 'office@example.com', R2_ACCOUNT_ID: 'a'.repeat(32), R2_BUCKET: 'private', R2_ACCESS_KEY_ID: 'test', R2_SECRET_ACCESS_KEY: 'test' };
 test('Hostinger configuration fails closed and session cookies are private', () => {
   assert.throws(() => configuration({}), /Missing server/);
   assert.throws(() => configuration({ ...env, SESSION_SECRET: 'weak' }), /SESSION_SECRET/);
-  assert.throws(() => configuration({ ...env, APP_URL: 'http://drogsdagministry.org' }), /HTTPS/);
+  assert.throws(() => configuration({ ...env, APP_URL: 'http://drogs.dagministry.org' }), /HTTPS/);
   const config = configuration(env);
   assert.deepEqual(config.admins, ['office@example.com']);
   assert.match(sessionCookie(config, 'token'), /HttpOnly; SameSite=Lax; Path=\/; Max-Age=43200; Secure/);
 });
 test('API rejects foreign origins and unauthenticated data requests', async () => {
   const api = createApi({ config: configuration(env), auth: { actor: async () => null } });
-  let response = await api(new Request('https://drogsdagministry.org/api/registration/action', { method: 'POST', headers: { origin: 'https://other.example' } }));
+  let response = await api(new Request('https://drogs.dagministry.org/api/registration/action', { method: 'POST', headers: { origin: 'https://other.example' } }));
   assert.equal(response.status, 403);
-  response = await api(new Request('https://drogsdagministry.org/api/registration/snapshot'));
+  response = await api(new Request('https://drogs.dagministry.org/api/registration/snapshot'));
   assert.equal(response.status, 401);
   assert.equal(response.headers.get('cache-control'), 'no-store');
 });

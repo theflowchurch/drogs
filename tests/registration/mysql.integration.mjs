@@ -24,7 +24,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   const pool = mysql.createPool({ ...options, database: db, connectionLimit: 5 });
   const mediaDir = await mkdtemp(`${tmpdir()}/drogs-mysql-test-`);
   const mails = [], objects = new Map();
-  const config = { origin: 'https://drogsdagministry.org', secure: true, secret: 't'.repeat(64), admins: ['office@example.com', 'browser-office@example.com'], siteCode: '1234', adminCode: 'admin-test-code', from: 'no-reply@example.com', r2: { account: 'a'.repeat(32), bucket: 'test-private', accessKeyId: 'test', secretAccessKey: 'test' } };
+  const config = { origin: 'https://drogs.dagministry.org', secure: true, secret: 't'.repeat(64), admins: ['office@example.com', 'browser-office@example.com'], siteCode: '1234', adminCode: 'admin-test-code', from: 'no-reply@example.com', r2: { account: 'a'.repeat(32), bucket: 'test-private', accessKeyId: 'test', secretAccessKey: 'test' } };
   const mailer = { sendMail: async mail => { mails.push(mail); await writeFile(`${mediaDir}/mail.json`, JSON.stringify(mails), { mode: 0o600 }); } };
   const auth = createAuth({ pool, config, mailer });
   const telegram = [];
