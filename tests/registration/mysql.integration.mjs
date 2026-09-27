@@ -24,7 +24,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   const pool = mysql.createPool({ ...options, database: db, connectionLimit: 5 });
   const mediaDir = await mkdtemp(`${tmpdir()}/drogs-mysql-test-`);
   const mails = [], objects = new Map();
-  const config = { origin: 'https://drogsdagministry.org', secure: true, secret: 't'.repeat(64), admins: ['office@example.com', 'browser-office@example.com'], from: 'no-reply@example.com', r2: { account: 'a'.repeat(32), bucket: 'test-private', accessKeyId: 'test', secretAccessKey: 'test' } };
+  const config = { origin: 'https://drogsdagministry.org', secure: true, secret: 't'.repeat(64), admins: ['office@example.com', 'browser-office@example.com'], siteCode: '1234', adminCode: 'admin-test-code', from: 'no-reply@example.com', r2: { account: 'a'.repeat(32), bucket: 'test-private', accessKeyId: 'test', secretAccessKey: 'test' } };
   const auth = createAuth({ pool, config, mailer: { sendMail: async mail => { mails.push(mail); await writeFile(`${mediaDir}/mail.json`, JSON.stringify(mails), { mode: 0o600 }); } } });
   const client = new S3Client({ region: 'auto', endpoint: `https://${config.r2.account}.r2.cloudflarestorage.com`, credentials: { accessKeyId: 'test', secretAccessKey: 'test' },
     requestChecksumCalculation: 'WHEN_REQUIRED', requestHandler: { handle: async request => {
@@ -59,6 +59,11 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   try {
     await migrate(pool); await migrate(pool); // Idempotent, preserves existing records.
     assert.equal((await call('snapshot')).status, 401);
+    assert.equal((await call('auth/access', '', { code: 'wrong', office: false })).status, 401);
+    const visitorAccess = await call('auth/access', '', { code: '1234', office: false });
+    assert.equal(visitorAccess.status, 200); assert.equal(visitorAccess.data.office, false);
+    const officeAccess = await call('auth/access', '', { code: 'admin-test-code', office: true });
+    assert.equal(officeAccess.status, 200); assert.equal(officeAccess.data.office, true);
     const office = await login('office@example.com'), bishop = await login('bishop@example.com'), pastor = await login('pastor@example.com'), stranger = await login('stranger@example.com');
     assert.equal(office.data.office, true);
     assert.equal(bishop.data.office, false);

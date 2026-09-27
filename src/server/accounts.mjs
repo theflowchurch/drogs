@@ -10,7 +10,7 @@ export async function readAccounts(pool, config, url) {
   const parse = value => typeof value === 'string' ? JSON.parse(value) : value;
   return { total: counts.total, page, pageSize: 50, data: rows.map(r => {
     const profile = parse(r.profile), registration = parse(r.registration);
-    return { id: r.id, email: r.email, name: registration?.data?.name || profile?.name || '', role: profile?.role || registration?.data?.role || '',
+    return { id: r.id, email: registration?.data?.email || profile?.email || r.email, name: registration?.data?.name || profile?.name || '', role: profile?.role || registration?.data?.role || '',
       office: config.admins.includes(r.email), signedUpAt: r.signed_up_at ? Number(r.signed_up_at) : null,
       lastLoginAt: r.last_login_at ? Number(r.last_login_at) : null, loginCount: Number(r.login_count || 0),
       registrationStatus: registration?.status || 'not_started', registrationYear: registration?.year || null };

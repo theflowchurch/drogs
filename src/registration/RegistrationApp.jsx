@@ -200,16 +200,19 @@ export default function RegistrationApp({ office = false }) {
   useEffect(() => {
     api
       .currentActor()
-      .then(setActor)
+      .then((current) => {
+        setActor(current);
+        if (current) setGate(true);
+      })
       .catch((e) => setError(e.message));
     const until = Number(
       sessionStorage.getItem("drogs-registration-gate") || 0,
     );
-    setGate(api.live || until > Date.now());
+    setGate(until > Date.now());
   }, []);
   useEffect(() => {
     if (actor) {
-      if (api.live) setGate(true);
+      setGate(true);
       refresh().catch((e) => setError(e.message));
     }
   }, [actor, refresh]);
@@ -306,17 +309,13 @@ export default function RegistrationApp({ office = false }) {
           <strong>DROGS</strong>
         </a>
         <div className="reg-header-right">
-          <span className="reg-cycle">
-            <i />
-            {state?.year || 2027} annual registration
-          </span>
           {gate && actor ? (
             <button className="reg-text" onClick={logout}>
               Sign out
             </button>
           ) : (
             <a className="reg-text" href={`${base}/${office ? "" : "admin/"}`}>
-              {office ? "Registration portal" : "Office sign in"} ↗
+              {office ? "Registration" : "Sign in"} ↗
             </a>
           )}
         </div>
@@ -346,27 +345,29 @@ export default function RegistrationApp({ office = false }) {
           </button>
         </div>
       )}
-      {!gate && !api.live ? (
+      {!gate ? (
         <Gate
           office={office}
-          onEnter={() => {
-            sessionStorage.setItem(
-              "drogs-registration-gate",
-              String(Date.now() + 1800000),
-            );
+          onEnter={(code) => run(async () => {
+            if (api.live) setActor(await api.accessWithCode(code, office));
+            else if (code !== "1234") throw Error("That access code is not correct.");
+            sessionStorage.setItem("drogs-registration-gate", String(Date.now() + 1800000));
             setGate(true);
-          }}
+          })}
         />
-      ) : !actor ? (
+      ) : !actor && !api.live ? (
         <Account office={office} run={run} busy={busy} onActor={setActor} />
+      ) : !actor ? (
+        <div className="reg-loading" role="status">
+          Opening your workspace…
+        </div>
       ) : !state ? (
         <div className="reg-loading" role="status">
           Opening your workspace…
         </div>
       ) : office && !isOffice ? (
         <Empty title="Office access is required">
-          This verified email has not been assigned office access. Sign out and
-          use your office account.
+          This account has not been assigned office access.
         </Empty>
       ) : (
         <div className="reg-shell">
@@ -527,13 +528,6 @@ export default function RegistrationApp({ office = false }) {
           </main>
         </div>
       )}
-      <footer className="reg-footer">
-        <span>DROGS</span>
-        <span>
-          Annual registration · Bishops $100 USD / Pastors $50 USD ·
-          Non-refundable
-        </span>
-      </footer>
     </div>
   );
 }
@@ -559,20 +553,20 @@ function Gate({ office, onEnter }) {
             : "Register your details. Confirm your place. Continue the work."}
         </p>
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            if (password === "1234") onEnter();
-            else setError("That password is not correct.");
+            setError("");
+            if (!(await onEnter(password))) setError("That access code is not correct.");
           }}
         >
           <label className="sr-only" htmlFor="entrance">
-            Platform password
+            {office ? "Admin code" : "Website code"}
           </label>
           <input
             id="entrance"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter platform password"
+            placeholder={office ? "Enter admin code" : "Enter website code"}
             type="password"
             required
             autoComplete="current-password"
@@ -583,7 +577,7 @@ function Gate({ office, onEnter }) {
         </form>
         {error && <p role="alert">{error}</p>}
         <small>
-          Your personal account comes next. No bishop or pastor code needed.
+          {office ? "Private access for the DROGS office team." : "Enter 1234 to begin your registration."}
         </small>
       </div>
     </section>

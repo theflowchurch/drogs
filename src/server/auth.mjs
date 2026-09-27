@@ -28,7 +28,29 @@ export async function rateLimit(pool, config, key, limit, period, now = Date.now
   if (!allowed) throw new HttpError(429, 'Too many attempts. Please wait before trying again.');
 }
 export function createAuth({ pool, config, mailer }) {
+  const createSession = async (conn, user) => {
+    const token = randomBytes(32).toString('hex');
+    await conn.execute('INSERT INTO dr_sessions (token_hash,user_id,expires_at) VALUES (?,?,?)', [digest(config.secret, `session:${token}`), user.id, Date.now() + 43200000]);
+    return { actor: { ...user, office: config.admins.includes(user.email) }, token };
+  };
   return {
+    async accessWithCode(code, office = false) {
+      if (typeof code !== 'string' || code.length > 64) throw new HttpError(401, 'That access code is not correct.');
+      await rateLimit(pool, config, `access-code:${office ? 'office' : 'registration'}`, 50, 60000);
+      const expected = Buffer.from(digest(config.secret, `access:${office ? config.adminCode : config.siteCode}`), 'hex');
+      const supplied = Buffer.from(digest(config.secret, `access:${code}`), 'hex');
+      if (!timingSafeEqual(expected, supplied)) throw new HttpError(401, 'That access code is not correct.');
+      return transaction(pool, async conn => {
+        const email = office ? config.admins[0] : `visitor-${randomUUID()}@drogs.invalid`;
+        const id = randomUUID();
+        await conn.execute('INSERT IGNORE INTO dr_users (id,email) VALUES (?,?)', [id, email]);
+        const [[user]] = await conn.execute('SELECT id,email FROM dr_users WHERE email=?', [email]);
+        const now = Date.now();
+        await conn.execute('INSERT INTO dr_account_activity (user_id,signed_up_at,last_login_at,login_count) VALUES (?,?,?,1) ON DUPLICATE KEY UPDATE last_login_at=VALUES(last_login_at),login_count=login_count+1', [user.id, now, now]);
+        await conn.execute('INSERT INTO dr_logins (user_id,logged_in_at) VALUES (?,?)', [user.id, now]);
+        return createSession(conn, user);
+      });
+    },
     async requestCode(email) {
       await rateLimit(pool, config, `otp-minute:${email}`, 1, 60000);
       await rateLimit(pool, config, `otp-hour:${email}`, 5, 3600000);
@@ -62,9 +84,7 @@ export function createAuth({ pool, config, mailer }) {
         const now = Date.now();
         await conn.execute('INSERT INTO dr_account_activity (user_id,signed_up_at,last_login_at,login_count) VALUES (?,?,?,1) ON DUPLICATE KEY UPDATE last_login_at=VALUES(last_login_at),login_count=login_count+1', [user.id, created.affectedRows ? now : null, now]);
         await conn.execute('INSERT INTO dr_logins (user_id,logged_in_at) VALUES (?,?)', [user.id, now]);
-        const token = randomBytes(32).toString('hex');
-        await conn.execute('INSERT INTO dr_sessions (token_hash,user_id,expires_at) VALUES (?,?,?)', [digest(config.secret, `session:${token}`), user.id, Date.now() + 43200000]);
-        return { actor: { ...user, office: config.admins.includes(user.email) }, token };
+        return createSession(conn, user);
       });
       if (!result) throw new HttpError(401, 'That code is invalid or expired. Request a new code.');
       return result;

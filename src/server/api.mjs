@@ -49,6 +49,12 @@ export function createApi({ pool, config, auth, storage, logger = console }) {
         await auth.requestCode(emailAddress(email));
         return json({ ok: true });
       }
+      if (path === '/api/registration/auth/access' && method === 'POST') {
+        const { code, office = false } = await jsonBody(request);
+        const session = await auth.accessWithCode(code, office === true);
+        await auth.signOut(request);
+        return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token) });
+      }
       if (path === '/api/registration/auth/verify' && method === 'POST') {
         const { email, token } = await jsonBody(request);
         const session = await auth.verifyCode(emailAddress(email), token);

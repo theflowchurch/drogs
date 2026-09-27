@@ -1,6 +1,6 @@
 export function configuration(env = process.env) {
   const required = ['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'APP_URL', 'SESSION_SECRET',
-    'ADMIN_EMAILS', 'SMTP_HOST', 'SMTP_USER', 'SMTP_PASSWORD', 'SMTP_FROM',
+    'ADMIN_EMAILS', 'SITE_ACCESS_CODE', 'ADMIN_ACCESS_CODE', 'SMTP_HOST', 'SMTP_USER', 'SMTP_PASSWORD', 'SMTP_FROM',
     'R2_ACCOUNT_ID', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY'];
   const missing = required.filter(key => !env[key]?.trim());
   if (missing.length) throw Error(`Missing server environment variables: ${missing.join(', ')}`);
@@ -20,6 +20,7 @@ export function configuration(env = process.env) {
   };
   return {
     origin: origin.origin, secure: origin.protocol === 'https:', secret: env.SESSION_SECRET, admins,
+    siteCode: env.SITE_ACCESS_CODE, adminCode: env.ADMIN_ACCESS_CODE,
     db: { host: env.DB_HOST, port: port('DB_PORT', 3306), database: env.DB_NAME,
       user: env.DB_USER, password: env.DB_PASSWORD, charset: 'utf8mb4', timezone: 'Z',
       ...(env.DB_SSL === 'true' ? { ssl: { rejectUnauthorized: true, ...(env.DB_SSL_CA ? { ca: env.DB_SSL_CA.replace(/\\n/g, '\n') } : {}) } } : {}) },

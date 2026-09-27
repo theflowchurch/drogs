@@ -1,4 +1,4 @@
-import json, os
+import os
 from pathlib import Path
 from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright, expect
@@ -18,24 +18,17 @@ with sync_playwright() as p:
     page = context.new_page()
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
-    def login(email, admin=False):
+    def login(admin=False):
         page.goto(BASE + ('/admin' if admin else '/'))
         page.wait_for_load_state('networkidle')
-        expect(page.get_by_label('Platform password')).not_to_be_visible()
         expect(page.get_by_text('Demo ·', exact=False)).not_to_be_visible()
-        page.get_by_label('Email address', exact=True).fill(email)
-        page.get_by_role('button', name='Send sign-in code').click()
-        page.get_by_label('One-time email code').wait_for()
-        import re
-        mail = next(m for m in reversed(json.loads((MEDIA/'mail.json').read_text())) if m['to'] == email)
-        token = re.search(r'code is (\d{6})', mail['text'])[1]
-        page.get_by_label('One-time email code').fill(token)
-        page.get_by_role('button', name='Verify and sign in').click()
+        page.get_by_label('Admin code' if admin else 'Website code', exact=True).fill('admin-test-code' if admin else '1234')
+        page.get_by_role('button', name='Enter DROGS').click()
         page.locator('main').wait_for()
     try:
-        login('browser-member@example.com')
+        login()
         page.get_by_label('Registering as').select_option('bishop')
-        for label, value in [('First name','Browser'),('Last name','Bishop'),('Phone number','+233201234567'),('Date of birth','1990-02-01'),('Country','Ghana'),('City','Accra')]:
+        for label, value in [('First name','Browser'),('Last name','Bishop'),('Email address','browser-member@example.com'),('Phone number','+233201234567'),('Date of birth','1990-02-01'),('Country','Ghana'),('City','Accra')]:
             page.get_by_label(label, exact=True).fill(value)
         page.get_by_label('Organization',exact=True).select_option('First Love')
         page.get_by_label('Denomination',exact=True).select_option('First Love Church')
@@ -56,9 +49,9 @@ with sync_playwright() as p:
         expect(page.get_by_text('Your registration has been received.')).to_be_visible()
         assert page.evaluate("localStorage.getItem('drogs-registration-v1')") is None
         page.get_by_role('button',name='Sign out',exact=True).click()
-        page.get_by_label('Email address',exact=True).wait_for()
+        page.get_by_label('Website code',exact=True).wait_for()
         page.set_viewport_size({'width':1440,'height':1050})
-        login('browser-office@example.com', True)
+        login(True)
         assert page.url.endswith('/admin/')
         page.get_by_role('button',name='Bishop approvals',exact=True).click()
         page.get_by_role('button',name='Browser Bishop').click()
