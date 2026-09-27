@@ -734,38 +734,32 @@ function Account({ office, signup = false, run, busy, onActor }) {
     [token, setToken] = useState("");
   return (
     <section className={`reg-account ${signup ? "signup" : "signin"}`}>
-      {signup && (
-        <div
-          className="reg-hero-image"
-          style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
-          aria-hidden="true"
-        />
-      )}
+      <div
+        className="reg-hero-image"
+        style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
+        aria-hidden="true"
+      />
       <div>
         <img
           className="reg-account-mark"
           src={`${base}/assets/brand/castle-icon.png`}
           alt=""
         />
-        <span className="reg-eyebrow">
-          {office ? "OFFICE ACCESS" : signup ? "NEW ACCOUNT" : "KURIAKE CASTLE"}
-        </span>
-        <h1>
-          {sent
-            ? "Check your email."
-            : signup
-              ? "Create your account."
-              : "Sign in."}
-        </h1>
-        <p>
-          {signup
-            ? api.live
-              ? "Enter your email and we’ll send a one-time code. Then register your details and complete your commitment."
-              : "Enter your email to create your account on this device."
-            : api.live
-              ? "Use the email you registered with. We’ll send a one-time code."
-              : "Enter the email you registered with on this device."}
-        </p>
+        {signup || office ? (
+          <>
+            <span className="reg-eyebrow">
+              {office ? "OFFICE ACCESS" : "NEW ACCOUNT"}
+            </span>
+            <h1>{sent ? "Check your email." : "Create your account."}</h1>
+            <p>
+              {api.live
+                ? "Enter your email and we’ll send a one-time code. Then register your details and complete your commitment."
+                : "Enter your email to create your account on this device."}
+            </p>
+          </>
+        ) : (
+          <h1>Kuriake Castle</h1>
+        )}
         {signup ? (
           <ol className="reg-steps">
             <li>
@@ -845,11 +839,13 @@ function Account({ office, signup = false, run, busy, onActor }) {
             Change email or resend code
           </button>
         )}
-        <p className="reg-small">
-          {api.live
-            ? "Your email is your account identity. Keep using the same address each year."
-            : "Accounts and uploads remain on this device until the site is connected."}
-        </p>
+        {signup && (
+          <p className="reg-small">
+            {api.live
+              ? "Your email is your account identity. Keep using the same address each year."
+              : "Accounts and uploads remain on this device until the site is connected."}
+          </p>
+        )}
         {signup && (
           <p className="reg-small">
             Already registered? <a href={`${base}/`}>Sign in</a>
