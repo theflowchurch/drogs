@@ -64,7 +64,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(visitorAccess.status, 200); assert.equal(visitorAccess.data.office, false);
     const officeAccess = await call('auth/access', '', { code: 'admin-test-code', office: true });
     assert.equal(officeAccess.status, 200); assert.equal(officeAccess.data.office, true);
-    const office = await login('office@example.com'), bishop = await login('bishop@example.com'), pastor = await login('pastor@example.com'), stranger = await login('stranger@example.com');
+    const office = officeAccess, bishop = await login('bishop@example.com'), pastor = await login('pastor@example.com'), stranger = await login('stranger@example.com');
     assert.equal(office.data.office, true);
     assert.equal(bishop.data.office, false);
     const bishopPhoto = await upload(bishop), pastorPhoto = await upload(pastor);
