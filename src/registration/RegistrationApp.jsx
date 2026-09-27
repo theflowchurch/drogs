@@ -183,7 +183,8 @@ export default function RegistrationApp({
   // Members sign in with their email; only the office and the browse-only
   // directory sit behind an access code.
   const gated = office || browse;
-  const [gate, setGate] = useState(!gated),
+  const [directoryRole, setDirectoryRole] = useState("bishop"),
+    [gate, setGate] = useState(!gated),
     [actor, setActor] = useState(null),
     [state, setState] = useState(null),
     [busy, setBusy] = useState(false),
@@ -426,14 +427,14 @@ export default function RegistrationApp({
             <div className="reg-page-heading">
               <div>
                 <span className="reg-eyebrow">Kuriake Castle</span>
-                <h1>Directory</h1>
+                <h1>{directoryHeading(directoryRole)}</h1>
                 <p>Every bishop and pastor in Kuriake Castle.</p>
               </div>
             </div>
-            <MemberDirectory />
+            <MemberDirectory role={directoryRole} setRole={setDirectoryRole} />
           </main>
         </div>
-      ) : !actor && !office ? (
+      ) : !actor && (!office || !api.live) ? (
         <Account
           office={office}
           signup={signup}
@@ -518,7 +519,9 @@ export default function RegistrationApp({
                       <span className="reg-eyebrow">
                         {office ? "KURIAKE CASTLE / OFFICE" : "KURIAKE CASTLE / YOUR MINISTRY"}
                       </span>
-                      <h1>{tab}</h1>
+                      <h1>
+                        {tab === "Directory" ? directoryHeading(directoryRole) : tab}
+                      </h1>
                       <p>
                         {
                           {
@@ -547,9 +550,17 @@ export default function RegistrationApp({
                   {tab === "API keys" && <ApiKeys run={run} />}
                   {tab === "Directory" &&
                     (office ? (
-                      <Directory state={state} year={Number(year)} />
+                      <Directory
+                        state={state}
+                        year={Number(year)}
+                        role={directoryRole}
+                        setRole={setDirectoryRole}
+                      />
                     ) : (
-                      <MemberDirectory />
+                      <MemberDirectory
+                        role={directoryRole}
+                        setRole={setDirectoryRole}
+                      />
                     ))}
                   {tab === "Unclaimed" && (
                     <ReviewQueue
@@ -933,7 +944,7 @@ function Participant({
             </h3>
             <p>
               {current.status === "confirmed"
-                ? "You can now submit your annual commitment."
+                ? "You can now pay your annual renewal ministerial fee."
                 : current.status === "pending"
                   ? "The office will verify your account. Once approved, you can submit your pastor list and make your commitment."
                   : current.status === "removed"
@@ -1012,7 +1023,7 @@ function RegistrationForm({
           <span className="reg-eyebrow">
             {state.year} / ANNUAL REGISTRATION
           </span>
-          <h1>{review ? "Review your details." : "Let’s make it official."}</h1>
+          <h1>{review ? "Review your details." : "Role of Good Standing."}</h1>
           <p>
             {review
               ? "Check your details before submitting your annual registration."
@@ -1082,7 +1093,7 @@ function RegistrationForm({
             </p>
           </div>
           <div className="reg-amount">
-            <span>Annual commitment</span>
+            <span>Annual renewal ministerial fee</span>
             <strong>
               ${AMOUNTS[data.role]}
               <small>USD</small>
@@ -1347,7 +1358,7 @@ function RegistrationForm({
                 mine.
               </label>
               <p className="reg-small">
-                The annual commitment is ${AMOUNTS[data.role]} USD and is
+                The annual renewal ministerial fee is ${AMOUNTS[data.role]} USD and is
                 non-refundable. No payment is collected on this screen.
               </p>
               <div className="reg-form-actions">
@@ -1390,7 +1401,7 @@ function CommitmentPreview({ role, country }) {
   const rate = rateFor(rates, currency);
   return (
     <p className="reg-local-amount reg-field wide">
-      Annual commitment: ${amount} USD
+      Annual renewal ministerial fee: ${amount} USD
       {rate > 0
         ? ` · about ${localAmount(amount, rate, currency)} in ${country.trim()}`
         : currency === "USD"
@@ -1472,7 +1483,7 @@ function Payment({ current, actor, run, refresh }) {
   const rate = rateFor(rates, currency);
   return (
     <section className="reg-card reg-payment">
-      <span className="reg-eyebrow">ANNUAL COMMITMENT</span>
+      <span className="reg-eyebrow">ANNUAL RENEWAL MINISTERIAL FEE</span>
       <h2>
         ${current.amount}
         <small> USD</small>
@@ -1843,9 +1854,10 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
     </>
   );
 }
-function Directory({ state, year }) {
-  const [role, setRole] = useState("bishop"),
-    [filter, setFilter] = useState({
+const directoryHeading = (role) =>
+  `Directory · ${role === "bishop" ? "Bishops" : "Pastors"} Role of Good Standing`;
+function Directory({ state, year, role, setRole }) {
+  const [filter, setFilter] = useState({
       q: "",
       org: "",
       denomination: "",
@@ -2108,9 +2120,8 @@ function PublicRecord({ person: p, onOpen }) {
     </>
   );
 }
-function MemberDirectory() {
-  const [role, setRole] = useState("bishop"),
-    [filter, setFilter] = useState({
+function MemberDirectory({ role, setRole }) {
+  const [filter, setFilter] = useState({
       q: "",
       org: "",
       denomination: "",
