@@ -34,7 +34,7 @@ import {
 import { checkReceiptImage } from "./receipt-check.mjs";
 import { portraitStyle } from "../runtime/portrait-framing";
 import people from "./reference-people.json";
-// The office's existing records. Bishops are the linkable approval references;
+// Everyone DROGS already knows. Bishops are the linkable approval references;
 // the whole roster backs the Directory and the member search.
 const references = people.filter((p) => p.role === "bishop");
 const index = referenceIndex(people);
@@ -452,7 +452,7 @@ export default function RegistrationApp({ office = false, browse = false }) {
             <div className="reg-side-note">
               <b>
                 {office
-                  ? "A clear record. Every year."
+                  ? "Every bishop and pastor. Every year."
                   : profile?.name || "Welcome to DROGS"}
               </b>
               <p>
@@ -501,7 +501,7 @@ export default function RegistrationApp({ office = false, browse = false }) {
                               "The pastors submitted by each bishop, including changes during the year.",
                             Payments:
                               "Review payment screenshots and confirm received commitments.",
-                            History: "Previous cycles and a record of changes.",
+                            History: "Previous cycles and what changed.",
                             Accounts: "See who has created an account and when they last signed in.",
                             "API keys": "Give connected applications controlled, read-only access to DROGS.",
                           }[tab]
@@ -1678,7 +1678,7 @@ function DirectoryFilters({ filter, setFilter, options }) {
       )}
       {"state" in filter && (
         <select
-          aria-label="Filter updated records"
+          aria-label="Filter updated people"
           value={filter.state}
           onChange={(e) => set({ state: e.target.value })}
         >
@@ -2434,11 +2434,11 @@ function ReferenceReview({ rows, perform, canEdit }) {
     <section className="reg-card reg-reference-review">
       <div className="reg-section-head">
         <div>
-          <h2>Verify existing records</h2>
+          <h2>Pastors already in DROGS</h2>
           <p>
             {pending.length.toLocaleString()} on this list already appear in
-            DROGS. Confirm each person so their record is updated instead of
-            duplicated.
+            DROGS. Confirm each person so their information is updated instead
+            of a second entry being created.
           </p>
         </div>
       </div>
@@ -2495,7 +2495,7 @@ function ReferenceReview({ rows, perform, canEdit }) {
             </div>
           </div>
           {entry.matches.length > 1 && (
-            <Field label="Which record is this?">
+            <Field label="Which pastor is this?">
               <select value={pick} onChange={(e) => setPick(e.target.value)}>
                 {entry.matches.map((m) => (
                   <option key={m.reference.id} value={m.reference.id}>
@@ -2548,13 +2548,13 @@ function ReferenceReview({ rows, perform, canEdit }) {
                 await perform(
                   "linkReference",
                   { rosterId: row.id, referenceId: reference.id },
-                  `${reference.name} confirmed. The DROGS record now shows the details on your list.`,
+                  `${reference.name} confirmed. DROGS now shows the details on your list.`,
                 )
               )
                 setOpenId(null);
             }}
           >
-            Confirm and update the DROGS record
+            Confirm and update their information
           </button>
           <button className="reg-text" onClick={() => setOpenId(null)}>
             Not the same person · keep as a new pastor

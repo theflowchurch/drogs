@@ -403,7 +403,7 @@ export function applyAction(
       );
     const id = String(payload.referenceId || "");
     if (!/^[BP]\d+$/.test(id))
-      throw Error("Choose an existing record to confirm.");
+      throw Error("Choose the pastor to confirm.");
     if (
       state.rosters.some(
         (r) =>
@@ -414,7 +414,7 @@ export function applyAction(
       )
     )
       throw Error(
-        "That existing record is already confirmed for another pastor this year.",
+        "That person is already confirmed for another pastor this year.",
       );
     row.referenceId = id;
     row.referenceConfirmedBy = actor.id;
@@ -576,7 +576,7 @@ export function referenceIndex(references) {
   }
   return { byId, byName, all: references };
 }
-// Existing records that may be the same person as an annual-list entry. The
+// People DROGS already holds who may be the same person as an annual-list entry. The
 // name must match exactly once normalized; a matching email or phone makes it
 // near certain. A person still confirms from the photo before any record
 // changes, so a close spelling is never linked automatically.
