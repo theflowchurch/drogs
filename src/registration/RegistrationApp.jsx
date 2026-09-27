@@ -2890,7 +2890,7 @@ function History({ state, records, office, actor, year, perform }) {
                   assignBishop: "Supervising bishop assigned",
                   payment: "Payment proof submitted",
                   reviewPayment: "Payment reviewed",
-                  openYear: "Annual cycle opened",
+                  openYear: "Next year opened",
                   carryRoster: "Prior list reconfirmed",
                 }[a.action] || a.action}
               </b>

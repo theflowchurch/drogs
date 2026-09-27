@@ -5,6 +5,12 @@ export function requestHandler({ origin, api, nextHandler }) {
     res.setHeader('Referrer-Policy', 'same-origin');
     res.setHeader('X-Frame-Options', 'DENY');
     const path = (req.url || '/').split('?')[0];
+    // kuriakecastle.org is the only public address; the earlier domain sends people there.
+    const host = String(req.headers.host || '').split(':')[0];
+    if (host === 'drogs.dagministry.org' && !path.startsWith('/api/')) {
+      res.writeHead(301, { Location: `https://kuriakecastle.org${req.url || '/'}`, 'Cache-Control': 'no-store' });
+      return res.end();
+    }
     if (!path.startsWith('/api/registration/') && !path.startsWith('/api/v1/')) return nextHandler(req, res);
     try {
       // The site answers on every domain attached to it; the request's own host is its origin.

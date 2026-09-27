@@ -7,7 +7,7 @@ Choose a separate key for each connected app, a descriptive name, permissions, a
 Send requests to the same domain as the registration app:
 
 ```sh
-curl 'https://drogs.dagministry.org/api/v1/registrations?year=2027&limit=50' \
+curl 'https://kuriakecastle.org/api/v1/registrations?year=2027&limit=50' \
   -H 'Authorization: Bearer YOUR_DROGS_API_KEY'
 ```
 
