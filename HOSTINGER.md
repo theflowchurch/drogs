@@ -4,7 +4,7 @@ The source now includes a Node.js backend for MySQL and private Cloudflare R2 im
 
 ## Deployment
 
-Use the **source** repository `theflowchurch/drogs`, branch `codex/annual-registration`. The repository `jkgbafa/drogs-registration` contains only the GitHub Pages demo export and cannot run this backend.
+Use the **source** repository `theflowchurch/drogs`, branch `codex/annual-registration`. The site is connected through the Hostinger GitHub App with auto-deployment enabled on that branch, so every push builds and restarts the app; **Redeploy** in hPanel or `POST …/nodejs/builds` with `source_type: git` runs the same pipeline on demand. Keep the auto-deployment branch set to `codex/annual-registration` (it was previously pointed at `codex/registration-api-keys`, which is why pushes did not go live). `jkgbafa/drogs-registration` only redirects to the domain.
 
 1. Create a Hostinger **Node.js application** using Node 22 or newer. Use this source folder as the application root.
 2. Add the variables in `HOSTINGER.env.example` to the application's environment settings at **build and runtime**. The local `.env` is private, ignored by Git, and must not be uploaded to a public web directory.
