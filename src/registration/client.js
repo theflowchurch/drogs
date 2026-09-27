@@ -32,6 +32,11 @@ const supabase = () =>
     auth: { storageKey: "drogs-registration-auth" },
   }));
 const sessionKey = "drogs-registration-demo-account";
+// Once an account exists on this device, signing in again should not ask for
+// the email a second time. In connected mode the session cookie does this and
+// a new sign-in still needs the one-time code; only the demo remembers locally.
+const rememberedKey = (office) =>
+  `drogs-registration-demo-remembered:${office ? "office" : "member"}`;
 const read = () =>
   JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || emptyState();
 function mediaDB() {
@@ -63,11 +68,16 @@ async function fileOperation(mode, fn) {
 function check(error) {
   if (error) throw Error(error.message);
 }
-export async function currentActor() {
+export async function currentActor(office = false) {
   if (mysqlBackend) return server("auth/me");
   if (configError)
     throw Error("Both Supabase URL and public key must be configured.");
-  if (!live) return JSON.parse(sessionStorage.getItem(sessionKey) || "null");
+  if (!live)
+    return JSON.parse(
+      sessionStorage.getItem(sessionKey) ||
+        localStorage.getItem(rememberedKey(office)) ||
+        "null",
+    );
   const { data, error } = await supabase().auth.getUser();
   if (error || !data.user) return null;
   return { id: data.user.id, email: data.user.email };
@@ -98,14 +108,20 @@ export function demoSignIn(email, office = false) {
   const p = read().profiles.find((p) => normalEmail(p.email) === email);
   const actor = { id: p?.id || crypto.randomUUID(), email, office };
   sessionStorage.setItem(sessionKey, JSON.stringify(actor));
+  localStorage.setItem(rememberedKey(office), JSON.stringify(actor));
   return actor;
 }
-export async function signOut() {
+// Signing out deliberately forgets the account; the idle lock only ends the
+// session, so the entrance password is asked for again but the account is not.
+export async function signOut(office = false, forget = true) {
   if (mysqlBackend) return server("auth/signout", {});
   if (live) {
     const { error } = await supabase().auth.signOut();
     check(error);
-  } else sessionStorage.removeItem(sessionKey);
+  } else {
+    sessionStorage.removeItem(sessionKey);
+    if (forget) localStorage.removeItem(rememberedKey(office));
+  }
 }
 export async function snapshot(actor) {
   if (mysqlBackend) return server("snapshot");
@@ -179,3 +195,15 @@ export const revokeKey = id => server('keys/revoke', { id });
 
 export const accounts = (search = '', page = 1) => server(`accounts?search=${encodeURIComponent(search)}&page=${page}`);
 export const logins = (user, before = '') => server(`logins?user=${encodeURIComponent(user)}&before=${encodeURIComponent(before)}`);
+
+export const supportAvailable = mysqlBackend;
+const SUPPORT_KEY = "drogs-registration-support";
+// In the demo nothing leaves the browser; the report is kept so the flow can be
+// checked end to end without pretending an email was sent.
+export async function reportIssue(actor, input) {
+  if (mysqlBackend) return server("support", input);
+  const saved = JSON.parse(localStorage.getItem(SUPPORT_KEY) || "[]");
+  saved.push({ ...input, actor: actor?.email || "", at: new Date().toISOString() });
+  localStorage.setItem(SUPPORT_KEY, JSON.stringify(saved.slice(-50)));
+  return { ok: true, delivered: false };
+}

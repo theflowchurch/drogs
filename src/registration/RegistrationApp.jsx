@@ -25,6 +25,13 @@ import {
   referenceMatches,
   directoryPeople,
 } from "./model.mjs";
+import {
+  currencyFor,
+  loadRates,
+  localAmount,
+  rateFor,
+} from "./exchange.mjs";
+import { checkReceiptImage } from "./receipt-check.mjs";
 import people from "./reference-people.json";
 // The office's existing records. Bishops are the linkable approval references;
 // the whole roster backs the Directory and the member search.
@@ -208,7 +215,7 @@ export default function RegistrationApp({ office = false }) {
     }, message);
   useEffect(() => {
     api
-      .currentActor()
+      .currentActor(office)
       .then((current) => {
         setActor(current);
         if (current) setGate(true);
@@ -247,7 +254,7 @@ export default function RegistrationApp({ office = false }) {
         String(Date.now() + 1800000),
       );
       timeout = setTimeout(() => {
-        api.signOut().finally(() => {
+        api.signOut(office, false).finally(() => {
           setActor(null);
           setGate(false);
           sessionStorage.removeItem("drogs-registration-gate");
@@ -294,7 +301,7 @@ export default function RegistrationApp({ office = false }) {
       ];
   async function logout() {
     await run(async () => {
-      await api.signOut();
+      await api.signOut(office);
       setActor(null);
       setState(null);
       setGate(false);
@@ -543,9 +550,82 @@ export default function RegistrationApp({ office = false }) {
               )}
             </fieldset>
           </main>
+          <HelpButton actor={actor} run={run} />
         </div>
       )}
     </div>
+  );
+}
+// Anyone stuck can report it from any screen. The office receives an email,
+// with an optional Telegram heads-up, when the connected backend is running.
+function HelpButton({ actor, run }) {
+  const [open, setOpen] = useState(false),
+    [message, setMessage] = useState(""),
+    [contact, setContact] = useState(""),
+    [sent, setSent] = useState(false);
+  return (
+    <>
+      <button
+        className="reg-help-button"
+        onClick={() => {
+          setOpen(true);
+          setSent(false);
+          setContact(actor?.email || "");
+        }}
+      >
+        <span aria-hidden="true">?</span> Any issues?
+      </button>
+      {open && (
+        <Dialog title="Report a problem" onClose={() => setOpen(false)}>
+          {sent ? (
+            <div className="reg-status-message confirmed">
+              <h3>Thank you — the office has your report.</h3>
+              <p>
+                {api.supportAvailable
+                  ? "Someone will look at it and reply to the address you gave."
+                  : "This is the browser demo, so nothing was actually sent. On the live site this reaches the office by email."}
+              </p>
+            </div>
+          ) : (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                run(async () => {
+                  await api.reportIssue(actor, { message, contact });
+                  setMessage("");
+                  setSent(true);
+                });
+              }}
+            >
+              <p className="reg-small">
+                Tell us what happened and what you were trying to do. Do not
+                include passwords or payment card numbers.
+              </p>
+              <Field label="What went wrong?">
+                <textarea
+                  rows={5}
+                  required
+                  minLength={5}
+                  maxLength={4000}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="I tried to upload my receipt and it would not accept the photo."
+                />
+              </Field>
+              <Field label="Email for a reply">
+                <input
+                  type="email"
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value)}
+                  autoComplete="email"
+                />
+              </Field>
+              <button className="reg-primary full">Send to the office →</button>
+            </form>
+          )}
+        </Dialog>
+      )}
+    </>
   );
 }
 function Gate({ office, onEnter }) {
@@ -1225,7 +1305,19 @@ function RegistrationForm({
 }
 function Payment({ current, actor, run, refresh }) {
   const [proof, setProof] = useState(current.proof || ""),
-    [ack, setAck] = useState(false);
+    [ack, setAck] = useState(false),
+    [receiptNote, setReceiptNote] = useState(""),
+    [rates, setRates] = useState(null);
+  const currency = currencyFor(current.data.country);
+  useEffect(() => {
+    if (!currency || currency === "USD") return;
+    let live = true;
+    loadRates().then((value) => live && setRates(value));
+    return () => {
+      live = false;
+    };
+  }, [currency]);
+  const rate = rateFor(rates, currency);
   return (
     <section className="reg-card reg-payment">
       <span className="reg-eyebrow">ANNUAL COMMITMENT</span>
@@ -1233,6 +1325,17 @@ function Payment({ current, actor, run, refresh }) {
         ${current.amount}
         <small> USD</small>
       </h2>
+      {rate > 0 && (
+        <p className="reg-local-amount">
+          about {localAmount(current.amount, rate, currency)} in{" "}
+          {current.data.country}
+          <small>
+            Indicative rate, {rates.updated || "recently updated"}. DROGS is
+            paid in US dollars; your bank or mobile-money provider sets the
+            final amount.
+          </small>
+        </p>
+      )}
       <b>Non-refundable</b>
       <p>
         {current.year} · {titleCase(current.data.role)}
@@ -1295,13 +1398,25 @@ function Payment({ current, actor, run, refresh }) {
                   disabled={api.live && !paymentInstructions}
                   onChange={(e) => {
                     const file = e.target.files?.[0];
-                    if (file)
-                      run(async () =>
-                        setProof(await api.upload(actor, file, "receipt")),
+                    e.target.value = "";
+                    if (!file) return;
+                    run(async () => {
+                      const check = await checkReceiptImage(file);
+                      if (check.verdict === "photograph") {
+                        setReceiptNote("");
+                        throw Error(check.reason);
+                      }
+                      setProof(await api.upload(actor, file, "receipt"));
+                      setReceiptNote(
+                        check.verdict === "unclear" ? check.reason : "",
                       );
+                    });
                   }}
                 />
               </Field>
+              {receiptNote && (
+                <p className="reg-status-message unclaimed">{receiptNote}</p>
+              )}
               <label className="reg-check">
                 <input
                   required

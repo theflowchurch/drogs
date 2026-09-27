@@ -21,9 +21,10 @@ if (!dev) {
 const config = configuration();
 const pool = createPool(config);
 await pool.query('SELECT current_year FROM dr_settings WHERE id=1');
-const auth = createAuth({ pool, config, mailer: nodemailer.createTransport(config.smtp) });
+const mailer = nodemailer.createTransport(config.smtp);
+const auth = createAuth({ pool, config, mailer });
 const storage = createStorage({ pool, config });
-const api = createApi({ pool, config, auth, storage });
+const api = createApi({ pool, config, auth, storage, mailer });
 const port = Number(process.env.PORT || 3000);
 const app = next({ dev, hostname: '0.0.0.0', port });
 await app.prepare();

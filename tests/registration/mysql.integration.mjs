@@ -25,7 +25,10 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   const mediaDir = await mkdtemp(`${tmpdir()}/drogs-mysql-test-`);
   const mails = [], objects = new Map();
   const config = { origin: 'https://drogsdagministry.org', secure: true, secret: 't'.repeat(64), admins: ['office@example.com', 'browser-office@example.com'], siteCode: '1234', adminCode: 'admin-test-code', from: 'no-reply@example.com', r2: { account: 'a'.repeat(32), bucket: 'test-private', accessKeyId: 'test', secretAccessKey: 'test' } };
-  const auth = createAuth({ pool, config, mailer: { sendMail: async mail => { mails.push(mail); await writeFile(`${mediaDir}/mail.json`, JSON.stringify(mails), { mode: 0o600 }); } } });
+  const mailer = { sendMail: async mail => { mails.push(mail); await writeFile(`${mediaDir}/mail.json`, JSON.stringify(mails), { mode: 0o600 }); } };
+  const auth = createAuth({ pool, config, mailer });
+  const telegram = [];
+  config.telegram = { token: 'test-token', chat: '-100' };
   const client = new S3Client({ region: 'auto', endpoint: `https://${config.r2.account}.r2.cloudflarestorage.com`, credentials: { accessKeyId: 'test', secretAccessKey: 'test' },
     requestChecksumCalculation: 'WHEN_REQUIRED', requestHandler: { handle: async request => {
       if (request.method === 'PUT') {
@@ -36,7 +39,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
       return { response: { statusCode: 200, headers: {}, body: Readable.from([]) } };
     } } });
   const storage = createStorage({ pool, config, client });
-  const api = createApi({ pool, config, auth, storage });
+  const api = createApi({ pool, config, auth, storage, mailer, fetcher: async (url, init) => { telegram.push({ url, body: init.body }); return { ok: true }; } });
   async function call(path, cookie = '', body, options = {}) {
     const response = await api(new Request(`${config.origin}/api/registration/${path}`, { method: body === undefined ? 'GET' : 'POST', headers: { origin: config.origin, cookie, 'content-type': 'application/json', ...options.headers }, ...(body === undefined ? {} : { body: JSON.stringify(body) }), ...options }));
     return { status: response.status, data: await response.json(), cookie: response.headers.get('set-cookie')?.split(';')[0] };
@@ -177,6 +180,18 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('keys/revoke', bishop.cookie, { id: issued.data.key.id })).status, 403);
     assert.equal((await call('keys/revoke', office.cookie, { id: issued.data.key.id })).status, 200);
     assert.equal((await external('registrations')).status, 401);
+    // "Any issues?" reports reach the office by email, with a Telegram heads-up.
+    assert.equal((await call('support', '', { message: 'Cannot upload my receipt.' })).status, 401);
+    assert.equal((await call('support', pastor.cookie, { message: 'no' })).status, 400);
+    assert.equal((await call('support', pastor.cookie, { message: 'The receipt upload rejects my screenshot.' })).status, 200);
+    assert.equal(mails.at(-1).to, config.admins.join(','), 'the office is emailed');
+    assert.match(mails.at(-1).text, /rejects my screenshot/);
+    assert.equal(mails.at(-1).replyTo, 'pastor@example.com');
+    assert.match(telegram.at(-1).url, /api\.telegram\.org\/bottest-token\/sendMessage/);
+    assert.match(telegram.at(-1).body, /rejects my screenshot/);
+    for (let i = 0; i < 5; i++) await call('support', pastor.cookie, { message: 'Another report about the same thing.' });
+    assert.equal((await call('support', pastor.cookie, { message: 'Another report about the same thing.' })).status, 429, 'reports are rate limited');
+
     if (process.env.TEST_BROWSER === '1') {
       const { default: next } = await import('next');
       config.origin = 'http://127.0.0.1:4208'; config.secure = false;
@@ -188,7 +203,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
         const { stdout } = await promisify(execFile)(process.env.TEST_PYTHON || 'python3', ['tests/registration/mysql-browser.py'], {
           env: { ...process.env, TEST_MEDIA_DIR: mediaDir }, timeout: 100000,
         });
-        console.log(stdout.trim());
+    console.log(stdout.trim());
       } finally { await new Promise(resolve => server.close(resolve)); await app.close(); }
     }
   } finally {

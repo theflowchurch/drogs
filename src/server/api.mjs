@@ -1,5 +1,6 @@
 import { readAccounts, readLogins } from './accounts.mjs';
 import { createKeyService } from './api-keys.mjs';
+import { createSupport } from './support.mjs';
 import { readFile } from 'node:fs/promises';
 import { applyAction, visibleState } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
@@ -35,8 +36,9 @@ async function jsonBody(request) {
   }
 }
 const json = (value, status = 200, headers = {}) => Response.json(value, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...headers } });
-export function createApi({ pool, config, auth, storage, logger = console }) {
+export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch, logger = console }) {
   const keys = createKeyService({ pool, config, storage });
+  const support = createSupport({ config, mailer, fetcher, logger });
   return async function handle(request) {
     try {
       const url = new URL(request.url), path = url.pathname.replace(/\/$/, ''), method = request.method;
@@ -72,6 +74,10 @@ export function createApi({ pool, config, auth, storage, logger = console }) {
       if (['/api/registration/accounts', '/api/registration/logins'].includes(path) && method === 'GET') {
         if (!actor.office) throw new HttpError(403, 'Office access required.');
         return json(await (path.endsWith('/accounts') ? readAccounts : readLogins)(pool, config, url));
+      }
+      if (path === '/api/registration/support' && method === 'POST') {
+        await rateLimit(pool, config, `support:${actor.id}`, 5, 600000);
+        return json(await support(actor, await jsonBody(request)));
       }
       if (path === '/api/registration/keys' && method === 'GET') return json(await keys.list(actor));
       if (path === '/api/registration/keys' && method === 'POST') return json(await keys.issue(actor, await jsonBody(request)), 201);
