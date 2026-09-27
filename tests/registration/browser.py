@@ -18,7 +18,7 @@ with sync_playwright() as p:
   page.get_by_role('button',name='Continue →').click()
   page.locator('main').wait_for()
  def signout():
-  page.get_by_role('button',name='Sign out',exact=True).click();page.get_by_label('Access code').wait_for()
+  page.get_by_role('button',name='Sign out',exact=True).click();page.get_by_label('Email address',exact=True).wait_for()
  def register(name,role='pastor',bishop='B1'):
   page.get_by_label('Registering as').select_option(role)
   page.get_by_label('Organization',exact=True).select_option('First Love')
