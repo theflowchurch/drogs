@@ -2,7 +2,7 @@ const basePath=process.env.NEXT_PUBLIC_BASE_PATH || '';
 export const siteMetadata={
   title:'Kuriake Castle',
   description:'Kuriake Castle annual leadership commitment',
-  icons:{icon:`${basePath}/assets/mitre-transparent.png`},
+  icons:{icon:`${basePath}/assets/brand/castle-favicon.png`,apple:`${basePath}/assets/brand/castle-favicon.png`},
 };
 export const siteViewport={themeColor:'#0d242b'};
 export default function Document({children,surface}){

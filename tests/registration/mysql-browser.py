@@ -1,4 +1,4 @@
-import os
+import os, re, json
 from pathlib import Path
 from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright, expect
@@ -19,16 +19,24 @@ with sync_playwright() as p:
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
     def login(admin=False):
-        page.goto(BASE + ('/admin' if admin else '/'))
+        page.goto(BASE + ('/admin' if admin else '/signup/'))
         page.wait_for_load_state('networkidle')
         expect(page.get_by_text('Demo ·', exact=False)).not_to_be_visible()
-        page.get_by_label('Admin code' if admin else 'Website code', exact=True).fill('admin-test-code' if admin else '1234')
-        page.get_by_role('button', name='Enter Kuriake Castle').click()
+        if admin:
+            page.get_by_label('Admin code', exact=True).fill('admin-test-code')
+            page.get_by_role('button', name='Enter Kuriake Castle').click()
+        else:
+            page.get_by_label('Email address', exact=True).fill('browser-member@example.com')
+            page.get_by_role('button', name='Send code').click()
+            page.get_by_label('One-time email code').wait_for()
+            code = re.search(r'code is (\d{6})', json.loads((MEDIA/'mail.json').read_text())[-1]['text']).group(1)
+            page.get_by_label('One-time email code').fill(code)
+            page.get_by_role('button', name='Verify and create account').click()
         page.locator('main').wait_for()
     try:
         login()
         page.get_by_label('Registering as').select_option('bishop')
-        for label, value in [('First name','Browser'),('Last name','Bishop'),('Email address','browser-member@example.com'),('Phone number','+233201234567'),('Date of birth','1990-02-01'),('Country','Ghana'),('City','Accra')]:
+        for label, value in [('First name','Browser'),('Last name','Bishop'),('Phone number','+233201234567'),('Date of birth','1990-02-01'),('Country','Ghana'),('City','Accra')]:
             page.get_by_label(label, exact=True).fill(value)
         page.get_by_label('Organization',exact=True).select_option('First Love')
         page.get_by_label('Denomination',exact=True).select_option('First Love Church')

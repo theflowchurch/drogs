@@ -175,8 +175,15 @@ function Dialog({ title, onClose, children }) {
     </div>
   );
 }
-export default function RegistrationApp({ office = false, browse = false }) {
-  const [gate, setGate] = useState(false),
+export default function RegistrationApp({
+  office = false,
+  browse = false,
+  signup = false,
+}) {
+  // Members sign in with their email; only the office and the browse-only
+  // directory sit behind an access code.
+  const gated = office || browse;
+  const [gate, setGate] = useState(!gated),
     [actor, setActor] = useState(null),
     [state, setState] = useState(null),
     [busy, setBusy] = useState(false),
@@ -225,7 +232,7 @@ export default function RegistrationApp({ office = false, browse = false }) {
     const until = Number(
       sessionStorage.getItem("drogs-registration-gate") || 0,
     );
-    setGate(until > Date.now());
+    setGate(!gated || until > Date.now());
   }, []);
   useEffect(() => {
     if (actor) {
@@ -250,14 +257,17 @@ export default function RegistrationApp({ office = false, browse = false }) {
     let timeout;
     const reset = () => {
       clearTimeout(timeout);
-      sessionStorage.setItem(
-        "drogs-registration-gate",
-        String(Date.now() + 1800000),
-      );
+      // Only an access code earns the gate stamp; a member's email sign-in
+      // must never unlock the office or the browse-only directory.
+      if (gated)
+        sessionStorage.setItem(
+          "drogs-registration-gate",
+          String(Date.now() + 1800000),
+        );
       timeout = setTimeout(() => {
         api.signOut(office, false).finally(() => {
           setActor(null);
-          setGate(false);
+          setGate(!gated);
           sessionStorage.removeItem("drogs-registration-gate");
         });
       }, 1800000);
@@ -305,7 +315,7 @@ export default function RegistrationApp({ office = false, browse = false }) {
       await api.signOut(office);
       setActor(null);
       setState(null);
-      setGate(false);
+      setGate(!gated);
       sessionStorage.removeItem("drogs-registration-gate");
     });
   }
@@ -325,7 +335,9 @@ export default function RegistrationApp({ office = false, browse = false }) {
     <div className="reg-app">
       <header className="reg-header">
         <a className="reg-brand" href={`${base}/`}>
-          <img src={`${base}/assets/mitre-transparent.png`} alt="" />
+          <span className="reg-brand-mark">
+            <img src={`${base}/assets/brand/castle-icon.png`} alt="" />
+          </span>
           <strong>Kuriake Castle</strong>
         </a>
         <div className="reg-header-right">
@@ -333,9 +345,17 @@ export default function RegistrationApp({ office = false, browse = false }) {
             <button className="reg-text" onClick={logout}>
               Sign out
             </button>
+          ) : office || browse ? (
+            <a className="reg-text" href={`${base}/`}>
+              Sign in ↗
+            </a>
+          ) : signup ? (
+            <a className="reg-text" href={`${base}/`}>
+              Already have an account? Sign in ↗
+            </a>
           ) : (
-            <a className="reg-text" href={`${base}/${office ? "" : "admin/"}`}>
-              {office ? "Registration" : "Sign in"} ↗
+            <a className="reg-text" href={`${base}/signup/`}>
+              Create an account ↗
             </a>
           )}
         </div>
@@ -405,8 +425,14 @@ export default function RegistrationApp({ office = false, browse = false }) {
             <MemberDirectory />
           </main>
         </div>
-      ) : !actor && !api.live ? (
-        <Account office={office} run={run} busy={busy} onActor={setActor} />
+      ) : !actor && !office ? (
+        <Account
+          office={office}
+          signup={signup}
+          run={run}
+          busy={busy}
+          onActor={setActor}
+        />
       ) : !actor ? (
         <div className="reg-loading" role="status">
           Opening your workspace…
@@ -651,11 +677,10 @@ function Gate({ office, onEnter }) {
     <section className="reg-gate">
       <div className="reg-gate-glow" />
       <div className="reg-gate-inner">
-        <img src={`${base}/assets/mitre-transparent.png`} alt="" />
+        <img src={`${base}/assets/brand/castle-icon.png`} alt="" />
         <h1>
           <em>Kuriake Castle</em>
         </h1>
-        <p className="reg-gate-tagline">Digital roll call of good standing</p>
         <form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -684,33 +709,62 @@ function Gate({ office, onEnter }) {
     </section>
   );
 }
-function Account({ office, run, busy, onActor }) {
+function Account({ office, signup = false, run, busy, onActor }) {
   const [email, setEmail] = useState(""),
     [sent, setSent] = useState(false),
     [token, setToken] = useState("");
   return (
-    <section className="reg-account">
+    <section className={`reg-account ${signup ? "signup" : "signin"}`}>
+      {signup && (
+        <div
+          className="reg-hero-image"
+          style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
+          aria-hidden="true"
+        />
+      )}
       <div>
+        <img
+          className="reg-account-mark"
+          src={`${base}/assets/brand/castle-icon.png`}
+          alt=""
+        />
         <span className="reg-eyebrow">
-          {office ? "OFFICE ACCESS" : "YOUR ACCOUNT"}
+          {office ? "OFFICE ACCESS" : signup ? "NEW ACCOUNT" : "KURIAKE CASTLE"}
         </span>
-        <h1>{sent ? "Check your email." : "Start with your email."}</h1>
+        <h1>
+          {sent
+            ? "Check your email."
+            : signup
+              ? "Create your account."
+              : "Sign in."}
+        </h1>
         <p>
-          {api.live
-            ? "We’ll send a one-time sign-in code. New members create their account here; returning members use the same email."
-            : "Enter your email to open your account. This copy is not connected to email delivery."}
+          {signup
+            ? api.live
+              ? "Enter your email and we’ll send a one-time code. Then register your details and complete your commitment."
+              : "Enter your email to create your account on this device."
+            : api.live
+              ? "Use the email you registered with. We’ll send a one-time code."
+              : "Enter the email you registered with on this device."}
         </p>
-        <ol className="reg-steps">
-          <li>
-            <b>01</b> Create your account
-          </li>
-          <li>
-            <b>02</b> Register your details
-          </li>
-          <li>
-            <b>03</b> Confirm and pay
-          </li>
-        </ol>
+        {signup ? (
+          <ol className="reg-steps">
+            <li>
+              <b>01</b> Create your account
+            </li>
+            <li>
+              <b>02</b> Register your details
+            </li>
+            <li>
+              <b>03</b> Confirm and pay
+            </li>
+          </ol>
+        ) : (
+          <p className="reg-account-switch">
+            New to Kuriake Castle?{" "}
+            <a href={`${base}/signup/`}>Create an account →</a>
+          </p>
+        )}
       </div>
       <form
         className="reg-card"
@@ -757,8 +811,12 @@ function Account({ office, run, busy, onActor }) {
             : !api.live
               ? "Continue"
               : sent
-                ? "Verify and sign in"
-                : "Send sign-in code"}{" "}
+                ? signup
+                  ? "Verify and create account"
+                  : "Verify and sign in"
+                : signup
+                  ? "Send code"
+                  : "Send sign-in code"}{" "}
           →
         </button>
         {sent && (
@@ -778,6 +836,11 @@ function Account({ office, run, busy, onActor }) {
             ? "Your email is your account identity. Keep using the same address each year."
             : "Accounts and uploads remain on this device until the site is connected."}
         </p>
+        {signup && (
+          <p className="reg-small">
+            Already registered? <a href={`${base}/`}>Sign in</a>
+          </p>
+        )}
       </form>
     </section>
   );

@@ -1776,3 +1776,84 @@ p {
   width: 10px;
   height: 10px;
 }
+
+/* Brand mark: a white castle, so it sits on a dark chip */
+.reg-brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--dark);
+}
+.reg-brand-mark img {
+  height: 22px;
+  width: auto;
+}
+.reg-gate-inner > img {
+  height: 96px;
+  width: auto;
+}
+/* Sign-in landing and sign-up page */
+.reg-account {
+  position: relative;
+  isolation: isolate;
+}
+.reg-account.signin,
+.reg-account.signup {
+  max-width: none;
+  padding: 90px max(30px, calc((100% - 1080px) / 2));
+  background: #06252b;
+  color: #fff;
+}
+.reg-account.signin p,
+.reg-account.signup p {
+  color: #b4cdcb;
+}
+.reg-account.signin .reg-eyebrow,
+.reg-account.signup .reg-eyebrow {
+  color: #a0c6bf;
+}
+.reg-account.signin .reg-steps b,
+.reg-account.signup .reg-steps b {
+  color: #8ed5c5;
+}
+.reg-account.signin .reg-card,
+.reg-account.signup .reg-card {
+  color: var(--ink);
+}
+.reg-account.signin .reg-card p,
+.reg-account.signup .reg-card p {
+  color: var(--muted);
+}
+.reg-account.signin a,
+.reg-account.signup a {
+  color: #8ed5c5;
+}
+.reg-account .reg-card a {
+  color: var(--teal);
+}
+.reg-account-mark {
+  height: 64px;
+  width: auto;
+  margin-bottom: 26px;
+  display: block;
+}
+.reg-account-switch {
+  margin-top: 36px;
+  font-size: 15px;
+}
+.reg-hero-image {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.45;
+}
+@media (max-width: 900px) {
+  .reg-account.signin,
+  .reg-account.signup {
+    padding: 56px 24px;
+  }
+}
