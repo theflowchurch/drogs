@@ -32,6 +32,7 @@ import {
   rateFor,
 } from "./exchange.mjs";
 import { checkReceiptImage } from "./receipt-check.mjs";
+import { portraitStyle } from "../runtime/portrait-framing";
 import people from "./reference-people.json";
 // The office's existing records. Bishops are the linkable approval references;
 // the whole roster backs the Directory and the member search.
@@ -174,7 +175,7 @@ function Dialog({ title, onClose, children }) {
     </div>
   );
 }
-export default function RegistrationApp({ office = false }) {
+export default function RegistrationApp({ office = false, browse = false }) {
   const [gate, setGate] = useState(false),
     [actor, setActor] = useState(null),
     [state, setState] = useState(null),
@@ -295,8 +296,8 @@ export default function RegistrationApp({ office = false }) {
       ]
     : [
         "Registration",
-        ...(profile?.bishopApproved ? ["My pastors", "Unclaimed"] : []),
         ...(current && current.status !== "draft" ? ["Directory"] : []),
+        ...(profile?.bishopApproved ? ["My pastors", "Unclaimed"] : []),
         "History",
       ];
   async function logout() {
@@ -377,6 +378,33 @@ export default function RegistrationApp({ office = false }) {
             setGate(true);
           })}
         />
+      ) : browse ? (
+        <div className="reg-shell">
+          <aside className="reg-sidebar">
+            <span className="reg-eyebrow">DROGS</span>
+            <div className="reg-nav">
+              <button className="active">
+                <span>Directory</span>
+              </button>
+            </div>
+            <div className="reg-side-note">
+              <b>Every bishop and pastor</b>
+              <p>
+                To update your own information, <a href={`${base}/`}>register</a>.
+              </p>
+            </div>
+          </aside>
+          <main className="reg-main">
+            <div className="reg-page-heading">
+              <div>
+                <span className="reg-eyebrow">DROGS</span>
+                <h1>Directory</h1>
+                <p>Every bishop and pastor in DROGS.</p>
+              </div>
+            </div>
+            <MemberDirectory />
+          </main>
+        </div>
       ) : !actor && !api.live ? (
         <Account office={office} run={run} busy={busy} onActor={setActor} />
       ) : !actor ? (
@@ -408,7 +436,11 @@ export default function RegistrationApp({ office = false }) {
                     setNotice("");
                   }}
                 >
-                  <span>{n}</span>
+                  <span>
+                    {n === "Registration" && current && current.status !== "draft"
+                      ? "My profile"
+                      : n}
+                  </span>
                   {n === "Unclaimed" && (
                     <b>
                       {scoped.filter((r) => r.status === "unclaimed").length}
@@ -457,8 +489,8 @@ export default function RegistrationApp({ office = false }) {
                         {
                           {
                             Directory: office
-                              ? "Every record DROGS holds. Green means the person updated their information this cycle; red is the older record."
-                              : "Search every bishop and pastor in DROGS.",
+                              ? "Every bishop and pastor in DROGS. Green means they updated their information this cycle; red means it is still the older information."
+                              : "Every bishop and pastor in DROGS.",
                             Unclaimed:
                               "Registrations waiting for a bishop to confirm their place.",
                             "Bishop approvals":
@@ -800,9 +832,9 @@ function Participant({
     <>
       <div className="reg-page-heading">
         <div>
-          <span className="reg-eyebrow">{state.year} / YOUR REGISTRATION</span>
+          <span className="reg-eyebrow">{state.year} / MY PROFILE</span>
           <h1>Thank you, {current.data.name.split(" ")[0]}.</h1>
-          <p>Your registration has been received.</p>
+          <p>Your registration is complete. This is the information you gave us.</p>
         </div>
         <Badge status={current.status} />
       </div>
@@ -1562,6 +1594,7 @@ function Portrait({ person, className = "" }) {
     return (
       <img
         className={className}
+        style={{ cssText: portraitStyle(person.image) }}
         src={`${base}/${person.image}`}
         alt={person.name}
         loading="lazy"
@@ -1682,18 +1715,10 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
           >
             <span className="reg-person-portrait">
               <Portrait person={p} />
-              {dots && <Dot updated={p.updated} />}
             </span>
-            <div>
-              <small>
-                {p.title} · {p.organization}
-              </small>
+            <div className="reg-person-name">
               <h3>{p.name}</h3>
-              <p>{p.denomination || "Denomination not recorded"}</p>
-              <span className="reg-person-place">
-                {[p.city, p.country].filter(Boolean).join(", ") ||
-                  "Location not recorded"}
-              </span>
+              {dots && <Dot updated={p.updated} />}
             </div>
           </button>
         ))}
@@ -1708,7 +1733,6 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
 }
 function Directory({ state, year }) {
   const [role, setRole] = useState("bishop"),
-    [view, setView] = useState("people"),
     [filter, setFilter] = useState({
       q: "",
       org: "",
@@ -1734,35 +1758,6 @@ function Directory({ state, year }) {
     () => filterOptions(all, filter.org),
     [all, filter.org],
   );
-  const groups = useMemo(() => {
-    const map = new Map();
-    for (const p of all) {
-      if (!p.denomination || (filter.org && p.organization !== filter.org))
-        continue;
-      const d = map.get(p.denomination) || {
-        name: p.denomination,
-        logo: "",
-        organizations: new Set(),
-        bishop: 0,
-        pastor: 0,
-        updated: 0,
-      };
-      d.logo ||= p.denominationLogo;
-      d.organizations.add(p.organization);
-      d[p.role] += 1;
-      if (p.updated) d.updated += 1;
-      map.set(p.denomination, d);
-    }
-    return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
-  }, [all, filter.org]);
-  const open = (name, nextRole) => {
-    setFilter({ ...filter, denomination: name });
-    setRole(nextRole);
-    setView("people");
-  };
-  const current = filter.denomination
-    ? groups.find((g) => g.name === filter.denomination)
-    : null;
   // Pastors a bishop confirmed on this cycle's annual list.
   const linkedPastors = (bishop) => {
     const account = state.profiles.find(
@@ -1786,10 +1781,10 @@ function Directory({ state, year }) {
     <>
       <div className="reg-stats">
         {[
-          ["Existing records", scope.length],
+          ["Bishops", scope.filter((p) => p.role === "bishop").length],
+          ["Pastors", scope.filter((p) => p.role === "pastor").length],
           ["Updated this cycle", scope.filter((p) => p.updated).length],
           ["Not updated", scope.filter((p) => !p.updated).length],
-          ["Unclaimed", scope.filter((p) => !p.claimed).length],
         ].map(([label, n]) => (
           <div key={label}>
             <span>{label}</span>
@@ -1797,79 +1792,11 @@ function Directory({ state, year }) {
           </div>
         ))}
       </div>
-      <div className="reg-switch" role="group" aria-label="Directory view">
-        {[
-          ["people", "People"],
-          ["denominations", "Denominations"],
-        ].map(([value, label]) => (
-          <button
-            key={value}
-            aria-pressed={view === value}
-            className={view === value ? "active" : ""}
-            onClick={() => setView(value)}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
       <DirectoryFilters
         filter={filter}
         setFilter={setFilter}
         options={options}
       />
-      {view === "denominations" ? (
-        <div className="reg-denominations">
-          {groups.map((g) => (
-            <article className="reg-denomination" key={g.name}>
-              <header>
-                {g.logo ? (
-                  <img src={`${base}/${g.logo}`} alt="" decoding="async" />
-                ) : (
-                  <span className="reg-denomination-mark">◇</span>
-                )}
-                <div>
-                  <h3>{g.name}</h3>
-                  <p>{[...g.organizations].join(" · ")}</p>
-                </div>
-              </header>
-              <div className="reg-denomination-totals">
-                <button onClick={() => open(g.name, "bishop")}>
-                  <span>Bishops</span>
-                  <strong>{g.bishop.toLocaleString()}</strong>
-                </button>
-                <button onClick={() => open(g.name, "pastor")}>
-                  <span>Pastors</span>
-                  <strong>{g.pastor.toLocaleString()}</strong>
-                </button>
-              </div>
-              <small>{g.updated.toLocaleString()} updated this cycle</small>
-            </article>
-          ))}
-          {!groups.length && (
-            <Empty title="No denominations in this view">
-              Clear the organization filter to see every denomination.
-            </Empty>
-          )}
-        </div>
-      ) : (
-        <>
-          {current && (
-            <section className="reg-denomination-heading">
-              {current.logo && (
-                <img src={`${base}/${current.logo}`} alt="" decoding="async" />
-              )}
-              <div>
-                <h2>{current.name}</h2>
-                <p>{[...current.organizations].join(" · ")}</p>
-              </div>
-              <button
-                className="reg-text"
-                onClick={() => setFilter({ ...filter, denomination: "" })}
-              >
-                Clear denomination
-              </button>
-            </section>
-          )}
           <div className="reg-switch" role="group" aria-label="Role">
             {[
               ["bishop", "Bishops"],
@@ -1897,30 +1824,29 @@ function Directory({ state, year }) {
               onOpen={setSelected}
             />
           ) : (
-            <Empty title="No records match these filters">
+            <Empty title={`No ${role === "bishop" ? "bishops" : "pastors"} match these filters`}>
               Change the search, organization or denomination.
             </Empty>
           )}
-        </>
-      )}
       {selected && (
-        <Dialog title="Record" onClose={() => setSelected(null)}>
-          <RecordDetails person={selected} under={linkedPastors(selected)} />
+        <Dialog title={selected.name} onClose={() => setSelected(null)}>
+          <RecordDetails
+            person={selected}
+            under={linkedPastors(selected)}
+            onOpen={setSelected}
+          />
         </Dialog>
       )}
     </>
   );
 }
-function RecordDetails({ person: p, under = [] }) {
+function RecordDetails({ person: p, under = [], onOpen }) {
   const changed = (field) =>
     p.recorded && p.recorded[field] && p.recorded[field] !== p[field];
   return (
     <>
       <div className="reg-record-hero centred">
-        <span className="reg-person-portrait">
-          <Portrait person={p} className="reg-record-photo large" />
-          <Dot updated={p.updated} />
-        </span>
+        <Portrait person={p} className="reg-record-photo large" />
         <div>
           <span className="reg-eyebrow">{(p.title || p.role).toUpperCase()}</span>
           <h2>{p.name}</h2>
@@ -1973,7 +1899,9 @@ function RecordDetails({ person: p, under = [] }) {
           </div>
         ))}
       </dl>
-      {p.role === "bishop" && <PastorsUnder bishop={p} extra={under} dots />}
+      {p.role === "bishop" && (
+        <PastorsUnder bishop={p} extra={under} onOpen={onOpen} dots />
+      )}
     </>
   );
 }
@@ -2013,11 +1941,11 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false }) {
       <div className="reg-thumb-grid">
         {list.slice(0, limit).map((q) => (
           <button key={q.id} onClick={() => onOpen?.(q)} disabled={!onOpen}>
-            <span className="reg-person-portrait">
-              <Portrait person={q} />
+            <Portrait person={q} />
+            <span className="reg-thumb-name">
+              <b>{q.name}</b>
               {dots && <Dot updated={q.updated} />}
             </span>
-            <b>{q.name}</b>
             <small>{[q.branch, q.country].filter(Boolean).join(" · ")}</small>
           </button>
         ))}

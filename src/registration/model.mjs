@@ -630,7 +630,7 @@ export function directoryPeople(state, references, year = state.year) {
       updatedAt:
         registration?.submittedAt || row?.referenceConfirmedAt || null,
       updatedBy: registration ? "registration" : row ? "bishop" : "",
-      claimed: p.role === "bishop" ? Boolean(registration) : linked.has(p.id),
+      claimed: p.role === "bishop" || linked.has(p.id),
       registration: registration || null,
     };
   });
