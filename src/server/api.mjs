@@ -110,7 +110,14 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       }
       if (path === '/api/registration/upload' && method === 'POST') {
         const bytes = await readBody(request, 5 * 1024 * 1024);
-        const key = await storage.upload(actor, bytes, request.headers.get('content-type'), url.searchParams.get('kind'));
+        let key;
+        try { key = await storage.upload(actor, bytes, request.headers.get('content-type'), url.searchParams.get('kind')); }
+        catch (error) {
+          if (error instanceof HttpError) throw error;
+          // A storage-side failure (credentials, bucket, network) is a configuration problem, not the member's image.
+          logger.error('Image storage failed', { type: error.name, code: error.code || error.$metadata?.httpStatusCode || 'INTERNAL' });
+          throw new HttpError(503, 'Photo storage is not reachable at the moment. Your details are safe; please try again later, or tell the office with “Any issues?”.');
+        }
         return json({ path: key }, 201);
       }
       if (path === '/api/registration/media' && method === 'GET') {
