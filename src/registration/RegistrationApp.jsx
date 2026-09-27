@@ -489,7 +489,7 @@ export default function RegistrationApp({ office = false, browse = false }) {
                         {
                           {
                             Directory: office
-                              ? "Every bishop and pastor in DROGS. Green means they updated their information this cycle; red means it is still the older information."
+                              ? "Every bishop and pastor in DROGS. Green: the bishop has registered, or the pastor has been claimed by their bishop this cycle. Red: not yet."
                               : "Every bishop and pastor in DROGS.",
                             Unclaimed:
                               "Registrations waiting for a bishop to confirm their place.",
@@ -1607,15 +1607,23 @@ function Portrait({ person, className = "" }) {
     </div>
   );
 }
-function Dot({ updated }) {
+// Red means: a bishop has not registered yet, or a pastor has not been claimed yet.
+const statusWords = (p) =>
+  p.role === "bishop"
+    ? p.updated
+      ? "Registered this cycle"
+      : "Not yet registered"
+    : p.updated
+      ? "Claimed by their bishop"
+      : "Not yet claimed";
+function Dot({ person }) {
+  const words = statusWords(person);
   return (
     <span
-      className={`reg-dot ${updated ? "updated" : "stale"}`}
-      title={updated ? "Updated this cycle" : "Older information"}
+      className={`reg-dot ${person.updated ? "updated" : "stale"}`}
+      title={words}
     >
-      <span className="reg-visually-hidden">
-        {updated ? "Updated this cycle" : "Older information, not updated"}
-      </span>
+      <span className="reg-visually-hidden">{words}</span>
     </span>
   );
 }
@@ -1625,8 +1633,7 @@ const personMatches = (p, f) =>
   (!f.country || p.country === f.country) &&
   (!f.state ||
     (f.state === "updated" && p.updated) ||
-    (f.state === "stale" && !p.updated) ||
-    (f.state === "unclaimed" && !p.claimed)) &&
+    (f.state === "stale" && !p.updated)) &&
   (!f.q ||
     normalName(`${p.name} ${p.city} ${p.country} ${p.denomination}`).includes(
       normalName(f.q),
@@ -1682,10 +1689,9 @@ function DirectoryFilters({ filter, setFilter, options }) {
           value={filter.state}
           onChange={(e) => set({ state: e.target.value })}
         >
-          <option value="">Updated and not updated</option>
-          <option value="updated">Updated this cycle</option>
-          <option value="stale">Not updated</option>
-          <option value="unclaimed">Unclaimed</option>
+          <option value="">Everyone</option>
+          <option value="updated">Registered · claimed</option>
+          <option value="stale">Not yet registered · claimed</option>
         </select>
       )}
     </div>
@@ -1718,7 +1724,7 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
             </span>
             <div className="reg-person-name">
               <h3>{p.name}</h3>
-              {dots && <Dot updated={p.updated} />}
+              {dots && <Dot person={p} />}
             </div>
           </button>
         ))}
@@ -1783,8 +1789,14 @@ function Directory({ state, year }) {
         {[
           ["Bishops", scope.filter((p) => p.role === "bishop").length],
           ["Pastors", scope.filter((p) => p.role === "pastor").length],
-          ["Updated this cycle", scope.filter((p) => p.updated).length],
-          ["Not updated", scope.filter((p) => !p.updated).length],
+          [
+            role === "bishop" ? "Registered this cycle" : "Claimed by a bishop",
+            list.filter((p) => p.updated).length,
+          ],
+          [
+            role === "bishop" ? "Not yet registered" : "Not yet claimed",
+            list.filter((p) => !p.updated).length,
+          ],
         ].map(([label, n]) => (
           <div key={label}>
             <span>{label}</span>
@@ -1863,13 +1875,8 @@ function RecordDetails({ person: p, under = [], onOpen }) {
           )}
           <p className="reg-record-line">{p.organization}</p>
           <span className={`reg-badge ${p.updated ? "verified" : "unclaimed"}`}>
-            {p.updated
-              ? p.updatedBy === "registration"
-                ? "Updated by registration"
-                : "Confirmed by their bishop"
-              : "Older information · not updated"}
-          </span>{" "}
-          {!p.claimed && <Badge status="unclaimed">Unclaimed</Badge>}
+            {statusWords(p)}
+          </span>
         </div>
       </div>
       <dl className="reg-details">
@@ -1944,7 +1951,7 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false }) {
             <Portrait person={q} />
             <span className="reg-thumb-name">
               <b>{q.name}</b>
-              {dots && <Dot updated={q.updated} />}
+              {dots && <Dot person={q} />}
             </span>
             <small>{[q.branch, q.country].filter(Boolean).join(" · ")}</small>
           </button>
@@ -2931,8 +2938,8 @@ function History({ state, records, office, actor, year, perform }) {
           onClose={() => setNext(false)}
         >
           <p>
-            This closes new submissions and changes for {state.year}. Existing
-            records remain viewable. Bishops must reconfirm their annual lists,
+            This closes new submissions and changes for {state.year}. Everyone
+            stays viewable. Bishops must reconfirm their annual lists,
             and everyone must register and pay for the new year.
           </p>
           <button
