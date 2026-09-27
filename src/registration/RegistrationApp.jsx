@@ -1907,6 +1907,7 @@ function Directory({ state, year, role, setRole }) {
         {[
           ["Bishops", scope.filter((p) => p.role === "bishop").length],
           ["Pastors", scope.filter((p) => p.role === "pastor").length],
+          ["Bishops and pastors", scope.length],
           [
             role === "bishop" ? "Registered this cycle" : "Claimed by a bishop",
             list.filter((p) => p.updated).length,
@@ -2144,6 +2145,18 @@ function MemberDirectory({ role, setRole }) {
   );
   return (
     <>
+      <div className="reg-stats">
+        {[
+          ["Bishops", scope.filter((p) => p.role === "bishop").length],
+          ["Pastors", scope.filter((p) => p.role === "pastor").length],
+          ["Bishops and pastors", scope.length],
+        ].map(([label, n]) => (
+          <div key={label}>
+            <span>{label}</span>
+            <strong>{n.toLocaleString()}</strong>
+          </div>
+        ))}
+      </div>
       <div className="reg-toggle" role="group" aria-label="Bishops or pastors">
         {[
           ["bishop", "Bishops"],
