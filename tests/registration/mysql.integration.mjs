@@ -184,15 +184,15 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await external('registrations')).status, 401);
     // When object storage rejects the credentials the image is kept in MySQL and still served.
     failStorage = true;
-    const fallback = await upload(pastor, 'receipt');
+    const fallback = await upload(bishop, 'receipt');
     failStorage = false;
     assert.ok(fallback.startsWith('db/'), 'fallback keys are marked');
-    const fallbackUrl = await call(`media?path=${encodeURIComponent(fallback)}`, pastor.cookie);
+    const fallbackUrl = await call(`media?path=${encodeURIComponent(fallback)}`, bishop.cookie);
     assert.equal(fallbackUrl.status, 200); assert.match(fallbackUrl.data.url, /\/api\/registration\/media\/blob\?path=/);
-    const blob = await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: pastor.cookie } }));
+    const blob = await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: bishop.cookie } }));
     assert.equal(blob.status, 200); assert.equal(blob.headers.get('content-type'), 'image/webp'); assert.ok((await blob.arrayBuffer()).byteLength > 100);
     assert.equal((await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: stranger.cookie } }))).status, 403, 'strangers cannot read a stored image');
-    assert.equal((await call('paystack/verify', pastor.cookie, { reference: 'abc123' })).status, 503, 'Paystack is off until the secret key is configured');
+    assert.equal((await call('paystack/verify', bishop.cookie, { reference: 'abc123' })).status, 503, 'Paystack is off until the secret key is configured');
 
     // "Any issues?" reports reach the office by email, with a Telegram heads-up.
     assert.equal((await call('support', '', { message: 'Cannot upload my receipt.' })).status, 401);
