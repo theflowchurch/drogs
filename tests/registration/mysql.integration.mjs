@@ -182,15 +182,15 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await external('registrations')).status, 401);
     // "Any issues?" reports reach the office by email, with a Telegram heads-up.
     assert.equal((await call('support', '', { message: 'Cannot upload my receipt.' })).status, 401);
-    assert.equal((await call('support', pastor.cookie, { message: 'no' })).status, 400);
-    assert.equal((await call('support', pastor.cookie, { message: 'The receipt upload rejects my screenshot.' })).status, 200);
+    assert.equal((await call('support', bishop.cookie, { message: 'no' })).status, 400);
+    assert.equal((await call('support', bishop.cookie, { message: 'The receipt upload rejects my screenshot.' })).status, 200);
     assert.equal(mails.at(-1).to, config.admins.join(','), 'the office is emailed');
     assert.match(mails.at(-1).text, /rejects my screenshot/);
-    assert.equal(mails.at(-1).replyTo, 'pastor@example.com');
+    assert.equal(mails.at(-1).replyTo, 'bishop@example.com');
     assert.match(telegram.at(-1).url, /api\.telegram\.org\/bottest-token\/sendMessage/);
     assert.match(telegram.at(-1).body, /rejects my screenshot/);
-    for (let i = 0; i < 5; i++) await call('support', pastor.cookie, { message: 'Another report about the same thing.' });
-    assert.equal((await call('support', pastor.cookie, { message: 'Another report about the same thing.' })).status, 429, 'reports are rate limited');
+    for (let i = 0; i < 5; i++) await call('support', bishop.cookie, { message: 'Another report about the same thing.' });
+    assert.equal((await call('support', bishop.cookie, { message: 'Another report about the same thing.' })).status, 429, 'reports are rate limited');
 
     if (process.env.TEST_BROWSER === '1') {
       const { default: next } = await import('next');
