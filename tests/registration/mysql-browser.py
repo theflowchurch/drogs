@@ -54,7 +54,7 @@ with sync_playwright() as p:
         page.get_by_label('I confirm that these details').check()
         page.get_by_label('I confirm this is me').check()
         page.get_by_role('button',name='Submit registration').click()
-        expect(page.get_by_text('Your registration has been received.')).to_be_visible()
+        expect(page.get_by_text('Your registration is complete.')).to_be_visible()
         assert page.evaluate("localStorage.getItem('drogs-registration-v1')") is None
         page.get_by_role('button',name='Sign out',exact=True).click()
         page.get_by_label('Website code',exact=True).wait_for()
