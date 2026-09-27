@@ -21,6 +21,10 @@ export const normalEmail = (value) =>
     .trim()
     .toLowerCase();
 export const normalPhone = (value) => String(value || "").replace(/\D/g, "");
+export const registrationEmail = (accountEmail, submittedEmail) =>
+  String(accountEmail || "").endsWith("@drogs.invalid")
+    ? normalEmail(submittedEmail)
+    : normalEmail(accountEmail);
 export const emptyState = () => ({
   version: 1,
   year: 2027,
@@ -43,7 +47,7 @@ export function validateProfile(p, email, { draft = false } = {}) {
     city: String(p.city || "").trim(),
     photoConfirmed: p.photoConfirmed === true,
     phone: String(p.phone || "").trim(),
-    email: normalEmail(email),
+    email: registrationEmail(email, p.email),
     dob: p.dob || "",
     church: String(p.church || "").trim(),
     organization: p.organization || "",
@@ -203,7 +207,7 @@ export function applyAction(
         id: actor.id,
         role: data.role,
         name: data.name,
-        email: actor.email,
+        email: data.email,
         bishopApproved: false,
         referenceId: null,
       };

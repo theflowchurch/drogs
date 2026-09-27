@@ -15,6 +15,7 @@ import * as api from "./client";
 import { DENOMINATIONS } from "./denominations.mjs";
 import {
   ORGANIZATIONS,
+  registrationEmail,
   AMOUNTS,
   parseRoster,
   validateProfile,
@@ -812,7 +813,7 @@ function RegistrationForm({
         bishopName: "",
       },
       ...initial,
-      email: actor.email,
+      email: registrationEmail(actor.email, initial?.email),
     })),
     [review, setReview] = useState(false),
     [accurate, setAccurate] = useState(false),
@@ -956,8 +957,10 @@ function RegistrationForm({
                 <Field label="Email address">
                   <input
                     type="email"
-                    readOnly
-                    value={actor.email}
+                    required
+                    readOnly={!actor.email.endsWith("@drogs.invalid")}
+                    value={data.email}
+                    onChange={(e) => set("email", e.target.value)}
                     autoComplete="email"
                   />
                 </Field>
