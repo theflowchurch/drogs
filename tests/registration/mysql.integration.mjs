@@ -104,6 +104,19 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     for (let i = 0; i < 5; i++) assert.equal((await call('auth/verify', '', { email: 'locked@example.com', token: wrong })).status, 401);
     assert.equal((await call('auth/verify', '', { email: 'locked@example.com', token: code })).status, 401, 'locked after five failures');
     assert.equal((await call('auth/request', '', { email: 'locked@example.com' })).status, 429);
+    assert.equal((await call('accounts', bishop.cookie)).status, 403);
+    assert.equal((await call('logins', bishop.cookie)).status, 403);
+    assert.equal((await call('accounts')).status, 401);
+    const accounts = await call('accounts?search=office%40example.com', office.cookie);
+    assert.equal(accounts.status, 200);
+    assert.equal(accounts.data.total, 1);
+    assert.ok(accounts.data.data[0].signedUpAt);
+    assert.ok(accounts.data.data[0].lastLoginAt);
+    assert.equal(accounts.data.data[0].loginCount, 1, 'Failed code reuse must not count as a login');
+    const logins = await call(`logins?user=${accounts.data.data[0].id}`, office.cookie);
+    assert.equal(logins.data.data.length, 1);
+    assert.equal(logins.data.data[0].email, 'office@example.com');
+    assert.equal(JSON.stringify(logins.data).includes('token'), false);
     // Application API keys are a separate, read-only identity from admin cookies.
     assert.equal((await call('keys', bishop.cookie)).status, 403);
     assert.equal((await call('keys', bishop.cookie, { name: 'Forbidden', scopes: ['registrations:read'] })).status, 403);
@@ -137,7 +150,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     const full = await external('backend/registrations', all.data.token);
     assert.equal(full.status, 200);
     assert.ok(full.data.data.some(r => r.proof === receipt), 'Full payment receipt reference included');
-    for (const resource of ['rosters', 'profiles', 'users', 'history', 'media', 'keys', 'settings', 'reference']) {
+    for (const resource of ['rosters', 'profiles', 'users', 'history', 'media', 'keys', 'settings', 'reference', 'accounts', 'logins']) {
       const result = await external(`backend/${resource}`, all.data.token);
       assert.equal(result.status, 200, resource);
       assert.equal(JSON.stringify(result.data).includes(storedKey.token_hash), false);

@@ -48,3 +48,9 @@ Collection endpoints accept `limit` and `after`. Registrations and rosters inclu
 This access excludes authentication internals (passwords, OTPs, sessions and rate-limit hashes), environment variables and database/SMTP/Cloudflare secrets. It provides no SQL console, infrastructure administration, write, upload or deletion permissions. Existing restricted keys retain their scopes; issue a new key with `backend:read` to grant full application-data access.
 
 The preserved older Supabase API documentation is in [LEGACY_API.md](LEGACY_API.md).
+
+## Accounts and successful logins
+
+`GET /api/v1/backend/accounts?search=EMAIL_OR_NAME&page=1` returns account signup/last-login dates, recorded login count, role, office access and current-cycle registration status (50 per page, with total). `GET /api/v1/backend/logins?user=USER_ID&before=CURSOR` returns successful email-verified login events, newest first, 50 per page. Omit `user` for all accounts. Both require `backend:read`. No OTPs or session credentials are exposed.
+
+Office admins can also use **Accounts** in `/admin` to search accounts and view their login histories. Apply migration `003_account_activity.sql` before deploying this version. Existing accounts have unknown signup dates; historical login activity cannot be reconstructed. Tracking starts with this release.

@@ -1,3 +1,4 @@
+import { readAccounts, readLogins } from './accounts.mjs';
 import { readFile } from 'node:fs/promises';
 import { ORGANIZATIONS, AMOUNTS } from '../registration/model.mjs';
 import { DENOMINATIONS } from '../registration/denominations.mjs';
@@ -71,7 +72,7 @@ export function createKeyService({ pool, config, storage }) {
       if (!parse(key.scopes).includes(permission) && !parse(key.scopes).includes('backend:read')) throw new HttpError(403, `This key requires ${permission} permission.`);
       await rateLimit(pool, config, `api-key:${key.id}`, 120, 60000);
       await pool.execute('UPDATE dr_api_keys SET last_used_at=? WHERE id=?', [Date.now(), key.id]);
-      if (backend) return readBackend(pool, storage, url);
+      if (backend) return readBackend(pool, storage, url, config);
       if (permission === 'photos:read') {
         const path = url.searchParams.get('path');
         if (!path || path.length > 512) throw new HttpError(400, 'Supply a valid portrait path.');
@@ -102,8 +103,10 @@ export function createKeyService({ pool, config, storage }) {
 }
 
 // Explicit application-data allowlist. Authentication/provider tables are never exposed.
-async function readBackend(pool, storage, url) {
+async function readBackend(pool, storage, url, config) {
   const resource = url.pathname.replace(/\/$/, '').slice('/api/v1/backend/'.length);
+  if (resource === 'accounts') return readAccounts(pool, config, url);
+  if (resource === 'logins') return readLogins(pool, config, url);
   if (resource === 'settings') {
     const [[settings]] = await pool.query('SELECT current_year FROM dr_settings WHERE id=1');
     const [years] = await pool.query('SELECT DISTINCT registration_year AS year FROM dr_registrations ORDER BY registration_year');

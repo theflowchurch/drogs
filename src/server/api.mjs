@@ -1,3 +1,4 @@
+import { readAccounts, readLogins } from './accounts.mjs';
 import { createKeyService } from './api-keys.mjs';
 import { readFile } from 'node:fs/promises';
 import { applyAction, visibleState } from '../registration/model.mjs';
@@ -61,6 +62,10 @@ export function createApi({ pool, config, auth, storage, logger = console }) {
       const actor = await auth.actor(request);
       if (path === '/api/registration/auth/me' && method === 'GET') return json(actor);
       if (!actor) throw new HttpError(401, 'Please sign in again.');
+      if (['/api/registration/accounts', '/api/registration/logins'].includes(path) && method === 'GET') {
+        if (!actor.office) throw new HttpError(403, 'Office access required.');
+        return json(await (path.endsWith('/accounts') ? readAccounts : readLogins)(pool, config, url));
+      }
       if (path === '/api/registration/keys' && method === 'GET') return json(await keys.list(actor));
       if (path === '/api/registration/keys' && method === 'POST') return json(await keys.issue(actor, await jsonBody(request)), 201);
       if (path === '/api/registration/keys/revoke' && method === 'POST') return json(await keys.revoke(actor, (await jsonBody(request)).id));

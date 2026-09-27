@@ -57,8 +57,11 @@ export function createAuth({ pool, config, mailer }) {
           return null; // Commit failed-attempt count; do not throw and roll it back.
         }
         await conn.execute('DELETE FROM dr_otp WHERE email=?', [email]);
-        await conn.execute('INSERT IGNORE INTO dr_users (id,email) VALUES (?,?)', [randomUUID(), email]);
+        const [created] = await conn.execute('INSERT IGNORE INTO dr_users (id,email) VALUES (?,?)', [randomUUID(), email]);
         const [[user]] = await conn.execute('SELECT id,email FROM dr_users WHERE email=?', [email]);
+        const now = Date.now();
+        await conn.execute('INSERT INTO dr_account_activity (user_id,signed_up_at,last_login_at,login_count) VALUES (?,?,?,1) ON DUPLICATE KEY UPDATE last_login_at=VALUES(last_login_at),login_count=login_count+1', [user.id, created.affectedRows ? now : null, now]);
+        await conn.execute('INSERT INTO dr_logins (user_id,logged_in_at) VALUES (?,?)', [user.id, now]);
         const token = randomBytes(32).toString('hex');
         await conn.execute('INSERT INTO dr_sessions (token_hash,user_id,expires_at) VALUES (?,?,?)', [digest(config.secret, `session:${token}`), user.id, Date.now() + 43200000]);
         return { actor: { ...user, office: config.admins.includes(user.email) }, token };
