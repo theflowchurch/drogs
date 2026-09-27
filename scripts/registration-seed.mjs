@@ -1,7 +1,7 @@
 import fs from "node:fs";
 const records = JSON.parse(
-  fs.readFileSync("src/registration/reference-bishops.json", "utf8"),
-);
+  fs.readFileSync("src/registration/reference-people.json", "utf8"),
+).filter((r) => r.role === "bishop");
 const quote = (s) => `'${String(s || "").replaceAll("'", "''")}'`;
 const sql =
   "-- Reference names only: no registrations, accounts, dates of birth or contact details.\nINSERT INTO public.registration_references(id,name,title,organization,image) VALUES\n" +

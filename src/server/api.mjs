@@ -5,7 +5,8 @@ import { applyAction, visibleState } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, canReadMedia } from './storage.mjs';
-const references = JSON.parse(await readFile(new URL('../registration/reference-bishops.json', import.meta.url), 'utf8'));
+const people = JSON.parse(await readFile(new URL('../registration/reference-people.json', import.meta.url), 'utf8'));
+const references = people.filter(p => p.role === 'bishop');
 export async function readBody(request, limit = 256 * 1024) {
   if (Number(request.headers.get('content-length')) > limit) throw new HttpError(413, 'The upload is too large.');
   if (!request.body) return Buffer.alloc(0);

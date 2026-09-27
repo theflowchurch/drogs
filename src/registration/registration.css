@@ -1339,3 +1339,355 @@ p {
 .reg-account-status {text-transform:capitalize}
 .reg-accounts li {padding:10px 0}
 @media(max-width:650px){.reg-account-search{align-items:stretch;flex-direction:column}.reg-account-toolbar{align-items:start;flex-direction:column;min-width:0;width:100%}.reg-account-toolbar>*{max-width:100%;overflow-wrap:anywhere}.reg-account-table{max-width:100%}}
+
+/* Directory: existing records, updated markers and record views */
+.reg-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.reg-person-portrait {
+  display: block;
+  position: relative;
+}
+.reg-person-card > .reg-person-portrait > img,
+.reg-person-card > .reg-person-portrait > .reg-placeholder {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4/4.5;
+  object-fit: cover;
+  object-position: center 25%;
+}
+.reg-person-place {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+}
+.reg-dot {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(10, 40, 46, 0.35);
+}
+.reg-dot.updated {
+  background: #1f9d55;
+}
+.reg-dot.stale {
+  background: var(--red);
+}
+.reg-toggle,
+.reg-switch {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 18px;
+  background: #e9efee;
+  border-radius: 999px;
+}
+.reg-toggle button,
+.reg-switch button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 9px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.reg-toggle button.active,
+.reg-switch button.active {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(10, 40, 46, 0.14);
+}
+.reg-toggle b,
+.reg-switch strong {
+  font-size: 11px;
+  color: var(--teal);
+}
+.reg-denominations {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.reg-denomination {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  padding: 18px;
+}
+.reg-denomination header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.reg-denomination header img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+.reg-denomination h3 {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.3;
+}
+.reg-denomination p {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+.reg-denomination-mark {
+  color: var(--muted);
+}
+.reg-denomination-totals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.reg-denomination-totals button {
+  border: 1px solid var(--line);
+  background: #f7faf9;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: left;
+}
+.reg-denomination-totals span {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.reg-denomination-totals strong {
+  font-size: 18px;
+}
+.reg-denomination > small {
+  display: block;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.reg-denomination-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+.reg-denomination-heading img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+.reg-denomination-heading h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.reg-denomination-heading p {
+  margin: 3px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+.reg-denomination-heading > button {
+  margin-left: auto;
+}
+.reg-denomination-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f7faf9;
+  padding: 12px 14px;
+  margin: 16px 0;
+}
+.reg-denomination-link img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+.reg-denomination-link small {
+  display: block;
+  font-size: 11px;
+  color: var(--teal);
+}
+.reg-record-hero {
+  display: flex;
+  gap: 26px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.reg-record-photo {
+  width: 220px;
+  aspect-ratio: 4/4.6;
+  object-fit: cover;
+  object-position: center 22%;
+  border-radius: 16px;
+  background: #eef3f2;
+}
+.reg-record-hero > div:last-child {
+  flex: 1;
+  min-width: 220px;
+}
+.reg-record-hero h2 {
+  margin: 6px 0 4px;
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.reg-record-country {
+  margin: 0 0 14px;
+  font-size: 20px;
+  color: var(--muted);
+}
+.reg-record-denomination {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: 0.04em;
+}
+.reg-record-denomination img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+.reg-record-line {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.reg-record-group {
+  margin-top: 28px;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+.reg-record-group h3 {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+.reg-record-group h3 b {
+  color: var(--teal);
+}
+.reg-thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+  gap: 12px;
+}
+.reg-thumb-grid button {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  padding: 0 0 10px;
+  overflow: hidden;
+  text-align: center;
+}
+.reg-thumb-grid img,
+.reg-thumb-grid .reg-placeholder {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1/1.1;
+  object-fit: cover;
+  object-position: center 22%;
+  margin-bottom: 8px;
+}
+.reg-thumb-grid b {
+  display: block;
+  padding: 0 8px;
+  font-size: 12px;
+  line-height: 1.25;
+}
+.reg-thumb-grid small {
+  display: block;
+  padding: 2px 8px 0;
+  font-size: 10px;
+  color: var(--muted);
+}
+.reg-compare {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+}
+.reg-compare > div {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 4px 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f7faf9;
+  font-size: 13px;
+}
+.reg-compare > div.changed {
+  border-color: #d89aa5;
+  background: #fdf5f6;
+}
+.reg-compare span {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  align-self: center;
+}
+.reg-compare i {
+  grid-column: 2;
+  font-style: normal;
+  font-size: 12px;
+  color: var(--red);
+}
+.reg-compare i:empty {
+  display: none;
+}
+.reg-check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 16px 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.reg-reference-review {
+  border-color: #d89aa5;
+}
+.reg-secondary.full,
+.reg-primary.full {
+  width: 100%;
+  margin-top: 14px;
+}
+@media (max-width: 700px) {
+  .reg-record-photo {
+    width: 100%;
+    max-width: 260px;
+  }
+  .reg-toggle,
+  .reg-switch {
+    display: flex;
+    width: 100%;
+  }
+  .reg-toggle button,
+  .reg-switch button {
+    flex: 1;
+    justify-content: center;
+  }
+}

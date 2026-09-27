@@ -113,7 +113,7 @@ async function readBackend(pool, storage, url, config) {
     return { currentYear: settings.current_year, years: years.map(r => r.year), amounts: AMOUNTS };
   }
   if (resource === 'reference') return { organizations: ORGANIZATIONS, denominations: DENOMINATIONS,
-    bishops: JSON.parse(await readFile(new URL('../registration/reference-bishops.json', import.meta.url), 'utf8')) };
+    bishops: JSON.parse(await readFile(new URL('../registration/reference-people.json', import.meta.url), 'utf8')).filter(p => p.role === 'bishop') };
   if (resource === 'media-url') {
     const path = url.searchParams.get('path');
     if (!path || path.length > 512) throw new HttpError(400, 'Supply a valid media path.');

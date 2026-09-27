@@ -351,6 +351,34 @@ export function applyAction(
       throw Error("Select an approved bishop.");
     r.data.bishopId = payload.bishopId;
     r.data.bishopName = "";
+  } else if (action === "linkReference") {
+    const row = state.rosters.find(
+      (r) => r.id === payload.rosterId && r.year === state.year,
+    );
+    if (!row || row.status !== "active")
+      throw Error("This annual list entry is not active.");
+    if (!actor.office && row.bishopId !== actor.id)
+      throw Error(
+        "Only the supervising bishop or office can confirm this entry.",
+      );
+    const id = String(payload.referenceId || "");
+    if (!/^[BP]\d+$/.test(id))
+      throw Error("Choose an existing record to confirm.");
+    if (
+      state.rosters.some(
+        (r) =>
+          r.id !== row.id &&
+          r.year === state.year &&
+          r.status === "active" &&
+          r.referenceId === id,
+      )
+    )
+      throw Error(
+        "That existing record is already confirmed for another pastor this year.",
+      );
+    row.referenceId = id;
+    row.referenceConfirmedBy = actor.id;
+    row.referenceConfirmedAt = now;
   } else if (action === "removeRoster") {
     const r = state.rosters.find(
       (r) => r.id === payload.id && r.year === state.year,
@@ -483,4 +511,108 @@ export function visibleState(state, actor, references) {
     audit: state.audit.filter((r) => actor.office || r.actor === actor.id),
     directory: directoryFor(state, references),
   };
+}
+export const samePhone = (a, b) => {
+  // ponytail: legacy numbers were stored with inconsistent country prefixes, so
+  // the last nine digits decide. Replace with E.164 normalization once the
+  // source rosters store a country code for every row.
+  const x = normalPhone(a),
+    y = normalPhone(b);
+  return x.length >= 7 && y.length >= 7 && x.slice(-9) === y.slice(-9);
+};
+export function referenceIndex(references) {
+  const byId = new Map(),
+    byName = new Map();
+  for (const p of references) {
+    byId.set(p.id, p);
+    const key = normalName(p.name);
+    if (!byName.has(key)) byName.set(key, []);
+    byName.get(key).push(p);
+  }
+  return { byId, byName, all: references };
+}
+// Existing records that may be the same person as an annual-list entry. The
+// name must match exactly once normalized; a matching email or phone makes it
+// near certain. A person still confirms from the photo before any record
+// changes, so a close spelling is never linked automatically.
+export function referenceMatches(index, row, role = "pastor") {
+  return (index.byName.get(normalName(row.name)) || [])
+    .filter((p) => p.role === role)
+    .map((p) => ({
+      reference: p,
+      emailMatch: Boolean(
+        normalEmail(row.email) && normalEmail(p.email) === normalEmail(row.email),
+      ),
+      phoneMatch: samePhone(p.phone, row.phone),
+    }))
+    .map((m) => ({ ...m, contactMatch: m.emailMatch || m.phoneMatch }))
+    .sort((a, b) => Number(b.contactMatch) - Number(a.contactMatch));
+}
+// The office directory: every existing record, showing whichever information is
+// current. Green (updated) means the person registered this cycle or their
+// bishop confirmed their details; red means this is still the older record.
+export function directoryPeople(state, references, year = state.year) {
+  const rows = state.rosters.filter(
+    (r) => r.year === year && r.status === "active",
+  );
+  const linked = new Map();
+  for (const row of rows) if (row.referenceId) linked.set(row.referenceId, row);
+  const submitted = state.registrations.filter(
+    (r) => r.year === year && r.status !== "draft",
+  );
+  const byUser = new Map(submitted.map((r) => [r.userId, r]));
+  const registrations = new Map();
+  for (const p of state.profiles)
+    if (p.referenceId && byUser.has(p.id))
+      registrations.set(p.referenceId, byUser.get(p.id));
+  for (const row of rows)
+    if (row.referenceId && row.pastorId && byUser.has(row.pastorId))
+      registrations.set(row.referenceId, byUser.get(row.pastorId));
+  const people = references.map((p) => {
+    const row = linked.get(p.id),
+      registration = registrations.get(p.id),
+      d = registration?.data;
+    return {
+      ...p,
+      email: d?.email || row?.email || p.email,
+      phone: d?.phone || row?.phone || p.phone,
+      city: d?.city || p.city,
+      country: d?.country || p.country,
+      denomination: d?.denomination || p.denomination,
+      photo: d?.photo || "",
+      recorded: { email: p.email, phone: p.phone },
+      updated: Boolean(registration || row?.referenceConfirmedAt),
+      updatedAt:
+        registration?.submittedAt || row?.referenceConfirmedAt || null,
+      updatedBy: registration ? "registration" : row ? "bishop" : "",
+      claimed: p.role === "bishop" ? Boolean(registration) : linked.has(p.id),
+      registration: registration || null,
+    };
+  });
+  const matched = new Set([...registrations.values()].map((r) => r.userId));
+  for (const r of submitted.filter(
+    (r) => r.status === "confirmed" && !matched.has(r.userId),
+  ))
+    people.push({
+      id: `new:${r.userId}`,
+      role: r.data.role,
+      name: r.data.name,
+      title: r.data.role === "bishop" ? "Bishop" : "Pastor",
+      organization: r.data.organization,
+      denomination: r.data.denomination || r.data.church,
+      denominationLogo: "",
+      city: r.data.city,
+      country: r.data.country,
+      image: "",
+      photo: r.data.photo,
+      email: r.data.email,
+      phone: r.data.phone,
+      recorded: null,
+      updated: true,
+      updatedAt: r.submittedAt,
+      updatedBy: "registration",
+      claimed: true,
+      registration: r,
+    });
+  return people.sort((a, b) => a.name.localeCompare(b.name));
 }

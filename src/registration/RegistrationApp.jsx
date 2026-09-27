@@ -3,6 +3,7 @@ import Accounts from './Accounts';
 import ApiKeys from './ApiKeys';
 import {
   useEffect,
+  useMemo,
   useState,
   useCallback,
   useId,
@@ -20,8 +21,15 @@ import {
   parseRoster,
   validateProfile,
   normalName,
+  referenceIndex,
+  referenceMatches,
+  directoryPeople,
 } from "./model.mjs";
-import references from "./reference-bishops.json";
+import people from "./reference-people.json";
+// The office's existing records. Bishops are the linkable approval references;
+// the whole roster backs the Directory and the member search.
+const references = people.filter((p) => p.role === "bishop");
+const index = referenceIndex(people);
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const paymentInstructions = process.env.NEXT_PUBLIC_PAYMENT_INSTRUCTIONS || "";
 const statusLabel = {
@@ -278,9 +286,12 @@ export default function RegistrationApp({ office = false }) {
         "History",
         ...(api.apiKeysAvailable ? ["Accounts", "API keys"] : []),
       ]
-    : profile?.bishopApproved
-      ? ["Registration", "My pastors", "Unclaimed", "History"]
-      : ["Registration", "History"];
+    : [
+        "Registration",
+        ...(profile?.bishopApproved ? ["My pastors", "Unclaimed"] : []),
+        ...(current && current.status !== "draft" ? ["Directory"] : []),
+        "History",
+      ];
   async function logout() {
     await run(async () => {
       await api.signOut();
@@ -435,8 +446,9 @@ export default function RegistrationApp({ office = false }) {
                       <p>
                         {
                           {
-                            Directory:
-                              "People registered and confirmed for this annual cycle.",
+                            Directory: office
+                              ? "Every record DROGS holds. Green means the person updated their information this cycle; red is the older record."
+                              : "Search every bishop and pastor in DROGS.",
                             Unclaimed:
                               "Registrations waiting for a bishop to confirm their place.",
                             "Bishop approvals":
@@ -454,7 +466,8 @@ export default function RegistrationApp({ office = false }) {
                         }
                       </p>
                     </div>
-                    {!["Accounts", "API keys"].includes(tab) && <Field label="Annual cycle">
+                    {!["Accounts", "API keys"].includes(tab) &&
+                      !(tab === "Directory" && !office) && <Field label="Annual cycle">
                       <select
                         value={year}
                         onChange={(e) => setYear(Number(e.target.value))}
@@ -475,9 +488,12 @@ export default function RegistrationApp({ office = false }) {
                   </div>
                   {tab === "Accounts" && <Accounts run={run} />}
                   {tab === "API keys" && <ApiKeys run={run} />}
-                  {tab === "Directory" && (
-                    <Directory records={scoped} directory={state.directory} />
-                  )}
+                  {tab === "Directory" &&
+                    (office ? (
+                      <Directory state={state} year={Number(year)} />
+                    ) : (
+                      <MemberDirectory />
+                    ))}
                   {tab === "Unclaimed" && (
                     <ReviewQueue
                       records={scoped.filter((r) => r.status === "unclaimed")}
@@ -1396,61 +1412,576 @@ const filtered = (records, f) =>
         normalName(f.q),
       ),
   );
-function Directory({ records, directory }) {
-  const [filter, setFilter] = useState({ q: "", org: "", role: "" }),
+const PAGE = 60;
+const initials = (name) =>
+  String(name || "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((x) => x[0])
+    .join("")
+    .toUpperCase();
+// A registration photo is private and fetched through a signed URL; an existing
+// record's portrait is a published asset.
+function Portrait({ person, className = "" }) {
+  if (person.photo)
+    return (
+      <Media path={person.photo} alt={person.name} className={className} />
+    );
+  if (person.image)
+    return (
+      <img
+        className={className}
+        src={`${base}/${person.image}`}
+        alt={person.name}
+        loading="lazy"
+        decoding="async"
+      />
+    );
+  return (
+    <div className={`reg-placeholder ${className}`} aria-label={person.name}>
+      {initials(person.name) || "◯"}
+    </div>
+  );
+}
+function Dot({ updated }) {
+  return (
+    <span
+      className={`reg-dot ${updated ? "updated" : "stale"}`}
+      title={updated ? "Updated this cycle" : "Older information"}
+    >
+      <span className="reg-visually-hidden">
+        {updated ? "Updated this cycle" : "Older information, not updated"}
+      </span>
+    </span>
+  );
+}
+const personMatches = (p, f) =>
+  (!f.org || p.organization === f.org) &&
+  (!f.denomination || p.denomination === f.denomination) &&
+  (!f.country || p.country === f.country) &&
+  (!f.state ||
+    (f.state === "updated" && p.updated) ||
+    (f.state === "stale" && !p.updated) ||
+    (f.state === "unclaimed" && !p.claimed)) &&
+  (!f.q ||
+    normalName(`${p.name} ${p.city} ${p.country} ${p.denomination}`).includes(
+      normalName(f.q),
+    ));
+function DirectoryFilters({ filter, setFilter, options }) {
+  const set = (patch) => setFilter({ ...filter, ...patch });
+  return (
+    <div className="reg-filters">
+      <input
+        aria-label="Search people"
+        placeholder="Search by name, city or denomination"
+        type="search"
+        value={filter.q}
+        onChange={(e) => set({ q: e.target.value })}
+      />
+      <select
+        aria-label="Filter organization"
+        value={filter.org}
+        onChange={(e) =>
+          set({ org: e.target.value, denomination: "", country: "" })
+        }
+      >
+        <option value="">All organizations</option>
+        {options.organization.map((o) => (
+          <option key={o}>{o}</option>
+        ))}
+      </select>
+      <select
+        aria-label="Filter denomination"
+        value={filter.denomination}
+        onChange={(e) => set({ denomination: e.target.value })}
+      >
+        <option value="">All denominations</option>
+        {options.denomination.map((d) => (
+          <option key={d}>{d}</option>
+        ))}
+      </select>
+      {"country" in filter && (
+        <select
+          aria-label="Filter country"
+          value={filter.country}
+          onChange={(e) => set({ country: e.target.value })}
+        >
+          <option value="">All countries</option>
+          {options.country.map((c) => (
+            <option key={c}>{c}</option>
+          ))}
+        </select>
+      )}
+      {"state" in filter && (
+        <select
+          aria-label="Filter updated records"
+          value={filter.state}
+          onChange={(e) => set({ state: e.target.value })}
+        >
+          <option value="">Updated and not updated</option>
+          <option value="updated">Updated this cycle</option>
+          <option value="stale">Not updated</option>
+          <option value="unclaimed">Unclaimed</option>
+        </select>
+      )}
+    </div>
+  );
+}
+// Choices come from the records in view, so an organization narrows the
+// denominations and countries offered.
+const filterOptions = (list, org) => {
+  const scope = list.filter((p) => !org || p.organization === org);
+  const unique = (field, from) =>
+    [...new Set(from.map((p) => p[field]).filter(Boolean))].sort();
+  return {
+    organization: unique("organization", list),
+    denomination: unique("denomination", scope),
+    country: unique("country", scope),
+  };
+};
+function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
+  return (
+    <>
+      <div className="reg-people-grid">
+        {list.slice(0, limit).map((p) => (
+          <button
+            className="reg-person-card"
+            key={p.id}
+            onClick={() => onOpen(p)}
+          >
+            <span className="reg-person-portrait">
+              <Portrait person={p} />
+              {dots && <Dot updated={p.updated} />}
+            </span>
+            <div>
+              <small>
+                {p.title} · {p.organization}
+              </small>
+              <h3>{p.name}</h3>
+              <p>{p.denomination || "Denomination not recorded"}</p>
+              <span className="reg-person-place">
+                {[p.city, p.country].filter(Boolean).join(", ") ||
+                  "Location not recorded"}
+              </span>
+            </div>
+          </button>
+        ))}
+      </div>
+      {list.length > limit && (
+        <button className="reg-secondary full" onClick={onMore}>
+          Show more · {(list.length - limit).toLocaleString()} remaining
+        </button>
+      )}
+    </>
+  );
+}
+function Directory({ state, year }) {
+  const [role, setRole] = useState("bishop"),
+    [view, setView] = useState("people"),
+    [filter, setFilter] = useState({
+      q: "",
+      org: "",
+      denomination: "",
+      state: "",
+    }),
+    [limit, setLimit] = useState(PAGE),
     [selected, setSelected] = useState(null);
-  const confirmed = records.filter((r) => r.status === "confirmed"),
-    shown = filtered(confirmed, filter);
+  const all = useMemo(
+    () => directoryPeople(state, people, year),
+    [state, year],
+  );
+  const scope = useMemo(
+    () => all.filter((p) => personMatches(p, filter)),
+    [all, filter],
+  );
+  const list = useMemo(
+    () => scope.filter((p) => p.role === role),
+    [scope, role],
+  );
+  useEffect(() => setLimit(PAGE), [filter, role]);
+  const options = useMemo(
+    () => filterOptions(all, filter.org),
+    [all, filter.org],
+  );
+  const groups = useMemo(() => {
+    const map = new Map();
+    for (const p of all) {
+      if (!p.denomination || (filter.org && p.organization !== filter.org))
+        continue;
+      const d = map.get(p.denomination) || {
+        name: p.denomination,
+        logo: "",
+        organizations: new Set(),
+        bishop: 0,
+        pastor: 0,
+        updated: 0,
+      };
+      d.logo ||= p.denominationLogo;
+      d.organizations.add(p.organization);
+      d[p.role] += 1;
+      if (p.updated) d.updated += 1;
+      map.set(p.denomination, d);
+    }
+    return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
+  }, [all, filter.org]);
+  const open = (name, nextRole) => {
+    setFilter({ ...filter, denomination: name });
+    setRole(nextRole);
+    setView("people");
+  };
+  const current = filter.denomination
+    ? groups.find((g) => g.name === filter.denomination)
+    : null;
   return (
     <>
       <div className="reg-stats">
         {[
-          ["Confirmed registrations", confirmed.length],
-          ["Bishops", confirmed.filter((r) => r.data.role === "bishop").length],
-          ["Pastors", confirmed.filter((r) => r.data.role === "pastor").length],
-          [
-            "Payments verified",
-            confirmed.filter((r) => r.payment === "verified").length,
-          ],
+          ["Existing records", scope.length],
+          ["Updated this cycle", scope.filter((p) => p.updated).length],
+          ["Not updated", scope.filter((p) => !p.updated).length],
+          ["Unclaimed", scope.filter((p) => !p.claimed).length],
         ].map(([label, n]) => (
           <div key={label}>
             <span>{label}</span>
-            <strong>{n}</strong>
+            <strong>{n.toLocaleString()}</strong>
           </div>
         ))}
       </div>
-      <Filters filter={filter} setFilter={setFilter} roles />
-      {!shown.length ? (
-        <Empty title="No confirmed registrations yet">
-          New registrations appear here after confirmation. Existing reference
-          records are not counted as registrations.
-        </Empty>
-      ) : (
-        <div className="reg-people-grid">
-          {shown.map((r) => (
-            <button
-              className="reg-person-card"
-              key={r.userId}
-              onClick={() => setSelected(r)}
-            >
-              <Media path={r.data.photo} alt={r.data.name} />
-              <div>
-                <small>
-                  {titleCase(r.data.role)} · {r.data.organization}
-                </small>
-                <h3>{r.data.name}</h3>
-                <p>{r.data.denomination || r.data.church}</p>
-                <Badge status={r.payment}>
-                  {r.payment === "pending" ? "Payment under review" : null}
-                </Badge>
+      <div className="reg-switch" role="group" aria-label="Directory view">
+        {[
+          ["people", "People"],
+          ["denominations", "Denominations"],
+        ].map(([value, label]) => (
+          <button
+            key={value}
+            aria-pressed={view === value}
+            className={view === value ? "active" : ""}
+            onClick={() => setView(value)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <DirectoryFilters
+        filter={filter}
+        setFilter={setFilter}
+        options={options}
+      />
+      {view === "denominations" ? (
+        <div className="reg-denominations">
+          {groups.map((g) => (
+            <article className="reg-denomination" key={g.name}>
+              <header>
+                {g.logo ? (
+                  <img src={`${base}/${g.logo}`} alt="" decoding="async" />
+                ) : (
+                  <span className="reg-denomination-mark">◇</span>
+                )}
+                <div>
+                  <h3>{g.name}</h3>
+                  <p>{[...g.organizations].join(" · ")}</p>
+                </div>
+              </header>
+              <div className="reg-denomination-totals">
+                <button onClick={() => open(g.name, "bishop")}>
+                  <span>Bishops</span>
+                  <strong>{g.bishop.toLocaleString()}</strong>
+                </button>
+                <button onClick={() => open(g.name, "pastor")}>
+                  <span>Pastors</span>
+                  <strong>{g.pastor.toLocaleString()}</strong>
+                </button>
               </div>
-            </button>
+              <small>{g.updated.toLocaleString()} updated this cycle</small>
+            </article>
           ))}
+          {!groups.length && (
+            <Empty title="No denominations in this view">
+              Clear the organization filter to see every denomination.
+            </Empty>
+          )}
         </div>
+      ) : (
+        <>
+          {current && (
+            <section className="reg-denomination-heading">
+              {current.logo && (
+                <img src={`${base}/${current.logo}`} alt="" decoding="async" />
+              )}
+              <div>
+                <h2>{current.name}</h2>
+                <p>{[...current.organizations].join(" · ")}</p>
+              </div>
+              <button
+                className="reg-text"
+                onClick={() => setFilter({ ...filter, denomination: "" })}
+              >
+                Clear denomination
+              </button>
+            </section>
+          )}
+          <div className="reg-switch" role="group" aria-label="Role">
+            {[
+              ["bishop", "Bishops"],
+              ["pastor", "Pastors"],
+            ].map(([value, label]) => (
+              <button
+                key={value}
+                aria-label={label}
+                aria-pressed={role === value}
+                className={role === value ? "active" : ""}
+                onClick={() => setRole(value)}
+              >
+                {label}{" "}
+                <strong>
+                  {scope.filter((p) => p.role === value).length.toLocaleString()}
+                </strong>
+              </button>
+            ))}
+          </div>
+          {list.length ? (
+            <PeopleGrid
+              list={list}
+              limit={limit}
+              onMore={() => setLimit((n) => n + PAGE)}
+              onOpen={setSelected}
+            />
+          ) : (
+            <Empty title="No records match these filters">
+              Change the search, organization or denomination.
+            </Empty>
+          )}
+        </>
       )}
       {selected && (
-        <Dialog title="Registration details" onClose={() => setSelected(null)}>
-          <ProfileDetails record={selected} directory={directory} />
+        <Dialog title="Record" onClose={() => setSelected(null)}>
+          <RecordDetails
+            person={selected}
+            onDenomination={(name) => {
+              setSelected(null);
+              open(name, selected.role);
+            }}
+          />
+        </Dialog>
+      )}
+    </>
+  );
+}
+function RecordDetails({ person: p, onDenomination }) {
+  const changed = (field) =>
+    p.recorded && p.recorded[field] && p.recorded[field] !== p[field];
+  return (
+    <>
+      <div className="reg-record-hero">
+        <span className="reg-person-portrait">
+          <Portrait person={p} className="reg-record-photo" />
+          <Dot updated={p.updated} />
+        </span>
+        <div>
+          <span className="reg-eyebrow">{(p.title || p.role).toUpperCase()}</span>
+          <h2>{p.name}</h2>
+          <p className="reg-record-country">
+            {[p.city, p.country].filter(Boolean).join(", ") || "Location not recorded"}
+          </p>
+          <p className="reg-record-line">{p.organization}</p>
+          <span className={`reg-badge ${p.updated ? "verified" : "unclaimed"}`}>
+            {p.updated
+              ? p.updatedBy === "registration"
+                ? "Updated by registration"
+                : "Confirmed by their bishop"
+              : "Older information · not updated"}
+          </span>
+          {!p.claimed && <Badge status="unclaimed">Unclaimed</Badge>}
+        </div>
+      </div>
+      {p.denomination && (
+        <button
+          className="reg-denomination-link"
+          onClick={() => onDenomination?.(p.denomination)}
+        >
+          {p.denominationLogo && (
+            <img src={`${base}/${p.denominationLogo}`} alt="" />
+          )}
+          <span>
+            {p.denomination}
+            <small>View this denomination →</small>
+          </span>
+        </button>
+      )}
+      <dl className="reg-details">
+        {[
+          ["City", p.city || "—"],
+          ["Country", p.country || "—"],
+          ["Email", p.email || "—"],
+          ["Phone", p.phone || "—"],
+          ...(changed("email")
+            ? [["Previous email on record", p.recorded.email]]
+            : []),
+          ...(changed("phone")
+            ? [["Previous phone on record", p.recorded.phone]]
+            : []),
+          ...(p.bishop ? [["Supervising bishop", p.bishop]] : []),
+          ...(p.updatedAt
+            ? [["Updated", new Date(p.updatedAt).toLocaleString()]]
+            : []),
+          ...(p.registration
+            ? [
+                ["Registration", statusLabel[p.registration.status]],
+                ["Payment", statusLabel[p.registration.payment]],
+              ]
+            : []),
+        ].map(([k, v]) => (
+          <div key={k}>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </>
+  );
+}
+// Members search the published roster: portrait, name, title, country,
+// denomination, branch and who oversees whom. Contact details and dates of
+// birth are removed before the roster reaches the browser.
+const publicPeople = people.map(({ email, phone, ...rest }) => rest);
+const bishopPastors = (bishop) => {
+  const named = publicPeople.filter(
+    (p) => p.role === "pastor" && p.bishop && normalName(p.bishop) === normalName(bishop.name),
+  );
+  if (named.length) return { list: named, heading: "Pastors under this bishop" };
+  if (!bishop.denomination) return { list: [], heading: "" };
+  return {
+    list: publicPeople.filter(
+      (p) => p.role === "pastor" && p.denomination === bishop.denomination,
+    ),
+    heading: `Pastors in ${bishop.denomination}`,
+  };
+};
+function PublicRecord({ person: p, onOpen }) {
+  const under = p.role === "bishop" ? bishopPastors(p) : null;
+  const [limit, setLimit] = useState(24);
+  return (
+    <>
+      <div className="reg-record-hero">
+        <Portrait person={p} className="reg-record-photo" />
+        <div>
+          <span className="reg-eyebrow">{(p.title || p.role).toUpperCase()}</span>
+          <h2>{p.name}</h2>
+          <p className="reg-record-country">
+            {[p.city, p.country].filter(Boolean).join(", ") ||
+              "Location not recorded"}
+          </p>
+          {p.denomination && (
+            <p className="reg-record-denomination">
+              {p.denominationLogo && (
+                <img src={`${base}/${p.denominationLogo}`} alt="" />
+              )}
+              <span>{p.denomination}</span>
+            </p>
+          )}
+          {p.role === "pastor" && p.branch && (
+            <p className="reg-record-line">Branch · {p.branch}</p>
+          )}
+          {p.role === "pastor" && (
+            <p className="reg-record-line">
+              Bishop · {p.bishop || "Not recorded"}
+            </p>
+          )}
+        </div>
+      </div>
+      {under?.list.length ? (
+        <section className="reg-record-group">
+          <h3>
+            {under.heading} <b>{under.list.length.toLocaleString()}</b>
+          </h3>
+          <div className="reg-thumb-grid">
+            {under.list.slice(0, limit).map((q) => (
+              <button key={q.id} onClick={() => onOpen(q)}>
+                <Portrait person={q} />
+                <b>{q.name}</b>
+                <small>
+                  {[q.branch, q.country].filter(Boolean).join(" · ")}
+                </small>
+              </button>
+            ))}
+          </div>
+          {under.list.length > limit && (
+            <button
+              className="reg-secondary full"
+              onClick={() => setLimit((n) => n + 24)}
+            >
+              Show more · {(under.list.length - limit).toLocaleString()} remaining
+            </button>
+          )}
+        </section>
+      ) : null}
+    </>
+  );
+}
+function MemberDirectory() {
+  const [role, setRole] = useState("bishop"),
+    [filter, setFilter] = useState({
+      q: "",
+      org: "",
+      denomination: "",
+      country: "",
+    }),
+    [limit, setLimit] = useState(PAGE),
+    [selected, setSelected] = useState(null);
+  const scope = useMemo(
+    () => publicPeople.filter((p) => personMatches(p, filter)),
+    [filter],
+  );
+  const list = useMemo(
+    () => scope.filter((p) => p.role === role),
+    [scope, role],
+  );
+  useEffect(() => setLimit(PAGE), [filter, role]);
+  const options = useMemo(
+    () => filterOptions(publicPeople, filter.org),
+    [filter.org],
+  );
+  return (
+    <>
+      <div className="reg-toggle" role="group" aria-label="Bishops or pastors">
+        {[
+          ["bishop", "Bishops"],
+          ["pastor", "Pastors"],
+        ].map(([value, label]) => (
+          <button
+            key={value}
+            aria-label={label}
+            aria-pressed={role === value}
+            className={role === value ? "active" : ""}
+            onClick={() => setRole(value)}
+          >
+            {label}
+            <b>{scope.filter((p) => p.role === value).length.toLocaleString()}</b>
+          </button>
+        ))}
+      </div>
+      <DirectoryFilters
+        filter={filter}
+        setFilter={setFilter}
+        options={options}
+      />
+      {list.length ? (
+        <PeopleGrid
+          list={list}
+          limit={limit}
+          onMore={() => setLimit((n) => n + PAGE)}
+          onOpen={setSelected}
+          dots={false}
+        />
+      ) : (
+        <Empty title="No one matches this search">
+          Try another name, denomination or country.
+        </Empty>
+      )}
+      {selected && (
+        <Dialog title={selected.name} onClose={() => setSelected(null)}>
+          <PublicRecord person={selected} onOpen={setSelected} />
         </Dialog>
       )}
     </>
@@ -1792,6 +2323,168 @@ function Payments({ records, perform, canEdit }) {
     </>
   );
 }
+// A bishop's pasted list often names people DROGS already holds. The portrait
+// and the recorded details are shown side by side so a person decides whether
+// it is the same pastor; confirming links the record and makes the list's
+// contact details the current ones.
+function ReferenceReview({ rows, perform, canEdit }) {
+  const [openId, setOpenId] = useState(null),
+    [pick, setPick] = useState(""),
+    [same, setSame] = useState(false);
+  const pending = useMemo(
+    () =>
+      rows
+        .filter((r) => r.status === "active" && !r.referenceId)
+        .map((row) => ({ row, matches: referenceMatches(index, row) }))
+        .filter((m) => m.matches.length),
+    [rows],
+  );
+  const entry = pending.find((m) => m.row.id === openId);
+  const chosen =
+    entry && (entry.matches.find((m) => m.reference.id === pick) || entry.matches[0]);
+  const reference = chosen?.reference;
+  const row = entry?.row;
+  const start = (m) => {
+    setOpenId(m.row.id);
+    setPick(m.matches[0].reference.id);
+    setSame(false);
+  };
+  const differs = (a, b) => Boolean(a) && Boolean(b) && normalName(a) !== normalName(b);
+  if (!pending.length) return null;
+  return (
+    <section className="reg-card reg-reference-review">
+      <div className="reg-section-head">
+        <div>
+          <h2>Verify existing records</h2>
+          <p>
+            {pending.length.toLocaleString()} on this list already appear in
+            DROGS. Confirm each person so their record is updated instead of
+            duplicated.
+          </p>
+        </div>
+      </div>
+      <div className="reg-queue">
+        {pending.slice(0, PAGE).map((m) => (
+          <button
+            key={m.row.id}
+            className="reg-queue-row"
+            disabled={!canEdit}
+            onClick={() => start(m)}
+          >
+            <Portrait
+              person={m.matches[0].reference}
+              className="reg-avatar small"
+            />
+            <div>
+              <h3>{m.row.name}</h3>
+              <p>
+                {m.matches[0].reference.title} ·{" "}
+                {m.matches[0].reference.denomination ||
+                  m.matches[0].reference.organization}
+              </p>
+              <small>
+                {m.matches[0].contactMatch
+                  ? "Email or phone also matches our record"
+                  : "Name matches, contact details differ"}
+              </small>
+            </div>
+            <Badge status={m.matches[0].contactMatch ? "verified" : "unclaimed"}>
+              {m.matches[0].contactMatch ? "Likely the same person" : "Check"}
+            </Badge>
+            <span>Review →</span>
+          </button>
+        ))}
+      </div>
+      {pending.length > PAGE && (
+        <small>
+          Showing the first {PAGE}. Confirm these to reveal the rest.
+        </small>
+      )}
+      {entry && reference && (
+        <Dialog
+          title="Is this the same person?"
+          onClose={() => setOpenId(null)}
+        >
+          <div className="reg-person-summary">
+            <Portrait person={reference} className="reg-avatar" />
+            <div>
+              <h2>{reference.name}</h2>
+              <p>
+                {reference.title} · {reference.organization}
+              </p>
+              <small>{reference.denomination}</small>
+            </div>
+          </div>
+          {entry.matches.length > 1 && (
+            <Field label="Which record is this?">
+              <select value={pick} onChange={(e) => setPick(e.target.value)}>
+                {entry.matches.map((m) => (
+                  <option key={m.reference.id} value={m.reference.id}>
+                    {m.reference.name} ·{" "}
+                    {m.reference.denomination || m.reference.organization} ·{" "}
+                    {m.reference.city || "City not recorded"}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          )}
+          <div className="reg-compare">
+            {[
+              ["Name", reference.name, row.name],
+              ["Email", reference.email, row.email],
+              ["Phone", reference.phone, row.phone],
+              ["City", reference.city, ""],
+            ].map(([label, ours, theirs]) => (
+              <div key={label} className={differs(ours, theirs) ? "changed" : ""}>
+                <span>{label}</span>
+                <b>{ours || "Not recorded"}</b>
+                <i>{theirs && differs(ours, theirs) ? `now ${theirs}` : ""}</i>
+              </div>
+            ))}
+          </div>
+          {(differs(reference.email, row.email) ||
+            differs(reference.phone, row.phone)) && (
+            <p className="reg-status-message unclaimed">
+              <b>Their contact details have changed</b>
+              Confirming replaces the older email and phone with the details on
+              your list.
+            </p>
+          )}
+          <label className="reg-check">
+            <input
+              type="checkbox"
+              checked={same}
+              onChange={(e) => setSame(e.target.checked)}
+            />
+            <span>
+              I have looked at the photo and confirm this is the same person as{" "}
+              {row.name}.
+            </span>
+          </label>
+          <button
+            className="reg-primary full"
+            disabled={!same || !canEdit}
+            onClick={async () => {
+              if (
+                await perform(
+                  "linkReference",
+                  { rosterId: row.id, referenceId: reference.id },
+                  `${reference.name} confirmed. The DROGS record now shows the details on your list.`,
+                )
+              )
+                setOpenId(null);
+            }}
+          >
+            Confirm and update the DROGS record
+          </button>
+          <button className="reg-text" onClick={() => setOpenId(null)}>
+            Not the same person · keep as a new pastor
+          </button>
+        </Dialog>
+      )}
+    </section>
+  );
+}
 function Roster({ state, year, actor, office, perform }) {
   const [bishopId, setBishopId] = useState(""),
     [q, setQ] = useState(""),
@@ -1913,6 +2606,11 @@ function Roster({ state, year, actor, office, perform }) {
           )}
         </section>
       )}
+      <ReferenceReview
+        rows={rows}
+        perform={perform}
+        canEdit={year === state.year}
+      />
       {rows.length ? (
         <div className="reg-table-scroll">
           <table className="reg-table">
@@ -1920,6 +2618,7 @@ function Roster({ state, year, actor, office, perform }) {
               <tr>
                 <th>Pastor</th>
                 <th>Contact</th>
+                <th>DROGS record</th>
                 {office && <th>Bishop</th>}
                 <th>Registration</th>
                 <th>List status</th>
@@ -1936,6 +2635,13 @@ function Roster({ state, year, actor, office, perform }) {
                   <td>
                     {r.email}
                     <small>{r.phone}</small>
+                  </td>
+                  <td>
+                    {r.referenceId ? (
+                      <Badge status="verified">Confirmed · {r.referenceId}</Badge>
+                    ) : (
+                      <small>Not linked</small>
+                    )}
                   </td>
                   {office && (
                     <td>

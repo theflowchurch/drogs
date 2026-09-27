@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import references from "./reference-bishops.json";
+import people from "./reference-people.json";
+const references = people.filter((p) => p.role === "bishop");
 import {
   STORAGE_KEY,
   emptyState,

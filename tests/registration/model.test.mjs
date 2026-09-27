@@ -7,6 +7,9 @@ import {
   parseRoster,
   validateProfile,
   STORAGE_KEY,
+  referenceIndex,
+  referenceMatches,
+  directoryPeople,
 } from "../../src/registration/model.mjs";
 const bishop = { id: "b1", email: "bishop@example.com" },
   other = { id: "b2", email: "other@example.com" },
@@ -209,5 +212,105 @@ test("new form enforces split names, location, organization denomination and att
     () =>
       applyAction(setup(), pastor, "submit", { ...p, photoConfirmed: false }),
     /Confirm your photo/,
+  );
+});
+test("confirming an existing record updates it, and the directory marks who is updated", () => {
+  // A bishop whose annual list names a pastor DROGS already holds, with a new email.
+  const references = [
+    {
+      id: "B1",
+      role: "bishop",
+      name: "A Bishop",
+      title: "Bishop",
+      organization: "First Love",
+      denomination: "First Love Church",
+      city: "Accra",
+      country: "Ghana",
+      email: "old-bishop@example.com",
+      phone: "+233200000001",
+    },
+    {
+      id: "P7",
+      role: "pastor",
+      name: "John Doe",
+      title: "Pastor",
+      organization: "First Love",
+      denomination: "First Love Church",
+      city: "Kumasi",
+      country: "Ghana",
+      email: "old-john@example.com",
+      phone: "00233 20 123 4567",
+    },
+    {
+      id: "P8",
+      role: "pastor",
+      name: "Never Listed",
+      title: "Pastor",
+      organization: "First Love",
+      denomination: "First Love Church",
+      city: "Tema",
+      country: "Ghana",
+      email: "quiet@example.com",
+      phone: "+233201111111",
+    },
+  ];
+  let s = setup();
+  s = applyAction(s, bishop, "addRoster", {
+    rows: [
+      { name: "John Doe", email: "john@example.com", phone: "+233201234567" },
+    ],
+  });
+  const row = s.rosters[0];
+  const index = referenceIndex(references);
+  const matches = referenceMatches(index, row);
+  assert.deepEqual(
+    matches.map((m) => m.reference.id),
+    ["P7"],
+    "the existing record is offered by name",
+  );
+  assert.equal(
+    matches[0].contactMatch,
+    true,
+    "the same number written differently still matches",
+  );
+
+  const before = directoryPeople(s, references);
+  assert.equal(before.find((p) => p.id === "P7").updated, false);
+  assert.equal(before.find((p) => p.id === "P7").email, "old-john@example.com");
+  assert.equal(before.find((p) => p.id === "B1").updated, true, "the bishop registered");
+
+  // Only the supervising bishop or the office confirms the match.
+  assert.throws(
+    () =>
+      applyAction(s, other, "linkReference", {
+        rosterId: row.id,
+        referenceId: "P7",
+      }),
+    /bishop or office/,
+  );
+  s = applyAction(s, bishop, "linkReference", {
+    rosterId: row.id,
+    referenceId: "P7",
+  });
+  const after = directoryPeople(s, references);
+  const john = after.find((p) => p.id === "P7");
+  assert.equal(john.updated, true);
+  assert.equal(john.claimed, true);
+  assert.equal(john.email, "john@example.com", "our record now holds the new email");
+  assert.equal(john.recorded.email, "old-john@example.com", "the previous email stays visible");
+  assert.equal(after.find((p) => p.id === "P8").claimed, false, "nobody has claimed P8");
+
+  // The same existing record cannot be confirmed for two people in one cycle.
+  s = applyAction(s, bishop, "addRoster", {
+    rows: [{ name: "John Doe", email: "other-john@example.com" }],
+  });
+  const second = s.rosters.find((r) => r.email === "other-john@example.com");
+  assert.throws(
+    () =>
+      applyAction(s, bishop, "linkReference", {
+        rosterId: second.id,
+        referenceId: "P7",
+      }),
+    /already confirmed/,
   );
 });
