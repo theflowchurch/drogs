@@ -835,10 +835,10 @@ function Participant({
               <dt>Date of birth</dt>
               <dd>{current.data.dob}</dd>
             </div>
-            {current.data.role === "pastor" && (
+            {current.data.role === "pastor" && bishop && (
               <div>
-                <dt>Supervising bishop</dt>
-                <dd>{bishop?.name || current.data.bishopName}</dd>
+                <dt>Bishop</dt>
+                <dd>{bishop.name}</dd>
               </div>
             )}
           </dl>
@@ -913,13 +913,6 @@ function RegistrationForm({
         next.name = [next.firstName, next.lastName].filter(Boolean).join(" ");
       return next;
     });
-  const [bishopSearch, setBishopSearch] = useState("");
-  const options = state.directory.filter(
-    (b) =>
-      !bishopSearch ||
-      normalName(b.name).includes(normalName(bishopSearch)) ||
-      b.id === data.bishopId,
-  );
   async function save() {
     await run(async () => {
       await api.action(actor, "save", data);
@@ -1118,47 +1111,7 @@ function RegistrationForm({
                     autoComplete="address-level2"
                   />
                 </Field>
-                {data.role === "pastor" && (
-                  <>
-                    <Field label="Find your bishop" wide>
-                      <input
-                        type="search"
-                        placeholder="Search bishops by name"
-                        value={bishopSearch}
-                        onChange={(e) => setBishopSearch(e.target.value)}
-                      />
-                    </Field>
-                    <Field
-                      label="Supervising bishop"
-                      wide
-                      hint="Your bishop must confirm you on this year’s list."
-                    >
-                      <select
-                        required
-                        value={data.bishopId}
-                        onChange={(e) => set("bishopId", e.target.value)}
-                      >
-                        <option value="">Select your bishop</option>
-                        <option value="missing">My bishop is not listed</option>
-                        {options.map((b) => (
-                          <option value={b.id} key={b.id}>
-                            {b.title || "Bishop"} {b.name}
-                            {b.organization ? ` · ${b.organization}` : ""}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                    {data.bishopId === "missing" && (
-                      <Field label="Bishop’s full name" wide>
-                        <input
-                          required
-                          value={data.bishopName}
-                          onChange={(e) => set("bishopName", e.target.value)}
-                        />
-                      </Field>
-                    )}
-                  </>
-                )}
+                <CommitmentPreview role={data.role} country={data.country} />
                 <Field label="Photo in official attire" wide>
                   {data.photo && (
                     <Media
@@ -1304,6 +1257,39 @@ function RegistrationForm({
         </section>
       </div>
     </>
+  );
+}
+// Shown as soon as a country is typed, so the amount to send is clear before
+// anyone reaches payment. Same indicative-rate rules as the payment card.
+function CommitmentPreview({ role, country }) {
+  const [rates, setRates] = useState(null);
+  const currency = currencyFor(country),
+    amount = AMOUNTS[role] || AMOUNTS.pastor;
+  useEffect(() => {
+    if (!currency || currency === "USD") return;
+    let live = true;
+    loadRates().then((value) => live && setRates(value));
+    return () => {
+      live = false;
+    };
+  }, [currency]);
+  if (!String(country || "").trim()) return null;
+  const rate = rateFor(rates, currency);
+  return (
+    <p className="reg-local-amount reg-field wide">
+      Annual commitment: ${amount} USD
+      {rate > 0
+        ? ` · about ${localAmount(amount, rate, currency)} in ${country.trim()}`
+        : currency === "USD"
+          ? ""
+          : currency
+            ? " · fetching today’s rate…"
+            : " · we could not match that country to a currency; the amount is charged in USD"}
+      <small>
+        Indicative rate. DROGS is paid in US dollars; your bank or mobile-money
+        provider sets the final amount.
+      </small>
+    </p>
   );
 }
 function Payment({ current, actor, run, refresh }) {
@@ -1468,9 +1454,9 @@ function ProfileDetails({ record, directory = [] }) {
           ...(p.role === "pastor"
             ? [
                 [
-                  "Selected bishop",
+                  "Bishop",
                   directory.find((b) => b.id === p.bishopId)?.name ||
-                    p.bishopName,
+                    "Not yet assigned",
                 ],
               ]
             : []),
@@ -1751,6 +1737,25 @@ function Directory({ state, year }) {
   const current = filter.denomination
     ? groups.find((g) => g.name === filter.denomination)
     : null;
+  // Pastors a bishop confirmed on this cycle's annual list.
+  const linkedPastors = (bishop) => {
+    const account = state.profiles.find(
+      (x) => x.bishopApproved && x.referenceId === bishop.id,
+    )?.id;
+    if (!account) return [];
+    const ids = new Set(
+      state.rosters
+        .filter(
+          (r) =>
+            r.year === year &&
+            r.bishopId === account &&
+            r.status === "active" &&
+            r.referenceId,
+        )
+        .map((r) => r.referenceId),
+    );
+    return all.filter((q) => ids.has(q.id));
+  };
   return (
     <>
       <div className="reg-stats">
@@ -1874,26 +1879,20 @@ function Directory({ state, year }) {
       )}
       {selected && (
         <Dialog title="Record" onClose={() => setSelected(null)}>
-          <RecordDetails
-            person={selected}
-            onDenomination={(name) => {
-              setSelected(null);
-              open(name, selected.role);
-            }}
-          />
+          <RecordDetails person={selected} under={linkedPastors(selected)} />
         </Dialog>
       )}
     </>
   );
 }
-function RecordDetails({ person: p, onDenomination }) {
+function RecordDetails({ person: p, under = [] }) {
   const changed = (field) =>
     p.recorded && p.recorded[field] && p.recorded[field] !== p[field];
   return (
     <>
-      <div className="reg-record-hero">
+      <div className="reg-record-hero centred">
         <span className="reg-person-portrait">
-          <Portrait person={p} className="reg-record-photo" />
+          <Portrait person={p} className="reg-record-photo large" />
           <Dot updated={p.updated} />
         </span>
         <div>
@@ -1902,6 +1901,14 @@ function RecordDetails({ person: p, onDenomination }) {
           <p className="reg-record-country">
             {[p.city, p.country].filter(Boolean).join(", ") || "Location not recorded"}
           </p>
+          {p.denomination && (
+            <p className="reg-record-denomination">
+              {p.denominationLogo && (
+                <img src={`${base}/${p.denominationLogo}`} alt="" />
+              )}
+              <span>{p.denomination}</span>
+            </p>
+          )}
           <p className="reg-record-line">{p.organization}</p>
           <span className={`reg-badge ${p.updated ? "verified" : "unclaimed"}`}>
             {p.updated
@@ -1909,28 +1916,12 @@ function RecordDetails({ person: p, onDenomination }) {
                 ? "Updated by registration"
                 : "Confirmed by their bishop"
               : "Older information · not updated"}
-          </span>
+          </span>{" "}
           {!p.claimed && <Badge status="unclaimed">Unclaimed</Badge>}
         </div>
       </div>
-      {p.denomination && (
-        <button
-          className="reg-denomination-link"
-          onClick={() => onDenomination?.(p.denomination)}
-        >
-          {p.denominationLogo && (
-            <img src={`${base}/${p.denominationLogo}`} alt="" />
-          )}
-          <span>
-            {p.denomination}
-            <small>View this denomination →</small>
-          </span>
-        </button>
-      )}
       <dl className="reg-details">
         {[
-          ["City", p.city || "—"],
-          ["Country", p.country || "—"],
           ["Email", p.email || "—"],
           ["Phone", p.phone || "—"],
           ...(changed("email")
@@ -1939,7 +1930,7 @@ function RecordDetails({ person: p, onDenomination }) {
           ...(changed("phone")
             ? [["Previous phone on record", p.recorded.phone]]
             : []),
-          ...(p.bishop ? [["Supervising bishop", p.bishop]] : []),
+          ...(p.role === "pastor" ? [["Bishop", p.bishop || "Not recorded"]] : []),
           ...(p.updatedAt
             ? [["Updated", new Date(p.updatedAt).toLocaleString()]]
             : []),
@@ -1956,6 +1947,7 @@ function RecordDetails({ person: p, onDenomination }) {
           </div>
         ))}
       </dl>
+      {p.role === "bishop" && <PastorsUnder bishop={p} extra={under} dots />}
     </>
   );
 }
@@ -1976,9 +1968,46 @@ const bishopPastors = (bishop) => {
     heading: `Pastors in ${bishop.denomination}`,
   };
 };
-function PublicRecord({ person: p, onOpen }) {
-  const under = p.role === "bishop" ? bishopPastors(p) : null;
+function PastorsUnder({ bishop, extra = [], onOpen, dots = false }) {
   const [limit, setLimit] = useState(24);
+  const named = bishopPastors(bishop);
+  const seen = new Set(extra.map((q) => q.id));
+  const list = [...extra, ...named.list.filter((q) => !seen.has(q.id))];
+  const heading = extra.length
+    ? named.list.length && named.heading.startsWith("Pastors in")
+      ? `Pastors under this bishop and in ${bishop.denomination}`
+      : "Pastors under this bishop"
+    : named.heading;
+  if (!list.length) return null;
+  return (
+    <section className="reg-record-group">
+      <h3>
+        {heading} <b>{list.length.toLocaleString()}</b>
+      </h3>
+      <div className="reg-thumb-grid">
+        {list.slice(0, limit).map((q) => (
+          <button key={q.id} onClick={() => onOpen?.(q)} disabled={!onOpen}>
+            <span className="reg-person-portrait">
+              <Portrait person={q} />
+              {dots && <Dot updated={q.updated} />}
+            </span>
+            <b>{q.name}</b>
+            <small>{[q.branch, q.country].filter(Boolean).join(" · ")}</small>
+          </button>
+        ))}
+      </div>
+      {list.length > limit && (
+        <button
+          className="reg-secondary full"
+          onClick={() => setLimit((n) => n + 24)}
+        >
+          Show more · {(list.length - limit).toLocaleString()} remaining
+        </button>
+      )}
+    </section>
+  );
+}
+function PublicRecord({ person: p, onOpen }) {
   return (
     <>
       <div className="reg-record-hero">
@@ -2008,32 +2037,7 @@ function PublicRecord({ person: p, onOpen }) {
           )}
         </div>
       </div>
-      {under?.list.length ? (
-        <section className="reg-record-group">
-          <h3>
-            {under.heading} <b>{under.list.length.toLocaleString()}</b>
-          </h3>
-          <div className="reg-thumb-grid">
-            {under.list.slice(0, limit).map((q) => (
-              <button key={q.id} onClick={() => onOpen(q)}>
-                <Portrait person={q} />
-                <b>{q.name}</b>
-                <small>
-                  {[q.branch, q.country].filter(Boolean).join(" · ")}
-                </small>
-              </button>
-            ))}
-          </div>
-          {under.list.length > limit && (
-            <button
-              className="reg-secondary full"
-              onClick={() => setLimit((n) => n + 24)}
-            >
-              Show more · {(under.list.length - limit).toLocaleString()} remaining
-            </button>
-          )}
-        </section>
-      ) : null}
+      {p.role === "bishop" && <PastorsUnder bishop={p} onOpen={onOpen} />}
     </>
   );
 }
@@ -2113,10 +2117,11 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
   const selected = records.find((r) => r.userId === selectedId);
   const bishop =
     selected && state.directory.find((b) => b.id === selected.data.bishopId);
+  const claimable = Boolean(bishop?.accountId) || (!office && !bishop);
   const candidates = selected
     ? state.rosters.filter(
         (r) =>
-          r.bishopId === bishop?.accountId &&
+          (bishop ? r.bishopId === bishop.accountId : true) &&
           r.year === selected.year &&
           r.status === "active" &&
           !r.pastorId,
@@ -2143,9 +2148,9 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
                 {r.data.organization} · {r.data.denomination || r.data.church}
               </p>
               <small>
-                Claims:{" "}
+                Bishop:{" "}
                 {state.directory.find((b) => b.id === r.data.bishopId)?.name ||
-                  r.data.bishopName}
+                  "not yet assigned"}
               </small>
             </div>
             <Badge status="unclaimed" />
@@ -2175,7 +2180,9 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
             <p>
               {bishop?.accountId
                 ? "Check the registration against this bishop’s list. A spelling difference can be resolved by linking the correct entry below."
-                : "The selected bishop does not yet have an approved account, or has not been listed."}
+                : office
+                  ? "No bishop has claimed this pastor yet. Assign one below, or wait for a bishop to confirm them."
+                  : "Nobody has claimed this pastor yet. If they are under your oversight, confirm them below to add them to your list."}
             </p>
           </div>
           {canEdit && (
@@ -2212,7 +2219,7 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
                   </button>
                 </div>
               )}
-              {bishop?.accountId && (
+              {claimable && (
                 <>
                   <Field label="Link to annual list">
                     <select
@@ -2231,8 +2238,8 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
                   </Field>
                   <p className="reg-small">
                     Confirm only after checking this person belongs under{" "}
-                    {bishop.name}. This adds them to the directory and unlocks
-                    their payment.
+                    {bishop ? bishop.name : "your oversight"}. This adds them to
+                    the directory and unlocks their payment.
                   </p>
                   <button
                     className="reg-primary full"

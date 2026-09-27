@@ -314,3 +314,34 @@ test("confirming an existing record updates it, and the directory marks who is u
     /already confirmed/,
   );
 });
+test("a pastor registers without choosing a bishop and is matched or claimed", () => {
+  let s = setup();
+  s = applyAction(s, bishop, "addRoster", {
+    rows: [{ name: "John Doe", email: pastor.email }],
+  });
+  // Matched against every approved bishop's list, then assigned to that bishop.
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: "" });
+  const matched = s.registrations.find((r) => r.userId === pastor.id);
+  assert.equal(matched.status, "confirmed");
+  assert.equal(matched.data.bishopId, "B1");
+
+  // Not on any list: unclaimed, visible to approved bishops, claimable by one.
+  const lone = { id: "p2", email: "mary@example.com" };
+  s = applyAction(s, lone, "submit", {
+    ...profile(lone, "pastor", "Mary Owusu"),
+    bishopId: "",
+  });
+  assert.equal(s.registrations.find((r) => r.userId === lone.id).status, "unclaimed");
+  assert.ok(
+    visibleState(s, bishop, []).registrations.some((r) => r.userId === lone.id),
+    "an approved bishop sees the unassigned pastor",
+  );
+  assert.throws(
+    () => applyAction(s, pastor, "claim", { userId: lone.id }),
+    /Assign an approved bishop|bishop or office/,
+  );
+  s = applyAction(s, bishop, "claim", { userId: lone.id });
+  const claimed = s.registrations.find((r) => r.userId === lone.id);
+  assert.equal(claimed.status, "confirmed");
+  assert.equal(claimed.data.bishopId, "B1");
+});

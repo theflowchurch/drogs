@@ -1732,3 +1732,22 @@ p {
   background: rgba(255, 255, 255, 0.18);
   font-size: 12px;
 }
+
+.reg-record-hero.centred {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.reg-record-hero.centred > div:last-child {
+  min-width: 0;
+}
+.reg-record-hero.centred .reg-record-denomination {
+  justify-content: center;
+}
+.reg-record-photo.large {
+  width: 280px;
+}
+.reg-thumb-grid button:disabled {
+  cursor: default;
+  color: inherit;
+}

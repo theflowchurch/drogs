@@ -79,11 +79,10 @@ export function validateProfile(p, email, { draft = false } = {}) {
     if (!ORGANIZATIONS.includes(q.organization))
       throw Error("Choose your organization.");
     if (!q.photo) throw Error("Upload your official-attire photo.");
-    if (q.role === "pastor" && !q.bishopId)
-      throw Error("Select your bishop, or choose Bishop not listed.");
-    if (q.bishopId === "missing" && !q.bishopName)
-      throw Error("Enter the name of your bishop.");
   }
+  // Pastors no longer pick a bishop: their name is matched against every
+  // approved bishop's annual list, and the office can assign one if needed.
+  if (q.bishopId === "missing") q.bishopId = "";
   if (!(DENOMINATIONS[q.organization] || []).length) q.denomination = "";
   if (q.role === "bishop") {
     q.bishopId = "";
@@ -99,14 +98,20 @@ export function bishopFor(state, key) {
       (p.referenceId || p.id) === key,
   );
 }
+export const approvedBishop = (state, id) =>
+  state.profiles.some(
+    (p) => p.id === id && p.role === "bishop" && p.bishopApproved,
+  );
+export const bishopKey = (bishop) => bishop.referenceId || bishop.id;
 export function matchFor(state, registration) {
   const p = registration.data,
     bishop = bishopFor(state, p.bishopId);
-  if (!bishop) return null;
+  // With no bishop chosen, every approved bishop's list is searched; the match
+  // must still be a single entry with the same name and email or phone.
   const candidates = state.rosters.filter(
     (r) =>
       r.year === registration.year &&
-      r.bishopId === bishop.id &&
+      (bishop ? r.bishopId === bishop.id : approvedBishop(state, r.bishopId)) &&
       r.status === "active" &&
       (!r.pastorId || r.pastorId === registration.userId) &&
       normalName(r.name) === normalName(p.name) &&
@@ -137,6 +142,8 @@ function reconcile(state) {
     if (match) {
       match.pastorId = r.userId;
       r.status = "confirmed";
+      const owner = state.profiles.find((p) => p.id === match.bishopId);
+      if (owner) r.data.bishopId = bishopKey(owner);
     } else r.status = "unclaimed";
   }
 }
@@ -310,12 +317,20 @@ export function applyAction(
       throw Error(
         "This registration is no longer Unclaimed. Refresh the page.",
       );
-    const bishop = bishopFor(state, r.data.bishopId);
+    // An approved bishop confirming an unassigned pastor takes them onto
+    // their own list.
+    const bishop =
+      bishopFor(state, r.data.bishopId) ||
+      (!actor.office && profile?.bishopApproved && profile.role === "bishop"
+        ? profile
+        : null);
     if (!bishop) throw Error("Assign an approved bishop first.");
     if (!actor.office && bishop.id !== actor.id)
       throw Error(
         "Only the selected bishop or office can confirm this pastor.",
       );
+    r.data.bishopId = bishopKey(bishop);
+    r.data.bishopName = "";
     let row = state.rosters.find(
       (x) =>
         x.id === payload.rosterId &&
@@ -495,12 +510,17 @@ export function directoryFor(state, references) {
   return records.sort((a, b) => a.name.localeCompare(b.name));
 }
 export function visibleState(state, actor, references) {
+  // Unclaimed pastors with no bishop yet are shown to every approved bishop so
+  // the right one can claim them.
   const scope = (r) =>
     actor.office ||
     r.userId === actor.id ||
     (r.status !== "draft" &&
       r.data.role === "pastor" &&
-      bishopFor(state, r.data.bishopId)?.id === actor.id);
+      (bishopFor(state, r.data.bishopId)?.id === actor.id ||
+        (r.status === "unclaimed" &&
+          !bishopFor(state, r.data.bishopId) &&
+          approvedBishop(state, actor.id))));
   return {
     ...state,
     profiles: state.profiles.filter((p) => actor.office || p.id === actor.id),

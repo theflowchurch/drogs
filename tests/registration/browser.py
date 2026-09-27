@@ -30,7 +30,6 @@ with sync_playwright() as p:
   for org in ['DHMM','FLOW','Healing Jesus Campaign']:
    page.get_by_label('Organization',exact=True).select_option(org);expect(page.get_by_label('Denomination',exact=True)).to_be_disabled()
   page.get_by_label('Organization',exact=True).select_option('First Love');expect(page.get_by_label('Denomination',exact=True)).to_have_value('');page.get_by_label('Denomination',exact=True).select_option('First Love Church')
-  if role=='pastor':page.get_by_label('Supervising bishop',exact=True).select_option(bishop)
   page.get_by_label('Photo in official attire',exact=True).set_input_files(PHOTO)
   expect(page.get_by_text('Photo uploaded. Choose a new image to replace it.')).to_be_visible()
  def submit():
