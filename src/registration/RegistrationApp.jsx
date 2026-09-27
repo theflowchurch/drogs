@@ -540,19 +540,10 @@ function Gate({ office, onEnter }) {
       <div className="reg-gate-glow" />
       <div className="reg-gate-inner">
         <img src={`${base}/assets/mitre-transparent.png`} alt="" />
-        <span className="reg-eyebrow">
-          {office ? "OFFICE WORKSPACE" : "ANNUAL MINISTRY REGISTRATION"}
-        </span>
         <h1>
-          One ministry.
-          <br />
-          <em>A faithful record.</em>
+          <em>DROGS</em>
         </h1>
-        <p>
-          {office
-            ? "A clear view of your bishops, pastors and annual registrations."
-            : "Register your details. Confirm your place. Continue the work."}
-        </p>
+        <p className="reg-gate-tagline">Digital roll call of good standing</p>
         <form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -577,9 +568,6 @@ function Gate({ office, onEnter }) {
           </button>
         </form>
         {error && <p role="alert">{error}</p>}
-        <small>
-          {office ? "Private access for the DROGS office team." : "Enter 1234 to begin your registration."}
-        </small>
       </div>
     </section>
   );

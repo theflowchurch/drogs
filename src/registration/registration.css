@@ -161,6 +161,11 @@ p {
   color: #b4cdcb;
   font-size: 16px;
 }
+.reg-gate .reg-gate-tagline {
+  color: #fff;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+}
 .reg-gate form {
   display: flex;
   max-width: 460px;
@@ -177,10 +182,6 @@ p {
   border: 0;
   padding: 10px 15px;
   min-width: 0;
-}
-.reg-gate small {
-  font-size: 11px;
-  color: #88aaa9;
 }
 .reg-primary,
 .reg-secondary {
@@ -1181,9 +1182,6 @@ p {
   .reg-gate p {
     font-size: 14px;
   }
-  .reg-gate small {
-    font-size: 10px;
-  }
   .reg-queue-row {
     gap: 13px;
     padding: 16px;
@@ -1325,12 +1323,13 @@ p {
 @media(max-width:600px){.reg-api-key{flex-direction:column}.reg-api-keys .reg-card{min-width:0}}
 
 .reg-accounts {display:grid;gap:24px;min-width:0}
+.reg-accounts > .reg-card {min-width:0;max-width:100%;overflow:hidden;overflow-wrap:anywhere}
 .reg-account-toolbar {display:flex;justify-content:space-between;align-items:center;gap:16px}
 .reg-account-toolbar h2 {margin-bottom:6px}
 .reg-account-search {display:flex;align-items:end;gap:16px;margin:22px 0}
 .reg-account-search .reg-field {flex:1;margin:0}
 .reg-account-note {font-size:13px;line-height:1.6;color:#6b665d;max-width:850px}
-.reg-account-table {overflow-x:auto;margin:22px 0}
+.reg-account-table {overflow-x:auto;margin:22px 0;min-width:0;width:100%}
 .reg-account-table table {width:100%;border-collapse:collapse;text-align:left;font-size:14px}
 .reg-account-table th {font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6b665d;padding:14px 12px;border-bottom:2px solid #d9d4c9}
 .reg-account-table td {padding:20px 12px;border-bottom:1px solid #e8e3d9;vertical-align:top;min-width:140px}
