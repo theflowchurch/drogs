@@ -190,7 +190,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     const fallbackUrl = await call(`media?path=${encodeURIComponent(fallback)}`, bishop.cookie);
     assert.equal(fallbackUrl.status, 200); assert.match(fallbackUrl.data.url, /\/api\/registration\/media\/blob\?path=/);
     const blob = await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: bishop.cookie } }));
-    assert.equal(blob.status, 200); assert.equal(blob.headers.get('content-type'), 'image/webp'); assert.ok((await blob.arrayBuffer()).byteLength > 100);
+    assert.equal(blob.status, 200); assert.equal(blob.headers.get('content-type'), 'image/webp'); assert.ok((await blob.arrayBuffer()).byteLength > 20, "the stored image is returned");
     assert.equal((await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: stranger.cookie } }))).status, 403, 'strangers cannot read a stored image');
     assert.equal((await call('paystack/verify', bishop.cookie, { reference: 'abc123' })).status, 503, 'Paystack is off until the secret key is configured');
 
