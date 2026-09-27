@@ -11,7 +11,14 @@ export function requestHandler({ origin, api, nextHandler }) {
       res.writeHead(301, { Location: `https://kuriakecastle.org${req.url || '/'}`, 'Cache-Control': 'no-store' });
       return res.end();
     }
-    if (!path.startsWith('/api/registration/') && !path.startsWith('/api/v1/')) return nextHandler(req, res);
+    if (!path.startsWith('/api/registration/') && !path.startsWith('/api/v1/')) {
+      // Pages must not sit in the CDN for a year after a deploy; hashed /_next/static files may.
+      if (!path.startsWith('/_next/static/') && !path.startsWith('/assets/')) {
+        const setHeader = res.setHeader.bind(res);
+        res.setHeader = (name, value) => setHeader(name, String(name).toLowerCase() === 'cache-control' ? 'private, no-cache' : value);
+      }
+      return nextHandler(req, res);
+    }
     try {
       // The site answers on every domain attached to it; the request's own host is its origin.
       const host = String(req.headers.host || new URL(origin).host).split(',')[0].trim();
