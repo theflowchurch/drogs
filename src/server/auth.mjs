@@ -51,7 +51,7 @@ export function createAuth({ pool, config, mailer }) {
         return createSession(conn, user);
       });
     },
-    async requestCode(email) {
+    async requestCode(email, origin = config.origin) {
       await rateLimit(pool, config, `otp-minute:${email}`, 1, 60000);
       await rateLimit(pool, config, `otp-hour:${email}`, 5, 3600000);
       await rateLimit(pool, config, 'otp-global', 500, 3600000);
@@ -59,8 +59,8 @@ export function createAuth({ pool, config, mailer }) {
       const hash = digest(config.secret, `otp:${email}:${token}`);
       await pool.execute('INSERT INTO dr_otp (email,code_hash,expires_at,attempts) VALUES (?,?,?,0) ON DUPLICATE KEY UPDATE code_hash=VALUES(code_hash),expires_at=VALUES(expires_at),attempts=0', [email, hash, Date.now() + 600000]);
       try {
-        await mailer.sendMail({ from: config.from, to: email, subject: 'Your DROGS sign-in code',
-          text: `Your DROGS sign-in code is ${token}. It expires in 10 minutes.\n\nUse it at ${config.origin}. If you did not request this code, you can ignore this email.` });
+        await mailer.sendMail({ from: config.from, to: email, subject: 'Your Kuriake Castle sign-in code',
+          text: `Your Kuriake Castle sign-in code is ${token}. It expires in 10 minutes.\n\nUse it at ${origin}. If you did not request this code, you can ignore this email.` });
       } catch {
         await pool.execute('DELETE FROM dr_otp WHERE email=? AND code_hash=?', [email, hash]);
         throw new HttpError(503, 'Unable to send your code. Please try again shortly.');

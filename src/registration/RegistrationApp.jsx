@@ -34,7 +34,7 @@ import {
 import { checkReceiptImage } from "./receipt-check.mjs";
 import { portraitStyle } from "../runtime/portrait-framing";
 import people from "./reference-people.json";
-// Everyone DROGS already knows. Bishops are the linkable approval references;
+// Everyone Kuriake Castle already knows. Bishops are the linkable approval references;
 // the whole roster backs the Directory and the member search.
 const references = people.filter((p) => p.role === "bishop");
 const index = referenceIndex(people);
@@ -326,7 +326,7 @@ export default function RegistrationApp({ office = false, browse = false }) {
       <header className="reg-header">
         <a className="reg-brand" href={`${base}/`}>
           <img src={`${base}/assets/mitre-transparent.png`} alt="" />
-          <strong>DROGS</strong>
+          <strong>Kuriake Castle</strong>
         </a>
         <div className="reg-header-right">
           {gate && actor ? (
@@ -344,8 +344,8 @@ export default function RegistrationApp({ office = false, browse = false }) {
         <div className="reg-demo">
           Saved in this browser only · email delivery and shared accounts are
           not connected ·{" "}
-          <a href="https://drogs.dagministry.org/">
-            live site: drogs.dagministry.org
+          <a href="https://kuriakecastle.org/">
+            live site: kuriakecastle.org
           </a>
         </div>
       )}
@@ -381,7 +381,7 @@ export default function RegistrationApp({ office = false, browse = false }) {
       ) : browse ? (
         <div className="reg-shell">
           <aside className="reg-sidebar">
-            <span className="reg-eyebrow">DROGS</span>
+            <span className="reg-eyebrow">Kuriake Castle</span>
             <div className="reg-nav">
               <button className="active">
                 <span>Directory</span>
@@ -397,9 +397,9 @@ export default function RegistrationApp({ office = false, browse = false }) {
           <main className="reg-main">
             <div className="reg-page-heading">
               <div>
-                <span className="reg-eyebrow">DROGS</span>
+                <span className="reg-eyebrow">Kuriake Castle</span>
                 <h1>Directory</h1>
-                <p>Every bishop and pastor in DROGS.</p>
+                <p>Every bishop and pastor in Kuriake Castle.</p>
               </div>
             </div>
             <MemberDirectory />
@@ -453,7 +453,7 @@ export default function RegistrationApp({ office = false, browse = false }) {
               <b>
                 {office
                   ? "Every bishop and pastor. Every year."
-                  : profile?.name || "Welcome to DROGS"}
+                  : profile?.name || "Welcome to Kuriake Castle"}
               </b>
               <p>
                 {office
@@ -482,15 +482,15 @@ export default function RegistrationApp({ office = false, browse = false }) {
                   <div className="reg-page-heading">
                     <div>
                       <span className="reg-eyebrow">
-                        {office ? "DROGS / OFFICE" : "DROGS / YOUR MINISTRY"}
+                        {office ? "KURIAKE CASTLE / OFFICE" : "KURIAKE CASTLE / YOUR MINISTRY"}
                       </span>
                       <h1>{tab}</h1>
                       <p>
                         {
                           {
                             Directory: office
-                              ? "Every bishop and pastor in DROGS. Green: the bishop has registered, or the pastor has been claimed by their bishop this cycle. Red: not yet."
-                              : "Every bishop and pastor in DROGS.",
+                              ? "Every bishop and pastor in Kuriake Castle. Green: the bishop has registered, or the pastor has been claimed by their bishop this cycle. Red: not yet."
+                              : "Every bishop and pastor in Kuriake Castle.",
                             Unclaimed:
                               "Registrations waiting for a bishop to confirm their place.",
                             "Bishop approvals":
@@ -503,30 +503,11 @@ export default function RegistrationApp({ office = false, browse = false }) {
                               "Review payment screenshots and confirm received commitments.",
                             History: "Previous cycles and what changed.",
                             Accounts: "See who has created an account and when they last signed in.",
-                            "API keys": "Give connected applications controlled, read-only access to DROGS.",
+                            "API keys": "Give connected applications controlled, read-only access to Kuriake Castle.",
                           }[tab]
                         }
                       </p>
                     </div>
-                    {!["Accounts", "API keys"].includes(tab) &&
-                      !(tab === "Directory" && !office) && <Field label="Annual cycle">
-                      <select
-                        value={year}
-                        onChange={(e) => setYear(Number(e.target.value))}
-                      >
-                        {Array.from(
-                          new Set([
-                            state.year,
-                            ...state.registrations.map((r) => r.year),
-                            ...state.rosters.map((r) => r.year),
-                          ]),
-                        )
-                          .sort((a, b) => b - a)
-                          .map((y) => (
-                            <option key={y}>{y}</option>
-                          ))}
-                      </select>
-                    </Field>}
                   </div>
                   {tab === "Accounts" && <Accounts run={run} />}
                   {tab === "API keys" && <ApiKeys run={run} />}
@@ -618,7 +599,7 @@ function HelpButton({ actor, run }) {
               <p>
                 {api.supportAvailable
                   ? "Someone will look at it and reply to the address you gave."
-                  : "This copy is not connected to the office mailbox, so nothing was sent. On drogs.dagministry.org this reaches the office by email."}
+                  : "This copy is not connected to the office mailbox, so nothing was sent. On kuriakecastle.org this reaches the office by email."}
               </p>
             </div>
           ) : (
@@ -672,7 +653,7 @@ function Gate({ office, onEnter }) {
       <div className="reg-gate-inner">
         <img src={`${base}/assets/mitre-transparent.png`} alt="" />
         <h1>
-          <em>DROGS</em>
+          <em>Kuriake Castle</em>
         </h1>
         <p className="reg-gate-tagline">Digital roll call of good standing</p>
         <form
@@ -695,7 +676,7 @@ function Gate({ office, onEnter }) {
             autoComplete="current-password"
           />
           <button className="reg-primary">
-            Enter DROGS <span>→</span>
+            Enter Kuriake Castle <span>→</span>
           </button>
         </form>
         {error && <p role="alert">{error}</p>}
@@ -1344,7 +1325,7 @@ function CommitmentPreview({ role, country }) {
             ? " · fetching today’s rate…"
             : " · we could not match that country to a currency; the amount is charged in USD"}
       <small>
-        Indicative rate. DROGS is paid in US dollars; your bank or mobile-money
+        Indicative rate. Kuriake Castle is paid in US dollars; your bank or mobile-money
         provider sets the final amount.
       </small>
     </p>
@@ -1377,7 +1358,7 @@ function Payment({ current, actor, run, refresh }) {
           about {localAmount(current.amount, rate, currency)} in{" "}
           {current.data.country}
           <small>
-            Indicative rate, {rates.updated || "recently updated"}. DROGS is
+            Indicative rate, {rates.updated || "recently updated"}. Kuriake Castle is
             paid in US dollars; your bank or mobile-money provider sets the
             final amount.
           </small>
@@ -2409,7 +2390,7 @@ function Payments({ records, perform, canEdit }) {
     </>
   );
 }
-// A bishop's pasted list often names people DROGS already holds. The portrait
+// A bishop's pasted list often names people Kuriake Castle already holds. The portrait
 // and the recorded details are shown side by side so a person decides whether
 // it is the same pastor; confirming links the record and makes the list's
 // contact details the current ones.
@@ -2441,10 +2422,10 @@ function ReferenceReview({ rows, perform, canEdit }) {
     <section className="reg-card reg-reference-review">
       <div className="reg-section-head">
         <div>
-          <h2>Pastors already in DROGS</h2>
+          <h2>Pastors already in Kuriake Castle</h2>
           <p>
             {pending.length.toLocaleString()} on this list already appear in
-            DROGS. Confirm each person so their information is updated instead
+            Kuriake Castle. Confirm each person so their information is updated instead
             of a second entry being created.
           </p>
         </div>
@@ -2555,7 +2536,7 @@ function ReferenceReview({ rows, perform, canEdit }) {
                 await perform(
                   "linkReference",
                   { rosterId: row.id, referenceId: reference.id },
-                  `${reference.name} confirmed. DROGS now shows the details on your list.`,
+                  `${reference.name} confirmed. Kuriake Castle now shows the details on your list.`,
                 )
               )
                 setOpenId(null);
@@ -2704,7 +2685,7 @@ function Roster({ state, year, actor, office, perform }) {
               <tr>
                 <th>Pastor</th>
                 <th>Contact</th>
-                <th>DROGS record</th>
+                <th>Kuriake Castle</th>
                 {office && <th>Bishop</th>}
                 <th>Registration</th>
                 <th>List status</th>
@@ -2922,7 +2903,7 @@ function History({ state, records, office, actor, year, perform }) {
       </section>
       {office && (
         <section className="reg-card">
-          <h2>Annual cycle</h2>
+          <h2>Next year</h2>
           <p>
             Accounts and historical records persist. Opening a new cycle starts
             fresh registration and payment counts.

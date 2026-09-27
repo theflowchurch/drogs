@@ -13,7 +13,7 @@ with sync_playwright() as p:
  def open_account(email,office=False):
   page.goto(BASE+('/admin/' if office else '/'));page.wait_for_load_state('networkidle')
   if page.get_by_label('Platform password').is_visible():
-   page.get_by_label('Platform password').fill('1234');page.get_by_role('button',name='Enter DROGS').click()
+   page.get_by_label('Platform password').fill('1234');page.get_by_role('button',name='Enter Kuriake Castle').click()
   page.get_by_label('Email address',exact=True).fill(email)
   page.get_by_role('button',name='Continue →').click()
   page.locator('main').wait_for()

@@ -31,7 +31,7 @@ await app.prepare();
 const nextHandler = app.getRequestHandler();
 const server = createServer(requestHandler({ origin: config.origin, api, nextHandler }));
 server.requestTimeout = 30000;
-server.listen(port, '0.0.0.0', () => console.log(`DROGS server listening on port ${port}; admin: ${config.origin}/admin`));
+server.listen(port, '0.0.0.0', () => console.log(`Kuriake Castle server listening on port ${port}; admin: ${config.origin}/admin`));
 // Periodic deletion is limited to expired authentication records, never registrations/media.
 const cleanup = setInterval(async () => {
   try {

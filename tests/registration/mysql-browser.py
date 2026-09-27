@@ -23,7 +23,7 @@ with sync_playwright() as p:
         page.wait_for_load_state('networkidle')
         expect(page.get_by_text('Demo ·', exact=False)).not_to_be_visible()
         page.get_by_label('Admin code' if admin else 'Website code', exact=True).fill('admin-test-code' if admin else '1234')
-        page.get_by_role('button', name='Enter DROGS').click()
+        page.get_by_role('button', name='Enter Kuriake Castle').click()
         page.locator('main').wait_for()
     try:
         login()

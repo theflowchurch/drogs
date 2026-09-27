@@ -44,12 +44,12 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       const url = new URL(request.url), path = url.pathname.replace(/\/$/, ''), method = request.method;
       if (path.startsWith('/api/v1/')) return json(await keys.read(request));
       if (!['GET', 'POST'].includes(method)) throw new HttpError(405, 'Method not allowed.');
-      if (method === 'POST' && request.headers.get('origin') !== config.origin)
+      if (method === 'POST' && request.headers.get('origin') !== url.origin)
         throw new HttpError(403, 'Open the form on the configured website before continuing.');
       if (request.headers.get('sec-fetch-site') === 'cross-site') throw new HttpError(403, 'Cross-site requests are not allowed.');
       if (path === '/api/registration/auth/request' && method === 'POST') {
         const { email } = await jsonBody(request);
-        await auth.requestCode(emailAddress(email));
+        await auth.requestCode(emailAddress(email), url.origin);
         return json({ ok: true });
       }
       if (path === '/api/registration/auth/access' && method === 'POST') {

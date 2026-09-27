@@ -7,7 +7,7 @@ export function createSupport({ config, mailer, fetcher = fetch, logger = consol
     if (message.length < 5) throw new HttpError(400, 'Describe what went wrong in a sentence or two.');
     if (message.length > 4000) throw new HttpError(400, 'Please shorten the description to 4,000 characters.');
     const replyTo = input?.contact ? emailAddress(input.contact) : actor.email;
-    const heading = `DROGS website issue from ${replyTo}`;
+    const heading = `Kuriake Castle website issue from ${replyTo}`;
     const body = `${heading}\nAccount: ${actor.id}\nOffice access: ${actor.office ? 'yes' : 'no'}\nReported: ${new Date().toISOString()}\n\n${message}\n`;
     await mailer.sendMail({ from: config.from, to: config.admins.join(','), replyTo, subject: heading, text: body });
     if (config.telegram) {
