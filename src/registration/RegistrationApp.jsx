@@ -138,10 +138,22 @@ function Media({ path, alt, className = "" }) {
     </div>
   );
 }
-function Dialog({ title, onClose, children }) {
+// Step through the people of a list from inside the dialog: arrow buttons,
+// the keyboard's left/right keys, or a horizontal swipe on a phone.
+const stepper = (list, selected, setSelected) => {
+  const i = list.findIndex((p) => p.id === selected.id);
+  return {
+    onPrev: i > 0 ? () => setSelected(list[i - 1]) : undefined,
+    onNext: i >= 0 && i < list.length - 1 ? () => setSelected(list[i + 1]) : undefined,
+  };
+};
+function Dialog({ title, onClose, onPrev, onNext, children }) {
   const host = useRef(null),
-    close = useRef(onClose);
+    close = useRef(onClose),
+    nav = useRef({}),
+    touch = useRef(null);
   close.current = onClose;
+  nav.current = { onPrev, onNext };
   useEffect(() => {
     const previous = document.activeElement;
     const focusable = () =>
@@ -153,6 +165,10 @@ function Dialog({ title, onClose, children }) {
     focusable()[0]?.focus();
     const key = (e) => {
       if (e.key === "Escape") close.current();
+      if (!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement?.tagName || "")) {
+        if (e.key === "ArrowLeft") nav.current.onPrev?.();
+        if (e.key === "ArrowRight") nav.current.onNext?.();
+      }
       if (e.key === "Tab") {
         const items = focusable(),
           first = items[0],
@@ -183,9 +199,21 @@ function Dialog({ title, onClose, children }) {
         role="dialog"
         aria-modal="true"
         aria-label={title}
+        onTouchStart={(e) => { touch.current = e.touches[0].clientX; }}
+        onTouchEnd={(e) => {
+          const dx = e.changedTouches[0].clientX - (touch.current ?? e.changedTouches[0].clientX);
+          if (dx > 70) nav.current.onPrev?.();
+          if (dx < -70) nav.current.onNext?.();
+        }}
       >
         <div className="reg-section-head">
           <h2>{title}</h2>
+          {(onPrev || onNext) && (
+            <div className="reg-dialog-nav">
+              <button className="reg-icon" onClick={onPrev} disabled={!onPrev} aria-label="Previous person">←</button>
+              <button className="reg-icon" onClick={onNext} disabled={!onNext} aria-label="Next person">→</button>
+            </div>
+          )}
           <button className="reg-icon" onClick={onClose} aria-label="Close">
             ×
           </button>
@@ -2228,7 +2256,7 @@ function Directory({ state, year, role, setRole, perform, mode = "original" }) {
             </Empty>
           )}
       {selected && (
-        <Dialog title={selected.name} onClose={() => setSelected(null)}>
+        <Dialog title={selected.name} onClose={() => setSelected(null)} {...stepper(list, selected, setSelected)}>
           <RecordDetails
             person={selected}
             under={linkedPastors(selected)}
@@ -2492,6 +2520,7 @@ function PublicDirectory({ data, embedded = false }) {
     );
   return (
     <section className={embedded ? "" : "reg-public-list"}>
+      {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
       <button className="reg-back" onClick={() => { setRole(null); setQ(""); }}>
         <span className="reg-back-arrow" aria-hidden="true">←</span> Back to Bishops and Pastors
       </button>
@@ -2520,7 +2549,7 @@ function SearchResults({ list, q }) {
         <Empty title="No one matches">Try another spelling.</Empty>
       )}
       {selected && (
-        <Dialog title={selected.name} onClose={() => setSelected(null)}>
+        <Dialog title={selected.name} onClose={() => setSelected(null)} {...stepper(shown, selected, setSelected)}>
           <PublicRecord person={selected} onOpen={setSelected} from={list} />
         </Dialog>
       )}
@@ -2600,7 +2629,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
         </Empty>
       )}
       {selected && (
-        <Dialog title={selected.name} onClose={() => setSelected(null)}>
+        <Dialog title={selected.name} onClose={() => setSelected(null)} {...stepper(list, selected, setSelected)}>
           <PublicRecord person={selected} onOpen={setSelected} from={roll} />
         </Dialog>
       )}

@@ -2462,3 +2462,17 @@ p {
   right: 0;
   color: rgba(255, 255, 255, 0.75);
 }
+
+.reg-dialog-nav {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+  margin-right: 8px;
+}
+.reg-dialog-nav button:disabled {
+  opacity: 0.35;
+}
+.reg-public-list > .reg-doors-title {
+  margin: 0 0 18px;
+  text-align: left;
+}
