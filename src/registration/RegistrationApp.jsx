@@ -2492,8 +2492,8 @@ function PublicDirectory({ data, embedded = false }) {
     );
   return (
     <section className={embedded ? "" : "reg-public-list"}>
-      <button className="reg-text reg-back" onClick={() => { setRole(null); setQ(""); }}>
-        ← Bishops and pastors
+      <button className="reg-back" onClick={() => { setRole(null); setQ(""); }}>
+        <span className="reg-back-arrow" aria-hidden="true">←</span> Back to Bishops and Pastors
       </button>
       <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} />
     </section>
