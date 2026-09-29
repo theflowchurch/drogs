@@ -243,6 +243,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('auth/request', '', { email: 'stranger@example.com', mode: 'signin' })).status, 404, 'an account without a profile or registration is not a member');
     assert.equal(mails.length, sent, 'no code is emailed to an unrecognised address');
     assert.equal((await call('auth/verify', '', { email: 'nobody@example.com', token: '', mode: 'signin' })).status, 404);
+    await pool.execute('DELETE FROM dr_rate_limits'); // the bishop requested a code less than a minute ago
     const signin = await call('auth/request', '', { email: 'bishop@example.com', mode: 'signin' });
     assert.equal(signin.status, 200);
     assert.equal(signin.data.codeRequired, true, 'sign-in always needs the emailed code');
