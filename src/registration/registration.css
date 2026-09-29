@@ -2186,3 +2186,13 @@ p {
   grid-template-rows: auto auto auto;
   align-content: start;
 }
+
+.reg-hero-page {
+  min-height: 100svh;
+}
+.reg-hero-signin {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 2;
+}

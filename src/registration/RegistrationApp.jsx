@@ -357,7 +357,7 @@ export default function RegistrationApp({
     );
   return (
     <div className="reg-app">
-      <header className="reg-header">
+      {!hero && <header className="reg-header">
         {gate && actor && !browse && (
           <button
             className="reg-sidebar-toggle"
@@ -392,13 +392,9 @@ export default function RegistrationApp({
                 Sign up
               </button>
             </>
-          ) : hero ? (
-            <a className="reg-primary reg-signin-button" href={`${base}/signup/#signin`}>
-              Sign in
-            </a>
           ) : null}
         </div>
-      </header>
+      </header>}
       {!api.live && (
         <div className="reg-demo">
           Saved in this browser only · email delivery and shared accounts are
@@ -429,6 +425,9 @@ export default function RegistrationApp({
       )}
       {hero ? (
         <section className="reg-account signin reg-hero-page">
+          <a className="reg-primary reg-signin-button reg-hero-signin" href={`${base}/signup/#signin`}>
+            Sign in
+          </a>
           <div
             className="reg-hero-image"
             style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
@@ -1173,13 +1172,6 @@ function RegistrationForm({
               </div>
             )}
           <Field label="Photo in official attire" wide>
-            {data.photo && (
-              <Media
-                path={data.photo}
-                alt="Your uploaded portrait"
-                className="reg-upload-preview"
-              />
-            )}
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp"
