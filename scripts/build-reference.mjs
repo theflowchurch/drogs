@@ -16,7 +16,7 @@ const DENOMINATION_ALIAS = { 'QODESH FAMILY CHURCH': 'QODESH FAMILY CHURCHES',
 // One-off corrections to the source rows.
 const REHOME = { ETHIOPIA: { organization: 'First Love', denomination: 'FIRST LOVE CHURCH', denominationLogo: 'assets/denominations/first-love-church.png' } };
 // FLOW has no supplied logo yet.
-const GROUP_LOGO = { HJC: 'assets/denominations/healing-jesus.webp' };
+const GROUP_LOGO = { HJC: 'assets/brand/hjc-logo.png', FLOW: 'assets/brand/flow-logo.png', DHMM: 'assets/brand/dhmm-logo-black.png' };
 const clean = value => String(value ?? '').trim();
 const skip = new Set(['', 'n/a', 'none', 'unknown', 'international']);
 const keep = value => (skip.has(clean(value).toLowerCase()) ? '' : clean(value));

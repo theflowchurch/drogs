@@ -2350,3 +2350,8 @@ p {
 .reg-app > .reg-gate {
   flex: 1;
 }
+
+/* DHMM's mark is white; light mode uses the black version, dark mode swaps back */
+:root[data-theme="dark"] img[src$="dhmm-logo-black.png"] {
+  content: url("/assets/brand/dhmm-logo-white.png");
+}

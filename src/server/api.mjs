@@ -52,6 +52,7 @@ async function paystackMinimum(state, actor, currency, fetcher) {
 }
 const json = (value, status = 200, headers = {}) => Response.json(value, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...headers } });
 export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch, logger = console }) {
+  let publicCache = { at: 0, value: null };
   const keys = createKeyService({ pool, config, storage });
   const support = createSupport({ config, mailer, fetcher, logger });
   return async function handle(request) {
@@ -78,9 +79,14 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token) });
       }
       if (path === '/api/registration/public-directory' && method === 'GET') {
-        // Open to everyone: the roll carries no contact details.
-        const state = await transaction(pool, conn => readState(conn));
-        return json({ source: config.publicDirectory, roll: publicRoll(state, people) });
+        // Open to everyone: the roll carries no contact details. Cached briefly and
+        // rate limited so the public page cannot be used to hammer the database.
+        await rateLimit(pool, config, `public-directory:${request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'all'}`, 120, 60000);
+        if (!publicCache.value || Date.now() - publicCache.at > 30000) {
+          const state = await transaction(pool, conn => readState(conn));
+          publicCache = { at: Date.now(), value: { source: config.publicDirectory, roll: publicRoll(state, people) } };
+        }
+        return json(publicCache.value, 200, { 'Cache-Control': 'public, max-age=30' });
       }
       if (path === '/api/registration/auth/verify' && method === 'POST') {
         const { email, token, mode } = await jsonBody(request);

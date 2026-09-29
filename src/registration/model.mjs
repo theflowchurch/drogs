@@ -708,7 +708,10 @@ export function publicRoll(state, people, year = state.year) {
         title: r.data.gender ? titleFor(r.data) : ref?.title || (r.data.role === "bishop" ? "Bishop" : "Pastor"),
         organization: r.data.organization,
         denomination: r.data.denomination || r.data.church || ref?.denomination || "",
-        denominationLogo: ref?.denominationLogo || "",
+        denominationLogo:
+          ref?.denominationLogo ||
+          ({ FLOW: "assets/brand/flow-logo.png", HJC: "assets/brand/hjc-logo.png", DHMM: "assets/brand/dhmm-logo-black.png" })[r.data.organization] ||
+          "",
         city: r.data.city,
         country: r.data.country,
         branch: ref?.branch || "",

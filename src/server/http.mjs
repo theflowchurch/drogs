@@ -4,6 +4,10 @@ export function requestHandler({ origin, api, nextHandler }) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'same-origin');
     res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    // Report-only first: Next.js needs inline scripts/styles; Paystack and the rate service are the only third parties.
+    res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; img-src 'self' data: blob: https:; script-src 'self' 'unsafe-inline' https://js.paystack.co; style-src 'self' 'unsafe-inline'; connect-src 'self' https://open.er-api.com https://api.paystack.co https://*.r2.cloudflarestorage.com; frame-src https://checkout.paystack.com https://js.paystack.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
     const path = (req.url || '/').split('?')[0];
     // kuriakecastle.org is the only public address; the earlier domain sends people there.
     const host = String(req.headers.host || '').split(':')[0];
