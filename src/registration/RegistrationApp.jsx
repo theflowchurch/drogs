@@ -250,7 +250,8 @@ export default function RegistrationApp({
   }, [actor, refresh, gated, office]);
   useEffect(() => {
     setSidebarHidden(localStorage.getItem("kc-sidebar-hidden") === "yes");
-  }, []);
+    if (signup && location.hash === "#signin") setSigninOpen("signin");
+  }, [signup]);
   const toggleSidebar = () => {
     const next = !sidebarHidden;
     setSidebarHidden(next);
@@ -356,7 +357,7 @@ export default function RegistrationApp({
     );
   return (
     <div className="reg-app">
-      {!hero && <header className="reg-header">
+      <header className="reg-header">
         {gate && actor && !browse && (
           <button
             className="reg-sidebar-toggle"
@@ -391,9 +392,13 @@ export default function RegistrationApp({
                 Sign up
               </button>
             </>
+          ) : hero ? (
+            <a className="reg-primary reg-signin-button" href={`${base}/signup/#signin`}>
+              Sign in
+            </a>
           ) : null}
         </div>
-      </header>}
+      </header>
       {!api.live && (
         <div className="reg-demo">
           Saved in this browser only · email delivery and shared accounts are
@@ -1865,6 +1870,8 @@ const filtered = (records, f) =>
       ),
   );
 const PAGE = 60;
+// Bishops are few enough to show at once; pastors page in blocks of 300.
+const pageFor = (role) => (role === "bishop" ? Infinity : 300);
 const initials = (name) =>
   String(name || "")
     .split(/\s+/)
@@ -2053,7 +2060,7 @@ function Directory({ state, year, role, setRole, perform, mode = "original" }) {
     () => scope.filter((p) => p.role === role),
     [scope, role],
   );
-  useEffect(() => setLimit(PAGE), [filter, role]);
+  useEffect(() => setLimit(pageFor(role)), [filter, role]);
   const options = useMemo(
     () => filterOptions(all, filter.org),
     [all, filter.org],
@@ -2127,7 +2134,7 @@ function Directory({ state, year, role, setRole, perform, mode = "original" }) {
             <PeopleGrid
               list={list}
               limit={limit}
-              onMore={() => setLimit((n) => n + PAGE)}
+              onMore={() => setLimit((n) => n + 300)}
               onOpen={setSelected}
             />
           ) : (
@@ -2339,9 +2346,9 @@ function PublicDirectory({ data, embedded = false }) {
     bishop: list.filter((p) => p.role === "bishop").length,
     pastor: list.filter((p) => p.role === "pastor").length,
   };
-  if (!role && !q)
+  if (!role)
     return (
-      <section className={`reg-doors ${embedded ? "embedded" : ""}`}>
+      <section className={`reg-doors ${embedded ? "embedded" : ""} ${q ? "searching" : ""}`}>
         {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
         <input
           type="search"
@@ -2351,6 +2358,9 @@ function PublicDirectory({ data, embedded = false }) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
+        {q ? (
+          <SearchResults list={list} q={q} onPick={(r) => { setRole(r); }} />
+        ) : (
         <div className="reg-doors-grid">
           {[
             ["bishop", "Bishops"],
@@ -2362,6 +2372,7 @@ function PublicDirectory({ data, embedded = false }) {
             </button>
           ))}
         </div>
+        )}
       </section>
     );
   return (
@@ -2371,6 +2382,34 @@ function PublicDirectory({ data, embedded = false }) {
       </button>
       <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} />
     </section>
+  );
+}
+// Results for the single search box on the doors page: names first.
+function SearchResults({ list, q }) {
+  const [selected, setSelected] = useState(null);
+  const words = normalName(q);
+  const byName = list.filter((p) => normalName(p.name).includes(words));
+  const elsewhere = list.filter(
+    (p) => !normalName(p.name).includes(words) && normalName(`${p.city} ${p.country} ${p.denomination}`).includes(words),
+  );
+  const shown = [...byName, ...elsewhere].slice(0, 60);
+  return (
+    <div className="reg-search-results">
+      <p className="reg-small">
+        {byName.length.toLocaleString()} name{byName.length === 1 ? "" : "s"}
+        {elsewhere.length ? ` · ${elsewhere.length.toLocaleString()} by place or denomination` : ""}
+      </p>
+      {shown.length ? (
+        <PeopleGrid list={shown} limit={60} onMore={() => {}} onOpen={setSelected} dots={false} />
+      ) : (
+        <Empty title="No one matches">Try another spelling.</Empty>
+      )}
+      {selected && (
+        <Dialog title={selected.name} onClose={() => setSelected(null)}>
+          <PublicRecord person={selected} onOpen={setSelected} from={list} />
+        </Dialog>
+      )}
+    </div>
   );
 }
 function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
@@ -2390,7 +2429,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
     () => scope.filter((p) => p.role === role),
     [scope, role],
   );
-  useEffect(() => setLimit(PAGE), [filter, role]);
+  useEffect(() => setLimit(pageFor(role)), [filter, role]);
   const options = useMemo(
     () => filterOptions(roll, filter.org),
     [roll, filter.org],
@@ -2434,7 +2473,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
         <PeopleGrid
           list={list}
           limit={limit}
-          onMore={() => setLimit((n) => n + PAGE)}
+          onMore={() => setLimit((n) => n + 300)}
           onOpen={setSelected}
           dots={false}
         />

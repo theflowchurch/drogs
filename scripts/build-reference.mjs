@@ -11,6 +11,8 @@ const ORGANIZATION = { 'UD-OLGC': 'United Denominations', 'UO-FLC190': 'First Lo
 const OUTREACH_GROUP = { 'FLOW Office': 'FLOW', 'Healing Jesus Council': 'HJC' };
 // Spelling variants of one denomination.
 const DENOMINATION_ALIAS = { 'QODESH FAMILY CHURCH': 'QODESH FAMILY CHURCHES' };
+// FLOW has no supplied logo yet.
+const GROUP_LOGO = { HJC: 'assets/denominations/healing-jesus.webp' };
 const clean = value => String(value ?? '').trim();
 const skip = new Set(['', 'n/a', 'none', 'unknown', 'international']);
 const keep = value => (skip.has(clean(value).toLowerCase()) ? '' : clean(value));
@@ -20,8 +22,9 @@ const person = (role, p) => ({
   name: p.name,
   title: p.title || (role === 'bishop' ? 'Bishop' : 'Pastor'),
   organization: ORGANIZATION[p.organization] || OUTREACH_GROUP[clean(p.outreachGroup)] || '',
-  denomination: p.organization === 'OUTREACH' ? '' : DENOMINATION_ALIAS[keep(p.denomination)] || keep(p.denomination),
-  denominationLogo: p.denominationLogo || '',
+  // Outreach rows show their group (FLOW / HJC) where a denomination would appear.
+  denomination: p.organization === 'OUTREACH' ? OUTREACH_GROUP[clean(p.outreachGroup)] || '' : DENOMINATION_ALIAS[keep(p.denomination)] || keep(p.denomination),
+  denominationLogo: p.organization === 'OUTREACH' ? GROUP_LOGO[OUTREACH_GROUP[clean(p.outreachGroup)]] || '' : p.denominationLogo || '',
   city: keep(p.city),
   branch: keep(p.branch),
   country: keep(p.region),

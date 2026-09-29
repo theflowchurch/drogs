@@ -2176,3 +2176,13 @@ p {
     min-height: 220px;
   }
 }
+
+.reg-search-results {
+  max-width: 1180px;
+  margin: 0 auto;
+  width: 100%;
+}
+.reg-doors.searching {
+  grid-template-rows: auto auto auto;
+  align-content: start;
+}
