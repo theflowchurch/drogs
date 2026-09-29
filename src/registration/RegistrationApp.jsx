@@ -54,6 +54,21 @@ const statusLabel = {
   rejected: "Replacement proof needed",
   verified: "Payment verified",
 };
+const fieldLabel = {
+  name: "name",
+  gender: "gender",
+  denomination: "denomination",
+  church: "church",
+  organization: "organization",
+  country: "country",
+  city: "city",
+  email: "email",
+  phone: "phone",
+  dob: "date of birth",
+  bishopName: "bishop (as typed)",
+  bishopFirstName: "bishop first name",
+  bishopLastName: "bishop last name",
+};
 const titleCase = (s) => (s ? s[0].toUpperCase() + s.slice(1) : "");
 function Badge({ status, children }) {
   return (
@@ -2259,8 +2274,17 @@ function RecordDetails({ person: p, under = [], onOpen, perform }) {
       </div>
       <dl className="reg-details">
         {[
+          // Everything the roster holds on this person.
+          ["Record", p.id],
+          ["Title", p.title || "—"],
+          ["Organization", p.organization || "—"],
+          ["Denomination", p.denomination || "—"],
+          ["Branch", p.branch || "—"],
+          ["City", p.city || "—"],
+          ["Country", p.country || "—"],
           ["Email", p.email || "—"],
           ["Phone", p.phone || "—"],
+          ["Photo on file", p.image ? "Yes" : "No"],
           ...(changed("email")
             ? [["Previous email on record", p.recorded.email]]
             : []),
@@ -2275,6 +2299,17 @@ function RecordDetails({ person: p, under = [], onOpen, perform }) {
             ? [
                 ["Registration", statusLabel[p.registration.status]],
                 ["Payment", statusLabel[p.registration.payment]],
+                // Then every field they typed on the form this year.
+                ...Object.entries(p.registration.data || {})
+                  .filter(
+                    ([k, v]) =>
+                      v !== "" && v != null && typeof v !== "object" &&
+                      !["photo", "photoConfirmed", "referenceId", "bishopId", "firstName", "lastName", "role"].includes(k),
+                  )
+                  .map(([k, v]) => [
+                    `Submitted ${fieldLabel[k] || k}`,
+                    typeof v === "boolean" ? (v ? "Yes" : "No") : String(v),
+                  ]),
               ]
             : []),
         ].map(([k, v]) => (
