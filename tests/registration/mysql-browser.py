@@ -65,7 +65,8 @@ with sync_playwright() as p:
         expect(page.get_by_text('Your registration is complete.')).to_be_visible()
         assert page.evaluate("localStorage.getItem('drogs-registration-v1')") is None
         page.get_by_role('button',name='Sign out',exact=True).click()
-        page.get_by_role('button', name='Sign up', exact=True).wait_for()
+        page.get_by_role('link', name='View the full Pastoral directory').wait_for()  # members land on the front page
+        assert page.url.rstrip('/') == BASE.rstrip('/'), page.url
         page.set_viewport_size({'width':1440,'height':1050})
         login(True)
         assert page.url.endswith('/admin/')
