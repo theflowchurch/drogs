@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as api from './client';
 const date = value => value ? new Date(value).toLocaleString() : 'Not recorded';
 const status = value => value === 'not_started' ? 'Not started' : value.replaceAll('_', ' ');
@@ -7,9 +7,11 @@ export default function Accounts({ run }) {
   const [result, setResult] = useState(null), [search, setSearch] = useState(''), [query, setQuery] = useState('');
   const [history, setHistory] = useState(null), [person, setPerson] = useState(null);
   const [admins, setAdmins] = useState([]), [newAdmin, setNewAdmin] = useState(''), [confirmClear, setConfirmClear] = useState(false);
-  const load = (page = 1, term = query) => run(async () => setResult(await api.accounts(term, page)));
+  const seq = useRef(0);
+  // Only the latest request may set the table; a slow first load must not overwrite a search.
+  const load = (page = 1, term = query) => { const n = ++seq.current; return run(async () => { const r = await api.accounts(term, page); if (n === seq.current) setResult(r); }); };
   const saveAdmins = (list) => run(async () => { setAdmins((await api.saveSettings({ ADMIN_EMAILS: list.join(',') })).admins || []); setNewAdmin(''); }, 'Office access updated.');
-  const remove = (body, message) => run(async () => { await api.removeAccounts(body); setConfirmClear(false); setResult(await api.accounts(query, 1)); }, message);
+  const remove = (body, message) => run(async () => { await api.removeAccounts(body); setConfirmClear(false); const n = ++seq.current; const r = await api.accounts(query, 1); if (n === seq.current) setResult(r); }, message);
   useEffect(() => { load(); run(async () => setAdmins((await api.listSettings()).admins || [])); }, []);
   return <div className="reg-accounts">
     <section className="reg-card">
