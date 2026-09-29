@@ -88,8 +88,6 @@ export function validateProfile(p, email, { draft = false } = {}) {
   if (!draft) {
     if (!q.firstName || !q.lastName || q.name.length > 160)
       throw Error("Enter your first and last names.");
-    if (!q.consentedAt)
-      throw Error("Please consent to the public listing before submitting.");
     if (!/^\S+@\S+\.\S+$/.test(q.email))
       throw Error("Enter a valid email address.");
     if (normalPhone(q.phone).length < 7 || normalPhone(q.phone).length > 15)
@@ -310,6 +308,9 @@ export function applyAction(
     const data = validateProfile(payload, actor.email, {
       draft: action === "save",
     });
+    // Consent is collected on the review screen, so it is checked at submit only.
+    if (action === "submit" && !data.consentedAt)
+      throw Error("Please consent to the public listing before submitting.");
     if (action === "submit" && !data.photoConfirmed)
       throw Error(
         "Confirm your photo and required official attire before submitting.",

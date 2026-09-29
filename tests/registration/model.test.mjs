@@ -426,9 +426,11 @@ test("the public roll lists only confirmed people and the office can pick the ph
 
 test("a registration cannot be submitted without consent to the public listing", () => {
   assert.throws(
-    () => validateProfile({ ...profile(pastor), consentedAt: "" }, pastor.email),
+    () => applyAction(emptyState(), pastor, "submit", { ...profile(pastor), consentedAt: "" }),
     /consent/,
   );
+  // Reviewing (full validation) does not need consent yet; it comes on that screen.
+  assert.ok(validateProfile({ ...profile(pastor), consentedAt: "" }, pastor.email));
   assert.equal(validateProfile(profile(pastor), pastor.email).consentedAt, "2026-09-29T08:00:00.000Z");
 });
 test("names are alike across order, missing middle names and small typos", () => {
