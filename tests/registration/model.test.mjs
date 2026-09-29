@@ -11,6 +11,7 @@ import {
   referenceMatches,
   directoryPeople,
   publicRoll,
+  namesAlike,
 } from "../../src/registration/model.mjs";
 const bishop = { id: "b1", email: "bishop@example.com" },
   other = { id: "b2", email: "other@example.com" },
@@ -357,13 +358,23 @@ test("a pastor registers without choosing a bishop and is matched or claimed", (
   );
   assert.equal(s.registrations.find((r) => r.userId === lone.id).status, "unclaimed");
   assert.ok(
-    visibleState(s, bishop, []).registrations.some((r) => r.userId === lone.id),
-    "an approved bishop sees the unassigned pastor",
+    !visibleState(s, bishop, []).registrations.some((r) => r.userId === lone.id),
+    "a pastor who named someone else is not shown to this bishop",
   );
   assert.throws(
-    () => applyAction(s, pastor, "claim", { userId: lone.id }),
-    /Assign an approved bishop|bishop or office/,
+    () => applyAction(s, bishop, "claim", { userId: lone.id }),
+    /Assign an approved bishop/,
   );
+  // Naming the bishop with a typo is enough to be seen and claimed by them.
+  const typo = { id: "p4", email: "typo@example.com" };
+  s = applyAction(s, typo, "submit", {
+    ...profile(typo, "pastor", "Kwame Typo"),
+    bishopId: "",
+    bishopFirstName: "Amma",
+    bishopLastName: "Bishopp",
+  });
+  assert.equal(s.registrations.find((r) => r.userId === typo.id).data.bishopId, "B1", "a close spelling resolves the bishop");
+  s = applyAction(s, office, "assignBishop", { userId: lone.id, bishopId: "B1" });
   s = applyAction(s, bishop, "claim", { userId: lone.id });
   const claimed = s.registrations.find((r) => r.userId === lone.id);
   assert.equal(claimed.status, "confirmed");
@@ -425,4 +436,12 @@ test("the public roll lists only confirmed people and the office can pick the ph
   const chosen = publicRoll(s, references)[0];
   assert.equal(chosen.image, "assets/bishops/001.jpg");
   assert.equal(chosen.photo, "");
+});
+
+test("names are alike across order, missing middle names and small typos", () => {
+  assert.ok(namesAlike("Nina Masuko", "Nely Nina Masuku"));
+  assert.ok(namesAlike("Masuku Nina", "Nina Masuku"));
+  assert.ok(namesAlike("Henry Asare Duah", "Henry Asare-Duah"));
+  assert.ok(!namesAlike("Nina Masuku", "Brian Masuku"), "a different first name is a different person");
+  assert.ok(!namesAlike("Nina", "Nina Masuku"), "one word is never enough");
 });

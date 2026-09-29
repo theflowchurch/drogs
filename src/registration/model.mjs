@@ -113,17 +113,45 @@ export const approvedBishop = (state, id) =>
     (p) => p.id === id && p.role === "bishop" && p.bishopApproved,
   );
 export const bishopKey = (bishop) => bishop.referenceId || bishop.id;
-// The bishop the pastor named, when exactly one approved bishop has that full
-// name in either order. Anything ambiguous is left for the office.
+const editDistance = (a, b) => {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++)
+    for (let j = 1; j <= b.length; j++)
+      d[i][j] = Math.min(
+        d[i - 1][j] + 1,
+        d[i][j - 1] + 1,
+        d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1),
+      );
+  return d[a.length][b.length];
+};
+const wordsAlike = (a, b) =>
+  a === b ||
+  (Math.min(a.length, b.length) >= 3 &&
+    editDistance(a, b) <= (Math.max(a.length, b.length) > 6 ? 2 : 1)) ||
+  (a.length === 1 && b.startsWith(a)) ||
+  (b.length === 1 && a.startsWith(b));
+// Two names are alike when every word of the shorter one has a close match in
+// the longer, in any order: "Nina Masuko" ~ "Nely Nina Masuku", "Masuku Nina".
+export function namesAlike(a, b) {
+  const x = normalName(a).split(" ").filter(Boolean),
+    y = normalName(b).split(" ").filter(Boolean);
+  if (x.length < 2 || y.length < 2) return false;
+  const [shorter, longer] = x.length <= y.length ? [x, y] : [y, x];
+  const pool = [...longer];
+  return shorter.every((w) => {
+    const i = pool.findIndex((v) => wordsAlike(w, v));
+    if (i < 0) return false;
+    pool.splice(i, 1);
+    return true;
+  });
+}
+// The bishop the pastor named, when exactly one approved bishop's name is alike.
+// Anything ambiguous is left for the office.
 export function bishopNamed(state, name) {
-  const wanted = normalName(name);
-  if (!wanted) return null;
-  const reversed = wanted.split(" ").reverse().join(" ");
+  if (!normalName(name)) return null;
   const found = state.profiles.filter(
-    (p) =>
-      p.role === "bishop" &&
-      p.bishopApproved &&
-      [wanted, reversed].includes(normalName(p.name)),
+    (p) => p.role === "bishop" && p.bishopApproved && namesAlike(p.name, name),
   );
   return found.length === 1 ? found[0] : null;
 }
@@ -345,11 +373,14 @@ export function applyAction(
       throw Error(
         "This registration is no longer Unclaimed. Refresh the page.",
       );
-    // An approved bishop confirming an unassigned pastor takes them onto
-    // their own list.
+    // The bishop the pastor named may confirm them even when the spelling did
+    // not resolve automatically; anyone else needs the office.
     const bishop =
       bishopFor(state, r.data.bishopId) ||
-      (!actor.office && profile?.bishopApproved && profile.role === "bishop"
+      (!actor.office &&
+      profile?.bishopApproved &&
+      profile.role === "bishop" &&
+      namesAlike(profile.name, r.data.bishopName)
         ? profile
         : null);
     if (!bishop) throw Error("Assign an approved bishop first.");
@@ -594,8 +625,8 @@ export function publicRoll(state, people, year = state.year) {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 export function visibleState(state, actor, references, people = references) {
-  // Unclaimed pastors with no bishop yet are shown to every approved bishop so
-  // the right one can claim them.
+  // A floating pastor is shown only to the bishop they named (and the office).
+  const me = state.profiles.find((p) => p.id === actor.id);
   const scope = (r) =>
     actor.office ||
     r.userId === actor.id ||
@@ -604,7 +635,9 @@ export function visibleState(state, actor, references, people = references) {
       (bishopFor(state, r.data.bishopId)?.id === actor.id ||
         (r.status === "unclaimed" &&
           !bishopFor(state, r.data.bishopId) &&
-          approvedBishop(state, actor.id))));
+          me?.role === "bishop" &&
+          me.bishopApproved &&
+          namesAlike(me.name, r.data.bishopName))));
   return {
     ...state,
     profiles: state.profiles.filter((p) => actor.office || p.id === actor.id),

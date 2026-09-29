@@ -22,6 +22,7 @@ import {
   parseRoster,
   validateProfile,
   normalName,
+  namesAlike,
   referenceIndex,
   referenceMatches,
   directoryPeople,
@@ -184,7 +185,8 @@ export default function RegistrationApp({
   // Members sign in with their email; only the office and the browse-only
   // directory sit behind an access code.
   const gated = office || browse;
-  const [signinOpen, setSigninOpen] = useState(false),
+  const [sidebarHidden, setSidebarHidden] = useState(false),
+    [signinOpen, setSigninOpen] = useState(false),
     [directoryRole, setDirectoryRole] = useState("bishop"),
     [gate, setGate] = useState(!gated),
     [actor, setActor] = useState(null),
@@ -244,6 +246,14 @@ export default function RegistrationApp({
       refresh().catch((e) => setError(e.message));
     }
   }, [actor, refresh, gated, office]);
+  useEffect(() => {
+    setSidebarHidden(localStorage.getItem("kc-sidebar-hidden") === "yes");
+  }, []);
+  const toggleSidebar = () => {
+    const next = !sidebarHidden;
+    setSidebarHidden(next);
+    localStorage.setItem("kc-sidebar-hidden", next ? "yes" : "no");
+  };
   useEffect(() => {
     // The browse-only directory needs no account: the roll is public to anyone past the code.
     if (browse && gate && !actor && !state)
@@ -359,6 +369,20 @@ export default function RegistrationApp({
   return (
     <div className="reg-app">
       <header className="reg-header">
+        {gate && (actor || browse) && (
+          <button
+            className="reg-sidebar-toggle"
+            onClick={toggleSidebar}
+            aria-label={sidebarHidden ? "Show side panel" : "Hide side panel"}
+            aria-pressed={sidebarHidden}
+            title={sidebarHidden ? "Show side panel" : "Hide side panel"}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="16" rx="2" />
+              <path d="M9 4v16" />
+            </svg>
+          </button>
+        )}
         <a className="reg-brand" href={`${base}/`}>
           <span className="reg-brand-mark">
             <img src={`${base}/assets/brand/castle-icon.png`} alt="" />
@@ -424,7 +448,7 @@ export default function RegistrationApp({
           })}
         />
       ) : browse ? (
-        <div className="reg-shell">
+        <div className={`reg-shell ${sidebarHidden ? "sidebar-collapsed" : ""}`}>
           <aside className="reg-sidebar">
             <span className="reg-eyebrow">Kuriake Castle</span>
             <div className="reg-nav">
@@ -474,7 +498,7 @@ export default function RegistrationApp({
           This account has not been assigned office access.
         </Empty>
       ) : (
-        <div className="reg-shell">
+        <div className={`reg-shell ${sidebarHidden ? "sidebar-collapsed" : ""}`}>
           <aside className="reg-sidebar">
             <span className="reg-eyebrow">
               {office ? "Administration" : "Your workspace"}
@@ -1086,6 +1110,29 @@ function RegistrationForm({
       }
       return next;
     });
+  // Bishops whose names are alike the typed one, registered ones first. Picking
+  // one writes the exact spelling back so the annual list matches.
+  const bishopSuggestions = useMemo(() => {
+    const typed = `${data.bishopFirstName} ${data.bishopLastName}`.trim();
+    if (data.role !== "pastor" || data.bishopFirstName.length < 2 || data.bishopLastName.length < 2) return [];
+    const exact = state.directory.find((b) => normalName(b.name) === normalName(typed));
+    if (exact) return [];
+    return state.directory
+      .filter((b) => namesAlike(b.name, typed))
+      .sort((a, b) => Number(Boolean(b.accountId)) - Number(Boolean(a.accountId)))
+      .slice(0, 3);
+  }, [data.role, data.bishopFirstName, data.bishopLastName, state.directory]);
+  const pickBishop = (b) =>
+    setData((d) => {
+      const parts = b.name.trim().split(/\s+/);
+      return {
+        ...d,
+        bishopFirstName: parts.slice(0, -1).join(" "),
+        bishopLastName: parts.at(-1),
+        bishopId: b.accountId ? b.id : d.bishopId,
+        photoConfirmed: false,
+      };
+    });
   const set = (key, value) =>
     setData((d) => {
       const next = { ...d, [key]: value, photoConfirmed: false };
@@ -1393,6 +1440,25 @@ function RegistrationForm({
                         onChange={(e) => set("bishopLastName", e.target.value)}
                       />
                     </Field>
+                    {bishopSuggestions.length > 0 && (
+                      <div className="reg-is-this-you reg-field wide">
+                        <p>Did you mean one of these bishops? Pick the right one so the spelling matches their list.</p>
+                        <div className="reg-candidates">
+                          {bishopSuggestions.map((b) => (
+                            <div key={b.id} className="reg-candidate">
+                              <Portrait person={b} />
+                              <div>
+                                <b>{b.name}</b>
+                                <small>{[b.title, b.organization].filter(Boolean).join(" · ")}</small>
+                                <button type="button" className="reg-secondary" onClick={() => pickBishop(b)}>
+                                  This is my bishop
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
