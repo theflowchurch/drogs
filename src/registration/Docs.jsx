@@ -1,13 +1,12 @@
 import docs from "./api-docs.json";
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
-// Public pages carry only a plain disclosure; the policy and terms are linked
-// where members register and consent, not on the open directory.
-export function LegalFooter({ notice = false }) {
+// Public pages carry nothing; the policy and terms are linked only where
+// members register and consent.
+export function LegalFooter({ hidden = false }) {
+  if (hidden) return null;
   return (
     <footer className="reg-legal">
-      {notice
-        ? "The bishops and pastors listed here serve in the United Denominations and its partner organizations. This information is public and shown for general understanding only."
-        : <><a href={`${base}/privacy/`}>Privacy policy</a> · <a href={`${base}/terms/`}>Terms and conditions</a></>}
+      <a href={`${base}/privacy/`}>Privacy policy</a> · <a href={`${base}/terms/`}>Terms and conditions</a>
     </footer>
   );
 }
