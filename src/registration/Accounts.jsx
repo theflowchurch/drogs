@@ -13,6 +13,8 @@ export default function Accounts({ run }) {
   const saveAdmins = (list, message = 'Office access updated.') => run(async () => { setAdmins((await api.saveSettings({ ADMIN_EMAILS: list.join(',') })).admins || []); setNewAdmin(''); }, message);
   const remove = (body, message) => run(async () => { await api.removeAccounts(body); setConfirmClear(false); const n = ++seq.current; const r = await api.accounts(query, 1); if (n === seq.current) setResult(r); }, message);
   useEffect(() => { load(); run(async () => setAdmins((await api.listSettings()).admins || [])); }, []);
+  // Results appear as you type (name or email), after a short pause between keystrokes.
+  useEffect(() => { const t = setTimeout(() => { if (search !== query) { setQuery(search); load(1, search); } }, 250); return () => clearTimeout(t); }, [search]);
   return <div className="reg-accounts">
     <section className="reg-card">
       <h2>Office access</h2>
@@ -26,7 +28,7 @@ export default function Accounts({ run }) {
     <section className="reg-card">
       <div className="reg-account-toolbar"><div><h2>Member accounts</h2><p>{result ? `${result.total} ${query ? 'matching' : 'total'} accounts` : 'Loading accounts…'} · Latest login first</p></div><button className="reg-text" onClick={() => load(result?.page || 1)}>Refresh</button></div>
       <form className="reg-account-search" onSubmit={e => { e.preventDefault(); setQuery(search); load(1, search); }}>
-        <label className="reg-field">Find an account<input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder="Name or email address" maxLength={254} /></label><button className="reg-primary">Search accounts</button>
+        <label className="reg-field">Find an account<input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder="Start typing a name or email address" maxLength={254} autoComplete="off" /></label><button className="reg-primary">Search accounts</button>
       </form>
       <p className="reg-account-note">An account is created when someone first signs in. Removing an account deletes their profile, registration, uploads and sign-in history; office members cannot be removed here.</p>
       {result && !result.data.length ? <p>No accounts found.</p> : result && <div className="reg-account-table"><table><thead><tr><th>Person</th><th>Account created</th><th>Last successful login</th><th>Registration</th><th>Activity</th></tr></thead><tbody>{result.data.map(account => <tr key={account.id}>
