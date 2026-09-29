@@ -28,7 +28,7 @@ with sync_playwright() as p:
   page.get_by_label('Date of birth').fill('1990-02-01')
   page.get_by_label('Denomination',exact=True).select_option('First Love Church');page.get_by_label('Country',exact=True).fill('Ghana');page.get_by_label('City',exact=True).fill('Accra')
   choices=page.get_by_label('Denomination',exact=True).locator('option').all_text_contents();assert len(choices)==8 and 'Go Ye Church' in choices
-  for org in ['DHMM','FLOW','Healing Jesus Campaign']:
+  for org in ['DHMM','FLOW','HJC']:
    page.get_by_label('Organization',exact=True).select_option(org);expect(page.get_by_label('Denomination',exact=True)).to_be_disabled()
   page.get_by_label('Organization',exact=True).select_option('First Love');expect(page.get_by_label('Denomination',exact=True)).to_have_value('');page.get_by_label('Denomination',exact=True).select_option('First Love Church')
   if role=='pastor':page.get_by_label('Your bishop’s first name').fill('Demo');page.get_by_label('Your bishop’s surname').fill('Bishop')

@@ -530,6 +530,7 @@ export default function RegistrationApp({
             <fieldset className="reg-workspace-fieldset" disabled={busy}>
               {tab === "Registration" && (
                 <Participant
+                  fixedRole={typeof signup === "string" ? signup : ""}
                   actor={actor}
                   state={state}
                   current={current}
@@ -906,6 +907,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
   );
 }
 function Participant({
+  fixedRole = "",
   actor,
   state,
   current,
@@ -923,6 +925,7 @@ function Participant({
     return (
       <RegistrationForm
         editing={editing}
+        fixedRole={fixedRole}
         onDone={() => setEditing(false)}
         key={`${state.year}-${actor.id}`}
         actor={actor}
@@ -1022,6 +1025,7 @@ function Participant({
 }
 function RegistrationForm({
   editing = false,
+  fixedRole = "",
   onDone,
   actor,
   initial,
@@ -1033,7 +1037,7 @@ function RegistrationForm({
 }) {
   const [data, setData] = useState(() => ({
       ...{
-        role: profile?.role || "pastor",
+        role: fixedRole || profile?.role || "pastor",
         name: "",
         firstName: "",
         lastName: "",
@@ -1235,11 +1239,14 @@ function RegistrationForm({
                 <span>All fields are required</span>
               </div>
               <div className="reg-fields">
-                <Field label="Registering as">
+                <Field
+                  label="Registering as"
+                  hint={fixedRole ? `This link is for ${fixedRole} registration.` : undefined}
+                >
                   <select
                     value={data.role}
                     onChange={(e) => set("role", e.target.value)}
-                    disabled={Boolean(profile)}
+                    disabled={Boolean(profile) || Boolean(fixedRole)}
                   >
                     <option value="pastor">Pastor</option>
                     <option value="bishop">
@@ -2335,6 +2342,7 @@ function PublicDirectory({ data, embedded = false }) {
   if (!role && !q)
     return (
       <section className={`reg-doors ${embedded ? "embedded" : ""}`}>
+        {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
         <input
           type="search"
           className="reg-doors-search"
@@ -2351,7 +2359,6 @@ function PublicDirectory({ data, embedded = false }) {
             <button key={value} className="reg-door" onClick={() => setRole(value)}>
               <span>{label}</span>
               <strong>{counts[value].toLocaleString()}</strong>
-              <small>Roll of Good Standing</small>
             </button>
           ))}
         </div>

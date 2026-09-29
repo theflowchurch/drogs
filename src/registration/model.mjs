@@ -4,7 +4,7 @@ export const ORGANIZATIONS = [
   "United Denominations",
   "DHMM",
   "FLOW",
-  "Healing Jesus Campaign",
+  "HJC",
 ];
 export const STORAGE_KEY = "drogs-registration-v1";
 export const AMOUNTS = { bishop: 100, pastor: 50 };

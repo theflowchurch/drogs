@@ -6,7 +6,11 @@ globalThis.window = globalThis;
 await import('../data/bishops.js');
 await import('../data/pastors.js');
 const { BISHOPS, PASTORS } = globalThis;
-const ORGANIZATION = { 'UD-OLGC': 'United Denominations', 'UO-FLC190': 'First Love', OUTREACH: 'Outreach' };
+const ORGANIZATION = { 'UD-OLGC': 'United Denominations', 'UO-FLC190': 'First Love' };
+// Outreach rows carry their group: the FLOW office or the Healing Jesus Council.
+const OUTREACH_GROUP = { 'FLOW Office': 'FLOW', 'Healing Jesus Council': 'HJC' };
+// Spelling variants of one denomination.
+const DENOMINATION_ALIAS = { 'QODESH FAMILY CHURCH': 'QODESH FAMILY CHURCHES' };
 const clean = value => String(value ?? '').trim();
 const skip = new Set(['', 'n/a', 'none', 'unknown', 'international']);
 const keep = value => (skip.has(clean(value).toLowerCase()) ? '' : clean(value));
@@ -15,8 +19,8 @@ const person = (role, p) => ({
   role,
   name: p.name,
   title: p.title || (role === 'bishop' ? 'Bishop' : 'Pastor'),
-  organization: ORGANIZATION[p.organization] || p.organization,
-  denomination: keep(p.denomination),
+  organization: ORGANIZATION[p.organization] || OUTREACH_GROUP[clean(p.outreachGroup)] || '',
+  denomination: p.organization === 'OUTREACH' ? '' : DENOMINATION_ALIAS[keep(p.denomination)] || keep(p.denomination),
   denominationLogo: p.denominationLogo || '',
   city: keep(p.city),
   branch: keep(p.branch),

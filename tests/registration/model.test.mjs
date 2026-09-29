@@ -207,7 +207,7 @@ test("new form enforces split names, location, organization denomination and att
       validateProfile({ ...p, denomination: "Invented Church" }, pastor.email),
     /denomination/,
   );
-  for (const organization of ["DHMM", "FLOW", "Healing Jesus Campaign"])
+  for (const organization of ["DHMM", "FLOW", "HJC"])
     assert.equal(
       validateProfile({ ...p, organization }, pastor.email).denomination,
       "",

@@ -83,5 +83,5 @@ export const DENOMINATIONS = {
   ],
   DHMM: [],
   FLOW: [],
-  "Healing Jesus Campaign": [],
+  "HJC": [],
 };

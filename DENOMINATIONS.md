@@ -1,6 +1,6 @@
 # Registration denomination choices
 
-First Love choices follow the supplied screenshot plus First Love Church. UD choices retain the labels from the existing UD directory, without changing historical classifications. DHMM, FLOW and Healing Jesus Campaign have no denomination selection.
+First Love choices follow the supplied screenshot plus First Love Church. UD choices retain the labels from the existing UD directory, without changing historical classifications. DHMM, FLOW and HJC have no denomination selection.
 
 ## First Love
 
@@ -94,7 +94,7 @@ Disabled — not applicable.
 
 Disabled — not applicable.
 
-## Healing Jesus Campaign
+## HJC
 
 Disabled — not applicable.
 
