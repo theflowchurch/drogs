@@ -99,9 +99,9 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call(`media?path=${pastorPhoto}`, stranger.cookie)).status, 403);
     const unclaimed = await call('snapshot', pastor.cookie);
     assert.equal(unclaimed.data.registrations[0].status, 'unclaimed');
-    assert.equal((await call('action', bishop.cookie, { name: 'addRoster', payload: { rows: [{ name: 'Valid', email: 'valid@example.com' }, { name: '' }] } })).status, 400);
+    assert.equal((await call('action', bishop.cookie, { name: 'addRoster', payload: { rows: [{ name: 'Valid Person', dob: '01/01/1990' }, { name: '' }] } })).status, 400);
     assert.equal((await call('snapshot', bishop.cookie)).data.rosters.length, 0, 'failed bulk write rolled back');
-    const concurrent = await Promise.all([1, 2].map(() => call('action', bishop.cookie, { name: 'addRoster', payload: { rows: [{ name: 'John Doe', email: 'pastor@example.com' }] } })));
+    const concurrent = await Promise.all([1, 2].map(() => call('action', bishop.cookie, { name: 'addRoster', payload: { rows: [{ name: 'John Doe', dob: '01/01/1990' }] } })));
     assert.deepEqual(concurrent.map(r => r.status).sort(), [200, 400]);
     assert.equal((await call('snapshot', bishop.cookie)).data.rosters.length, 1);
     assert.equal((await call('snapshot', pastor.cookie)).data.registrations[0].status, 'confirmed');

@@ -50,7 +50,7 @@ test("fresh registration has a separate storage key and zero counts", () => {
   assert.equal(emptyState().registrations.length, 0);
   assert.equal(emptyState().profiles.length, 0);
 });
-test("bishop cannot self-approve or add a list while pending", () => {
+test("a bishop cannot self-approve but may list pastors while pending", () => {
   let s = applyAction(
     emptyState(),
     bishop,
@@ -64,10 +64,23 @@ test("bishop cannot self-approve or add a list while pending", () => {
   assert.throws(
     () =>
       applyAction(s, bishop, "addRoster", {
-        rows: [{ name: "John", email: "john@example.com" }],
+        rows: [{ name: "John", dob: "01/02/1990" }],
       }),
-    /approved/,
+    /full name/,
   );
+  s = applyAction(s, bishop, "addRoster", {
+    rows: [{ name: "John Doe", dob: "01/02/1990" }],
+  });
+  assert.equal(s.rosters.length, 1, "a pending bishop's list is accepted");
+  // A bishop asked to resubmit may edit once; a denied bishop drops off.
+  s = applyAction(s, office, "reviewBishop", { userId: "b1", decision: "resubmit", note: "Please use the red jacket photo." });
+  assert.equal(s.registrations[0].status, "pending");
+  s = applyAction(s, bishop, "update", { ...profile(bishop, "bishop"), city: "Tema" });
+  assert.equal(s.registrations[0].data.city, "Tema");
+  assert.throws(() => applyAction(s, bishop, "update", { ...profile(bishop, "bishop") }), /locked/);
+  s = applyAction(s, office, "reviewBishop", { userId: "b1", decision: "denied", note: "Not a bishop of this fellowship." });
+  assert.equal(s.registrations[0].status, "denied");
+  assert.throws(() => applyAction(s, bishop, "addRoster", { rows: [{ name: "Ama Owusu", dob: "02/02/1990" }] }), /Submit your bishop registration/);
 });
 test("unmatched pastor is Unclaimed and cannot pay, linked pastor can", () => {
   let s = setup();
@@ -79,7 +92,7 @@ test("unmatched pastor is Unclaimed and cannot pay, linked pastor can", () => {
     /unlocks/,
   );
   s = applyAction(s, bishop, "addRoster", {
-    rows: [{ name: "John Doe", email: pastor.email }],
+    rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }],
   });
   assert.equal(s.registrations.at(-1).status, "confirmed");
   assert.equal(s.registrations.at(-1).amount, 50);
@@ -98,10 +111,17 @@ test("unmatched pastor is Unclaimed and cannot pay, linked pastor can", () => {
   });
   assert.equal(s.registrations.at(-1).payment, "verified");
 });
-test("name-only and fuzzy-name matches require explicit confirmation", () => {
+test("a close name and birthday match automatically; a wrong birthday waits for the bishop", () => {
   let s = setup();
   s = applyAction(s, bishop, "addRoster", {
-    rows: [{ name: "Jon Doe", email: pastor.email }],
+    rows: [{ name: "Jon Doe", dob: "02/01/1990" }],
+  });
+  // A spelling slip plus swapped day and month still matches.
+  s = applyAction(s, pastor, "submit", profile(pastor));
+  assert.equal(s.registrations.at(-1).status, "confirmed");
+  s = setup();
+  s = applyAction(s, bishop, "addRoster", {
+    rows: [{ name: "Jon Doe", dob: "14/07/1988" }],
   });
   s = applyAction(s, pastor, "submit", profile(pastor));
   assert.equal(s.registrations.at(-1).status, "unclaimed");
@@ -120,21 +140,23 @@ test("name-only and fuzzy-name matches require explicit confirmation", () => {
     /no longer/,
   );
 });
-test("duplicate-contact ambiguous candidates are not auto matched", () => {
-  let s = setup();
-  s = applyAction(s, bishop, "addRoster", {
-    rows: [
-      { name: "John Doe", email: pastor.email },
-      { name: "John Doe", phone: "+233201234567" },
-    ],
-  });
-  s = applyAction(s, pastor, "submit", profile(pastor));
-  assert.equal(s.registrations.at(-1).status, "unclaimed");
+test("the same person twice on one list is refused", () => {
+  const s = setup();
+  assert.throws(
+    () =>
+      applyAction(s, bishop, "addRoster", {
+        rows: [
+          { name: "John Doe", dob: "01/02/1990" },
+          { name: "John K Doe", dob: "02/02/1990" },
+        ],
+      }),
+    /already in this year/,
+  );
 });
 test("removal preserves payment and next cycle has fresh counts and no copied payment", () => {
   let s = setup();
   s = applyAction(s, bishop, "addRoster", {
-    rows: [{ name: "John Doe", email: pastor.email }],
+    rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }],
   });
   s = applyAction(s, pastor, "submit", profile(pastor));
   s = applyAction(s, pastor, "payment", {
@@ -165,7 +187,7 @@ test("wrong bishop list never matches, drafts and unrelated profiles remain priv
     referenceId: "B2",
   });
   s = applyAction(s, bishop, "addRoster", {
-    rows: [{ name: "John Doe", email: pastor.email }],
+    rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }],
   });
   s = applyAction(s, pastor, "save", { ...profile(pastor), bishopId: "B2" });
   assert.equal(visibleState(s, other, []).registrations.length, 1);
@@ -178,22 +200,20 @@ test("failed bulk import is atomic, duplicates and invalid birth dates rejected"
   const s = setup();
   assert.throws(() =>
     applyAction(s, bishop, "addRoster", {
-      rows: [{ name: "Valid", email: "v@example.com" }, { name: "Invalid" }],
+      rows: [{ name: "Valid Person", dob: "01/02/1990" }, { name: "Invalid Person", dob: "31/02/1990" }],
     }),
+    /date of birth/,
   );
   assert.equal(s.rosters.length, 0);
   assert.throws(() =>
     validateProfile({ ...profile(pastor), dob: "1990-02-31" }, pastor.email),
   );
+  // Spreadsheets give full name, date of birth (day/month/year), then optional email and phone.
   assert.deepEqual(
-    parseRoster('name,email,phone,church\n"Doe, John",john@example.com,,Grace'),
+    parseRoster('name,date of birth,email,phone\n"Doe, John",14/03/1985,john@example.com,\nAma Owusu\t3.4.90'),
     [
-      {
-        name: "Doe, John",
-        email: "john@example.com",
-        phone: "",
-        church: "Grace",
-      },
+      { name: "Doe, John", dob: "1985-03-14", email: "john@example.com", phone: "" },
+      { name: "Ama Owusu", dob: "1990-04-03", email: "", phone: "" },
     ],
   );
 });
@@ -261,7 +281,7 @@ test("confirming an existing record updates it, and the directory marks who is u
   let s = setup();
   s = applyAction(s, bishop, "addRoster", {
     rows: [
-      { name: "John Doe", email: "john@example.com", phone: "+233201234567" },
+      { name: "John Doe", dob: "01/02/1990", email: "john@example.com", phone: "+233201234567" },
     ],
   });
   const row = s.rosters[0];
@@ -306,7 +326,7 @@ test("confirming an existing record updates it, and the directory marks who is u
 
   // The same existing record cannot be confirmed for two people in one cycle.
   s = applyAction(s, bishop, "addRoster", {
-    rows: [{ name: "John Doe", email: "other-john@example.com" }],
+    rows: [{ name: "John Doe", dob: "09/09/1975", email: "other-john@example.com" }],
   });
   const second = s.rosters.find((r) => r.email === "other-john@example.com");
   assert.throws(
@@ -318,73 +338,36 @@ test("confirming an existing record updates it, and the directory marks who is u
     /already confirmed/,
   );
 });
-test("a pastor registers without choosing a bishop and is matched or claimed", () => {
+test("a pastor must pick a registered bishop and is matched or left for that bishop", () => {
   let s = setup();
   s = applyAction(s, bishop, "addRoster", {
-    rows: [{ name: "John Doe", email: pastor.email }],
+    rows: [{ name: "John Doe", dob: "01/02/1990" }],
   });
-  // Matched against every approved bishop's list, then assigned to that bishop.
-  s = applyAction(s, pastor, "submit", {
-    ...profile(pastor),
-    bishopId: "",
-    bishopFirstName: "Bishop",
-    bishopLastName: "Ama",
-  });
-  const matched = s.registrations.find((r) => r.userId === pastor.id);
-  assert.equal(matched.status, "confirmed");
-  assert.equal(
-    matched.data.bishopId,
-    "B1",
-    "the typed name, in either order, resolves the bishop",
+  assert.throws(
+    () => applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: "" }),
+    /Choose your bishop/,
   );
+  assert.deepEqual(
+    visibleState(s, pastor, []).bishops.map((b) => b.id),
+    ["B1"],
+    "only registered bishops are offered",
+  );
+  s = applyAction(s, pastor, "submit", profile(pastor));
+  assert.equal(s.registrations.find((r) => r.userId === pastor.id).status, "confirmed");
 
-  // Not on any list: unclaimed, visible to approved bishops, claimable by one.
+  // Not on the bishop's list: floats in that bishop's Unclaimed until they confirm.
   const lone = { id: "p2", email: "mary@example.com" };
-  s = applyAction(s, lone, "submit", {
-    ...profile(lone, "pastor", "Mary Owusu"),
-    bishopId: "",
-    bishopFirstName: "Unknown",
-    bishopLastName: "Person",
-  });
-  const third = { id: "p3", email: "x@example.com" };
-  assert.throws(
-    () =>
-      applyAction(s, third, "submit", {
-        ...profile(third),
-        bishopId: "",
-        bishopLastName: "",
-      }),
-    /first name and surname/,
-  );
+  s = applyAction(s, lone, "submit", profile(lone, "pastor", "Mary Owusu"));
   assert.equal(s.registrations.find((r) => r.userId === lone.id).status, "unclaimed");
-  assert.ok(
-    !visibleState(s, bishop, []).registrations.some((r) => r.userId === lone.id),
-    "a pastor who named someone else is not shown to this bishop",
-  );
-  assert.throws(
-    () => applyAction(s, bishop, "claim", { userId: lone.id }),
-    /Assign an approved bishop/,
-  );
-  // Naming the bishop with a typo is enough to be seen and claimed by them.
-  const typo = { id: "p4", email: "typo@example.com" };
-  s = applyAction(s, typo, "submit", {
-    ...profile(typo, "pastor", "Kwame Typo"),
-    bishopId: "",
-    bishopFirstName: "Amma",
-    bishopLastName: "Bishopp",
-  });
-  assert.equal(s.registrations.find((r) => r.userId === typo.id).data.bishopId, "B1", "a close spelling resolves the bishop");
-  s = applyAction(s, office, "assignBishop", { userId: lone.id, bishopId: "B1" });
+  assert.ok(visibleState(s, bishop, []).registrations.some((r) => r.userId === lone.id));
+  assert.ok(!visibleState(s, other, []).registrations.some((r) => r.userId === lone.id));
   s = applyAction(s, bishop, "claim", { userId: lone.id });
-  const claimed = s.registrations.find((r) => r.userId === lone.id);
-  assert.equal(claimed.status, "confirmed");
-  assert.equal(claimed.data.bishopId, "B1");
+  assert.equal(s.registrations.find((r) => r.userId === lone.id).status, "confirmed");
 });
-
 test("a Paystack payment is recorded only once, only when enough was paid", () => {
   let s = setup();
   s = applyAction(s, bishop, "addRoster", {
-    rows: [{ name: "John Doe", email: pastor.email }],
+    rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }],
   });
   s = applyAction(s, pastor, "submit", profile(pastor));
   assert.equal(s.registrations.find((r) => r.userId === pastor.id).status, "confirmed");
@@ -446,15 +429,10 @@ test("names are alike across order, missing middle names and small typos", () =>
   assert.ok(!namesAlike("Nina", "Nina Masuku"), "one word is never enough");
 });
 
-test("a member updates their own submitted details without losing status", () => {
+test("a submitted profile is locked", () => {
   let s = setup();
-  s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", email: pastor.email }] });
+  s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
   s = applyAction(s, pastor, "submit", profile(pastor));
-  assert.throws(() => applyAction(s, pastor, "update", { ...profile(pastor), photoConfirmed: false }), /Confirm your photo/);
-  s = applyAction(s, pastor, "update", { ...profile(pastor), phone: "+233209999999", city: "Kumasi" });
-  const r = s.registrations.find((x) => x.userId === pastor.id);
-  assert.equal(r.status, "confirmed");
-  assert.equal(r.data.phone, "+233209999999");
-  assert.equal(r.data.city, "Kumasi");
-  assert.equal(r.data.bishopId, "B1", "the bishop link is kept");
+  assert.throws(() => applyAction(s, pastor, "update", { ...profile(pastor), city: "Kumasi" }), /locked/);
+  assert.equal(s.registrations.find((x) => x.userId === pastor.id).data.city, "Accra");
 });

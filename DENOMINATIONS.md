@@ -26,7 +26,6 @@ First Love choices follow the supplied screenshot plus First Love Church. UD cho
 - East End City Churches
 - East Mountain Churches
 - Eglise Benediction Totale
-- Enlargement Matrix Church
 - Eschatos
 - Ethiopia
 - Everything By Prayer Center
@@ -51,8 +50,6 @@ First Love choices follow the supplied screenshot plus First Love Church. UD cho
 - Makarios City Church
 - Makarios Western North
 - Malawi
-- Miracle Matrix Church
-- Morning Star City Churches
 - Mustard Seed Chapel International
 - Onction Internationale Benin
 - Others International Church
@@ -65,7 +62,6 @@ First Love choices follow the supplied screenshot plus First Love Church. UD cho
 - Primeiras Obras
 - Qodesh City Churches
 - Qodesh Family Churches
-- Reasonable Service
 - Rejoice Greatly
 - Rencontre Prophetique Internationale
 - Revelation Church Of Asia

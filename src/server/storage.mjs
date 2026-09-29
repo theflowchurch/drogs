@@ -3,6 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import sharp from 'sharp';
 import { randomUUID } from 'node:crypto';
 import { HttpError, rateLimit } from './auth.mjs';
+import { submittedBishop } from '../registration/model.mjs';
 export async function prepareImage(bytes, contentType) {
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(contentType) || bytes.length > 5 * 1024 * 1024 || !bytes.length)
     throw new HttpError(400, 'Choose a JPG, PNG or WebP image smaller than 5 MB.');
@@ -20,7 +21,7 @@ export function canReadMedia(state, actor, media) {
   if (media.kind !== 'portrait') return false;
   // Portraits of people confirmed on the roll are part of the directory every member sees.
   if (state.registrations.some(r => r.status === 'confirmed' && r.data.photo === media.object_key)) return true;
-  const profile = state.profiles.find(p => p.id === actor.id && p.role === 'bishop' && p.bishopApproved);
+  const profile = state.profiles.find(p => p.id === actor.id && p.role === 'bishop' && (p.bishopApproved || submittedBishop(state, p)));
   return Boolean(profile && state.registrations.some(r => r.status !== 'draft' && r.data.role === 'pastor' &&
     r.data.photo === media.object_key && r.data.bishopId === (profile.referenceId || profile.id)));
 }

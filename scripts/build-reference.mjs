@@ -10,7 +10,11 @@ const ORGANIZATION = { 'UD-OLGC': 'United Denominations', 'UO-FLC190': 'First Lo
 // Outreach rows carry their group: the FLOW office or the Healing Jesus Council.
 const OUTREACH_GROUP = { 'FLOW Office': 'FLOW', 'Healing Jesus Council': 'HJC' };
 // Spelling variants of one denomination.
-const DENOMINATION_ALIAS = { 'QODESH FAMILY CHURCH': 'QODESH FAMILY CHURCHES' };
+const DENOMINATION_ALIAS = { 'QODESH FAMILY CHURCH': 'QODESH FAMILY CHURCHES',
+  // No longer exist as denominations; their people keep their organization.
+  'MORNING STAR CITY CHURCHES': '', 'MIRACLE MATRIX CHURCH': '', 'ENLARGEMENT MATRIX CHURCH': '', 'REASONABLE SERVICE': '' };
+// One-off corrections to the source rows.
+const REHOME = { ETHIOPIA: { organization: 'First Love', denomination: 'FIRST LOVE CHURCH', denominationLogo: 'assets/denominations/first-love-church.png' } };
 // FLOW has no supplied logo yet.
 const GROUP_LOGO = { HJC: 'assets/denominations/healing-jesus.webp' };
 const clean = value => String(value ?? '').trim();
@@ -21,10 +25,10 @@ const person = (role, p) => ({
   role,
   name: p.name,
   title: p.title || (role === 'bishop' ? 'Bishop' : 'Pastor'),
-  organization: ORGANIZATION[p.organization] || OUTREACH_GROUP[clean(p.outreachGroup)] || '',
+  organization: REHOME[keep(p.denomination)]?.organization || ORGANIZATION[p.organization] || OUTREACH_GROUP[clean(p.outreachGroup)] || '',
   // Outreach rows show their group (FLOW / HJC) where a denomination would appear.
-  denomination: p.organization === 'OUTREACH' ? OUTREACH_GROUP[clean(p.outreachGroup)] || '' : DENOMINATION_ALIAS[keep(p.denomination)] || keep(p.denomination),
-  denominationLogo: p.organization === 'OUTREACH' ? GROUP_LOGO[OUTREACH_GROUP[clean(p.outreachGroup)]] || '' : p.denominationLogo || '',
+  denomination: REHOME[keep(p.denomination)]?.denomination ?? (p.organization === 'OUTREACH' ? OUTREACH_GROUP[clean(p.outreachGroup)] || '' : (DENOMINATION_ALIAS[keep(p.denomination)] ?? keep(p.denomination))),
+  denominationLogo: REHOME[keep(p.denomination)]?.denominationLogo ?? (p.organization === 'OUTREACH' ? GROUP_LOGO[OUTREACH_GROUP[clean(p.outreachGroup)]] || '' : (DENOMINATION_ALIAS[keep(p.denomination)] === '' ? '' : p.denominationLogo || '')),
   city: keep(p.city),
   branch: keep(p.branch),
   country: keep(p.region),

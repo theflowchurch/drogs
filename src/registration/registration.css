@@ -2196,3 +2196,42 @@ p {
   right: 22px;
   z-index: 2;
 }
+
+.reg-candidate.chosen {
+  border-color: var(--teal);
+  background: #f1f8f6;
+}
+.reg-review-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.reg-secondary.danger {
+  color: var(--red);
+  border-color: #e3bcc3;
+}
+.reg-badge.denied {
+  background: #fbe9ec;
+  color: #8a2233;
+}
+
+/* The castle sits faintly behind every page so no screen is bare */
+.reg-app {
+  position: relative;
+  isolation: isolate;
+}
+.reg-app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: #f5f7f6;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.18;
+  pointer-events: none;
+}
+.reg-doors,
+.reg-main,
+.reg-public-list {
+  background: transparent;
+}

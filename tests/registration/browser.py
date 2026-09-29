@@ -31,7 +31,7 @@ with sync_playwright() as p:
   for org in ['DHMM','FLOW','HJC']:
    page.get_by_label('Organization',exact=True).select_option(org);expect(page.get_by_label('Denomination',exact=True)).to_be_disabled()
   page.get_by_label('Organization',exact=True).select_option('First Love');expect(page.get_by_label('Denomination',exact=True)).to_have_value('');page.get_by_label('Denomination',exact=True).select_option('First Love Church')
-  if role=='pastor':page.get_by_label('Your bishop’s first name').fill('Demo');page.get_by_label('Your bishop’s surname').fill('Bishop')
+  if role=='pastor':page.get_by_label('Find your bishop').fill('Demo Bish');page.get_by_role('button',name='This is my bishop').first.click();expect(page.get_by_text('Change bishop')).to_be_visible()
   page.get_by_label('Photo in official attire',exact=True).set_input_files(PHOTO)
   expect(page.get_by_text('Photo uploaded. Choose a new image to replace it.')).to_be_visible()
  def submit():
@@ -53,13 +53,11 @@ with sync_playwright() as p:
   signout();open_account('office@example.com',True)
   expect(page.get_by_text('Existing records',exact=True)).to_be_visible()
   assert page.locator('.reg-dot.stale').count()>0 and page.locator('.reg-dot.updated').count()==0
-  page.get_by_role('button',name='Denominations',exact=True).click();expect(page.locator('.reg-denomination').first).to_be_visible()
-  page.get_by_role('button',name='People',exact=True).click()
   page.get_by_role('button',name='Bishop approvals',exact=True).click();page.get_by_role('button',name='Demo Bishop').click()
-  page.get_by_label('Match to existing bishop reference').select_option('B1');page.get_by_label('I have verified this person').check();page.get_by_role('button',name='Approve bishop account').click()
-  expect(page.get_by_text('No bishop accounts awaiting approval')).to_be_visible()
+  page.get_by_label('Match to existing bishop reference').select_option('B1');page.get_by_label('I have verified this person').check();page.get_by_role('button',name='Confirm bishop').click()
+  expect(page.get_by_text('No bishop registrations awaiting confirmation')).to_be_visible()
   signout();open_account('bishop@example.com');page.get_by_role('button',name='My pastors',exact=True).click()
-  page.get_by_label('Pastor list',exact=True).fill('Jon Demo, pastor@example.com, +233201234567, Grace Church')
+  page.get_by_label('Pastor list',exact=True).fill('Jon Demo, 14/07/1988')  # wrong birthday: John stays Unclaimed until the office links him
   page.get_by_role('button',name='Add to annual list').click();expect(page.get_by_role('cell',name='Jon Demo')).to_be_visible()
   signout();open_account('pastor@example.com');register('John Demo')
   page.get_by_role('button',name='Save draft').click();expect(page.get_by_text('Draft saved. You can return to finish it.')).to_be_visible()

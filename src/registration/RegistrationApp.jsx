@@ -45,7 +45,8 @@ const paymentInstructions = process.env.NEXT_PUBLIC_PAYMENT_INSTRUCTIONS || "";
 const statusLabel = {
   draft: "Draft",
   unclaimed: "Unclaimed",
-  pending: "Awaiting office approval",
+  pending: "Awaiting office confirmation",
+  denied: "Not approved",
   confirmed: "Confirmed",
   removed: "Removed from annual list",
   unpaid: "Not paid",
@@ -330,7 +331,9 @@ export default function RegistrationApp({
     : [
         "Registration",
         ...(current && current.status !== "draft" ? ["Directory"] : []),
-        ...(profile?.bishopApproved ? ["My pastors", "Unclaimed"] : []),
+        ...(profile?.role === "bishop" && current && !["draft", "denied"].includes(current.status)
+          ? ["My pastors", "Unclaimed"]
+          : []),
         "History",
       ];
   async function logout() {
@@ -357,6 +360,13 @@ export default function RegistrationApp({
     );
   return (
     <div className="reg-app">
+      {!hero && (
+        <div
+          className="reg-app-bg"
+          style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
+          aria-hidden="true"
+        />
+      )}
       {!hero && <header className="reg-header">
         {gate && actor && !browse && (
           <button
@@ -627,8 +637,7 @@ export default function RegistrationApp({
                   {tab === "Bishop approvals" && (
                     <BishopApprovals
                       records={scoped.filter(
-                        (r) =>
-                          r.data.role === "bishop" && r.status === "pending",
+                        (r) => r.data.role === "bishop" && ["pending", "denied"].includes(r.status),
                       )}
                       perform={perform}
                       canEdit={Number(year) === state.year}
@@ -996,25 +1005,33 @@ function Participant({
             <h3>
               {current.status === "confirmed"
                 ? "Your registration is confirmed."
-                : current.status === "pending"
-                  ? "Your bishop account is awaiting verification."
-                  : current.status === "removed"
-                    ? "Your annual roster status has changed."
-                    : "Your bishop has not confirmed you yet."}
+                : current.status === "denied"
+                  ? "Your registration was not approved."
+                  : current.resubmit
+                    ? "The office has asked you to update your registration."
+                    : current.status === "pending"
+                      ? "Your registration is in. Add your pastors now."
+                      : current.status === "removed"
+                        ? "Your annual roster status has changed."
+                        : "Your bishop has not confirmed you yet."}
             </h3>
             <p>
               {current.status === "confirmed"
                 ? "You can now pay your annual renewal ministerial fee."
-                : current.status === "pending"
-                  ? "The office will verify your account. Once approved, you can submit your pastor list and make your commitment."
-                  : current.status === "removed"
-                    ? "Contact your bishop or the office to discuss this change. Your registration and payment history have been retained."
-                    : "Your details are safely saved in Unclaimed. Your bishop or the office can confirm your registration. Payment will unlock after confirmation."}
+                : current.status === "denied" || current.resubmit
+                  ? current.bishopNote || "Please contact the office."
+                  : current.status === "pending"
+                    ? "The office confirms bishops in the background. Meanwhile, go to My pastors and upload your list so your pastors are recognised when they register."
+                    : current.status === "removed"
+                      ? "Contact your bishop or the office to discuss this change. Your registration and payment history have been retained."
+                      : "Your details are safely saved in Unclaimed. Your bishop or the office can confirm your registration. Payment will unlock after confirmation."}
             </p>
           </div>
-          <button className="reg-secondary" onClick={() => setEditing(true)}>
-            Edit my details
-          </button>
+          {current.resubmit && (
+            <button className="reg-secondary" onClick={() => setEditing(true)}>
+              Update my registration
+            </button>
+          )}
         </section>
         <Payment
           current={current}
@@ -1091,26 +1108,26 @@ function RegistrationForm({
       }
       return next;
     });
-  // Bishops whose names are alike the typed one, registered ones first. Picking
-  // one writes the exact spelling back so the annual list matches.
-  const bishopSuggestions = useMemo(() => {
-    const typed = `${data.bishopFirstName} ${data.bishopLastName}`.trim();
-    if (data.role !== "pastor" || data.bishopFirstName.length < 2 || data.bishopLastName.length < 2) return [];
-    const exact = state.directory.find((b) => normalName(b.name) === normalName(typed));
-    if (exact) return [];
-    return state.directory
-      .filter((b) => namesAlike(b.name, typed))
-      .sort((a, b) => Number(Boolean(b.accountId)) - Number(Boolean(a.accountId)))
-      .slice(0, 3);
-  }, [data.role, data.bishopFirstName, data.bishopLastName, state.directory]);
+  // Pastors choose from bishops who have already registered; the search forgives
+  // spelling and word order.
+  const [bishopQuery, setBishopQuery] = useState("");
+  const registeredBishops = state.bishops || [];
+  const chosenBishop = registeredBishops.find((b) => b.id === data.bishopId) || null;
+  const bishopMatches = useMemo(() => {
+    const q = normalName(bishopQuery);
+    if (data.role !== "pastor" || chosenBishop || q.length < 2) return [];
+    return registeredBishops
+      .filter((b) => normalName(b.name).includes(q) || namesAlike(b.name, bishopQuery))
+      .slice(0, 6);
+  }, [bishopQuery, data.role, chosenBishop, registeredBishops]);
   const pickBishop = (b) =>
     setData((d) => {
       const parts = b.name.trim().split(/\s+/);
       return {
         ...d,
+        bishopId: b.id,
         bishopFirstName: parts.slice(0, -1).join(" "),
-        bishopLastName: parts.at(-1),
-        bishopId: b.accountId ? b.id : d.bishopId,
+        bishopLastName: parts.at(-1) || "",
         photoConfirmed: false,
       };
     });
@@ -1396,48 +1413,54 @@ function RegistrationForm({
                 </Field>
                 <CommitmentPreview role={data.role} country={data.country} />
                 {data.role === "pastor" && (
-                  <>
-                    <Field
-                      label="Your bishop’s first name"
-                      hint="Type both names exactly as your bishop is known, so we can compare them with their annual list."
-                    >
-                      <input
-                        required
-                        minLength={2}
-                        autoComplete="off"
-                        value={data.bishopFirstName}
-                        onChange={(e) => set("bishopFirstName", e.target.value)}
-                      />
-                    </Field>
-                    <Field label="Your bishop’s surname">
-                      <input
-                        required
-                        minLength={2}
-                        autoComplete="off"
-                        value={data.bishopLastName}
-                        onChange={(e) => set("bishopLastName", e.target.value)}
-                      />
-                    </Field>
-                    {bishopSuggestions.length > 0 && (
-                      <div className="reg-is-this-you reg-field wide">
-                        <p>Did you mean one of these bishops? Pick the right one so the spelling matches their list.</p>
-                        <div className="reg-candidates">
-                          {bishopSuggestions.map((b) => (
-                            <div key={b.id} className="reg-candidate">
-                              <Portrait person={b} />
-                              <div>
-                                <b>{b.name}</b>
-                                <small>{[b.title, b.organization].filter(Boolean).join(" · ")}</small>
-                                <button type="button" className="reg-secondary" onClick={() => pickBishop(b)}>
-                                  This is my bishop
-                                </button>
-                              </div>
-                            </div>
-                          ))}
+                  <div className="reg-field wide">
+                    <label>Your bishop</label>
+                    {chosenBishop ? (
+                      <div className="reg-candidate chosen">
+                        <Portrait person={chosenBishop} />
+                        <div>
+                          <b>{chosenBishop.name}</b>
+                          <small>{[chosenBishop.denomination, chosenBishop.organization].filter(Boolean).join(" · ")}</small>
+                          <button type="button" className="reg-text" onClick={() => set("bishopId", "")}>
+                            Change bishop
+                          </button>
                         </div>
                       </div>
+                    ) : (
+                      <>
+                        <input
+                          aria-label="Find your bishop"
+                          placeholder="Type your bishop’s name"
+                          autoComplete="off"
+                          value={bishopQuery}
+                          onChange={(e) => setBishopQuery(e.target.value)}
+                        />
+                        {bishopMatches.length > 0 && (
+                          <div className="reg-candidates">
+                            {bishopMatches.map((b) => (
+                              <div key={b.id} className="reg-candidate">
+                                <Portrait person={b} />
+                                <div>
+                                  <b>{b.name}</b>
+                                  <small>{[b.denomination, b.organization].filter(Boolean).join(" · ")}</small>
+                                  <button type="button" className="reg-secondary" onClick={() => pickBishop(b)}>
+                                    This is my bishop
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <small>
+                          {registeredBishops.length
+                            ? bishopQuery.length >= 2 && !bishopMatches.length
+                              ? "No registered bishop matches that name. Bishops must register before their pastors; ask yours to sign up at kuriakecastle.org/signup/bishop/."
+                              : "Only bishops who have already registered appear here."
+                            : "No bishop has registered yet. Ask your bishop to sign up first at kuriakecastle.org/signup/bishop/."}
+                        </small>
+                      </>
                     )}
-                  </>
+                  </div>
                 )}
               </div>
               <div className="reg-form-actions">
@@ -2323,7 +2346,26 @@ function PublicRecord({ person: p, onOpen, from }) {
           )}
         </div>
       </div>
-      {p.role === "bishop" && <PastorsUnder bishop={p} onOpen={onOpen} from={from} />}
+      {p.role === "bishop" && p.pastors ? (
+        p.pastors.length ? (
+          <section className="reg-record-group">
+            <h3>
+              Pastors under this bishop <b>{p.pastors.length.toLocaleString()}</b>
+            </h3>
+            <div className="reg-thumb-grid">
+              {p.pastors.map((q) => (
+                <button key={q.id} disabled>
+                  <Portrait person={q} />
+                  <span className="reg-thumb-name"><b>{q.name}</b></span>
+                  <small>{q.registered ? [q.city, q.country].filter(Boolean).join(" · ") || "Registered" : "Not yet registered"}</small>
+                </button>
+              ))}
+            </div>
+          </section>
+        ) : null
+      ) : p.role === "bishop" ? (
+        <PastorsUnder bishop={p} onOpen={onOpen} from={from} />
+      ) : null}
     </>
   );
 }
@@ -2640,13 +2682,24 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
 function BishopApprovals({ records, perform, canEdit }) {
   const [selectedId, setSelectedId] = useState(null),
     [ref, setRef] = useState(""),
-    [confirmed, setConfirmed] = useState(false);
+    [confirmed, setConfirmed] = useState(false),
+    [note, setNote] = useState(""),
+    [view, setView] = useState("awaiting");
+  const bucket = (r) => (r.status === "denied" ? "denied" : r.resubmit ? "resubmit" : "awaiting");
+  const shown = records.filter((r) => bucket(r) === view);
   const selected = records.find((r) => r.userId === selectedId);
   return (
     <>
-      {records.length ? (
+      <div className="reg-switch" role="group" aria-label="Bishop review">
+        {[["awaiting", "Awaiting confirmation"], ["resubmit", "Needs resubmission"], ["denied", "Denied"]].map(([value, label]) => (
+          <button key={value} aria-pressed={view === value} className={view === value ? "active" : ""} onClick={() => setView(value)}>
+            {label} <strong>{records.filter((r) => bucket(r) === value).length}</strong>
+          </button>
+        ))}
+      </div>
+      {shown.length ? (
         <div className="reg-queue">
-          {records.map((r) => (
+          {shown.map((r) => (
             <button
               className="reg-queue-row"
               key={r.userId}
@@ -2663,14 +2716,14 @@ function BishopApprovals({ records, perform, canEdit }) {
                   {r.data.organization} · {r.data.email}
                 </p>
               </div>
-              <Badge status="pending" />
-              <span>Verify →</span>
+              <Badge status={r.status === "denied" ? "denied" : "pending"}>{r.resubmit ? "Asked to resubmit" : null}</Badge>
+              <span>Review →</span>
             </button>
           ))}
         </div>
       ) : (
-        <Empty title="No bishop accounts awaiting approval">
-          New bishop registrations appear here for office verification.
+        <Empty title={view === "awaiting" ? "No bishop registrations awaiting confirmation" : view === "denied" ? "No denied registrations" : "Nobody is waiting to resubmit"}>
+          Bishops appear here as soon as they submit; they can add their pastors in the meantime.
         </Empty>
       )}
       {selected && (
@@ -2700,19 +2753,31 @@ function BishopApprovals({ records, perform, canEdit }) {
             />
             I have verified this person’s identity and bishop role.
           </label>
+          {selected.bishopNote && <p className="reg-status-message unclaimed">Last note: {selected.bishopNote}</p>}
           <button
             className="reg-primary full"
-            disabled={!confirmed || !canEdit}
+            disabled={!confirmed || !canEdit || selected.status === "confirmed"}
             onClick={() =>
               perform(
                 "approveBishop",
                 { userId: selected.userId, referenceId: ref },
-                "Bishop account approved.",
+                "Bishop confirmed. They now appear on the roll.",
               )
             }
           >
-            Approve bishop account
+            Confirm bishop
           </button>
+          <Field label="Note to the bishop" hint="Required for deny or resubmission; the bishop sees it on their profile.">
+            <textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
+          </Field>
+          <div className="reg-review-buttons">
+            <button className="reg-secondary" disabled={!canEdit || !note.trim()} onClick={() => perform("reviewBishop", { userId: selected.userId, decision: "resubmit", note }, "The bishop has been asked to resubmit.")}>
+              Needs resubmission
+            </button>
+            <button className="reg-secondary danger" disabled={!canEdit || !note.trim()} onClick={() => perform("reviewBishop", { userId: selected.userId, decision: "denied", note }, "Registration denied.")}>
+              Deny
+            </button>
+          </div>
         </Dialog>
       )}
     </>
@@ -2985,6 +3050,23 @@ function ReferenceReview({ rows, perform, canEdit }) {
     </section>
   );
 }
+// Turns an uploaded Excel or CSV file into the pasted-list text. Excel dates
+// arrive as serial numbers; they are written back as day/month/year.
+async function readSpreadsheet(file) {
+  const XLSX = await import("xlsx");
+  const book = XLSX.read(await file.arrayBuffer(), { type: "array", cellDates: true });
+  const sheet = book.Sheets[book.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: true, defval: "" });
+  const cell = (v) =>
+    v instanceof Date
+      ? `${String(v.getUTCDate()).padStart(2, "0")}/${String(v.getUTCMonth() + 1).padStart(2, "0")}/${v.getUTCFullYear()}`
+      : typeof v === "number" && v > 20000 && v < 80000
+        ? (() => { const d = new Date(Math.round((v - 25569) * 86400000)); return `${String(d.getUTCDate()).padStart(2, "0")}/${String(d.getUTCMonth() + 1).padStart(2, "0")}/${d.getUTCFullYear()}`; })()
+        : String(v ?? "").trim();
+  const lines = rows.map((r) => r.map(cell)).filter((r) => r.some(Boolean)).map((r) => r.map((c) => (c.includes(",") ? `"${c.replaceAll('"', '""')}"` : c)).join(","));
+  if (!lines.length) throw Error("That file has no rows.");
+  return lines.join("\n");
+}
 function Roster({ state, year, actor, office, perform }) {
   const [bishopId, setBishopId] = useState(""),
     [q, setQ] = useState(""),
@@ -3052,8 +3134,9 @@ function Roster({ state, year, actor, office, perform }) {
             <div>
               <h2>Add your pastors</h2>
               <p>
-                One person per line: name, email, phone, church. An email or
-                phone is required.
+                Upload your Excel or CSV file, or paste from it. Two columns:
+                <b> full name</b> and <b>date of birth</b> written day/month/year
+                (e.g. 14/03/1985). Email and phone may follow as extra columns.
               </p>
             </div>
           </div>
@@ -3075,21 +3158,30 @@ function Roster({ state, year, actor, office, perform }) {
               }
             }}
           >
+            <Field label="Upload a spreadsheet" hint="Excel (.xlsx, .xls) or CSV. The first column is the full name, the second the date of birth.">
+              <input
+                type="file"
+                accept=".xlsx,.xls,.csv,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  e.target.value = "";
+                  if (file) readSpreadsheet(file).then(setText).catch((err) => setInputError(err.message));
+                }}
+              />
+            </Field>
             <Field label="Pastor list">
               <textarea
-                rows={5}
+                rows={6}
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 required
-                placeholder={
-                  "John Mensah, john@example.com, +233201234567, Grace Church\nMary Owusu, mary@example.com, +233209876543, Hope Church"
-                }
+                placeholder={"John Mensah, 14/03/1985\nMary Owusu, 02/11/1979"}
               />
             </Field>
             {inputError && <p role="alert">{inputError}</p>}
             <div className="reg-form-actions">
               <small>
-                Up to 500 rows. Copy from a spreadsheet or type names.
+                Up to 500 rows. Check the names and dates, then add them.
               </small>
               <button className="reg-primary">Add to annual list →</button>
             </div>
@@ -3117,7 +3209,7 @@ function Roster({ state, year, actor, office, perform }) {
             <thead>
               <tr>
                 <th>Pastor</th>
-                <th>Contact</th>
+                <th>Date of birth</th>
                 <th>Kuriake Castle</th>
                 {office && <th>Bishop</th>}
                 <th>Registration</th>
@@ -3130,12 +3222,9 @@ function Roster({ state, year, actor, office, perform }) {
                 <tr key={r.id}>
                   <td>
                     <b>{r.name}</b>
-                    <small>{r.church}</small>
+                    <small>{[r.email, r.phone].filter(Boolean).join(" · ")}</small>
                   </td>
-                  <td>
-                    {r.email}
-                    <small>{r.phone}</small>
-                  </td>
+                  <td>{r.dob ? r.dob.split("-").reverse().join("/") : "—"}</td>
                   <td>
                     {r.referenceId ? (
                       <Badge status="verified">Confirmed · {r.referenceId}</Badge>

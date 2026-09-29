@@ -21,6 +21,28 @@ export const normalEmail = (value) =>
     .trim()
     .toLowerCase();
 export const normalPhone = (value) => String(value || "").replace(/\D/g, "");
+// Dates come as day/month/year from spreadsheets, or ISO from the form.
+export function parseDob(value) {
+  const v = String(value ?? "").trim();
+  let m = v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  let y, mo, d;
+  if (m) [y, mo, d] = [m[1], m[2], m[3]];
+  else if ((m = v.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})$/))) {
+    [d, mo, y] = [m[1], m[2], m[3]];
+    if (y.length === 2) y = (Number(y) > 30 ? "19" : "20") + y;
+  } else return "";
+  const iso = `${y}-${mo.padStart(2, "0")}-${d.padStart(2, "0")}`;
+  const t = new Date(`${iso}T00:00:00Z`);
+  return Number.isFinite(t.getTime()) && t.toISOString().slice(0, 10) === iso ? iso : "";
+}
+// Same birthday, or one written with day and month swapped, or a day out.
+export function dobClose(a, b) {
+  if (!a || !b) return false;
+  if (a === b) return true;
+  const [ay, am, ad] = a.split("-"), [by, bm, bd] = b.split("-");
+  if (ay === by && am === bd && ad === bm) return true;
+  return Math.abs(Date.parse(a) - Date.parse(b)) <= 86400000;
+}
 export const registrationEmail = (accountEmail, submittedEmail) =>
   String(accountEmail || "").endsWith("@drogs.invalid")
     ? normalEmail(submittedEmail)
@@ -82,13 +104,8 @@ export function validateProfile(p, email, { draft = false } = {}) {
     if (!ORGANIZATIONS.includes(q.organization))
       throw Error("Choose your organization.");
     if (!q.photo) throw Error("Upload your official-attire photo.");
-    // Both names of the bishop are required so one common first name cannot
-    // be mistaken for another bishop when the lists are compared.
-    if (
-      q.role === "pastor" &&
-      (q.bishopFirstName.length < 2 || q.bishopLastName.length < 2)
-    )
-      throw Error("Enter your bishop’s first name and surname.");
+    if (q.role === "pastor" && !q.bishopId)
+      throw Error("Choose your bishop from the registered bishops.");
   }
   if (q.bishopId === "missing") q.bishopId = "";
   if (!(DENOMINATIONS[q.organization] || []).length) q.denomination = "";
@@ -108,6 +125,29 @@ export function bishopFor(state, key) {
       (p.referenceId || p.id) === key,
   );
 }
+// A bishop who has submitted this year's registration and is not denied.
+export const submittedBishop = (state, p) =>
+  Boolean(
+    p &&
+      p.role === "bishop" &&
+      p.bishopDecision !== "denied" &&
+      state.registrations.some(
+        (r) => r.userId === p.id && r.year === state.year && r.status !== "draft",
+      ),
+  );
+export function bishopKeyed(state, key) {
+  return state.profiles.find(
+    (p) => (p.referenceId || p.id) === key && submittedBishop(state, p),
+  );
+}
+export const registeredBishops = (state) =>
+  state.profiles
+    .filter((p) => submittedBishop(state, p))
+    .map((p) => {
+      const r = state.registrations.find((x) => x.userId === p.id && x.year === state.year);
+      return { id: bishopKey(p), name: p.name, approved: Boolean(p.bishopApproved), photo: r?.data.photo || "", organization: p.organization || "", denomination: r?.data.denomination || "" };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
 export const approvedBishop = (state, id) =>
   state.profiles.some(
     (p) => p.id === id && p.role === "bishop" && p.bishopApproved,
@@ -155,22 +195,20 @@ export function bishopNamed(state, name) {
   );
   return found.length === 1 ? found[0] : null;
 }
+// A pastor matches an entry on the list of the bishop they claimed when the
+// name is alike and the birthday is the same or nearly so. Exactly one match.
 export function matchFor(state, registration) {
   const p = registration.data,
-    bishop = bishopFor(state, p.bishopId);
-  // With no bishop chosen, every approved bishop's list is searched; the match
-  // must still be a single entry with the same name and email or phone.
+    bishop = bishopKeyed(state, p.bishopId);
+  if (!bishop) return null;
   const candidates = state.rosters.filter(
     (r) =>
       r.year === registration.year &&
-      (bishop ? r.bishopId === bishop.id : approvedBishop(state, r.bishopId)) &&
+      r.bishopId === bishop.id &&
       r.status === "active" &&
       (!r.pastorId || r.pastorId === registration.userId) &&
-      normalName(r.name) === normalName(p.name) &&
-      ((normalEmail(r.email) &&
-        normalEmail(r.email) === normalEmail(p.email)) ||
-        (normalPhone(r.phone) &&
-          normalPhone(r.phone) === normalPhone(p.phone))),
+      namesAlike(r.name, p.name) &&
+      dobClose(r.dob, p.dob),
   );
   return candidates.length === 1 ? candidates[0] : null;
 }
@@ -180,7 +218,11 @@ function reconcile(state) {
   )) {
     const profile = state.profiles.find((p) => p.id === r.userId);
     if (r.data.role === "bishop") {
-      r.status = profile?.bishopApproved ? "confirmed" : "pending";
+      r.status = profile?.bishopApproved
+        ? "confirmed"
+        : profile?.bishopDecision === "denied"
+          ? "denied"
+          : "pending";
       continue;
     }
     const assigned = state.rosters.find(
@@ -190,7 +232,7 @@ function reconcile(state) {
       r.status = assigned.status === "active" ? "confirmed" : "removed";
       continue;
     }
-    if (!bishopFor(state, r.data.bishopId)) {
+    if (!bishopKeyed(state, r.data.bishopId)) {
       const named = bishopNamed(state, r.data.bishopName);
       if (named) r.data.bishopId = bishopKey(named);
     }
@@ -226,11 +268,11 @@ export function parseRoster(text) {
   }
   if (quoted) throw Error("The pasted list has an unclosed quote.");
   if (rows[0]?.[0]?.toLowerCase() === "name") rows.shift();
-  return rows.map(([name, email = "", phone = "", church = ""]) => ({
+  return rows.map(([name, dob = "", email = "", phone = ""]) => ({
     name,
+    dob: parseDob(dob) || dob,
     email,
     phone,
-    church,
   }));
 }
 export function applyAction(
@@ -247,9 +289,10 @@ export function applyAction(
   const office = () => {
     if (!actor.office) throw Error("Office access required.");
   };
+  // An approved bishop keeps acting between years; a new one acts once submitted.
   const verifiedBishop = () => {
-    if (!profile?.bishopApproved || profile.role !== "bishop")
-      throw Error("Your bishop account must be approved by the office.");
+    if (!profile?.bishopApproved && !submittedBishop(state, profile))
+      throw Error("Submit your bishop registration first.");
   };
   const registration = () =>
     state.registrations.find(
@@ -312,10 +355,17 @@ export function applyAction(
       (x) => x.userId === actor.id && x.year === state.year,
     );
     if (!r || r.status === "draft") throw Error("Submit your registration first.");
+    if (!r.resubmit)
+      throw Error("Your details are locked after submission. Contact the office for a correction.");
     const data = validateProfile({ ...r.data, ...payload, role: r.data.role }, actor.email);
     if (!data.photoConfirmed) throw Error("Confirm your photo before saving.");
     r.data = { ...data, referenceId: data.referenceId || r.data.referenceId, bishopId: r.data.bishopId };
-    if (profile) profile.name = data.name;
+    if (profile) {
+      profile.name = data.name;
+      profile.bishopDecision = null;
+    }
+    r.resubmit = false;
+    r.resubmittedAt = now;
     r.updatedAt = now;
   } else if (action === "approveBishop") {
     office();
@@ -334,7 +384,24 @@ export function applyAction(
       );
     if (p.bishopApproved) throw Error("This bishop is already approved.");
     p.bishopApproved = true;
-    p.referenceId = payload.referenceId || null;
+    p.bishopDecision = null;
+    r.resubmit = false;
+    p.referenceId = payload.referenceId || r.data.referenceId || null;
+  } else if (action === "reviewBishop") {
+    office();
+    const p = state.profiles.find((p) => p.id === payload.userId);
+    const r = registration();
+    if (p?.role !== "bishop" || !r || r.status === "draft")
+      throw Error("Select a submitted bishop registration.");
+    if (!["denied", "resubmit"].includes(payload.decision))
+      throw Error("Choose deny or needs resubmission.");
+    if (!String(payload.note || "").trim())
+      throw Error("Tell the bishop why, in a sentence.");
+    p.bishopApproved = false;
+    p.bishopDecision = payload.decision;
+    r.bishopNote = String(payload.note).trim();
+    r.resubmit = payload.decision === "resubmit";
+    r.reviewedAt = now;
   } else if (action === "addRoster") {
     verifiedBishop();
     if (
@@ -346,26 +413,22 @@ export function applyAction(
     for (const input of payload.rows) {
       const r = {
         name: String(input.name || "").trim(),
+        dob: parseDob(input.dob),
         email: normalEmail(input.email),
         phone: String(input.phone || "").trim(),
-        church: String(input.church || "").trim(),
       };
-      if (
-        !r.name ||
-        (!/^\S+@\S+\.\S+$/.test(r.email) && normalPhone(r.phone).length < 7)
-      )
-        throw Error(
-          "Each pastor needs a name and a valid email or phone number.",
-        );
+      if (!r.name || r.name.split(/\s+/).length < 2)
+        throw Error(`“${r.name || "(blank)"}”: each pastor needs their full name.`);
+      if (!r.dob)
+        throw Error(`${r.name}: enter the date of birth as day/month/year, e.g. 14/03/1985.`);
       if (
         state.rosters.some(
           (x) =>
             x.bishopId === actor.id &&
             x.year === state.year &&
-            normalName(x.name) === normalName(r.name) &&
-            ((r.email && normalEmail(x.email) === r.email) ||
-              (normalPhone(r.phone) &&
-                normalPhone(x.phone) === normalPhone(r.phone))),
+            x.status === "active" &&
+            namesAlike(x.name, r.name) &&
+            dobClose(x.dob, r.dob),
         )
       )
         throw Error(`${r.name} is already in this year’s list.`);
@@ -388,14 +451,13 @@ export function applyAction(
     // The bishop the pastor named may confirm them even when the spelling did
     // not resolve automatically; anyone else needs the office.
     const bishop =
-      bishopFor(state, r.data.bishopId) ||
+      bishopKeyed(state, r.data.bishopId) ||
       (!actor.office &&
-      profile?.bishopApproved &&
-      profile.role === "bishop" &&
+      submittedBishop(state, profile) &&
       namesAlike(profile.name, r.data.bishopName)
         ? profile
         : null);
-    if (!bishop) throw Error("Assign an approved bishop first.");
+    if (!bishop) throw Error("Assign a registered bishop first.");
     if (!actor.office && bishop.id !== actor.id)
       throw Error(
         "Only the selected bishop or office can confirm this pastor.",
@@ -432,8 +494,8 @@ export function applyAction(
     const r = registration();
     if (!r || r.data.role !== "pastor" || r.status !== "unclaimed")
       throw Error("Select an Unclaimed pastor.");
-    if (!bishopFor(state, payload.bishopId))
-      throw Error("Select an approved bishop.");
+    if (!bishopKeyed(state, payload.bishopId))
+      throw Error("Select a registered bishop.");
     r.data.bishopId = payload.bishopId;
   } else if (action === "linkReference") {
     const row = state.rosters.find(
@@ -612,11 +674,25 @@ export function directoryFor(state, references) {
 }
 export function publicRoll(state, people, year = state.year) {
   const byId = new Map(people.map((p) => [p.id, p]));
+  const bishopOf = (r) => state.profiles.find((p) => (p.referenceId || p.id) === r.data.bishopId && p.bishopApproved);
   return state.registrations
-    .filter((r) => r.year === year && r.status === "confirmed")
+    .filter((r) => r.year === year && r.status === "confirmed" && (r.data.role === "bishop" || bishopOf(r)))
     .map((r) => {
       const ref = byId.get(r.data.referenceId) || null;
+      const profile = state.profiles.find((p) => p.id === r.userId);
+      // The pastors a bishop listed, with photos for those who have registered.
+      const pastors = r.data.role === "bishop"
+        ? state.rosters
+            .filter((x) => x.year === year && x.bishopId === r.userId && x.status === "active")
+            .map((x) => {
+              const reg = x.pastorId && state.registrations.find((y) => y.userId === x.pastorId && y.year === year);
+              return { id: `p:${x.id}`, role: "pastor", name: reg?.data.name || x.name, title: "Pastor", photo: reg?.data.photo || "", city: reg?.data.city || "", country: reg?.data.country || "", registered: Boolean(reg) };
+            })
+            .sort((a, b) => a.name.localeCompare(b.name))
+        : undefined;
       return {
+        pastors,
+        bishopKey: r.data.role === "bishop" ? bishopKey(profile) : r.data.bishopId,
         id: `u:${r.userId}`,
         role: r.data.role,
         name: r.data.name,
@@ -644,11 +720,10 @@ export function visibleState(state, actor, references, people = references) {
     r.userId === actor.id ||
     (r.status !== "draft" &&
       r.data.role === "pastor" &&
-      (bishopFor(state, r.data.bishopId)?.id === actor.id ||
+      (bishopKeyed(state, r.data.bishopId)?.id === actor.id ||
         (r.status === "unclaimed" &&
-          !bishopFor(state, r.data.bishopId) &&
-          me?.role === "bishop" &&
-          me.bishopApproved &&
+          !bishopKeyed(state, r.data.bishopId) &&
+          submittedBishop(state, me) &&
           namesAlike(me.name, r.data.bishopName))));
   return {
     ...state,
@@ -660,6 +735,7 @@ export function visibleState(state, actor, references, people = references) {
     audit: state.audit.filter((r) => actor.office || r.actor === actor.id),
     directory: directoryFor(state, references),
     roll: publicRoll(state, people),
+    bishops: registeredBishops(state),
   };
 }
 export const samePhone = (a, b) => {
