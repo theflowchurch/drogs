@@ -1,7 +1,7 @@
 import { readAccounts, readLogins } from './accounts.mjs';
 import { createKeyService } from './api-keys.mjs';
 import { createSupport } from './support.mjs';
-import { applySettings, describeSettings, readSettings, writeSettings } from './settings.mjs';
+import { applySettings, bootstrapSettings, describeSettings, readSettings, writeSettings } from './settings.mjs';
 import { readFile } from 'node:fs/promises';
 import { applyAction, visibleState } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
@@ -83,6 +83,11 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (path === '/api/registration/auth/signout' && method === 'POST') {
         await auth.signOut(request);
         return json({ ok: true }, 200, { 'Set-Cookie': sessionCookie(config, '', 0) });
+      }
+      if (path === '/api/registration/settings/bootstrap' && method === 'POST') {
+        await bootstrapSettings(config, pool, await jsonBody(request));
+        await applySettings(config, pool);
+        return json({ ok: true });
       }
       const actor = await auth.actor(request);
       if (path === '/api/registration/auth/me' && method === 'GET') return json(actor);

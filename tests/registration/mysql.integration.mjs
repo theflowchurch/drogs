@@ -13,6 +13,8 @@ import sharp from 'sharp';
 import { migrate } from '../../src/server/database.mjs';
 import { createAuth } from '../../src/server/auth.mjs';
 import { createStorage } from '../../src/server/storage.mjs';
+import { configuration } from '../../src/server/config.mjs';
+import { createHash } from 'node:crypto';
 import { createApi } from '../../src/server/api.mjs';
 
 test('MySQL + private R2 transport: real persistence, authentication, scope, rollback and concurrent matching', { timeout: 180000 }, async () => {
@@ -25,11 +27,15 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   const mediaDir = await mkdtemp(`${tmpdir()}/drogs-mysql-test-`);
   const mails = [], objects = new Map();
   let failStorage = false;
-  const config = { origin: 'https://drogs.dagministry.org', secure: true, secret: 't'.repeat(64), admins: ['office@example.com', 'browser-office@example.com'], siteCode: '1234', adminCode: 'admin-test-code', from: 'no-reply@example.com', requireEmailCode: true, r2: { account: 'a'.repeat(32), bucket: 'test-private', accessKeyId: 'test', secretAccessKey: 'test' } };
+  const testEnv = { DB_HOST: 'localhost', DB_NAME: 'x', DB_USER: 'x', DB_PASSWORD: 'x', APP_URL: 'https://drogs.dagministry.org', SESSION_SECRET: 't'.repeat(64),
+    ADMIN_EMAILS: 'office@example.com,browser-office@example.com', SITE_ACCESS_CODE: '1234', ADMIN_ACCESS_CODE: 'admin-test-code', REQUIRE_EMAIL_CODE: 'true',
+    SMTP_HOST: 'smtp.example.com', SMTP_USER: 'u', SMTP_PASSWORD: 'p', SMTP_FROM: 'no-reply@example.com', TELEGRAM_BOT_TOKEN: 'test-token', TELEGRAM_CHAT_ID: '-100',
+    R2_ACCOUNT_ID: 'a'.repeat(32), R2_BUCKET: 'test-private', R2_ACCESS_KEY_ID: 'test', R2_SECRET_ACCESS_KEY: 'test',
+    BOOTSTRAP_TOKEN_SHA256: createHash('sha256').update('test-bootstrap-token').digest('hex') };
+  const config = configuration(testEnv);
   const mailer = { sendMail: async mail => { mails.push(mail); await writeFile(`${mediaDir}/mail.json`, JSON.stringify(mails), { mode: 0o600 }); } };
   const auth = createAuth({ pool, config, mailer });
   const telegram = [];
-  config.telegram = { token: 'test-token', chat: '-100' };
   const client = new S3Client({ region: 'auto', endpoint: `https://${config.r2.account}.r2.cloudflarestorage.com`, credentials: { accessKeyId: 'test', secretAccessKey: 'test' },
     requestChecksumCalculation: 'WHEN_REQUIRED', requestHandler: { handle: async request => {
       if (failStorage) { const e = Error('The request signature we calculated does not match'); e.name = 'SignatureDoesNotMatch'; throw e; }
@@ -194,6 +200,12 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: stranger.cookie } }))).status, 403, 'strangers cannot read a stored image');
     assert.equal((await call('paystack/verify', bishop.cookie, { reference: 'abc123' })).status, 503, 'Paystack is off until the secret key is configured');
 
+    // First-time setup: one secret, one use.
+    assert.equal((await call('settings/bootstrap', '', { token: 'wrong', values: { SMTP_FROM: 'x@example.com' } })).status, 403);
+    assert.equal((await call('settings/bootstrap', '', { token: 'test-bootstrap-token', values: { SMTP_FROM: 'Kuriake Castle <setup@example.com>' } })).status, 200);
+    assert.equal(config.from, 'Kuriake Castle <setup@example.com>');
+    assert.equal((await call('settings/bootstrap', '', { token: 'test-bootstrap-token', values: { SMTP_FROM: 'again@example.com' } })).status, 410, 'the setup token works once');
+    await call('settings', office.cookie, { values: { SMTP_FROM: ' ' } });
     // Office-managed settings override the environment and apply immediately.
     assert.equal((await call('settings', bishop.cookie)).status, 403);
     const before = await call('settings', office.cookie); assert.equal(before.status, 200);
