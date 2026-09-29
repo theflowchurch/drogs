@@ -254,7 +254,9 @@ export default function RegistrationApp({
         // A signed-in member does not pass the office or directory gate.
         if (current && (!gated || (office && current.office))) setGate(true);
       })
-      .catch((e) => setError(e.message));
+      // A failed session check (e.g. the server restarting after a deploy)
+      // just means "not signed in"; visitors should not see a fetch error.
+      .catch(() => setActor(null));
     const until = Number(
       sessionStorage.getItem("drogs-registration-gate") || 0,
     );
