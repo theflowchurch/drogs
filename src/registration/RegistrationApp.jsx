@@ -14,6 +14,7 @@ import {
   cloneElement,
 } from "react";
 import * as api from "./client";
+import { LegalFooter } from "./Docs";
 import { DENOMINATIONS } from "./denominations.mjs";
 import {
   ORGANIZATIONS,
@@ -718,6 +719,7 @@ export default function RegistrationApp({
           <HelpButton actor={actor} run={run} />
         </div>
       )}
+      <LegalFooter />
     </div>
   );
 }
@@ -1124,6 +1126,7 @@ function RegistrationForm({
     })),
     [review, setReview] = useState(false),
     [accurate, setAccurate] = useState(false),
+    [consent, setConsent] = useState(false),
     [fileBusy, setFileBusy] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   // Existing records with this name; the registrant confirms from the photo and
@@ -1190,7 +1193,7 @@ function RegistrationForm({
   }
   async function send() {
     const ok = await run(async () => {
-      await api.action(actor, editing ? "update" : "submit", data);
+      await api.action(actor, editing ? "update" : "submit", { ...data, consentedAt: data.consentedAt || new Date().toISOString() });
       await refresh();
     }, editing ? "Your details are updated." : "Registration submitted.");
     if (ok && editing) onDone?.();
@@ -1603,6 +1606,20 @@ function RegistrationForm({
                 I confirm that these details are accurate and this photograph is
                 mine.
               </label>
+              <label className="reg-check">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                />
+                I consent to Kuriake Castle showing my name, title, photograph,
+                organization, denomination, city and country on the public Roll
+                of Good Standing. My email address, phone number and date of
+                birth are never shown publicly and are used only by the office
+                and my bishop to confirm my registration. I have read the{" "}
+                <a href={`${base}/privacy/`} target="_blank" rel="noreferrer">privacy policy</a>{" "}
+                and <a href={`${base}/terms/`} target="_blank" rel="noreferrer">terms</a>.
+              </label>
               <p className="reg-small">
                 The annual renewal ministerial fee is ${AMOUNTS[data.role]} USD and is
                 non-refundable. No payment is collected on this screen.
@@ -1617,7 +1634,7 @@ function RegistrationForm({
                 <button
                   className="reg-primary"
                   onClick={send}
-                  disabled={!accurate || !data.photoConfirmed || busy}
+                  disabled={!accurate || !consent || !data.photoConfirmed || busy}
                 >
                   Submit registration →
                 </button>

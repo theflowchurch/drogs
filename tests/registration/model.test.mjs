@@ -28,6 +28,7 @@ const profile = (actor, role = "pastor", name = "John Doe") => ({
   city: "Accra",
   gender: "male",
   photoConfirmed: true,
+  consentedAt: "2026-09-29T08:00:00.000Z",
   email: actor.email,
   phone: "+233201234567",
   dob: "1990-02-01",
@@ -423,6 +424,13 @@ test("the public roll lists only confirmed people and the office can pick the ph
   assert.equal(chosen.photo, "");
 });
 
+test("a registration cannot be submitted without consent to the public listing", () => {
+  assert.throws(
+    () => validateProfile({ ...profile(pastor), consentedAt: "" }, pastor.email),
+    /consent/,
+  );
+  assert.equal(validateProfile(profile(pastor), pastor.email).consentedAt, "2026-09-29T08:00:00.000Z");
+});
 test("names are alike across order, missing middle names and small typos", () => {
   assert.ok(namesAlike("Nina Masuko", "Nely Nina Masuku"));
   assert.ok(namesAlike("Masuku Nina", "Nina Masuku"));

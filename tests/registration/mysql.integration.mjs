@@ -66,7 +66,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(result.status, 201, JSON.stringify(result.data));
     return result.data.path;
   }
-  const profile = (photo, role = 'bishop') => ({ role, firstName: role === 'bishop' ? 'Test' : 'John', lastName: role === 'bishop' ? 'Bishop' : 'Doe', phone: '+233201234567', dob: '1990-01-01', country: 'Ghana', city: 'Accra', organization: 'First Love', denomination: 'First Love Church', photo, gender: 'male', photoConfirmed: true, bishopId: 'B1', bishopFirstName: 'Test', bishopLastName: 'Bishop' });
+  const profile = (photo, role = 'bishop') => ({ role, firstName: role === 'bishop' ? 'Test' : 'John', lastName: role === 'bishop' ? 'Bishop' : 'Doe', phone: '+233201234567', dob: '1990-01-01', country: 'Ghana', city: 'Accra', organization: 'First Love', denomination: 'First Love Church', photo, gender: 'male', photoConfirmed: true, consentedAt: '2026-09-29T08:00:00.000Z', bishopId: 'B1', bishopFirstName: 'Test', bishopLastName: 'Bishop' });
   try {
     await migrate(pool); await migrate(pool); // Idempotent, preserves existing records.
     assert.equal((await call('snapshot')).status, 401);

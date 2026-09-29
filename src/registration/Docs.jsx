@@ -1,5 +1,12 @@
 import docs from "./api-docs.json";
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
+export function LegalFooter() {
+  return (
+    <footer className="reg-legal">
+      <a href={`${base}/privacy/`}>Privacy policy</a> · <a href={`${base}/terms/`}>Terms and conditions</a>
+    </footer>
+  );
+}
 const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
 const inline = (s) =>
   esc(s)
@@ -37,7 +44,7 @@ function render(md) {
   }
   return out.join("\n");
 }
-export default function Docs() {
+export default function Docs({ markdown = docs.markdown, office = true }) {
   return (
     <div className="reg-app reg-docs-page">
       <header className="reg-header">
@@ -45,9 +52,10 @@ export default function Docs() {
           <span className="reg-brand-mark"><img src={`${base}/assets/brand/castle-icon.png`} alt="" /></span>
           <strong>Kuriake Castle</strong>
         </a>
-        <div className="reg-header-right"><a className="reg-text" href={`${base}/admin/`}>Office ↗</a></div>
+        <div className="reg-header-right">{office ? <a className="reg-text" href={`${base}/admin/`}>Office ↗</a> : <a className="reg-text" href={`${base}/directory/`}>Directory ↗</a>}</div>
       </header>
-      <main className="reg-docs" dangerouslySetInnerHTML={{ __html: render(docs.markdown) }} />
+      <main className="reg-docs" dangerouslySetInnerHTML={{ __html: render(markdown) }} />
+      <LegalFooter />
     </div>
   );
 }

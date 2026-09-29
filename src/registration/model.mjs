@@ -79,6 +79,8 @@ export function validateProfile(p, email, { draft = false } = {}) {
     referenceId: /^[BP]\d+$/.test(String(p.referenceId || "")) ? p.referenceId : "",
     bishopFirstName: String(p.bishopFirstName || "").trim(),
     bishopLastName: String(p.bishopLastName || "").trim(),
+    // When the person agreed to the public listing (ISO time); kept as a record.
+    consentedAt: Number.isFinite(Date.parse(p.consentedAt)) ? new Date(p.consentedAt).toISOString() : "",
   };
   q.bishopName = [q.bishopFirstName, q.bishopLastName].filter(Boolean).join(" ");
   if (!["bishop", "pastor"].includes(q.role))
@@ -86,6 +88,8 @@ export function validateProfile(p, email, { draft = false } = {}) {
   if (!draft) {
     if (!q.firstName || !q.lastName || q.name.length > 160)
       throw Error("Enter your first and last names.");
+    if (!q.consentedAt)
+      throw Error("Please consent to the public listing before submitting.");
     if (!/^\S+@\S+\.\S+$/.test(q.email))
       throw Error("Enter a valid email address.");
     if (normalPhone(q.phone).length < 7 || normalPhone(q.phone).length > 15)

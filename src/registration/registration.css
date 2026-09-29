@@ -2384,3 +2384,21 @@ p {
 :root:not([data-theme="dark"]) img[src$="flow-logo.png"] {
   content: url("/assets/brand/flow-logo-black.png");
 }
+
+/* Legal links: one quiet line, no band, no extra space */
+.reg-legal {
+  text-align: center;
+  font-size: 12px;
+  padding: 8px 12px;
+  color: var(--muted);
+}
+.reg-legal a {
+  color: inherit;
+}
+.reg-app:has(.reg-hero-page) .reg-legal {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: rgba(255, 255, 255, 0.75);
+}

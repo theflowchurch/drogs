@@ -37,7 +37,7 @@ with sync_playwright() as p:
   expect(page.get_by_text('Photo uploaded. Choose a new image to replace it.')).to_be_visible()
  def submit():
   page.get_by_role('button',name='Review registration').click()
-  page.get_by_label('I confirm that these details').check()
+  page.get_by_label('I confirm that these details').check(); page.get_by_label('I consent to Kuriake Castle').check()
   expect(page.get_by_role('button',name='Submit registration')).to_be_disabled()
   expect(page.get_by_alt_text('Your uploaded photo for confirmation')).to_be_visible()
   page.get_by_label('I confirm this is me').check()
