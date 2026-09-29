@@ -2448,6 +2448,9 @@ p {
   font-size: 12px;
   padding: 8px 12px;
   color: var(--muted);
+  max-width: 760px;
+  margin: 0 auto;
+  line-height: 1.5;
 }
 .reg-legal a {
   color: inherit;

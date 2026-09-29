@@ -719,7 +719,7 @@ export default function RegistrationApp({
           <HelpButton actor={actor} run={run} />
         </div>
       )}
-      <LegalFooter />
+      <LegalFooter notice={hero || browse} />
     </div>
   );
 }
