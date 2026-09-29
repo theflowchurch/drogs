@@ -6,18 +6,18 @@ const status = value => value === 'not_started' ? 'Not started' : value.replaceA
 export default function Accounts({ run }) {
   const [result, setResult] = useState(null), [search, setSearch] = useState(''), [query, setQuery] = useState('');
   const [history, setHistory] = useState(null), [person, setPerson] = useState(null);
-  const [admins, setAdmins] = useState([]), [newAdmin, setNewAdmin] = useState(''), [confirmClear, setConfirmClear] = useState(false);
+  const [admins, setAdmins] = useState([]), [newAdmin, setNewAdmin] = useState(''), [confirmClear, setConfirmClear] = useState(false), [revoking, setRevoking] = useState('');
   const seq = useRef(0);
   // Only the latest request may set the table; a slow first load must not overwrite a search.
   const load = (page = 1, term = query) => { const n = ++seq.current; return run(async () => { const r = await api.accounts(term, page); if (n === seq.current) setResult(r); }); };
-  const saveAdmins = (list) => run(async () => { setAdmins((await api.saveSettings({ ADMIN_EMAILS: list.join(',') })).admins || []); setNewAdmin(''); }, 'Office access updated.');
+  const saveAdmins = (list, message = 'Office access updated.') => run(async () => { setAdmins((await api.saveSettings({ ADMIN_EMAILS: list.join(',') })).admins || []); setNewAdmin(''); }, message);
   const remove = (body, message) => run(async () => { await api.removeAccounts(body); setConfirmClear(false); const n = ++seq.current; const r = await api.accounts(query, 1); if (n === seq.current) setResult(r); }, message);
   useEffect(() => { load(); run(async () => setAdmins((await api.listSettings()).admins || [])); }, []);
   return <div className="reg-accounts">
     <section className="reg-card">
       <h2>Office access</h2>
       <p>These emails can sign in to /admin/ (access code, then an emailed code). Revoke to remove someone’s access.</p>
-      <ul className="reg-admin-list">{admins.map(email => <li key={email}><span>{email}</span><button type="button" className="reg-text danger" disabled={admins.length < 2} onClick={() => saveAdmins(admins.filter(e => e !== email))}>Revoke access</button></li>)}</ul>
+      <ul className="reg-admin-list">{admins.map(email => <li key={email}><span>{email}</span><button type="button" className="reg-text danger" disabled={admins.length < 2} onClick={() => setRevoking(email)}>Revoke access</button></li>)}</ul>
       <form className="reg-admin-add" onSubmit={e => { e.preventDefault(); const v = newAdmin.trim().toLowerCase(); if (v && !admins.includes(v)) saveAdmins([...admins, v]); }}>
         <input type="email" required aria-label="New office email" placeholder="name@example.com" value={newAdmin} onChange={e => setNewAdmin(e.target.value)} />
         <button className="reg-primary">Give office access</button>
@@ -40,6 +40,14 @@ export default function Accounts({ run }) {
         ? <div className="reg-review-buttons"><button className="reg-secondary danger" onClick={() => remove({ all: true }, 'Member accounts removed. Office members were kept.')}>Yes, remove every member account</button><button className="reg-secondary" onClick={() => setConfirmClear(false)}>Keep them</button></div>
         : <button className="reg-text danger" onClick={() => setConfirmClear(true)}>Remove all member accounts (keeps office members)</button>)}
     </section>
+    {revoking && <div className="reg-overlay"><section className="reg-dialog" role="dialog" aria-modal="true" aria-label="Revoke office access">
+      <div className="reg-section-head"><h2>Revoke office access?</h2><button className="reg-icon" onClick={() => setRevoking('')} aria-label="Close">×</button></div>
+      <p><strong>{revoking}</strong> will no longer be able to sign in to the office. You can give access again later.</p>
+      <div className="reg-review-buttons">
+        <button className="reg-secondary danger" autoFocus onClick={() => { const email = revoking; setRevoking(''); saveAdmins(admins.filter(e => e !== email), `Access revoked for ${email}.`); }}>Yes, revoke access</button>
+        <button className="reg-secondary" onClick={() => setRevoking('')}>Keep access</button>
+      </div>
+    </section></div>}
     {history && <section className="reg-card" aria-label="Account login history"><div className="reg-account-toolbar"><div><h2>Successful logins</h2><p>{person.email}</p></div><button className="reg-text" onClick={() => setHistory(null)}>Close history</button></div>
       {history.data.length ? <ul>{history.data.map(event => <li key={event.id}>{date(event.loggedInAt)} — Signed in</li>)}</ul> : <p>No logins recorded since tracking began.</p>}
       {history.nextCursor && <button className="reg-text" onClick={() => run(async () => { const next = await api.logins(person.id, history.nextCursor); setHistory({ ...next, data: [...history.data, ...next.data] }); })}>Load earlier logins</button>}
