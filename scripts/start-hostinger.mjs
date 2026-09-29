@@ -12,7 +12,7 @@ const { createPool, migrate } = await import('../src/server/database.mjs');
 const { createAuth } = await import('../src/server/auth.mjs');
 const { createStorage } = await import('../src/server/storage.mjs');
 const { createApi } = await import('../src/server/api.mjs');
-const { applySettings, importBootstrap } = await import('../src/server/settings.mjs');
+const { applySettings } = await import('../src/server/settings.mjs');
 const { default: nodemailer } = await import('nodemailer');
 const { default: next } = await import('next');
 if (!dev) {
@@ -23,7 +23,6 @@ const config = configuration();
 const pool = createPool(config);
 await migrate(pool); // idempotent: creates any missing dr_ tables
 await pool.query('SELECT current_year FROM dr_settings WHERE id=1');
-await importBootstrap(pool, process.cwd(), config);
 await applySettings(config, pool);
 // The transport is created per message so mail settings saved in /admin/ apply at once.
 const mailer = { sendMail: message => nodemailer.createTransport(config.smtp).sendMail(message) };

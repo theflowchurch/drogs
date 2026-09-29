@@ -1,5 +1,3 @@
-import { readFile, unlink } from 'node:fs/promises';
-import { join } from 'node:path';
 import { configuration } from './config.mjs';
 import { HttpError } from './auth.mjs';
 // Settings the office may change from /admin/ without touching the host's
@@ -52,15 +50,3 @@ export async function writeSettings(pool, values, actor, config = {}) {
   }
 }
 export const describeSettings = stored => SETTINGS.map(([key, label, hint]) => ({ key, label, hint, set: Boolean(stored[key]) }));
-// A one-off bootstrap-config.json dropped beside the app is imported into
-// dr_config and removed, so a first configuration never needs host access.
-export async function importBootstrap(pool, directory, config = {}, logger = console) {
-  const file = join(directory, 'bootstrap-config.json');
-  let text;
-  try { text = await readFile(file, 'utf8'); } catch { return false; }
-  const values = JSON.parse(text);
-  await writeSettings(pool, values, { office: true }, config);
-  await unlink(file);
-  logger.log(`Imported ${Object.keys(values).length} setting(s) from bootstrap-config.json`);
-  return true;
-}
