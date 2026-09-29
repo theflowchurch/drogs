@@ -74,6 +74,7 @@ export function validateProfile(p, email, { draft = false } = {}) {
     church: String(p.church || "").trim(),
     organization: p.organization || "",
     photo: p.photo || "",
+    gender: ["male", "female"].includes(p.gender) ? p.gender : "",
     bishopId: p.bishopId || "",
     referenceId: /^[BP]\d+$/.test(String(p.referenceId || "")) ? p.referenceId : "",
     bishopFirstName: String(p.bishopFirstName || "").trim(),
@@ -98,6 +99,7 @@ export function validateProfile(p, email, { draft = false } = {}) {
     )
       throw Error("Enter a valid date of birth in the past.");
     if (!q.country || !q.city) throw Error("Enter your country and city.");
+    if (!q.gender) throw Error("Select male or female.");
     const denominations = DENOMINATIONS[q.organization] || [];
     if (denominations.length && !denominations.includes(q.denomination))
       throw Error("Select a denomination listed under your organization.");
@@ -672,6 +674,13 @@ export function directoryFor(state, references) {
     });
   return records.sort((a, b) => a.name.localeCompare(b.name));
 }
+// How a person is addressed: a female bishop is an Episcopal Sister in United
+// Denominations and a Mother in First Love; everyone else is Bishop or Pastor.
+export function titleFor({ role, gender, organization }) {
+  if (role !== "bishop") return "Pastor";
+  if (gender === "female") return organization === "United Denominations" ? "Episcopal Sister" : organization === "First Love" ? "Mother" : "Bishop";
+  return "Bishop";
+}
 export function publicRoll(state, people, year = state.year) {
   const byId = new Map(people.map((p) => [p.id, p]));
   const bishopOf = (r) => state.profiles.find((p) => (p.referenceId || p.id) === r.data.bishopId && p.bishopApproved);
@@ -696,7 +705,7 @@ export function publicRoll(state, people, year = state.year) {
         id: `u:${r.userId}`,
         role: r.data.role,
         name: r.data.name,
-        title: ref?.title || (r.data.role === "bishop" ? "Bishop" : "Pastor"),
+        title: r.data.gender ? titleFor(r.data) : ref?.title || (r.data.role === "bishop" ? "Bishop" : "Pastor"),
         organization: r.data.organization,
         denomination: r.data.denomination || r.data.church || ref?.denomination || "",
         denominationLogo: ref?.denominationLogo || "",
@@ -826,7 +835,7 @@ export function directoryPeople(state, references, year = state.year) {
       id: `new:${r.userId}`,
       role: r.data.role,
       name: r.data.name,
-      title: r.data.role === "bishop" ? "Bishop" : "Pastor",
+      title: titleFor(r.data),
       organization: r.data.organization,
       denomination: r.data.denomination || r.data.church,
       denominationLogo: "",

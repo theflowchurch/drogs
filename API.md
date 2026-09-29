@@ -2,7 +2,9 @@
 
 Office users create keys in `/admin` → **API keys**. Keys are issued by DROGS and used by other servers to read DROGS data. They are not Cloudflare credentials and never grant database or storage administration access.
 
-Choose a separate key for each connected app, a descriptive name, permissions, and a lifetime of 1–365 days (the UI offers 7, 30, 90 or 365). The full key is shown only at creation. MySQL stores a keyed hash, public prefix and metadata. Office users can revoke keys. Removing the issuing email from `ADMIN_EMAILS` also disables its keys. Changing `SESSION_SECRET` invalidates all keys and login sessions.
+Choose a separate key for each connected app, a descriptive name, permissions, and a lifetime of 1–365 days or **never** (the UI offers 7, 30, 90, 365 or Never expires; a never-expiring key can still be revoked). The full key is shown only at creation. MySQL stores a keyed hash, public prefix and metadata. Office users can revoke keys. Removing the issuing email from `ADMIN_EMAILS` also disables its keys. Changing `SESSION_SECRET` invalidates all keys and login sessions.
+
+This document is also published at https://kuriakecastle.org/docs/.
 
 Send requests to the same domain as the registration app:
 

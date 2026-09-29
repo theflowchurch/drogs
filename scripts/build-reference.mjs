@@ -8,7 +8,7 @@ await import('../data/pastors.js');
 const { BISHOPS, PASTORS } = globalThis;
 const ORGANIZATION = { 'UD-OLGC': 'United Denominations', 'UO-FLC190': 'First Love' };
 // Outreach rows carry their group: the FLOW office or the Healing Jesus Council.
-const OUTREACH_GROUP = { 'FLOW Office': 'FLOW', 'Healing Jesus Council': 'HJC' };
+const OUTREACH_GROUP = { 'FLOW Office': 'FLOW', 'Healing Jesus Council': 'HJC', Outreach: 'FLOW' /* Gifty Krofuah, confirmed by the office */ };
 // Spelling variants of one denomination.
 const DENOMINATION_ALIAS = { 'QODESH FAMILY CHURCH': 'QODESH FAMILY CHURCHES',
   // No longer exist as denominations; their people keep their organization.

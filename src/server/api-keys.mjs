@@ -12,7 +12,8 @@ export function keyOptions(input) {
   const days = Number(input.days ?? 90);
   if (!name || name.length > 80) throw new HttpError(400, 'Give this key a name of up to 80 characters.');
   if (!scopes.length || scopes.some(s => !KEY_SCOPES.includes(s))) throw new HttpError(400, 'Choose valid read permissions.');
-  if (!Number.isInteger(days) || days < 1 || days > 365) throw new HttpError(400, 'Expiry must be between 1 and 365 days.');
+  // 0 means the key never expires; it can still be revoked.
+  if (!Number.isInteger(days) || days < 0 || days > 365) throw new HttpError(400, 'Expiry must be between 1 and 365 days, or 0 for never.');
   return { name, scopes, days };
 }
 const parse = value => typeof value === 'string' ? JSON.parse(value) : value;
@@ -39,7 +40,7 @@ export function createKeyService({ pool, config, storage }) {
       await rateLimit(pool, config, `key-issue:${actor.id}`, 20, 3600000);
       const token = `drogs_live_${randomBytes(32).toString('base64url')}`;
       const row = { id: randomUUID(), name, token_prefix: token.slice(0, 19), scopes, created_by: actor.id,
-        created_at: Date.now(), expires_at: Date.now() + days * 86400000 };
+        created_at: Date.now(), expires_at: days === 0 ? 4102444800000 /* 2100-01-01: never, in practice */ : Date.now() + days * 86400000 };
       await transaction(pool, async conn => {
         await conn.execute('INSERT INTO dr_api_keys (id,name,token_hash,token_prefix,scopes,created_by,created_at,expires_at) VALUES (?,?,?,?,?,?,?,?)',
           [row.id, name, digest(config.secret, `api-key:${token}`), row.token_prefix, JSON.stringify(scopes), actor.id, row.created_at, row.expires_at]);

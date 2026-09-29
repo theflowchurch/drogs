@@ -1,7 +1,7 @@
 import { readAccounts, readLogins } from './accounts.mjs';
 import { createKeyService } from './api-keys.mjs';
 import { createSupport } from './support.mjs';
-import { applySettings, bootstrapSettings, describeSettings, readSettings, writeSettings } from './settings.mjs';
+import { applySettings, bootstrapSettings, describeSettings, officeMembers, readSettings, writeSettings } from './settings.mjs';
 import { readFile } from 'node:fs/promises';
 import { applyAction, visibleState, publicRoll } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
@@ -110,12 +110,12 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       }
       if (path === '/api/registration/settings' && method === 'GET') {
         if (!actor.office) throw new HttpError(403, 'Office access required.');
-        return json({ settings: describeSettings(await readSettings(pool)) });
+        return json({ settings: describeSettings(await readSettings(pool)), admins: officeMembers(config) });
       }
       if (path === '/api/registration/settings' && method === 'POST') {
         await writeSettings(pool, (await jsonBody(request)).values, actor, config);
         await applySettings(config, pool);
-        return json({ settings: describeSettings(await readSettings(pool)) });
+        return json({ settings: describeSettings(await readSettings(pool)), admins: officeMembers(config) });
       }
       if (path === '/api/registration/keys' && method === 'GET') return json(await keys.list(actor));
       if (path === '/api/registration/keys' && method === 'POST') return json(await keys.issue(actor, await jsonBody(request)), 201);

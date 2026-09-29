@@ -1,13 +1,36 @@
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #173139;
-  background: #f5f7f6;
+  color: var(--ink);
+  background: var(--bg);
+  color-scheme: light;
+  --bg: #f5f7f6;
+  --panel: #ffffff;
+  --panel-soft: #f7faf9;
   --ink: #173139;
   --muted: #6a7f83;
   --line: #dce5e4;
-  --teal: #087c79;
-  --dark: #0a282e;
+  /* Navy accent */
+  --accent: #1e3a8a;
+  --accent-strong: #172c6b;
+  --accent-soft: #9db4ff;
+  --teal: var(--accent);
+  --dark: #0a1a3a;
   --red: #ac3346;
+}
+/* Dark mode: near-black navy panels, like the dashboard */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0f19;
+  --panel: #131a27;
+  --panel-soft: #18213280;
+  --ink: #e8edf7;
+  --muted: #98a4bb;
+  --line: #22304a;
+  --accent: #6b8cff;
+  --accent-strong: #4f6fe6;
+  --accent-soft: #9db4ff;
+  --dark: #0f1524;
+  --red: #ff7b8f;
 }
 * {
   box-sizing: border-box;
@@ -66,7 +89,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: white;
+  background: var(--panel);
   border-bottom: 1px solid var(--line);
   gap: 20px;
 }
@@ -155,7 +178,7 @@ p {
 }
 .reg-gate em {
   font-style: normal;
-  color: #8ed5c5;
+  color: var(--accent-soft);
 }
 .reg-gate p {
   color: #b4cdcb;
@@ -169,7 +192,7 @@ p {
 .reg-gate form {
   display: flex;
   max-width: 460px;
-  background: #fff;
+  background: var(--panel);
   padding: 7px;
   border-radius: 14px;
   margin: 35px auto 20px;
@@ -201,10 +224,10 @@ p {
   color: white;
 }
 .reg-primary:hover {
-  background: #066b68;
+  background: var(--accent-strong);
 }
 .reg-secondary {
-  background: white;
+  background: var(--panel);
   border-color: var(--line);
   color: var(--ink);
 }
@@ -242,7 +265,7 @@ p {
   letter-spacing: 1px;
 }
 .reg-card {
-  background: #fff;
+  background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 18px;
   padding: 32px;
@@ -283,7 +306,7 @@ p {
   border: 1px solid var(--line);
   border-radius: 9px;
   color: var(--ink);
-  background: #fff;
+  background: var(--panel);
   font-size: 14px;
   min-height: 47px;
 }
@@ -297,7 +320,7 @@ p {
 }
 .reg-field input[type="file"] {
   font-size: 12px;
-  background: #f7faf9;
+  background: var(--panel-soft);
   padding: 15px;
 }
 .reg-field input[type="file"]::file-selector-button {
@@ -714,7 +737,7 @@ p {
   margin-bottom: 30px;
 }
 .reg-stats > div {
-  background: white;
+  background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 13px;
   padding: 24px;
@@ -775,7 +798,7 @@ p {
   text-align: left;
   padding: 0;
   border: 1px solid #d2e2d9;
-  background: #fff;
+  background: var(--panel);
   border-radius: 14px;
   overflow: hidden;
 }
@@ -815,7 +838,7 @@ p {
   padding: 21px;
   border: 1px solid var(--line);
   border-radius: 13px;
-  background: white;
+  background: var(--panel);
 }
 .reg-queue-row.unclaimed {
   border-color: #d89aa5;
@@ -849,7 +872,7 @@ p {
   border-collapse: collapse;
   width: 100%;
   font-size: 12px;
-  background: #fff;
+  background: var(--panel);
 }
 .reg-table th {
   font-size: 10px;
@@ -881,7 +904,7 @@ p {
 }
 .reg-icon {
   border: 1px solid var(--line);
-  background: white;
+  background: var(--panel);
   border-radius: 50%;
   font-size: 22px;
   width: 34px;
@@ -904,7 +927,7 @@ p {
 .reg-dialog {
   width: min(670px, 100%);
   border-radius: 19px;
-  background: #fff;
+  background: var(--panel);
   padding: 32px;
   box-shadow: 0 40px 100px #0003;
   margin: auto;
@@ -1388,7 +1411,7 @@ p {
   gap: 4px;
   padding: 4px;
   margin-bottom: 18px;
-  background: #e9efee;
+  background: var(--panel-soft);
   border-radius: 999px;
 }
 .reg-toggle button,
@@ -1405,7 +1428,7 @@ p {
 }
 .reg-toggle button.active,
 .reg-switch button.active {
-  background: #fff;
+  background: var(--panel);
   color: var(--ink);
   box-shadow: 0 1px 4px rgba(10, 40, 46, 0.14);
 }
@@ -1422,7 +1445,7 @@ p {
 .reg-denomination {
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
+  background: var(--panel);
   padding: 18px;
 }
 .reg-denomination header {
@@ -1456,7 +1479,7 @@ p {
 }
 .reg-denomination-totals button {
   border: 1px solid var(--line);
-  background: #f7faf9;
+  background: var(--panel-soft);
   border-radius: 10px;
   padding: 10px;
   text-align: left;
@@ -1485,7 +1508,7 @@ p {
   margin-bottom: 16px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
+  background: var(--panel);
 }
 .reg-denomination-heading img {
   width: 48px;
@@ -1512,7 +1535,7 @@ p {
   text-align: left;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #f7faf9;
+  background: var(--panel-soft);
   padding: 12px 14px;
   margin: 16px 0;
 }
@@ -1598,7 +1621,7 @@ p {
 .reg-thumb-grid button {
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--panel);
   padding: 0 0 10px;
   overflow: hidden;
   text-align: center;
@@ -1635,7 +1658,7 @@ p {
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #f7faf9;
+  background: var(--panel-soft);
   font-size: 13px;
 }
 .reg-compare > div.changed {
@@ -1816,7 +1839,7 @@ p {
 }
 .reg-account.signin .reg-steps b,
 .reg-account.signup .reg-steps b {
-  color: #8ed5c5;
+  color: var(--accent-soft);
 }
 .reg-account.signin .reg-card,
 .reg-account.signup .reg-card {
@@ -1828,7 +1851,7 @@ p {
 }
 .reg-account.signin a,
 .reg-account.signup a {
-  color: #8ed5c5;
+  color: var(--accent-soft);
 }
 .reg-account .reg-card a {
   color: var(--teal);
@@ -1869,7 +1892,7 @@ p {
 
 /* Registration sidebar: your photo first, then the commitment */
 .reg-upload-card {
-  background: #fff;
+  background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 18px;
   padding: 18px;
@@ -1890,7 +1913,7 @@ p {
   place-items: center;
   align-content: center;
   gap: 10px;
-  background: #e9efee;
+  background: var(--panel-soft);
   color: #8aa0a2;
   border: 1px dashed #c9d7d5;
 }
@@ -1981,7 +2004,7 @@ p {
   display: flex;
   gap: 14px;
   align-items: center;
-  background: #fff;
+  background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 10px;
@@ -2024,7 +2047,7 @@ p {
 .reg-photo-choice button {
   border: 2px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--panel);
   padding: 6px;
   display: grid;
   gap: 6px;
@@ -2051,7 +2074,7 @@ p {
   margin-right: 12px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fff;
+  background: var(--panel);
   color: var(--ink);
 }
 .reg-sidebar-toggle svg {
@@ -2104,7 +2127,7 @@ p {
   grid-template-rows: auto auto 1fr;
   gap: 22px;
   padding: 44px max(24px, 4vw) 48px;
-  background: #f5f7f6;
+  background: var(--bg);
 }
 .reg-doors-title {
   margin: 0;
@@ -2127,7 +2150,7 @@ p {
   font-size: 16px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
+  background: var(--panel);
 }
 .reg-doors-grid {
   display: grid;
@@ -2141,7 +2164,7 @@ p {
   gap: 10px;
   border: 1px solid var(--line);
   border-radius: 24px;
-  background: #fff;
+  background: var(--panel);
   color: var(--ink);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -2224,7 +2247,7 @@ p {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background-color: #f5f7f6;
+  background-color: var(--bg);
   background-size: cover;
   background-position: center;
   opacity: 0.18;
@@ -2234,4 +2257,96 @@ p {
 .reg-main,
 .reg-public-list {
   background: transparent;
+}
+
+/* Theme toggle */
+.reg-theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin-left: 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 17px;
+}
+.reg-hero-page .reg-theme-toggle {
+  position: absolute;
+  top: 22px;
+  right: 120px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+:root[data-theme="dark"] .reg-header {
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+:root[data-theme="dark"] .reg-brand strong,
+:root[data-theme="dark"] .reg-text {
+  color: var(--ink);
+}
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+  background: #0f1420;
+  color: var(--ink);
+  border-color: var(--line);
+}
+:root[data-theme="dark"] .reg-badge.verified {
+  background: #163b2f;
+  color: #8fe3c3;
+}
+:root[data-theme="dark"] .reg-badge.unclaimed,
+:root[data-theme="dark"] .reg-badge.denied {
+  background: #3a1a22;
+  color: #ff9db0;
+}
+:root[data-theme="dark"] .reg-is-this-you,
+:root[data-theme="dark"] .reg-status-message {
+  background: var(--panel-soft);
+  border-color: var(--line);
+}
+:root[data-theme="dark"] .reg-app-bg {
+  opacity: 0.12;
+}
+/* API docs page */
+.reg-docs {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  line-height: 1.6;
+}
+.reg-docs h1 { font-size: 34px; letter-spacing: -1px; }
+.reg-docs h2 { margin-top: 36px; }
+.reg-docs pre { background: var(--dark); color: #e8edf7; padding: 16px; border-radius: 12px; overflow: auto; font-size: 13px; }
+.reg-docs code { font-size: 0.92em; background: var(--panel-soft); padding: 1px 5px; border-radius: 5px; }
+.reg-docs pre code { background: transparent; padding: 0; }
+.reg-docs table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.reg-docs th, .reg-docs td { border-bottom: 1px solid var(--line); padding: 10px 8px; text-align: left; vertical-align: top; }
+.reg-docs a { color: var(--accent); }
+/* Office members */
+.reg-admin-list { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 8px; }
+.reg-admin-list li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
+.reg-admin-add { display: flex; gap: 10px; }
+.reg-admin-add input { flex: 1; }
+
+/* The side panel always reaches the bottom of the window */
+.reg-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+.reg-shell {
+  flex: 1;
+  min-height: 0;
+}
+.reg-app > .reg-account,
+.reg-app > .reg-doors,
+.reg-app > .reg-public-list,
+.reg-app > .reg-gate {
+  flex: 1;
 }

@@ -42,7 +42,7 @@ export async function applySettings(config, pool) {
 }
 // One-time first configuration without host access: the SHA-256 of a secret
 // held offline is committed here; the secret is presented once, then burned.
-export const BOOTSTRAP_TOKEN_SHA256 = ''; // burned; tests supply one via BOOTSTRAP_TOKEN_SHA256
+export const BOOTSTRAP_TOKEN_SHA256 = '87297268a239be371e4c384f945d33cfa0857b55199d766ffb33bad8bacb9239'; // one use, then burned
 export async function bootstrapSettings(config, pool, body) {
   const expected = config.sourceEnv?.BOOTSTRAP_TOKEN_SHA256 || BOOTSTRAP_TOKEN_SHA256;
   if (!expected) throw new HttpError(404, 'Not found.');
@@ -69,3 +69,5 @@ export async function writeSettings(pool, values, actor, config = {}) {
   }
 }
 export const describeSettings = stored => SETTINGS.map(([key, label, hint]) => ({ key, label, hint, set: Boolean(stored[key]) }));
+// Office emails are not secrets: the office sees and manages the list.
+export const officeMembers = config => config.admins;

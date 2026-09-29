@@ -72,6 +72,7 @@ test("PostgreSQL registration workflow enforces isolation, claims, payment locks
       church: "Grace",
       organization: "First Love",
       photo: `${ids[who]}/portrait/test.jpg`,
+      gender: "male",
       bishopId: "B1",
       bishopFirstName: "Test",
       bishopLastName: "Bishop",

@@ -12,6 +12,7 @@ import {
   directoryPeople,
   publicRoll,
   namesAlike,
+  titleFor,
 } from "../../src/registration/model.mjs";
 const bishop = { id: "b1", email: "bishop@example.com" },
   other = { id: "b2", email: "other@example.com" },
@@ -25,6 +26,7 @@ const profile = (actor, role = "pastor", name = "John Doe") => ({
   denomination: "First Love Church",
   country: "Ghana",
   city: "Accra",
+  gender: "male",
   photoConfirmed: true,
   email: actor.email,
   phone: "+233201234567",
@@ -435,4 +437,12 @@ test("a submitted profile is locked", () => {
   s = applyAction(s, pastor, "submit", profile(pastor));
   assert.throws(() => applyAction(s, pastor, "update", { ...profile(pastor), city: "Kumasi" }), /locked/);
   assert.equal(s.registrations.find((x) => x.userId === pastor.id).data.city, "Accra");
+});
+
+test("female bishops are addressed by their organization's title", () => {
+  assert.equal(titleFor({ role: "bishop", gender: "female", organization: "United Denominations" }), "Episcopal Sister");
+  assert.equal(titleFor({ role: "bishop", gender: "female", organization: "First Love" }), "Mother");
+  assert.equal(titleFor({ role: "bishop", gender: "male", organization: "First Love" }), "Bishop");
+  assert.equal(titleFor({ role: "pastor", gender: "female", organization: "First Love" }), "Pastor");
+  assert.throws(() => validateProfile({ ...profile(pastor), gender: "" }, pastor.email), /male or female/);
 });

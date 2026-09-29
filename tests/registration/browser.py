@@ -24,6 +24,7 @@ with sync_playwright() as p:
   page.get_by_label('Registering as').select_option(role)
   page.get_by_label('Organization',exact=True).select_option('First Love')
   page.get_by_label('First name',exact=True).fill(name.split(' ')[0]);page.get_by_label('Last name',exact=True).fill(' '.join(name.split(' ')[1:]))
+  page.get_by_label('Gender',exact=True).select_option('male')
   page.get_by_label('Phone number').fill('+233201234567')
   page.get_by_label('Date of birth').fill('1990-02-01')
   page.get_by_label('Denomination',exact=True).select_option('First Love Church');page.get_by_label('Country',exact=True).fill('Ghana');page.get_by_label('City',exact=True).fill('Accra')

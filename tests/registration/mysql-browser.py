@@ -45,6 +45,7 @@ with sync_playwright() as p:
         page.get_by_label('Registering as').select_option('bishop')
         for label, value in [('First name','Browser'),('Last name','Bishop'),('Phone number','+233201234567'),('Date of birth','1990-02-01'),('Country','Ghana'),('City','Accra')]:
             page.get_by_label(label, exact=True).fill(value)
+        page.get_by_label('Gender',exact=True).select_option('male')
         page.get_by_label('Organization',exact=True).select_option('First Love')
         page.get_by_label('Denomination',exact=True).select_option('First Love Church')
         page.get_by_label('Photo in official attire',exact=True).set_input_files(str(ROOT/'assets/outreach/brian-masuku.png'))

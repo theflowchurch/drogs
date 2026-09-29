@@ -28,6 +28,7 @@ export default function ApiKeys({ run }) {
       <label className="reg-field">Expires after
         <select aria-label="Key expiry" value={days} onChange={e => setDays(e.target.value)}>
           {[7,30,90,365].map(value => <option key={value} value={value}>{value} days</option>)}
+          <option value="0">Never expires</option>
         </select>
       </label>
       <fieldset className="reg-api-permissions"><legend>Allowed access</legend>

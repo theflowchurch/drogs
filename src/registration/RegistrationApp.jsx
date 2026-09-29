@@ -23,6 +23,7 @@ import {
   validateProfile,
   normalName,
   namesAlike,
+  titleFor,
   referenceIndex,
   referenceMatches,
   directoryPeople,
@@ -187,7 +188,8 @@ export default function RegistrationApp({
   // directory sit behind an access code.
   const gated = office;
   const hero = !office && !browse && !signup;
-  const [pub, setPub] = useState(null),
+  const [theme, setTheme] = useState("light"),
+    [pub, setPub] = useState(null),
     [sidebarHidden, setSidebarHidden] = useState(false),
     [signinOpen, setSigninOpen] = useState(false),
     [directoryRole, setDirectoryRole] = useState("bishop"),
@@ -249,6 +251,17 @@ export default function RegistrationApp({
       refresh().catch((e) => setError(e.message));
     }
   }, [actor, refresh, gated, office]);
+  useEffect(() => {
+    const saved = localStorage.getItem("kc-theme") === "dark" ? "dark" : "light";
+    setTheme(saved);
+    document.documentElement.dataset.theme = saved;
+  }, []);
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    localStorage.setItem("kc-theme", next);
+    document.documentElement.dataset.theme = next;
+  };
   useEffect(() => {
     setSidebarHidden(localStorage.getItem("kc-sidebar-hidden") === "yes");
     if (signup && location.hash === "#signin") setSigninOpen("signin");
@@ -323,7 +336,7 @@ export default function RegistrationApp({
         "Unclaimed",
         "Bishop approvals",
         "Payments",
-        "Annual lists",
+        "Pastor lists",
         "History",
         ...(api.apiKeysAvailable ? ["Accounts", "API keys"] : []),
         ...(api.settingsAvailable ? ["Settings"] : []),
@@ -403,6 +416,9 @@ export default function RegistrationApp({
               </button>
             </>
           ) : null}
+          <button className="reg-theme-toggle" onClick={toggleTheme} aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} title={theme === "dark" ? "Light mode" : "Dark mode"}>
+            {theme === "dark" ? "☀" : "☾"}
+          </button>
         </div>
       </header>}
       {!api.live && (
@@ -438,6 +454,9 @@ export default function RegistrationApp({
           <a className="reg-primary reg-signin-button reg-hero-signin" href={`${base}/signup/#signin`}>
             Sign in
           </a>
+          <button className="reg-theme-toggle" onClick={toggleTheme} aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}>
+            {theme === "dark" ? "☀" : "☾"}
+          </button>
           <div
             className="reg-hero-image"
             style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
@@ -583,8 +602,8 @@ export default function RegistrationApp({
                               "Verify each bishop before they can confirm pastors.",
                             "My pastors":
                               "Submit and maintain the names of the pastors under your oversight.",
-                            "Annual lists":
-                              "The pastors submitted by each bishop, including changes during the year.",
+                            "Pastor lists":
+                              "Every bishop’s uploaded list of pastors — who was added, who was confirmed, who was removed — across all bishops. Each bishop sees only their own under My pastors.",
                             Payments:
                               "Review payment screenshots and confirm received commitments.",
                             History: "Previous cycles and what changed.",
@@ -650,7 +669,7 @@ export default function RegistrationApp({
                       canEdit={Number(year) === state.year}
                     />
                   )}
-                  {(tab === "My pastors" || tab === "Annual lists") && (
+                  {(tab === "My pastors" || tab === "Pastor lists") && (
                     <Roster
                       state={state}
                       year={Number(year)}
@@ -1059,6 +1078,7 @@ function RegistrationForm({
   const [data, setData] = useState(() => ({
       ...{
         role: fixedRole || profile?.role || "pastor",
+        gender: "",
         name: "",
         firstName: "",
         lastName: "",
@@ -1278,6 +1298,16 @@ function RegistrationForm({
                     {ORGANIZATIONS.map((o) => (
                       <option key={o}>{o}</option>
                     ))}
+                  </select>
+                </Field>
+                <Field
+                  label="Gender"
+                  hint={data.role === "bishop" && data.gender === "female" ? `You will be listed as ${titleFor(data)}.` : undefined}
+                >
+                  <select required value={data.gender} onChange={(e) => set("gender", e.target.value)}>
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
                   </select>
                 </Field>
                 <Field label="First name">
@@ -2679,6 +2709,12 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
     </>
   );
 }
+// Existing bishops whose names are alike this registrant's, best first.
+const bishopSuggestionsFor = (r) =>
+  references
+    .filter((b) => namesAlike(b.name, r.data.name))
+    .sort((a, b) => Number(b.id === r.data.referenceId) - Number(a.id === r.data.referenceId))
+    .slice(0, 4);
 function BishopApprovals({ records, perform, canEdit }) {
   const [selectedId, setSelectedId] = useState(null),
     [ref, setRef] = useState(""),
@@ -2705,7 +2741,8 @@ function BishopApprovals({ records, perform, canEdit }) {
               key={r.userId}
               onClick={() => {
                 setSelectedId(r.userId);
-                setRef("");
+                // Preselect the record the registrant confirmed, else the best name match.
+                setRef(r.data.referenceId || bishopSuggestionsFor(r)[0]?.id || "");
                 setConfirmed(false);
               }}
             >
@@ -2732,9 +2769,59 @@ function BishopApprovals({ records, perform, canEdit }) {
           onClose={() => setSelectedId(null)}
         >
           <ProfileDetails record={selected} />
+          {(() => {
+            const suggestions = bishopSuggestionsFor(selected);
+            const chosen = index.byId.get(ref);
+            const diffs = chosen
+              ? [
+                  ["Denomination", chosen.denomination, selected.data.denomination],
+                  ["City", chosen.city, selected.data.city],
+                  ["Country", chosen.country, selected.data.country],
+                  ["Organization", chosen.organization, selected.data.organization],
+                ].filter(([, was, now]) => was && now && normalName(was) !== normalName(now))
+              : [];
+            return (
+              <div className="reg-is-this-you">
+                <p>
+                  {suggestions.length
+                    ? selected.data.referenceId
+                      ? "The bishop confirmed this is their existing record:"
+                      : "Who we think this is, from the existing roster:"
+                    : "No existing bishop has a name like this — likely a new bishop."}
+                </p>
+                {suggestions.length > 0 && (
+                  <div className="reg-candidates">
+                    {suggestions.map((b) => (
+                      <div key={b.id} className={`reg-candidate ${ref === b.id ? "chosen" : ""}`}>
+                        <Portrait person={b} />
+                        <div>
+                          <b>{b.name}</b>
+                          <small>{[b.title, b.denomination, b.city, b.country].filter(Boolean).join(" · ")}</small>
+                          <button type="button" className="reg-secondary" onClick={() => setRef(ref === b.id ? "" : b.id)}>
+                            {ref === b.id ? "Selected" : "This is them"}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {diffs.length > 0 && (
+                  <div className="reg-compare">
+                    {diffs.map(([label, was, now]) => (
+                      <div key={label} className="changed">
+                        <span>{label}</span>
+                        <b>{was}</b>
+                        <i>now {now}</i>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
           <Field
-            label="Match to existing bishop reference"
-            hint="Link the correct reference so pastors who selected that name reach this bishop’s account."
+            label="Or pick another existing bishop"
+            hint="Linking the record keeps their history and photo together; leave as new if they are not in the roster."
           >
             <select value={ref} onChange={(e) => setRef(e.target.value)}>
               <option value="">New bishop — no existing reference</option>
