@@ -79,7 +79,7 @@ with sync_playwright() as p:
         page.get_by_role('button',name='Search accounts',exact=True).click()
         expect(page.get_by_text('1 matching accounts',exact=False)).to_be_visible()
         page.get_by_role('button',name='View logins (1)',exact=True).click()
-        expect(page.get_by_role('region',name='Account login history')).to_contain_text('Email verified')
+        expect(page.get_by_role('region',name='Account login history')).to_contain_text('Signed in')
         page.set_viewport_size({'width':390,'height':844})
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
         page.set_viewport_size({'width':1440,'height':1050})
