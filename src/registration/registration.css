@@ -2105,10 +2105,10 @@ p {
 .reg-enter {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  font-size: 22px;
+  gap: 16px;
+  font-size: clamp(24px, 2.4vw, 36px);
   font-weight: 500;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.4px;
   color: #fff !important;
   text-decoration: none;
 }

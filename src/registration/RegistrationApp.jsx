@@ -482,7 +482,7 @@ export default function RegistrationApp({
             Kuriake Castle
           </h1>
           <a className="reg-enter" href={`${base}/directory/`}>
-            <span className="reg-shimmer">Enter the castle to view the directory</span>
+            <span className="reg-shimmer">Click here to view the full Pastoral directory</span>
             <span className="reg-enter-arrow" aria-hidden="true">→</span>
           </a>
         </section>
