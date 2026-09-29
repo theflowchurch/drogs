@@ -3,7 +3,7 @@ import { createKeyService } from './api-keys.mjs';
 import { createSupport } from './support.mjs';
 import { applySettings, bootstrapSettings, describeSettings, readSettings, writeSettings } from './settings.mjs';
 import { readFile } from 'node:fs/promises';
-import { applyAction, visibleState } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, canReadMedia } from './storage.mjs';
@@ -63,9 +63,12 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (method === 'POST' && request.headers.get('origin') !== url.origin)
         throw new HttpError(403, 'Open the form on the configured website before continuing.');
       if (request.headers.get('sec-fetch-site') === 'cross-site') throw new HttpError(403, 'Cross-site requests are not allowed.');
+      if (path === '/api/registration/auth/office-code' && method === 'POST') {
+        return json(await auth.checkOfficeCode((await jsonBody(request)).code));
+      }
       if (path === '/api/registration/auth/request' && method === 'POST') {
-        const { email } = await jsonBody(request);
-        const requested = await auth.requestCode(emailAddress(email), url.origin);
+        const { email, mode } = await jsonBody(request);
+        const requested = await auth.requestCode(emailAddress(email), url.origin, mode === 'office' ? 'office' : 'signup');
         return json({ ok: true, codeRequired: requested?.codeRequired !== false });
       }
       if (path === '/api/registration/auth/access' && method === 'POST') {
@@ -74,9 +77,14 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         await auth.signOut(request);
         return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token) });
       }
+      if (path === '/api/registration/public-directory' && method === 'GET') {
+        // Open to everyone: the roll carries no contact details.
+        const state = await transaction(pool, conn => readState(conn));
+        return json({ source: config.publicDirectory, roll: publicRoll(state, people) });
+      }
       if (path === '/api/registration/auth/verify' && method === 'POST') {
-        const { email, token } = await jsonBody(request);
-        const session = await auth.verifyCode(emailAddress(email), token);
+        const { email, token, mode } = await jsonBody(request);
+        const session = await auth.verifyCode(emailAddress(email), token, ['signin', 'office'].includes(mode) ? mode : 'signup');
         await auth.signOut(request);
         return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token) });
       }
@@ -119,7 +127,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           // Payment evidence is available only to its owner and the office.
           view.registrations = view.registrations.map(r => r.userId === actor.id ? r : { ...r, proof: undefined });
         }
-        return json({ ...view, office: actor.office, paystackKey: config.paystackPublic });
+        return json({ ...view, office: actor.office, paystackKey: config.paystackPublic, publicDirectory: config.publicDirectory });
       }
       if (path === '/api/registration/action' && method === 'POST') {
         await rateLimit(pool, config, `action:${actor.id}`, 120, 60000);

@@ -34,10 +34,20 @@ export function createAuth({ pool, config, mailer }) {
     return { actor: { ...user, office: config.admins.includes(user.email) }, token };
   };
   return {
-    async accessWithCode(code, office = false) {
+    // The office code only opens the door; the person then signs in with an approved email and a code sent to it.
+    async checkOfficeCode(code) {
       if (typeof code !== 'string' || code.length > 64) throw new HttpError(401, 'That access code is not correct.');
-      await rateLimit(pool, config, `access-code:${office ? 'office' : 'registration'}`, 50, 60000);
-      const expected = Buffer.from(digest(config.secret, `access:${office ? config.adminCode : config.siteCode}`), 'hex');
+      await rateLimit(pool, config, 'access-code:office', 50, 60000);
+      const expected = Buffer.from(digest(config.secret, `access:${config.adminCode}`), 'hex');
+      const supplied = Buffer.from(digest(config.secret, `access:${code}`), 'hex');
+      if (!timingSafeEqual(expected, supplied)) throw new HttpError(401, 'That access code is not correct.');
+      return { ok: true };
+    },
+    async accessWithCode(code, office = false) {
+      if (office) throw new HttpError(403, 'Office members sign in with an approved email.');
+      if (typeof code !== 'string' || code.length > 64) throw new HttpError(401, 'That access code is not correct.');
+      await rateLimit(pool, config, 'access-code:registration', 50, 60000);
+      const expected = Buffer.from(digest(config.secret, `access:${config.siteCode}`), 'hex');
       const supplied = Buffer.from(digest(config.secret, `access:${code}`), 'hex');
       if (!timingSafeEqual(expected, supplied)) throw new HttpError(401, 'That access code is not correct.');
       return transaction(pool, async conn => {
@@ -51,8 +61,9 @@ export function createAuth({ pool, config, mailer }) {
         return createSession(conn, user);
       });
     },
-    async requestCode(email, origin = config.origin) {
-      if (!config.requireEmailCode) return { codeRequired: false };
+    async requestCode(email, origin = config.origin, mode = 'signup') {
+      if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
+      if (mode !== 'office' && !config.requireEmailCode) return { codeRequired: false };
       await rateLimit(pool, config, `otp-minute:${email}`, 1, 60000);
       await rateLimit(pool, config, `otp-hour:${email}`, 5, 3600000);
       await rateLimit(pool, config, 'otp-global', 500, 3600000);
@@ -67,8 +78,15 @@ export function createAuth({ pool, config, mailer }) {
         throw new HttpError(503, 'Unable to send your code. Please try again shortly.');
       }
     },
-    async verifyCode(email, code) {
-      const open = !config.requireEmailCode;
+    async verifyCode(email, code, mode = 'signup') {
+      // Office sign-ins always need the emailed code, whatever the member setting is.
+      if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
+      const open = mode !== 'office' && !config.requireEmailCode;
+      // Signing in (as opposed to signing up) needs an account we already know.
+      if (mode === 'signin') {
+        const [[known]] = await pool.execute('SELECT id FROM dr_users WHERE email=?', [email]);
+        if (!known) throw new HttpError(404, 'Sorry, this email is not recognised. Please create an account.');
+      }
       // With codes off, an email alone signs in; office addresses are excluded so the
       // admin access code stays the only way to office privileges.
       if (open && config.admins.includes(email)) throw new HttpError(403, 'Office accounts sign in with the admin code at /admin/.');

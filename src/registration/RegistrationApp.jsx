@@ -184,8 +184,10 @@ export default function RegistrationApp({
 }) {
   // Members sign in with their email; only the office and the browse-only
   // directory sit behind an access code.
-  const gated = office || browse;
-  const [sidebarHidden, setSidebarHidden] = useState(false),
+  const gated = office;
+  const hero = !office && !browse && !signup;
+  const [pub, setPub] = useState(null),
+    [sidebarHidden, setSidebarHidden] = useState(false),
     [signinOpen, setSigninOpen] = useState(false),
     [directoryRole, setDirectoryRole] = useState("bishop"),
     [gate, setGate] = useState(!gated),
@@ -255,13 +257,9 @@ export default function RegistrationApp({
     localStorage.setItem("kc-sidebar-hidden", next ? "yes" : "no");
   };
   useEffect(() => {
-    // The browse-only directory needs no account: the roll is public to anyone past the code.
-    if (browse && gate && !actor && !state)
-      api
-        .snapshot({ id: "browse", email: "", office: false })
-        .then(setState)
-        .catch((e) => setError(e.message));
-  }, [browse, gate, actor, state]);
+    // The public directory needs no account at all.
+    if (browse) api.publicDirectory().then(setPub).catch((e) => setError(e.message));
+  }, [browse]);
   useEffect(() => {
     if (!actor) return;
     const update = () => refresh().catch((e) => setError(e.message));
@@ -309,16 +307,6 @@ export default function RegistrationApp({
     return () => clearTimeout(timer);
   }, [notice]);
   const isOffice = api.live ? Boolean(state?.office) : Boolean(actor?.office);
-  const registering = state
-    ? !state.registrations.some(
-        (r) => r.userId === actor?.id && r.year === state.year && r.status !== "draft",
-      )
-    : null;
-  useEffect(() => {
-    if (gated || !actor || registering === null) return;
-    if (!signup && registering) location.replace(`${base}/signup/`);
-    if (signup && !registering) location.replace(`${base}/`);
-  }, [gated, actor, registering, signup]);
   const profile = state?.profiles.find((p) => p.id === actor?.id);
   const current = state?.registrations.find(
     (r) => r.userId === actor?.id && r.year === state.year,
@@ -347,11 +335,11 @@ export default function RegistrationApp({
   async function logout() {
     await run(async () => {
       await api.signOut(office);
+      setSigninOpen(false);
       setActor(null);
       setState(null);
       setGate(!gated);
       sessionStorage.removeItem("drogs-registration-gate");
-      if (!gated) location.assign(`${base}/`);
     });
   }
   if (api.configError)
@@ -368,8 +356,8 @@ export default function RegistrationApp({
     );
   return (
     <div className="reg-app">
-      <header className="reg-header">
-        {gate && (actor || browse) && (
+      {!hero && <header className="reg-header">
+        {gate && actor && !browse && (
           <button
             className="reg-sidebar-toggle"
             onClick={toggleSidebar}
@@ -394,21 +382,18 @@ export default function RegistrationApp({
             <button className="reg-text" onClick={logout}>
               Sign out
             </button>
-          ) : office || browse ? (
-            <a className="reg-text" href={`${base}/`}>
-              Sign in ↗
-            </a>
           ) : signup ? (
-            <a className="reg-text" href={`${base}/`}>
-              Already have an account? Sign in ↗
-            </a>
-          ) : (
-            <button className="reg-primary reg-signin-button" onClick={() => setSigninOpen(true)}>
-              Sign in
-            </button>
-          )}
+            <>
+              <button className="reg-text" onClick={() => setSigninOpen("signin")}>
+                Sign in
+              </button>
+              <button className="reg-primary reg-signin-button" onClick={() => setSigninOpen("signup")}>
+                Sign up
+              </button>
+            </>
+          ) : null}
         </div>
-      </header>
+      </header>}
       {!api.live && (
         <div className="reg-demo">
           Saved in this browser only · email delivery and shared accounts are
@@ -437,51 +422,51 @@ export default function RegistrationApp({
           </button>
         </div>
       )}
-      {!gate ? (
+      {hero ? (
+        <section className="reg-account signin reg-hero-page">
+          <div
+            className="reg-hero-image"
+            style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
+            aria-hidden="true"
+          />
+          <h1 className="reg-hero-title">
+            <img src={`${base}/assets/brand/castle-icon.png`} alt="" />
+            Kuriake Castle
+          </h1>
+          <a className="reg-enter" href={`${base}/directory/`}>
+            Enter the castle
+            <small>to view the directory</small>
+          </a>
+        </section>
+      ) : !gate ? (
         <Gate
           office={office}
           onEnter={(code) => run(async () => {
-            if (api.live) setActor(await api.accessWithCode(code, office));
+            // The office code opens the door; the email and its code come next.
+            if (api.live) { if (!(await api.officeCode(code)).ok) throw Error("That access code is not correct."); }
             else if (code !== "1234") throw Error("That access code is not correct.");
             sessionStorage.setItem("drogs-registration-gate", String(Date.now() + 1800000));
             setGate(true);
           })}
         />
       ) : browse ? (
-        <div className={`reg-shell ${sidebarHidden ? "sidebar-collapsed" : ""}`}>
-          <aside className="reg-sidebar">
-            <span className="reg-eyebrow">Kuriake Castle</span>
-            <div className="reg-nav">
-              <button className="active">
-                <span>Directory</span>
-              </button>
-            </div>
-            <div className="reg-side-note">
-              <b>Roll of Good Standing</b>
-              <p>
-                Everyone who has registered this year. To be listed,{" "}
-                <a href={`${base}/signup/`}>register</a>.
-              </p>
-            </div>
-          </aside>
-          <main className="reg-main">
-            <div className="reg-page-heading">
-              <div>
-                <span className="reg-eyebrow">Kuriake Castle</span>
-                <h1>{directoryHeading(directoryRole)}</h1>
-                <p>Bishops and pastors registered this year.</p>
-              </div>
-            </div>
-            <MemberDirectory role={directoryRole} setRole={setDirectoryRole} roll={state?.roll || []} />
-          </main>
-        </div>
-      ) : !actor && (!office || !api.live) ? (
+        pub ? (
+          <PublicDirectory data={pub} />
+        ) : (
+          <div className="reg-loading" role="status">
+            Opening the directory…
+          </div>
+        )
+      ) : !actor ? (
         <Account
           office={office}
           signup={signup}
           run={run}
           busy={busy}
-          onActor={setActor}
+          onActor={(a) => {
+            setSigninOpen(false);
+            setActor(a);
+          }}
           open={signinOpen}
           onClose={() => setSigninOpen(false)}
         />
@@ -574,7 +559,7 @@ export default function RegistrationApp({
                           {
                             Directory: office
                               ? "Everyone registered this year, with their details. This is what the public roll counts."
-                              : "Bishops and pastors registered this year.",
+                              : "The same directory the public sees.",
                             "Original data":
                               "The information Kuriake Castle held before this year’s registration. Green: the bishop has registered, or the pastor has been claimed by their bishop. Red: not yet.",
                             Unclaimed:
@@ -610,10 +595,9 @@ export default function RegistrationApp({
                         mode="registered"
                       />
                     ) : (
-                      <MemberDirectory
-                        role={directoryRole}
-                        setRole={setDirectoryRole}
-                        roll={state.roll || []}
+                      <PublicDirectory
+                        data={{ source: state.publicDirectory || "original", roll: state.roll || [] }}
+                        embedded
                       />
                     ))}
                   {tab === "Original data" && (
@@ -792,7 +776,7 @@ function Gate({ office, onEnter }) {
     </section>
   );
 }
-function AccountForm({ office, signup = false, run, busy, onActor }) {
+function AccountForm({ office, signup = false, mode = office ? "office" : signup ? "signup" : "signin", run, busy, onActor }) {
   const [email, setEmail] = useState(""),
     [sent, setSent] = useState(false),
     [token, setToken] = useState("");
@@ -803,15 +787,15 @@ function AccountForm({ office, signup = false, run, busy, onActor }) {
     e.preventDefault();
     run(async () => {
       if (!api.live) {
-        onActor(api.demoSignIn(email, office));
+        onActor(api.demoSignIn(email, office, mode));
         return;
       }
-      if (sent) onActor(await api.verifyCode(email, token));
+      if (sent) onActor(await api.verifyCode(email, token, mode));
       else {
-        const requested = await api.requestCode(email);
+        const requested = await api.requestCode(email, mode);
         // When the server does not ask for a code, the email alone signs in.
         if (requested?.codeRequired === false)
-          onActor(await api.verifyCode(email, ""));
+          onActor(await api.verifyCode(email, "", mode));
         else setSent(true);
       }
     });
@@ -848,7 +832,7 @@ function AccountForm({ office, signup = false, run, busy, onActor }) {
           ? signup
             ? "Verify and create account"
             : "Verify and sign in"
-          : signup
+          : signup || mode === "office"
             ? "Send code"
             : "Send sign-in code"}{" "}
     →
@@ -885,13 +869,13 @@ function AccountForm({ office, signup = false, run, busy, onActor }) {
 function Account({ office, signup = false, run, busy, onActor, open = false, onClose }) {
   const [sent] = useState(false);
   return (
-    <section className={`reg-account ${signup || office ? "signup" : "signin"}`}>
+    <section className={`reg-account ${office ? "signup" : "signin"}`}>
       <div
         className="reg-hero-image"
         style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
         aria-hidden="true"
       />
-      {signup || office ? (
+      {office ? (
         <>
           <div>
             <img
@@ -899,30 +883,11 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
               src={`${base}/assets/brand/castle-icon.png`}
               alt=""
             />
-            <span className="reg-eyebrow">
-              {office ? "OFFICE ACCESS" : "NEW ACCOUNT"}
-            </span>
-            <h1>{sent ? "Check your email." : "Create your account."}</h1>
-            <p>
-              {api.live
-                ? "Enter your email and we’ll send a one-time code. Then register your details and complete your commitment."
-                : "Enter your email to create your account on this device."}
-            </p>
-            {signup && (
-              <ol className="reg-steps">
-                <li>
-                  <b>01</b> Create your account
-                </li>
-                <li>
-                  <b>02</b> Register your details
-                </li>
-                <li>
-                  <b>03</b> Confirm and pay
-                </li>
-              </ol>
-            )}
+            <span className="reg-eyebrow">OFFICE ACCESS</span>
+            <h1>{sent ? "Check your email." : "Sign in to the office."}</h1>
+            <p>Approved office emails only. A code is sent to your email each time.</p>
           </div>
-          <AccountForm office={office} signup={signup} run={run} busy={busy} onActor={onActor} />
+          <AccountForm office={office} run={run} busy={busy} onActor={onActor} />
         </>
       ) : (
         <>
@@ -931,8 +896,8 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
             Kuriake Castle
           </h1>
           {open && (
-            <Dialog title="Sign in" onClose={onClose}>
-              <AccountForm office={office} run={run} busy={busy} onActor={onActor} />
+            <Dialog title={open === "signin" ? "Sign in" : "Sign up"} onClose={onClose}>
+              <AccountForm office={office} signup={open === "signup"} mode={open} run={run} busy={busy} onActor={onActor} />
             </Dialog>
           )}
         </>
@@ -953,9 +918,12 @@ function Participant({
   const previous = state.registrations
     .filter((r) => r.userId === actor.id && r.year < state.year)
     .sort((a, b) => b.year - a.year)[0];
-  if (!current || current.status === "draft")
+  const [editing, setEditing] = useState(false);
+  if (!current || current.status === "draft" || editing)
     return (
       <RegistrationForm
+        editing={editing}
+        onDone={() => setEditing(false)}
         key={`${state.year}-${actor.id}`}
         actor={actor}
         initial={current?.data || previous?.data}
@@ -1006,6 +974,10 @@ function Participant({
               <dt>Date of birth</dt>
               <dd>{current.data.dob}</dd>
             </div>
+            <div>
+              <dt>City</dt>
+              <dd>{[current.data.city, current.data.country].filter(Boolean).join(", ")}</dd>
+            </div>
             {current.data.role === "pastor" && (
               <div>
                 <dt>Bishop</dt>
@@ -1033,10 +1005,9 @@ function Participant({
                     : "Your details are safely saved in Unclaimed. Your bishop or the office can confirm your registration. Payment will unlock after confirmation."}
             </p>
           </div>
-          <small className="reg-small">
-            Need a correction? Contact the office before registering a second
-            account.
-          </small>
+          <button className="reg-secondary" onClick={() => setEditing(true)}>
+            Edit my details
+          </button>
         </section>
         <Payment
           current={current}
@@ -1050,6 +1021,8 @@ function Participant({
   );
 }
 function RegistrationForm({
+  editing = false,
+  onDone,
   actor,
   initial,
   profile,
@@ -1148,10 +1121,11 @@ function RegistrationForm({
     }, "Draft saved. You can return to finish it.");
   }
   async function send() {
-    await run(async () => {
-      await api.action(actor, "submit", data);
+    const ok = await run(async () => {
+      await api.action(actor, editing ? "update" : "submit", data);
       await refresh();
-    }, "Registration submitted.");
+    }, editing ? "Your details are updated." : "Registration submitted.");
+    if (ok && editing) onDone?.();
   }
   return (
     <>
@@ -1160,7 +1134,7 @@ function RegistrationForm({
           <span className="reg-eyebrow">
             {state.year} / ANNUAL REGISTRATION
           </span>
-          <h1>{review ? "Review your details." : "Roll of Good Standing."}</h1>
+          <h1>{review ? "Review your details." : editing ? "Update my details." : "Roll of Good Standing."}</h1>
           <p>
             {review
               ? "Check your details before submitting your annual registration."
@@ -2347,9 +2321,54 @@ function PublicRecord({ person: p, onOpen, from }) {
     </>
   );
 }
-function MemberDirectory({ role, setRole, roll = [] }) {
+// The public directory: a search bar, then two doors — Bishops and Pastors with
+// their totals — before any faces are shown. Lists the existing roster until the
+// office switches the source to this year's roll.
+function PublicDirectory({ data, embedded = false }) {
+  const list = data.source === "roll" ? data.roll : publicPeople;
+  const [role, setRole] = useState(null),
+    [q, setQ] = useState("");
+  const counts = {
+    bishop: list.filter((p) => p.role === "bishop").length,
+    pastor: list.filter((p) => p.role === "pastor").length,
+  };
+  if (!role && !q)
+    return (
+      <section className={`reg-doors ${embedded ? "embedded" : ""}`}>
+        <input
+          type="search"
+          className="reg-doors-search"
+          aria-label="Search people"
+          placeholder="Search by name, city or denomination"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+        />
+        <div className="reg-doors-grid">
+          {[
+            ["bishop", "Bishops"],
+            ["pastor", "Pastors"],
+          ].map(([value, label]) => (
+            <button key={value} className="reg-door" onClick={() => setRole(value)}>
+              <span>{label}</span>
+              <strong>{counts[value].toLocaleString()}</strong>
+              <small>Roll of Good Standing</small>
+            </button>
+          ))}
+        </div>
+      </section>
+    );
+  return (
+    <section className={embedded ? "" : "reg-public-list"}>
+      <button className="reg-text reg-back" onClick={() => { setRole(null); setQ(""); }}>
+        ← Bishops and pastors
+      </button>
+      <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} />
+    </section>
+  );
+}
+function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
   const [filter, setFilter] = useState({
-      q: "",
+      q: initialQuery,
       org: "",
       denomination: "",
       country: "",

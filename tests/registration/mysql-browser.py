@@ -25,7 +25,14 @@ with sync_playwright() as p:
         if admin:
             page.get_by_label('Access code', exact=True).fill('admin-test-code')
             page.get_by_role('button', name='Enter →').click()
+            page.get_by_label('Email address', exact=True).fill('browser-office@example.com')
+            page.get_by_role('button', name='Send code').click()
+            page.get_by_label('One-time email code').wait_for()
+            code = re.search(r'code is (\d{6})', json.loads((MEDIA/'mail.json').read_text())[-1]['text']).group(1)
+            page.get_by_label('One-time email code').fill(code)
+            page.get_by_role('button', name='Verify and sign in').click()
         else:
+            page.get_by_role('button', name='Sign up', exact=True).click()
             page.get_by_label('Email address', exact=True).fill('browser-member@example.com')
             page.get_by_role('button', name='Send code').click()
             page.get_by_label('One-time email code').wait_for()
@@ -54,12 +61,10 @@ with sync_playwright() as p:
         page.get_by_label('I confirm that these details').check()
         page.get_by_label('I confirm this is me').check()
         page.get_by_role('button',name='Submit registration').click()
-        page.wait_for_url(BASE + '/')  # a submitted member is sent from /signup/ to My profile
-        page.wait_for_load_state('networkidle')
         expect(page.get_by_text('Your registration is complete.')).to_be_visible()
         assert page.evaluate("localStorage.getItem('drogs-registration-v1')") is None
         page.get_by_role('button',name='Sign out',exact=True).click()
-        page.get_by_role('button', name='Sign in', exact=True).wait_for()
+        page.get_by_role('button', name='Sign up', exact=True).wait_for()
         page.set_viewport_size({'width':1440,'height':1050})
         login(True)
         assert page.url.endswith('/admin/')

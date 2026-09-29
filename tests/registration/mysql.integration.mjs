@@ -73,7 +73,14 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('auth/access', '', { code: 'wrong', office: false })).status, 401);
     const visitorAccess = await call('auth/access', '', { code: '1234', office: false });
     assert.equal(visitorAccess.status, 200); assert.equal(visitorAccess.data.office, false);
-    const officeAccess = await call('auth/access', '', { code: 'admin-test-code', office: true });
+    assert.equal((await call('auth/access', '', { code: 'admin-test-code', office: true })).status, 403, 'the office code alone no longer signs anyone in');
+    assert.equal((await call('auth/office-code', '', { code: 'wrong' })).status, 401);
+    assert.equal((await call('auth/office-code', '', { code: 'admin-test-code' })).status, 200);
+    assert.equal((await call('auth/request', '', { email: 'stranger@example.com', mode: 'office' })).status, 403, 'unapproved emails are told they have no access');
+    assert.equal((await call('auth/request', '', { email: 'office@example.com', mode: 'office' })).status, 200);
+    const officeToken = mails.at(-1).text.match(/code is (\d{6})/)[1];
+    assert.equal((await call('auth/verify', '', { email: 'office@example.com', token: '000000', mode: 'office' })).status, 401, 'the office always needs the emailed code');
+    const officeAccess = await call('auth/verify', '', { email: 'office@example.com', token: officeToken, mode: 'office' });
     assert.equal(officeAccess.status, 200); assert.equal(officeAccess.data.office, true);
     const office = officeAccess, bishop = await login('bishop@example.com'), pastor = await login('pastor@example.com'), stranger = await login('stranger@example.com');
     assert.equal(office.data.office, true);

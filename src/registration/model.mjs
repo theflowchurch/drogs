@@ -305,6 +305,18 @@ export function applyAction(
           ? "pending"
           : "unclaimed";
     if (action === "submit") r.submittedAt = now;
+  } else if (action === "update") {
+    // A member keeps their own details current after submitting; status and
+    // payment are untouched and the record stays linked.
+    const r = state.registrations.find(
+      (x) => x.userId === actor.id && x.year === state.year,
+    );
+    if (!r || r.status === "draft") throw Error("Submit your registration first.");
+    const data = validateProfile({ ...r.data, ...payload, role: r.data.role }, actor.email);
+    if (!data.photoConfirmed) throw Error("Confirm your photo before saving.");
+    r.data = { ...data, referenceId: data.referenceId || r.data.referenceId, bishopId: r.data.bishopId };
+    if (profile) profile.name = data.name;
+    r.updatedAt = now;
   } else if (action === "approveBishop") {
     office();
     const p = state.profiles.find((p) => p.id === payload.userId);

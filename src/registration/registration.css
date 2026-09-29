@@ -2069,3 +2069,104 @@ p {
 .reg-shell.sidebar-collapsed .reg-sidebar {
   display: none;
 }
+
+/* Public hero and the two doors */
+.reg-hero-page {
+  min-height: 100svh;
+  gap: 40px;
+  align-content: center;
+}
+.reg-enter {
+  display: inline-grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 18px 40px;
+  border-radius: 999px;
+  background: var(--teal);
+  color: #fff !important;
+  font-size: 18px;
+  font-weight: 650;
+  text-decoration: none;
+  animation: reg-glow 1.8s ease-in-out infinite;
+}
+.reg-enter small {
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.85;
+}
+@keyframes reg-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(142, 213, 197, 0.55); transform: scale(1); }
+  50% { box-shadow: 0 0 0 18px rgba(142, 213, 197, 0); transform: scale(1.04); }
+}
+.reg-doors {
+  min-height: calc(100svh - 90px);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 24px;
+  padding: 28px max(24px, 4vw) 40px;
+  background: #f5f7f6;
+}
+.reg-doors.embedded {
+  min-height: 60vh;
+  padding: 0;
+  background: transparent;
+}
+.reg-doors-search {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  font-size: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+.reg-doors-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.reg-door {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: #fff;
+  color: var(--ink);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.reg-door:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 60px rgba(10, 40, 46, 0.12);
+}
+.reg-door span {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.reg-door strong {
+  font-size: clamp(56px, 9vw, 120px);
+  line-height: 1;
+  letter-spacing: -3px;
+}
+.reg-door small {
+  font-size: 12px;
+  color: var(--teal);
+}
+.reg-public-list {
+  padding: 24px max(24px, 4vw) 60px;
+}
+.reg-back {
+  margin-bottom: 14px;
+}
+@media (max-width: 700px) {
+  .reg-doors-grid {
+    grid-template-columns: 1fr;
+  }
+  .reg-door {
+    min-height: 220px;
+  }
+}

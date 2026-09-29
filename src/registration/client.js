@@ -84,16 +84,18 @@ export async function currentActor(office = false) {
   if (error || !data.user) return null;
   return { id: data.user.id, email: data.user.email };
 }
-export async function requestCode(email) {
-  if (mysqlBackend) return server("auth/request", { email });
+export const officeCode = (code) =>
+  mysqlBackend ? server("auth/office-code", { code }) : Promise.resolve({ ok: code === "1234" });
+export async function requestCode(email, mode = "signup") {
+  if (mysqlBackend) return server("auth/request", { email, mode });
   const { error } = await supabase().auth.signInWithOtp({
     email,
     options: { shouldCreateUser: true },
   });
   check(error);
 }
-export async function verifyCode(email, token) {
-  if (mysqlBackend) return server("auth/verify", { email, token });
+export async function verifyCode(email, token, mode = "signup") {
+  if (mysqlBackend) return server("auth/verify", { email, token, mode });
   const { data, error } = await supabase().auth.verifyOtp({
     email,
     token,
@@ -105,9 +107,11 @@ export async function verifyCode(email, token) {
 export const accessWithCode = (code, office = false) => mysqlBackend
   ? server("auth/access", { code, office })
   : null;
-export function demoSignIn(email, office = false) {
+export function demoSignIn(email, office = false, mode = "signup") {
   email = normalEmail(email);
   const p = read().profiles.find((p) => normalEmail(p.email) === email);
+  if (mode === "signin" && !p && !office)
+    throw Error("Sorry, this email is not recognised. Please create an account.");
   const actor = { id: p?.id || crypto.randomUUID(), email, office };
   sessionStorage.setItem(sessionKey(office), JSON.stringify(actor));
   localStorage.setItem(rememberedKey(office), JSON.stringify(actor));
@@ -207,6 +211,11 @@ export const accounts = (search = '', page = 1) => server(`accounts?search=${enc
 export const logins = (user, before = '') => server(`logins?user=${encodeURIComponent(user)}&before=${encodeURIComponent(before)}`);
 
 export const supportAvailable = mysqlBackend;
+// The public directory needs no account. Locally it is the saved roll.
+export async function publicDirectory() {
+  if (mysqlBackend) return server("public-directory");
+  return { source: "original", roll: visibleState(read(), { id: "public", email: "", office: false }, references, people).roll };
+}
 export const settingsAvailable = mysqlBackend;
 export const listSettings = () => server('settings');
 export const saveSettings = values => server('settings', { values });

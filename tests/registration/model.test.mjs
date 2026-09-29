@@ -445,3 +445,16 @@ test("names are alike across order, missing middle names and small typos", () =>
   assert.ok(!namesAlike("Nina Masuku", "Brian Masuku"), "a different first name is a different person");
   assert.ok(!namesAlike("Nina", "Nina Masuku"), "one word is never enough");
 });
+
+test("a member updates their own submitted details without losing status", () => {
+  let s = setup();
+  s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", email: pastor.email }] });
+  s = applyAction(s, pastor, "submit", profile(pastor));
+  assert.throws(() => applyAction(s, pastor, "update", { ...profile(pastor), photoConfirmed: false }), /Confirm your photo/);
+  s = applyAction(s, pastor, "update", { ...profile(pastor), phone: "+233209999999", city: "Kumasi" });
+  const r = s.registrations.find((x) => x.userId === pastor.id);
+  assert.equal(r.status, "confirmed");
+  assert.equal(r.data.phone, "+233209999999");
+  assert.equal(r.data.city, "Kumasi");
+  assert.equal(r.data.bishopId, "B1", "the bishop link is kept");
+});

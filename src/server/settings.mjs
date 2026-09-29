@@ -15,8 +15,9 @@ export const SETTINGS = [
   ['R2_BUCKET', 'R2 bucket', ''],
   ['R2_ACCESS_KEY_ID', 'R2 access key ID', ''],
   ['R2_SECRET_ACCESS_KEY', 'R2 secret access key', ''],
-  ['ADMIN_ACCESS_CODE', 'Office access code', 'The code typed at /admin/.'],
-  ['SITE_ACCESS_CODE', 'Directory access code', 'The code typed at /directory/.'],
+  ['PUBLIC_DIRECTORY_SOURCE', 'Public directory shows', '"original" (the existing roster, for now) or "roll" (only people confirmed this year).'],
+  ['ADMIN_ACCESS_CODE', 'Office access code', 'The code typed at /admin/ before the email.'],
+  ['ADMIN_EMAILS', 'Office emails', 'Comma-separated. Only these addresses can sign in to /admin/; each sign-in is confirmed by an emailed code.'],
 ];
 const allowed = new Set(SETTINGS.map(([key]) => key));
 export async function readSettings(pool) {
@@ -41,7 +42,7 @@ export async function applySettings(config, pool) {
 }
 // One-time first configuration without host access: the SHA-256 of a secret
 // held offline is committed here; the secret is presented once, then burned.
-export const BOOTSTRAP_TOKEN_SHA256 = ''; // burned after first use; tests supply one via BOOTSTRAP_TOKEN_SHA256
+export const BOOTSTRAP_TOKEN_SHA256 = '8a424c06576f5b80ac1f4ad2a56e084c0bcb98e52d51ee8d42b37a7417687872'; // one use, then burned
 export async function bootstrapSettings(config, pool, body) {
   const expected = config.sourceEnv?.BOOTSTRAP_TOKEN_SHA256 || BOOTSTRAP_TOKEN_SHA256;
   if (!expected) throw new HttpError(404, 'Not found.');
