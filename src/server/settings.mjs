@@ -34,7 +34,9 @@ export async function readSettings(pool) {
 export async function applySettings(config, pool) {
   const stored = await readSettings(pool);
   if (!config.sourceEnv) return stored; // a hand-built config cannot be re-derived
-  Object.assign(config, configuration({ ...config.sourceEnv, ...stored }));
+  const base = config.sourceEnv;
+  Object.assign(config, configuration({ ...base, ...stored }));
+  config.sourceEnv = base; // keep the untouched environment so a cleared setting really reverts
   return stored;
 }
 // One-time first configuration without host access: the SHA-256 of a secret
