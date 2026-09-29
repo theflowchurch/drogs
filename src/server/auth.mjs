@@ -33,6 +33,13 @@ export function createAuth({ pool, config, mailer }) {
     await conn.execute('INSERT INTO dr_sessions (token_hash,user_id,expires_at) VALUES (?,?,?)', [digest(config.secret, `session:${token}`), user.id, Date.now() + 43200000]);
     return { actor: { ...user, office: config.admins.includes(user.email) }, token };
   };
+  // Signing in is only for people who already registered (a profile or a
+  // registration, pending or approved). Nobody else is told anything more
+  // than "not recognised", and no code is ever emailed to an unknown address.
+  async function requireMember(email) {
+    const [[known]] = await pool.execute('SELECT u.id FROM dr_users u WHERE u.email=? AND (EXISTS (SELECT 1 FROM dr_profiles p WHERE p.id=u.id) OR EXISTS (SELECT 1 FROM dr_registrations r WHERE r.user_id=u.id))', [email]);
+    if (!known) throw new HttpError(404, 'Sorry, this email is not recognised. Only registered bishops and pastors can sign in.');
+  }
   return {
     // The office code only opens the door; the person then signs in with an approved email and a code sent to it.
     async checkOfficeCode(code) {
@@ -63,7 +70,9 @@ export function createAuth({ pool, config, mailer }) {
     },
     async requestCode(email, origin = config.origin, mode = 'signup') {
       if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
-      if (mode !== 'office' && !config.requireEmailCode) return { codeRequired: false };
+      if (mode === 'signin') await requireMember(email);
+      // Sign-up through the shared link may skip the code; sign-in never does.
+      if (mode === 'signup' && !config.requireEmailCode) return { codeRequired: false };
       await rateLimit(pool, config, `otp-minute:${email}`, 1, 60000);
       await rateLimit(pool, config, `otp-hour:${email}`, 5, 3600000);
       await rateLimit(pool, config, 'otp-global', 500, 3600000);
@@ -81,12 +90,8 @@ export function createAuth({ pool, config, mailer }) {
     async verifyCode(email, code, mode = 'signup') {
       // Office sign-ins always need the emailed code, whatever the member setting is.
       if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
-      const open = mode !== 'office' && !config.requireEmailCode;
-      // Signing in (as opposed to signing up) needs an account we already know.
-      if (mode === 'signin') {
-        const [[known]] = await pool.execute('SELECT id FROM dr_users WHERE email=?', [email]);
-        if (!known) throw new HttpError(404, 'Sorry, this email is not recognised. Please create an account.');
-      }
+      const open = mode === 'signup' && !config.requireEmailCode;
+      if (mode === 'signin') await requireMember(email);
       // With codes off, an email alone signs in; office addresses are excluded so the
       // admin access code stays the only way to office privileges.
       if (open && config.admins.includes(email)) throw new HttpError(403, 'Office accounts sign in with the admin code at /admin/.');

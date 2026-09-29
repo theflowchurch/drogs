@@ -237,6 +237,16 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     for (let i = 0; i < 5; i++) await call('support', bishop.cookie, { message: 'Another report about the same thing.' });
     assert.equal((await call('support', bishop.cookie, { message: 'Another report about the same thing.' })).status, 429, 'reports are rate limited');
 
+    // Sign-in is only for registered members: unknown addresses get nothing, not even a code.
+    const sent = mails.length;
+    assert.equal((await call('auth/request', '', { email: 'nobody@example.com', mode: 'signin' })).status, 404);
+    assert.equal((await call('auth/request', '', { email: 'stranger@example.com', mode: 'signin' })).status, 404, 'an account without a profile or registration is not a member');
+    assert.equal(mails.length, sent, 'no code is emailed to an unrecognised address');
+    assert.equal((await call('auth/verify', '', { email: 'nobody@example.com', token: '', mode: 'signin' })).status, 404);
+    const signin = await call('auth/request', '', { email: 'bishop@example.com', mode: 'signin' });
+    assert.equal(signin.status, 200);
+    assert.equal(signin.data.codeRequired, true, 'sign-in always needs the emailed code');
+    assert.equal((await call('auth/verify', '', { email: 'bishop@example.com', token: mails.at(-1).text.match(/code is (\d{6})/)[1], mode: 'signin' })).status, 200);
     // The office can remove member accounts; office members and non-office callers cannot.
     assert.equal((await call('accounts/remove', bishop.cookie, { user: 'x' })).status, 403);
     const strangerId = (await call('accounts?search=stranger%40example.com', office.cookie)).data.data[0].id;

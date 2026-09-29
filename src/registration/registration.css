@@ -2106,7 +2106,7 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 16px;
-  font-size: clamp(24px, 2.4vw, 36px);
+  font-size: clamp(26px, 2.7vw, 40px);
   font-weight: 500;
   letter-spacing: -0.4px;
   color: #fff !important;
@@ -2133,8 +2133,9 @@ p {
   transform: translateX(6px);
   color: #fff;
 }
-/* The hero sits in a flex column; auto margins would shrink it to its content */
-.reg-account.reg-hero-page {
+/* These sit in a flex column; auto margins would shrink them to their content */
+.reg-account.signin,
+.reg-account.signup {
   width: 100%;
   margin: 0;
 }

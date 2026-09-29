@@ -369,6 +369,8 @@ export default function RegistrationApp({
   async function logout() {
     await run(async () => {
       await api.signOut(office);
+      // Members land back on the public front page; the office returns to its gate.
+      if (!office) { location.assign(`${base}/`); return; }
       setSigninOpen(false);
       setActor(null);
       setState(null);
@@ -468,9 +470,14 @@ export default function RegistrationApp({
       )}
       {hero ? (
         <section className="reg-account signin reg-hero-page">
-          <a className="reg-primary reg-signin-button reg-hero-signin" href={`${base}/signup/#signin`}>
+          <button className="reg-primary reg-signin-button reg-hero-signin" onClick={() => setSigninOpen("signin")}>
             Sign in
-          </a>
+          </button>
+          {signinOpen && (
+            <Dialog title="Sign in" onClose={() => setSigninOpen(false)}>
+              <AccountForm mode="signin" run={run} busy={busy} onActor={() => location.assign(`${base}/signup/`)} />
+            </Dialog>
+          )}
           <button className="reg-theme-toggle" onClick={toggleTheme} aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}>
             {theme === "dark" ? "☀" : "☾"}
           </button>
@@ -484,7 +491,7 @@ export default function RegistrationApp({
             Kuriake Castle
           </h1>
           <a className="reg-enter" href={`${base}/directory/`}>
-            <span className="reg-shimmer">Click here to view the full Pastoral directory</span>
+            <span className="reg-shimmer">View the full Pastoral directory</span>
             <span className="reg-enter-arrow" aria-hidden="true">→</span>
           </a>
         </section>
