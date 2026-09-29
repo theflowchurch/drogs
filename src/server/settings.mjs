@@ -39,7 +39,7 @@ export async function applySettings(config, pool) {
 }
 // One-time first configuration without host access: the SHA-256 of a secret
 // held offline is committed here; the secret is presented once, then burned.
-export const BOOTSTRAP_TOKEN_SHA256 = 'd6628cecae38c264726e29962ffb0cf1d591c645bd924e5896f9dff029c8bbf8';
+export const BOOTSTRAP_TOKEN_SHA256 = ''; // burned after first use; tests supply one via BOOTSTRAP_TOKEN_SHA256
 export async function bootstrapSettings(config, pool, body) {
   const expected = config.sourceEnv?.BOOTSTRAP_TOKEN_SHA256 || BOOTSTRAP_TOKEN_SHA256;
   if (!expected) throw new HttpError(404, 'Not found.');
