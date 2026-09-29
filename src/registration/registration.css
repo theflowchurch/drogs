@@ -2143,7 +2143,7 @@ p {
   min-height: calc(100svh - 90px);
   display: grid;
   grid-template-rows: auto auto auto;
-  align-content: start;
+  align-content: center;
   gap: 22px;
   padding: 44px max(24px, 4vw) 48px;
   background: var(--bg);
@@ -2163,7 +2163,7 @@ p {
 }
 .reg-doors-search {
   width: 100%;
-  max-width: 760px;
+  max-width: 875px;
   margin: 0 auto;
   padding: 16px 20px;
   font-size: 16px;
@@ -2174,11 +2174,10 @@ p {
 .reg-doors-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 22px;
   width: 100%;
-  max-width: 760px;
+  max-width: 875px;
   margin: 0 auto;
-  align-self: start;
 }
 /* Half-size glass doors so the castle shows through; a light sweep runs round the edge */
 .reg-door {
@@ -2187,8 +2186,8 @@ p {
   align-content: center;
   justify-items: center;
   gap: 6px;
-  min-height: 190px;
-  padding: 28px 20px;
+  min-height: 220px;
+  padding: 32px 22px;
   border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.38);
@@ -2219,14 +2218,14 @@ p {
   box-shadow: 0 18px 40px rgba(10, 26, 58, 0.18);
 }
 .reg-door span {
-  font-size: clamp(18px, 2.5vw, 36px);
+  font-size: clamp(21px, 2.9vw, 41px);
   font-weight: 800;
   letter-spacing: -1px;
   line-height: 1;
   color: var(--ink);
 }
 .reg-door strong {
-  font-size: clamp(24px, 3.5vw, 52px);
+  font-size: clamp(28px, 4vw, 60px);
   line-height: 1;
   letter-spacing: -1.5px;
   color: var(--teal);
@@ -2247,7 +2246,7 @@ p {
     grid-template-columns: 1fr;
   }
   .reg-door {
-    min-height: 140px;
+    min-height: 160px;
   }
 }
 
@@ -2301,7 +2300,7 @@ p {
   background-color: var(--bg);
   background-size: cover;
   background-position: center;
-  opacity: 0.18;
+  opacity: 0.38;
   pointer-events: none;
 }
 .reg-doors,
@@ -2362,7 +2361,7 @@ p {
   border-color: var(--line);
 }
 :root[data-theme="dark"] .reg-app-bg {
-  opacity: 0.12;
+  opacity: 0.3;
 }
 /* API docs page */
 .reg-docs {
