@@ -114,7 +114,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (path === '/api/registration/keys/revoke' && method === 'POST') return json(await keys.revoke(actor, (await jsonBody(request)).id));
       if (path === '/api/registration/snapshot' && method === 'GET') {
         const state = await transaction(pool, conn => readState(conn));
-        const view = visibleState(state, actor, references);
+        const view = visibleState(state, actor, references, people);
         if (!actor.office) {
           // Payment evidence is available only to its owner and the office.
           view.registrations = view.registrations.map(r => r.userId === actor.id ? r : { ...r, proof: undefined });

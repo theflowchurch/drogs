@@ -53,6 +53,7 @@ export function validateProfile(p, email, { draft = false } = {}) {
     organization: p.organization || "",
     photo: p.photo || "",
     bishopId: p.bishopId || "",
+    referenceId: /^[BP]\d+$/.test(String(p.referenceId || "")) ? p.referenceId : "",
     bishopFirstName: String(p.bishopFirstName || "").trim(),
     bishopLastName: String(p.bishopLastName || "").trim(),
   };
@@ -509,6 +510,15 @@ export function applyAction(
     r.nonrefundableAt = now;
     r.paymentSubmittedAt = now;
     r.paymentReviewedAt = now;
+  } else if (action === "choosePhoto") {
+    office();
+    const r = registration();
+    if (!r || r.status === "draft") throw Error("Select a submitted registration.");
+    if (!["upload", "reference"].includes(payload.source))
+      throw Error("Choose the uploaded photo or the existing one.");
+    if (payload.source === "reference" && !r.data.referenceId)
+      throw Error("This registration is not linked to an existing record.");
+    r.displayPhoto = payload.source;
   } else if (action === "reviewPayment") {
     office();
     const r = registration();
@@ -557,7 +567,33 @@ export function directoryFor(state, references) {
     });
   return records.sort((a, b) => a.name.localeCompare(b.name));
 }
-export function visibleState(state, actor, references) {
+export function publicRoll(state, people, year = state.year) {
+  const byId = new Map(people.map((p) => [p.id, p]));
+  return state.registrations
+    .filter((r) => r.year === year && r.status === "confirmed")
+    .map((r) => {
+      const ref = byId.get(r.data.referenceId) || null;
+      return {
+        id: `u:${r.userId}`,
+        role: r.data.role,
+        name: r.data.name,
+        title: ref?.title || (r.data.role === "bishop" ? "Bishop" : "Pastor"),
+        organization: r.data.organization,
+        denomination: r.data.denomination || r.data.church || ref?.denomination || "",
+        denominationLogo: ref?.denominationLogo || "",
+        city: r.data.city,
+        country: r.data.country,
+        branch: ref?.branch || "",
+        bishop: ref?.bishop || "",
+        // The office may prefer the existing portrait over the new upload.
+        photo: r.displayPhoto === "reference" && ref?.image ? "" : r.data.photo,
+        image: r.displayPhoto === "reference" ? ref?.image || "" : "",
+        referenceId: r.data.referenceId || "",
+      };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+export function visibleState(state, actor, references, people = references) {
   // Unclaimed pastors with no bishop yet are shown to every approved bishop so
   // the right one can claim them.
   const scope = (r) =>
@@ -578,6 +614,7 @@ export function visibleState(state, actor, references) {
     ),
     audit: state.audit.filter((r) => actor.office || r.actor === actor.id),
     directory: directoryFor(state, references),
+    roll: publicRoll(state, people),
   };
 }
 export const samePhone = (a, b) => {
@@ -633,6 +670,9 @@ export function directoryPeople(state, references, year = state.year) {
   for (const p of state.profiles)
     if (p.referenceId && byUser.has(p.id))
       registrations.set(p.referenceId, byUser.get(p.id));
+  for (const r of submitted)
+    if (r.data.referenceId && !registrations.has(r.data.referenceId))
+      registrations.set(r.data.referenceId, r);
   for (const row of rows)
     if (row.referenceId && row.pastorId && byUser.has(row.pastorId))
       registrations.set(row.referenceId, byUser.get(row.pastorId));

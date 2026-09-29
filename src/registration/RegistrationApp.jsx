@@ -245,6 +245,14 @@ export default function RegistrationApp({
     }
   }, [actor, refresh, gated, office]);
   useEffect(() => {
+    // The browse-only directory needs no account: the roll is public to anyone past the code.
+    if (browse && gate && !actor && !state)
+      api
+        .snapshot({ id: "browse", email: "", office: false })
+        .then(setState)
+        .catch((e) => setError(e.message));
+  }, [browse, gate, actor, state]);
+  useEffect(() => {
     if (!actor) return;
     const update = () => refresh().catch((e) => setError(e.message));
     window.addEventListener("storage", update);
@@ -311,6 +319,7 @@ export default function RegistrationApp({
   const nav = office
     ? [
         "Directory",
+        "Original data",
         "Unclaimed",
         "Bishop approvals",
         "Payments",
@@ -424,9 +433,10 @@ export default function RegistrationApp({
               </button>
             </div>
             <div className="reg-side-note">
-              <b>Every bishop and pastor</b>
+              <b>Roll of Good Standing</b>
               <p>
-                To update your own information, <a href={`${base}/`}>register</a>.
+                Everyone who has registered this year. To be listed,{" "}
+                <a href={`${base}/signup/`}>register</a>.
               </p>
             </div>
           </aside>
@@ -435,10 +445,10 @@ export default function RegistrationApp({
               <div>
                 <span className="reg-eyebrow">Kuriake Castle</span>
                 <h1>{directoryHeading(directoryRole)}</h1>
-                <p>Every bishop and pastor in Kuriake Castle.</p>
+                <p>Bishops and pastors registered this year.</p>
               </div>
             </div>
-            <MemberDirectory role={directoryRole} setRole={setDirectoryRole} />
+            <MemberDirectory role={directoryRole} setRole={setDirectoryRole} roll={state?.roll || []} />
           </main>
         </div>
       ) : !actor && (!office || !api.live) ? (
@@ -529,14 +539,20 @@ export default function RegistrationApp({
                         {office ? "KURIAKE CASTLE / OFFICE" : "KURIAKE CASTLE / YOUR MINISTRY"}
                       </span>
                       <h1>
-                        {tab === "Directory" ? directoryHeading(directoryRole) : tab}
+                        {tab === "Directory"
+                          ? directoryHeading(directoryRole)
+                          : tab === "Original data"
+                            ? `Original data · ${directoryRole === "bishop" ? "Bishops" : "Pastors"}`
+                            : tab}
                       </h1>
                       <p>
                         {
                           {
                             Directory: office
-                              ? "Every bishop and pastor in Kuriake Castle. Green: the bishop has registered, or the pastor has been claimed by their bishop this cycle. Red: not yet."
-                              : "Every bishop and pastor in Kuriake Castle.",
+                              ? "Everyone registered this year, with their details. This is what the public roll counts."
+                              : "Bishops and pastors registered this year.",
+                            "Original data":
+                              "The information Kuriake Castle held before this year’s registration. Green: the bishop has registered, or the pastor has been claimed by their bishop. Red: not yet.",
                             Unclaimed:
                               "Registrations waiting for a bishop to confirm their place.",
                             "Bishop approvals":
@@ -566,13 +582,26 @@ export default function RegistrationApp({
                         year={Number(year)}
                         role={directoryRole}
                         setRole={setDirectoryRole}
+                        perform={perform}
+                        mode="registered"
                       />
                     ) : (
                       <MemberDirectory
                         role={directoryRole}
                         setRole={setDirectoryRole}
+                        roll={state.roll || []}
                       />
                     ))}
+                  {tab === "Original data" && (
+                    <Directory
+                      state={state}
+                      year={Number(year)}
+                      role={directoryRole}
+                      setRole={setDirectoryRole}
+                      perform={perform}
+                      mode="original"
+                    />
+                  )}
                   {tab === "Unclaimed" && (
                     <ReviewQueue
                       records={scoped.filter((r) => r.status === "unclaimed")}
@@ -1021,6 +1050,7 @@ function RegistrationForm({
         organization: "",
         photo: "",
         bishopId: "",
+        referenceId: "",
         bishopFirstName: "",
         bishopLastName: "",
       },
@@ -1030,6 +1060,32 @@ function RegistrationForm({
     [review, setReview] = useState(false),
     [accurate, setAccurate] = useState(false),
     [fileBusy, setFileBusy] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  // Existing records with this name; the registrant confirms from the photo and
+  // the form is pre-filled with what Kuriake Castle already holds.
+  const candidates = useMemo(() => {
+    if (data.referenceId || dismissed || !data.firstName || !data.lastName) return [];
+    return referenceMatches(index, { name: data.name, email: data.email, phone: data.phone }, data.role)
+      .slice(0, 3)
+      .map((m) => m.reference);
+  }, [data.firstName, data.lastName, data.email, data.phone, data.role, data.referenceId, dismissed]);
+  const adopt = (ref) =>
+    setData((d) => {
+      const next = { ...d, referenceId: ref.id, photoConfirmed: false };
+      if (!d.phone && ref.phone) next.phone = ref.phone;
+      if (!d.country && ref.country) next.country = ref.country;
+      if (!d.city && ref.city) next.city = ref.city;
+      if (!d.organization && ORGANIZATIONS.includes(ref.organization)) next.organization = ref.organization;
+      // Older records shout their denomination in capitals; match it to the list by normalised name.
+      const listed = (DENOMINATIONS[next.organization] || []).find((d) => normalName(d) === normalName(ref.denomination));
+      if (!next.denomination && listed) next.denomination = listed;
+      if (d.role === "pastor" && ref.bishop && !d.bishopFirstName && !d.bishopLastName) {
+        const parts = ref.bishop.trim().split(/\s+/);
+        next.bishopFirstName = parts.slice(0, -1).join(" ") || parts[0];
+        next.bishopLastName = parts.length > 1 ? parts.at(-1) : "";
+      }
+      return next;
+    });
   const set = (key, value) =>
     setData((d) => {
       const next = { ...d, [key]: value, photoConfirmed: false };
@@ -1200,6 +1256,42 @@ function RegistrationForm({
                     autoComplete="family-name"
                   />
                 </Field>
+                {(candidates.length > 0 || data.referenceId) && (
+                  <div className="reg-is-this-you reg-field wide">
+                    {data.referenceId ? (
+                      <p>
+                        Linked to your existing record. Check the details below are still
+                        correct.{" "}
+                        <button type="button" className="reg-text" onClick={() => set("referenceId", "")}>
+                          Not me
+                        </button>
+                      </p>
+                    ) : (
+                      <>
+                        <p>Is this you? We already have a record with this name.</p>
+                        <div className="reg-candidates">
+                          {candidates.map((ref) => (
+                            <div key={ref.id} className="reg-candidate">
+                              <Portrait person={ref} />
+                              <div>
+                                <b>{ref.name}</b>
+                                <small>
+                                  {[ref.denomination, ref.city, ref.country].filter(Boolean).join(" · ")}
+                                </small>
+                                <button type="button" className="reg-secondary" onClick={() => adopt(ref)}>
+                                  Yes, this is me
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <button type="button" className="reg-text" onClick={() => setDismissed(true)}>
+                          None of these are me
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
                 <Field label="Email address">
                   <input
                     type="email"
@@ -1890,7 +1982,7 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
 }
 const directoryHeading = (role) =>
   `Directory · ${role === "bishop" ? "Bishops" : "Pastors"} Roll of Good Standing`;
-function Directory({ state, year, role, setRole }) {
+function Directory({ state, year, role, setRole, perform, mode = "original" }) {
   const [filter, setFilter] = useState({
       q: "",
       org: "",
@@ -1899,10 +1991,13 @@ function Directory({ state, year, role, setRole }) {
     }),
     [limit, setLimit] = useState(PAGE),
     [selected, setSelected] = useState(null);
-  const all = useMemo(
-    () => directoryPeople(state, people, year),
-    [state, year],
-  );
+  const all = useMemo(() => {
+    const everyone = directoryPeople(state, people, year);
+    // The registered view is what the public roll counts: people confirmed this year.
+    return mode === "registered"
+      ? everyone.filter((p) => p.registration?.status === "confirmed")
+      : everyone;
+  }, [state, year, mode]);
   const scope = useMemo(
     () => all.filter((p) => personMatches(p, filter)),
     [all, filter],
@@ -1999,19 +2094,50 @@ function Directory({ state, year, role, setRole }) {
             person={selected}
             under={linkedPastors(selected)}
             onOpen={setSelected}
+            perform={perform}
           />
         </Dialog>
       )}
     </>
   );
 }
-function RecordDetails({ person: p, under = [], onOpen }) {
+function RecordDetails({ person: p, under = [], onOpen, perform }) {
   const changed = (field) =>
     p.recorded && p.recorded[field] && p.recorded[field] !== p[field];
+  const r = p.registration;
+  const canChoose = Boolean(r && r.data?.photo && p.image && perform);
+  const showing = r?.displayPhoto === "reference" ? "reference" : "upload";
   return (
     <>
       <div className="reg-record-hero centred">
         <Portrait person={p} className="reg-record-photo large" />
+        {canChoose && (
+          <div className="reg-photo-choice">
+            <p>Which photo should the roll show?</p>
+            {[
+              ["upload", "New upload", { photo: r.data.photo, name: p.name }],
+              ["reference", "Existing photo", { image: p.image, name: p.name }],
+            ].map(([source, label, person]) => (
+              <button
+                key={source}
+                className={showing === source ? "active" : ""}
+                onClick={() =>
+                  perform(
+                    "choosePhoto",
+                    { userId: r.userId, source },
+                    `The roll now shows the ${label.toLowerCase()}.`,
+                  )
+                }
+              >
+                <Portrait person={person} />
+                <span>
+                  {label}
+                  {showing === source ? " · showing" : ""}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
         <div>
           <span className="reg-eyebrow">{(p.title || p.role).toUpperCase()}</span>
           <h2>{p.name}</h2>
@@ -2069,22 +2195,22 @@ function RecordDetails({ person: p, under = [], onOpen }) {
 // denomination, branch and who oversees whom. Contact details and dates of
 // birth are removed before the roster reaches the browser.
 const publicPeople = people.map(({ email, phone, ...rest }) => rest);
-const bishopPastors = (bishop) => {
-  const named = publicPeople.filter(
+const bishopPastors = (bishop, from = publicPeople) => {
+  const named = from.filter(
     (p) => p.role === "pastor" && p.bishop && normalName(p.bishop) === normalName(bishop.name),
   );
   if (named.length) return { list: named, heading: "Pastors under this bishop" };
   if (!bishop.denomination) return { list: [], heading: "" };
   return {
-    list: publicPeople.filter(
+    list: from.filter(
       (p) => p.role === "pastor" && p.denomination === bishop.denomination,
     ),
     heading: `Pastors in ${bishop.denomination}`,
   };
 };
-function PastorsUnder({ bishop, extra = [], onOpen, dots = false }) {
+function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
   const [limit, setLimit] = useState(24);
-  const named = bishopPastors(bishop);
+  const named = bishopPastors(bishop, from);
   const seen = new Set(extra.map((q) => q.id));
   const list = [...extra, ...named.list.filter((q) => !seen.has(q.id))];
   const heading = extra.length
@@ -2121,7 +2247,7 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false }) {
     </section>
   );
 }
-function PublicRecord({ person: p, onOpen }) {
+function PublicRecord({ person: p, onOpen, from }) {
   return (
     <>
       <div className="reg-record-hero">
@@ -2151,11 +2277,11 @@ function PublicRecord({ person: p, onOpen }) {
           )}
         </div>
       </div>
-      {p.role === "bishop" && <PastorsUnder bishop={p} onOpen={onOpen} />}
+      {p.role === "bishop" && <PastorsUnder bishop={p} onOpen={onOpen} from={from} />}
     </>
   );
 }
-function MemberDirectory({ role, setRole }) {
+function MemberDirectory({ role, setRole, roll = [] }) {
   const [filter, setFilter] = useState({
       q: "",
       org: "",
@@ -2165,8 +2291,8 @@ function MemberDirectory({ role, setRole }) {
     [limit, setLimit] = useState(PAGE),
     [selected, setSelected] = useState(null);
   const scope = useMemo(
-    () => publicPeople.filter((p) => personMatches(p, filter)),
-    [filter],
+    () => roll.filter((p) => personMatches(p, filter)),
+    [roll, filter],
   );
   const list = useMemo(
     () => scope.filter((p) => p.role === role),
@@ -2174,8 +2300,8 @@ function MemberDirectory({ role, setRole }) {
   );
   useEffect(() => setLimit(PAGE), [filter, role]);
   const options = useMemo(
-    () => filterOptions(publicPeople, filter.org),
-    [filter.org],
+    () => filterOptions(roll, filter.org),
+    [roll, filter.org],
   );
   return (
     <>
@@ -2183,7 +2309,6 @@ function MemberDirectory({ role, setRole }) {
         {[
           ["Bishops", scope.filter((p) => p.role === "bishop").length],
           ["Pastors", scope.filter((p) => p.role === "pastor").length],
-          ["Bishops and pastors", scope.length],
         ].map(([label, n]) => (
           <div key={label}>
             <span>{label}</span>
@@ -2222,13 +2347,15 @@ function MemberDirectory({ role, setRole }) {
           dots={false}
         />
       ) : (
-        <Empty title="No one matches this search">
-          Try another name, denomination or country.
+        <Empty title={roll.length ? "No one matches this search" : "The roll is filling up"}>
+          {roll.length
+            ? "Try another name, denomination or country."
+            : "Bishops and pastors appear here as they register this year."}
         </Empty>
       )}
       {selected && (
         <Dialog title={selected.name} onClose={() => setSelected(null)}>
-          <PublicRecord person={selected} onOpen={setSelected} />
+          <PublicRecord person={selected} onOpen={setSelected} from={roll} />
         </Dialog>
       )}
     </>

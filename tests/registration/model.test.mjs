@@ -10,6 +10,7 @@ import {
   referenceIndex,
   referenceMatches,
   directoryPeople,
+  publicRoll,
 } from "../../src/registration/model.mjs";
 const bishop = { id: "b1", email: "bishop@example.com" },
   other = { id: "b2", email: "other@example.com" },
@@ -405,4 +406,23 @@ test("a Paystack payment is recorded only once, only when enough was paid", () =
       }),
     /already/,
   );
+});
+
+test("the public roll lists only confirmed people and the office can pick the photo", () => {
+  const references = [
+    { id: "B1", role: "bishop", name: "Ama Bishop", title: "Bishop", organization: "First Love", denomination: "First Love Church", city: "Accra", country: "Ghana", image: "assets/bishops/001.jpg", email: "old@example.com", phone: "+233200000001" },
+  ];
+  let s = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Ama Bishop"), referenceId: "B1" });
+  assert.equal(publicRoll(s, references).length, 0, "a pending bishop is not on the roll");
+  s = applyAction(s, office, "approveBishop", { userId: bishop.id, referenceId: "B1" });
+  const roll = publicRoll(s, references);
+  assert.equal(roll.length, 1);
+  assert.equal(roll[0].photo, profile(bishop).photo, "the new upload shows by default");
+  assert.equal(roll[0].email, undefined, "no contact details on the roll");
+  assert.equal(directoryPeople(s, references).find((p) => p.id === "B1").updated, true);
+  assert.throws(() => applyAction(s, bishop, "choosePhoto", { userId: bishop.id, source: "reference" }), /Office/);
+  s = applyAction(s, office, "choosePhoto", { userId: bishop.id, source: "reference" });
+  const chosen = publicRoll(s, references)[0];
+  assert.equal(chosen.image, "assets/bishops/001.jpg");
+  assert.equal(chosen.photo, "");
 });

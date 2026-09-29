@@ -127,7 +127,7 @@ export async function signOut(office = false, forget = true) {
 }
 export async function snapshot(actor) {
   if (mysqlBackend) return server("snapshot");
-  if (!live) return visibleState(read(), actor, references);
+  if (!live) return visibleState(read(), actor, references, people);
   const { data, error } = await supabase().rpc("registration_snapshot");
   check(error);
   return data;

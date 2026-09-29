@@ -18,6 +18,8 @@ export function canReadMedia(state, actor, media) {
   if (media.owner_id === actor.id || actor.office) return true;
   // A supervising bishop may see submitted portraits, but never someone else's receipt.
   if (media.kind !== 'portrait') return false;
+  // Portraits of people confirmed on the roll are part of the directory every member sees.
+  if (state.registrations.some(r => r.status === 'confirmed' && r.data.photo === media.object_key)) return true;
   const profile = state.profiles.find(p => p.id === actor.id && p.role === 'bishop' && p.bishopApproved);
   return Boolean(profile && state.registrations.some(r => r.status !== 'draft' && r.data.role === 'pastor' &&
     r.data.photo === media.object_key && r.data.bishopId === (profile.referenceId || profile.id)));
