@@ -54,7 +54,7 @@ with sync_playwright() as p:
   signout();open_account('office@example.com',True)
   expect(page.get_by_text('Existing records',exact=True)).to_be_visible()
   assert page.locator('.reg-dot.stale').count()>0 and page.locator('.reg-dot.updated').count()==0
-  page.get_by_role('button',name='Bishop approvals',exact=True).click();page.get_by_role('button',name='Demo Bishop').click()
+  page.get_by_role('button',name='Approvals',exact=True).click();page.get_by_role('button',name='Demo Bishop').click()
   page.get_by_label('Match to existing bishop reference').select_option('B1');page.get_by_label('I have verified this person').check();page.get_by_role('button',name='Confirm bishop').click()
   expect(page.get_by_text('No bishop registrations awaiting confirmation')).to_be_visible()
   signout();open_account('bishop@example.com');page.get_by_role('button',name='My pastors',exact=True).click()

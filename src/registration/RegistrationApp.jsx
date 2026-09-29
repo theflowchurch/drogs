@@ -349,7 +349,7 @@ export default function RegistrationApp({
         "Directory",
         "Original data",
         "Unclaimed",
-        "Bishop approvals",
+        "Approvals",
         "Payments",
         "Pastor lists",
         "History",
@@ -482,8 +482,8 @@ export default function RegistrationApp({
             Kuriake Castle
           </h1>
           <a className="reg-enter" href={`${base}/directory/`}>
-            Enter the castle
-            <small>to view the directory</small>
+            <span className="reg-shimmer">Enter the castle to view the directory</span>
+            <span className="reg-enter-arrow" aria-hidden="true">→</span>
           </a>
         </section>
       ) : !gate ? (
@@ -613,8 +613,8 @@ export default function RegistrationApp({
                               "The information Kuriake Castle held before this year’s registration. Green: the bishop has registered, or the pastor has been claimed by their bishop. Red: not yet.",
                             Unclaimed:
                               "Registrations waiting for a bishop to confirm their place.",
-                            "Bishop approvals":
-                              "Verify each bishop before they can confirm pastors.",
+                            Approvals:
+                              "Verify each bishop before they can confirm pastors, and see everyone approved so far.",
                             "My pastors":
                               "Submit and maintain the names of the pastors under your oversight.",
                             "Pastor lists":
@@ -668,11 +668,10 @@ export default function RegistrationApp({
                       canEdit={Number(year) === state.year}
                     />
                   )}
-                  {tab === "Bishop approvals" && (
+                  {tab === "Approvals" && (
                     <BishopApprovals
-                      records={scoped.filter(
-                        (r) => r.data.role === "bishop" && ["pending", "denied"].includes(r.status),
-                      )}
+                      records={scoped}
+                      directory={state.directory || []}
                       perform={perform}
                       canEdit={Number(year) === state.year}
                     />
@@ -2741,24 +2740,50 @@ const bishopSuggestionsFor = (r) =>
     .filter((b) => namesAlike(b.name, r.data.name))
     .sort((a, b) => Number(b.id === r.data.referenceId) - Number(a.id === r.data.referenceId))
     .slice(0, 4);
-function BishopApprovals({ records, perform, canEdit }) {
+// Bishops waiting on the office, plus everyone (bishops and pastors) already
+// approved this year. Approved rows open read-only.
+function BishopApprovals({ records, directory = [], perform, canEdit }) {
   const [selectedId, setSelectedId] = useState(null),
     [ref, setRef] = useState(""),
     [confirmed, setConfirmed] = useState(false),
     [note, setNote] = useState(""),
-    [view, setView] = useState("awaiting");
-  const bucket = (r) => (r.status === "denied" ? "denied" : r.resubmit ? "resubmit" : "awaiting");
-  const shown = records.filter((r) => bucket(r) === view);
+    [view, setView] = useState("awaiting"),
+    [q, setQ] = useState("");
+  const bucket = (r) =>
+    r.status === "confirmed"
+      ? "approved"
+      : r.data.role !== "bishop"
+        ? ""
+        : r.status === "denied"
+          ? "denied"
+          : r.resubmit
+            ? "resubmit"
+            : "awaiting";
+  const term = normalName(q);
+  const shown = records.filter(
+    (r) =>
+      bucket(r) === view &&
+      (!term || normalName(`${r.data.name} ${r.data.email} ${r.data.denomination || ""}`).includes(term)),
+  );
   const selected = records.find((r) => r.userId === selectedId);
+  const reviewing = selected && selected.status !== "confirmed";
   return (
     <>
-      <div className="reg-switch" role="group" aria-label="Bishop review">
-        {[["awaiting", "Awaiting confirmation"], ["resubmit", "Needs resubmission"], ["denied", "Denied"]].map(([value, label]) => (
+      <div className="reg-switch" role="group" aria-label="Approvals">
+        {[["awaiting", "Awaiting confirmation"], ["resubmit", "Needs resubmission"], ["denied", "Denied"], ["approved", "Approved"]].map(([value, label]) => (
           <button key={value} aria-pressed={view === value} className={view === value ? "active" : ""} onClick={() => setView(value)}>
             {label} <strong>{records.filter((r) => bucket(r) === value).length}</strong>
           </button>
         ))}
       </div>
+      <input
+        type="search"
+        className="reg-doors-search"
+        aria-label="Search approvals"
+        placeholder="Search by name, email or denomination"
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+      />
       {shown.length ? (
         <div className="reg-queue">
           {shown.map((r) => (
@@ -2776,20 +2801,27 @@ function BishopApprovals({ records, perform, canEdit }) {
               <div>
                 <h3>{r.data.name}</h3>
                 <p>
-                  {r.data.organization} · {r.data.email}
+                  {titleFor(r.data)} · {r.data.organization} · {r.data.email}
                 </p>
               </div>
-              <Badge status={r.status === "denied" ? "denied" : "pending"}>{r.resubmit ? "Asked to resubmit" : null}</Badge>
-              <span>Review →</span>
+              <Badge status={r.status === "confirmed" ? "confirmed" : r.status === "denied" ? "denied" : "pending"}>{r.resubmit ? "Asked to resubmit" : null}</Badge>
+              <span>{r.status === "confirmed" ? "View →" : "Review →"}</span>
             </button>
           ))}
         </div>
       ) : (
-        <Empty title={view === "awaiting" ? "No bishop registrations awaiting confirmation" : view === "denied" ? "No denied registrations" : "Nobody is waiting to resubmit"}>
-          Bishops appear here as soon as they submit; they can add their pastors in the meantime.
+        <Empty title={term ? "Nobody matches that search" : view === "awaiting" ? "No bishop registrations awaiting confirmation" : view === "denied" ? "No denied registrations" : view === "approved" ? "Nobody has been approved yet" : "Nobody is waiting to resubmit"}>
+          {view === "approved"
+            ? "Bishops appear here once the office confirms them; pastors once their bishop confirms them."
+            : "Bishops appear here as soon as they submit; they can add their pastors in the meantime."}
         </Empty>
       )}
-      {selected && (
+      {selected && !reviewing && (
+        <Dialog title={`${titleFor(selected.data)} ${selected.data.name}`} onClose={() => setSelectedId(null)}>
+          <ProfileDetails record={selected} directory={directory} />
+        </Dialog>
+      )}
+      {reviewing && (
         <Dialog
           title="Verify bishop account"
           onClose={() => setSelectedId(null)}

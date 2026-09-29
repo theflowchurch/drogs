@@ -4,20 +4,17 @@ import * as api from './client';
 // Office-managed integration settings. Saved values are never shown back; the
 // office sees only whether each one is set.
 export default function Settings({ run }) {
-  const [settings, setSettings] = useState([]), [values, setValues] = useState({}), [saved, setSaved] = useState(false), [admins, setAdmins] = useState([]), [newAdmin, setNewAdmin] = useState('');
-  const reload = async () => { const r = await api.listSettings(); setSettings(r.settings); setAdmins(r.admins || []); };
-  const saveAdmins = (list) => run(async () => { const r = await api.saveSettings({ ADMIN_EMAILS: list.join(',') }); setSettings(r.settings); setAdmins(r.admins || []); setNewAdmin(''); }, 'Office members updated.');
+  const [settings, setSettings] = useState([]), [values, setValues] = useState({}), [saved, setSaved] = useState(false), [copied, setCopied] = useState('');
+  const reload = async () => setSettings((await api.listSettings()).settings);
   useEffect(() => { run(reload); }, []);
   const changed = Object.entries(values).filter(([, v]) => v !== undefined);
+  const origin = typeof window === 'undefined' ? 'https://kuriakecastle.org' : window.location.origin;
+  const links = [['Public roll', '/directory/'], ['Sign in', '/signup/#signin'], ['Sign up as a bishop', '/signup/bishop/'], ['Sign up as a pastor', '/signup/pastor/'], ['Office sign in', '/admin/'], ['API documentation', '/docs/']];
   return <>
   <section className="reg-card reg-settings">
-    <h2>Office members</h2>
-    <p>These emails can sign in to /admin/ (with the access code and an emailed code). Add or remove people here.</p>
-    <ul className="reg-admin-list">{admins.map(email => <li key={email}><span>{email}</span><button type="button" className="reg-text danger" disabled={admins.length < 2} onClick={() => saveAdmins(admins.filter(e => e !== email))}>Remove</button></li>)}</ul>
-    <form className="reg-admin-add" onSubmit={e => { e.preventDefault(); const v = newAdmin.trim().toLowerCase(); if (v && !admins.includes(v)) saveAdmins([...admins, v]); }}>
-      <input type="email" required aria-label="New office email" placeholder="name@example.com" value={newAdmin} onChange={e => setNewAdmin(e.target.value)} />
-      <button className="reg-primary">Add office member</button>
-    </form>
+    <h2>Links to share</h2>
+    <p>Send people the right door. Office access itself is granted under Accounts; anyone you add there signs in at the office link.</p>
+    <ul className="reg-admin-list">{links.map(([label, path]) => <li key={path}><span><b>{label}</b><br /><a href={origin + path}>{origin + path}</a></span><button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button></li>)}</ul>
   </section>
   <form className="reg-card reg-settings" onSubmit={event => {
     event.preventDefault();
@@ -27,7 +24,7 @@ export default function Settings({ run }) {
     }, 'Settings saved and in effect.');
   }}>
     <h2>Connected services</h2>
-    <p>Email delivery, payments, storage and access codes. Leave a field blank to keep its current value; type a single space to clear it.</p>
+    <p>Email delivery, payments, storage and access codes. Office members are managed under Accounts. Leave a field blank to keep its current value; type a single space to clear it.</p>
     {settings.filter(s => s.key !== 'ADMIN_EMAILS').map(s => <label className="reg-field" key={s.key}>
       <span>{s.label} <small className={`reg-badge ${s.set ? 'verified' : 'unclaimed'}`}>{s.set ? 'Set' : 'Not set'}</small></span>
       <input aria-label={s.label} type={/KEY|SECRET|TOKEN|CODE/.test(s.key) ? 'password' : 'text'} autoComplete="off"

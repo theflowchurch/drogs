@@ -208,6 +208,7 @@ export const issueKey = input => server('keys', input);
 export const revokeKey = id => server('keys/revoke', { id });
 
 export const accounts = (search = '', page = 1) => server(`accounts?search=${encodeURIComponent(search)}&page=${page}`);
+export const removeAccounts = (body) => server('accounts/remove', body);
 export const logins = (user, before = '') => server(`logins?user=${encodeURIComponent(user)}&before=${encodeURIComponent(before)}`);
 
 export const supportAvailable = mysqlBackend;

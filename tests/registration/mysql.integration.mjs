@@ -237,6 +237,14 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     for (let i = 0; i < 5; i++) await call('support', bishop.cookie, { message: 'Another report about the same thing.' });
     assert.equal((await call('support', bishop.cookie, { message: 'Another report about the same thing.' })).status, 429, 'reports are rate limited');
 
+    // The office can remove member accounts; office members and non-office callers cannot.
+    assert.equal((await call('accounts/remove', bishop.cookie, { user: 'x' })).status, 403);
+    const strangerId = (await call('accounts?search=stranger%40example.com', office.cookie)).data.data[0].id;
+    assert.equal((await call('accounts/remove', office.cookie, { user: strangerId })).data.removed, 1);
+    assert.equal((await call('accounts?search=stranger%40example.com', office.cookie)).data.total, 0);
+    assert.equal((await call('auth/me', stranger.cookie)).data, null, 'removed account is signed out');
+    const officeId = (await call('accounts?search=office%40example.com', office.cookie)).data.data[0].id;
+    assert.equal((await call('accounts/remove', office.cookie, { user: officeId })).data.removed, 0);
     if (process.env.TEST_BROWSER === '1') {
       const { default: next } = await import('next');
       config.origin = 'http://127.0.0.1:4208'; config.secure = false;

@@ -2103,26 +2103,40 @@ p {
   align-content: center;
 }
 .reg-enter {
-  display: inline-grid;
-  justify-items: center;
-  gap: 4px;
-  padding: 18px 40px;
-  border-radius: 999px;
-  background: var(--teal);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
   color: #fff !important;
-  font-size: 18px;
-  font-weight: 650;
   text-decoration: none;
-  animation: reg-glow 1.8s ease-in-out infinite;
 }
-.reg-enter small {
-  font-size: 12px;
-  font-weight: 400;
-  opacity: 0.85;
+/* Silver text with a white highlight sweeping across, like a loading shimmer */
+.reg-shimmer {
+  background-image: linear-gradient(90deg, #9aa3b2 0%, #9aa3b2 42%, #fff 50%, #9aa3b2 58%, #9aa3b2 100%);
+  background-size: 250% 100%;
+  background-position: 100% center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: reg-shimmer 2.6s linear infinite;
 }
-@keyframes reg-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(142, 213, 197, 0.55); transform: scale(1); }
-  50% { box-shadow: 0 0 0 18px rgba(142, 213, 197, 0); transform: scale(1.04); }
+@keyframes reg-shimmer {
+  to { background-position: 0% center; }
+}
+.reg-enter-arrow {
+  color: #c9d0dc;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+.reg-enter:hover .reg-enter-arrow {
+  transform: translateX(6px);
+  color: #fff;
+}
+/* The hero sits in a flex column; auto margins would shrink it to its content */
+.reg-account.reg-hero-page {
+  width: 100%;
+  margin: 0;
 }
 .reg-doors {
   min-height: calc(100svh - 90px);
@@ -2357,4 +2371,10 @@ p {
 /* DHMM's mark is white; light mode uses the black version, dark mode swaps back */
 :root[data-theme="dark"] img[src$="dhmm-logo-black.png"] {
   content: url("/assets/brand/dhmm-logo-white.png");
+}
+
+.reg-switch + .reg-doors-search {
+  display: block;
+  margin: 12px 0 16px;
+  max-width: none;
 }

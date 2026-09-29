@@ -25,3 +25,20 @@ export async function readLogins(pool, config, url) {
   const [rows] = await pool.execute(`SELECT CAST(l.id AS CHAR) AS id,l.user_id AS userId,u.email,l.logged_in_at AS loggedInAt FROM dr_logins l JOIN dr_users u ON u.id=l.user_id${filters.length ? ' WHERE '+filters.join(' AND ') : ''} ORDER BY l.id DESC LIMIT 51`, params);
   return { data: rows.slice(0,50).map(r => ({...r, loggedInAt: Number(r.loggedInAt)})), nextCursor: rows.length > 50 ? rows[49].id : null };
 }
+// Remove one member account, or every account that is not an office member.
+// Everything keyed to the user goes; roster rows that pointed at a removed
+// pastor become unclaimed again so the bishop's list stays intact.
+export async function removeAccounts(pool, config, actor, body) {
+  const { user, all } = body || {};
+  if (!all && (typeof user !== 'string' || !user || user.length > 36)) throw new HttpError(400, 'Which account?');
+  const params = all ? [] : [user];
+  const [rows] = await pool.execute(`SELECT id,email FROM dr_users${all ? '' : ' WHERE id=?'}`, params);
+  const ids = rows.filter(r => !config.admins.includes(r.email) && r.id !== actor.id).map(r => r.id);
+  if (!ids.length) return { removed: 0 };
+  const marks = ids.map(() => '?').join(',');
+  const run = sql => pool.execute(sql, ids);
+  await run(`UPDATE dr_rosters SET data=JSON_REMOVE(data,'$.pastorId') WHERE JSON_UNQUOTE(JSON_EXTRACT(data,'$.pastorId')) IN (${marks})`);
+  for (const [table, column] of [['dr_rosters', 'bishop_id'], ['dr_registrations', 'user_id'], ['dr_profiles', 'id'], ['dr_sessions', 'user_id'], ['dr_logins', 'user_id'], ['dr_account_activity', 'user_id'], ['dr_media', 'owner_id'], ['dr_users', 'id']])
+    await run(`DELETE FROM ${table} WHERE ${column} IN (${marks})`);
+  return { removed: ids.length };
+}

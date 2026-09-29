@@ -1,4 +1,4 @@
-import { readAccounts, readLogins } from './accounts.mjs';
+import { readAccounts, readLogins, removeAccounts } from './accounts.mjs';
 import { createKeyService } from './api-keys.mjs';
 import { createSupport } from './support.mjs';
 import { applySettings, bootstrapSettings, describeSettings, officeMembers, readSettings, writeSettings } from './settings.mjs';
@@ -109,6 +109,10 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (['/api/registration/accounts', '/api/registration/logins'].includes(path) && method === 'GET') {
         if (!actor.office) throw new HttpError(403, 'Office access required.');
         return json(await (path.endsWith('/accounts') ? readAccounts : readLogins)(pool, config, url));
+      }
+      if (path === '/api/registration/accounts/remove' && method === 'POST') {
+        if (!actor.office) throw new HttpError(403, 'Office access required.');
+        return json(await removeAccounts(pool, config, actor, await jsonBody(request)));
       }
       if (path === '/api/registration/support' && method === 'POST') {
         await rateLimit(pool, config, `support:${actor.id}`, 5, 600000);
