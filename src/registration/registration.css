@@ -2378,3 +2378,8 @@ p {
   margin: 12px 0 16px;
   max-width: none;
 }
+
+/* FLOW: black wordmark on light, red on dark */
+:root:not([data-theme="dark"]) img[src$="flow-logo.png"] {
+  content: url("/assets/brand/flow-logo-black.png");
+}
