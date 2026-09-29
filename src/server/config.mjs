@@ -19,18 +19,24 @@ export function configuration(env = process.env) {
     return value;
   };
   return {
+    // Kept so stored settings can be layered over the same environment later.
+    sourceEnv: env,
     origin: origin.origin, secure: origin.protocol === 'https:', secret: env.SESSION_SECRET, admins,
     siteCode: env.SITE_ACCESS_CODE, adminCode: env.ADMIN_ACCESS_CODE,
     db: { host: env.DB_HOST, port: port('DB_PORT', 3306), database: env.DB_NAME,
       user: env.DB_USER, password: env.DB_PASSWORD, charset: 'utf8mb4', timezone: 'Z',
       ...(env.DB_SSL === 'true' ? { ssl: { rejectUnauthorized: true, ...(env.DB_SSL_CA ? { ca: env.DB_SSL_CA.replace(/\\n/g, '\n') } : {}) } } : {}) },
-    smtp: { host: env.SMTP_HOST, port: port('SMTP_PORT', 587), secure: env.SMTP_SECURE === 'true',
+    // Resend, when a key is present, replaces whatever SMTP server the host was given.
+    smtp: env.RESEND_API_KEY?.trim()
+      ? { host: 'smtp.resend.com', port: 465, secure: true, auth: { user: 'resend', pass: env.RESEND_API_KEY.trim() }, connectionTimeout: 15000, socketTimeout: 20000 }
+      : { host: env.SMTP_HOST, port: port('SMTP_PORT', 587), secure: env.SMTP_SECURE === 'true',
       requireTLS: env.SMTP_SECURE !== 'true', auth: { user: env.SMTP_USER, pass: env.SMTP_PASSWORD },
       connectionTimeout: 15000, socketTimeout: 20000 },
     from: env.SMTP_FROM,
     // Optional: a Telegram heads-up alongside the office email for issue reports.
     // Optional: Paystack secret key enables card / mobile-money payments (public key is NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY).
     paystack: env.PAYSTACK_SECRET_KEY?.trim() || null,
+    paystackPublic: (env.PAYSTACK_PUBLIC_KEY || env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '').trim(),
     // Email one-time codes are off unless REQUIRE_EMAIL_CODE=true: members sign in with just their email.
     requireEmailCode: env.REQUIRE_EMAIL_CODE === 'true',
     telegram: env.TELEGRAM_BOT_TOKEN?.trim() && env.TELEGRAM_CHAT_ID?.trim()

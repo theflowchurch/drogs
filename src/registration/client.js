@@ -207,6 +207,9 @@ export const accounts = (search = '', page = 1) => server(`accounts?search=${enc
 export const logins = (user, before = '') => server(`logins?user=${encodeURIComponent(user)}&before=${encodeURIComponent(before)}`);
 
 export const supportAvailable = mysqlBackend;
+export const settingsAvailable = mysqlBackend;
+export const listSettings = () => server('settings');
+export const saveSettings = values => server('settings', { values });
 const SUPPORT_KEY = "drogs-registration-support";
 // In the demo nothing leaves the browser; the report is kept so the flow can be
 // checked end to end without pretending an email was sent.

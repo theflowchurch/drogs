@@ -6,6 +6,11 @@ import { readBody, createApi } from '../../src/server/api.mjs';
 import { prepareImage, canReadMedia } from '../../src/server/storage.mjs';
 import { sessionCookie } from '../../src/server/auth.mjs';
 const env = { DB_HOST: 'localhost', DB_NAME: 'db', DB_USER: 'user', DB_PASSWORD: 'test', APP_URL: 'https://drogs.dagministry.org', SESSION_SECRET: 'x'.repeat(64), ADMIN_EMAILS: 'office@example.com', SITE_ACCESS_CODE: '1234', ADMIN_ACCESS_CODE: 'admin-test-code', SMTP_HOST: 'smtp.example.com', SMTP_USER: 'user', SMTP_PASSWORD: 'test', SMTP_FROM: 'office@example.com', R2_ACCOUNT_ID: 'a'.repeat(32), R2_BUCKET: 'private', R2_ACCESS_KEY_ID: 'test', R2_SECRET_ACCESS_KEY: 'test' };
+test('a Resend key routes mail through smtp.resend.com', () => {
+  const config = configuration({ ...env, RESEND_API_KEY: 're_test' });
+  assert.equal(config.smtp.host, 'smtp.resend.com'); assert.equal(config.smtp.auth.user, 'resend'); assert.equal(config.smtp.auth.pass, 're_test');
+  assert.equal(configuration(env).smtp.host, 'smtp.example.com');
+});
 test('Hostinger configuration fails closed and session cookies are private', () => {
   assert.throws(() => configuration({}), /Missing server/);
   assert.throws(() => configuration({ ...env, SESSION_SECRET: 'weak' }), /SESSION_SECRET/);

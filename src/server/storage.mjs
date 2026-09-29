@@ -28,10 +28,10 @@ export async function assertOwnedMedia(conn, actor, path, kind) {
   if (!media || media.owner_id !== actor.id || media.kind !== kind) throw new HttpError(400, 'Upload your own image before continuing.');
 }
 export function createStorage({ config, pool, client, logger = console }) {
-  const s3 = client || new S3Client({ region: 'auto', endpoint: `https://${config.r2.account}.r2.cloudflarestorage.com`,
+  // Built per call so settings saved in /admin/ take effect without a restart.
+  const s3 = () => client || new S3Client({ region: 'auto', endpoint: `https://${config.r2.account}.r2.cloudflarestorage.com`,
     credentials: { accessKeyId: config.r2.accessKeyId, secretAccessKey: config.r2.secretAccessKey, ...(config.r2.sessionToken ? { sessionToken: config.r2.sessionToken } : {}) },
     requestChecksumCalculation: 'WHEN_REQUIRED', responseChecksumValidation: 'WHEN_REQUIRED' });
-  const Bucket = config.r2.bucket;
   return {
     async upload(actor, bytes, contentType, kind) {
       if (!['portrait', 'receipt'].includes(kind)) throw new HttpError(400, 'Invalid upload type.');
@@ -39,7 +39,7 @@ export function createStorage({ config, pool, client, logger = console }) {
       let body = await prepareImage(bytes, contentType);
       let Key = `${actor.id}/${kind}/${randomUUID()}.webp`;
       try {
-        await s3.send(new PutObjectCommand({ Bucket, Key, Body: body, ContentType: 'image/webp', CacheControl: 'private, max-age=300' }));
+        await s3().send(new PutObjectCommand({ Bucket: config.r2.bucket, Key, Body: body, ContentType: 'image/webp', CacheControl: 'private, max-age=300' }));
       } catch (error) {
         // ponytail: when object storage rejects us (wrong credentials, missing
         // bucket, outage) the image goes into MySQL instead, smaller, so a
@@ -56,7 +56,7 @@ export function createStorage({ config, pool, client, logger = console }) {
     },
     url(key) {
       if (key.startsWith('db/')) return `/api/registration/media/blob?path=${encodeURIComponent(key)}`;
-      return getSignedUrl(s3, new GetObjectCommand({ Bucket, Key: key }), { expiresIn: 3600 });
+      return getSignedUrl(s3(), new GetObjectCommand({ Bucket: config.r2.bucket, Key: key }), { expiresIn: 3600 });
     },
     async blob(key) {
       const [[row]] = await pool.execute('SELECT data FROM dr_media_blobs WHERE object_key=?', [key]);

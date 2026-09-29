@@ -194,6 +194,18 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: stranger.cookie } }))).status, 403, 'strangers cannot read a stored image');
     assert.equal((await call('paystack/verify', bishop.cookie, { reference: 'abc123' })).status, 503, 'Paystack is off until the secret key is configured');
 
+    // Office-managed settings override the environment and apply immediately.
+    assert.equal((await call('settings', bishop.cookie)).status, 403);
+    const before = await call('settings', office.cookie); assert.equal(before.status, 200);
+    assert.equal(before.data.settings.find(s => s.key === 'RESEND_API_KEY').set, false);
+    assert.equal((await call('settings', office.cookie, { values: { NOT_A_SETTING: 'x' } })).status, 400);
+    const savedSettings = await call('settings', office.cookie, { values: { RESEND_API_KEY: 're_test_key', SMTP_FROM: 'Kuriake Castle <no-reply@notifications.kuriakecastle.org>' } });
+    assert.equal(savedSettings.status, 200); assert.equal(savedSettings.data.settings.find(s => s.key === 'RESEND_API_KEY').set, true);
+    assert.equal(config.smtp.host, 'smtp.resend.com', 'the live config now points at Resend');
+    assert.equal(config.from, 'Kuriake Castle <no-reply@notifications.kuriakecastle.org>');
+    assert.equal((await call('settings', office.cookie, { values: { RESEND_API_KEY: ' ' } })).status, 200);
+    assert.notEqual(config.smtp.host, 'smtp.resend.com', 'clearing a setting restores the environment value');
+
     // "Any issues?" reports reach the office by email, with a Telegram heads-up.
     assert.equal((await call('support', '', { message: 'Cannot upload my receipt.' })).status, 401);
     assert.equal((await call('support', bishop.cookie, { message: 'no' })).status, 400);

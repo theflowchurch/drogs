@@ -1,6 +1,7 @@
 "use client";
 import Accounts from './Accounts';
 import ApiKeys from './ApiKeys';
+import Settings from './Settings';
 import {
   useEffect,
   useMemo,
@@ -316,6 +317,7 @@ export default function RegistrationApp({
         "Annual lists",
         "History",
         ...(api.apiKeysAvailable ? ["Accounts", "API keys"] : []),
+        ...(api.settingsAvailable ? ["Settings"] : []),
       ]
     : [
         "Registration",
@@ -548,6 +550,7 @@ export default function RegistrationApp({
                             History: "Previous cycles and what changed.",
                             Accounts: "See who has created an account and when they last signed in.",
                             "API keys": "Give connected applications controlled, read-only access to Kuriake Castle.",
+                            Settings: "Email delivery, payments, photo storage and access codes.",
                           }[tab]
                         }
                       </p>
@@ -555,6 +558,7 @@ export default function RegistrationApp({
                   </div>
                   {tab === "Accounts" && <Accounts run={run} />}
                   {tab === "API keys" && <ApiKeys run={run} />}
+                  {tab === "Settings" && <Settings run={run} />}
                   {tab === "Directory" &&
                     (office ? (
                       <Directory
@@ -981,7 +985,13 @@ function Participant({
             account.
           </small>
         </section>
-        <Payment current={current} actor={actor} run={run} refresh={refresh} />
+        <Payment
+          current={current}
+          actor={actor}
+          run={run}
+          refresh={refresh}
+          paystackKey={state.paystackKey || api.paystackKey}
+        />
       </div>
     </>
   );
@@ -1443,7 +1453,7 @@ function CommitmentPreview({ role, country }) {
 // Card or mobile money through Paystack's inline checkout. The amount is charged
 // in GHS at the same indicative rate the member sees; the server confirms the
 // reference with Paystack before the payment is recorded.
-function PaystackButton({ current, actor, run, refresh, rate, currency }) {
+function PaystackButton({ current, actor, run, refresh, rate, currency, paystackKey }) {
   const [ready, setReady] = useState(Boolean(globalThis.PaystackPop));
   useEffect(() => {
     if (globalThis.PaystackPop) return setReady(true);
@@ -1465,7 +1475,7 @@ function PaystackButton({ current, actor, run, refresh, rate, currency }) {
           run(async () => {
             const reference = await new Promise((resolve, reject) => {
               const handler = globalThis.PaystackPop.setup({
-                key: api.paystackKey,
+                key: paystackKey,
                 email: actor.email,
                 amount: Math.round((usdOnly ? current.amount : ghs) * 100),
                 currency: usdOnly ? "USD" : "GHS",
@@ -1490,7 +1500,7 @@ function PaystackButton({ current, actor, run, refresh, rate, currency }) {
     </div>
   );
 }
-function Payment({ current, actor, run, refresh }) {
+function Payment({ current, actor, run, refresh, paystackKey = "" }) {
   const [proof, setProof] = useState(current.proof || ""),
     [ack, setAck] = useState(false),
     [receiptNote, setReceiptNote] = useState(""),
@@ -1551,8 +1561,8 @@ function Payment({ current, actor, run, refresh }) {
               {!api.live ? " You can test a sample receipt below." : ""}
             </p>
           )}
-          {api.paystackKey && current.payment !== "pending" && (
-            <PaystackButton current={current} actor={actor} run={run} refresh={refresh} rates={rates} currency={currency} rate={rate} />
+          {paystackKey && current.payment !== "pending" && (
+            <PaystackButton current={current} actor={actor} run={run} refresh={refresh} currency={currency} rate={rate} paystackKey={paystackKey} />
           )}
           {current.paymentNote && (
             <p className="reg-status-message unclaimed">

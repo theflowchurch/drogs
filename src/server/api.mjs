@@ -1,6 +1,7 @@
 import { readAccounts, readLogins } from './accounts.mjs';
 import { createKeyService } from './api-keys.mjs';
 import { createSupport } from './support.mjs';
+import { applySettings, describeSettings, readSettings, writeSettings } from './settings.mjs';
 import { readFile } from 'node:fs/promises';
 import { applyAction, visibleState } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
@@ -56,6 +57,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
   return async function handle(request) {
     try {
       const url = new URL(request.url), path = url.pathname.replace(/\/$/, ''), method = request.method;
+      await applySettings(config, pool);
       if (path.startsWith('/api/v1/')) return json(await keys.read(request));
       if (!['GET', 'POST'].includes(method)) throw new HttpError(405, 'Method not allowed.');
       if (method === 'POST' && request.headers.get('origin') !== url.origin)
@@ -93,6 +95,15 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         await rateLimit(pool, config, `support:${actor.id}`, 5, 600000);
         return json(await support(actor, await jsonBody(request)));
       }
+      if (path === '/api/registration/settings' && method === 'GET') {
+        if (!actor.office) throw new HttpError(403, 'Office access required.');
+        return json({ settings: describeSettings(await readSettings(pool)) });
+      }
+      if (path === '/api/registration/settings' && method === 'POST') {
+        await writeSettings(pool, (await jsonBody(request)).values, actor, config);
+        await applySettings(config, pool);
+        return json({ settings: describeSettings(await readSettings(pool)) });
+      }
       if (path === '/api/registration/keys' && method === 'GET') return json(await keys.list(actor));
       if (path === '/api/registration/keys' && method === 'POST') return json(await keys.issue(actor, await jsonBody(request)), 201);
       if (path === '/api/registration/keys/revoke' && method === 'POST') return json(await keys.revoke(actor, (await jsonBody(request)).id));
@@ -103,7 +114,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           // Payment evidence is available only to its owner and the office.
           view.registrations = view.registrations.map(r => r.userId === actor.id ? r : { ...r, proof: undefined });
         }
-        return json({ ...view, office: actor.office });
+        return json({ ...view, office: actor.office, paystackKey: config.paystackPublic });
       }
       if (path === '/api/registration/action' && method === 'POST') {
         await rateLimit(pool, config, `action:${actor.id}`, 120, 60000);
