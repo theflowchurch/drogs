@@ -167,12 +167,14 @@ const editDistance = (a, b) => {
       );
   return d[a.length][b.length];
 };
+// An initial only stands in for a word when it is in the name being checked
+// (the shorter one); initials in the longer name must not act as wildcards,
+// or "Kent Njeru" would be alike to "Farrell N.K.A Bruce".
 const wordsAlike = (a, b) =>
   a === b ||
   (Math.min(a.length, b.length) >= 3 &&
     editDistance(a, b) <= (Math.max(a.length, b.length) > 6 ? 2 : 1)) ||
-  (a.length === 1 && b.startsWith(a)) ||
-  (b.length === 1 && a.startsWith(b));
+  (a.length === 1 && b.startsWith(a));
 // Two names are alike when every word of the shorter one has a close match in
 // the longer, in any order: "Nina Masuko" ~ "Nely Nina Masuku", "Masuku Nina".
 export function namesAlike(a, b) {

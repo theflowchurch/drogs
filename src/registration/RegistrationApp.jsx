@@ -2329,29 +2329,20 @@ function RecordDetails({ person: p, under = [], onOpen, perform }) {
 // denomination, branch and who oversees whom. Contact details and dates of
 // birth are removed before the roster reaches the browser.
 const publicPeople = people.map(({ email, phone, ...rest }) => rest);
-const bishopPastors = (bishop, from = publicPeople) => {
-  const named = from.filter(
-    (p) => p.role === "pastor" && p.bishop && normalName(p.bishop) === normalName(bishop.name),
-  );
-  if (named.length) return { list: named, heading: "Pastors under this bishop" };
-  if (!bishop.denomination) return { list: [], heading: "" };
-  return {
-    list: from.filter(
-      (p) => p.role === "pastor" && p.denomination === bishop.denomination,
-    ),
-    heading: `Pastors in ${bishop.denomination}`,
-  };
-};
+// Pastors whose record names this bishop as overseer (typo-tolerant). A bishop
+// nobody named has no pastors listed; a pastor who named nobody sits under no one.
+const bishopPastors = (bishop, from = publicPeople) => ({
+  list: from.filter(
+    (p) => p.role === "pastor" && p.bishop && namesAlike(p.bishop, bishop.name),
+  ),
+  heading: "Pastors under this bishop",
+});
 function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
   const [limit, setLimit] = useState(24);
   const named = bishopPastors(bishop, from);
   const seen = new Set(extra.map((q) => q.id));
   const list = [...extra, ...named.list.filter((q) => !seen.has(q.id))];
-  const heading = extra.length
-    ? named.list.length && named.heading.startsWith("Pastors in")
-      ? `Pastors under this bishop and in ${bishop.denomination}`
-      : "Pastors under this bishop"
-    : named.heading;
+  const heading = named.heading;
   if (!list.length) return null;
   return (
     <section className="reg-record-group">

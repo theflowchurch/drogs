@@ -428,6 +428,8 @@ test("names are alike across order, missing middle names and small typos", () =>
   assert.ok(namesAlike("Masuku Nina", "Nina Masuku"));
   assert.ok(namesAlike("Henry Asare Duah", "Henry Asare-Duah"));
   assert.ok(!namesAlike("Nina Masuku", "Brian Masuku"), "a different first name is a different person");
+  assert.ok(namesAlike("J Smith", "John Smith"), "an initial stands in for a word");
+  assert.ok(!namesAlike("Kent Njeru", "Farrell N.K.A Bruce"), "initials in the longer name are not wildcards");
   assert.ok(!namesAlike("Nina", "Nina Masuku"), "one word is never enough");
 });
 
