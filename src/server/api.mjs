@@ -89,10 +89,10 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         return json(publicCache.value, 200, { 'Cache-Control': 'public, max-age=30' });
       }
       if (path === '/api/registration/auth/verify' && method === 'POST') {
-        const { email, token, mode } = await jsonBody(request);
-        const session = await auth.verifyCode(emailAddress(email), token, ['signin', 'office'].includes(mode) ? mode : 'signup');
+        const { email, token, mode, remember } = await jsonBody(request);
+        const session = await auth.verifyCode(emailAddress(email), token, ['signin', 'office'].includes(mode) ? mode : 'signup', remember === true);
         await auth.signOut(request);
-        return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token) });
+        return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token, session.maxAge) });
       }
       if (path === '/api/registration/auth/signout' && method === 'POST') {
         await auth.signOut(request);

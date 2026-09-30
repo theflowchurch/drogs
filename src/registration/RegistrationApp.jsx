@@ -343,6 +343,8 @@ export default function RegistrationApp({
   }, [actor, refresh]);
   useEffect(() => {
     if (!gate) return;
+    // Someone who chose to stay signed in is not signed out for being idle.
+    if (localStorage.getItem("kc-remember") === "yes") return;
     let timeout;
     const reset = () => {
       clearTimeout(timeout);
@@ -871,6 +873,7 @@ function Gate({ office, onEnter }) {
   );
 }
 function AccountForm({ office, signup = false, mode = office ? "office" : signup ? "signup" : "signin", run, busy, onActor }) {
+  const [remember, setRemember] = useState(false);
   const [email, setEmail] = useState(""),
     [sent, setSent] = useState(false),
     [token, setToken] = useState("");
@@ -884,7 +887,10 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
         onActor(api.demoSignIn(email, office, mode));
         return;
       }
-      if (sent) onActor(await api.verifyCode(email, token, mode));
+      if (sent) {
+        localStorage.setItem("kc-remember", remember ? "yes" : "no");
+        onActor(await api.verifyCode(email, token, mode, remember));
+      }
       else {
         await api.requestCode(email, mode);
         setSent(true);
@@ -913,6 +919,12 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
         pattern="[0-9]{6,10}"
       />
     </Field>
+  )}
+  {sent && (
+    <label className="reg-check">
+      <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+      <span>Keep me signed in on this device for 30 days.</span>
+    </label>
   )}
   <button className="reg-primary full" disabled={busy}>
     {busy
@@ -1037,7 +1049,7 @@ function Participant({
           <h1>Thank you, {current.data.name.split(" ")[0]}.</h1>
           <p>Your registration is complete. This is the information you gave us.</p>
         </div>
-        <Badge status={current.status} />
+        <Badge status={current.status === "unclaimed" ? "pending" : current.status} />
       </div>
       <div className="reg-status-layout">
         <section className="reg-card">
@@ -1079,7 +1091,7 @@ function Participant({
               </div>
             )}
           </dl>
-          <div className={`reg-status-message ${current.status}`}>
+          <div className={`reg-status-message ${current.status === "unclaimed" ? "pending" : current.status}`}>
             <h3>
               {current.status === "confirmed"
                 ? "Your registration is confirmed."
@@ -1091,7 +1103,7 @@ function Participant({
                       ? "Thank you. Your registration is being processed."
                       : current.status === "removed"
                         ? "Your annual roster status has changed."
-                        : "Your bishop has not confirmed you yet."}
+                        : "Thank you. Your registration is being processed."}
             </h3>
             <p>
               {current.status === "confirmed"
@@ -1102,7 +1114,7 @@ function Participant({
                     ? `${current.payment === "verified" ? "Your payment has been received. " : ""}${pastorCount ? `${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded. ` : ""}The office is confirming your registration; you will see the result here. You can add more pastors under My pastors at any time.`
                     : current.status === "removed"
                       ? "Contact your bishop or the office to discuss this change. Your registration and payment history have been retained."
-                      : "Your details are safely saved in Unclaimed. Your bishop or the office can confirm your registration. Payment will unlock after confirmation."}
+                      : `${current.payment === "verified" ? "Your payment has been received. " : ""}Your bishop and the office are confirming your registration; you will see the result here.`}
             </p>
           </div>
           {current.resubmit && (

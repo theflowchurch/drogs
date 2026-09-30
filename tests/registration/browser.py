@@ -69,7 +69,7 @@ with sync_playwright() as p:
   assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
   page.get_by_role('button',name='Next →').click();page.get_by_role('button',name='I’ll pay later →').click();expect(page.get_by_role('button',name='Confirm and submit →')).to_be_disabled()
   page.get_by_role('button',name='← Back').click();page.get_by_role('button',name='← Back').click();expect(page.get_by_label('First name',exact=True)).to_have_value('John');submit()
-  expect(page.get_by_text('Your bishop has not confirmed you yet.')).to_be_visible()
+  expect(page.get_by_text('Thank you. Your registration is being processed.')).to_be_visible()
   page.screenshot(path=str(OUT/'mobile-unclaimed-status.png'),full_page=True)
   signout();page.set_viewport_size({'width':1440,'height':1050});open_account('office@example.com',True)
   page.get_by_role('button',name='Directory',exact=True).click()

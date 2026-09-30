@@ -28,10 +28,12 @@ export async function rateLimit(pool, config, key, limit, period, now = Date.now
   if (!allowed) throw new HttpError(429, 'Too many attempts. Please wait before trying again.');
 }
 export function createAuth({ pool, config, mailer }) {
-  const createSession = async (conn, user) => {
-    const token = randomBytes(32).toString('hex');
-    await conn.execute('INSERT INTO dr_sessions (token_hash,user_id,expires_at) VALUES (?,?,?)', [digest(config.secret, `session:${token}`), user.id, Date.now() + 43200000]);
-    return { actor: { ...user, office: config.admins.includes(user.email) }, token };
+  // Twelve hours by default; thirty days when the person asks to stay signed in on this device.
+  const SESSION_MS = 43200000, REMEMBER_MS = 30 * 86400000;
+  const createSession = async (conn, user, remember = false) => {
+    const token = randomBytes(32).toString('hex'), ttl = remember ? REMEMBER_MS : SESSION_MS;
+    await conn.execute('INSERT INTO dr_sessions (token_hash,user_id,expires_at) VALUES (?,?,?)', [digest(config.secret, `session:${token}`), user.id, Date.now() + ttl]);
+    return { actor: { ...user, office: config.admins.includes(user.email) }, token, maxAge: Math.floor(ttl / 1000) };
   };
   // Signing in is only for people who already registered (a profile or a
   // registration, pending or approved). Nobody else is told anything more
@@ -96,7 +98,7 @@ export function createAuth({ pool, config, mailer }) {
         throw new HttpError(503, 'Unable to send your code. Please try again shortly.');
       }
     },
-    async verifyCode(email, code, mode = 'signup') {
+    async verifyCode(email, code, mode = 'signup', remember = false) {
       // Office sign-ins always need the emailed code, whatever the member setting is.
       if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
       mode = await effectiveMode(email, mode);
@@ -123,7 +125,7 @@ export function createAuth({ pool, config, mailer }) {
         const now = Date.now();
         await conn.execute('INSERT INTO dr_account_activity (user_id,signed_up_at,last_login_at,login_count) VALUES (?,?,?,1) ON DUPLICATE KEY UPDATE last_login_at=VALUES(last_login_at),login_count=login_count+1', [user.id, created.affectedRows ? now : null, now]);
         await conn.execute('INSERT INTO dr_logins (user_id,logged_in_at) VALUES (?,?)', [user.id, now]);
-        return createSession(conn, user);
+        return createSession(conn, user, remember === true);
       });
       if (!result) throw new HttpError(401, 'That code is invalid or expired. Request a new code.');
       return result;

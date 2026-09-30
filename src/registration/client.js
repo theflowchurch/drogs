@@ -105,8 +105,8 @@ export async function requestCode(email, mode = "signup") {
   });
   check(error);
 }
-export async function verifyCode(email, token, mode = "signup") {
-  if (mysqlBackend) return server("auth/verify", { email, token, mode });
+export async function verifyCode(email, token, mode = "signup", remember = false) {
+  if (mysqlBackend) return server("auth/verify", { email, token, mode, remember });
   const { data, error } = await supabase().auth.verifyOtp({
     email,
     token,
