@@ -1137,8 +1137,28 @@ p {
   }
   .reg-form-aside {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 15px;
+    align-items: start;
+  }
+  .reg-amount {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 18px;
+    align-items: center;
+  }
+  .reg-amount > span,
+  .reg-amount hr {
+    grid-column: 1 / -1;
+  }
+  .reg-amount strong {
+    margin: 4px 0;
+  }
+  .reg-amount p {
+    margin: 0;
+  }
+  .reg-amount hr {
+    margin: 12px 0;
   }
   .reg-amount {
     padding: 20px;
@@ -2840,4 +2860,22 @@ p {
   .reg-add-pastor {
     grid-template-columns: 1fr;
   }
+}
+
+/* iOS gives date inputs an intrinsic width; keep them inside their box */
+input[type="date"] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 46px;
+}
+.reg-silhouette span {
+  text-align: center;
+  padding: 0 14px;
+}
+.reg-attire-example figcaption b {
+  margin-bottom: 4px;
 }

@@ -1278,9 +1278,6 @@ function RegistrationForm({
     <>
       <div className="reg-page-heading">
         <div>
-          <span className="reg-eyebrow">
-            {state.year} / ANNUAL REGISTRATION
-          </span>
           <h1>
             {step === "review"
               ? "Review everything."
@@ -1299,7 +1296,7 @@ function RegistrationForm({
                 ? "Upload or paste the pastors under your oversight. They are recognised automatically when they register."
                 : step === "payment"
                   ? "Send the fee by mobile money and upload the confirmation."
-                  : "A few details, an official portrait, and your place in the ministry."}
+                  : `Complete your ${state.year} registration to maintain your place on the Roll of Good Standing.`}
           </p>
         </div>
         <Badge status="draft">
@@ -1356,10 +1353,8 @@ function RegistrationForm({
               />
               <figcaption>
                 <b>{data.role === "bishop" ? "Required: official red jacket" : "Required: official pastoral attire"}</b>
-                {data.role === "bishop"
-                  ? " A collar alone is not sufficient."
-                  : ""}{" "}
-                Face the camera, plain background, face fully visible. No selfies or casual clothing.
+                Face the camera on a plain background, face fully visible.
+                {data.role === "bishop" ? " A collar on its own, selfies and casual clothing are not accepted." : " Selfies and casual clothing are not accepted."}
               </figcaption>
             </figure>
           </div>
