@@ -404,6 +404,9 @@ test("the public roll lists only confirmed people and the office can pick the ph
   assert.equal(directoryPeople(s, references).find((p) => p.id === "B1").updated, true);
   assert.throws(() => applyAction(s, bishop, "choosePhoto", { userId: bishop.id, source: "reference" }), /Office/);
   s = applyAction(s, office, "choosePhoto", { userId: bishop.id, source: "reference" });
+  const shown = directoryPeople(s, references).find((p) => p.id === "B1");
+  assert.equal(shown.photo, "", "the office directory shows the existing photo too");
+  assert.equal(shown.image, "assets/bishops/001.jpg");
   const chosen = publicRoll(s, references)[0];
   assert.equal(chosen.image, "assets/bishops/001.jpg");
   assert.equal(chosen.photo, "");

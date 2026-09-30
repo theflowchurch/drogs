@@ -857,7 +857,8 @@ export function directoryPeople(state, references, year = state.year) {
       city: d?.city || p.city,
       country: d?.country || p.country,
       denomination: d?.denomination || p.denomination,
-      photo: d?.photo || "",
+      // The office's "which photo" choice applies everywhere, not only on the public roll.
+      photo: registration?.displayPhoto === "reference" && p.image ? "" : d?.photo || "",
       recorded: { email: p.email, phone: p.phone },
       updated: Boolean(registration || row?.referenceConfirmedAt),
       updatedAt:
