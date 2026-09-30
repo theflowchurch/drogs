@@ -42,7 +42,7 @@ with sync_playwright() as p:
         page.locator('main').wait_for()
     try:
         login()
-        page.get_by_label('Registering as').select_option('bishop')
+        page.get_by_label('Ministerial Category').select_option('bishop')
         for label, value in [('First name','Browser'),('Last name','Bishop'),('WhatsApp number','+233201234567'),('Date of birth','1990-02-01'),('Country','Ghana'),('City','Accra')]:
             page.get_by_label(label, exact=True).fill(value)
         page.get_by_label('Gender',exact=True).select_option('male')
@@ -56,13 +56,13 @@ with sync_playwright() as p:
         expect(page.get_by_label('First name',exact=True)).to_have_value('Browser')
         page.set_viewport_size({'width':390,'height':844})
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
-        page.get_by_role('button',name='Next →').click()
+        page.get_by_role('button',name='Continue →').click()
         # Guided onboarding for a bishop: pastors, then payment, then review.
         page.get_by_label('Pastor’s full name',exact=True).fill('Jon Demo')
         page.get_by_label('Pastor’s date of birth',exact=True).fill('1988-07-14')
         page.get_by_role('button',name='Add pastor',exact=True).click()
         expect(page.get_by_role('cell',name='Jon Demo',exact=True)).to_be_visible()  # read-only preview table
-        page.get_by_role('button',name='Next →').click()
+        page.get_by_role('button',name='Continue →').click()
         page.get_by_role('button',name='Continue →').click()
         expect(page.get_by_alt_text('Your uploaded photo for confirmation')).to_be_visible()
         expect(page.get_by_role('cell',name='Jon Demo',exact=True)).to_be_visible()  # review page repeats the pastors table

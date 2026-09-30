@@ -1385,13 +1385,12 @@ function RegistrationForm({
               }}
             >
               <div className="reg-section-head">
-                <h2>Your registration</h2>
+                <h2>Your Details</h2>
                 <span>All fields are required</span>
               </div>
               <div className="reg-fields">
                 <Field
-                  label="Registering as"
-                  hint={fixedRole ? `This link is for ${fixedRole} registration.` : undefined}
+                  label="Ministerial Category"
                 >
                   <select
                     value={data.role}
@@ -1400,7 +1399,7 @@ function RegistrationForm({
                   >
                     <option value="pastor">Pastor</option>
                     <option value="bishop">
-                      Bishop / Mother / Episcopal Sister
+                      Bishop
                     </option>
                   </select>
                 </Field>
@@ -1492,7 +1491,7 @@ function RegistrationForm({
                 </Field>
                 <Field
                   label="WhatsApp number"
-                  hint="With the country code and no leading 0, e.g. +233 24 123 4567. Guidance is sent to this number on WhatsApp."
+                  hint="Include your country code, e.g. +233 24 123 4567. Registration updates will be sent to you on WhatsApp."
                 >
                   <input
                     required
@@ -1515,32 +1514,20 @@ function RegistrationForm({
                     autoComplete="bday"
                   />
                 </Field>
-                <Field
-                  label="Denomination"
-                  hint={
-                    !(DENOMINATIONS[data.organization] || []).length
-                      ? "Not applicable to this organization."
-                      : undefined
-                  }
-                >
-                  <select
-                    value={data.denomination}
-                    onChange={(e) => set("denomination", e.target.value)}
-                    disabled={!(DENOMINATIONS[data.organization] || []).length}
-                    required={
-                      (DENOMINATIONS[data.organization] || []).length > 0
-                    }
-                  >
-                    <option value="">
-                      {(DENOMINATIONS[data.organization] || []).length
-                        ? "Select denomination"
-                        : "Not applicable"}
-                    </option>
-                    {(DENOMINATIONS[data.organization] || []).map((d) => (
-                      <option key={d}>{d}</option>
-                    ))}
-                  </select>
-                </Field>
+                {(DENOMINATIONS[data.organization] || []).length > 0 && (
+                  <Field label="Denomination">
+                    <select
+                      value={data.denomination}
+                      onChange={(e) => set("denomination", e.target.value)}
+                      required
+                    >
+                      <option value="">Select denomination</option>
+                      {(DENOMINATIONS[data.organization] || []).map((d) => (
+                        <option key={d}>{d}</option>
+                      ))}
+                    </select>
+                  </Field>
+                )}
                 <Field label="Country">
                   <input
                     required
@@ -1619,7 +1606,7 @@ function RegistrationForm({
                   Save draft
                 </button>
                 <button className="reg-primary" disabled={busy || fileBusy}>
-                  {editing ? "Review changes →" : "Next →"}
+                  {editing ? "Review changes →" : "Continue →"}
                 </button>
               </div>
             </form>
@@ -1653,7 +1640,7 @@ function RegistrationForm({
               <RowsTable rows={rosterRows} title="Pastors about to be submitted" onRemove={(i) => setRosterRows((rows) => rows.filter((_, k) => k !== i))} />
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
-                <button type="button" className="reg-primary" onClick={next}>{rosterRows.length ? "Next →" : "I’ll add my pastors later →"}</button>
+                <button type="button" className="reg-primary" onClick={next}>{rosterRows.length ? "Continue →" : "I’ll add my pastors later →"}</button>
               </div>
             </div>
           ) : step === "payment" ? (

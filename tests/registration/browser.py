@@ -21,7 +21,7 @@ with sync_playwright() as p:
  def signout():
   page.get_by_role('button',name='Sign out',exact=True).click();page.get_by_role('link',name='View the full Pastoral directory').wait_for()
  def register(name,role='pastor',bishop='B1'):
-  page.get_by_label('Registering as').select_option(role)
+  page.get_by_label('Ministerial Category').select_option(role)
   page.get_by_label('Organization',exact=True).select_option('First Love')
   page.get_by_label('First name',exact=True).fill(name.split(' ')[0]);page.get_by_label('Last name',exact=True).fill(' '.join(name.split(' ')[1:]))
   page.get_by_label('Gender',exact=True).select_option('male')
@@ -30,13 +30,13 @@ with sync_playwright() as p:
   page.get_by_label('Denomination',exact=True).select_option('First Love Church');page.get_by_label('Country',exact=True).fill('Ghana');page.get_by_label('City',exact=True).fill('Accra')
   choices=page.get_by_label('Denomination',exact=True).locator('option').all_text_contents();assert len(choices)==8 and 'Go Ye Church' in choices
   for org in ['DHMM','FLOW','HJC']:
-   page.get_by_label('Organization',exact=True).select_option(org);expect(page.get_by_label('Denomination',exact=True)).to_be_disabled()
+   page.get_by_label('Organization',exact=True).select_option(org);expect(page.get_by_label('Denomination',exact=True)).not_to_be_visible()  # no denominations → the field is hidden
   page.get_by_label('Organization',exact=True).select_option('First Love');expect(page.get_by_label('Denomination',exact=True)).to_have_value('');page.get_by_label('Denomination',exact=True).select_option('First Love Church')
   if role=='pastor':page.get_by_label('Find your bishop').fill('Demo Bish');page.get_by_role('button',name='This is my bishop').first.click();expect(page.get_by_text('Change bishop')).to_be_visible()
   page.get_by_label('Photo in official attire',exact=True).set_input_files(PHOTO)
   expect(page.get_by_text('Photo uploaded · tap to replace it')).to_be_visible()
  def submit():
-  page.get_by_role('button',name='Next →').click()
+  page.get_by_role('button',name='Continue →').click()
   if page.get_by_text('Add your pastors').is_visible(): page.get_by_role('button',name='I’ll add my pastors later →').click()
   page.get_by_role('button',name='Continue →').click()
   page.get_by_label('I confirm that these details').check(); page.get_by_label('I consent to Kuriake Castle').check()
@@ -45,7 +45,7 @@ with sync_playwright() as p:
   page.get_by_label('I confirm this is me').check()
   page.screenshot(path=str(OUT/('portrait-review-'+str(len(list(OUT.glob('portrait-review*'))))+'.png')),full_page=True)
   page.get_by_role('button',name='Confirm and submit →').click()
-  expect(page.get_by_role('heading',name='Your registration',exact=True)).not_to_be_visible()
+  expect(page.get_by_role('heading',name='Your Details',exact=True)).not_to_be_visible()
   expect(page.get_by_text('Your registration is complete.')).to_be_visible()
  try:
   page.goto(BASE+'/');page.wait_for_load_state('networkidle');page.screenshot(path=str(OUT/'entrance.png'),full_page=True)
@@ -67,7 +67,7 @@ with sync_playwright() as p:
   page.reload();page.wait_for_load_state('networkidle');expect(page.get_by_label('First name',exact=True)).to_have_value('John')
   page.set_viewport_size({'width':390,'height':844});page.screenshot(path=str(OUT/'mobile-form.png'),full_page=True)
   assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
-  page.get_by_role('button',name='Next →').click();page.get_by_role('button',name='Continue →').click();expect(page.get_by_role('button',name='Confirm and submit →')).to_be_disabled()
+  page.get_by_role('button',name='Continue →').click();page.get_by_role('button',name='Continue →').click();expect(page.get_by_role('button',name='Confirm and submit →')).to_be_disabled()
   page.get_by_role('button',name='← Back').click();page.get_by_role('button',name='← Back').click();expect(page.get_by_label('First name',exact=True)).to_have_value('John');submit()
   expect(page.get_by_text('Thank you. Your registration is being processed.')).to_be_visible()
   page.screenshot(path=str(OUT/'mobile-unclaimed-status.png'),full_page=True)
