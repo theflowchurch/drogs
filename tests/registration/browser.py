@@ -38,7 +38,7 @@ with sync_playwright() as p:
  def submit():
   page.get_by_role('button',name='Next →').click()
   if page.get_by_text('Add your pastors').is_visible(): page.get_by_role('button',name='I’ll add my pastors later →').click()
-  page.get_by_role('button',name='I’ll pay later →').click()
+  page.get_by_role('button',name='Continue →').click()
   page.get_by_label('I confirm that these details').check(); page.get_by_label('I consent to Kuriake Castle').check()
   expect(page.get_by_role('button',name='Confirm and submit →')).to_be_disabled()
   expect(page.get_by_alt_text('Your uploaded photo for confirmation')).to_be_visible()
@@ -67,7 +67,7 @@ with sync_playwright() as p:
   page.reload();page.wait_for_load_state('networkidle');expect(page.get_by_label('First name',exact=True)).to_have_value('John')
   page.set_viewport_size({'width':390,'height':844});page.screenshot(path=str(OUT/'mobile-form.png'),full_page=True)
   assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
-  page.get_by_role('button',name='Next →').click();page.get_by_role('button',name='I’ll pay later →').click();expect(page.get_by_role('button',name='Confirm and submit →')).to_be_disabled()
+  page.get_by_role('button',name='Next →').click();page.get_by_role('button',name='Continue →').click();expect(page.get_by_role('button',name='Confirm and submit →')).to_be_disabled()
   page.get_by_role('button',name='← Back').click();page.get_by_role('button',name='← Back').click();expect(page.get_by_label('First name',exact=True)).to_have_value('John');submit()
   expect(page.get_by_text('Thank you. Your registration is being processed.')).to_be_visible()
   page.screenshot(path=str(OUT/'mobile-unclaimed-status.png'),full_page=True)

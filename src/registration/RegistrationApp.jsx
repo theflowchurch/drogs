@@ -1723,11 +1723,18 @@ function RegistrationForm({
                   />
                 </>
               ) : (
-                <p className="reg-payment-instructions">Card and mobile-money payment opens shortly. Continue now and pay from My profile when it is available.</p>
+                <p className="reg-payment-instructions">Card and mobile-money payment is not switched on yet. Continue for now; the office will let you know when to pay.</p>
               )}
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
-                <button className="reg-primary" disabled={busy}>{mine?.payment === "verified" ? "View your profile →" : "I’ll pay later →"}</button>
+                {/* Payment comes first: with checkout available, the only way forward is to pay. */}
+                {mine?.payment === "verified" ? (
+                  <button className="reg-primary" disabled={busy}>View your profile →</button>
+                ) : state.paystackKey ? (
+                  <span className="reg-small">Complete the payment above to continue.</span>
+                ) : (
+                  <button className="reg-primary" disabled={busy}>Continue →</button>
+                )}
               </div>
             </form>
           ) : (
@@ -1811,7 +1818,7 @@ function RegistrationForm({
                   {mine?.payment === "verified" ? (
                     <p>${AMOUNTS[data.role]} USD paid by card or mobile money. <Badge status="verified" /></p>
                   ) : (
-                    <p className="reg-small">Not paid yet. You can pay later from My profile.</p>
+                    <p className="reg-small">Payment is not switched on yet; the office will let you know when to pay.</p>
                   )}
                   <button type="button" className="reg-text" onClick={() => setStep("payment")}>Change</button>
                 </section>

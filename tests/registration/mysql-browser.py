@@ -62,7 +62,7 @@ with sync_playwright() as p:
         page.get_by_label('Pastor list',exact=True).fill('Jon Demo, 14/07/1988')
         expect(page.get_by_role('cell',name='Jon Demo')).to_be_visible()  # read-only preview table
         page.get_by_role('button',name='Next →').click()
-        page.get_by_role('button',name='I’ll pay later →').click()
+        page.get_by_role('button',name='Continue →').click()
         expect(page.get_by_alt_text('Your uploaded photo for confirmation')).to_be_visible()
         expect(page.get_by_role('cell',name='Jon Demo')).to_be_visible()  # review page repeats the pastors table
         assert page.get_by_alt_text('Your uploaded photo for confirmation').evaluate('(img) => img.complete && img.naturalWidth > 0')
