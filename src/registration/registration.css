@@ -2011,13 +2011,16 @@ p {
   min-height: 40px;
 }
 .reg-account.signin .reg-hero-title {
-  font-size: clamp(56px, 9vw, 132px);
+  font-size: clamp(48px, 7.5vw, 120px);
   letter-spacing: -4px;
-  gap: 34px;
+  gap: 0.28em;
   line-height: 1;
+  white-space: nowrap;
 }
+/* The castle is wide, so it is sized to the letters: about a cap-height tall */
 .reg-account.signin .reg-hero-title img {
-  height: clamp(110px, 16vw, 230px);
+  height: 0.78em;
+  width: auto;
 }
 @media (max-width: 700px) {
   .reg-account.signin .reg-hero-title {
@@ -2145,6 +2148,8 @@ p {
 .reg-enter {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 16px;
   font-size: clamp(26px, 2.7vw, 40px);
   font-weight: 500;
@@ -2937,5 +2942,16 @@ input[type="date"] {
   }
   .reg-slot.head span:last-child {
     display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .reg-enter {
+    font-size: 22px;
+    gap: 8px;
+    padding: 0 12px;
+  }
+  .reg-enter .reg-shimmer {
+    max-width: 260px;
   }
 }
