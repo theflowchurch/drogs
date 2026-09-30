@@ -635,8 +635,9 @@ export function applyAction(
     const r = state.registrations.find(
       (r) => r.userId === actor.id && r.year === state.year,
     );
-    if (!r || ["draft", "denied"].includes(r.status))
-      throw Error("Submit your registration before paying.");
+    // A draft saved on the payment step is enough: the fee is fixed per role.
+    if (!r || r.status === "denied")
+      throw Error("Start your registration before paying.");
     if (r.payment === "verified")
       throw Error("This payment has already been verified.");
     if (

@@ -70,7 +70,6 @@ with sync_playwright() as p:
   page.get_by_role('button',name='Next →').click();page.get_by_role('button',name='I’ll pay later →').click();expect(page.get_by_role('button',name='Confirm and submit →')).to_be_disabled()
   page.get_by_role('button',name='← Back').click();page.get_by_role('button',name='← Back').click();expect(page.get_by_label('First name',exact=True)).to_have_value('John');submit()
   expect(page.get_by_text('Your bishop has not confirmed you yet.')).to_be_visible()
-  expect(page.get_by_role('button',name='Submit payment proof')).not_to_be_visible()
   page.screenshot(path=str(OUT/'mobile-unclaimed-status.png'),full_page=True)
   signout();page.set_viewport_size({'width':1440,'height':1050});open_account('office@example.com',True)
   page.get_by_role('button',name='Directory',exact=True).click()
@@ -93,8 +92,6 @@ with sync_playwright() as p:
   assert 'abedsah' not in page.locator('.reg-dialog, dialog, body').first.inner_text().lower(),'members never see contact details'
   page.screenshot(path=str(OUT/'member-directory.png'),full_page=True)
   page.keyboard.press('Escape');page.get_by_role('button',name='Registration',exact=True).click()
-  expect(page.get_by_role('button',name='Submit payment proof')).to_be_disabled()
-  page.get_by_label('Transaction ID', exact=True).fill('MP240912.1234.A1');page.get_by_label('Payment screenshot').set_input_files(PHOTO);expect(page.get_by_alt_text('Payment proof preview')).to_be_visible();page.get_by_label('I understand that my $50').check();page.get_by_role('button',name='Submit payment proof').click()
   expect(page.get_by_text('Payment awaiting verification',exact=True)).to_be_visible()
   signout();page.set_viewport_size({'width':1440,'height':1050});open_account('office@example.com',True);page.get_by_role('button',name='Payments',exact=True).click()
   page.get_by_role('button',name='John Demo').click();page.get_by_role('button',name='Verify received payment').click();expect(page.get_by_text('No payments waiting',exact=True)).to_be_visible()

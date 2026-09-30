@@ -24,6 +24,7 @@ import {
   validateProfile,
   normalName,
   namesAlike,
+  dobClose,
   titleFor,
   paymentReference,
   referenceIndex,
@@ -311,6 +312,9 @@ export default function RegistrationApp({
   useEffect(() => {
     setSidebarHidden(localStorage.getItem("kc-sidebar-hidden") === "yes");
     if (signup && location.hash === "#signin") setSigninOpen("signin");
+    // The bishop / pastor links open straight onto the email box: email first,
+    // then the code, then the form with that email locked in.
+    else if (typeof signup === "string") setSigninOpen("signup");
   }, [signup]);
   const toggleSidebar = () => {
     const next = !sidebarHidden;
@@ -1091,7 +1095,7 @@ function Participant({
                 : current.status === "denied" || current.resubmit
                   ? current.bishopNote || "Please contact the office."
                   : current.status === "pending"
-                    ? `${current.payment === "pending" ? "Your payment proof has been received. " : current.payment === "verified" ? "Your payment is verified. " : ""}${pastorCount ? `${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded. ` : ""}The office is confirming your registration; you will see the result here. You can add more pastors under My pastors at any time.`
+                    ? `${current.payment === "verified" ? "Your payment has been received. " : ""}${pastorCount ? `${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded. ` : ""}The office is confirming your registration; you will see the result here. You can add more pastors under My pastors at any time.`
                     : current.status === "removed"
                       ? "Contact your bishop or the office to discuss this change. Your registration and payment history have been retained."
                       : "Your details are safely saved in Unclaimed. Your bishop or the office can confirm your registration. Payment will unlock after confirmation."}
@@ -1108,7 +1112,6 @@ function Participant({
           actor={actor}
           run={run}
           refresh={refresh}
-          momo={state.payment}
           paystackKey={state.paystackKey || ""}
         />
       </div>
@@ -1156,10 +1159,7 @@ function RegistrationForm({
     [rosterText, setRosterText] = useState(""),
     [rosterRows, setRosterRows] = useState([]),
     [rosterError, setRosterError] = useState(""),
-    [transactionId, setTransactionId] = useState(""),
-    [proof, setProof] = useState(""),
-    [ack, setAck] = useState(false),
-    [receiptNote, setReceiptNote] = useState(""),
+    [pasting, setPasting] = useState(false),
     [rates, setRates] = useState(null),
     [accurate, setAccurate] = useState(false),
     [consent, setConsent] = useState(false),
@@ -1175,8 +1175,8 @@ function RegistrationForm({
   }, [data.firstName, data.lastName, data.email, data.phone, data.role, data.referenceId, dismissed]);
   const adopt = (ref) =>
     setData((d) => {
+      // Photo and phone are never taken from the old record: both are asked for afresh.
       const next = { ...d, referenceId: ref.id, photoConfirmed: false };
-      if (!d.phone && ref.phone) next.phone = ref.phone;
       if (!d.country && ref.country) next.country = ref.country;
       if (!d.city && ref.city) next.city = ref.city;
       if (!d.organization && ORGANIZATIONS.includes(ref.organization)) next.organization = ref.organization;
@@ -1238,7 +1238,8 @@ function RegistrationForm({
     return () => { live = false; };
   }, [step, currency]);
   const rate = rateFor(rates, currency);
-  const momo = state.payment?.number ? state.payment : !api.live ? { number: "024 000 0000", name: "Kuriake Castle (sample)" } : null;
+  // This year's record for the person (a draft once the payment step saves it).
+  const mine = state.registrations.find((r) => r.userId === actor.id && r.year === state.year);
   async function save() {
     await run(async () => {
       await api.action(actor, "save", data);
@@ -1250,7 +1251,6 @@ function RegistrationForm({
       await api.action(actor, editing ? "update" : "submit", { ...data, consentedAt: data.consentedAt || new Date().toISOString() });
       // The pastors and the payment proof gathered on the way are sent right after.
       if (!editing && rosterRows.length) await api.action(actor, "addRoster", { rows: rosterRows });
-      if (!editing && proof && transactionId.trim()) await api.action(actor, "payment", { proof, nonrefundable: true, transactionId });
       await refresh();
     }, editing ? "Your details are updated." : "Thank you. Your registration has been received and is being processed.");
     if (ok && editing) onDone?.();
@@ -1615,7 +1615,7 @@ function RegistrationForm({
               onSubmit={(e) => {
                 e.preventDefault();
                 try {
-                  setRosterRows(rosterText.trim() ? parseRoster(rosterText) : []);
+                  setRosterRows(rosterText.trim() ? uniqueRows(parseRoster(rosterText)) : []);
                   setRosterError("");
                   next();
                 } catch (err) {
@@ -1627,33 +1627,44 @@ function RegistrationForm({
                 <div>
                   <h2>Add your pastors</h2>
                   <p>
-                    Upload your Excel or CSV file, or paste from it. Two columns: <b>full name</b> and <b>date of birth</b> written day/month/year (e.g. 14/03/1985). Email and phone may follow as extra columns.
+                    Upload your Excel or CSV file: <b>full name</b> in the first column, <b>date of birth</b> (day/month/year, e.g. 14/03/1985) in the second. Email and phone may follow.
                   </p>
                 </div>
               </div>
-              <Field label="Upload a spreadsheet" hint="Excel (.xlsx, .xls) or CSV. The first column is the full name, the second the date of birth.">
+              <Field label="Upload a spreadsheet" hint="Excel (.xlsx, .xls) or CSV.">
                 <input
                   type="file"
                   accept=".xlsx,.xls,.csv,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     e.target.value = "";
-                    if (file) readSpreadsheet(file).then((t) => { setRosterText(t); setRosterError(""); }).catch((err) => setRosterError(err.message));
+                    if (!file) return;
+                    readSpreadsheet(file)
+                      .then((t) => { setRosterText(t); setRosterRows(uniqueRows(parseRoster(t))); setRosterError(""); setPasting(false); })
+                      .catch((err) => setRosterError(err.message));
                   }}
                 />
               </Field>
-              <Field label="Pastor list" hint="One pastor per line. You can also type them in by hand.">
-                <textarea
-                  rows={8}
-                  value={rosterText}
-                  onChange={(e) => setRosterText(e.target.value)}
-                  placeholder={"John Mensah, 14/03/1985\nMary Owusu, 02/11/1979"}
-                />
-              </Field>
+              {pasting ? (
+                <Field label="Pastor list" hint="One pastor per line: name, then date of birth.">
+                  <textarea
+                    rows={8}
+                    value={rosterText}
+                    onChange={(e) => {
+                      setRosterText(e.target.value);
+                      try { setRosterRows(e.target.value.trim() ? uniqueRows(parseRoster(e.target.value)) : []); setRosterError(""); } catch (err) { setRosterError(err.message); }
+                    }}
+                    placeholder={"John Mensah, 14/03/1985\nMary Owusu, 02/11/1979"}
+                  />
+                </Field>
+              ) : (
+                <button type="button" className="reg-text" onClick={() => setPasting(true)}>Or type or paste the names instead</button>
+              )}
               {rosterError && <p role="alert" className="reg-status-message unclaimed">{rosterError}</p>}
+              <RowsTable rows={rosterRows} title="Pastors about to be submitted" />
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
-                <button className="reg-primary">{rosterText.trim() ? "Next →" : "I’ll add my pastors later →"}</button>
+                <button className="reg-primary">{rosterRows.length ? "Next →" : "I’ll add my pastors later →"}</button>
               </div>
             </form>
           ) : step === "payment" ? (
@@ -1672,57 +1683,31 @@ function RegistrationForm({
                   <p>Annual renewal ministerial fee · {titleCase(data.role)} · {state.year} · non-refundable.</p>
                 </div>
               </div>
-              {momo ? (
-                <div className="reg-payment-instructions reg-momo">
-                  <p>Send the fee by mobile money, then upload the confirmation.</p>
-                  <dl className="reg-details">
-                    <div><dt>Send to</dt><dd><b>{momo.number}</b>{momo.name ? ` · ${momo.name}` : ""}</dd></div>
-                    <div><dt>Amount</dt><dd><b>{rate > 0 ? localAmount(AMOUNTS[data.role], rate, currency) : `$${AMOUNTS[data.role]} USD`}</b>{rate > 0 ? ` (for $${AMOUNTS[data.role]} USD)` : ""}</dd></div>
-                    <div><dt>Reference</dt><dd><b>{paymentReference({ year: state.year, userId: actor.id })}</b> — type this as the payment reference</dd></div>
-                  </dl>
-                  <p className="reg-small">
-                    Then screenshot the confirmation SMS or the app’s transaction details showing the <b>Transaction ID</b>, amount and date. Photos of paper receipts are not accepted.
-                  </p>
+              {mine?.payment === "verified" ? (
+                <div className="reg-status-message confirmed">
+                  <h3>Payment received. Thank you.</h3>
+                  <p>${AMOUNTS[data.role]} USD paid by card or mobile money.</p>
                 </div>
+              ) : state.paystackKey ? (
+                <>
+                  <p>Pay securely by card or mobile money (MTN, Telecel, AT). You will come back here once the payment goes through.</p>
+                  <PaystackButton
+                    current={{ amount: AMOUNTS[data.role], year: state.year, data }}
+                    actor={actor}
+                    run={run}
+                    refresh={refresh}
+                    currency={currency}
+                    rate={rate}
+                    paystackKey={state.paystackKey}
+                    beforePay={() => api.action(actor, "save", data)}
+                  />
+                </>
               ) : (
-                <p className="reg-payment-instructions">Payment account details will be provided by the office. You can continue and pay later.</p>
+                <p className="reg-payment-instructions">Card and mobile-money payment opens shortly. Continue now and pay from My profile when it is available.</p>
               )}
-              {state.paystackKey && (
-                <p className="reg-small">Prefer to pay by card or mobile money directly? Continue now and use the Paystack button on My profile after confirming.</p>
-              )}
-              <Field label="Transaction ID" hint="From the confirmation SMS or app, e.g. MP240912.1234.A1. Each ID can be used once.">
-                <input value={transactionId} onChange={(e) => setTransactionId(e.target.value)} placeholder="Transaction ID" maxLength={40} autoComplete="off" disabled={!momo} />
-              </Field>
-              <Field label="Payment screenshot">
-                {proof && <Media path={proof} alt="Payment proof preview" className="reg-proof" />}
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  disabled={!momo}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    e.target.value = "";
-                    if (!file) return;
-                    run(async () => {
-                      const check = await checkReceiptImage(file);
-                      setProof(await api.upload(actor, file, "receipt"));
-                      setReceiptNote(["photograph", "unclear"].includes(check.verdict) ? check.reason : "");
-                    });
-                  }}
-                />
-              </Field>
-              {receiptNote && <p className="reg-status-message unclaimed">{receiptNote}</p>}
-              <label className="reg-check">
-                <input type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)} disabled={!momo} />
-                <span>I understand that my ${AMOUNTS[data.role]} USD commitment is non-refundable.</span>
-              </label>
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
-                {proof || transactionId.trim() ? (
-                  <button className="reg-primary" disabled={!proof || !transactionId.trim() || !ack || busy}>Next →</button>
-                ) : (
-                  <button className="reg-primary" disabled={busy}>I’ll pay later →</button>
-                )}
+                <button className="reg-primary" disabled={busy}>{mine?.payment === "verified" ? "Next →" : "I’ll pay later →"}</button>
               </div>
             </form>
           ) : (
@@ -1793,11 +1778,7 @@ function RegistrationForm({
                 <section className="reg-review-block">
                   <h3>Your pastors <b>{rosterRows.length}</b></h3>
                   {rosterRows.length ? (
-                    <ul className="reg-review-list">
-                      {rosterRows.map((r, i) => (
-                        <li key={i}>{r.name} · {String(r.dob).includes("-") ? r.dob.split("-").reverse().join("/") : r.dob}</li>
-                      ))}
-                    </ul>
+                    <RowsTable rows={rosterRows} />
                   ) : (
                     <p className="reg-small">None added yet. You can add them later under My pastors.</p>
                   )}
@@ -1807,11 +1788,8 @@ function RegistrationForm({
               {!editing && (
                 <section className="reg-review-block">
                   <h3>Payment</h3>
-                  {proof && transactionId.trim() ? (
-                    <>
-                      <p>${AMOUNTS[data.role]} USD by mobile money · Transaction ID <b>{transactionId.trim().toUpperCase()}</b></p>
-                      <Media path={proof} alt="Payment proof preview" className="reg-proof" />
-                    </>
+                  {mine?.payment === "verified" ? (
+                    <p>${AMOUNTS[data.role]} USD paid by card or mobile money. <Badge status="verified" /></p>
                   ) : (
                     <p className="reg-small">Not paid yet. You can pay later from My profile.</p>
                   )}
@@ -1905,7 +1883,7 @@ function CommitmentPreview({ role, country }) {
 // Card or mobile money through Paystack's inline checkout. The amount is charged
 // in GHS at the same indicative rate the member sees; the server confirms the
 // reference with Paystack before the payment is recorded.
-function PaystackButton({ current, actor, run, refresh, rate, currency, paystackKey }) {
+function PaystackButton({ current, actor, run, refresh, rate, currency, paystackKey, beforePay, label }) {
   const [ready, setReady] = useState(Boolean(globalThis.PaystackPop));
   useEffect(() => {
     if (globalThis.PaystackPop) return setReady(true);
@@ -1925,6 +1903,7 @@ function PaystackButton({ current, actor, run, refresh, rate, currency, paystack
         disabled={!ready}
         onClick={() =>
           run(async () => {
+            await beforePay?.();
             const reference = await new Promise((resolve, reject) => {
               const handler = globalThis.PaystackPop.setup({
                 key: paystackKey,
@@ -1934,7 +1913,7 @@ function PaystackButton({ current, actor, run, refresh, rate, currency, paystack
                 channels: ["card", "mobile_money", "bank", "bank_transfer"],
                 metadata: { custom_fields: [{ display_name: "Kuriake Castle", variable_name: "registration", value: `${current.year} ${current.data.role} ${current.data.name}` }] },
                 callback: (response) => resolve(response.reference),
-                onClose: () => reject(Error("Payment window closed before completing.")),
+                onClose: () => reject(Error("Payment window closed. Nothing was charged; you can pay later from My profile.")),
               });
               handler.openIframe();
             });
@@ -1943,7 +1922,7 @@ function PaystackButton({ current, actor, run, refresh, rate, currency, paystack
           }, "Payment received. Thank you for your commitment.")
         }
       >
-        Pay {ghs ? `GHS ${Math.round(ghs).toLocaleString()}` : `$${current.amount}`} by card or mobile money →
+        {label || `Pay ${ghs ? `GHS ${Math.round(ghs).toLocaleString()}` : `$${current.amount}`} by card or mobile money →`}
       </button>
       <small className="reg-small">
         Secure checkout by Paystack: cards, MTN / Telecel / AT mobile money, bank.
@@ -1952,25 +1931,16 @@ function PaystackButton({ current, actor, run, refresh, rate, currency, paystack
     </div>
   );
 }
-function Payment({ current, actor, run, refresh, momo = null, paystackKey = "" }) {
-  const [proof, setProof] = useState(current.proof || ""),
-    [ack, setAck] = useState(false),
-    [receiptNote, setReceiptNote] = useState(""),
-    [transactionId, setTransactionId] = useState(""),
-    [rates, setRates] = useState(null);
+function Payment({ current, actor, run, refresh, paystackKey = "" }) {
+  const [rates, setRates] = useState(null);
   const currency = currencyFor(current.data.country);
   useEffect(() => {
     if (!currency || currency === "USD") return;
     let live = true;
     loadRates().then((value) => live && setRates(value));
-    return () => {
-      live = false;
-    };
+    return () => { live = false; };
   }, [currency]);
   const rate = rateFor(rates, currency);
-  // Without a live server the sample number lets the flow be rehearsed.
-  const momoReady = Boolean(momo?.number) || !api.live;
-  if (!api.live && !momo?.number) momo = { number: "024 000 0000", name: "Kuriake Castle (sample)" };
   return (
     <section className="reg-card reg-payment">
       <span className="reg-eyebrow">ANNUAL RENEWAL MINISTERIAL FEE</span>
@@ -1980,134 +1950,26 @@ function Payment({ current, actor, run, refresh, momo = null, paystackKey = "" }
       </h2>
       {rate > 0 && (
         <p className="reg-local-amount">
-          about {localAmount(current.amount, rate, currency)} in{" "}
-          {current.data.country}
-          <small>
-            Indicative rate, {rates.updated || "recently updated"}. Kuriake Castle is
-            paid in US dollars; your bank or mobile-money provider sets the
-            final amount.
-          </small>
+          about {localAmount(current.amount, rate, currency)} in {current.data.country}
+          <small>Indicative rate, {rates.updated || "recently updated"}. Your bank or mobile-money provider sets the final amount.</small>
         </p>
       )}
       <b>Non-refundable</b>
       <p>
         {current.year} · {titleCase(current.data.role)}
       </p>
-      <Badge status={current.payment}>
-        {current.payment === "pending" ? "Payment awaiting verification" : null}
-      </Badge>
-      {["draft", "denied"].includes(current.status) ? (
-        <p className="reg-small">
-          Payment opens once your registration has been submitted.
-        </p>
-      ) : current.payment === "verified" ? (
+      <Badge status={current.payment} />
+      {current.payment === "verified" ? (
         <div className="reg-status-message confirmed">
           <h3>Thank you for your commitment.</h3>
-          <p>Your payment has been verified by the office.</p>
+          <p>Your payment has been received.</p>
         </div>
+      ) : ["draft", "denied"].includes(current.status) ? (
+        <p className="reg-small">Payment opens once your registration has been submitted.</p>
+      ) : paystackKey ? (
+        <PaystackButton current={current} actor={actor} run={run} refresh={refresh} currency={currency} rate={rate} paystackKey={paystackKey} />
       ) : (
-        <>
-          {momoReady ? (
-            <div className="reg-payment-instructions reg-momo">
-              <p>Send the fee by mobile money, then upload the confirmation.</p>
-              <dl className="reg-details">
-                <div><dt>Send to</dt><dd><b>{momo.number}</b>{momo.name ? ` · ${momo.name}` : ""}</dd></div>
-                <div><dt>Amount</dt><dd><b>{rate > 0 ? localAmount(current.amount, rate, currency) : `$${current.amount} USD`}</b>{rate > 0 ? ` (for $${current.amount} USD)` : ""}</dd></div>
-                <div><dt>Reference</dt><dd><b>{paymentReference(current)}</b> — type this as the payment reference</dd></div>
-              </dl>
-              <p className="reg-small">
-                Then screenshot the confirmation SMS or the app’s transaction details showing the <b>Transaction ID</b>, amount and date. Photos of paper receipts are not accepted.
-              </p>
-            </div>
-          ) : (
-            <p className="reg-payment-instructions">
-              Payment account details will be provided by the office.
-            </p>
-          )}
-          {paystackKey && current.payment !== "pending" && (
-            <PaystackButton current={current} actor={actor} run={run} refresh={refresh} currency={currency} rate={rate} paystackKey={paystackKey} />
-          )}
-          {current.paymentNote && (
-            <p className="reg-status-message unclaimed">
-              {current.paymentNote}
-            </p>
-          )}
-          {current.payment === "pending" ? (
-            <p>The office will check your screenshot and confirm receipt.</p>
-          ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                run(async () => {
-                  await api.action(actor, "payment", {
-                    proof,
-                    nonrefundable: ack,
-                    transactionId,
-                  });
-                  await refresh();
-                }, "Payment proof submitted for verification.");
-              }}
-            >
-              <Field label="Transaction ID" hint="From the confirmation SMS or app, e.g. MP240912.1234.A1. Each ID can be used once.">
-                <input
-                  required
-                  value={transactionId}
-                  onChange={(e) => setTransactionId(e.target.value)}
-                  placeholder="Transaction ID"
-                  maxLength={40}
-                  autoComplete="off"
-                />
-              </Field>
-              <Field label="Payment screenshot">
-                {proof && (
-                  <Media
-                    path={proof}
-                    alt="Payment proof preview"
-                    className="reg-proof"
-                  />
-                )}
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  disabled={!momoReady}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    e.target.value = "";
-                    if (!file) return;
-                    run(async () => {
-                      const check = await checkReceiptImage(file);
-                      setProof(await api.upload(actor, file, "receipt"));
-                      setReceiptNote(
-                        ["photograph", "unclear"].includes(check.verdict)
-                          ? check.reason
-                          : "",
-                      );
-                    });
-                  }}
-                />
-              </Field>
-              {receiptNote && (
-                <p className="reg-status-message unclaimed">{receiptNote}</p>
-              )}
-              <label className="reg-check">
-                <input
-                  required
-                  type="checkbox"
-                  checked={ack}
-                  onChange={(e) => setAck(e.target.checked)}
-                />
-                I understand that my ${current.amount} USD commitment is
-                non-refundable.
-              </label>
-              <button
-                className="reg-primary full"
-                disabled={!proof || !ack || !transactionId.trim() || !momoReady}
-              >
-                Submit payment proof →
-              </button>
-            </form>
-          )}
-        </>
+        <p className="reg-small">Card and mobile-money payment opens shortly. You will be able to pay here.</p>
       )}
     </section>
   );
@@ -2336,6 +2198,28 @@ const filterOptions = (list, org) => {
     country: unique("country", scope),
   };
 };
+// The same duplicate rule the server applies, so the preview matches what will be kept.
+const uniqueRows = (rows) =>
+  rows.filter((r, i) => !rows.slice(0, i).some((x) => namesAlike(x.name, r.name) && dobClose(x.dob, r.dob)));
+// A clean, read-only look at rows about to be submitted: name and date of birth.
+function RowsTable({ rows, title }) {
+  if (!rows.length) return null;
+  return (
+    <div className="reg-rows">
+      {title && <p className="reg-rows-title">{title} <b>{rows.length}</b></p>}
+      <div className="reg-rows-scroll">
+        <table>
+          <thead><tr><th>#</th><th>Full name</th><th>Date of birth</th></tr></thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <tr key={i}><td>{i + 1}</td><td>{r.name}</td><td>{String(r.dob).includes("-") ? r.dob.split("-").reverse().join("/") : r.dob}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
 function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
   return (
     <>
