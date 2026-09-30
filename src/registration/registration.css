@@ -2640,3 +2640,74 @@ p {
 .reg-table tr.claimed td:first-child {
   box-shadow: inset 3px 0 0 #1f9d55;
 }
+
+/* Public roll: two plain alphabetical columns */
+.reg-roll {
+  padding: 44px max(24px, 4vw) 60px;
+  display: grid;
+  gap: 22px;
+  justify-items: center;
+}
+.reg-roll .reg-doors-search {
+  margin: 0;
+}
+.reg-roll-columns {
+  width: 100%;
+  max-width: 1180px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+.reg-roll-column {
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+:root[data-theme="dark"] .reg-roll-column {
+  background: rgba(19, 26, 39, 0.55);
+}
+.reg-roll-column h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+}
+.reg-roll-column h2 b {
+  margin-left: 8px;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--panel-soft);
+  color: var(--muted);
+}
+.reg-roll-column ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.reg-roll-column li {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 2px;
+}
+.reg-roll-column li:last-child {
+  border-bottom: 0;
+}
+.reg-roll-name {
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 15px;
+}
+.reg-roll-column small {
+  color: var(--muted);
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .reg-roll-columns {
+    grid-template-columns: 1fr;
+  }
+}
