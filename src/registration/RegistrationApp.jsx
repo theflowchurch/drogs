@@ -2631,7 +2631,7 @@ function PublicList({ list }) {
                       {p.role === "bishop" ? (
                         <button type="button" className="reg-roll-name reg-roll-toggle" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : p.id)}>
                           {p.name}
-                          <span className="reg-roll-count">{under.length ? `${under.length} pastor${under.length === 1 ? "" : "s"}` : "no pastors listed"} {isOpen ? "▴" : "▾"}</span>
+                          <span className="reg-roll-count" aria-hidden="true">{isOpen ? "▴" : "▾"}</span>
                         </button>
                       ) : (
                         <span className="reg-roll-name">{p.name}</span>
