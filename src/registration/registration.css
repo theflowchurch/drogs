@@ -2891,11 +2891,15 @@ input[type="date"] {
   padding-right: 4px;
 }
 .reg-slot input {
+  width: 100%;
+  min-width: 0;
   min-height: 42px;
   padding: 8px 12px;
-}
-.reg-slot input[type="date"] {
-  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--ink);
+  background: var(--panel);
+  font-size: 14px;
 }
 .reg-slot.ok .reg-slot-n {
   color: #1f9d55;
