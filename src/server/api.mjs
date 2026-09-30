@@ -161,24 +161,41 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         // The office's decision goes to the address the bishop registered with; a mail failure must not undo the decision.
         if (reviewed?.data?.email) {
           const resubmit = payload.decision === 'resubmit';
-          const intro = resubmit ? 'The Kuriake Castle office has reviewed your registration and needs you to update it before it can be confirmed.' : 'The Kuriake Castle office has reviewed your registration and was not able to approve it.';
-          const next = resubmit ? `Sign in at ${url.origin}/signup/ with this email address, open My profile and make the changes, then submit again.` : 'If you believe this is a mistake, reply to this email or use “Any issues?” on the site.';
+          const role = reviewed.data.role === 'bishop' ? 'Bishop' : 'Pastor';
           const esc = v => String(v).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-          // When the photo is the problem, show theirs beside the required standard so the difference is plain.
+          const reasons = String(payload.note).split('\n').map(l => l.replace(/^•\s*/, '').trim()).filter(Boolean);
+          const photoIssue = reasons.some(r => /photo/i.test(r));
+          const others = reasons.filter(r => !/photo/i.test(r));
+          const requirements = role === 'Bishop' ? ['Red jacket', 'Face fully visible', 'Plain background'] : ['Official pastoral attire', 'Face fully visible', 'Plain background'];
+          // Their photo beside the required standard, embedded so it shows on any phone.
           const attachments = [];
           let comparison = '';
-          if (/photo/i.test(payload.note)) {
-            const bishopRole = reviewed.data.role === 'bishop';
-            attachments.push({ filename: bishopRole ? 'required-bishop.jpg' : 'required-pastor.webp', path: fileURLToPath(new URL(bishopRole ? '../../assets/brand/bishop-example.jpg' : '../../assets/pastors/reconciled-5.webp', import.meta.url)), cid: 'required' });
+          if (photoIssue) {
+            attachments.push({ filename: role === 'Bishop' ? 'required-bishop.jpg' : 'required-pastor.webp', path: fileURLToPath(new URL(role === 'Bishop' ? '../../assets/brand/bishop-example.jpg' : '../../assets/pastors/reconciled-5.webp', import.meta.url)), cid: 'required' });
             const yours = reviewed.data.photo ? await storage.bytes(reviewed.data.photo) : null;
             if (yours) attachments.push({ filename: 'your-photo.webp', content: yours, contentType: 'image/webp', cid: 'yours' });
             const cell = (cid, caption) => `<td style="padding:8px;text-align:center;vertical-align:top"><img src="cid:${cid}" alt="${esc(caption)}" width="200" style="display:block;width:200px;height:230px;object-fit:cover;border-radius:12px;margin:0 auto 8px"><div style="font:600 13px system-ui,sans-serif;color:#172139">${esc(caption)}</div></td>`;
-            comparison = `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:18px 0"><tr>${yours ? cell('yours', 'The photo you submitted') : ''}${cell('required', bishopRole ? 'Required: official red jacket' : 'Required: official pastoral attire')}</tr></table>`;
+            comparison = `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:14px 0 18px"><tr>${yours ? cell('yours', 'The photo you submitted') : ''}${cell('required', role === 'Bishop' ? 'Required: official red jacket' : 'Required: official pastoral attire')}</tr></table>`;
           }
-          const html = `<div style="font:15px/1.6 system-ui,-apple-system,sans-serif;color:#172139;max-width:560px"><p>Dear ${esc(reviewed.data.name)},</p><p>${esc(intro)}</p><ul>${String(payload.note).split('\n').filter(Boolean).map(l => `<li>${esc(l.replace(/^•\s*/, ''))}</li>`).join('')}</ul>${comparison}<p>${esc(next).replace(/(https?:\/\/\S+)/, '<a href="$1">$1</a>')}</p><p>Kuriake Castle office</p></div>`;
+          const intro = resubmit
+            ? `The Kuriake Castle Office has reviewed your registration. Before your registration can be confirmed, please make the following update${reasons.length > 1 ? 's' : ''}:`
+            : 'The Kuriake Castle Office has reviewed your registration and was not able to approve it, for the following reason(s):';
+          const photoText = photoIssue ? `Photo Requirement\nThe photo submitted does not meet the official attire requirements. As a ${role}, please upload a new photo that meets the following requirements:\n${requirements.map(r => `* ${r}`).join('\n')}\n\n` : '';
+          const othersText = others.length ? `${photoIssue ? 'Other Updates' : 'Updates Needed'}\n${others.map(r => `* ${r}`).join('\n')}\n\n` : '';
+          const closing = resubmit
+            ? `Please sign in at ${url.origin}/signup/ using the same email address you registered with, go to My Profile, make the update${reasons.length > 1 ? 's' : ''}, and submit your registration again.\n\nOnce the update has been submitted, your registration will be reviewed for confirmation.`
+            : 'If you believe this decision is a mistake, reply to this email or use “Any issues?” on the site.';
+          const text = `Dear ${reviewed.data.name},\n\n${intro}\n\n${photoText}${othersText}${closing}\n\nBlessings,\nKuriake Castle Office`;
+          const html = `<div style="font:15px/1.6 system-ui,-apple-system,sans-serif;color:#172139;max-width:560px">
+<p>Dear ${esc(reviewed.data.name)},</p>
+<p>${esc(intro)}</p>
+${photoIssue ? `<p><b>Photo Requirement</b><br>The photo submitted does not meet the official attire requirements. As a ${role}, please upload a new photo that meets the following requirements:</p><ul>${requirements.map(r => `<li>${esc(r)}</li>`).join('')}</ul>${comparison}` : ''}
+${others.length ? `<p><b>${photoIssue ? 'Other Updates' : 'Updates Needed'}</b></p><ul>${others.map(r => `<li>${esc(r)}</li>`).join('')}</ul>` : ''}
+<p>${esc(closing).replace(/(https?:\/\/\S+?)(\s|$)/, '<a href="$1">$1</a>$2').replace(/\n\n/g, '</p><p>')}</p>
+<p>Blessings,<br>Kuriake Castle Office</p></div>`;
           mailer.sendMail({ from: config.from, to: reviewed.data.email,
-            subject: resubmit ? 'Kuriake Castle: please update your registration' : 'Kuriake Castle: your registration was not approved',
-            text: `Dear ${reviewed.data.name},\n\n${intro}\n\n${payload.note}\n\n${next}\n\nKuriake Castle office`, html, attachments })
+            subject: resubmit ? `Action required: your ${role} registration is not confirmed yet` : `Your Kuriake Castle ${role} registration was not approved`,
+            text, html, attachments })
             .catch(error => logger.error('Review mail failed', { type: error.name, code: error.code }));
         }
         return json({ ok: true });

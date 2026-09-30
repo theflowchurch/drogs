@@ -25,6 +25,42 @@ export const normalEmail = (value) =>
     .trim()
     .toLowerCase();
 export const normalPhone = (value) => String(value || "").replace(/\D/g, "");
+// Dialling codes for the countries on the roll, so a number typed the local way
+// ("024 123 4567" in Ghana) becomes the international form WhatsApp needs.
+export const DIAL_CODES = {
+  ghana: "233", nigeria: "234", "united states": "1", usa: "1", "united kingdom": "44", uk: "44", "south africa": "27",
+  kenya: "254", mozambique: "258", botswana: "267", zambia: "260", liberia: "231", togo: "228", italy: "39", uganda: "256",
+  zimbabwe: "263", namibia: "264", "sierra leone": "232", benin: "229", switzerland: "41", australia: "61", canada: "1",
+  cameroon: "237", guyana: "592", rwanda: "250", "cote d'ivoire": "225", "cote d'ivoire (ivory coast)": "225", "ivory coast": "225",
+  germany: "49", tanzania: "255", "guinea-bissau": "245", jamaica: "1", guinea: "224", eswatini: "268", "new zealand": "64",
+  france: "33", brazil: "55", gabon: "241", madagascar: "261", gambia: "220", "burkina faso": "226", mali: "223", senegal: "221",
+  niger: "227", chad: "235", ethiopia: "251", malawi: "265", angola: "244", "cape verde": "238", "cabo verde": "238", netherlands: "31",
+  belgium: "32", spain: "34", portugal: "351", ireland: "353", sweden: "46", norway: "47", denmark: "45", india: "91",
+  "united arab emirates": "971", uae: "971", "trinidad and tobago": "1", "saint kitts and nevis": "1", "st kitts & nevis": "1", barbados: "1",
+  "congo": "242", "dr congo": "243", "democratic republic of the congo": "243", "equatorial guinea": "240", "central african republic": "236",
+  "south sudan": "211", sudan: "249", egypt: "20", morocco: "212", lesotho: "266", mauritius: "230", seychelles: "248", haiti: "509",
+  "burundi": "257", "sao tome and principe": "239", "fiji": "679", "papua new guinea": "675",
+};
+// "+233 024 123 4567", "0241234567" (with a country), "233241234567" → "+233241234567".
+// Returns "" when the number cannot be made international.
+export function whatsappNumber(value, country = "") {
+  let digits = normalPhone(value);
+  const typedPlus = /^\s*\+/.test(String(value || "")) || /^\s*00/.test(String(value || ""));
+  if (/^\s*00/.test(String(value || ""))) digits = digits.replace(/^00/, "");
+  const code = DIAL_CODES[String(country || "").trim().toLowerCase()] || "";
+  const codes = Object.values(DIAL_CODES).sort((a, b) => b.length - a.length);
+  if (!typedPlus) {
+    if (digits.startsWith("0")) {
+      if (!code) return ""; // a local number with no country to place it in
+      digits = code + digits.slice(1); // local form: the 0 stands for the country code
+    } else if (code ? !digits.startsWith(code) : !codes.some((c) => digits.startsWith(c))) return "";
+  }
+  // A trunk 0 kept after the country code ("+233 024…") is dropped.
+  const dial = codes.find((c) => digits.startsWith(c));
+  if (dial && digits[dial.length] === "0" && digits.length - dial.length > 8) digits = dial + digits.slice(dial.length + 1);
+  if (digits.length < 8 || digits.length > 15) return "";
+  return `+${digits}`;
+}
 // Dates come as day/month/year from spreadsheets, or ISO from the form.
 export function parseDob(value) {
   const v = String(value ?? "").trim();
@@ -94,8 +130,9 @@ export function validateProfile(p, email, { draft = false } = {}) {
       throw Error("Enter your first and last names.");
     if (!/^\S+@\S+\.\S+$/.test(q.email))
       throw Error("Enter a valid email address.");
-    if (normalPhone(q.phone).length < 7 || normalPhone(q.phone).length > 15)
-      throw Error("Enter a phone number with its country code.");
+    q.phone = whatsappNumber(q.phone, q.country);
+    if (!q.phone)
+      throw Error("Enter your WhatsApp number with its country code, e.g. +233 24 123 4567 (no leading 0).");
     if (
       !/^\d{4}-\d{2}-\d{2}$/.test(q.dob) ||
       !Number.isFinite(Date.parse(q.dob)) ||

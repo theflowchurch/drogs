@@ -1498,8 +1498,8 @@ function RegistrationForm({
                   />
                 </Field>
                 <Field
-                  label="Phone number"
-                  hint="Include your country code, e.g. +233"
+                  label="WhatsApp number"
+                  hint="With the country code and no leading 0, e.g. +233 24 123 4567. Guidance is sent to this number on WhatsApp."
                 >
                   <input
                     required

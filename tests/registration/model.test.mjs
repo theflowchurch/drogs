@@ -11,6 +11,7 @@ import {
   referenceMatches,
   directoryPeople,
   publicRoll,
+  whatsappNumber,
   nearMatches,
   namesAlike,
   titleFor,
@@ -503,4 +504,18 @@ test("unclaimed pastors are flagged yellow when the list nearly matches, red whe
   const kojo = { id: "p4", email: "kojo@example.com" };
   s = applyAction(s, kojo, "submit", { ...profile(kojo, "pastor", "Kojo Denzel"), dob: "1985-09-09", email: kojo.email, bishopId: "B1" });
   assert.deepEqual(nearMatches(s, s.registrations.find((r) => r.userId === kojo.id)), []);
+});
+
+test("WhatsApp numbers are stored in international form without the trunk zero", () => {
+  assert.equal(whatsappNumber("+233 024 123 4567", "Ghana"), "+233241234567", "zero after the code is dropped");
+  assert.equal(whatsappNumber("0241234567", "Ghana"), "+233241234567", "local form takes the country's code");
+  assert.equal(whatsappNumber("233241234567", "Ghana"), "+233241234567", "bare digits with the code are accepted");
+  assert.equal(whatsappNumber("00233241234567", ""), "+233241234567", "00 prefix is the same as +");
+  assert.equal(whatsappNumber("+44 7700 900123", "United Kingdom"), "+447700900123");
+  assert.equal(whatsappNumber("+1 702 945 8407", "United States"), "+17029458407", "a 1 code never loses a digit");
+  assert.equal(whatsappNumber("0241234567", ""), "", "a local number without a known country cannot be placed");
+  assert.equal(whatsappNumber("12345", "Ghana"), "", "too short");
+  const p = validateProfile({ ...profile(pastor), phone: "024 123 4567", country: "Ghana" }, pastor.email);
+  assert.equal(p.phone, "+233241234567");
+  assert.throws(() => validateProfile({ ...profile(pastor), phone: "0241234567", country: "Atlantis" }, pastor.email), /country code/);
 });
