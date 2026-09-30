@@ -1841,14 +1841,14 @@ p {
 .reg-brand-mark {
   display: inline-grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: var(--dark);
 }
+/* The castle alone, no box: navy on the light theme, white on the dark one */
 .reg-brand-mark img {
-  height: 22px;
+  height: 26px;
   width: auto;
+}
+:root[data-theme="dark"] img[src$="castle-icon.png"] {
+  content: url("/assets/brand/castle-icon-white.png");
 }
 .reg-gate-inner > img {
   height: 96px;
