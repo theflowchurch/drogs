@@ -43,7 +43,7 @@ with sync_playwright() as p:
     try:
         login()
         page.get_by_label('Registering as').select_option('bishop')
-        for label, value in [('First name','Browser'),('Last name','Bishop'),('Phone number','+233201234567'),('Date of birth','1990-02-01'),('Country','Ghana'),('City','Accra')]:
+        for label, value in [('First name','Browser'),('Last name','Bishop'),('WhatsApp number','+233201234567'),('Date of birth','1990-02-01'),('Country','Ghana'),('City','Accra')]:
             page.get_by_label(label, exact=True).fill(value)
         page.get_by_label('Gender',exact=True).select_option('male')
         page.get_by_label('Organization',exact=True).select_option('First Love')
