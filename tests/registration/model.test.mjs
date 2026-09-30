@@ -143,18 +143,14 @@ test("a close name and birthday match automatically; a wrong birthday waits for 
     /no longer/,
   );
 });
-test("the same person twice on one list is refused", () => {
-  const s = setup();
-  assert.throws(
-    () =>
-      applyAction(s, bishop, "addRoster", {
-        rows: [
-          { name: "John Doe", dob: "01/02/1990" },
-          { name: "John K Doe", dob: "02/02/1990" },
-        ],
-      }),
-    /already in this year/,
-  );
+test("the same person twice on one list is kept once", () => {
+  const s = applyAction(setup(), bishop, "addRoster", {
+    rows: [
+      { name: "John Doe", dob: "01/02/1990" },
+      { name: "John K Doe", dob: "02/02/1990" },
+    ],
+  });
+  assert.equal(s.rosters.filter((r) => r.status === "active").length, 1);
 });
 test("removal preserves payment and next cycle has fresh counts and no copied payment", () => {
   let s = setup();
@@ -457,4 +453,41 @@ test("female bishops are addressed by their organization's title", () => {
   assert.equal(titleFor({ role: "bishop", gender: "male", organization: "First Love" }), "Bishop");
   assert.equal(titleFor({ role: "pastor", gender: "female", organization: "First Love" }), "Pastor");
   assert.throws(() => validateProfile({ ...profile(pastor), gender: "" }, pastor.email), /male or female/);
+});
+test("a pastor matched under a pending bishop stays on the roll when the office confirms the bishop with a reference", () => {
+  let s = applyAction(emptyState(), bishop, "submit", profile(bishop, "bishop", "Ama Bishop"));
+  s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: bishop.id });
+  assert.equal(s.registrations.at(-1).status, "confirmed");
+  s = applyAction(s, office, "approveBishop", { userId: bishop.id, referenceId: "B1" });
+  const reg = s.registrations.find((r) => r.userId === pastor.id);
+  assert.equal(reg.status, "confirmed");
+  assert.equal(reg.data.bishopId, "B1", "the pastor follows the bishop's new key");
+  const roll = publicRoll(s, [{ id: "B1", role: "bishop", name: "Ama Bishop", title: "Bishop", organization: "First Love", denomination: "First Love Church", image: "", city: "Accra", country: "Ghana" }]);
+  assert.ok(roll.some((p) => p.role === "pastor" && p.name === "John Doe"), "the pastor keeps their own public card");
+});
+test("a pastor removed from the list by mistake is matched again when re-added", () => {
+  let s = setup();
+  s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: "B1" });
+  assert.equal(s.registrations.at(-1).status, "confirmed");
+  s = applyAction(s, bishop, "removeRoster", { id: s.rosters[0].id, reason: "Transferred" });
+  assert.equal(s.registrations.at(-1).status, "removed");
+  s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
+  assert.equal(s.registrations.at(-1).status, "confirmed");
+  assert.equal(s.rosters.filter((r) => r.status === "active" && r.pastorId === pastor.id).length, 1);
+});
+test("a header row without digits is skipped whatever it says", () => {
+  assert.deepEqual(parseRoster("Full Name,Date of Birth\nJohn Doe,01/02/1990").map((r) => r.name), ["John Doe"]);
+  assert.deepEqual(parseRoster("Pastor,Date of birth\nJohn Doe,01/02/1990").map((r) => r.name), ["John Doe"]);
+  assert.equal(parseRoster("John Doe,01/02/1990").length, 1, "a single data row is not a header");
+});
+test("a pastor confirmed by hand gets a row with a date of birth so a later upload does not duplicate them", () => {
+  let s = setup();
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: "B1" });
+  assert.equal(s.registrations.at(-1).status, "unclaimed");
+  s = applyAction(s, bishop, "claim", { userId: pastor.id });
+  assert.equal(s.rosters[0].dob, profile(pastor).dob);
+  s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
+  assert.equal(s.rosters.filter((r) => r.status === "active").length, 1, "the upload is recognised as the same person");
 });

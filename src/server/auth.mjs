@@ -36,9 +36,17 @@ export function createAuth({ pool, config, mailer }) {
   // Signing in is only for people who already registered (a profile or a
   // registration, pending or approved). Nobody else is told anything more
   // than "not recognised", and no code is ever emailed to an unknown address.
-  async function requireMember(email) {
+  async function isMember(email) {
     const [[known]] = await pool.execute('SELECT u.id FROM dr_users u WHERE u.email=? AND (EXISTS (SELECT 1 FROM dr_profiles p WHERE p.id=u.id) OR EXISTS (SELECT 1 FROM dr_registrations r WHERE r.user_id=u.id))', [email]);
-    if (!known) throw new HttpError(404, 'Sorry, this email is not recognised. Only registered bishops and pastors can sign in.');
+    return Boolean(known);
+  }
+  async function requireMember(email) {
+    if (!(await isMember(email))) throw new HttpError(404, 'Sorry, this email is not recognised. Only registered bishops and pastors can sign in.');
+  }
+  // The sign-up form must not become a back door into an existing member's
+  // account: an email that already belongs to a member is treated as a sign-in.
+  async function effectiveMode(email, mode) {
+    return mode === 'signup' && (await isMember(email)) ? 'signin' : mode;
   }
   return {
     // The office code only opens the door; the person then signs in with an approved email and a code sent to it.
@@ -70,6 +78,7 @@ export function createAuth({ pool, config, mailer }) {
     },
     async requestCode(email, origin = config.origin, mode = 'signup') {
       if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
+      mode = await effectiveMode(email, mode);
       if (mode === 'signin') await requireMember(email);
       // Sign-up through the shared link may skip the code; sign-in never does.
       if (mode === 'signup' && !config.requireEmailCode) return { codeRequired: false };
@@ -90,6 +99,7 @@ export function createAuth({ pool, config, mailer }) {
     async verifyCode(email, code, mode = 'signup') {
       // Office sign-ins always need the emailed code, whatever the member setting is.
       if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
+      mode = await effectiveMode(email, mode);
       const open = mode === 'signup' && !config.requireEmailCode;
       if (mode === 'signin') await requireMember(email);
       // With codes off, an email alone signs in; office addresses are excluded so the

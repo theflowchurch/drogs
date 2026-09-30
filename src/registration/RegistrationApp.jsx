@@ -2119,27 +2119,10 @@ const filterOptions = (list, org) => {
     country: unique("country", scope),
   };
 };
-// Card size is a slider (remembered per browser): small = more people per row.
-// Phones start at three per row; laptops at the classic size.
-const cardDefault = () => (typeof window !== "undefined" && window.innerWidth < 700 ? 100 : 190);
 function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
-  const [size, setSize] = useState(190);
-  useEffect(() => {
-    const saved = Number(localStorage.getItem("kc-card-size"));
-    setSize(saved >= 70 && saved <= 320 ? saved : cardDefault());
-  }, []);
-  const zoom = (v) => {
-    setSize(v);
-    localStorage.setItem("kc-card-size", String(v));
-  };
   return (
     <>
-      <div className="reg-zoom">
-        <span aria-hidden="true">▦</span>
-        <input type="range" min={70} max={320} step={10} value={size} onChange={(e) => zoom(Number(e.target.value))} aria-label="Card size: left for more people per row, right for larger photos" />
-        <span aria-hidden="true">▢</span>
-      </div>
-      <div className="reg-people-grid" style={{ "--card-min": `${size}px` }}>
+      <div className="reg-people-grid">
         {list.slice(0, limit).map((p) => (
           <button
             className="reg-person-card"
@@ -2597,17 +2580,6 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
   );
   return (
     <>
-      <div className="reg-stats">
-        {[
-          ["Bishops", scope.filter((p) => p.role === "bishop").length],
-          ["Pastors", scope.filter((p) => p.role === "pastor").length],
-        ].map(([label, n]) => (
-          <div key={label}>
-            <span>{label}</span>
-            <strong>{n.toLocaleString()}</strong>
-          </div>
-        ))}
-      </div>
       <div className="reg-toggle" role="group" aria-label="Bishops or pastors">
         {[
           ["bishop", "Bishops"],
@@ -2659,8 +2631,9 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
     [bishopId, setBishopId] = useState(""),
     [rosterId, setRosterId] = useState("");
   const selected = records.find((r) => r.userId === selectedId);
+  const bishops = state.bishops || [];
   const bishop =
-    selected && state.directory.find((b) => b.id === selected.data.bishopId);
+    selected && bishops.find((b) => b.id === selected.data.bishopId);
   const claimable = Boolean(bishop?.accountId) || (!office && !bishop);
   const candidates = selected
     ? state.rosters.filter(
@@ -2693,7 +2666,7 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
               </p>
               <small>
                 Bishop:{" "}
-                {state.directory.find((b) => b.id === r.data.bishopId)?.name ||
+                {bishops.find((b) => b.id === r.data.bishopId)?.name ||
                   `${r.data.bishopName || "not given"} (typed, not matched)`}
               </small>
             </div>
@@ -2738,9 +2711,8 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
                       value={bishopId}
                       onChange={(e) => setBishopId(e.target.value)}
                     >
-                      <option value="">Select approved bishop</option>
-                      {state.directory
-                        .filter((b) => b.accountId)
+                      <option value="">Select a registered bishop</option>
+                      {bishops
                         .map((b) => (
                           <option key={b.id} value={b.id}>
                             {b.name}
@@ -3275,8 +3247,8 @@ async function readSpreadsheet(file) {
   const sheet = book.Sheets[book.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: true, defval: "" });
   const cell = (v) =>
-    v instanceof Date
-      ? `${String(v.getUTCDate()).padStart(2, "0")}/${String(v.getUTCMonth() + 1).padStart(2, "0")}/${v.getUTCFullYear()}`
+    v instanceof Date // SheetJS builds local-midnight dates; read them in local time
+      ? `${String(v.getDate()).padStart(2, "0")}/${String(v.getMonth() + 1).padStart(2, "0")}/${v.getFullYear()}`
       : typeof v === "number" && v > 20000 && v < 80000
         ? (() => { const d = new Date(Math.round((v - 25569) * 86400000)); return `${String(d.getUTCDate()).padStart(2, "0")}/${String(d.getUTCMonth() + 1).padStart(2, "0")}/${d.getUTCFullYear()}`; })()
         : String(v ?? "").trim();
@@ -3335,8 +3307,7 @@ function Roster({ state, year, actor, office, perform }) {
             onChange={(e) => setBishopId(e.target.value)}
           >
             <option value="">All bishops</option>
-            {state.directory
-              .filter((b) => b.accountId)
+            {(state.bishops || [])
               .map((b) => (
                 <option key={b.id} value={b.accountId}>
                   {b.name}
@@ -3452,7 +3423,7 @@ function Roster({ state, year, actor, office, perform }) {
                   {office && (
                     <td>
                       {
-                        state.directory.find((b) => b.accountId === r.bishopId)
+                        (state.bishops || []).find((b) => b.accountId === r.bishopId)
                           ?.name
                       }
                     </td>

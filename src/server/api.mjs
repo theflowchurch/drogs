@@ -146,7 +146,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         if (name === 'recordPaystack') throw new HttpError(400, 'Payments are recorded after Paystack confirms them.');
         await transaction(pool, async conn => {
           const before = await readState(conn, true);
-          if (['save', 'submit'].includes(name) && payload.photo) await assertOwnedMedia(conn, actor, payload.photo, 'portrait');
+          if (['save', 'submit', 'update'].includes(name) && payload.photo) await assertOwnedMedia(conn, actor, payload.photo, 'portrait');
           if (name === 'payment') await assertOwnedMedia(conn, actor, payload.proof, 'receipt');
           if (name === 'approveBishop' && payload.referenceId && !references.some(r => r.id === payload.referenceId))
             throw new HttpError(400, 'Choose a listed bishop reference.');

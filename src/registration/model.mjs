@@ -149,7 +149,7 @@ export const registeredBishops = (state) =>
     .filter((p) => submittedBishop(state, p))
     .map((p) => {
       const r = state.registrations.find((x) => x.userId === p.id && x.year === state.year);
-      return { id: bishopKey(p), name: p.name, approved: Boolean(p.bishopApproved), photo: r?.data.photo || "", organization: p.organization || "", denomination: r?.data.denomination || "" };
+      return { id: bishopKey(p), accountId: p.id, name: p.name, approved: Boolean(p.bishopApproved), photo: r?.data.photo || "", organization: p.organization || "", denomination: r?.data.denomination || "" };
     })
     .sort((a, b) => a.name.localeCompare(b.name));
 export const approvedBishop = (state, id) =>
@@ -231,11 +231,17 @@ function reconcile(state) {
           : "pending";
       continue;
     }
+    // An active list row already linked to this pastor settles it. The key the
+    // pastor stored may predate the bishop's confirmation, so re-key from the
+    // row's owner every time. Removed rows do not pin the pastor: a re-added
+    // name can match again below.
     const assigned = state.rosters.find(
-      (x) => x.year === r.year && x.pastorId === r.userId,
+      (x) => x.year === r.year && x.pastorId === r.userId && x.status === "active",
     );
     if (assigned) {
-      r.status = assigned.status === "active" ? "confirmed" : "removed";
+      r.status = "confirmed";
+      const owner = state.profiles.find((p) => p.id === assigned.bishopId);
+      if (owner) r.data.bishopId = bishopKey(owner);
       continue;
     }
     if (!bishopKeyed(state, r.data.bishopId)) {
@@ -248,7 +254,10 @@ function reconcile(state) {
       r.status = "confirmed";
       const owner = state.profiles.find((p) => p.id === match.bishopId);
       if (owner) r.data.bishopId = bishopKey(owner);
-    } else r.status = "unclaimed";
+    } else
+      r.status = state.rosters.some((x) => x.year === r.year && x.pastorId === r.userId)
+        ? "removed"
+        : "unclaimed";
   }
 }
 export function parseRoster(text) {
@@ -273,7 +282,8 @@ export function parseRoster(text) {
     } else if (c !== "\r") field += c;
   }
   if (quoted) throw Error("The pasted list has an unclosed quote.");
-  if (rows[0]?.[0]?.toLowerCase() === "name") rows.shift();
+  // A header row never contains a digit; every data row carries a date of birth.
+  if (rows.length > 1 && !/\d/.test(rows[0].join(""))) rows.shift();
   return rows.map(([name, dob = "", email = "", phone = ""]) => ({
     name,
     dob: parseDob(dob) || dob,
@@ -440,7 +450,7 @@ export function applyAction(
             dobClose(x.dob, r.dob),
         )
       )
-        throw Error(`${r.name} is already in this year’s list.`);
+        continue; // already on this year's list (e.g. re-uploading an updated spreadsheet)
       state.rosters.push({
         ...r,
         id: makeId(),
@@ -488,6 +498,7 @@ export function applyAction(
         bishopId: bishop.id,
         year: state.year,
         name: r.data.name,
+        dob: r.data.dob,
         email: r.data.email,
         phone: r.data.phone,
         church: r.data.church,

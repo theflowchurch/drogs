@@ -794,21 +794,21 @@ p {
 }
 .reg-people-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(var(--card-min, 190px), 100%), 1fr));
-  gap: clamp(8px, calc(var(--card-min, 190px) * 0.1), 20px);
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 20px;
 }
-.reg-zoom {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  margin: 0 0 12px;
-  color: var(--muted);
-  font-size: 13px;
-}
-.reg-zoom input {
-  width: min(180px, 50vw);
-  accent-color: var(--accent);
+/* Phones: two per row, smaller type */
+@media (max-width: 700px) {
+  .reg-people-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .reg-person-card > .reg-person-name {
+    padding: 10px 26px 10px 12px;
+  }
+  .reg-person-name h3 {
+    font-size: 13px;
+  }
 }
 .reg-person-card {
   text-align: left;
@@ -1797,11 +1797,11 @@ p {
 }
 .reg-person-card > .reg-person-name {
   position: relative;
-  padding: clamp(6px, calc(var(--card-min, 190px) * 0.085), 16px) clamp(22px, calc(var(--card-min, 190px) * 0.21), 40px) clamp(6px, calc(var(--card-min, 190px) * 0.085), 16px) clamp(8px, calc(var(--card-min, 190px) * 0.095), 18px);
+  padding: 16px 40px 16px 18px;
 }
 .reg-person-name h3 {
   margin: 0;
-  font-size: clamp(10px, calc(var(--card-min, 190px) * 0.085), 16px);
+  font-size: 16px;
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
