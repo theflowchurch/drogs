@@ -2838,32 +2838,6 @@ p {
   text-align: center;
 }
 
-.reg-add-pastor {
-  display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: end;
-}
-.reg-add-pastor .reg-field {
-  margin: 0;
-}
-.reg-add-pastor .reg-plus {
-  height: 46px;
-  width: 46px;
-  border-radius: 12px;
-  border: 1px solid var(--accent);
-  background: var(--accent);
-  color: #fff;
-  font-size: 26px;
-  line-height: 1;
-  cursor: pointer;
-}
-.reg-add-pastor .reg-plus:disabled {
-  opacity: 0.5;
-}
-.reg-add-pastor [role="alert"] {
-  grid-column: 1 / -1;
-}
 .reg-or {
   margin: 14px 0 6px;
 }
@@ -2889,4 +2863,75 @@ input[type="date"] {
 }
 .reg-attire-example figcaption b {
   margin-bottom: 4px;
+}
+
+/* Pastor sheet: numbered rows of name + date of birth */
+.reg-slots {
+  display: grid;
+  gap: 6px;
+  margin: 6px 0 14px;
+}
+.reg-slot {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+.reg-slot.head {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0 0 2px;
+}
+.reg-slot-n {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+  padding-right: 4px;
+}
+.reg-slot input {
+  min-height: 42px;
+  padding: 8px 12px;
+}
+.reg-slot input[type="date"] {
+  min-height: 42px;
+}
+.reg-slot.ok .reg-slot-n {
+  color: #1f9d55;
+  font-weight: 700;
+}
+.reg-slot.bad input {
+  border-color: var(--red);
+}
+.reg-slot-error {
+  grid-column: 2 / -1;
+  color: var(--red);
+  font-size: 12px;
+}
+.reg-upload-alt {
+  margin: 14px 0;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+.reg-upload-alt summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.reg-upload-alt .reg-field {
+  margin: 12px 0 4px;
+}
+@media (max-width: 700px) {
+  .reg-slot {
+    grid-template-columns: 26px minmax(0, 1fr);
+  }
+  .reg-slot input[type="date"] {
+    grid-column: 2;
+  }
+  .reg-slot.head span:last-child {
+    display: none;
+  }
 }

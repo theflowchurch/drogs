@@ -60,8 +60,8 @@ with sync_playwright() as p:
   page.get_by_label('Match to existing bishop reference').select_option('B1');page.get_by_label('I have verified this person').check();page.get_by_role('button',name='Confirm bishop').click()
   expect(page.get_by_text('No bishop registrations awaiting confirmation')).to_be_visible()
   signout();open_account('bishop@example.com');page.get_by_role('button',name='My pastors',exact=True).click()
-  page.get_by_label('Pastor’s full name',exact=True).fill('Jon Demo');page.get_by_label('Pastor’s date of birth',exact=True).fill('1988-07-14')  # wrong birthday: John stays Unclaimed until the office links him
-  page.get_by_role('button',name='Add pastor',exact=True).click();expect(page.get_by_role('cell',name='Jon Demo',exact=True)).to_be_visible()
+  page.get_by_label('Pastor 1 full name',exact=True).fill('Jon Demo');page.get_by_label('Pastor 1 date of birth',exact=True).fill('1988-07-14')  # wrong birthday: John stays Unclaimed until the office links him
+  page.get_by_role('button',name='Add to my list →',exact=True).click();expect(page.get_by_role('cell',name='Jon Demo',exact=True)).to_be_visible()
   signout();open_account('pastor@example.com');register('John Demo')
   page.get_by_role('button',name='Save draft').click();expect(page.get_by_text('Draft saved. You can return to finish it.')).to_be_visible()
   page.reload();page.wait_for_load_state('networkidle');expect(page.get_by_label('First name',exact=True)).to_have_value('John')

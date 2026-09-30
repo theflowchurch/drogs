@@ -1175,6 +1175,7 @@ function RegistrationForm({
     // Onboarding is one guided path: details → (bishops: pastors) → payment → review → confirm.
     [step, setStep] = useState("details"),
     [rosterRows, setRosterRows] = useState([]),
+    [slots, setSlots] = useState(() => blankSlots(22)),
     [rosterError, setRosterError] = useState(""),
     [rates, setRates] = useState(null),
     [accurate, setAccurate] = useState(false),
@@ -1617,31 +1618,45 @@ function RegistrationForm({
                 <div>
                   <h2>Add your pastors</h2>
                   <p>
-                    Upload your Excel or CSV file: <b>full name</b> in the first column, <b>date of birth</b> (day/month/year, e.g. 14/03/1985) in the second. Or add pastors one at a time below. Each pastor adds their own photo when they register.
+                    Type each pastor’s <b>full name</b> and <b>date of birth</b> on a row below. Empty rows are ignored. Each pastor adds their own photo when they register.
                   </p>
                 </div>
               </div>
-              <Field label="Upload a spreadsheet" hint="Excel (.xlsx, .xls) or CSV.">
-                <input
-                  type="file"
-                  accept=".xlsx,.xls,.csv,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    e.target.value = "";
-                    if (!file) return;
-                    readSpreadsheet(file)
-                      .then((t) => { setRosterRows((rows) => uniqueRows([...rows, ...parseRoster(t)])); setRosterError(""); })
-                      .catch((err) => setRosterError(err.message));
-                  }}
-                />
-              </Field>
-              <p className="reg-small reg-or">Or add them one at a time:</p>
-              <AddPastorRow onAdd={(row) => { setRosterRows((rows) => uniqueRows([...rows, row])); setRosterError(""); }} />
+              <PastorSlots slots={slots} setSlots={setSlots} />
+              <details className="reg-upload-alt">
+                <summary>Have a spreadsheet instead? Upload it here</summary>
+                <Field label="Upload a spreadsheet" hint="Excel (.xlsx, .xls) or CSV: full name in the first column, date of birth (day/month/year) in the second. The rows above fill in from the file.">
+                  <input
+                    type="file"
+                    accept=".xlsx,.xls,.csv,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      e.target.value = "";
+                      if (!file) return;
+                      readSpreadsheet(file)
+                        .then((t) => {
+                          const rows = parseRoster(t).map((r) => ({ name: r.name, dob: /^\d{4}-\d{2}-\d{2}$/.test(r.dob) ? r.dob : "" }));
+                          setSlots((cur) => { const kept = cur.filter((r) => r.name.trim() || r.dob); const merged = [...kept, ...rows]; return merged.length < 22 ? [...merged, ...blankSlots(22 - merged.length)] : merged; });
+                          setRosterError("");
+                        })
+                        .catch((err) => setRosterError(err.message));
+                    }}
+                  />
+                </Field>
+              </details>
               {rosterError && <p role="alert" className="reg-status-message unclaimed">{rosterError}</p>}
-              <RowsTable rows={rosterRows} title="Pastors about to be submitted" onRemove={(i) => setRosterRows((rows) => rows.filter((_, k) => k !== i))} />
+              <p className="reg-small">{filledSlots(slots).length ? `${uniqueRows(filledSlots(slots)).length} pastor${uniqueRows(filledSlots(slots)).length === 1 ? "" : "s"} ready to submit. You will see them again on the review page before confirming.` : "No pastors entered yet."}</p>
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
-                <button type="button" className="reg-primary" onClick={next}>{rosterRows.length ? "Continue →" : "I’ll add my pastors later →"}</button>
+                <button
+                  type="button"
+                  className="reg-primary"
+                  disabled={!slotsComplete(slots)}
+                  title={slotsComplete(slots) ? undefined : "Finish or clear the highlighted rows first"}
+                  onClick={() => { setRosterRows(uniqueRows(filledSlots(slots))); next(); }}
+                >
+                  {filledSlots(slots).length ? "Continue →" : "I’ll add my pastors later →"}
+                </button>
               </div>
             </div>
           ) : step === "payment" ? (
@@ -2185,34 +2200,35 @@ const filterOptions = (list, org) => {
 // The same duplicate rule the server applies, so the preview matches what will be kept.
 const uniqueRows = (rows) =>
   rows.filter((r, i) => !rows.slice(0, i).some((x) => namesAlike(x.name, r.name) && dobClose(x.dob, r.dob)));
-// One pastor at a time: full name and date of birth, nothing else.
-function AddPastorRow({ onAdd, busy = false }) {
-  const [name, setName] = useState(""),
-    [dob, setDob] = useState(""),
-    [error, setError] = useState("");
+// A sheet of blank rows to fill in: full name and date of birth per pastor.
+// Empty rows are ignored; a spreadsheet can fill rows too; more rows on demand.
+const blankSlots = (n) => Array.from({ length: n }, () => ({ name: "", dob: "" }));
+function PastorSlots({ slots, setSlots, count = 22 }) {
+  const update = (i, key, value) => setSlots((rows) => rows.map((r, k) => (k === i ? { ...r, [key]: value } : r)));
+  const problem = (r) => {
+    if (!r.name.trim() && !r.dob) return "";
+    if (r.name.trim().split(/\s+/).length < 2) return "Full name needed (first and last).";
+    if (!r.dob) return "Date of birth needed.";
+    return "";
+  };
   return (
-    <form
-      className="reg-add-pastor"
-      onSubmit={(e) => {
-        e.preventDefault();
-        const full = name.trim().replace(/\s+/g, " ");
-        if (full.split(" ").length < 2) return setError("Enter the pastor’s full name (first and last).");
-        if (!dob) return setError("Enter the pastor’s date of birth.");
-        setError("");
-        Promise.resolve(onAdd({ name: full, dob })).then((ok) => { if (ok !== false) { setName(""); setDob(""); } });
-      }}
-    >
-      <Field label="Pastor’s full name">
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. John Mensah" autoComplete="off" />
-      </Field>
-      <Field label="Pastor’s date of birth">
-        <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} max={new Date().toISOString().slice(0, 10)} />
-      </Field>
-      <button className="reg-plus" disabled={busy} aria-label="Add pastor" title="Add pastor">+</button>
-      {error && <p role="alert" className="reg-status-message unclaimed">{error}</p>}
-    </form>
+    <div className="reg-slots">
+      <div className="reg-slot head" aria-hidden="true"><span>#</span><span>Pastor’s full name</span><span>Date of birth</span></div>
+      {slots.map((r, i) => (
+        <div key={i} className={`reg-slot ${problem(r) ? "bad" : r.name.trim() && r.dob ? "ok" : ""}`}>
+          <span className="reg-slot-n">{i + 1}</span>
+          <input aria-label={`Pastor ${i + 1} full name`} value={r.name} onChange={(e) => update(i, "name", e.target.value)} placeholder="Full name" autoComplete="off" />
+          <input aria-label={`Pastor ${i + 1} date of birth`} type="date" value={r.dob} onChange={(e) => update(i, "dob", e.target.value)} max={new Date().toISOString().slice(0, 10)} />
+          {problem(r) && <small className="reg-slot-error">{problem(r)}</small>}
+        </div>
+      ))}
+      <button type="button" className="reg-text" onClick={() => setSlots((rows) => [...rows, ...blankSlots(count)])}>+ Add {count} more rows</button>
+    </div>
   );
 }
+// Rows that are actually filled in, as the list expects them.
+const filledSlots = (slots) => slots.filter((r) => r.name.trim() && r.dob).map((r) => ({ name: r.name.trim().replace(/\s+/g, " "), dob: r.dob }));
+const slotsComplete = (slots) => slots.every((r) => (!r.name.trim() && !r.dob) || (r.name.trim().split(/\s+/).length >= 2 && r.dob));
 // A clean, read-only look at rows about to be submitted: name and date of birth.
 function RowsTable({ rows, title, onRemove }) {
   if (!rows.length) return null;
@@ -3512,6 +3528,7 @@ function Roster({ state, year, actor, office, perform }) {
   const [bishopId, setBishopId] = useState(""),
     [q, setQ] = useState(""),
     [inputError, setInputError] = useState(""),
+    [moreSlots, setMoreSlots] = useState(() => blankSlots(5)),
     [remove, setRemove] = useState(null),
     [reason, setReason] = useState("Transferred"),
     [note, setNote] = useState(""),
@@ -3651,26 +3668,39 @@ function Roster({ state, year, actor, office, perform }) {
             <div>
               <h2>Add more pastors</h2>
               <p>
-                Upload your Excel or CSV file (<b>full name</b>, then <b>date of birth</b> as day/month/year), or add pastors one at a time. Each pastor adds their own photo when they register.
+                Type each pastor’s <b>full name</b> and <b>date of birth</b>, then add them. Each pastor adds their own photo when they register.
               </p>
             </div>
           </div>
-          <Field label="Upload a spreadsheet" hint="Excel (.xlsx, .xls) or CSV. The first column is the full name, the second the date of birth.">
-            <input
-              type="file"
-              accept=".xlsx,.xls,.csv,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                e.target.value = "";
-                if (!file) return;
-                readSpreadsheet(file)
-                  .then((t) => perform("addRoster", { rows: parseRoster(t) }, "Pastors added to your list."))
-                  .catch((err) => setInputError(err.message));
-              }}
-            />
-          </Field>
-          <p className="reg-small reg-or">Or add them one at a time:</p>
-          <AddPastorRow onAdd={(row) => perform("addRoster", { rows: [row] }, `${row.name} added to your list.`)} />
+          <PastorSlots slots={moreSlots} setSlots={setMoreSlots} count={5} />
+          <div className="reg-form-actions">
+            <small>{filledSlots(moreSlots).length ? `${filledSlots(moreSlots).length} ready to add.` : "Fill in a row, then add."}</small>
+            <button
+              type="button"
+              className="reg-primary"
+              disabled={!filledSlots(moreSlots).length || !slotsComplete(moreSlots)}
+              onClick={() => perform("addRoster", { rows: filledSlots(moreSlots) }, "Pastors added to your list.").then((ok) => ok && setMoreSlots(blankSlots(5)))}
+            >
+              Add to my list →
+            </button>
+          </div>
+          <details className="reg-upload-alt">
+            <summary>Have a spreadsheet instead? Upload it here</summary>
+            <Field label="Upload a spreadsheet" hint="Excel (.xlsx, .xls) or CSV: full name in the first column, date of birth (day/month/year) in the second.">
+              <input
+                type="file"
+                accept=".xlsx,.xls,.csv,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  e.target.value = "";
+                  if (!file) return;
+                  readSpreadsheet(file)
+                    .then((t) => perform("addRoster", { rows: parseRoster(t) }, "Pastors added to your list."))
+                    .catch((err) => setInputError(err.message));
+                }}
+              />
+            </Field>
+          </details>
           {inputError && <p role="alert" className="reg-status-message unclaimed">{inputError}</p>}
           {state.rosters.some(
             (r) =>
