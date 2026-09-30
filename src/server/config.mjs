@@ -36,8 +36,6 @@ export function configuration(env = process.env) {
     // Optional: a Telegram heads-up alongside the office email for issue reports.
     // Where members send the annual fee by mobile money; shown on the payment screen once set.
     momo: { number: (env.MOMO_NUMBER || '').trim(), name: (env.MOMO_NAME || '').trim() },
-    // Email one-time codes are off unless REQUIRE_EMAIL_CODE=true: members sign in with just their email.
-    requireEmailCode: env.REQUIRE_EMAIL_CODE === 'true',
     // What the public directory lists until the office flips it to this year's roll.
     publicDirectory: env.PUBLIC_DIRECTORY_SOURCE === 'roll' ? 'roll' : 'original',
     telegram: env.TELEGRAM_BOT_TOKEN?.trim() && env.TELEGRAM_CHAT_ID?.trim()

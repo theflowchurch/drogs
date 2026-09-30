@@ -55,8 +55,8 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       }
       if (path === '/api/registration/auth/request' && method === 'POST') {
         const { email, mode } = await jsonBody(request);
-        const requested = await auth.requestCode(emailAddress(email), url.origin, ['signin', 'office'].includes(mode) ? mode : 'signup');
-        return json({ ok: true, codeRequired: requested?.codeRequired !== false });
+        await auth.requestCode(emailAddress(email), url.origin, ['signin', 'office'].includes(mode) ? mode : 'signup');
+        return json({ ok: true, codeRequired: true });
       }
       if (path === '/api/registration/auth/access' && method === 'POST') {
         const { code, office = false } = await jsonBody(request);

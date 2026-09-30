@@ -28,7 +28,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   const mails = [], objects = new Map();
   let failStorage = false;
   const testEnv = { DB_HOST: 'localhost', DB_NAME: 'x', DB_USER: 'x', DB_PASSWORD: 'x', APP_URL: 'https://drogs.dagministry.org', SESSION_SECRET: 't'.repeat(64),
-    ADMIN_EMAILS: 'office@example.com,browser-office@example.com', SITE_ACCESS_CODE: '1234', ADMIN_ACCESS_CODE: 'admin-test-code', REQUIRE_EMAIL_CODE: 'true',
+    ADMIN_EMAILS: 'office@example.com,browser-office@example.com', SITE_ACCESS_CODE: '1234', ADMIN_ACCESS_CODE: 'admin-test-code',
     SMTP_HOST: 'smtp.example.com', SMTP_USER: 'u', SMTP_PASSWORD: 'p', SMTP_FROM: 'no-reply@example.com', TELEGRAM_BOT_TOKEN: 'test-token', TELEGRAM_CHAT_ID: '-100',
     R2_ACCOUNT_ID: 'a'.repeat(32), R2_BUCKET: 'test-private', R2_ACCESS_KEY_ID: 'test', R2_SECRET_ACCESS_KEY: 'test',
     BOOTSTRAP_TOKEN_SHA256: createHash('sha256').update('test-bootstrap-token').digest('hex') };

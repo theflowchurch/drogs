@@ -6,7 +6,6 @@ import { HttpError, rateLimit } from './auth.mjs';
 export const SETTINGS = [
   ['RESEND_API_KEY', 'Resend API key', 'Outgoing email (sign-in codes, office reports) is sent through Resend when set.'],
   ['SMTP_FROM', 'From address', 'e.g. Kuriake Castle <no-reply@notifications.kuriakecastle.org>'],
-  ['REQUIRE_EMAIL_CODE', 'Require emailed sign-in code', 'true or false. Off: members sign in with their email alone.'],
   ['MOMO_NUMBER', 'Mobile money number', 'Members send the annual fee here; shown on the payment screen once set.'],
   ['MOMO_NAME', 'Mobile money account name', 'The registered name on that number, so members can check before sending.'],
   ['TELEGRAM_BOT_TOKEN', 'Telegram bot token', 'Optional: “Any issues?” reports also post to Telegram.'],

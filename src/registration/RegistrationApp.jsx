@@ -878,11 +878,8 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
       }
       if (sent) onActor(await api.verifyCode(email, token, mode));
       else {
-        const requested = await api.requestCode(email, mode);
-        // When the server does not ask for a code, the email alone signs in.
-        if (requested?.codeRequired === false)
-          onActor(await api.verifyCode(email, "", mode));
-        else setSent(true);
+        await api.requestCode(email, mode);
+        setSent(true);
       }
     });
   }}

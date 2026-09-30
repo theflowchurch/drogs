@@ -80,8 +80,8 @@ export function createAuth({ pool, config, mailer }) {
       if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
       mode = await effectiveMode(email, mode);
       if (mode === 'signin') await requireMember(email);
-      // Sign-up through the shared link may skip the code; sign-in never does.
-      if (mode === 'signup' && !config.requireEmailCode) return { codeRequired: false };
+      // Office addresses only ever sign in through /admin/ (access code first).
+      if (mode !== 'office' && config.admins.includes(email)) throw new HttpError(403, 'Office accounts sign in with the admin code at /admin/.');
       await rateLimit(pool, config, `otp-minute:${email}`, 1, 60000);
       await rateLimit(pool, config, `otp-hour:${email}`, 5, 3600000);
       await rateLimit(pool, config, 'otp-global', 500, 3600000);
@@ -100,13 +100,12 @@ export function createAuth({ pool, config, mailer }) {
       // Office sign-ins always need the emailed code, whatever the member setting is.
       if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
       mode = await effectiveMode(email, mode);
-      const open = mode === 'signup' && !config.requireEmailCode;
+      // Every path needs the emailed code: nobody reaches the form on an email alone.
+      const open = false;
       if (mode === 'signin') await requireMember(email);
-      // With codes off, an email alone signs in; office addresses are excluded so the
-      // admin access code stays the only way to office privileges.
-      if (open && config.admins.includes(email)) throw new HttpError(403, 'Office accounts sign in with the admin code at /admin/.');
-      if (!open && (typeof code !== 'string' || !/^\d{6}$/.test(code))) throw new HttpError(400, 'Enter the six-digit code from your email.');
-      await rateLimit(pool, config, `verify:${email}`, open ? 60 : 20, 3600000);
+      if (mode !== 'office' && config.admins.includes(email)) throw new HttpError(403, 'Office accounts sign in with the admin code at /admin/.');
+      if (typeof code !== 'string' || !/^\d{6}$/.test(code)) throw new HttpError(400, 'Enter the six-digit code from your email.');
+      await rateLimit(pool, config, `verify:${email}`, 20, 3600000);
       const result = await transaction(pool, async conn => {
         if (!open) {
           const [[otp]] = await conn.execute('SELECT * FROM dr_otp WHERE email=? FOR UPDATE', [email]);
