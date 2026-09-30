@@ -901,7 +901,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
     });
   }}
 >
-  <Field label="Email address">
+  <Field label="Email address" hint={sent ? undefined : "Use an email address you can access now. A 6-digit verification code will be sent to you."}>
     <input
       type="email"
       required
@@ -1353,8 +1353,7 @@ function RegistrationForm({
               <img src={`${base}/${attireExample(data).file}`} alt={attireExample(data).alt} />
               <figcaption>
                 <b>{attireExample(data).caption}</b>
-                Face the camera on a plain background, face fully visible.
-                {data.role === "bishop" && data.gender !== "female" ? " A collar on its own, selfies and casual clothing are not accepted." : " Selfies and casual clothing are not accepted."}
+                {data.role === "bishop" && data.gender !== "female" ? "Wear your red pastoral jacket. " : data.gender === "female" ? "" : "Wear pastoral attire. "}Face clearly visible. Plain background. No selfies or casual clothing.
               </figcaption>
             </figure>
           </div>
@@ -1491,7 +1490,7 @@ function RegistrationForm({
                 </Field>
                 <Field
                   label="WhatsApp number"
-                  hint="Include your country code, e.g. +233 24 123 4567. Registration updates will be sent to you on WhatsApp."
+                  hint="Include your country code. Do not add a leading zero. Example: +233 24 123 4567. Registration updates will be sent to you on WhatsApp."
                 >
                   <input
                     required
@@ -1501,7 +1500,7 @@ function RegistrationForm({
                     autoComplete="tel"
                   />
                 </Field>
-                <Field label="Date of birth">
+                <Field label="Date of birth" hint={data.role === "pastor" ? "Enter your full name and date of birth exactly as they appear on your bishop’s list." : undefined}>
                   <input
                     required
                     type="date"
@@ -1588,7 +1587,7 @@ function RegistrationForm({
                           {registeredBishops.length
                             ? bishopQuery.length >= 2 && !bishopMatches.length
                               ? "No registered bishop matches that name. Bishops must register before their pastors; ask yours to sign up at kuriakecastle.org/signup/bishop/."
-                              : "Only bishops who have already registered appear here."
+                              : "Your bishop must register first. Select your bishop’s name from the list."
                             : "No bishop has registered yet. Ask your bishop to sign up first at kuriakecastle.org/signup/bishop/."}
                         </small>
                       </>
@@ -1616,7 +1615,7 @@ function RegistrationForm({
                 <div>
                   <h2>Add your pastors</h2>
                   <p>
-                    Type each pastor’s <b>full name</b> and <b>date of birth</b> on a row below. Empty rows are ignored. Each pastor adds their own photo when they register.
+                    Enter each pastor’s <b>Full Name</b> and <b>Date of Birth</b> on a row below, or upload an Excel or CSV file with those two columns (date as DD/MM/YYYY). Empty rows are ignored. Each pastor adds their own photo when they register.
                   </p>
                 </div>
               </div>
@@ -1670,7 +1669,7 @@ function RegistrationForm({
                     ${AMOUNTS[data.role]} <small>USD</small>
                     {rate > 0 ? <small> · about {localAmount(AMOUNTS[data.role], rate, currency)}</small> : null}
                   </h2>
-                  <p>Annual renewal ministerial fee · {titleCase(data.role)} · {state.year} · non-refundable.</p>
+                  <p>${AMOUNTS[data.role]} USD non-refundable registration fee · {titleCase(data.role)} · {state.year}. Pay by card or mobile money through Paystack.</p>
                 </div>
               </div>
               {mine?.payment === "verified" ? (
@@ -1680,7 +1679,7 @@ function RegistrationForm({
                 </div>
               ) : state.paystackKey ? (
                 <>
-                  <p>Pay securely by card or mobile money (MTN, Telecel, AT). You will come back here once the payment goes through.</p>
+                  <p>Card, or mobile money (MTN, Telecel, AT). You will return here once the payment goes through.</p>
                   <PaystackButton
                     current={{ amount: AMOUNTS[data.role], year: state.year, data }}
                     actor={actor}
