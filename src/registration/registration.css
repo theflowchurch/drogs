@@ -2488,3 +2488,27 @@ p {
   margin: 0 0 18px;
   text-align: left;
 }
+
+.reg-review-block {
+  margin: 18px 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.reg-review-block h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.reg-review-block h3 b {
+  margin-left: 6px;
+  font-size: 12px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--panel-soft);
+}
+.reg-review-list {
+  margin: 0 0 8px;
+  padding-left: 18px;
+  columns: 2;
+  font-size: 13px;
+}

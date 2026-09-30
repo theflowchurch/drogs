@@ -56,13 +56,19 @@ with sync_playwright() as p:
         expect(page.get_by_label('First name',exact=True)).to_have_value('Browser')
         page.set_viewport_size({'width':390,'height':844})
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
-        page.get_by_role('button',name='Review registration').click()
+        page.get_by_role('button',name='Next →').click()
+        # Guided onboarding for a bishop: pastors, then payment, then review.
+        page.get_by_label('Pastor list',exact=True).fill('Jon Demo, 14/07/1988')
+        page.get_by_role('button',name='Next →').click()
+        page.get_by_role('button',name='I’ll pay later →').click()
         expect(page.get_by_alt_text('Your uploaded photo for confirmation')).to_be_visible()
+        expect(page.get_by_text('Jon Demo · 14/07/1988')).to_be_visible()
         assert page.get_by_alt_text('Your uploaded photo for confirmation').evaluate('(img) => img.complete && img.naturalWidth > 0')
         page.get_by_label('I confirm that these details').check(); page.get_by_label('I consent to Kuriake Castle').check()
         page.get_by_label('I confirm this is me').check()
-        page.get_by_role('button',name='Submit registration').click()
+        page.get_by_role('button',name='Confirm and submit →').click()
         expect(page.get_by_text('Your registration is complete.')).to_be_visible()
+        expect(page.get_by_text('1 pastor uploaded.')).to_be_visible()
         assert page.evaluate("localStorage.getItem('drogs-registration-v1')") is None
         page.get_by_role('button',name='Sign out',exact=True).click()
         page.get_by_role('link', name='View the full Pastoral directory').wait_for()  # members land on the front page

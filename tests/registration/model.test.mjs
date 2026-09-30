@@ -85,15 +85,16 @@ test("a bishop cannot self-approve but may list pastors while pending", () => {
   assert.equal(s.registrations[0].status, "denied");
   assert.throws(() => applyAction(s, bishop, "addRoster", { rows: [{ name: "Ama Owusu", dob: "02/02/1990" }] }), /Submit your bishop registration/);
 });
-test("unmatched pastor is Unclaimed and cannot pay, linked pastor can", () => {
+test("unmatched pastor is Unclaimed but can already send payment proof; linked pastor is confirmed", () => {
   let s = setup();
+  assert.throws(
+    () => applyAction(s, pastor, "payment", { proof: "a", nonrefundable: true, transactionId: "TX-TEST-0001" }),
+    /Submit your registration/,
+  );
   s = applyAction(s, pastor, "submit", profile(pastor));
   assert.equal(s.registrations.at(-1).status, "unclaimed");
-  assert.throws(
-    () =>
-      applyAction(s, pastor, "payment", { proof: "a", nonrefundable: true, transactionId: "TX-TEST-0001" }),
-    /unlocks/,
-  );
+  s = applyAction(s, pastor, "payment", { proof: "a", nonrefundable: true, transactionId: "TX-TEST-0000" });
+  assert.equal(s.registrations.at(-1).payment, "pending", "proof accepted while still unclaimed");
   s = applyAction(s, bishop, "addRoster", {
     rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }],
   });

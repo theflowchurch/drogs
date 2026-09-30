@@ -1020,6 +1020,7 @@ function Participant({
       />
     );
   const bishop = state.directory.find((b) => b.id === current.data.bishopId);
+  const pastorCount = state.rosters.filter((r) => r.year === state.year && r.bishopId === actor.id && r.status === "active").length;
   return (
     <>
       <div className="reg-page-heading">
@@ -1079,7 +1080,7 @@ function Participant({
                   : current.resubmit
                     ? "The office has asked you to update your registration."
                     : current.status === "pending"
-                      ? "Your registration is in. Add your pastors now."
+                      ? "Thank you. Your registration is being processed."
                       : current.status === "removed"
                         ? "Your annual roster status has changed."
                         : "Your bishop has not confirmed you yet."}
@@ -1090,7 +1091,7 @@ function Participant({
                 : current.status === "denied" || current.resubmit
                   ? current.bishopNote || "Please contact the office."
                   : current.status === "pending"
-                    ? "The office confirms bishops in the background. Meanwhile, go to My pastors and upload your list so your pastors are recognised when they register."
+                    ? `${current.payment === "pending" ? "Your payment proof has been received. " : current.payment === "verified" ? "Your payment is verified. " : ""}${pastorCount ? `${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded. ` : ""}The office is confirming your registration; you will see the result here. You can add more pastors under My pastors at any time.`
                     : current.status === "removed"
                       ? "Contact your bishop or the office to discuss this change. Your registration and payment history have been retained."
                       : "Your details are safely saved in Unclaimed. Your bishop or the office can confirm your registration. Payment will unlock after confirmation."}
@@ -1149,7 +1150,16 @@ function RegistrationForm({
       ...initial,
       email: registrationEmail(actor.email, initial?.email),
     })),
-    [review, setReview] = useState(false),
+    // Onboarding is one guided path: details → (bishops: pastors) → payment → review → confirm.
+    [step, setStep] = useState("details"),
+    [rosterText, setRosterText] = useState(""),
+    [rosterRows, setRosterRows] = useState([]),
+    [rosterError, setRosterError] = useState(""),
+    [transactionId, setTransactionId] = useState(""),
+    [proof, setProof] = useState(""),
+    [ack, setAck] = useState(false),
+    [receiptNote, setReceiptNote] = useState(""),
+    [rates, setRates] = useState(null),
     [accurate, setAccurate] = useState(false),
     [consent, setConsent] = useState(false),
     [fileBusy, setFileBusy] = useState(false);
@@ -1210,6 +1220,24 @@ function RegistrationForm({
         next.name = [next.firstName, next.lastName].filter(Boolean).join(" ");
       return next;
     });
+  const steps = editing
+    ? ["details", "review"]
+    : data.role === "bishop"
+      ? ["details", "pastors", "payment", "review"]
+      : ["details", "payment", "review"];
+  const review = step === "review";
+  const stepLabel = { details: "Your details", pastors: "Your pastors", payment: "Payment", review: "Review" };
+  const next = () => setStep(steps[Math.min(steps.indexOf(step) + 1, steps.length - 1)]);
+  const back = () => setStep(steps[Math.max(steps.indexOf(step) - 1, 0)]);
+  const currency = currencyFor(data.country);
+  useEffect(() => {
+    if (step !== "payment" || !currency || currency === "USD") return;
+    let live = true;
+    loadRates().then((value) => live && setRates(value));
+    return () => { live = false; };
+  }, [step, currency]);
+  const rate = rateFor(rates, currency);
+  const momo = state.payment?.number ? state.payment : !api.live ? { number: "024 000 0000", name: "Kuriake Castle (sample)" } : null;
   async function save() {
     await run(async () => {
       await api.action(actor, "save", data);
@@ -1219,8 +1247,11 @@ function RegistrationForm({
   async function send() {
     const ok = await run(async () => {
       await api.action(actor, editing ? "update" : "submit", { ...data, consentedAt: data.consentedAt || new Date().toISOString() });
+      // The pastors and the payment proof gathered on the way are sent right after.
+      if (!editing && rosterRows.length) await api.action(actor, "addRoster", { rows: rosterRows });
+      if (!editing && proof && transactionId.trim()) await api.action(actor, "payment", { proof, nonrefundable: true, transactionId });
       await refresh();
-    }, editing ? "Your details are updated." : "Registration submitted.");
+    }, editing ? "Your details are updated." : "Thank you. Your registration has been received and is being processed.");
     if (ok && editing) onDone?.();
   }
   return (
@@ -1230,15 +1261,29 @@ function RegistrationForm({
           <span className="reg-eyebrow">
             {state.year} / ANNUAL REGISTRATION
           </span>
-          <h1>{review ? "Review your details." : editing ? "Update my details." : "Roll of Good Standing."}</h1>
+          <h1>
+            {step === "review"
+              ? "Review everything."
+              : step === "pastors"
+                ? "Your pastors."
+                : step === "payment"
+                  ? "Annual renewal fee."
+                  : editing
+                    ? "Update my details."
+                    : "Roll of Good Standing."}
+          </h1>
           <p>
-            {review
-              ? "Check your details before submitting your annual registration."
-              : "A few details, an official portrait, and your place in the ministry."}
+            {step === "review"
+              ? "Check everything below, then confirm to submit."
+              : step === "pastors"
+                ? "Upload or paste the pastors under your oversight. They are recognised automatically when they register."
+                : step === "payment"
+                  ? "Send the fee by mobile money and upload the confirmation."
+                  : "A few details, an official portrait, and your place in the ministry."}
           </p>
         </div>
         <Badge status="draft">
-          {review ? "02 / Review" : "01 / Your details"}
+          {`0${steps.indexOf(step) + 1} / ${stepLabel[step]}`}
         </Badge>
       </div>
       <div className="reg-form-layout">
@@ -1303,11 +1348,11 @@ function RegistrationForm({
             </p>
             <hr />
             <b>Non-refundable</b>
-            <p>Payment opens after your registration is confirmed.</p>
+            <p>Paid by mobile money as part of your registration.</p>
           </div>
         </aside>
         <section className="reg-card reg-form-card">
-          {!review ? (
+          {step === "details" ? (
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -1315,7 +1360,7 @@ function RegistrationForm({
                   validateProfile(data, actor.email);
                   setData((d) => ({ ...d, photoConfirmed: false }));
                   setAccurate(false);
-                  setReview(true);
+                  next();
                 });
               }}
             >
@@ -1554,8 +1599,120 @@ function RegistrationForm({
                   Save draft
                 </button>
                 <button className="reg-primary" disabled={busy || fileBusy}>
-                  Review registration →
+                  {editing ? "Review changes →" : "Next →"}
                 </button>
+              </div>
+            </form>
+          ) : step === "pastors" ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                try {
+                  setRosterRows(rosterText.trim() ? parseRoster(rosterText) : []);
+                  setRosterError("");
+                  next();
+                } catch (err) {
+                  setRosterError(err.message);
+                }
+              }}
+            >
+              <div className="reg-section-head">
+                <div>
+                  <h2>Add your pastors</h2>
+                  <p>
+                    Upload your Excel or CSV file, or paste from it. Two columns: <b>full name</b> and <b>date of birth</b> written day/month/year (e.g. 14/03/1985). Email and phone may follow as extra columns.
+                  </p>
+                </div>
+              </div>
+              <Field label="Upload a spreadsheet" hint="Excel (.xlsx, .xls) or CSV. The first column is the full name, the second the date of birth.">
+                <input
+                  type="file"
+                  accept=".xlsx,.xls,.csv,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    e.target.value = "";
+                    if (file) readSpreadsheet(file).then((t) => { setRosterText(t); setRosterError(""); }).catch((err) => setRosterError(err.message));
+                  }}
+                />
+              </Field>
+              <Field label="Pastor list" hint="One pastor per line. You can also type them in by hand.">
+                <textarea
+                  rows={8}
+                  value={rosterText}
+                  onChange={(e) => setRosterText(e.target.value)}
+                  placeholder={"John Mensah, 14/03/1985\nMary Owusu, 02/11/1979"}
+                />
+              </Field>
+              {rosterError && <p role="alert" className="reg-status-message unclaimed">{rosterError}</p>}
+              <div className="reg-form-actions">
+                <button type="button" className="reg-secondary" onClick={back}>← Back</button>
+                <button className="reg-primary">{rosterText.trim() ? "Next →" : "I’ll add my pastors later →"}</button>
+              </div>
+            </form>
+          ) : step === "payment" ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                next();
+              }}
+            >
+              <div className="reg-section-head">
+                <div>
+                  <h2>
+                    ${AMOUNTS[data.role]} <small>USD</small>
+                    {rate > 0 ? <small> · about {localAmount(AMOUNTS[data.role], rate, currency)}</small> : null}
+                  </h2>
+                  <p>Annual renewal ministerial fee · {titleCase(data.role)} · {state.year} · non-refundable.</p>
+                </div>
+              </div>
+              {momo ? (
+                <div className="reg-payment-instructions reg-momo">
+                  <p>Send the fee by mobile money, then upload the confirmation.</p>
+                  <dl className="reg-details">
+                    <div><dt>Send to</dt><dd><b>{momo.number}</b>{momo.name ? ` · ${momo.name}` : ""}</dd></div>
+                    <div><dt>Amount</dt><dd><b>{rate > 0 ? localAmount(AMOUNTS[data.role], rate, currency) : `$${AMOUNTS[data.role]} USD`}</b>{rate > 0 ? ` (for $${AMOUNTS[data.role]} USD)` : ""}</dd></div>
+                    <div><dt>Reference</dt><dd><b>{paymentReference({ year: state.year, userId: actor.id })}</b> — type this as the payment reference</dd></div>
+                  </dl>
+                  <p className="reg-small">
+                    Then screenshot the confirmation SMS or the app’s transaction details showing the <b>Transaction ID</b>, amount and date. Photos of paper receipts are not accepted.
+                  </p>
+                </div>
+              ) : (
+                <p className="reg-payment-instructions">Payment account details will be provided by the office. You can continue and pay later.</p>
+              )}
+              <Field label="Transaction ID" hint="From the confirmation SMS or app, e.g. MP240912.1234.A1. Each ID can be used once.">
+                <input value={transactionId} onChange={(e) => setTransactionId(e.target.value)} placeholder="Transaction ID" maxLength={40} autoComplete="off" disabled={!momo} />
+              </Field>
+              <Field label="Payment screenshot">
+                {proof && <Media path={proof} alt="Payment proof preview" className="reg-proof" />}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  disabled={!momo}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    e.target.value = "";
+                    if (!file) return;
+                    run(async () => {
+                      const check = await checkReceiptImage(file);
+                      setProof(await api.upload(actor, file, "receipt"));
+                      setReceiptNote(["photograph", "unclear"].includes(check.verdict) ? check.reason : "");
+                    });
+                  }}
+                />
+              </Field>
+              {receiptNote && <p className="reg-status-message unclaimed">{receiptNote}</p>}
+              <label className="reg-check">
+                <input type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)} disabled={!momo} />
+                <span>I understand that my ${AMOUNTS[data.role]} USD commitment is non-refundable.</span>
+              </label>
+              <div className="reg-form-actions">
+                <button type="button" className="reg-secondary" onClick={back}>← Back</button>
+                {proof || transactionId.trim() ? (
+                  <button className="reg-primary" disabled={!proof || !transactionId.trim() || !ack || busy}>Next →</button>
+                ) : (
+                  <button className="reg-primary" disabled={busy}>I’ll pay later →</button>
+                )}
               </div>
             </form>
           ) : (
@@ -1615,13 +1772,42 @@ function RegistrationForm({
                   className="reg-secondary"
                   onClick={() => {
                     set("photoConfirmed", false);
-                    setReview(false);
+                    setStep("details");
                   }}
                 >
                   Choose a different photo
                 </button>
               </section>
               <ProfileDetails record={{ data }} directory={state.directory} />
+              {!editing && data.role === "bishop" && (
+                <section className="reg-review-block">
+                  <h3>Your pastors <b>{rosterRows.length}</b></h3>
+                  {rosterRows.length ? (
+                    <ul className="reg-review-list">
+                      {rosterRows.map((r, i) => (
+                        <li key={i}>{r.name} · {String(r.dob).includes("-") ? r.dob.split("-").reverse().join("/") : r.dob}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="reg-small">None added yet. You can add them later under My pastors.</p>
+                  )}
+                  <button type="button" className="reg-text" onClick={() => setStep("pastors")}>Change</button>
+                </section>
+              )}
+              {!editing && (
+                <section className="reg-review-block">
+                  <h3>Payment</h3>
+                  {proof && transactionId.trim() ? (
+                    <>
+                      <p>${AMOUNTS[data.role]} USD by mobile money · Transaction ID <b>{transactionId.trim().toUpperCase()}</b></p>
+                      <Media path={proof} alt="Payment proof preview" className="reg-proof" />
+                    </>
+                  ) : (
+                    <p className="reg-small">Not paid yet. You can pay later from My profile.</p>
+                  )}
+                  <button type="button" className="reg-text" onClick={() => setStep("payment")}>Change</button>
+                </section>
+              )}
               <label className="reg-check">
                 <input
                   type="checkbox"
@@ -1637,31 +1823,33 @@ function RegistrationForm({
                   checked={consent}
                   onChange={(e) => setConsent(e.target.checked)}
                 />
-                I consent to Kuriake Castle showing my name, title, photograph,
-                organization, denomination, city and country on the public Roll
-                of Good Standing. My email address, phone number and date of
-                birth are never shown publicly and are used only by the office
-                and my bishop to confirm my registration. I have read the{" "}
-                <a href={`${base}/privacy/`} target="_blank" rel="noreferrer">privacy policy</a>{" "}
-                and <a href={`${base}/terms/`} target="_blank" rel="noreferrer">terms</a>.
+                <span>
+                  I consent to Kuriake Castle showing my name, title, photograph,
+                  organization, denomination, city and country on the public Roll
+                  of Good Standing. My email address, phone number and date of
+                  birth are never shown publicly and are used only by the office
+                  and my bishop to confirm my registration. I have read the{" "}
+                  <a href={`${base}/privacy/`} target="_blank" rel="noreferrer">privacy policy</a>{" "}
+                  and <a href={`${base}/terms/`} target="_blank" rel="noreferrer">terms</a>.
+                </span>
               </label>
               <p className="reg-small">
                 The annual renewal ministerial fee is ${AMOUNTS[data.role]} USD and is
-                non-refundable. No payment is collected on this screen.
+                non-refundable.
               </p>
               <div className="reg-form-actions">
                 <button
                   className="reg-secondary"
-                  onClick={() => setReview(false)}
+                  onClick={back}
                 >
-                  ← Edit details
+                  ← Back
                 </button>
                 <button
                   className="reg-primary"
                   onClick={send}
                   disabled={!accurate || !consent || !data.photoConfirmed || busy}
                 >
-                  Submit registration →
+                  {editing ? "Submit changes →" : "Confirm and submit →"}
                 </button>
               </div>
             </>
@@ -1748,9 +1936,9 @@ function Payment({ current, actor, run, refresh, momo = null }) {
       <Badge status={current.payment}>
         {current.payment === "pending" ? "Payment awaiting verification" : null}
       </Badge>
-      {current.status !== "confirmed" ? (
+      {["draft", "denied"].includes(current.status) ? (
         <p className="reg-small">
-          Payment is locked until your registration is confirmed.
+          Payment opens once your registration has been submitted.
         </p>
       ) : current.payment === "verified" ? (
         <div className="reg-status-message confirmed">

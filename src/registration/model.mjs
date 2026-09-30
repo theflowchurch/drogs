@@ -604,8 +604,9 @@ export function applyAction(
     const r = state.registrations.find(
       (r) => r.userId === actor.id && r.year === state.year,
     );
-    if (r?.status !== "confirmed")
-      throw Error("Payment unlocks after confirmation.");
+    // Proof is sent during onboarding, before the office confirms anyone.
+    if (!r || ["draft", "denied"].includes(r.status))
+      throw Error("Submit your registration before sending payment.");
     if (r.payment === "verified")
       throw Error("This payment has already been verified.");
     if (!payload.nonrefundable || !payload.proof)
