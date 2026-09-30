@@ -27,6 +27,7 @@ import {
   nearMatches,
   dobClose,
   titleFor,
+  orgLabel,
   paymentReference,
   referenceIndex,
   referenceMatches,
@@ -1063,7 +1064,7 @@ function Participant({
             <div>
               <h2>{current.data.name}</h2>
               <p>
-                {titleCase(current.data.role)} · {current.data.organization}
+                {titleCase(current.data.role)} · {orgLabel(current.data.organization)}
               </p>
               <small>{current.data.denomination || current.data.church}</small>
             </div>
@@ -1411,7 +1412,7 @@ function RegistrationForm({
                   >
                     <option value="">Select organization</option>
                     {ORGANIZATIONS.map((o) => (
-                      <option key={o}>{o}</option>
+                      <option key={o} value={o}>{orgLabel(o)}</option>
                     ))}
                   </select>
                 </Field>
@@ -1966,7 +1967,7 @@ function ProfileDetails({ record, directory = [] }) {
         <div>
           <h2>{p.name}</h2>
           <p>
-            {titleCase(p.role)} · {p.organization}
+            {titleCase(p.role)} · {orgLabel(p.organization)}
           </p>
           {record.status && <Badge status={record.status} />}
         </div>
@@ -2018,7 +2019,7 @@ function Filters({ filter, setFilter, roles = false }) {
       >
         <option value="">All organizations</option>
         {ORGANIZATIONS.map((o) => (
-          <option key={o}>{o}</option>
+          <option key={o} value={o}>{orgLabel(o)}</option>
         ))}
       </select>
       {roles && (
@@ -2130,7 +2131,7 @@ function DirectoryFilters({ filter, setFilter, options }) {
       >
         <option value="">All organizations</option>
         {options.organization.map((o) => (
-          <option key={o}>{o}</option>
+          <option key={o} value={o}>{orgLabel(o)}</option>
         ))}
       </select>
       <select
@@ -2431,7 +2432,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform }) {
               <span>{p.denomination}</span>
             </p>
           )}
-          <p className="reg-record-line">{p.organization}</p>
+          <p className="reg-record-line">{orgLabel(p.organization)}</p>
           <span className={`reg-badge ${p.updated ? "verified" : "unclaimed"}`}>
             {statusWords(p)}
           </span>
@@ -2866,7 +2867,7 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
                     <div>
                       <h3>{r.data.name}</h3>
                       <p>
-                        {r.data.organization} · {r.data.denomination || r.data.church}
+                        {orgLabel(r.data.organization)} · {r.data.denomination || r.data.church}
                       </p>
                       <small>
                         Bishop:{" "}
@@ -3079,7 +3080,7 @@ function BishopApprovals({ records, directory = [], perform, canEdit }) {
               <div>
                 <h3>{r.data.name}</h3>
                 <p>
-                  {titleFor(r.data)} · {r.data.organization} · {r.data.email}
+                  {titleFor(r.data)} · {orgLabel(r.data.organization)} · {r.data.email}
                 </p>
               </div>
               <Badge status={r.status === "confirmed" ? "confirmed" : r.status === "denied" ? "denied" : "pending"}>{r.resubmit ? "Asked to resubmit" : null}</Badge>
@@ -3258,7 +3259,7 @@ function Payments({ records, perform, canEdit }) {
               <Media path={r.data.photo} alt="" className="reg-avatar small" />
               <div>
                 <h3>{r.data.name}</h3>
-                <p>{r.data.organization}</p>
+                <p>{orgLabel(r.data.organization)}</p>
               </div>
               <b>${r.amount} USD</b>
               <span>Check proof →</span>
@@ -3415,7 +3416,7 @@ function ReferenceReview({ rows, perform, canEdit }) {
             <div>
               <h2>{reference.name}</h2>
               <p>
-                {reference.title} · {reference.organization}
+                {reference.title} · {orgLabel(reference.organization)}
               </p>
               <small>{reference.denomination}</small>
             </div>

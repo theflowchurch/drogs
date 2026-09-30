@@ -1,4 +1,13 @@
 import { DENOMINATIONS } from "./denominations.mjs";
+// Full names for display; the short keys stay as stored identifiers.
+export const ORGANIZATION_LABEL = {
+  "First Love": "First Love Church",
+  "United Denominations": "United Denominations",
+  HJC: "Healing Jesus Campaign",
+  FLOW: "FLOW",
+  DHMM: "DHMM",
+};
+export const orgLabel = (key) => ORGANIZATION_LABEL[key] || key || "";
 export const ORGANIZATIONS = [
   "First Love",
   "United Denominations",

@@ -9,6 +9,8 @@ const { BISHOPS, PASTORS } = globalThis;
 const ORGANIZATION = { 'UD-OLGC': 'United Denominations', 'UO-FLC190': 'First Love' };
 // Outreach rows carry their group: the FLOW office or the Healing Jesus Council.
 const OUTREACH_GROUP = { 'FLOW Office': 'FLOW', 'Healing Jesus Council': 'HJC', Outreach: 'FLOW' /* Gifty Krofuah, confirmed by the office */ };
+// What the roll prints where a denomination would be, for groups that have none.
+const GROUP_NAME = { FLOW: 'FLOW', HJC: 'Healing Jesus Campaign', DHMM: 'DHMM' };
 // Spelling variants of one denomination.
 const DENOMINATION_ALIAS = { 'QODESH FAMILY CHURCH': 'QODESH FAMILY CHURCHES',
   // No longer exist as denominations; their people keep their organization.
@@ -42,7 +44,7 @@ const person = (role, p) => ({
   title: p.title || (role === 'bishop' ? 'Bishop' : 'Pastor'),
   organization: REHOME[keep(p.denomination)]?.organization || ORGANIZATION[p.organization] || OUTREACH_GROUP[clean(p.outreachGroup)] || '',
   // Outreach rows show their group (FLOW / HJC) where a denomination would appear.
-  denomination: REHOME[keep(p.denomination)]?.denomination ?? (p.organization === 'OUTREACH' ? OUTREACH_GROUP[clean(p.outreachGroup)] || '' : (DENOMINATION_ALIAS[keep(p.denomination)] ?? keep(p.denomination))),
+  denomination: REHOME[keep(p.denomination)]?.denomination ?? (p.organization === 'OUTREACH' ? GROUP_NAME[OUTREACH_GROUP[clean(p.outreachGroup)]] || '' : (DENOMINATION_ALIAS[keep(p.denomination)] ?? keep(p.denomination))),
   denominationLogo: REHOME[keep(p.denomination)]?.denominationLogo ?? (p.organization === 'OUTREACH' ? GROUP_LOGO[OUTREACH_GROUP[clean(p.outreachGroup)]] || '' : (DENOMINATION_ALIAS[keep(p.denomination)] === '' ? '' : p.denominationLogo || '')),
   city: keep(p.city),
   branch: keep(p.branch),
