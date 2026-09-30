@@ -4,7 +4,7 @@ import { createSupport } from './support.mjs';
 import { applySettings, bootstrapSettings, describeSettings, officeMembers, readSettings, writeSettings } from './settings.mjs';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { applyAction, visibleState, publicRoll } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll, attireExample } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, canReadMedia } from './storage.mjs';
@@ -166,16 +166,17 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           const reasons = String(payload.note).split('\n').map(l => l.replace(/^•\s*/, '').trim()).filter(Boolean);
           const photoIssue = reasons.some(r => /photo/i.test(r));
           const others = reasons.filter(r => !/photo/i.test(r));
-          const requirements = role === 'Bishop' ? ['Red jacket', 'Face fully visible', 'Plain background'] : ['Official pastoral attire', 'Face fully visible', 'Plain background'];
+          const requirements = [reviewed.data.gender === 'female' ? `Official attire as shown (${reviewed.data.organization === 'United Denominations' ? 'United Denominations' : 'First Love'})` : role === 'Bishop' ? 'Red jacket' : 'Official pastoral attire (clerical collar, or dark suit and tie)', 'Face fully visible', 'Plain background'];
           // Their photo beside the required standard, embedded so it shows on any phone.
           const attachments = [];
           let comparison = '';
           if (photoIssue) {
-            attachments.push({ filename: role === 'Bishop' ? 'required-bishop.jpg' : 'required-pastor.webp', path: fileURLToPath(new URL(role === 'Bishop' ? '../../assets/brand/bishop-example.jpg' : '../../assets/pastors/reconciled-5.webp', import.meta.url)), cid: 'required' });
+            const example = attireExample(reviewed.data);
+            attachments.push({ filename: 'required.jpg', path: fileURLToPath(new URL(`../../${example.file}`, import.meta.url)), cid: 'required' });
             const yours = reviewed.data.photo ? await storage.bytes(reviewed.data.photo) : null;
             if (yours) attachments.push({ filename: 'your-photo.webp', content: yours, contentType: 'image/webp', cid: 'yours' });
             const cell = (cid, caption) => `<td style="padding:8px;text-align:center;vertical-align:top"><img src="cid:${cid}" alt="${esc(caption)}" width="200" style="display:block;width:200px;height:230px;object-fit:cover;border-radius:12px;margin:0 auto 8px"><div style="font:600 13px system-ui,sans-serif;color:#172139">${esc(caption)}</div></td>`;
-            comparison = `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:14px 0 18px"><tr>${yours ? cell('yours', 'The photo you submitted') : ''}${cell('required', role === 'Bishop' ? 'Required: official red jacket' : 'Required: official pastoral attire')}</tr></table>`;
+            comparison = `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:14px 0 18px"><tr>${yours ? cell('yours', 'The photo you submitted') : ''}${cell('required', example.caption)}</tr></table>`;
           }
           const intro = resubmit
             ? `The Kuriake Castle Office has reviewed your registration. Before your registration can be confirmed, please make the following update${reasons.length > 1 ? 's' : ''}:`

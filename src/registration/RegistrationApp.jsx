@@ -28,6 +28,7 @@ import {
   dobClose,
   titleFor,
   orgLabel,
+  attireExample,
   paymentReference,
   referenceIndex,
   referenceMatches,
@@ -1349,14 +1350,11 @@ function RegistrationForm({
               </span>
             </label>
             <figure className="reg-attire-example">
-              <img
-                src={`${base}/${data.role === "bishop" ? "assets/brand/bishop-example.jpg" : "assets/pastors/reconciled-5.webp"}`}
-                alt={data.role === "bishop" ? "Required bishop red-jacket example" : "Required pastoral attire example"}
-              />
+              <img src={`${base}/${attireExample(data).file}`} alt={attireExample(data).alt} />
               <figcaption>
-                <b>{data.role === "bishop" ? "Required: official red jacket" : "Required: official pastoral attire"}</b>
+                <b>{attireExample(data).caption}</b>
                 Face the camera on a plain background, face fully visible.
-                {data.role === "bishop" ? " A collar on its own, selfies and casual clothing are not accepted." : " Selfies and casual clothing are not accepted."}
+                {data.role === "bishop" && data.gender !== "female" ? " A collar on its own, selfies and casual clothing are not accepted." : " Selfies and casual clothing are not accepted."}
               </figcaption>
             </figure>
           </div>
@@ -1732,20 +1730,15 @@ function RegistrationForm({
                     <figcaption>Your uploaded photo</figcaption>
                   </figure>
                   <figure>
-                    <img
-                      src={`${base}/${data.role === "bishop" ? "assets/brand/bishop-example.jpg" : "assets/pastors/reconciled-5.webp"}`}
-                      alt={
-                        data.role === "bishop"
-                          ? "Required bishop red-jacket example"
-                          : "Required pastoral attire example"
-                      }
-                    />
-                    <figcaption>
-                      {data.role === "bishop"
-                        ? "Required: official red jacket"
-                        : "Example: official pastoral attire"}
-                    </figcaption>
+                    <img src={`${base}/${attireExample(data).file}`} alt={attireExample(data).alt} />
+                    <figcaption>{attireExample(data).caption}</figcaption>
                   </figure>
+                  {attireExample(data).alternative && (
+                    <figure>
+                      <img src={`${base}/${attireExample(data).alternative.file}`} alt={attireExample(data).alternative.alt} />
+                      <figcaption>{attireExample(data).alternative.caption}</figcaption>
+                    </figure>
+                  )}
                 </div>
                 <label className="reg-check">
                   <input

@@ -203,7 +203,7 @@ export async function mediaUrl(path) {
   return file ? URL.createObjectURL(file) : "";
 }
 export const referenceImage = (role) =>
-  `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/${role === "bishop" ? "assets/brand/bishop-example.jpg" : "assets/pastors/reconciled-5.webp"}`;
+  `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/${role === "bishop" ? "assets/brand/bishop-example.jpg" : "assets/brand/pastor-example.jpg"}`;
 
 // Card and mobile-money checkout through Paystack; the server confirms every reference with the secret key.
 export const paystackVerify = (reference) => server("paystack/verify", { reference });
