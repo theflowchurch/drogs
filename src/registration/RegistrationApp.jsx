@@ -2590,8 +2590,15 @@ function PublicRecord({ person: p, onOpen, from }) {
 // alphabetical columns, bishops left and pastors right, name in black with the
 // denomination and place beneath, and one search box over both.
 function PublicList({ list }) {
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(""),
+    [open, setOpen] = useState(null);
   const term = normalName(q);
+  // A bishop's name opens the names of the pastors under them: from this year's
+  // roll when it carries them, otherwise from who named them in the old roster.
+  const pastorsOf = (bishop) =>
+    (bishop.pastors?.length ? bishop.pastors : bishopPastors(bishop, list).list)
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name));
   const matches = (p) =>
     !term || normalName(`${p.name} ${p.city || ""} ${p.country || ""} ${p.denomination || ""}`).includes(term);
   const column = (role) =>
@@ -2616,12 +2623,33 @@ function PublicList({ list }) {
             </h2>
             {people.length ? (
               <ol>
-                {people.map((p) => (
-                  <li key={p.id}>
-                    <span className="reg-roll-name">{p.name}</span>
-                    <small>{[p.denomination, [p.city, p.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>
-                  </li>
-                ))}
+                {people.map((p) => {
+                  const under = p.role === "bishop" ? pastorsOf(p) : [];
+                  const isOpen = open === p.id;
+                  return (
+                    <li key={p.id} className={isOpen ? "open" : ""}>
+                      {p.role === "bishop" ? (
+                        <button type="button" className="reg-roll-name reg-roll-toggle" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : p.id)}>
+                          {p.name}
+                          <span className="reg-roll-count">{under.length ? `${under.length} pastor${under.length === 1 ? "" : "s"}` : "no pastors listed"} {isOpen ? "▴" : "▾"}</span>
+                        </button>
+                      ) : (
+                        <span className="reg-roll-name">{p.name}</span>
+                      )}
+                      <small>{[p.denomination, [p.city, p.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>
+                      {isOpen && (
+                        <ol className="reg-roll-under">
+                          {under.length ? under.map((u) => (
+                            <li key={u.id}>
+                              <span className="reg-roll-name">{u.name}</span>
+                              <small>{[u.denomination, [u.city, u.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>
+                            </li>
+                          )) : <li><small>No pastors listed under this bishop yet.</small></li>}
+                        </ol>
+                      )}
+                    </li>
+                  );
+                })}
               </ol>
             ) : (
               <p className="reg-small">{term ? "No one matches." : "Nobody listed yet."}</p>
