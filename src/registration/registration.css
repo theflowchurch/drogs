@@ -2817,3 +2817,27 @@ p {
   color: var(--muted);
   text-align: center;
 }
+
+.reg-add-pastor {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+.reg-add-pastor .reg-field {
+  margin: 0;
+}
+.reg-add-pastor button {
+  height: 44px;
+}
+.reg-add-pastor [role="alert"] {
+  grid-column: 1 / -1;
+}
+.reg-or {
+  margin: 14px 0 6px;
+}
+@media (max-width: 700px) {
+  .reg-add-pastor {
+    grid-template-columns: 1fr;
+  }
+}

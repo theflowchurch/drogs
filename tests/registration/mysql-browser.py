@@ -58,8 +58,9 @@ with sync_playwright() as p:
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
         page.get_by_role('button',name='Next →').click()
         # Guided onboarding for a bishop: pastors, then payment, then review.
-        page.get_by_role('button',name='Or type or paste the names instead').click()
-        page.get_by_label('Pastor list',exact=True).fill('Jon Demo, 14/07/1988')
+        page.get_by_label('Pastor’s full name',exact=True).fill('Jon Demo')
+        page.get_by_label('Pastor’s date of birth',exact=True).fill('1988-07-14')
+        page.get_by_role('button',name='Add pastor',exact=True).click()
         expect(page.get_by_role('cell',name='Jon Demo')).to_be_visible()  # read-only preview table
         page.get_by_role('button',name='Next →').click()
         page.get_by_role('button',name='Continue →').click()
