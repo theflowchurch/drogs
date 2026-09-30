@@ -128,6 +128,18 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         await applySettings(config, pool);
         return json({ settings: describeSettings(await readSettings(pool)), admins: officeMembers(config) });
       }
+      if (path === '/api/registration/settings/telegram-test' && method === 'POST') {
+        // The office checks the Telegram link right after pasting the token and chat ID.
+        if (!actor.office) throw new HttpError(403, 'Office access required.');
+        if (!config.telegram) throw new HttpError(400, 'Save the Telegram bot token and chat ID first.');
+        const response = await fetcher(`https://api.telegram.org/bot${config.telegram.token}/sendMessage`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: config.telegram.chat, text: `Kuriake Castle is connected. Website issue reports will appear here.\nTest sent by ${actor.email} at ${new Date().toISOString()}` }),
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) throw new HttpError(400, `Telegram refused the message: ${result.description || `status ${response.status}`}. Check the token, that the bot is an admin of the channel, and the chat ID (channels start with -100).`);
+        return json({ ok: true, chat: result.result?.chat?.title || config.telegram.chat });
+      }
       if (path === '/api/registration/keys' && method === 'GET') return json(await keys.list(actor));
       if (path === '/api/registration/keys' && method === 'POST') return json(await keys.issue(actor, await jsonBody(request)), 201);
       if (path === '/api/registration/keys/revoke' && method === 'POST') return json(await keys.revoke(actor, (await jsonBody(request)).id));

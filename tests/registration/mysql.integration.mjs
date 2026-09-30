@@ -215,6 +215,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
 
     assert.equal((await call('paystack/verify', bishop.cookie, { reference: 'abc123' })).status, 503, 'Paystack is off until the secret key is configured');
 
+    assert.equal((await call('settings/telegram-test', bishop.cookie, {})).status, 403);
     // First-time setup: one secret, one use.
     assert.equal((await call('settings/bootstrap', '', { token: 'wrong', values: { SMTP_FROM: 'x@example.com' } })).status, 403);
     assert.equal((await call('settings/bootstrap', '', { token: 'test-bootstrap-token', values: { SMTP_FROM: 'Kuriake Castle <setup@example.com>' } })).status, 200);

@@ -4,7 +4,7 @@ import * as api from './client';
 // Office-managed integration settings. Saved values are never shown back; the
 // office sees only whether each one is set.
 export default function Settings({ run }) {
-  const [settings, setSettings] = useState([]), [values, setValues] = useState({}), [saved, setSaved] = useState(false), [copied, setCopied] = useState('');
+  const [settings, setSettings] = useState([]), [values, setValues] = useState({}), [saved, setSaved] = useState(false), [copied, setCopied] = useState(''), [telegramResult, setTelegramResult] = useState('');
   const reload = async () => setSettings((await api.listSettings()).settings);
   useEffect(() => { run(reload); }, []);
   const changed = Object.entries(values).filter(([, v]) => v !== undefined);
@@ -32,6 +32,8 @@ export default function Settings({ run }) {
       {s.hint && <small>{s.hint}</small>}
     </label>)}
     <button className="reg-primary" disabled={!changed.length}>Save settings</button>
+    <button type="button" className="reg-secondary" disabled={!settings.find(s => s.key === 'TELEGRAM_CHAT_ID')?.set} onClick={() => run(async () => { const r = await api.telegramTest(); setTelegramResult(`Test message posted to “${r.chat}”.`); }, 'Telegram is connected.')}>Send a Telegram test message</button>
+    {telegramResult && <p className="reg-small">{telegramResult}</p>}
     {saved && !changed.length && <p className="reg-small">Saved.</p>}
   </form>
   </>;
