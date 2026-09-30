@@ -70,8 +70,19 @@ async function fileOperation(mode, fn) {
 function check(error) {
   if (error) throw Error(error.message);
 }
+// Who is signed in. A blocked or half-loaded request (e.g. the host's bot
+// check intercepting the first call after a refresh) is not "signed out", so
+// the check is retried before giving up.
 export async function currentActor(office = false) {
-  if (mysqlBackend) return server("auth/me");
+  if (mysqlBackend) {
+    for (let attempt = 0; ; attempt++) {
+      try { return await server("auth/me"); }
+      catch (e) {
+        if (attempt >= 3) throw e;
+        await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
+      }
+    }
+  }
   if (configError)
     throw Error("Both Supabase URL and public key must be configured.");
   if (!live)

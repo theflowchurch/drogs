@@ -37,7 +37,7 @@ with sync_playwright() as p:
   expect(page.get_by_text('Photo uploaded. Choose a new image to replace it.')).to_be_visible()
  def submit():
   page.get_by_role('button',name='Next →').click()
-  if page.get_by_label('Pastor list',exact=True).is_visible(): page.get_by_role('button',name='I’ll add my pastors later →').click()
+  if page.get_by_text('Add your pastors').is_visible(): page.get_by_role('button',name='I’ll add my pastors later →').click()
   page.get_by_role('button',name='I’ll pay later →').click()
   page.get_by_label('I confirm that these details').check(); page.get_by_label('I consent to Kuriake Castle').check()
   expect(page.get_by_role('button',name='Confirm and submit →')).to_be_disabled()

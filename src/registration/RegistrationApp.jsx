@@ -240,6 +240,7 @@ export default function RegistrationApp({
     [directoryRole, setDirectoryRole] = useState("bishop"),
     [gate, setGate] = useState(!gated),
     [actor, setActor] = useState(null),
+    [checking, setChecking] = useState(true),
     [state, setState] = useState(null),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
@@ -277,6 +278,7 @@ export default function RegistrationApp({
       await refresh();
     }, message);
   useEffect(() => {
+    setChecking(true);
     api
       .currentActor(office)
       .then((current) => {
@@ -286,7 +288,8 @@ export default function RegistrationApp({
       })
       // A failed session check (e.g. the server restarting after a deploy)
       // just means "not signed in"; visitors should not see a fetch error.
-      .catch(() => setActor(null));
+      .catch(() => setActor(null))
+      .finally(() => setChecking(false));
     const until = Number(
       sessionStorage.getItem("drogs-registration-gate") || 0,
     );
@@ -547,6 +550,10 @@ export default function RegistrationApp({
             Opening the directory…
           </div>
         )
+      ) : !actor && checking ? (
+        <div className="reg-loading" role="status">
+          Checking your sign-in…
+        </div>
       ) : !actor ? (
         <Account
           office={office}
@@ -560,10 +567,6 @@ export default function RegistrationApp({
           open={signinOpen}
           onClose={() => setSigninOpen(false)}
         />
-      ) : !actor ? (
-        <div className="reg-loading" role="status">
-          Opening your workspace…
-        </div>
       ) : !state ? (
         <div className="reg-loading" role="status">
           Opening your workspace…
@@ -1685,8 +1688,8 @@ function RegistrationForm({
               </div>
               {mine?.payment === "verified" ? (
                 <div className="reg-status-message confirmed">
-                  <h3>Payment received. Thank you.</h3>
-                  <p>${AMOUNTS[data.role]} USD paid by card or mobile money.</p>
+                  <h3>Thank you for your commitment.</h3>
+                  <p>${AMOUNTS[data.role]} USD received by card or mobile money. Next, look over your profile{data.role === "bishop" ? " and your pastors" : ""} and confirm.</p>
                 </div>
               ) : state.paystackKey ? (
                 <>
@@ -1707,7 +1710,7 @@ function RegistrationForm({
               )}
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
-                <button className="reg-primary" disabled={busy}>{mine?.payment === "verified" ? "Next →" : "I’ll pay later →"}</button>
+                <button className="reg-primary" disabled={busy}>{mine?.payment === "verified" ? "View your profile →" : "I’ll pay later →"}</button>
               </div>
             </form>
           ) : (
