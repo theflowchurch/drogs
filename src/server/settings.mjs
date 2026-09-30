@@ -8,6 +8,8 @@ export const SETTINGS = [
   ['SMTP_FROM', 'From address', 'e.g. Kuriake Castle <no-reply@notifications.kuriakecastle.org>'],
   ['MOMO_NUMBER', 'Mobile money number', 'Members send the annual fee here; shown on the payment screen once set.'],
   ['MOMO_NAME', 'Mobile money account name', 'The registered name on that number, so members can check before sending.'],
+  ['PAYSTACK_PUBLIC_KEY', 'Paystack public key', 'Optional. Shows the card / mobile-money checkout button on My profile.'],
+  ['PAYSTACK_SECRET_KEY', 'Paystack secret key', 'Optional. Used by the server to confirm each Paystack payment.'],
   ['TELEGRAM_BOT_TOKEN', 'Telegram bot token', 'Optional: “Any issues?” reports also post to Telegram.'],
   ['TELEGRAM_CHAT_ID', 'Telegram chat ID', ''],
   ['R2_ACCOUNT_ID', 'Cloudflare R2 account ID', 'Photo storage. Leave blank to keep the host’s values.'],

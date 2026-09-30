@@ -36,6 +36,9 @@ export function configuration(env = process.env) {
     // Optional: a Telegram heads-up alongside the office email for issue reports.
     // Where members send the annual fee by mobile money; shown on the payment screen once set.
     momo: { number: (env.MOMO_NUMBER || '').trim(), name: (env.MOMO_NAME || '').trim() },
+    // Optional: Paystack keys enable card / mobile-money checkout alongside the MoMo transfer.
+    paystack: env.PAYSTACK_SECRET_KEY?.trim() || null,
+    paystackPublic: (env.PAYSTACK_PUBLIC_KEY || env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '').trim(),
     // What the public directory lists until the office flips it to this year's roll.
     publicDirectory: env.PUBLIC_DIRECTORY_SOURCE === 'roll' ? 'roll' : 'original',
     telegram: env.TELEGRAM_BOT_TOKEN?.trim() && env.TELEGRAM_CHAT_ID?.trim()

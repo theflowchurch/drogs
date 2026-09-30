@@ -32,7 +32,7 @@ Data is stored in a database in the European Union with encrypted connections. S
 
 ## Third parties
 
-We use Hostinger (hosting) and Resend (email delivery). Each receives only what it needs to do its job. We do not sell or share your data with anyone else.
+We use Hostinger (hosting), Resend (email delivery) and, for card or mobile-money checkout, Paystack (payments). Each receives only what it needs to do its job. We do not sell or share your data with anyone else.
 
 ## Contact
 

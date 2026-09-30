@@ -1109,6 +1109,7 @@ function Participant({
           run={run}
           refresh={refresh}
           momo={state.payment}
+          paystackKey={state.paystackKey || ""}
         />
       </div>
     </>
@@ -1680,6 +1681,9 @@ function RegistrationForm({
               ) : (
                 <p className="reg-payment-instructions">Payment account details will be provided by the office. You can continue and pay later.</p>
               )}
+              {state.paystackKey && (
+                <p className="reg-small">Prefer to pay by card or mobile money directly? Continue now and use the Paystack button on My profile after confirming.</p>
+              )}
               <Field label="Transaction ID" hint="From the confirmation SMS or app, e.g. MP240912.1234.A1. Each ID can be used once.">
                 <input value={transactionId} onChange={(e) => setTransactionId(e.target.value)} placeholder="Transaction ID" maxLength={40} autoComplete="off" disabled={!momo} />
               </Field>
@@ -1892,7 +1896,57 @@ function CommitmentPreview({ role, country }) {
     </p>
   );
 }
-function Payment({ current, actor, run, refresh, momo = null }) {
+// Card or mobile money through Paystack's inline checkout. The amount is charged
+// in GHS at the same indicative rate the member sees; the server confirms the
+// reference with Paystack before the payment is recorded.
+function PaystackButton({ current, actor, run, refresh, rate, currency, paystackKey }) {
+  const [ready, setReady] = useState(Boolean(globalThis.PaystackPop));
+  useEffect(() => {
+    if (globalThis.PaystackPop) return setReady(true);
+    const script = document.createElement("script");
+    script.src = "https://js.paystack.co/v1/inline.js";
+    script.async = true;
+    script.onload = () => setReady(true);
+    document.body.appendChild(script);
+  }, []);
+  const ghs = rate && currency === "GHS" ? current.amount * rate : null;
+  const usdOnly = !ghs;
+  return (
+    <div className="reg-paystack">
+      <button
+        type="button"
+        className="reg-primary full"
+        disabled={!ready}
+        onClick={() =>
+          run(async () => {
+            const reference = await new Promise((resolve, reject) => {
+              const handler = globalThis.PaystackPop.setup({
+                key: paystackKey,
+                email: actor.email,
+                amount: Math.round((usdOnly ? current.amount : ghs) * 100),
+                currency: usdOnly ? "USD" : "GHS",
+                channels: ["card", "mobile_money", "bank", "bank_transfer"],
+                metadata: { custom_fields: [{ display_name: "Kuriake Castle", variable_name: "registration", value: `${current.year} ${current.data.role} ${current.data.name}` }] },
+                callback: (response) => resolve(response.reference),
+                onClose: () => reject(Error("Payment window closed before completing.")),
+              });
+              handler.openIframe();
+            });
+            await api.paystackVerify(reference);
+            await refresh();
+          }, "Payment received. Thank you for your commitment.")
+        }
+      >
+        Pay {ghs ? `GHS ${Math.round(ghs).toLocaleString()}` : `$${current.amount}`} by card or mobile money →
+      </button>
+      <small className="reg-small">
+        Secure checkout by Paystack: cards, MTN / Telecel / AT mobile money, bank.
+        {ghs ? ` Charged in Ghana cedis at today’s indicative rate for $${current.amount} USD.` : ""}
+      </small>
+    </div>
+  );
+}
+function Payment({ current, actor, run, refresh, momo = null, paystackKey = "" }) {
   const [proof, setProof] = useState(current.proof || ""),
     [ack, setAck] = useState(false),
     [receiptNote, setReceiptNote] = useState(""),
@@ -1963,6 +2017,9 @@ function Payment({ current, actor, run, refresh, momo = null }) {
             <p className="reg-payment-instructions">
               Payment account details will be provided by the office.
             </p>
+          )}
+          {paystackKey && current.payment !== "pending" && (
+            <PaystackButton current={current} actor={actor} run={run} refresh={refresh} currency={currency} rate={rate} paystackKey={paystackKey} />
           )}
           {current.paymentNote && (
             <p className="reg-status-message unclaimed">

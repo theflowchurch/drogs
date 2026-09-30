@@ -358,6 +358,17 @@ test("a pastor must pick a registered bishop and is matched or left for that bis
   s = applyAction(s, bishop, "claim", { userId: lone.id });
   assert.equal(s.registrations.find((r) => r.userId === lone.id).status, "confirmed");
 });
+test("a Paystack payment is recorded only once, only when enough was paid", () => {
+  let s = setup();
+  s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }] });
+  s = applyAction(s, pastor, "submit", profile(pastor));
+  assert.throws(() => applyAction(s, pastor, "recordPaystack", { reference: "ref-1", amount: 40_00, currency: "GHS", expectedMinor: 575_00 }), /less than/);
+  s = applyAction(s, pastor, "recordPaystack", { reference: "ref-1", amount: 580_00, currency: "GHS", expectedMinor: 575_00 });
+  const paid = s.registrations.find((r) => r.userId === pastor.id);
+  assert.equal(paid.payment, "verified");
+  assert.equal(paid.paymentMethod, "paystack");
+  assert.throws(() => applyAction(s, pastor, "recordPaystack", { reference: "ref-1", amount: 580_00, currency: "GHS", expectedMinor: 575_00 }), /already/);
+});
 test("a mobile-money Transaction ID pays for one person only", () => {
   let s = setup();
   s = applyAction(s, bishop, "addRoster", {

@@ -194,6 +194,9 @@ export async function mediaUrl(path) {
 export const referenceImage = (role) =>
   `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/${role === "bishop" ? "assets/brand/bishop-example.jpg" : "assets/pastors/reconciled-5.webp"}`;
 
+// Card and mobile-money checkout through Paystack; the server confirms every reference with the secret key.
+export const paystackVerify = (reference) => server("paystack/verify", { reference });
+
 export const apiKeysAvailable = mysqlBackend;
 export const listKeys = () => server('keys');
 export const issueKey = input => server('keys', input);
