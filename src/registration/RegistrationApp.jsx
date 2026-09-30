@@ -1529,7 +1529,7 @@ function RegistrationForm({
                     </select>
                   </Field>
                 )}
-                <Field label="Country">
+                <Field label="Country where you currently serve">
                   <input
                     required
                     value={data.country}

@@ -27,7 +27,7 @@ with sync_playwright() as p:
   page.get_by_label('Gender',exact=True).select_option('male')
   page.get_by_label('WhatsApp number').fill('+233201234567')
   page.get_by_label('Date of birth').fill('1990-02-01')
-  page.get_by_label('Denomination',exact=True).select_option('First Love Church');page.get_by_label('Country',exact=True).fill('Ghana');page.get_by_label('City',exact=True).fill('Accra')
+  page.get_by_label('Denomination',exact=True).select_option('First Love Church');page.get_by_label('Country where you currently serve',exact=True).fill('Ghana');page.get_by_label('City',exact=True).fill('Accra')
   choices=page.get_by_label('Denomination',exact=True).locator('option').all_text_contents();assert len(choices)==8 and 'Go Ye Church' in choices
   for org in ['DHMM','FLOW','HJC']:
    page.get_by_label('Organization',exact=True).select_option(org);expect(page.get_by_label('Denomination',exact=True)).not_to_be_visible()  # no denominations → the field is hidden
