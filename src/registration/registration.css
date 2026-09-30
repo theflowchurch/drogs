@@ -2671,17 +2671,20 @@ p {
   background: rgba(19, 26, 39, 0.55);
 }
 .reg-roll-column h2 {
-  margin: 0 0 12px;
-  font-size: 20px;
-  letter-spacing: -0.5px;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-size: clamp(30px, 3.2vw, 44px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1;
 }
 .reg-roll-column h2 b {
-  margin-left: 8px;
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--panel-soft);
-  color: var(--muted);
+  font-size: clamp(26px, 2.8vw, 38px);
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -1px;
 }
 .reg-roll-column ol {
   list-style: none;
