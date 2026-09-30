@@ -2847,8 +2847,19 @@ p {
 .reg-add-pastor .reg-field {
   margin: 0;
 }
-.reg-add-pastor button {
-  height: 44px;
+.reg-add-pastor .reg-plus {
+  height: 46px;
+  width: 46px;
+  border-radius: 12px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+.reg-add-pastor .reg-plus:disabled {
+  opacity: 0.5;
 }
 .reg-add-pastor [role="alert"] {
   grid-column: 1 / -1;

@@ -2208,7 +2208,7 @@ function AddPastorRow({ onAdd, busy = false }) {
       <Field label="Pastor’s date of birth">
         <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} max={new Date().toISOString().slice(0, 10)} />
       </Field>
-      <button className="reg-secondary" disabled={busy}>Add pastor</button>
+      <button className="reg-plus" disabled={busy} aria-label="Add pastor" title="Add pastor">+</button>
       {error && <p role="alert" className="reg-status-message unclaimed">{error}</p>}
     </form>
   );
