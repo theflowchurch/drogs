@@ -102,8 +102,8 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('action', bishop.cookie, { name: 'addRoster', payload: { rows: [{ name: 'Valid Person', dob: '01/01/1990' }, { name: '' }] } })).status, 400);
     assert.equal((await call('snapshot', bishop.cookie)).data.rosters.length, 0, 'failed bulk write rolled back');
     const concurrent = await Promise.all([1, 2].map(() => call('action', bishop.cookie, { name: 'addRoster', payload: { rows: [{ name: 'John Doe', dob: '01/01/1990' }] } })));
-    assert.deepEqual(concurrent.map(r => r.status).sort(), [200, 400]);
-    assert.equal((await call('snapshot', bishop.cookie)).data.rosters.length, 1);
+    assert.deepEqual(concurrent.map(r => r.status).sort(), [200, 200], 'a duplicate row is skipped, not an error');
+    assert.equal((await call('snapshot', bishop.cookie)).data.rosters.length, 1, 'concurrent identical uploads leave one row');
     assert.equal((await call('snapshot', pastor.cookie)).data.registrations[0].status, 'confirmed');
     const receipt = await upload(pastor, 'receipt');
     assert.equal((await call('action', pastor.cookie, { name: 'payment', payload: { proof: receipt, nonrefundable: true } })).status, 200);
