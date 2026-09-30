@@ -61,11 +61,11 @@ with sync_playwright() as p:
         page.get_by_label('Pastor’s full name',exact=True).fill('Jon Demo')
         page.get_by_label('Pastor’s date of birth',exact=True).fill('1988-07-14')
         page.get_by_role('button',name='Add pastor',exact=True).click()
-        expect(page.get_by_role('cell',name='Jon Demo')).to_be_visible()  # read-only preview table
+        expect(page.get_by_role('cell',name='Jon Demo',exact=True)).to_be_visible()  # read-only preview table
         page.get_by_role('button',name='Next →').click()
         page.get_by_role('button',name='Continue →').click()
         expect(page.get_by_alt_text('Your uploaded photo for confirmation')).to_be_visible()
-        expect(page.get_by_role('cell',name='Jon Demo')).to_be_visible()  # review page repeats the pastors table
+        expect(page.get_by_role('cell',name='Jon Demo',exact=True)).to_be_visible()  # review page repeats the pastors table
         assert page.get_by_alt_text('Your uploaded photo for confirmation').evaluate('(img) => img.complete && img.naturalWidth > 0')
         page.get_by_label('I confirm that these details').check(); page.get_by_label('I consent to Kuriake Castle').check()
         page.get_by_label('I confirm this is me').check()
