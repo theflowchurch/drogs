@@ -2619,3 +2619,24 @@ p {
 .reg-reasons .reg-check {
   margin: 8px 0;
 }
+
+.reg-roster-person {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.reg-roster-person .reg-avatar.small {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  object-fit: cover;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+}
+.reg-table tr.unclaimed td:first-child {
+  box-shadow: inset 3px 0 0 var(--red);
+}
+.reg-table tr.claimed td:first-child {
+  box-shadow: inset 3px 0 0 #1f9d55;
+}

@@ -2285,22 +2285,22 @@ function Directory({ state, year, role, setRole, perform, mode = "original" }) {
   );
   // Pastors a bishop confirmed on this cycle's annual list.
   const linkedPastors = (bishop) => {
-    const account = state.profiles.find(
-      (x) => x.bishopApproved && x.referenceId === bishop.id,
-    )?.id;
+    const account =
+      bishop.registration?.userId ||
+      state.profiles.find((x) => x.bishopApproved && x.referenceId === bishop.id)?.id;
     if (!account) return [];
+    const keys = new Set([bishop.id, account]);
     const ids = new Set(
       state.rosters
-        .filter(
-          (r) =>
-            r.year === year &&
-            r.bishopId === account &&
-            r.status === "active" &&
-            r.referenceId,
-        )
+        .filter((r) => r.year === year && r.bishopId === account && r.status === "active" && r.referenceId)
         .map((r) => r.referenceId),
     );
-    return all.filter((q) => ids.has(q.id));
+    // Pastors linked to an old record, plus anyone who registered and was claimed under this bishop this year.
+    return all.filter(
+      (q) =>
+        q.role === "pastor" &&
+        (ids.has(q.id) || (q.registration?.status === "confirmed" && keys.has(q.registration.data.bishopId))),
+    );
   };
   return (
     <>
@@ -3412,13 +3412,19 @@ function Roster({ state, year, actor, office, perform }) {
     <>
       <div className="reg-stats">
         <div>
-          <span>Active pastors on list</span>
+          <span>On the list</span>
           <strong>{rows.filter((r) => r.status === "active").length}</strong>
         </div>
         <div>
-          <span>Registered and linked</span>
+          <span>Claimed</span>
           <strong>
             {rows.filter((r) => r.status === "active" && r.pastorId).length}
+          </strong>
+        </div>
+        <div>
+          <span>Unclaimed</span>
+          <strong>
+            {rows.filter((r) => r.status === "active" && !r.pastorId).length}
           </strong>
         </div>
         <div>
@@ -3450,11 +3456,83 @@ function Roster({ state, year, actor, office, perform }) {
           </select>
         )}
       </div>
+      <ReferenceReview
+        rows={rows}
+        perform={perform}
+        canEdit={year === state.year}
+      />
+      {rows.length ? (
+        <div className="reg-table-scroll">
+          <table className="reg-table">
+            <thead>
+              <tr>
+                <th>Pastor</th>
+                {office && <th>Bishop</th>}
+                <th>Status</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => {
+                // Once a pastor has claimed their place their own photo shows beside the name.
+                const reg = r.pastorId && state.registrations.find((x) => x.userId === r.pastorId && x.year === year);
+                const claimed = r.status === "active" && Boolean(r.pastorId);
+                return (
+                <tr key={r.id} className={r.status !== "active" ? "removed" : claimed ? "claimed" : "unclaimed"}>
+                  <td>
+                    <div className="reg-roster-person">
+                      {reg?.data?.photo ? <Media path={reg.data.photo} alt="" className="reg-avatar small" /> : <span className="reg-avatar small reg-placeholder" aria-hidden="true">◯</span>}
+                      <b>{r.name}</b>
+                    </div>
+                  </td>
+                  {office && (
+                    <td>
+                      {
+                        (state.bishops || []).find((b) => b.accountId === r.bishopId)
+                          ?.name
+                      }
+                    </td>
+                  )}
+                  <td>
+                    {r.status !== "active" ? (
+                      <Badge status="removed">Removed · {r.reason}</Badge>
+                    ) : claimed ? (
+                      <Badge status="confirmed">Claimed</Badge>
+                    ) : (
+                      <Badge status="unclaimed">Unclaimed</Badge>
+                    )}
+                    {r.note && <small>{r.note}</small>}
+                  </td>
+                  <td>
+                    {r.status === "active" && year === state.year && (
+                      <button
+                        className="reg-text danger"
+                        onClick={() => {
+                          setRemove(r);
+                          setReason("Transferred");
+                          setNote("");
+                        }}
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </td>
+                </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <Empty title="No pastors on this list yet">
+          {office ? "Bishops add their pastors during registration and under My pastors." : "Add your pastors below; they are recognised automatically when they register."}
+        </Empty>
+      )}
       {!office && year === state.year && (
         <section className="reg-card reg-roster-input">
           <div className="reg-section-head">
             <div>
-              <h2>Add your pastors</h2>
+              <h2>Add more pastors</h2>
               <p>
                 Upload your Excel or CSV file, or paste from it. Two columns:
                 <b> full name</b> and <b>date of birth</b> written day/month/year
@@ -3519,82 +3597,6 @@ function Roster({ state, year, actor, office, perform }) {
             </button>
           )}
         </section>
-      )}
-      <ReferenceReview
-        rows={rows}
-        perform={perform}
-        canEdit={year === state.year}
-      />
-      {rows.length ? (
-        <div className="reg-table-scroll">
-          <table className="reg-table">
-            <thead>
-              <tr>
-                <th>Pastor</th>
-                <th>Date of birth</th>
-                <th>Kuriake Castle</th>
-                {office && <th>Bishop</th>}
-                <th>Registration</th>
-                <th>List status</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.id}>
-                  <td>
-                    <b>{r.name}</b>
-                    <small>{[r.email, r.phone].filter(Boolean).join(" · ")}</small>
-                  </td>
-                  <td>{r.dob ? r.dob.split("-").reverse().join("/") : "—"}</td>
-                  <td>
-                    {r.referenceId ? (
-                      <Badge status="verified">Confirmed · {r.referenceId}</Badge>
-                    ) : (
-                      <small>Not linked</small>
-                    )}
-                  </td>
-                  {office && (
-                    <td>
-                      {
-                        (state.bishops || []).find((b) => b.accountId === r.bishopId)
-                          ?.name
-                      }
-                    </td>
-                  )}
-                  <td>{r.pastorId ? "Linked" : "Not yet linked"}</td>
-                  <td>
-                    <Badge
-                      status={r.status === "active" ? "confirmed" : "removed"}
-                    >
-                      {r.status === "active" ? "Active" : r.reason}
-                    </Badge>
-                    {r.note && <small>{r.note}</small>}
-                  </td>
-                  <td>
-                    {r.status === "active" && year === state.year && (
-                      <button
-                        className="reg-text danger"
-                        onClick={() => {
-                          setRemove(r);
-                          setReason("Transferred");
-                          setNote("");
-                        }}
-                      >
-                        Remove
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <Empty title="No pastors on this list yet">
-          Annual lists are submitted by approved bishops. Old directory entries
-          are reference data only.
-        </Empty>
       )}
       {remove && (
         <Dialog title={`Remove ${remove.name}`} onClose={() => setRemove(null)}>
