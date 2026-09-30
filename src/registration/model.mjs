@@ -222,6 +222,30 @@ export function matchFor(state, registration) {
   );
   return candidates.length === 1 ? candidates[0] : null;
 }
+// Why an unclaimed pastor did not match, with the list rows that nearly did:
+// "name" = same name, different birthday (someone typed the date wrong);
+// "first" = same birthday and first name, different surname (marriage, spelling);
+// "several" = more than one row fits exactly. None of these → nothing on the list.
+export function nearMatches(state, registration) {
+  const p = registration.data,
+    bishop = bishopKeyed(state, p.bishopId);
+  if (!bishop) return [];
+  const first = (name) => normalName(name).split(" ")[0] || "";
+  const rows = state.rosters.filter(
+    (r) => r.year === registration.year && r.bishopId === bishop.id && r.status === "active" && !r.pastorId,
+  );
+  const exact = rows.filter((r) => namesAlike(r.name, p.name) && dobClose(r.dob, p.dob));
+  if (exact.length > 1) return exact.map((row) => ({ row, reason: "several" }));
+  return rows
+    .map((r) =>
+      namesAlike(r.name, p.name) && !dobClose(r.dob, p.dob)
+        ? { row: r, reason: "name" }
+        : dobClose(r.dob, p.dob) && first(r.name) === first(p.name) && !namesAlike(r.name, p.name)
+          ? { row: r, reason: "first" }
+          : null,
+    )
+    .filter(Boolean);
+}
 function reconcile(state) {
   for (const r of state.registrations.filter(
     (r) => r.status !== "draft" && r.year === state.year,

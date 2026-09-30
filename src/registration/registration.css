@@ -2750,3 +2750,33 @@ p {
   font-size: 14px;
   font-weight: 500;
 }
+
+/* Unclaimed: yellow (nearly matches) above red (no match) */
+.reg-queue-group {
+  margin: 0 0 22px;
+}
+.reg-queue-group h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+.reg-queue-group h3 b {
+  margin-left: 6px;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--panel-soft);
+}
+.reg-queue-group > .reg-small {
+  margin: 0 0 10px;
+}
+.reg-queue-row.review {
+  border-color: #eadab0;
+  box-shadow: inset 4px 0 #c99a1e;
+}
+.reg-hints {
+  margin: 8px 0;
+  padding-left: 18px;
+}
+.reg-hints li {
+  margin: 4px 0;
+}

@@ -11,6 +11,7 @@ import {
   referenceMatches,
   directoryPeople,
   publicRoll,
+  nearMatches,
   namesAlike,
   titleFor,
 } from "../../src/registration/model.mjs";
@@ -482,4 +483,24 @@ test("a pastor confirmed by hand gets a row with a date of birth so a later uplo
   assert.equal(s.rosters[0].dob, profile(pastor).dob);
   s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
   assert.equal(s.rosters.filter((r) => r.status === "active").length, 1, "the upload is recognised as the same person");
+});
+
+test("unclaimed pastors are flagged yellow when the list nearly matches, red when it does not", () => {
+  let s = setup();
+  s = applyAction(s, bishop, "addRoster", {
+    rows: [{ name: "John Doe", dob: "05/05/1980" }, { name: "Mary Owusu", dob: "01/02/1990" }],
+  });
+  // Same name as the list, but the birthday differs → yellow, pointing at John's row.
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: "B1" });
+  const reg = s.registrations.find((r) => r.userId === pastor.id);
+  assert.equal(reg.status, "unclaimed");
+  assert.deepEqual(nearMatches(s, reg).map((m) => [m.row.name, m.reason]), [["John Doe", "name"]]);
+  // Same birthday and first name, married surname → yellow, pointing at Mary's row.
+  const mary = { id: "p3", email: "mary@example.com" };
+  s = applyAction(s, mary, "submit", { ...profile(mary, "pastor", "Mary Mensah"), dob: "1990-02-01", email: mary.email, bishopId: "B1" });
+  assert.deepEqual(nearMatches(s, s.registrations.find((r) => r.userId === mary.id)).map((m) => [m.row.name, m.reason]), [["Mary Owusu", "first"]]);
+  // Nothing like them on the list → red.
+  const kojo = { id: "p4", email: "kojo@example.com" };
+  s = applyAction(s, kojo, "submit", { ...profile(kojo, "pastor", "Kojo Denzel"), dob: "1985-09-09", email: kojo.email, bishopId: "B1" });
+  assert.deepEqual(nearMatches(s, s.registrations.find((r) => r.userId === kojo.id)), []);
 });

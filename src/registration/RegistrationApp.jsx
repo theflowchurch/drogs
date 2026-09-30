@@ -24,6 +24,7 @@ import {
   validateProfile,
   normalName,
   namesAlike,
+  nearMatches,
   dobClose,
   titleFor,
   paymentReference,
@@ -2839,41 +2840,63 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
           !r.pastorId,
       )
     : [];
+  // Yellow: the list nearly matches (wrong birthday, or a changed surname). Red: nothing like them on the list.
+  const hintsFor = (r) => nearMatches(state, r);
+  const reasonText = { name: "same name, different birthday", first: "same birthday and first name, different surname", several: "more than one entry fits" };
+  const shown = filtered(records, filter);
+  const groups = [
+    ["Possible matches", "review", shown.filter((r) => hintsFor(r).length), "The name or birthday on the bishop’s list is close. Open one to link it."],
+    ["No match on the list", "unclaimed", shown.filter((r) => !hintsFor(r).length), "Nothing on the bishop’s list resembles these registrations."],
+  ];
+  const selectedHints = selected ? hintsFor(selected) : [];
   return (
     <>
       <Filters filter={filter} setFilter={setFilter} />
-      <div className="reg-queue">
-        {filtered(records, filter).map((r) => (
-          <button
-            key={r.userId}
-            className="reg-queue-row unclaimed"
-            onClick={() => {
-              setSelectedId(r.userId);
-              setBishopId("");
-              setRosterId("");
-            }}
-          >
-            <Media path={r.data.photo} alt="" className="reg-avatar small" />
-            <div>
-              <h3>{r.data.name}</h3>
-              <p>
-                {r.data.organization} · {r.data.denomination || r.data.church}
-              </p>
-              <small>
-                Bishop:{" "}
-                {bishops.find((b) => b.id === r.data.bishopId)?.name ||
-                  `${r.data.bishopName || "not given"} (typed, not matched)`}
-              </small>
+      {groups.map(([label, tone, list, help]) =>
+        list.length ? (
+          <section key={label} className={`reg-queue-group ${tone}`}>
+            <h3>
+              {label} <b>{list.length}</b>
+            </h3>
+            <p className="reg-small">{help}</p>
+            <div className="reg-queue">
+              {list.map((r) => {
+                const hints = hintsFor(r);
+                return (
+                  <button
+                    key={r.userId}
+                    className={`reg-queue-row ${tone}`}
+                    onClick={() => {
+                      setSelectedId(r.userId);
+                      setBishopId("");
+                      setRosterId(hints.length === 1 ? hints[0].row.id : "");
+                    }}
+                  >
+                    <Media path={r.data.photo} alt="" className="reg-avatar small" />
+                    <div>
+                      <h3>{r.data.name}</h3>
+                      <p>
+                        {r.data.organization} · {r.data.denomination || r.data.church}
+                      </p>
+                      <small>
+                        Bishop:{" "}
+                        {bishops.find((b) => b.id === r.data.bishopId)?.name ||
+                          `${r.data.bishopName || "not given"} (typed, not matched)`}
+                        {hints.length ? ` · list has “${hints[0].row.name}” (${reasonText[hints[0].reason]})` : ""}
+                      </small>
+                    </div>
+                    <Badge status={tone === "review" ? "pending" : "unclaimed"}>{tone === "review" ? "Check the list" : "No match"}</Badge>
+                    <span>Review →</span>
+                  </button>
+                );
+              })}
             </div>
-            <Badge status="unclaimed" />
-            <span>Review →</span>
-          </button>
-        ))}
-      </div>
+          </section>
+        ) : null,
+      )}
       {!records.length && (
         <Empty title="No Unclaimed registrations">
-          Registrations that do not match a bishop’s annual list will appear
-          here in red.
+          Registrations that do not match a bishop’s annual list appear here: yellow when the list nearly matches, red when nothing on it resembles them.
         </Empty>
       )}
       {records.length > 0 && !filtered(records, filter).length && (
@@ -2887,6 +2910,20 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
           onClose={() => setSelectedId(null)}
         >
           <ProfileDetails record={selected} directory={state.directory} />
+          {selectedHints.length > 0 && (
+            <div className="reg-status-message pending">
+              <b>The list nearly matches</b>
+              <ul className="reg-hints">
+                {selectedHints.map(({ row, reason }) => (
+                  <li key={row.id}>
+                    <b>{row.name}</b> · born {row.dob ? row.dob.split("-").reverse().join("/") : "—"} — {reasonText[reason]}.{" "}
+                    <button type="button" className="reg-text" onClick={() => setRosterId(row.id)}>Link to this entry</button>
+                  </li>
+                ))}
+              </ul>
+              <p>Registered as {selected.data.name}, born {selected.data.dob ? selected.data.dob.split("-").reverse().join("/") : "—"}.</p>
+            </div>
+          )}
           <div className="reg-status-message unclaimed">
             <b>Not yet matched</b>
             <p>
