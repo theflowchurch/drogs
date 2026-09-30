@@ -2119,10 +2119,27 @@ const filterOptions = (list, org) => {
     country: unique("country", scope),
   };
 };
+// Card size is a slider (remembered per browser): small = more people per row.
+// Phones start at three per row; laptops at the classic size.
+const cardDefault = () => (typeof window !== "undefined" && window.innerWidth < 700 ? 100 : 190);
 function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
+  const [size, setSize] = useState(190);
+  useEffect(() => {
+    const saved = Number(localStorage.getItem("kc-card-size"));
+    setSize(saved >= 70 && saved <= 320 ? saved : cardDefault());
+  }, []);
+  const zoom = (v) => {
+    setSize(v);
+    localStorage.setItem("kc-card-size", String(v));
+  };
   return (
     <>
-      <div className="reg-people-grid">
+      <div className="reg-zoom">
+        <span aria-hidden="true">▦</span>
+        <input type="range" min={70} max={320} step={10} value={size} onChange={(e) => zoom(Number(e.target.value))} aria-label="Card size: left for more people per row, right for larger photos" />
+        <span aria-hidden="true">▢</span>
+      </div>
+      <div className="reg-people-grid" style={{ "--card-min": `${size}px` }}>
         {list.slice(0, limit).map((p) => (
           <button
             className="reg-person-card"
