@@ -1220,7 +1220,11 @@ function RegistrationForm({
   const set = (key, value) =>
     setData((d) => {
       const next = { ...d, [key]: value, photoConfirmed: false };
-      if (key === "organization") next.denomination = "";
+      if (key === "organization") {
+        next.denomination = "";
+        // FLOW is an online fellowship: its members are listed as Online, Ghana.
+        if (value === "FLOW") { next.city = "Online"; next.country = "Ghana"; }
+      }
       if (key === "firstName" || key === "lastName")
         next.name = [next.firstName, next.lastName].filter(Boolean).join(" ");
       return next;
@@ -2631,7 +2635,6 @@ function PublicList({ list }) {
                       {p.role === "bishop" ? (
                         <button type="button" className="reg-roll-name reg-roll-toggle" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : p.id)}>
                           {p.name}
-                          <span className="reg-roll-count" aria-hidden="true">{isOpen ? "▴" : "▾"}</span>
                         </button>
                       ) : (
                         <span className="reg-roll-name">{p.name}</span>

@@ -52,7 +52,13 @@ const person = (role, p) => ({
   phone: keep(p.mobile || p.whatsapp),
   ...(role === 'pastor' && keep(p.supervisingBishop) ? { bishop: keep(p.supervisingBishop) } : {}),
 });
-const people = [...BISHOPS.map(p => person('bishop', p)), ...PASTORS.map(p => person('pastor', p))];
+// Office corrections by name: people who belong to FLOW whatever the old roster said.
+const MOVE_TO_FLOW = new Set(['natalie welds']);
+// FLOW is an online fellowship: everyone in it is listed as Online, Ghana.
+const flow = p => (MOVE_TO_FLOW.has(p.name.toLowerCase()) || p.organization === 'FLOW')
+  ? { ...p, organization: 'FLOW', denomination: 'FLOW', denominationLogo: GROUP_LOGO.FLOW, city: 'Online', country: 'Ghana', branch: '' }
+  : p;
+const people = [...BISHOPS.map(p => person('bishop', p)), ...PASTORS.map(p => person('pastor', p))].map(flow);
 if (new Set(people.map(p => p.id)).size !== people.length) throw Error('Reference identifiers must be unique.');
 // Self-check: the encoding repair must leave every name clean and starting with a letter.
 const broken = people.filter(p => /[√‚]/.test(p.name) || !/^\p{L}/u.test(p.name));
