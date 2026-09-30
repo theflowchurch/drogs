@@ -1415,16 +1415,6 @@ function RegistrationForm({
                     ))}
                   </select>
                 </Field>
-                <Field
-                  label="Gender"
-                  hint={data.role === "bishop" && data.gender === "female" ? `You will be listed as ${titleFor(data)}.` : undefined}
-                >
-                  <select required value={data.gender} onChange={(e) => set("gender", e.target.value)}>
-                    <option value="">Select</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                  </select>
-                </Field>
                 <Field label="First name">
                   <input
                     required
@@ -1442,6 +1432,16 @@ function RegistrationForm({
                     onChange={(e) => set("lastName", e.target.value)}
                     autoComplete="family-name"
                   />
+                </Field>
+                <Field
+                  label="Gender"
+                  hint={data.role === "bishop" && data.gender === "female" ? `You will be listed as ${titleFor(data)}.` : undefined}
+                >
+                  <select required value={data.gender} onChange={(e) => set("gender", e.target.value)}>
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
                 </Field>
                 {(candidates.length > 0 || data.referenceId) && (
                   <div className="reg-is-this-you reg-field wide">
