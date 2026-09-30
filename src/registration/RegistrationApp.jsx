@@ -2951,7 +2951,7 @@ function BishopApprovals({ records, directory = [], perform, canEdit }) {
                 "approveBishop",
                 { userId: selected.userId, referenceId: ref },
                 "Bishop confirmed. They now appear on the roll.",
-              )
+              ).then((ok) => ok && setSelectedId(null))
             }
           >
             Confirm bishop
@@ -2960,10 +2960,10 @@ function BishopApprovals({ records, directory = [], perform, canEdit }) {
             <textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
           </Field>
           <div className="reg-review-buttons">
-            <button className="reg-secondary" disabled={!canEdit || !note.trim()} onClick={() => perform("reviewBishop", { userId: selected.userId, decision: "resubmit", note }, "The bishop has been asked to resubmit.")}>
+            <button className="reg-secondary" disabled={!canEdit || !note.trim()} onClick={() => perform("reviewBishop", { userId: selected.userId, decision: "resubmit", note }, "The bishop has been asked to resubmit.").then((ok) => ok && setSelectedId(null))}>
               Needs resubmission
             </button>
-            <button className="reg-secondary danger" disabled={!canEdit || !note.trim()} onClick={() => perform("reviewBishop", { userId: selected.userId, decision: "denied", note }, "Registration denied.")}>
+            <button className="reg-secondary danger" disabled={!canEdit || !note.trim()} onClick={() => perform("reviewBishop", { userId: selected.userId, decision: "denied", note }, "Registration denied.").then((ok) => ok && setSelectedId(null))}>
               Deny
             </button>
           </div>
