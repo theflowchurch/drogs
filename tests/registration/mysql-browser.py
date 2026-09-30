@@ -64,7 +64,7 @@ with sync_playwright() as p:
         page.get_by_role('button',name='Next →').click()
         page.get_by_role('button',name='I’ll pay later →').click()
         expect(page.get_by_alt_text('Your uploaded photo for confirmation')).to_be_visible()
-        expect(page.get_by_text('Jon Demo · 14/07/1988')).to_be_visible()
+        expect(page.get_by_role('cell',name='Jon Demo')).to_be_visible()  # review page repeats the pastors table
         assert page.get_by_alt_text('Your uploaded photo for confirmation').evaluate('(img) => img.complete && img.naturalWidth > 0')
         page.get_by_label('I confirm that these details').check(); page.get_by_label('I consent to Kuriake Castle').check()
         page.get_by_label('I confirm this is me').check()
