@@ -65,5 +65,17 @@ export function createStorage({ config, pool, client, logger = console }) {
       const [[row]] = await pool.execute('SELECT data FROM dr_media_blobs WHERE object_key=?', [key]);
       return row?.data || null;
     },
+    // The stored bytes of an image, wherever it lives; null when unreadable.
+    async bytes(key) {
+      try {
+        if (key.startsWith('db/')) return await this.blob(key);
+        const out = await s3().send(new GetObjectCommand({ Bucket: config.r2.bucket, Key: key }));
+        const body = out.Body ? Buffer.from(await out.Body.transformToByteArray()) : null;
+        return body?.length ? body : null;
+      } catch (error) {
+        logger.error('Image read failed', { type: error.name, code: error.code });
+        return null;
+      }
+    },
   };
 }

@@ -95,6 +95,8 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(mails.at(-1).to, 'bishop@example.com');
     assert.match(mails.at(-1).subject, /update your registration/);
     assert.match(mails.at(-1).text, /official attire/);
+    assert.ok(mails.at(-1).attachments?.some(a => a.cid === 'required'), 'the required attire example is embedded when the photo is the problem');
+    assert.match(mails.at(-1).html, /cid:required/);
     assert.equal((await call('action', office.cookie, { name: 'approveBishop', payload: { userId: bishop.data.id, referenceId: 'B1' } })).status, 200);
     assert.equal((await call('action', pastor.cookie, { name: 'save', payload: profile(bishopPhoto, 'pastor') })).status, 400, 'cannot save another account photo');
     assert.equal((await call('action', pastor.cookie, { name: 'save', payload: profile(pastorPhoto, 'pastor') })).status, 200);
