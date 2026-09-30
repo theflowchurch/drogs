@@ -2520,3 +2520,30 @@ p {
   columns: 2;
   font-size: 13px;
 }
+
+/* The attire example sits right under the upload, so the standard is seen before choosing a photo */
+.reg-attire-example {
+  margin: 14px 0 0;
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.reg-attire-example img {
+  width: 72px;
+  aspect-ratio: 4/4.6;
+  object-fit: cover;
+  object-position: center 20%;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+.reg-attire-example figcaption {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.reg-attire-example figcaption b {
+  display: block;
+  color: var(--ink);
+  margin-bottom: 2px;
+}

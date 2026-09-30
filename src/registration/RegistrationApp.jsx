@@ -1331,12 +1331,19 @@ function RegistrationForm({
                   : "JPG, PNG or WebP · up to 5 MB."}
             </small>
           </Field>
-            <p>
-              {data.role === "bishop"
-                ? "Bishops wear their official red jacket; a collar alone is not sufficient."
-                : "Wear your official pastoral attire."}{" "}
-              Face the camera, plain background, face fully visible.
-            </p>
+            <figure className="reg-attire-example">
+              <img
+                src={`${base}/${data.role === "bishop" ? "assets/brand/bishop-example.jpg" : "assets/pastors/reconciled-5.webp"}`}
+                alt={data.role === "bishop" ? "Required bishop red-jacket example" : "Required pastoral attire example"}
+              />
+              <figcaption>
+                <b>{data.role === "bishop" ? "Required: official red jacket" : "Required: official pastoral attire"}</b>
+                {data.role === "bishop"
+                  ? " A collar alone is not sufficient."
+                  : ""}{" "}
+                Face the camera, plain background, face fully visible. No selfies or casual clothing.
+              </figcaption>
+            </figure>
           </div>
           <div className="reg-amount">
             <span>Annual renewal ministerial fee</span>
@@ -1349,7 +1356,6 @@ function RegistrationForm({
             </p>
             <hr />
             <b>Non-refundable</b>
-            <p>Paid by mobile money as part of your registration.</p>
           </div>
         </aside>
         <section className="reg-card reg-form-card">
