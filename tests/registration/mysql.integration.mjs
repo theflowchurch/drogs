@@ -106,7 +106,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('snapshot', bishop.cookie)).data.rosters.length, 1, 'concurrent identical uploads leave one row');
     assert.equal((await call('snapshot', pastor.cookie)).data.registrations[0].status, 'confirmed');
     const receipt = await upload(pastor, 'receipt');
-    assert.equal((await call('action', pastor.cookie, { name: 'payment', payload: { proof: receipt, nonrefundable: true } })).status, 200);
+    assert.equal((await call('action', pastor.cookie, { name: 'payment', payload: { proof: receipt, nonrefundable: true, transactionId: 'TX-TEST-0001' } })).status, 200);
     assert.equal((await call(`media?path=${receipt}`, bishop.cookie)).status, 403);
     assert.equal((await call('snapshot', bishop.cookie)).data.registrations.find(r => r.userId === pastor.data.id).proof, undefined);
     const media = await call(`media?path=${receipt}`, office.cookie);
@@ -205,7 +205,6 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     const blob = await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: bishop.cookie } }));
     assert.equal(blob.status, 200); assert.equal(blob.headers.get('content-type'), 'image/webp'); assert.ok((await blob.arrayBuffer()).byteLength > 20, "the stored image is returned");
     assert.equal((await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: stranger.cookie } }))).status, 403, 'strangers cannot read a stored image');
-    assert.equal((await call('paystack/verify', bishop.cookie, { reference: 'abc123' })).status, 503, 'Paystack is off until the secret key is configured');
 
     // First-time setup: one secret, one use.
     assert.equal((await call('settings/bootstrap', '', { token: 'wrong', values: { SMTP_FROM: 'x@example.com' } })).status, 403);

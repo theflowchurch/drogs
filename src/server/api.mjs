@@ -36,20 +36,6 @@ async function jsonBody(request) {
     throw new HttpError(400, 'Invalid request data.');
   }
 }
-// The smallest acceptable charge for this member's commitment, in the
-// transaction currency's minor unit. GHS uses the same indicative USD rate the
-// member saw, minus a 3% margin for the provider's own conversion.
-// ponytail: fetched per verification; cache it if Paystack volume grows.
-async function paystackMinimum(state, actor, currency, fetcher) {
-  const r = state.registrations.find(r => r.userId === actor.id && r.year === state.year);
-  const usd = r?.amount || 0;
-  if (currency === 'USD') return usd * 100;
-  if (currency !== 'GHS') throw new HttpError(400, 'Only GHS or USD payments are accepted.');
-  const rates = await (await fetcher('https://open.er-api.com/v6/latest/USD')).json().catch(() => null);
-  const rate = Number(rates?.rates?.GHS);
-  if (!Number.isFinite(rate) || rate <= 0) throw new HttpError(503, 'The exchange rate is unavailable; please try again shortly.');
-  return Math.floor(usd * rate * 0.97 * 100);
-}
 const json = (value, status = 200, headers = {}) => Response.json(value, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...headers } });
 export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch, logger = console }) {
   let publicCache = { at: 0, value: null };
@@ -137,13 +123,12 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           // Payment evidence is available only to its owner and the office.
           view.registrations = view.registrations.map(r => r.userId === actor.id ? r : { ...r, proof: undefined });
         }
-        return json({ ...view, office: actor.office, paystackKey: config.paystackPublic, publicDirectory: config.publicDirectory });
+        return json({ ...view, office: actor.office, payment: config.momo, publicDirectory: config.publicDirectory });
       }
       if (path === '/api/registration/action' && method === 'POST') {
         await rateLimit(pool, config, `action:${actor.id}`, 120, 60000);
         const { name, payload = {} } = await jsonBody(request);
         if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new HttpError(400, 'Invalid action data.');
-        if (name === 'recordPaystack') throw new HttpError(400, 'Payments are recorded after Paystack confirms them.');
         await transaction(pool, async conn => {
           const before = await readState(conn, true);
           if (['save', 'submit', 'update'].includes(name) && payload.photo) await assertOwnedMedia(conn, actor, payload.photo, 'portrait');
@@ -182,24 +167,6 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           return new Response(bytes, { status: 200, headers: { 'Content-Type': media.content_type, 'Cache-Control': 'private, max-age=300', 'X-Content-Type-Options': 'nosniff' } });
         }
         return json({ url: await storage.url(key) });
-      }
-      if (path === '/api/registration/paystack/verify' && method === 'POST') {
-        if (!config.paystack) throw new HttpError(503, 'Card and mobile-money payments are not switched on yet.');
-        await rateLimit(pool, config, `paystack:${actor.id}`, 20, 600000);
-        const { reference } = await jsonBody(request);
-        if (typeof reference !== 'string' || !/^[A-Za-z0-9._=-]{6,100}$/.test(reference)) throw new HttpError(400, 'Invalid payment reference.');
-        const response = await fetcher(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, { headers: { Authorization: `Bearer ${config.paystack}` } });
-        const result = await response.json().catch(() => ({}));
-        const tx = result?.data;
-        if (!response.ok || !result?.status || tx?.status !== 'success') throw new HttpError(400, 'Paystack has not confirmed this payment yet.');
-        await transaction(pool, async conn => {
-          const before = await readState(conn, true);
-          let after;
-          try { after = applyAction(before, actor, 'recordPaystack', { reference, amount: tx.amount, currency: tx.currency, expectedMinor: await paystackMinimum(before, actor, tx.currency, fetcher) }); }
-          catch (error) { throw new HttpError(400, error.message); }
-          await persistState(conn, before, after);
-        });
-        return json({ ok: true });
       }
       throw new HttpError(404, 'Not found.');
     } catch (error) {

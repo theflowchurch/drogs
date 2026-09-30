@@ -8,7 +8,7 @@ Kuriake Castle (kuriakecastle.org) keeps the annual Roll of Good Standing for th
 
 ## What we collect
 
-When you register we ask for your name, gender, role, organization and denomination, city and country, a photograph in official attire, your email address, your phone number and your date of birth. Bishops also give us the names and dates of birth of the pastors under their oversight. Payments are handled by Paystack; we receive a reference and a confirmation, never your card or mobile-money details.
+When you register we ask for your name, gender, role, organization and denomination, city and country, a photograph in official attire, your email address, your phone number and your date of birth. Bishops also give us the names and dates of birth of the pastors under their oversight. The annual fee is paid by mobile money to the Kuriake Castle account; we keep the Transaction ID and the screenshot you upload so the office can confirm it against the statement.
 
 ## What is public
 
@@ -32,7 +32,7 @@ Data is stored in a database in the European Union with encrypted connections. S
 
 ## Third parties
 
-We use Hostinger (hosting), Resend (email delivery) and Paystack (payments). Each receives only what it needs to do its job. We do not sell or share your data with anyone else.
+We use Hostinger (hosting) and Resend (email delivery). Each receives only what it needs to do its job. We do not sell or share your data with anyone else.
 
 ## Contact
 

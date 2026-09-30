@@ -1898,15 +1898,13 @@ p {
   }
 }
 
-.reg-paystack {
-  margin: 12px 0 18px;
-  display: grid;
-  gap: 8px;
+.reg-momo .reg-details {
+  margin: 10px 0;
 }
-.reg-paystack .reg-primary {
-  background: #0a152e;
+.reg-momo .reg-details > div {
+  grid-template-columns: 90px 1fr;
+  padding: 9px 0;
 }
-
 /* Registration sidebar: your photo first, then the commitment */
 .reg-upload-card {
   background: var(--panel);

@@ -25,6 +25,7 @@ import {
   normalName,
   namesAlike,
   titleFor,
+  paymentReference,
   referenceIndex,
   referenceMatches,
   directoryPeople,
@@ -43,7 +44,6 @@ import people from "./reference-people.json";
 const references = people.filter((p) => p.role === "bishop");
 const index = referenceIndex(people);
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
-const paymentInstructions = process.env.NEXT_PUBLIC_PAYMENT_INSTRUCTIONS || "";
 const statusLabel = {
   draft: "Draft",
   unclaimed: "Unclaimed",
@@ -1110,7 +1110,7 @@ function Participant({
           actor={actor}
           run={run}
           refresh={refresh}
-          paystackKey={state.paystackKey || api.paystackKey}
+          momo={state.payment}
         />
       </div>
     </>
@@ -1707,60 +1707,11 @@ function CommitmentPreview({ role, country }) {
     </p>
   );
 }
-// Card or mobile money through Paystack's inline checkout. The amount is charged
-// in GHS at the same indicative rate the member sees; the server confirms the
-// reference with Paystack before the payment is recorded.
-function PaystackButton({ current, actor, run, refresh, rate, currency, paystackKey }) {
-  const [ready, setReady] = useState(Boolean(globalThis.PaystackPop));
-  useEffect(() => {
-    if (globalThis.PaystackPop) return setReady(true);
-    const script = document.createElement("script");
-    script.src = "https://js.paystack.co/v1/inline.js";
-    script.async = true;
-    script.onload = () => setReady(true);
-    document.body.appendChild(script);
-  }, []);
-  const ghs = rate && currency === "GHS" ? current.amount * rate : null;
-  const usdOnly = !ghs;
-  return (
-    <div className="reg-paystack">
-      <button
-        type="button"
-        className="reg-primary full"
-        disabled={!ready}
-        onClick={() =>
-          run(async () => {
-            const reference = await new Promise((resolve, reject) => {
-              const handler = globalThis.PaystackPop.setup({
-                key: paystackKey,
-                email: actor.email,
-                amount: Math.round((usdOnly ? current.amount : ghs) * 100),
-                currency: usdOnly ? "USD" : "GHS",
-                channels: ["card", "mobile_money", "bank", "bank_transfer"],
-                metadata: { custom_fields: [{ display_name: "Kuriake Castle", variable_name: "registration", value: `${current.year} ${current.data.role} ${current.data.name}` }] },
-                callback: (response) => resolve(response.reference),
-                onClose: () => reject(Error("Payment window closed before completing.")),
-              });
-              handler.openIframe();
-            });
-            await api.paystackVerify(reference);
-            await refresh();
-          }, "Payment received. Thank you for your commitment.")
-        }
-      >
-        Pay {ghs ? `GHS ${Math.round(ghs).toLocaleString()}` : `$${current.amount}`} by card or mobile money →
-      </button>
-      <small className="reg-small">
-        Secure checkout by Paystack: cards, MTN / Telecel / AT mobile money, bank.
-        {ghs ? ` Charged in Ghana cedis at today’s indicative rate for $${current.amount} USD.` : ""}
-      </small>
-    </div>
-  );
-}
-function Payment({ current, actor, run, refresh, paystackKey = "" }) {
+function Payment({ current, actor, run, refresh, momo = null }) {
   const [proof, setProof] = useState(current.proof || ""),
     [ack, setAck] = useState(false),
     [receiptNote, setReceiptNote] = useState(""),
+    [transactionId, setTransactionId] = useState(""),
     [rates, setRates] = useState(null);
   const currency = currencyFor(current.data.country);
   useEffect(() => {
@@ -1772,6 +1723,9 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
     };
   }, [currency]);
   const rate = rateFor(rates, currency);
+  // Without a live server the sample number lets the flow be rehearsed.
+  const momoReady = Boolean(momo?.number) || !api.live;
+  if (!api.live && !momo?.number) momo = { number: "024 000 0000", name: "Kuriake Castle (sample)" };
   return (
     <section className="reg-card reg-payment">
       <span className="reg-eyebrow">ANNUAL RENEWAL MINISTERIAL FEE</span>
@@ -1808,18 +1762,22 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
         </div>
       ) : (
         <>
-          {paymentInstructions ? (
-            <div className="reg-payment-instructions">
-              {paymentInstructions}
+          {momoReady ? (
+            <div className="reg-payment-instructions reg-momo">
+              <p>Send the fee by mobile money, then upload the confirmation.</p>
+              <dl className="reg-details">
+                <div><dt>Send to</dt><dd><b>{momo.number}</b>{momo.name ? ` · ${momo.name}` : ""}</dd></div>
+                <div><dt>Amount</dt><dd><b>{rate > 0 ? localAmount(current.amount, rate, currency) : `$${current.amount} USD`}</b>{rate > 0 ? ` (for $${current.amount} USD)` : ""}</dd></div>
+                <div><dt>Reference</dt><dd><b>{paymentReference(current)}</b> — type this as the payment reference</dd></div>
+              </dl>
+              <p className="reg-small">
+                Then screenshot the confirmation SMS or the app’s transaction details showing the <b>Transaction ID</b>, amount and date. Photos of paper receipts are not accepted.
+              </p>
             </div>
           ) : (
             <p className="reg-payment-instructions">
               Payment account details will be provided by the office.
-              {!api.live ? " You can test a sample receipt below." : ""}
             </p>
-          )}
-          {paystackKey && current.payment !== "pending" && (
-            <PaystackButton current={current} actor={actor} run={run} refresh={refresh} currency={currency} rate={rate} paystackKey={paystackKey} />
           )}
           {current.paymentNote && (
             <p className="reg-status-message unclaimed">
@@ -1836,11 +1794,22 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
                   await api.action(actor, "payment", {
                     proof,
                     nonrefundable: ack,
+                    transactionId,
                   });
                   await refresh();
                 }, "Payment proof submitted for verification.");
               }}
             >
+              <Field label="Transaction ID" hint="From the confirmation SMS or app, e.g. MP240912.1234.A1. Each ID can be used once.">
+                <input
+                  required
+                  value={transactionId}
+                  onChange={(e) => setTransactionId(e.target.value)}
+                  placeholder="Transaction ID"
+                  maxLength={40}
+                  autoComplete="off"
+                />
+              </Field>
               <Field label="Payment screenshot">
                 {proof && (
                   <Media
@@ -1852,7 +1821,7 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
-                  disabled={api.live && !paymentInstructions}
+                  disabled={!momoReady}
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     e.target.value = "";
@@ -1884,7 +1853,7 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
               </label>
               <button
                 className="reg-primary full"
-                disabled={!proof || !ack || (api.live && !paymentInstructions)}
+                disabled={!proof || !ack || !transactionId.trim() || !momoReady}
               >
                 Submit payment proof →
               </button>
@@ -3028,8 +2997,12 @@ function Payments({ records, perform, canEdit }) {
           <h3>
             {selected.data.name} · ${selected.amount} USD
           </h3>
+          <dl className="reg-details">
+            <div><dt>Transaction ID</dt><dd><b>{selected.transactionId || "Not given"}</b></dd></div>
+            <div><dt>Reference</dt><dd>{paymentReference(selected)}</dd></div>
+          </dl>
           <p>
-            Compare the screenshot with the payment received in your account
+            Find this Transaction ID on the mobile-money statement and compare the amount and date with the screenshot. Compare the screenshot with the payment received in your account
             before verifying.
           </p>
           <Media

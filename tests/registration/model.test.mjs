@@ -91,7 +91,7 @@ test("unmatched pastor is Unclaimed and cannot pay, linked pastor can", () => {
   assert.equal(s.registrations.at(-1).status, "unclaimed");
   assert.throws(
     () =>
-      applyAction(s, pastor, "payment", { proof: "a", nonrefundable: true }),
+      applyAction(s, pastor, "payment", { proof: "a", nonrefundable: true, transactionId: "TX-TEST-0001" }),
     /unlocks/,
   );
   s = applyAction(s, bishop, "addRoster", {
@@ -99,10 +99,7 @@ test("unmatched pastor is Unclaimed and cannot pay, linked pastor can", () => {
   });
   assert.equal(s.registrations.at(-1).status, "confirmed");
   assert.equal(s.registrations.at(-1).amount, 50);
-  s = applyAction(s, pastor, "payment", {
-    proof: "p1/receipt/a.jpg",
-    nonrefundable: true,
-  });
+  s = applyAction(s, pastor, "payment", { proof: "p1/receipt/a.jpg", nonrefundable: true, transactionId: "TX-TEST-0001" });
   assert.equal(s.registrations.at(-1).payment, "pending");
   assert.throws(
     () => applyAction(s, pastor, "reviewPayment", { result: "verified" }),
@@ -158,10 +155,7 @@ test("removal preserves payment and next cycle has fresh counts and no copied pa
     rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }],
   });
   s = applyAction(s, pastor, "submit", profile(pastor));
-  s = applyAction(s, pastor, "payment", {
-    proof: "p1/receipt/a",
-    nonrefundable: true,
-  });
+  s = applyAction(s, pastor, "payment", { proof: "p1/receipt/a", nonrefundable: true, transactionId: "TX-TEST-0001" });
   s = applyAction(s, bishop, "removeRoster", {
     id: s.rosters[0].id,
     reason: "Dismissed",
@@ -363,44 +357,27 @@ test("a pastor must pick a registered bishop and is matched or left for that bis
   s = applyAction(s, bishop, "claim", { userId: lone.id });
   assert.equal(s.registrations.find((r) => r.userId === lone.id).status, "confirmed");
 });
-test("a Paystack payment is recorded only once, only when enough was paid", () => {
+test("a mobile-money Transaction ID pays for one person only", () => {
   let s = setup();
   s = applyAction(s, bishop, "addRoster", {
-    rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }],
+    rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }, { name: "Nina Masuku", dob: "03/03/1991" }],
   });
   s = applyAction(s, pastor, "submit", profile(pastor));
-  assert.equal(s.registrations.find((r) => r.userId === pastor.id).status, "confirmed");
   assert.throws(
-    () =>
-      applyAction(s, pastor, "recordPaystack", {
-        reference: "ref-1",
-        amount: 40_00,
-        currency: "GHS",
-        expectedMinor: 575_00,
-      }),
-    /less than/,
+    () => applyAction(s, pastor, "payment", { proof: "p1/receipt/a.jpg", nonrefundable: true, transactionId: "12" }),
+    /Transaction ID/,
   );
-  s = applyAction(s, pastor, "recordPaystack", {
-    reference: "ref-1",
-    amount: 580_00,
-    currency: "GHS",
-    expectedMinor: 575_00,
-  });
+  s = applyAction(s, pastor, "payment", { proof: "p1/receipt/a.jpg", nonrefundable: true, transactionId: " mp2409.1234.a1 " });
   const paid = s.registrations.find((r) => r.userId === pastor.id);
-  assert.equal(paid.payment, "verified");
-  assert.equal(paid.paymentMethod, "paystack");
+  assert.equal(paid.payment, "pending");
+  assert.equal(paid.transactionId, "MP2409.1234.A1", "stored trimmed and upper-cased");
+  const twin = { id: "p2", email: "nina@example.com" };
+  s = applyAction(s, twin, "submit", { ...profile(twin, "pastor", "Nina Masuku"), dob: "1991-03-03", email: twin.email });
   assert.throws(
-    () =>
-      applyAction(s, pastor, "recordPaystack", {
-        reference: "ref-1",
-        amount: 580_00,
-        currency: "GHS",
-        expectedMinor: 575_00,
-      }),
-    /already/,
+    () => applyAction(s, twin, "payment", { proof: "p2/receipt/a.jpg", nonrefundable: true, transactionId: "MP2409.1234.A1" }),
+    /already been used/,
   );
 });
-
 test("the public roll lists only confirmed people and the office can pick the photo", () => {
   const references = [
     { id: "B1", role: "bishop", name: "Ama Bishop", title: "Bishop", organization: "First Love", denomination: "First Love Church", city: "Accra", country: "Ghana", image: "assets/bishops/001.jpg", email: "old@example.com", phone: "+233200000001" },

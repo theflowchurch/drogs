@@ -34,9 +34,8 @@ export function configuration(env = process.env) {
       connectionTimeout: 15000, socketTimeout: 20000 },
     from: env.SMTP_FROM,
     // Optional: a Telegram heads-up alongside the office email for issue reports.
-    // Optional: Paystack secret key enables card / mobile-money payments (public key is NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY).
-    paystack: env.PAYSTACK_SECRET_KEY?.trim() || null,
-    paystackPublic: (env.PAYSTACK_PUBLIC_KEY || env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '').trim(),
+    // Where members send the annual fee by mobile money; shown on the payment screen once set.
+    momo: { number: (env.MOMO_NUMBER || '').trim(), name: (env.MOMO_NAME || '').trim() },
     // Email one-time codes are off unless REQUIRE_EMAIL_CODE=true: members sign in with just their email.
     requireEmailCode: env.REQUIRE_EMAIL_CODE === 'true',
     // What the public directory lists until the office flips it to this year's roll.

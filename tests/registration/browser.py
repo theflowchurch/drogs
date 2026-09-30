@@ -92,7 +92,7 @@ with sync_playwright() as p:
   page.screenshot(path=str(OUT/'member-directory.png'),full_page=True)
   page.keyboard.press('Escape');page.get_by_role('button',name='Registration',exact=True).click()
   expect(page.get_by_role('button',name='Submit payment proof')).to_be_disabled()
-  page.get_by_label('Payment screenshot').set_input_files(PHOTO);expect(page.get_by_alt_text('Payment proof preview')).to_be_visible();page.get_by_label('I understand that my $50').check();page.get_by_role('button',name='Submit payment proof').click()
+  page.get_by_label('Transaction ID', exact=True).fill('MP240912.1234.A1');page.get_by_label('Payment screenshot').set_input_files(PHOTO);expect(page.get_by_alt_text('Payment proof preview')).to_be_visible();page.get_by_label('I understand that my $50').check();page.get_by_role('button',name='Submit payment proof').click()
   expect(page.get_by_text('Payment awaiting verification',exact=True)).to_be_visible()
   signout();page.set_viewport_size({'width':1440,'height':1050});open_account('office@example.com',True);page.get_by_role('button',name='Payments',exact=True).click()
   page.get_by_role('button',name='John Demo').click();page.get_by_role('button',name='Verify received payment').click();expect(page.get_by_text('No payments waiting',exact=True)).to_be_visible()

@@ -8,6 +8,10 @@ export const ORGANIZATIONS = [
 ];
 export const STORAGE_KEY = "drogs-registration-v1";
 export const AMOUNTS = { bishop: 100, pastor: 50 };
+// What a member types as the reference on their mobile-money transfer, so the
+// line on the office's statement points back to one registration.
+export const paymentReference = (r) =>
+  `KC-${r.year}-${String(r.userId).replace(/-/g, "").slice(-6).toUpperCase()}`;
 export const normalName = (value) =>
   String(value || "")
     .normalize("NFKD")
@@ -608,33 +612,23 @@ export function applyAction(
       throw Error(
         "Upload payment proof and acknowledge that the commitment is non-refundable.",
       );
+    // The mobile-money Transaction ID ties the screenshot to a line on the
+    // office's MoMo statement; one ID can only ever pay for one person.
+    const transactionId = String(payload.transactionId || "").trim().toUpperCase();
+    if (!/^[A-Z0-9.-]{6,40}$/.test(transactionId))
+      throw Error("Enter the Transaction ID from your mobile-money confirmation (letters and numbers, at least 6).");
+    if (
+      state.registrations.some(
+        (x) => x.userId !== r.userId && x.transactionId === transactionId,
+      )
+    )
+      throw Error("This Transaction ID has already been used for another registration.");
     r.payment = "pending";
     r.proof = payload.proof;
+    r.transactionId = transactionId;
+    r.paymentMethod = "momo";
     r.nonrefundableAt = now;
     r.paymentSubmittedAt = now;
-  } else if (action === "recordPaystack") {
-    // Only the server calls this, after Paystack confirmed the reference.
-    const r = state.registrations.find(
-      (r) => r.userId === actor.id && r.year === state.year,
-    );
-    if (r?.status !== "confirmed")
-      throw Error("Payment unlocks after confirmation.");
-    if (r.payment === "verified")
-      throw Error("This payment has already been verified.");
-    if (
-      state.registrations.some((x) => x.paystackReference === payload.reference)
-    )
-      throw Error("This payment reference has already been used.");
-    if (!(Number(payload.amount) >= Number(payload.expectedMinor)))
-      throw Error("The amount paid is less than the annual commitment.");
-    r.payment = "verified";
-    r.paymentMethod = "paystack";
-    r.paystackReference = String(payload.reference);
-    r.paystackAmount = Number(payload.amount);
-    r.paystackCurrency = String(payload.currency || "");
-    r.nonrefundableAt = now;
-    r.paymentSubmittedAt = now;
-    r.paymentReviewedAt = now;
   } else if (action === "choosePhoto") {
     office();
     const r = registration();
