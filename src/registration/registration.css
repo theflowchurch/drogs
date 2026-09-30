@@ -2793,7 +2793,8 @@ p {
   width: 100%;
   height: 100%;
   opacity: 0;
-  cursor: pointer;
+  /* The label itself opens the picker; the input must not swallow the click. */
+  pointer-events: none;
 }
 .reg-upload-target.busy {
   opacity: 0.6;
