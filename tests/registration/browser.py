@@ -34,7 +34,7 @@ with sync_playwright() as p:
   page.get_by_label('Organization',exact=True).select_option('First Love');expect(page.get_by_label('Denomination',exact=True)).to_have_value('');page.get_by_label('Denomination',exact=True).select_option('First Love Church')
   if role=='pastor':page.get_by_label('Find your bishop').fill('Demo Bish');page.get_by_role('button',name='This is my bishop').first.click();expect(page.get_by_text('Change bishop')).to_be_visible()
   page.get_by_label('Photo in official attire',exact=True).set_input_files(PHOTO)
-  expect(page.get_by_text('Photo uploaded. Choose a new image to replace it.')).to_be_visible()
+  expect(page.get_by_text('Photo uploaded · tap to replace it')).to_be_visible()
  def submit():
   page.get_by_role('button',name='Next →').click()
   if page.get_by_text('Add your pastors').is_visible(): page.get_by_role('button',name='I’ll add my pastors later →').click()

@@ -49,7 +49,7 @@ with sync_playwright() as p:
         page.get_by_label('Organization',exact=True).select_option('First Love')
         page.get_by_label('Denomination',exact=True).select_option('First Love Church')
         page.get_by_label('Photo in official attire',exact=True).set_input_files(str(ROOT/'assets/outreach/brian-masuku.png'))
-        expect(page.get_by_text('Photo uploaded. Choose a new image to replace it.')).to_be_visible()
+        expect(page.get_by_text('Photo uploaded · tap to replace it')).to_be_visible()
         page.get_by_role('button',name='Save draft').click()
         expect(page.get_by_text('Draft saved. You can return to finish it.')).to_be_visible()
         page.reload();page.wait_for_load_state('networkidle')

@@ -1311,47 +1311,46 @@ function RegistrationForm({
       <div className="reg-form-layout">
         <aside className="reg-form-aside">
           <div className="reg-upload-card">
-            {data.photo ? (
-              <Media
-                path={data.photo}
-                alt="Your uploaded portrait"
-                className="reg-upload-preview"
+            {/* The picture area is the upload control: tap it to choose a photo. */}
+            <label className={`reg-upload-target ${fileBusy ? "busy" : ""}`}>
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                aria-label="Photo in official attire"
+                disabled={fileBusy}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  e.target.value = "";
+                  if (file)
+                    run(async () => {
+                      setFileBusy(true);
+                      try {
+                        set("photo", await api.upload(actor, file));
+                      } finally {
+                        setFileBusy(false);
+                      }
+                    });
+                }}
               />
-            ) : (
-              <div className="reg-silhouette" aria-hidden="true">
-                <svg viewBox="0 0 120 150">
-                  <circle cx="60" cy="48" r="30" />
-                  <path d="M10 150c0-34 22-56 50-56s50 22 50 56z" />
-                </svg>
-                <span>Upload your photo</span>
-              </div>
-            )}
-          <Field label="Photo in official attire" wide>
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              disabled={fileBusy}
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file)
-                  run(async () => {
-                    setFileBusy(true);
-                    try {
-                      set("photo", await api.upload(actor, file));
-                    } finally {
-                      setFileBusy(false);
-                    }
-                  });
-              }}
-            />
-            <small>
-              {fileBusy
-                ? "Uploading…"
-                : data.photo
-                  ? "Photo uploaded. Choose a new image to replace it."
-                  : "JPG, PNG or WebP · up to 5 MB."}
-            </small>
-          </Field>
+              {data.photo ? (
+                <Media
+                  path={data.photo}
+                  alt="Your uploaded portrait"
+                  className="reg-upload-preview"
+                />
+              ) : (
+                <div className="reg-silhouette" aria-hidden="true">
+                  <svg viewBox="0 0 120 150">
+                    <circle cx="60" cy="48" r="30" />
+                    <path d="M10 150c0-34 22-56 50-56s50 22 50 56z" />
+                  </svg>
+                  <span>Tap to upload your photo</span>
+                </div>
+              )}
+              <span className="reg-upload-hint">
+                {fileBusy ? "Uploading…" : data.photo ? "Photo uploaded · tap to replace it" : "JPG, PNG or WebP · up to 5 MB"}
+              </span>
+            </label>
             <figure className="reg-attire-example">
               <img
                 src={`${base}/${data.role === "bishop" ? "assets/brand/bishop-example.jpg" : "assets/pastors/reconciled-5.webp"}`}
