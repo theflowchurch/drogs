@@ -330,7 +330,8 @@ export default function RegistrationApp({
   }, [browse]);
   useEffect(() => {
     if (!actor) return;
-    const update = () => refresh().catch((e) => setError(e.message));
+    // Background refreshes stay quiet when the network hiccups; the next tick tries again.
+    const update = () => refresh().catch(() => {});
     window.addEventListener("storage", update);
     window.addEventListener("registration-change", update);
     const timer = setInterval(update, 30000);
@@ -2888,6 +2889,13 @@ const bishopSuggestionsFor = (r) =>
     .filter((b) => namesAlike(b.name, r.data.name))
     .sort((a, b) => Number(b.id === r.data.referenceId) - Number(a.id === r.data.referenceId))
     .slice(0, 4);
+const REVIEW_REASONS = [
+  "Your photo does not meet the official attire requirement (red jacket for bishops, face fully visible, plain background).",
+  "Some of your details are incorrect or incomplete.",
+  "Your organization or denomination is not right.",
+  "Your date of birth or phone number looks wrong.",
+  "Your pastor list needs correcting.",
+];
 // Bishops waiting on the office, plus everyone (bishops and pastors) already
 // approved this year. Approved rows open read-only.
 function BishopApprovals({ records, directory = [], perform, canEdit }) {
@@ -2895,8 +2903,11 @@ function BishopApprovals({ records, directory = [], perform, canEdit }) {
     [ref, setRef] = useState(""),
     [confirmed, setConfirmed] = useState(false),
     [note, setNote] = useState(""),
+    [reasons, setReasons] = useState([]),
     [view, setView] = useState("awaiting"),
     [q, setQ] = useState("");
+  // The ticked reasons and the free note together make the message the bishop sees and is emailed.
+  const message = [...reasons.map((r) => `• ${r}`), note.trim()].filter(Boolean).join("\n");
   const bucket = (r) =>
     r.status === "confirmed"
       ? "approved"
@@ -2943,6 +2954,8 @@ function BishopApprovals({ records, directory = [], perform, canEdit }) {
                 // Preselect the record the registrant confirmed, else the best name match.
                 setRef(r.data.referenceId || bishopSuggestionsFor(r)[0]?.id || "");
                 setConfirmed(false);
+                setReasons([]);
+                setNote("");
               }}
             >
               <Media path={r.data.photo} alt="" className="reg-avatar small" />
@@ -3060,14 +3073,27 @@ function BishopApprovals({ records, directory = [], perform, canEdit }) {
           >
             Confirm bishop
           </button>
-          <Field label="Note to the bishop" hint="Required for deny or resubmission; the bishop sees it on their profile.">
+          <fieldset className="reg-reasons">
+            <legend>What needs to change? The bishop is emailed this at the address they registered with.</legend>
+            {REVIEW_REASONS.map((text) => (
+              <label key={text} className="reg-check">
+                <input
+                  type="checkbox"
+                  checked={reasons.includes(text)}
+                  onChange={(e) => setReasons(e.target.checked ? [...reasons, text] : reasons.filter((r) => r !== text))}
+                />
+                <span>{text}</span>
+              </label>
+            ))}
+          </fieldset>
+          <Field label="Anything else" hint="Optional. Added to the email and shown on their profile.">
             <textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
           </Field>
           <div className="reg-review-buttons">
-            <button className="reg-secondary" disabled={!canEdit || !note.trim()} onClick={() => perform("reviewBishop", { userId: selected.userId, decision: "resubmit", note }, "The bishop has been asked to resubmit.").then((ok) => ok && setSelectedId(null))}>
-              Needs resubmission
+            <button className="reg-secondary" disabled={!canEdit || !message.trim()} onClick={() => perform("reviewBishop", { userId: selected.userId, decision: "resubmit", note: message }, "The bishop has been asked to resubmit and emailed the reasons.").then((ok) => ok && setSelectedId(null))}>
+              Needs resubmission · email them
             </button>
-            <button className="reg-secondary danger" disabled={!canEdit || !note.trim()} onClick={() => perform("reviewBishop", { userId: selected.userId, decision: "denied", note }, "Registration denied.").then((ok) => ok && setSelectedId(null))}>
+            <button className="reg-secondary danger" disabled={!canEdit || !message.trim()} onClick={() => perform("reviewBishop", { userId: selected.userId, decision: "denied", note: message }, "Registration denied and the bishop emailed.").then((ok) => ok && setSelectedId(null))}>
               Deny
             </button>
           </div>

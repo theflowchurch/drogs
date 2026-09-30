@@ -2604,3 +2604,18 @@ p {
 .reg-rows tbody tr:nth-child(even) td {
   background: color-mix(in srgb, var(--panel-soft) 60%, transparent);
 }
+
+.reg-reasons {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 6px 14px 2px;
+  margin: 18px 0 0;
+}
+.reg-reasons legend {
+  padding: 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.reg-reasons .reg-check {
+  margin: 8px 0;
+}

@@ -90,6 +90,11 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     let r = await call('action', bishop.cookie, { name: 'submit', payload: { ...profile(bishopPhoto), office: true } });
     assert.equal(r.status, 200, JSON.stringify(r.data));
     assert.equal((await call('action', bishop.cookie, { name: 'approveBishop', payload: { userId: bishop.data.id, office: true } })).status, 400);
+    // Asking for a resubmission emails the reasons to the address the bishop registered with.
+    assert.equal((await call('action', office.cookie, { name: 'reviewBishop', payload: { userId: bishop.data.id, decision: 'resubmit', note: '• Your photo does not meet the official attire requirement.' } })).status, 200);
+    assert.equal(mails.at(-1).to, 'bishop@example.com');
+    assert.match(mails.at(-1).subject, /update your registration/);
+    assert.match(mails.at(-1).text, /official attire/);
     assert.equal((await call('action', office.cookie, { name: 'approveBishop', payload: { userId: bishop.data.id, referenceId: 'B1' } })).status, 200);
     assert.equal((await call('action', pastor.cookie, { name: 'save', payload: profile(bishopPhoto, 'pastor') })).status, 400, 'cannot save another account photo');
     assert.equal((await call('action', pastor.cookie, { name: 'save', payload: profile(pastorPhoto, 'pastor') })).status, 200);

@@ -144,6 +144,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         const { name, payload = {} } = await jsonBody(request);
         if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new HttpError(400, 'Invalid action data.');
         if (name === 'recordPaystack') throw new HttpError(400, 'Payments are recorded after Paystack confirms them.');
+        let reviewed = null;
         await transaction(pool, async conn => {
           const before = await readState(conn, true);
           if (['save', 'submit', 'update'].includes(name) && payload.photo) await assertOwnedMedia(conn, actor, payload.photo, 'portrait');
@@ -154,7 +155,16 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           try { after = applyAction(before, actor, name, payload); }
           catch (error) { throw new HttpError(400, error.message); }
           await persistState(conn, before, after);
+          if (name === 'reviewBishop') reviewed = after.registrations.find(r => r.userId === payload.userId && r.year === after.year);
         });
+        // The office's decision goes to the address the bishop registered with; a mail failure must not undo the decision.
+        if (reviewed?.data?.email) {
+          const resubmit = payload.decision === 'resubmit';
+          mailer.sendMail({ from: config.from, to: reviewed.data.email,
+            subject: resubmit ? 'Kuriake Castle: please update your registration' : 'Kuriake Castle: your registration was not approved',
+            text: `Dear ${reviewed.data.name},\n\n${resubmit ? 'The Kuriake Castle office has reviewed your registration and needs you to update it before it can be confirmed.' : 'The Kuriake Castle office has reviewed your registration and was not able to approve it.'}\n\n${payload.note}\n\n${resubmit ? `Sign in at ${url.origin}/signup/ with this email address, open My profile and make the changes, then submit again.` : 'If you believe this is a mistake, reply to this email or use “Any issues?” on the site.'}\n\nKuriake Castle office` })
+            .catch(error => logger.error('Review mail failed', { type: error.name, code: error.code }));
+        }
         return json({ ok: true });
       }
       if (path === '/api/registration/upload' && method === 'POST') {
