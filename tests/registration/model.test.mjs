@@ -745,3 +745,8 @@ test("the attire check verdict travels with the photo and is cleared when the of
   const t = validateProfile({ ...profile(pastor), photoCheck: { verdict: "nonsense" } }, pastor.email);
   assert.equal(t.photoCheck, null, "unknown verdicts are dropped");
 });
+test("a date of birth that gives an age under sixteen is rejected", () => {
+  const young = new Date(Date.now() - 10 * 365.25 * 86400000).toISOString().slice(0, 10);
+  assert.throws(() => validateProfile({ ...profile(pastor), dob: young }, pastor.email), /under 16/);
+  assert.equal(validateProfile({ ...profile(pastor), dob: "1990-02-01" }, pastor.email).dob, "1990-02-01");
+});

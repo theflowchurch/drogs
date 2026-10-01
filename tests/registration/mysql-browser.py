@@ -42,7 +42,7 @@ with sync_playwright() as p:
         page.locator('main').wait_for()
     try:
         login()
-        page.get_by_label('Ministerial Category').select_option('bishop')
+        page.get_by_label('Ministerial title').select_option('bishop')
         for label, value in [('First name','Browser'),('Last name','Bishop'),('WhatsApp number','+233201234567'),('Date of birth','1990-02-01'),('Country where you currently serve','Ghana'),('City','Accra')]:
             page.get_by_label(label, exact=True).fill(value)
         page.get_by_label('Gender',exact=True).select_option('male')
@@ -69,7 +69,7 @@ with sync_playwright() as p:
         page.get_by_label('I confirm that these details').check(); page.get_by_label('I consent to Kuriake Castle').check()
         page.get_by_label('I confirm this is me').check()
         page.get_by_role('button',name='Confirm and submit →').click()
-        expect(page.get_by_text('Your registration is complete.')).to_be_visible()
+        expect(page.get_by_text('Your registration has been submitted.')).to_be_visible()
         expect(page.get_by_text('1 pastor uploaded.')).to_be_visible()
         assert page.evaluate("localStorage.getItem('drogs-registration-v1')") is None
         page.get_by_role('button',name='Sign out',exact=True).click()

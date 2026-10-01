@@ -54,8 +54,8 @@ import {
 } from "./exchange.mjs";
 import { checkReceiptImage } from "./receipt-check.mjs";
 import { portraitStyle } from "../runtime/portrait-framing";
-import { shortDateTime } from "./format.mjs";
-import { checkAttire } from "./attire-check.mjs";
+import { shortDateTime, longDate } from "./format.mjs";
+import { checkAttire, expectedAttire } from "./attire-check.mjs";
 import people from "./reference-people.json";
 // Everyone Kuriake Castle already knows. Bishops are the linkable approval references;
 // the whole roster backs the Directory and the member search.
@@ -207,7 +207,7 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
             api.upload(actor, file, "portrait").then((key) => perform("update", { photo: key, photoConfirmed: true }, "Photo updated.")).catch((err) => setProblem(err.message || "The photo could not be uploaded.")).finally(() => setBusyPhoto(false));
           }} />
         </label>
-        <small>Date of birth: {d.dob}. It cannot be changed here; contact the office if it is wrong.</small>
+        <small>Date of birth: {longDate(d.dob)}. It cannot be changed here; contact the office if it is wrong.</small>
       </div>
       {problem && <p className="reg-field wide reg-error-text" role="alert">{problem}</p>}
       <div className="reg-form-actions wide">
@@ -1325,7 +1325,7 @@ function detailWords(detail, state) {
 function MyActivity({ state, actor }) {
   const mine = (state.audit || [])
     .filter((a) => a.actor === actor.id || a.target === actor.id)
-    .filter((a) => !["save", "choosePhoto"].includes(a.action))
+    .filter((a) => !["save", "choosePhoto", "apiKeyCreated", "apiKeyRevoked", "setCatalog", "setFees", "setSignup", "broadcast", "openYear", "editReference", "hideReference", "deleteReference", "addReference"].includes(a.action))
     .slice()
     .reverse()
     .slice(0, 50);
@@ -1392,7 +1392,7 @@ function Participant({
         <div>
           <span className="reg-eyebrow">{state.year} / MY PROFILE</span>
           <h1>{startedHere ? `Thank you, ${current.data.name.split(" ")[0]}.` : "My profile"}</h1>
-          <p>{startedHere ? "Your registration is complete. This is the information you gave us." : "Your place on the Roll of Good Standing. You can update your details at any time."}</p>
+          <p>{startedHere ? "Your registration has been submitted. Here are the details you provided." : "Your place on the Roll of Good Standing. You can update your details at any time."}</p>
         </div>
         <Badge status={current.status === "unclaimed" ? "pending" : current.status} />
       </div>
@@ -1407,6 +1407,9 @@ function Participant({
             <div>
               <span className="reg-eyebrow">{titleFor(current.data).toUpperCase()}</span>
               <h2>{current.data.name}</h2>
+              <span className={`reg-status-pill ${current.status === "confirmed" ? "good" : current.status === "denied" || current.resubmit ? "action" : "pending"}`}>
+                Status: {current.status === "confirmed" ? "In Good Standing" : current.status === "denied" || current.resubmit ? "Action Required" : "Pending Review"}
+              </span>
               <p>
                 {[orgLabel(current.data.organization), current.data.denomination || current.data.church]
                   .filter((v, i, a) => v && a.indexOf(v) === i)
@@ -1425,7 +1428,7 @@ function Participant({
             </div>
             <div>
               <dt>Date of birth</dt>
-              <dd>{current.data.dob}</dd>
+              <dd>{longDate(current.data.dob)}</dd>
             </div>
             <div>
               <dt>City</dt>
@@ -1448,21 +1451,21 @@ function Participant({
                   : current.resubmit
                     ? "The office has asked you to update your registration."
                     : current.status === "pending"
-                      ? "Thank you. Your registration is being processed."
+                      ? "Thank you. Your registration has been submitted."
                       : current.status === "removed"
                         ? "Your annual roster status has changed."
-                        : "Thank you. Your registration is being processed."}
+                        : "Thank you. Your registration has been submitted."}
             </h3>
             <p>
               {current.status === "confirmed"
-                ? "You can now pay your annual renewal ministerial fee."
+                ? "You can now pay your Annual Good Standing Renewal Fee."
                 : current.status === "denied" || current.resubmit
                   ? current.bishopNote || "Please contact the office."
                   : current.status === "pending"
-                    ? `${current.payment === "verified" ? "Your payment has been received. " : ""}${pastorCount ? `${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded. ` : ""}The office is confirming your registration; you will see the result here. You can add more pastors under My pastors at any time.`
+                    ? `${current.payment === "verified" ? "Your payment has been received. " : ""}${pastorCount ? `${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded. ` : ""}The office is reviewing your registration. Once it has been approved, your status will appear here. You can add more pastors under “My pastors” at any time.`
                     : current.status === "removed"
                       ? "Contact your bishop or the office to discuss this change. Your registration and payment history have been retained."
-                      : `${current.payment === "verified" ? "Your payment has been received. " : ""}Your bishop and the office are confirming your registration; you will see the result here.`}
+                      : `${current.payment === "verified" ? "Your payment has been received. " : ""}Your bishop and the office are reviewing your registration. Once it has been confirmed, your status will appear here.`}
             </p>
           </div>
           )}
@@ -1600,7 +1603,7 @@ function RegistrationForm({
       ? ["details", "pastors", "payment", "review"]
       : ["details", "payment", "review"];
   const review = step === "review";
-  const stepLabel = { details: "Your details", pastors: "Your pastors", payment: "Payment", review: "Review" };
+  const stepLabel = { details: "Your details", pastors: "Pastors under your ministry", payment: "Payment", review: "Review" };
   const next = () => setStep(steps[Math.min(steps.indexOf(step) + 1, steps.length - 1)]);
   const back = () => setStep(steps[Math.max(steps.indexOf(step) - 1, 0)]);
   const currency = currencyFor(data.country);
@@ -1634,23 +1637,23 @@ function RegistrationForm({
         <div>
           <h1>
             {step === "review"
-              ? "Review everything."
+              ? "Review your details."
               : step === "pastors"
-                ? "Your pastors."
+                ? "Pastors under your ministry."
                 : step === "payment"
-                  ? "Annual renewal fee."
+                  ? "Annual Good Standing Renewal Fee."
                   : editing
                     ? "Update my details."
                     : "Roll of Good Standing."}
           </h1>
           <p>
             {step === "review"
-              ? "Check everything below, then confirm to submit."
+              ? "Check that all the information below is correct before submitting."
               : step === "pastors"
                 ? "Upload or paste the pastors under your oversight. They are recognised automatically when they register."
                 : step === "payment"
                   ? "Send the fee by mobile money and upload the confirmation."
-                  : `Complete your ${state.year} registration to maintain your place on the Roll of Good Standing.`}
+                  : `Complete your ${state.year} annual renewal to remain on the Roll of Good Standing.`}
           </p>
         </div>
         <Badge status="draft">
@@ -1708,13 +1711,13 @@ function RegistrationForm({
               <img src={`${base}/${attireExample(data).file}`} alt={attireExample(data).alt} />
               <figcaption>
                 <b>{attireExample(data).caption}</b>
-                Face the camera on a plain background, face fully visible.
-                {data.role === "bishop" && data.gender !== "female" ? " A collar on its own, selfies and casual clothing are not accepted." : " Selfies and casual clothing are not accepted."}
+                Face the camera against a plain background, with your face fully visible. You must be wearing {expectedAttire(data).words}.
+                {data.gender === "female" ? " Selfies and casual clothing will not be accepted." : " Selfies, casual clothing or photos showing only the collar will not be accepted."}
               </figcaption>
             </figure>
           </div>
           <div className="reg-amount">
-            <span>Annual renewal ministerial fee</span>
+            <span>Annual Good Standing Renewal Fee</span>
             <strong>
               ${fees[data.role]}
               <small>USD</small>
@@ -1745,7 +1748,7 @@ function RegistrationForm({
               </div>
               <div className="reg-fields">
                 <Field
-                  label="Ministerial Category"
+                  label="Ministerial title"
                 >
                   <select
                     value={data.role}
@@ -1996,9 +1999,9 @@ function RegistrationForm({
                 <div>
                   <h2>
                     ${fees[data.role]} <small>USD</small>
-                    {rate > 0 ? <small> · about {localAmount(fees[data.role], rate, currency)}</small> : null}
+                    {rate > 0 ? <small> · approximately {localAmount(fees[data.role], rate, currency)}</small> : null}
                   </h2>
-                  <p>Annual renewal ministerial fee · {titleCase(data.role)} · {state.year} · non-refundable.</p>
+                  <p>Annual Good Standing Renewal Fee · {titleCase(data.role)} • {state.year} · Non-refundable.</p>
                 </div>
               </div>
               {mine?.payment === "verified" ? (
@@ -2041,13 +2044,10 @@ function RegistrationForm({
                 className="reg-attire-review"
                 aria-label="Confirm your official portrait"
               >
-                <h2>Is this the right photo?</h2>
+                <h2>Confirm your photo</h2>
                 <p>
-                  {data.role === "bishop"
-                    ? "Your photo must show you wearing your official red jacket. A collar without the red jacket is not sufficient."
-                    : "Your photo must show you in your official pastoral attire."}{" "}
-                  No casual clothing or selfies. Your face must be fully visible
-                  against a plain background.
+                  Your photo must show you wearing {expectedAttire(data).words}. Your face must be fully visible, facing the camera, against a plain background.{" "}
+                  {data.gender === "female" ? "Selfies and casual clothing will not be accepted." : "Photos showing only the collar, selfies or casual clothing will not be accepted."}
                 </p>
                 <div className="reg-photo-comparison">
                   <figure>
@@ -2096,7 +2096,7 @@ function RegistrationForm({
               <ProfileDetails record={{ data }} directory={state.directory} />
               {!editing && data.role === "bishop" && (
                 <section className="reg-review-block">
-                  <h3>Your pastors <b>{rosterRows.length}</b></h3>
+                  <h3>Pastors under your ministry <b>{rosterRows.length}</b></h3>
                   {rosterRows.length ? (
                     <RowsTable rows={rosterRows} />
                   ) : (
@@ -2132,17 +2132,17 @@ function RegistrationForm({
                   onChange={(e) => setConsent(e.target.checked)}
                 />
                 <span>
-                  I consent to Kuriake Castle showing my name, title, photograph,
+                  I consent to Kuriake Castle displaying my name, title, photograph,
                   organization, denomination, city and country on the public Roll
                   of Good Standing. My email address, phone number and date of
-                  birth are never shown publicly and are used only by the office
-                  and my bishop to confirm my registration. I have read the{" "}
-                  <a href={`${base}/privacy/`} target="_blank" rel="noreferrer">privacy policy</a>{" "}
-                  and <a href={`${base}/terms/`} target="_blank" rel="noreferrer">terms</a>.
+                  birth will remain private and will only be used by the office
+                  and my bishop to verify my registration. I have read the{" "}
+                  <a href={`${base}/privacy/`} target="_blank" rel="noreferrer">Privacy Policy</a>{" "}
+                  and <a href={`${base}/terms/`} target="_blank" rel="noreferrer">Terms</a>.
                 </span>
               </label>
               <p className="reg-small">
-                The annual renewal ministerial fee is ${fees[data.role]} USD and is
+                The Annual Good Standing Renewal Fee is ${fees[data.role]} USD and is
                 non-refundable.
               </p>
               <div className="reg-form-actions">
@@ -2185,17 +2185,17 @@ function CommitmentPreview({ role, country }) {
   const rate = rateFor(rates, currency);
   return (
     <p className="reg-local-amount reg-field wide">
-      Annual renewal ministerial fee: ${amount} USD
+      Annual Good Standing Renewal Fee: ${amount} USD
       {rate > 0
-        ? ` · about ${localAmount(amount, rate, currency)} in ${country.trim()}`
+        ? ` · approximately ${localAmount(amount, rate, currency)}`
         : currency === "USD"
           ? ""
           : currency
             ? " · fetching today’s rate…"
             : " · we could not match that country to a currency; the amount is charged in USD"}
       <small>
-        Indicative rate. The fee is set in US dollars and charged in Ghana cedis at
-        checkout; your bank or mobile-money provider sets the final amount.
+        The fee is set in US dollars. The Ghana cedi amount shown is an estimate; your
+        bank or mobile-money provider determines the final amount charged.
       </small>
     </p>
   );
@@ -2272,20 +2272,20 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
   const rate = rateFor(rates, currency);
   return (
     <section className="reg-card reg-payment">
-      <span className="reg-eyebrow">ANNUAL RENEWAL MINISTERIAL FEE</span>
+      <span className="reg-eyebrow">ANNUAL GOOD STANDING RENEWAL FEE</span>
       <h2>
         ${current.amount}
         <small> USD</small>
       </h2>
       {rate > 0 && (
         <p className="reg-local-amount">
-          about {localAmount(current.amount, rate, currency)} in {current.data.country}
-          <small>Indicative rate, {rates.updated || "recently updated"}. Your bank or mobile-money provider sets the final amount.</small>
+          Approximately {localAmount(current.amount, rate, currency)}
+          <small>Indicative rate. Your bank or mobile-money provider sets the final amount.</small>
         </p>
       )}
       <b>Non-refundable</b>
       <p>
-        {current.year} · {titleCase(current.data.role)}
+        {titleCase(current.data.role)} • {current.year}
       </p>
       <Badge status={current.payment} />
       {current.payment === "verified" ? (
@@ -2321,7 +2321,7 @@ function ProfileDetails({ record, directory = [] }) {
         {[
           ["Email", p.email],
           ["Phone", p.phone],
-          ["Date of birth", p.dob],
+          ["Date of birth", longDate(p.dob)],
           ["Denomination", p.denomination || p.church || "Not applicable"],
           ["Country", p.country || "—"],
           ["City", p.city || "—"],
@@ -2587,7 +2587,7 @@ function RowsTable({ rows, title, onRemove }) {
           <thead><tr><th>#</th><th>Full name</th><th>Date of birth</th>{onRemove && <th />}</tr></thead>
           <tbody>
             {rows.map((r, i) => (
-              <tr key={i}><td>{i + 1}</td><td>{r.name}</td><td>{String(r.dob).includes("-") ? r.dob.split("-").reverse().join("/") : r.dob}</td>{onRemove && <td><button type="button" className="reg-text danger" onClick={() => onRemove(i)} aria-label={`Remove ${r.name}`}>×</button></td>}</tr>
+              <tr key={i}><td>{i + 1}</td><td>{r.name}</td><td>{longDate(r.dob)}</td>{onRemove && <td><button type="button" className="reg-text danger" onClick={() => onRemove(i)} aria-label={`Remove ${r.name}`}>×</button></td>}</tr>
             ))}
           </tbody>
         </table>

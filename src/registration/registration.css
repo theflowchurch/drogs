@@ -3699,3 +3699,29 @@ input[type="date"] {
   color: #1d5a33;
   border: 1px solid #a9dcb9;
 }
+
+/* Member profile: where the registration stands */
+.reg-status-pill {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--line);
+}
+.reg-status-pill.good {
+  background: #e9f7ee;
+  color: #1d5a33;
+  border-color: #a9dcb9;
+}
+.reg-status-pill.pending {
+  background: #fff8e6;
+  color: #5a4300;
+  border-color: #f0c36d;
+}
+.reg-status-pill.action {
+  background: #fdecec;
+  color: #8a1c1c;
+  border-color: #f3b4b4;
+}

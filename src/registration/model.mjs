@@ -16,11 +16,11 @@ export const orgLabel = (key) => ORGANIZATION_LABEL[key] || key || "";
 export function attireExample({ role, gender, organization } = {}) {
   // Women bishops, whichever organization: the office's reference portrait (red jacket and hat).
   if (gender === "female" && role === "bishop")
-    return { file: "assets/brand/female-bishop-example.jpg", caption: "Required: official attire for women bishops", alt: "Required attire example for women bishops" };
+    return { file: "assets/brand/female-bishop-example.jpg", caption: "Required: Official Attire for Women Bishops", alt: "Required attire example for women bishops" };
   if (gender === "female")
     return organization === "United Denominations"
-      ? { file: "assets/brand/female-united-denominations-example.jpg", caption: "Required: official attire (United Denominations)", alt: "Required attire example for women in the United Denominations" }
-      : { file: "assets/brand/female-first-love-example.jpg", caption: "Required: official attire (First Love)", alt: "Required attire example for women in First Love" };
+      ? { file: "assets/brand/female-united-denominations-example.jpg", caption: "Required: Official United Denominations Attire", alt: "Required attire example for women in the United Denominations" }
+      : { file: "assets/brand/female-first-love-example.jpg", caption: "Required: Official First Love Attire", alt: "Required attire example for women in First Love" };
   if (role === "bishop")
     return { file: "assets/brand/bishop-example-2.jpg", caption: "Required: official red jacket", alt: "Required bishop red-jacket example" };
   return { file: "assets/brand/pastor-example.jpg", caption: "Required: official pastoral attire", alt: "Required pastoral attire example", alternative: { file: "assets/brand/pastor-suit-example.jpg", caption: "Also accepted: dark suit and tie", alt: "Accepted alternative: dark suit and tie" } };
@@ -287,6 +287,9 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
       q.dob >= new Date().toISOString().slice(0, 10)
     )
       throw Error("Enter a valid date of birth in the past.");
+    // Ministers are adults: a date of birth under sixteen years ago is almost certainly a typo.
+    if (q.dob > new Date(Date.now() - 16 * 365.25 * 86400000).toISOString().slice(0, 10))
+      throw Error("Check the date of birth: it gives an age under 16.");
     if (!q.country || !q.city) throw Error("Enter your country and city.");
     if (!q.gender) throw Error("Select male or female.");
     const denominations = catalog.denominations[q.organization] || [];

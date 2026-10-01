@@ -21,7 +21,7 @@ with sync_playwright() as p:
  def signout():
   page.get_by_role('button',name='Sign out',exact=True).click();page.get_by_role('link',name='View the full Pastoral directory').wait_for()
  def register(name,role='pastor',bishop='B1'):
-  page.get_by_label('Ministerial Category').select_option(role)
+  page.get_by_label('Ministerial title').select_option(role)
   page.get_by_label('Organization',exact=True).select_option('First Love')
   page.get_by_label('First name',exact=True).fill(name.split(' ')[0]);page.get_by_label('Last name',exact=True).fill(' '.join(name.split(' ')[1:]))
   page.get_by_label('Gender',exact=True).select_option('male')
@@ -46,7 +46,7 @@ with sync_playwright() as p:
   page.screenshot(path=str(OUT/('portrait-review-'+str(len(list(OUT.glob('portrait-review*'))))+'.png')),full_page=True)
   page.get_by_role('button',name='Confirm and submit →').click()
   expect(page.get_by_role('heading',name='Your Details',exact=True)).not_to_be_visible()
-  expect(page.get_by_text('Your registration is complete.')).to_be_visible()
+  expect(page.get_by_text('Your registration has been submitted.')).to_be_visible()
  try:
   page.goto(BASE+'/');page.wait_for_load_state('networkidle');page.screenshot(path=str(OUT/'entrance.png'),full_page=True)
   page.evaluate("localStorage.setItem('drogs-2027',JSON.stringify({legacy:'untouched'}))")
