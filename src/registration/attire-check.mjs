@@ -18,6 +18,7 @@ async function detector() {
 }
 // What colour the garment should be.
 export function expectedAttire({ role, gender, organization } = {}) {
+  if (role === "bishop" && gender === "female") return { colour: "red", words: "the official attire for women bishops" };
   if (role === "bishop") return { colour: "red", words: "the official red jacket" };
   if (gender === "female") return organization === "United Denominations" ? { colour: "yellow", words: "the official yellow attire" } : { colour: "red", words: "the official red attire" };
   return { colour: "dark", words: "a dark jacket or suit with a clerical collar" };

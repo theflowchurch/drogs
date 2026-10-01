@@ -1652,7 +1652,7 @@ function RegistrationForm({
               : step === "pastors"
                 ? "Add the pastors under your oversight. When they register, they will automatically be linked to you."
                 : step === "payment"
-                  ? "Send the fee by mobile money and upload the confirmation."
+                  ? "Pay your Annual Good Standing Renewal Fee securely by card or mobile money."
                   : `Complete your ${state.year} annual renewal to remain on the Roll of Good Standing.`}
           </p>
         </div>
@@ -2011,7 +2011,7 @@ function RegistrationForm({
                 </div>
               ) : state.paystackKey ? (
                 <>
-                  <p>Pay securely by card or mobile money (MTN, Telecel, AT). You will come back here once the payment goes through.</p>
+                  <p>Pay securely by card or mobile money (MTN, Telecel, AT). Once your payment is successful, you will automatically return to this page.</p>
                   <PaystackButton
                     current={{ amount: fees[data.role], year: state.year, data }}
                     actor={actor}
@@ -2032,7 +2032,7 @@ function RegistrationForm({
                 {mine?.payment === "verified" ? (
                   <button className="reg-primary" disabled={busy}>View your profile →</button>
                 ) : state.paystackKey ? (
-                  <span className="reg-small">Complete the payment above to continue.</span>
+                  <span className="reg-small">Complete your payment to continue.</span>
                 ) : (
                   <button className="reg-primary" disabled={busy}>Continue →</button>
                 )}
@@ -2251,11 +2251,10 @@ function PaystackButton({ current, actor, run, refresh, paystackKey, beforePay, 
           }, "Payment received. Thank you for your commitment.")
         }
       >
-        {ghs ? (label || `Pay GHS ${ghs.toLocaleString()} by card or mobile money →`) : rates === null ? "Today’s rate is unavailable. Try again in a minute." : "Getting today’s rate…"}
+        {ghs ? (label || `Pay GHS ${ghs.toLocaleString()} securely →`) : rates === null ? "Today’s rate is unavailable. Try again in a minute." : "Getting today’s rate…"}
       </button>
       <small className="reg-small">
-        Secure checkout by Paystack: cards, MTN / Telecel / AT mobile money, bank.
-        {ghs ? ` Charged in Ghana cedis at today’s rate for $${current.amount} USD; a card in another currency is converted by your bank.` : ""}
+        Secure payment by Paystack. The ${current.amount} USD fee will be charged in Ghana cedis at the current exchange rate.
       </small>
     </div>
   );
