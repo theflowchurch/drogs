@@ -1876,8 +1876,8 @@ function CommitmentPreview({ role, country }) {
             ? " · fetching today’s rate…"
             : " · we could not match that country to a currency; the amount is charged in USD"}
       <small>
-        Indicative rate. Kuriake Castle is paid in US dollars; your bank or mobile-money
-        provider sets the final amount.
+        Indicative rate. The fee is set in US dollars and charged in Ghana cedis at
+        checkout; your bank or mobile-money provider sets the final amount.
       </small>
     </p>
   );
@@ -1885,24 +1885,33 @@ function CommitmentPreview({ role, country }) {
 // Card or mobile money through Paystack's inline checkout. The amount is charged
 // in GHS at the same indicative rate the member sees; the server confirms the
 // reference with Paystack before the payment is recorded.
-function PaystackButton({ current, actor, run, refresh, rate, currency, paystackKey, beforePay, label }) {
+function PaystackButton({ current, actor, run, refresh, paystackKey, beforePay, label }) {
   const [ready, setReady] = useState(Boolean(globalThis.PaystackPop));
+  // Paystack Ghana accounts settle in cedis only, so every member is charged
+  // in GHS converted from the USD fee at today's rate. No rate, no charge:
+  // falling back to USD made Paystack refuse the currency.
+  const [rates, setRates] = useState(undefined);
   useEffect(() => {
-    if (globalThis.PaystackPop) return setReady(true);
-    const script = document.createElement("script");
-    script.src = "https://js.paystack.co/v1/inline.js";
-    script.async = true;
-    script.onload = () => setReady(true);
-    document.body.appendChild(script);
+    let live = true;
+    loadRates().then((value) => live && setRates(value));
+    if (globalThis.PaystackPop) setReady(true);
+    else {
+      const script = document.createElement("script");
+      script.src = "https://js.paystack.co/v1/inline.js";
+      script.async = true;
+      script.onload = () => setReady(true);
+      document.body.appendChild(script);
+    }
+    return () => { live = false; };
   }, []);
-  const ghs = rate && currency === "GHS" ? current.amount * rate : null;
-  const usdOnly = !ghs;
+  const rate = rateFor(rates, "GHS");
+  const ghs = rate ? Math.ceil(current.amount * rate) : 0;
   return (
     <div className="reg-paystack">
       <button
         type="button"
         className="reg-primary full"
-        disabled={!ready}
+        disabled={!ready || !ghs}
         onClick={() =>
           run(async () => {
             await beforePay?.();
@@ -1910,8 +1919,8 @@ function PaystackButton({ current, actor, run, refresh, rate, currency, paystack
               const handler = globalThis.PaystackPop.setup({
                 key: paystackKey,
                 email: actor.email,
-                amount: Math.round((usdOnly ? current.amount : ghs) * 100),
-                currency: usdOnly ? "USD" : "GHS",
+                amount: ghs * 100,
+                currency: "GHS",
                 channels: ["card", "mobile_money", "bank", "bank_transfer"],
                 metadata: { custom_fields: [{ display_name: "Kuriake Castle", variable_name: "registration", value: `${current.year} ${current.data.role} ${current.data.name}` }] },
                 callback: (response) => resolve(response.reference),
@@ -1924,11 +1933,11 @@ function PaystackButton({ current, actor, run, refresh, rate, currency, paystack
           }, "Payment received. Thank you for your commitment.")
         }
       >
-        {label || `Pay ${ghs ? `GHS ${Math.round(ghs).toLocaleString()}` : `$${current.amount}`} by card or mobile money →`}
+        {ghs ? (label || `Pay GHS ${ghs.toLocaleString()} by card or mobile money →`) : rates === null ? "Today’s rate is unavailable. Try again in a minute." : "Getting today’s rate…"}
       </button>
       <small className="reg-small">
         Secure checkout by Paystack: cards, MTN / Telecel / AT mobile money, bank.
-        {ghs ? ` Charged in Ghana cedis at today’s indicative rate for $${current.amount} USD.` : ""}
+        {ghs ? ` Charged in Ghana cedis at today’s rate for $${current.amount} USD; a card in another currency is converted by your bank.` : ""}
       </small>
     </div>
   );
