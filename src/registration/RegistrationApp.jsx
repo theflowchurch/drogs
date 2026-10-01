@@ -526,7 +526,10 @@ export default function RegistrationApp({
   }, [actor, refresh]);
   useEffect(() => {
     if (!gate) return;
-    // Someone who chose to stay signed in is not signed out for being idle.
+    // Nothing to time out until a member is signed in; the office gate has its own stamp.
+    if (!actor && !gated) return;
+    // Someone who chose to stay signed in is not signed out for being idle. Read
+    // after sign-in, so the box ticked on this sign-in is what counts.
     if (localStorage.getItem("kc-remember") === "yes") return;
     let timeout;
     const reset = () => {
@@ -554,7 +557,7 @@ export default function RegistrationApp({
       window.removeEventListener("pointerdown", reset);
       window.removeEventListener("keydown", reset);
     };
-  }, [gate]);
+  }, [gate, actor]);
   useEffect(() => {
     if (!notice) return;
     const timer = setTimeout(() => setNotice(""), 6000);
