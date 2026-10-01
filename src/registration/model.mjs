@@ -141,14 +141,8 @@ export const pauseFor = (state, entrance) => { const s = signupOf(state); return
 // that lists their denomination.
 export const catalogOf = (state) => {
   if (!state?.catalog?.organizations?.length) return { organizations: ORGANIZATIONS, denominations: DENOMINATIONS, groups: GROUPS };
-  const groups = { ...(state.catalog.groups || GROUPS) };
-  // The office asked for the Eschatos card to list its countries while its people
-  // carry "Eschatos" as denomination. A saved card with none of the countries gets
-  // them added after whatever the office already put there; nothing is removed.
-  const eschatos = groups.Eschatos, countries = GROUPS.Eschatos?.denominations || [];
-  if (eschatos && countries.length && !countries.some((c) => (eschatos.denominations || []).some((d) => normalName(d) === normalName(c))))
-    groups.Eschatos = { ...eschatos, denominations: [...new Set([...(eschatos.denominations || []), ...countries])] };
-  return { ...state.catalog, groups };
+  // The office's saved groups are the truth; nothing is added or repaired behind their back.
+  return { ...state.catalog, groups: state.catalog.groups || GROUPS };
 };
 const denominationKey = (value) => normalName(value).replace(/^the /, "");
 // Does the person's denomination still exist in the office's lists for their

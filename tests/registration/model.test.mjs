@@ -720,12 +720,9 @@ test("a denomination removed from the lists leaves its people as No denomination
   assert.equal(denominationListed(cat, { organization: "FLOW", denomination: "FLOW" }), true, "an organization without a list has nothing to check");
   assert.equal(denominationListed(cat, { organization: "United Denominations", denomination: "Eschatos" }), true, "a group name counts as a denomination");
   assert.equal(groupOf(cat, { organization: "United Denominations", denomination: "Eschatos" }), "Eschatos");
-  assert.ok(cat.groups.Eschatos.denominations.includes("Nicaragua"), "the Eschatos card lists its countries");
+  assert.deepEqual(cat.groups.Eschatos.denominations, ["Eschatos"], "Eschatos is its own denomination; people keep their own countries");
   const saved = catalogOf({ catalog: { ...cat, groups: { ...cat.groups, Eschatos: { organization: "United Denominations", denominations: ["Eschatos", "Revelation Church Of Asia"] } } } });
-  assert.deepEqual(saved.groups.Eschatos.denominations.slice(0, 2), ["Eschatos", "Revelation Church Of Asia"], "the office's own entries come first and stay");
-  assert.ok(saved.groups.Eschatos.denominations.includes("Nicaragua"), "the countries are added after them");
-  const trimmedCountries = catalogOf({ catalog: { ...cat, groups: { ...cat.groups, Eschatos: { organization: "United Denominations", denominations: ["Eschatos", "Brazil"] } } } });
-  assert.deepEqual(trimmedCountries.groups.Eschatos.denominations, ["Eschatos", "Brazil"], "a card that already has a country is left exactly as saved");
+  assert.deepEqual(saved.groups.Eschatos.denominations, ["Eschatos", "Revelation Church Of Asia"], "the office's saved card is returned exactly as saved");
   const trimmed = { ...cat, denominations: { ...cat.denominations, "First Love": cat.denominations["First Love"].filter((d) => d !== "Go Ye Church") } };
   assert.equal(denominationListed(trimmed, { organization: "First Love", denomination: "Go Ye Church" }), false);
 });
