@@ -734,3 +734,14 @@ test("denomination logos: defaults from the old records, office uploads saved wi
   const s = applyAction(emptyState(), office, "setCatalog", { catalog: { ...cat, logos: { ...cat.logos, "No Such Chapel": "office/logo/x.webp" } } });
   assert.equal(logoFor(catalogOf(s), "no such chapel"), "office/logo/x.webp");
 });
+test("the attire check verdict travels with the photo and is cleared when the office replaces it", () => {
+  let s = setup();
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), photoCheck: { verdict: "colour", note: "We could not see a dark jacket." } });
+  let r = s.registrations.find((x) => x.userId === pastor.id);
+  assert.deepEqual(r.data.photoCheck, { verdict: "colour", note: "We could not see a dark jacket." });
+  s = applyAction(s, office, "officeEdit", { userId: pastor.id, data: { photo: "office/portrait/new.webp" } });
+  r = s.registrations.find((x) => x.userId === pastor.id);
+  assert.equal(r.data.photoCheck, null, "a replaced photo has no stale verdict");
+  const t = validateProfile({ ...profile(pastor), photoCheck: { verdict: "nonsense" } }, pastor.email);
+  assert.equal(t.photoCheck, null, "unknown verdicts are dropped");
+});

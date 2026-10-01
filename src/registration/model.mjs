@@ -248,6 +248,10 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
     country: String(p.country || "").trim(),
     city: String(p.city || "").trim(),
     photoConfirmed: p.photoConfirmed === true,
+    // The on-device attire check's verdict for the current photo (first filter; the office still looks).
+    photoCheck: p.photoCheck && typeof p.photoCheck === "object" && ["ok", "no-face", "many-faces", "colour", "skipped"].includes(p.photoCheck.verdict)
+      ? { verdict: p.photoCheck.verdict, note: String(p.photoCheck.note || "").slice(0, 200) }
+      : null,
     phone: String(p.phone || "").trim(),
     email: registrationEmail(email, p.email),
     dob: p.dob || "",
@@ -926,7 +930,7 @@ export function applyAction(
     const data = validateProfile(merged, merged.email || r.data.email, { draft: true, catalog });
     if (incoming.phone && !data.phone) throw Error("Enter the WhatsApp number with its country code.");
     detail = Object.fromEntries(Object.keys(incoming).filter((k) => JSON.stringify(r.data[k] ?? "") !== JSON.stringify(data[k] ?? "")).map((k) => [k, [r.data[k] ?? "", data[k] ?? ""]]));
-    r.data = { ...data, consentedAt: r.data.consentedAt, photoConfirmed: true, referenceId: data.referenceId || r.data.referenceId || "", bishopId: data.bishopId || r.data.bishopId || "" };
+    r.data = { ...data, consentedAt: r.data.consentedAt, photoConfirmed: true, referenceId: data.referenceId || r.data.referenceId || "", bishopId: data.bishopId || r.data.bishopId || "", photoCheck: incoming.photo !== undefined && incoming.photoCheck === undefined ? null : data.photoCheck };
     r.updatedAt = now;
     const p = state.profiles.find((x) => x.id === r.userId);
     if (p) { p.name = data.name; p.organization = data.organization; p.role = data.role; if (incoming.referenceId !== undefined) p.referenceId = data.referenceId || ""; }

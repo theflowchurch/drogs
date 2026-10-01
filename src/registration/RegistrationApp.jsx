@@ -55,6 +55,7 @@ import {
 import { checkReceiptImage } from "./receipt-check.mjs";
 import { portraitStyle } from "../runtime/portrait-framing";
 import { shortDateTime } from "./format.mjs";
+import { checkAttire } from "./attire-check.mjs";
 import people from "./reference-people.json";
 // Everyone Kuriake Castle already knows. Bishops are the linkable approval references;
 // the whole roster backs the Directory and the member search.
@@ -321,6 +322,18 @@ function DashboardFrame() {
     </section>
   );
 }
+// The on-device attire check's verdict, shown to the member under their upload.
+function AttireNotice({ check, onChoose }) {
+  if (!check || check.verdict === "ok" || check.verdict === "skipped") return null;
+  if (check.verdict === "checking") return <p className="reg-small reg-attire-checking">Checking the photo…</p>;
+  return (
+    <div className="reg-attire-warning" role="alert">
+      <b>Please check this photo.</b> {check.note} You can choose another photo, or continue if you are sure this one is right; the office will take a look.
+      <div><button type="button" className="reg-secondary" onClick={onChoose}>Choose another photo</button></div>
+    </div>
+  );
+}
+const attireWords = (check) => !check ? "" : check.verdict === "ok" ? "Attire check: passed" : check.verdict === "no-face" ? "Attire check: no face detected" : check.verdict === "many-faces" ? "Attire check: more than one person" : check.verdict === "colour" ? "Attire check: expected attire colour not seen" : "";
 // A denomination's logo: the record's own artwork, else the catalog's (asset path or uploaded key).
 function DenominationLogo({ person, catalog }) {
   const src = person.denominationLogo || logoFor(catalog, person.denomination);
@@ -1521,7 +1534,7 @@ function RegistrationForm({
     // Onboarding is one guided path: details → (bishops: pastors) → payment → review → confirm.
     [step, setStep] = useState("details"),
     [rosterRows, setRosterRows] = useState([]),
-    [slots, setSlots] = useState(() => blankSlots(22)),
+    [slots, setSlots] = useState(() => blankSlots(4)),
     [rosterError, setRosterError] = useState(""),
     [rates, setRates] = useState(null),
     [accurate, setAccurate] = useState(false),
@@ -1661,7 +1674,10 @@ function RegistrationForm({
                     run(async () => {
                       setFileBusy(true);
                       try {
-                        set("photo", await api.upload(actor, file));
+                        const key = await api.upload(actor, file);
+                        setData((d) => ({ ...d, photo: key, photoCheck: { verdict: "checking", note: "" }, photoConfirmed: false }));
+                        // The attire check runs after the upload and never blocks it.
+                        checkAttire(file, { role: data.role, gender: data.gender, organization: data.organization }).then((result) => setData((d) => (d.photo === key ? { ...d, photoCheck: result } : d)));
                       } finally {
                         setFileBusy(false);
                       }
@@ -1687,6 +1703,7 @@ function RegistrationForm({
                 {fileBusy ? "Uploading…" : data.photo ? "Photo uploaded · tap to replace it" : "JPG, PNG or WebP · up to 5 MB"}
               </span>
             </label>
+            <AttireNotice check={data.photoCheck} onChoose={() => document.querySelector('input[aria-label="Photo in official attire"]')?.click()} />
             <figure className="reg-attire-example">
               <img src={`${base}/${attireExample(data).file}`} alt={attireExample(data).alt} />
               <figcaption>
@@ -1773,7 +1790,6 @@ function RegistrationForm({
                 </Field>
                 <Field
                   label="Gender"
-                  hint={data.role === "bishop" && data.gender === "female" ? `You will be listed as ${titleFor(data)}.` : undefined}
                 >
                   <select required value={data.gender} onChange={(e) => set("gender", e.target.value)}>
                     <option value="">Select</option>
@@ -1946,7 +1962,7 @@ function RegistrationForm({
                       readSpreadsheet(file)
                         .then((t) => {
                           const rows = parseRoster(t).map((r) => ({ name: r.name, dob: /^\d{4}-\d{2}-\d{2}$/.test(r.dob) ? r.dob : "" }));
-                          setSlots((cur) => { const kept = cur.filter((r) => r.name.trim() || r.dob); const merged = [...kept, ...rows]; return merged.length < 22 ? [...merged, ...blankSlots(22 - merged.length)] : merged; });
+                          setSlots((cur) => { const kept = cur.filter((r) => r.name.trim() || r.dob); const merged = [...kept, ...rows]; return merged.length < 4 ? [...merged, ...blankSlots(4 - merged.length)] : merged; });
                           setRosterError("");
                         })
                         .catch((err) => setRosterError(err.message));
@@ -2534,7 +2550,7 @@ const uniqueRows = (rows) =>
 // A sheet of blank rows to fill in: full name and date of birth per pastor.
 // Empty rows are ignored; a spreadsheet can fill rows too; more rows on demand.
 const blankSlots = (n) => Array.from({ length: n }, () => ({ name: "", dob: "" }));
-function PastorSlots({ slots, setSlots, count = 22 }) {
+function PastorSlots({ slots, setSlots, count = 4 }) {
   const update = (i, key, value) => setSlots((rows) => rows.map((r, k) => (k === i ? { ...r, [key]: value } : r)));
   const problem = (r) => {
     if (!r.name.trim() && !r.dob) return "";
@@ -2760,6 +2776,9 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
     <>
       <div className="reg-record-hero centred">
         <Portrait person={p} className="reg-record-photo large" />
+        {r?.data?.photoCheck && attireWords(r.data.photoCheck) && (
+          <p className={`reg-attire-flag ${r.data.photoCheck.verdict === "ok" ? "ok" : "warn"}`}>{attireWords(r.data.photoCheck)}</p>
+        )}
         {canChoose && (
           <div className="reg-photo-choice">
             <p>Which photo should the roll show?</p>
@@ -3476,7 +3495,7 @@ function ReviewQueue({ records, state, perform, actor, office, canEdit }) {
                     <div>
                       <h3>{r.data.name}</h3>
                       <p>
-                        {orgLabel(r.data.organization)} · {r.data.denomination || r.data.church}{r.entrance === "appointments" ? " · Pastoral appointment" : ""}
+                        {orgLabel(r.data.organization)} · {r.data.denomination || r.data.church}{r.entrance === "appointments" ? " · Pastoral appointment" : ""}{r.data.photoCheck && r.data.photoCheck.verdict !== "ok" && r.data.photoCheck.verdict !== "skipped" ? ` · ${attireWords(r.data.photoCheck)}` : ""}
                       </p>
                       <small>
                         Bishop:{" "}
@@ -3691,7 +3710,7 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
               <div>
                 <h3>{r.data.name}</h3>
                 <p>
-                  {titleFor(r.data)} · {orgLabel(r.data.organization)} · {r.data.email}{r.entrance === "appointments" ? " · Pastoral appointment" : ""}
+                  {titleFor(r.data)} · {orgLabel(r.data.organization)} · {r.data.email}{r.entrance === "appointments" ? " · Pastoral appointment" : ""}{r.data.photoCheck && r.data.photoCheck.verdict !== "ok" && r.data.photoCheck.verdict !== "skipped" ? ` · ${attireWords(r.data.photoCheck)}` : ""}
                   {state.profiles.find((p) => p.id === r.userId)?.autoApproved ? " · approved automatically: matched the original data" : ""}
                 </p>
               </div>
