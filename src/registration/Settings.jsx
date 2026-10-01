@@ -7,7 +7,7 @@ import { catalogOf, feesOf, orgLabel, signupOf, SIGNUP_PAUSED } from './model.mj
 // Organizations, their denominations and the fees: editable lists saved as one action each.
 // Pause or reopen sign-up. Paused: new people cannot request a code or submit;
 // everyone already registered keeps signing in, paying and editing.
-const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 // An uploaded logo lives in photo storage; fetch its URL like any media.
 function LogoMedia({ path }) {
   const [url, setUrl] = useState('');
@@ -69,7 +69,7 @@ function Structure({ state, perform, actor, show = ['groups', 'orgs', 'fees'] })
   const renameBox = (onDone) => <input className="reg-rename" autoFocus aria-label="New spelling" value={renaming.value} onChange={e => setRenaming({ ...renaming, value: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); onDone(renaming.value); } if (e.key === 'Escape') setRenaming(null); }} onBlur={() => onDone(renaming.value)} />;
   // Denomination logos: a small picture per denomination, uploaded by the office and saved with the lists.
   const logos = cat.logos || {};
-  const logoSrc = v => { const k = logos[v]; return k ? (k.startsWith('assets/') ? `${base}/${k}` : null) : ''; };
+  const logoSrc = v => { const k = logos[v]; return k ? (k.startsWith('assets/') ? `${basePath}/${k}` : null) : ''; };
   const setLogo = (v, file) => { if (!file || !actor) return; setLogoBusy(v); api.upload(actor, file, 'logo').then(key => setCat({ ...cat, logos: { ...logos, [v]: key } })).catch(() => {}).finally(() => setLogoBusy('')); };
   const logoControl = (v) => <label className={`reg-logo-chip ${logos[v] ? 'has' : ''}`} title={logos[v] ? 'Change logo' : 'Add logo'}>
     {logos[v] ? (logoSrc(v) ? <img src={logoSrc(v)} alt="" /> : <LogoMedia path={logos[v]} />) : <span aria-hidden="true">◌</span>}
