@@ -2603,84 +2603,10 @@ function PublicRecord({ person: p, onOpen, from }) {
 // The public directory: a search bar, then two doors — Bishops and Pastors with
 // their totals — before any faces are shown. Lists the existing roster until the
 // office switches the source to this year's roll.
-// The open directory at /directory/: no photos, no titles, no cards. Two
-// alphabetical columns, bishops left and pastors right, name in black with the
-// denomination and place beneath, and one search box over both.
-function PublicList({ list }) {
-  const [q, setQ] = useState(""),
-    [open, setOpen] = useState(null);
-  const term = normalName(q);
-  // A bishop's name opens the names of the pastors under them: from this year's
-  // roll when it carries them, otherwise from who named them in the old roster.
-  const pastorsOf = (bishop) =>
-    (bishop.pastors?.length ? bishop.pastors : bishopPastors(bishop, list).list)
-      .slice()
-      .sort((a, b) => a.name.localeCompare(b.name));
-  const matches = (p) =>
-    !term || normalName(`${p.name} ${p.city || ""} ${p.country || ""} ${p.denomination || ""}`).includes(term);
-  const column = (role) =>
-    list.filter((p) => p.role === role && matches(p)).sort((a, b) => a.name.localeCompare(b.name));
-  const columns = [["bishop", "Bishops"], ["pastor", "Pastors"]].map(([role, label]) => [label, column(role)]);
-  return (
-    <section className="reg-roll">
-      <h1 className="reg-doors-title">Roll of Good Standing</h1>
-      <input
-        type="search"
-        className="reg-doors-search"
-        aria-label="Search people"
-        placeholder="Search by name, city or denomination"
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-      />
-      <div className="reg-roll-columns">
-        {columns.map(([label, people]) => (
-          <div key={label} className="reg-roll-column">
-            <h2>
-              {label} <b>{people.length.toLocaleString()}</b>
-            </h2>
-            {people.length ? (
-              <ol>
-                {people.map((p) => {
-                  const under = p.role === "bishop" ? pastorsOf(p) : [];
-                  const isOpen = open === p.id;
-                  return (
-                    <li key={p.id} className={isOpen ? "open" : ""}>
-                      {p.role === "bishop" ? (
-                        <button type="button" className="reg-roll-name reg-roll-toggle" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : p.id)}>
-                          {p.name}
-                        </button>
-                      ) : (
-                        <span className="reg-roll-name">{p.name}</span>
-                      )}
-                      <small>{[p.denomination, [p.city, p.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>
-                      {isOpen && (
-                        <ol className="reg-roll-under">
-                          {under.length ? under.map((u) => (
-                            <li key={u.id}>
-                              <span className="reg-roll-name">{u.name}</span>
-                              <small>{[u.denomination, [u.city, u.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>
-                            </li>
-                          )) : <li><small>No pastors listed under this bishop yet.</small></li>}
-                        </ol>
-                      )}
-                    </li>
-                  );
-                })}
-              </ol>
-            ) : (
-              <p className="reg-small">{term ? "No one matches." : "Nobody listed yet."}</p>
-            )}
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
 function PublicDirectory({ data, embedded = false }) {
   const list = data.source === "roll" ? data.roll : publicPeople;
   const [role, setRole] = useState(null),
     [q, setQ] = useState("");
-  if (!embedded) return <PublicList list={list} />;
   const counts = {
     bishop: list.filter((p) => p.role === "bishop").length,
     pastor: list.filter((p) => p.role === "pastor").length,
