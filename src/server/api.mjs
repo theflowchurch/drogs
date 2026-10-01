@@ -107,7 +107,8 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       }
       const actor = await auth.actor(request);
       if (path === '/api/registration/auth/me' && method === 'GET') return json(actor);
-      if (!actor) throw new HttpError(401, 'Please sign in again.');
+      // Portraits on the public directory may be fetched without a session; the media route checks each one.
+      if (!actor && !path.startsWith('/api/registration/media')) throw new HttpError(401, 'Please sign in again.');
       if (['/api/registration/accounts', '/api/registration/logins'].includes(path) && method === 'GET') {
         if (!actor.office) throw new HttpError(403, 'Office access required.');
         return json(await (path.endsWith('/accounts') ? readAccounts : readLogins)(pool, config, url));

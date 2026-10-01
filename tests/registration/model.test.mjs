@@ -605,3 +605,11 @@ test("the office edits the organization and denomination lists and the fees, and
   assert.equal(s.registrations.at(-1).amount, 60);
   assert.throws(() => applyAction(s, office, "setCatalog", { catalog: { organizations: [] } }), /at least one/);
 });
+test("office adds an original-data record with an uploaded photo; the overlay carries it", () => {
+  let s = applyAction(emptyState(), office, "addReference", { fields: { role: "bishop", name: "Kwame Added", organization: "First Love", denomination: "First Love Church", country: "Ghana", photo: "office/portrait/k.webp" } });
+  const added = s.extraReferences[0];
+  assert.equal(added.photo, "office/portrait/k.webp");
+  assert.equal(overlayReferences([], s).find((p) => p.id === added.id).photo, "office/portrait/k.webp");
+  s = applyAction(s, office, "editReference", { referenceId: added.id, fields: { photo: "office/portrait/k2.webp" } });
+  assert.equal(overlayReferences([], s).find((p) => p.id === added.id).photo, "office/portrait/k2.webp");
+});

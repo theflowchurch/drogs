@@ -129,7 +129,7 @@ export const catalogOf = (state) =>
     : { organizations: ORGANIZATIONS, denominations: DENOMINATIONS };
 export const feesOf = (state) => state?.fees?.bishop ? state.fees : AMOUNTS;
 // Fields of an old roster record the office may correct.
-export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination", "city", "country", "bishop", "branch"];
+export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination", "city", "country", "bishop", "branch", "photo"];
 // The old roster as the office has corrected it: hidden and deleted records out,
 // corrected fields in, hand-added people appended.
 export function overlayReferences(references, state) {
@@ -941,7 +941,7 @@ export function applyAction(
     if (name.split(" ").length < 2) throw Error("Enter the full name.");
     if (!["bishop", "pastor"].includes(d.role)) throw Error("Choose Bishop or Pastor.");
     const id = `X${makeId().replace(/-/g, "").slice(0, 10)}`;
-    state.extraReferences = [...(state.extraReferences || []), { id, role: d.role, name, title: String(d.title || (d.role === "bishop" ? "Bishop" : "Pastor")), organization: String(d.organization || ""), denomination: String(d.denomination || ""), denominationLogo: "", city: String(d.city || ""), country: String(d.country || ""), branch: String(d.branch || ""), image: String(d.image || ""), email: "", phone: "", ...(d.role === "pastor" && d.bishop ? { bishop: String(d.bishop) } : {}) }];
+    state.extraReferences = [...(state.extraReferences || []), { id, role: d.role, name, title: String(d.title || (d.role === "bishop" ? "Bishop" : "Pastor")), organization: String(d.organization || ""), denomination: String(d.denomination || ""), denominationLogo: "", city: String(d.city || ""), country: String(d.country || ""), branch: String(d.branch || ""), image: String(d.image || ""), photo: String(d.photo || ""), email: "", phone: "", ...(d.role === "pastor" && d.bishop ? { bishop: String(d.bishop) } : {}) }];
     detail = { added: name, id };
   } else if (action === "setCatalog") {
     // Organizations and denominations offered on the sign-up form.
@@ -1149,7 +1149,7 @@ export function directoryPeople(state, references, year = state.year) {
       country: d?.country || p.country,
       denomination: d?.denomination || p.denomination,
       // The office's "which photo" choice applies everywhere, not only on the public roll.
-      photo: registration?.displayPhoto === "reference" && p.image ? "" : d?.photo || "",
+      photo: registration?.displayPhoto === "reference" && p.image ? "" : d?.photo || p.photo || "",
       recorded: { email: p.email, phone: p.phone },
       updated: Boolean(registration || row?.referenceConfirmedAt),
       updatedAt:

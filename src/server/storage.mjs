@@ -16,13 +16,18 @@ export async function prepareImage(bytes, contentType) {
   } catch { throw new HttpError(400, 'This image could not be opened. Choose a valid, still photo.'); }
 }
 export function canReadMedia(state, actor, media) {
-  if (media.owner_id === actor.id || actor.office) return true;
+  if (actor && (media.owner_id === actor.id || actor.office)) return true;
   // A photo the office placed on this person's own registration.
-  if (state.registrations.some(r => r.userId === actor.id && r.data.photo === media.object_key)) return true;
+  if (actor && state.registrations.some(r => r.userId === actor.id && r.data.photo === media.object_key)) return true;
   // A supervising bishop may see submitted portraits, but never someone else's receipt.
   if (media.kind !== 'portrait') return false;
-  // Portraits of people confirmed on the roll are part of the directory every member sees.
-  if (state.registrations.some(r => r.status === 'confirmed' && r.data.photo === media.object_key)) return true;
+  // Portraits on the public roll and on original-data records are part of the
+  // directory anyone can open, signed in or not.
+  const key = media.object_key, hidden = new Set(state.hidden || []), overrides = state.overrides || {};
+  if (state.registrations.some(r => r.status === 'confirmed' && !r.hidden && r.data.photo === key)) return true;
+  if ((state.extraReferences || []).some(x => x.photo === key && !hidden.has(x.id) && !overrides[x.id]?.deleted)) return true;
+  if (Object.entries(overrides).some(([id, o]) => o.photo === key && !o.deleted && !hidden.has(id))) return true;
+  if (!actor) return false;
   const profile = state.profiles.find(p => p.id === actor.id && p.role === 'bishop' && (p.bishopApproved || submittedBishop(state, p)));
   return Boolean(profile && state.registrations.some(r => r.status !== 'draft' && r.data.role === 'pastor' &&
     r.data.photo === media.object_key && r.data.bishopId === (profile.referenceId || profile.id)));

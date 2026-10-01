@@ -116,6 +116,9 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('action', pastor.cookie, { name: 'payment', payload: { proof: receipt, nonrefundable: true, transactionId: 'TX-TEST-0001' } })).status, 200);
     assert.equal((await call(`media?path=${receipt}`, bishop.cookie)).status, 403);
     assert.equal((await call('snapshot', bishop.cookie)).data.registrations.find(r => r.userId === pastor.data.id).proof, undefined);
+    // Anyone may load a confirmed member's portrait for the public directory, but never a receipt.
+    assert.equal((await call(`media?path=${pastorPhoto}`)).status, 200, 'public directory portrait without a session');
+    assert.equal((await call(`media?path=${receipt}`)).status, 403, 'receipts stay private');
     const media = await call(`media?path=${receipt}`, office.cookie);
     assert.equal(media.status, 200);
     assert.match(media.data.url, /r2\.cloudflarestorage\.com/);

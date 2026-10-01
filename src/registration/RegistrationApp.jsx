@@ -2341,7 +2341,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
       )}
       {adding && (
         <Dialog title={mode === "registered" ? "Add a person to the roll" : "Add a record to the original data"} onClose={() => setAdding(false)}>
-          <AddPersonForm state={state} mode={mode} onDone={() => setAdding(false)} perform={perform} />
+          <AddPersonForm state={state} mode={mode} onDone={() => setAdding(false)} perform={perform} actor={actor} />
         </Dialog>
       )}
       <div className="reg-stats">
@@ -2524,7 +2524,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
       )}
       {perform && state && (p.registration
         ? <OfficeEditor registration={p.registration} state={state} perform={perform} actor={actor} />
-        : <ReferenceEditor person={p} state={state} perform={perform} />)}
+        : <ReferenceEditor person={p} state={state} perform={perform} actor={actor} />)}
     </>
   );
 }
@@ -2623,12 +2623,13 @@ function Choice({ value, options, onChange, labelOf = (v) => v, blank = "", ...r
   );
 }
 const TITLES = ["Bishop", "Pastor", "Reverend", "Dr", "Mother", "Episcopal Sister", "Lady Pastor"];
-function ReferenceEditor({ person: p, state, perform }) {
+function ReferenceEditor({ person: p, state, perform, actor }) {
   const [open, setOpen] = useState(false),
     [form, setForm] = useState(null);
   const hidden = (state.hidden || []).includes(p.id), deleted = Boolean((state.overrides || {})[p.id]?.deleted);
-  const begin = () => { setForm(Object.fromEntries(REFERENCE_FIELDS.map((f) => [f, p[f] || ""]))); setOpen(true); };
+  const begin = () => { setForm(Object.fromEntries(REFERENCE_FIELDS.filter((f) => f !== "photo").map((f) => [f, p[f] || ""]))); setOpen(true); };
   const set = (f) => (v) => setForm((x) => ({ ...x, [f]: v, ...(f === "organization" ? { denomination: "" } : {}) }));
+  const [busyPhoto, setBusyPhoto] = useState(false), [photoProblem, setPhotoProblem] = useState("");
   // Choices: the office's organizations and denominations, plus whatever the
   // original data already uses, so old spellings stay selectable.
   const catalog = state.catalog || catalogOf(state);
@@ -2642,6 +2643,15 @@ function ReferenceEditor({ person: p, state, perform }) {
       <h3>Office tools · original record</h3>
       <div className="reg-office-actions">
         <button type="button" className="reg-secondary" onClick={() => (open ? setOpen(false) : begin())}>{open ? "Close editor" : "Edit record"}</button>
+        <label className={`reg-secondary reg-file-button ${busyPhoto ? "busy" : ""}`}>
+          {busyPhoto ? "Uploading…" : p.photo || p.image ? "Replace photo" : "Add photo"}
+          <input type="file" accept="image/jpeg,image/png,image/webp" disabled={busyPhoto} onChange={(e) => {
+            const file = e.target.files?.[0]; e.target.value = ""; if (!file) return; setBusyPhoto(true);
+            setPhotoProblem("");
+            api.upload(actor, file, "portrait").then((key) => perform("editReference", { referenceId: p.id, fields: { photo: key } }, "Photo updated.")).catch((err) => setPhotoProblem(err.message || "The photo could not be uploaded.")).finally(() => setBusyPhoto(false));
+          }} />
+        </label>
+        {photoProblem && <small className="reg-error-text" role="alert">{photoProblem}</small>}
         <button type="button" className="reg-secondary" onClick={() => perform("hideReference", { referenceId: p.id, hidden: !hidden }, hidden ? "Shown on the public roll again." : "Hidden from the public roll.")}>{hidden ? "Show on public roll" : "Hide from public roll"}</button>
         <button type="button" className={`reg-secondary ${deleted ? "" : "danger"}`} onClick={() => perform("deleteReference", { referenceId: p.id, deleted: !deleted }, deleted ? "Record restored." : "Record deleted from the directory.")}>{deleted ? "Restore record" : "Delete record"}</button>
       </div>
@@ -2667,13 +2677,30 @@ function ReferenceEditor({ person: p, state, perform }) {
   );
 }
 // A person added by the office: straight onto this year's roll, or into the original data.
-function AddPersonForm({ state, mode, perform, onDone }) {
+function AddPersonForm({ state, mode, perform, onDone, actor }) {
   const catalog = state.catalog || catalogOf(state);
   const [f, setF] = useState({ role: "pastor", firstName: "", lastName: "", gender: "", organization: catalog.organizations[0] || "", denomination: "", city: "", country: "", phone: "", email: "", dob: "", bishopId: "", bishop: "", title: "" });
+  const [file, setFile] = useState(null), [preview, setPreview] = useState(""), [busy, setBusy] = useState(false), [problem, setProblem] = useState("");
   const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
-  const submit = () => {
-    if (mode === "registered") return perform("addPerson", { data: f }, "Added to the roll.").then((ok) => ok && onDone());
-    return perform("addReference", { fields: { role: f.role, name: `${f.firstName} ${f.lastName}`.trim(), title: f.title, organization: f.organization, denomination: f.denomination, city: f.city, country: f.country, bishop: f.bishop } }, "Added to the original data.").then((ok) => ok && onDone());
+  const roster = overlayReferences(people, state);
+  const unique = (list) => [...new Set(list.filter(Boolean))].sort();
+  const countries = unique(roster.map((x) => x.country));
+  const bishopNames = unique(roster.filter((x) => x.role === "bishop").map((x) => x.name));
+  const choose = (e) => {
+    const next = e.target.files?.[0]; e.target.value = "";
+    if (!next) return;
+    if (preview) URL.revokeObjectURL(preview);
+    setFile(next); setPreview(URL.createObjectURL(next)); setProblem("");
+  };
+  const submit = async () => {
+    setBusy(true); setProblem("");
+    try {
+      const photo = file ? await api.upload(actor, file, "portrait") : "";
+      const ok = mode === "registered"
+        ? await perform("addPerson", { data: { ...f, photo } }, "Added to the roll.")
+        : await perform("addReference", { fields: { role: f.role, name: `${f.firstName} ${f.lastName}`.trim(), title: f.title, organization: f.organization, denomination: f.denomination, city: f.city, country: f.country, bishop: f.bishop, photo } }, "Added to the original data.");
+      if (ok) onDone();
+    } catch (err) { setProblem(err.message || "The photo could not be uploaded."); } finally { setBusy(false); }
   };
   return (
     <div className="reg-fields reg-office-form">
@@ -2685,7 +2712,7 @@ function AddPersonForm({ state, mode, perform, onDone }) {
       {(catalog.denominations[f.organization] || []).length > 0 && (
         <Field label="Denomination"><select value={f.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{catalog.denominations[f.organization].map((x) => <option key={x}>{x}</option>)}</select></Field>
       )}
-      <Field label="Country"><input value={f.country} onChange={(e) => set("country", e.target.value)} /></Field>
+      <Field label="Country"><Choice value={f.country} options={countries} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
       <Field label="City"><input value={f.city} onChange={(e) => set("city", e.target.value)} /></Field>
       {mode === "registered" ? (
         <>
@@ -2696,13 +2723,26 @@ function AddPersonForm({ state, mode, perform, onDone }) {
         </>
       ) : (
         <>
-          <Field label="Title (optional)"><input value={f.title} onChange={(e) => set("title", e.target.value)} placeholder={f.role === "bishop" ? "Bishop" : "Pastor"} /></Field>
-          {f.role === "pastor" && <Field label="Bishop’s name (optional)"><input value={f.bishop} onChange={(e) => set("bishop", e.target.value)} /></Field>}
+          <Field label="Title"><Choice value={f.title || (f.role === "bishop" ? "Bishop" : "Pastor")} options={TITLES} onChange={(v) => set("title", v)} blank={null} /></Field>
+          {f.role === "pastor" && <Field label="Bishop (optional)"><Choice value={f.bishop} options={bishopNames} onChange={(v) => set("bishop", v)} blank="None listed" /></Field>}
         </>
       )}
+      <div className="reg-field wide reg-add-photo">
+        <label>Photo</label>
+        <div className="reg-add-photo-row">
+          {preview ? <img src={preview} alt="" className="reg-add-photo-preview" /> : <div className="reg-placeholder reg-add-photo-preview">◯</div>}
+          <label className="reg-secondary reg-file-button">
+            {file ? "Choose a different photo" : "Choose a photo"}
+            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={choose} />
+          </label>
+          {file && <button type="button" className="reg-text" onClick={() => { URL.revokeObjectURL(preview); setFile(null); setPreview(""); }}>Remove</button>}
+        </div>
+        <small>JPG, PNG or WebP, under 5 MB. Optional; a placeholder shows until a photo is added.</small>
+      </div>
+      {problem && <p className="reg-field wide reg-error-text" role="alert">{problem}</p>}
       <div className="reg-form-actions wide">
-        <button type="button" className="reg-secondary" onClick={onDone}>Cancel</button>
-        <button type="button" className="reg-primary" onClick={submit}>Add</button>
+        <button type="button" className="reg-secondary" onClick={onDone} disabled={busy}>Cancel</button>
+        <button type="button" className="reg-primary" onClick={submit} disabled={busy}>{busy ? "Adding…" : "Add"}</button>
       </div>
     </div>
   );
