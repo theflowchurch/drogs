@@ -616,8 +616,8 @@ export function applyAction(
       (x) => x.userId === actor.id && x.year === state.year,
     );
     if (!r || r.status === "draft") throw Error("Submit your registration first.");
-    // Everything but the date of birth may change; a different bishop re-runs the match.
-    const data = validateProfile({ ...r.data, ...payload, role: r.data.role, dob: r.data.dob }, actor.email, { catalog });
+    // Name and date of birth are fixed after submission (the office can correct them); a different bishop re-runs the match.
+    const data = validateProfile({ ...r.data, ...payload, role: r.data.role, dob: r.data.dob, firstName: r.data.firstName, lastName: r.data.lastName }, actor.email, { catalog });
     if (!data.photoConfirmed) throw Error("Confirm your photo before saving.");
     const newBishop = data.role === "pastor" && data.bishopId && data.bishopId !== r.data.bishopId;
     if (newBishop) {

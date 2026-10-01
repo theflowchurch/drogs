@@ -171,7 +171,7 @@ const stepper = (list, selected, setSelected) => {
 function ProfileEditor({ current, state, actor, perform, onDone }) {
   const d = current.data;
   const catalog = state.catalog || catalogOf(state);
-  const [f, setF] = useState({ firstName: d.firstName || "", lastName: d.lastName || "", gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "" });
+  const [f, setF] = useState({ gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "" });
   const [busyPhoto, setBusyPhoto] = useState(false), [problem, setProblem] = useState("");
   const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
   const countries = [...new Set([...overlayReferences(people, state).map((x) => x.country), f.country].filter(Boolean))].sort();
@@ -180,8 +180,7 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
   const save = () => perform("update", { ...f, photoConfirmed: true }, "Your details were updated.").then((ok) => ok && onDone());
   return (
     <div className="reg-fields reg-office-form">
-      <Field label="First name"><input value={f.firstName} onChange={(e) => set("firstName", e.target.value)} /></Field>
-      <Field label="Last name"><input value={f.lastName} onChange={(e) => set("lastName", e.target.value)} /></Field>
+      <p className="reg-field wide reg-small">Name: <b>{d.name}</b> · Date of birth: <b>{longDate(d.dob)}</b>. These cannot be changed here; contact the office if either is wrong.</p>
       <Field label="Gender"><select value={f.gender} onChange={(e) => set("gender", e.target.value)}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></Field>
       <Field label="WhatsApp number"><input value={f.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
       <Field label="Organization"><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{orgLabel(o)}</option>)}</select></Field>
@@ -207,7 +206,6 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
             api.upload(actor, file, "portrait").then((key) => perform("update", { photo: key, photoConfirmed: true }, "Photo updated.")).catch((err) => setProblem(err.message || "The photo could not be uploaded.")).finally(() => setBusyPhoto(false));
           }} />
         </label>
-        <small>Date of birth: {longDate(d.dob)}. It cannot be changed here; contact the office if it is wrong.</small>
       </div>
       {problem && <p className="reg-field wide reg-error-text" role="alert">{problem}</p>}
       <div className="reg-form-actions wide">
@@ -1371,6 +1369,7 @@ function Participant({
   const [editing, setEditing] = useState(false), [editDetails, setEditDetails] = useState(false);
   // The thank-you is for the moment of finishing; anyone returning later sees their profile.
   const [startedHere] = useState(() => !current || current.status === "draft");
+  const [viewedProfile, setViewedProfile] = useState(false);
   if (!current || current.status === "draft" || editing)
     return (
       <RegistrationForm
@@ -1389,13 +1388,31 @@ function Participant({
     );
   const bishop = state.directory.find((b) => b.id === current.data.bishopId);
   const pastorCount = state.rosters.filter((r) => r.year === state.year && r.bishopId === actor.id && r.status === "active").length;
+  // Right after finishing: one confirmation card, then the profile (which is also what every later sign-in shows).
+  if (startedHere && !viewedProfile)
+    return (
+      <div className="reg-page-heading">
+        <div className="reg-card reg-finished">
+          <span className="reg-eyebrow">{state.year} / REGISTRATION</span>
+          <h1>Thank you, {current.data.name.split(" ")[0]}.</h1>
+          <p>
+            {current.status === "confirmed"
+              ? `Your registration has been confirmed. You are in good standing for ${state.year}.`
+              : "Your registration has been submitted. The office is reviewing it; your status will show on your profile."}
+            {current.payment === "verified" ? " Your payment has been received." : ""}
+            {pastorCount ? ` ${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded.` : ""}
+          </p>
+          <button className="reg-primary" onClick={() => setViewedProfile(true)}>View my profile →</button>
+        </div>
+      </div>
+    );
   return (
     <>
       <div className="reg-page-heading">
         <div>
           <span className="reg-eyebrow">{state.year} / MY PROFILE</span>
-          <h1>{startedHere ? `Thank you, ${current.data.name.split(" ")[0]}.` : "My profile"}</h1>
-          <p>{startedHere ? "Your registration has been submitted. Here are the details you provided." : "Your place on the Roll of Good Standing. You can update your details at any time."}</p>
+          <h1>My profile</h1>
+          <p>Your place on the Roll of Good Standing. You can update your details at any time.</p>
         </div>
         <Badge status={current.status === "unclaimed" ? "pending" : current.status} />
       </div>
@@ -1444,7 +1461,7 @@ function Participant({
               </div>
             )}
           </dl>
-          {(startedHere || current.status !== "confirmed" || current.resubmit) && (
+          {(current.status !== "confirmed" || current.resubmit) && (
           <div className={`reg-status-message ${current.status === "unclaimed" ? "pending" : current.status}`}>
             <h3>
               {current.status === "confirmed"

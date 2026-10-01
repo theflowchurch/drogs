@@ -1,3 +1,4 @@
+import re
 import os, re, json
 from pathlib import Path
 from urllib.parse import urlparse
@@ -69,8 +70,11 @@ with sync_playwright() as p:
         page.get_by_label('I confirm that these details').check(); page.get_by_label('I consent to Kuriake Castle').check()
         page.get_by_label('I confirm this is me').check()
         page.get_by_role('button',name='Confirm and submit →').click()
-        expect(page.get_by_text('Your registration has been submitted. Here are the details you provided.')).to_be_visible()
+        expect(page.get_by_role('heading',name=re.compile('^Thank you, '))).to_be_visible()
         expect(page.get_by_text('1 pastor uploaded.')).to_be_visible()
+        page.get_by_role('button',name='View my profile →',exact=True).click()
+        expect(page.get_by_role('heading',name='My profile',exact=True)).to_be_visible()
+        expect(page.get_by_text('Status: Pending Review',exact=True)).to_be_visible()
         assert page.evaluate("localStorage.getItem('drogs-registration-v1')") is None
         page.get_by_role('button',name='Sign out',exact=True).click()
         page.get_by_role('link', name='View the full Pastoral directory').wait_for()  # members land on the front page

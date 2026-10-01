@@ -647,6 +647,8 @@ test("members update their own details any time; date of birth is fixed; correct
   assert.equal(s.overrides.B1.city, "Kumasi");
   assert.equal(s.overrides.B1.phone, "+233240000000");
   assert.deepEqual(Object.keys(s.audit.at(-1).detail).sort(), ["city", "phone"]);
+  s = applyAction(s, bishop, "update", { firstName: "Someone", lastName: "Else", photoConfirmed: true });
+  assert.equal(s.registrations[0].data.name, "Ama Bishop", "the name is fixed after submission");
 });
 test("a pastor who picks a different bishop is re-matched under the new one", () => {
   let s = setup();

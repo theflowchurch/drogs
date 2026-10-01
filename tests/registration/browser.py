@@ -1,3 +1,4 @@
+import re
 import os
 from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
@@ -46,7 +47,7 @@ with sync_playwright() as p:
   page.screenshot(path=str(OUT/('portrait-review-'+str(len(list(OUT.glob('portrait-review*'))))+'.png')),full_page=True)
   page.get_by_role('button',name='Confirm and submit →').click()
   expect(page.get_by_role('heading',name='Your Details',exact=True)).not_to_be_visible()
-  expect(page.get_by_text('Your registration has been submitted. Here are the details you provided.')).to_be_visible()
+  expect(page.get_by_role('heading',name=re.compile('^Thank you, '))).to_be_visible()
  try:
   page.goto(BASE+'/');page.wait_for_load_state('networkidle');page.screenshot(path=str(OUT/'entrance.png'),full_page=True)
   page.evaluate("localStorage.setItem('drogs-2027',JSON.stringify({legacy:'untouched'}))")

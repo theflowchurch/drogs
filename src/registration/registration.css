@@ -3725,3 +3725,16 @@ input[type="date"] {
   color: #8a1c1c;
   border-color: #f3b4b4;
 }
+
+/* Registration finished: one card, then the profile */
+.reg-finished {
+  max-width: 640px;
+  padding: 28px;
+}
+.reg-finished h1 {
+  margin: 6px 0 10px;
+}
+.reg-finished p {
+  margin: 0 0 18px;
+  color: var(--muted);
+}
