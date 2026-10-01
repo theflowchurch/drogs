@@ -1650,7 +1650,7 @@ function RegistrationForm({
             {step === "review"
               ? "Check that all the information below is correct before submitting."
               : step === "pastors"
-                ? "Upload or paste the pastors under your oversight. They are recognised automatically when they register."
+                ? "Add the pastors under your oversight. When they register, they will automatically be linked to you."
                 : step === "payment"
                   ? "Send the fee by mobile money and upload the confirmation."
                   : `Complete your ${state.year} annual renewal to remain on the Roll of Good Standing.`}
@@ -4283,7 +4283,7 @@ function Roster({ state, year, actor, office, perform }) {
         </div>
       ) : (
         <Empty title="No pastors added yet">
-          {office ? "Pastors added by bishops will appear here." : "Add the pastors under your oversight below; they are recognised automatically when they register."}
+          {office ? "Pastors added by bishops will appear here." : "Add the pastors under your oversight. When they register, they will automatically be linked to you."}
         </Empty>
       )}
       {!office && year === state.year && (
