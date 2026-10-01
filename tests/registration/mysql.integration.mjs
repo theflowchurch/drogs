@@ -10,7 +10,7 @@ import mysql from 'mysql2/promise';
 import { S3Client } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
 import sharp from 'sharp';
-import { migrate } from '../../src/server/database.mjs';
+import { migrate, launchReset } from '../../src/server/database.mjs';
 import { createAuth } from '../../src/server/auth.mjs';
 import { createStorage } from '../../src/server/storage.mjs';
 import { configuration } from '../../src/server/config.mjs';
@@ -297,6 +297,15 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('auth/me', stranger.cookie)).data, null, 'removed account is signed out');
     const officeId = (await call('accounts?search=office%40example.com', office.cookie)).data.data[0].id;
     assert.equal((await call('accounts/remove', office.cookie, { user: officeId })).data.removed, 0);
+    // One-time launch reset: people and their records go; structure, settings and office accounts stay; never runs twice.
+    assert.equal((await call('action', office.cookie, { name: 'setFees', payload: { bishop: 120, pastor: 60 } })).status, 200);
+    const [[stateBefore]] = await pool.query('SELECT data FROM dr_state WHERE id=1');
+    assert.equal(await launchReset(pool, config), true);
+    for (const table of ['dr_registrations', 'dr_rosters', 'dr_profiles', 'dr_audit', 'dr_media']) assert.equal((await pool.query(`SELECT COUNT(*) AS n FROM ${table}`))[0][0].n, 0, `${table} cleared`);
+    const [users] = await pool.query('SELECT email FROM dr_users'); assert.deepEqual(users.map(u => u.email).sort(), [...config.admins].sort(), 'only office accounts remain');
+    const [[stateAfter]] = await pool.query('SELECT data FROM dr_state WHERE id=1'); assert.deepEqual(stateAfter.data, stateBefore.data, 'office structure untouched');
+    assert.equal((await call('auth/me', office.cookie)).data.office, true, 'the office stays signed in');
+    assert.equal(await launchReset(pool, config), false, 'runs once only');
     if (process.env.TEST_BROWSER === '1') {
       const { default: next } = await import('next');
       config.origin = 'http://127.0.0.1:4208'; config.secure = false;

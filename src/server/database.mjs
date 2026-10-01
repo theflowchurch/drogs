@@ -14,6 +14,25 @@ export async function migrate(pool) {
     for (const statement of sql.split(';').map(s => s.trim()).filter(Boolean)) await pool.query(statement);
   }
 }
+// One-time launch reset (requested by the office on 2026-10-01): every member
+// account and everything they produced goes, so the site starts empty. The
+// original data, the office's structure (dr_state: groups, denominations,
+// corrections), Settings (dr_config), API keys and the office accounts stay.
+// A marker in dr_config makes sure it runs exactly once, whatever restarts follow.
+export async function launchReset(pool, config, marker = 'LAUNCH_RESET_2026_10_01') {
+  const [[done]] = await pool.query('SELECT value FROM dr_config WHERE name=?', [marker]);
+  if (done) return false;
+  const admins = (config.admins || []).map(e => e.toLowerCase());
+  const [rows] = await pool.query('SELECT id,email FROM dr_users');
+  const gone = rows.filter(r => !admins.includes(String(r.email).toLowerCase())).map(r => r.id);
+  for (const table of ['dr_registrations', 'dr_rosters', 'dr_profiles', 'dr_audit', 'dr_media_blobs', 'dr_media', 'dr_otp', 'dr_rate_limits']) await pool.query(`DELETE FROM ${table}`);
+  if (gone.length) {
+    const marks = gone.map(() => '?').join(',');
+    for (const [table, column] of [['dr_sessions', 'user_id'], ['dr_logins', 'user_id'], ['dr_account_activity', 'user_id'], ['dr_users', 'id']]) await pool.query(`DELETE FROM ${table} WHERE ${column} IN (${marks})`, gone);
+  }
+  await pool.query('INSERT INTO dr_config (name,value,updated_at) VALUES (?,?,?) ON DUPLICATE KEY UPDATE value=VALUES(value),updated_at=VALUES(updated_at)', [marker, new Date().toISOString(), Date.now()]);
+  return true;
+}
 const parse = row => typeof row.data === 'string' ? JSON.parse(row.data) : row.data;
 export async function readState(conn, lock = false) {
   // All mutations lock this row before reading. This prevents lost updates and double claims.

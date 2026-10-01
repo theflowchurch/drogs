@@ -31,19 +31,10 @@ export async function readLogins(pool, config, url) {
 // Everything keyed to the user goes; roster rows that pointed at a removed
 // pastor become unclaimed again so the bishop's list stays intact.
 export async function removeAccounts(pool, config, actor, body) {
-  const { user, all } = body || {};
-  if (!all && (typeof user !== 'string' || !user || user.length > 36)) throw new HttpError(400, 'Which account?');
-  const params = all ? [] : [user];
-  const [rows] = await pool.execute(`SELECT id,email FROM dr_users${all ? '' : ' WHERE id=?'}`, params);
+  const { user } = body || {};
+  if (typeof user !== 'string' || !user || user.length > 36) throw new HttpError(400, 'Which account?');
+  const [rows] = await pool.execute('SELECT id,email FROM dr_users WHERE id=?', [user]);
   const ids = rows.filter(r => !config.admins.includes(r.email) && r.id !== actor.id).map(r => r.id);
-  if (all) {
-    // Reset for launch: every registration, list, photo and activity record goes,
-    // including the office members' own; office sign-ins and the office's
-    // structure (catalog, corrections to the original data) are kept.
-    for (const table of ['dr_registrations', 'dr_rosters', 'dr_profiles', 'dr_audit', 'dr_media_blobs', 'dr_media']) await pool.execute(`DELETE FROM ${table}`);
-    if (ids.length) { const marks = ids.map(() => '?').join(','); for (const [table, column] of [['dr_sessions', 'user_id'], ['dr_logins', 'user_id'], ['dr_account_activity', 'user_id'], ['dr_users', 'id']]) await pool.execute(`DELETE FROM ${table} WHERE ${column} IN (${marks})`, ids); }
-    return { removed: ids.length, reset: true };
-  }
   if (!ids.length) return { removed: 0 };
   const marks = ids.map(() => '?').join(',');
   const run = sql => pool.execute(sql, ids);

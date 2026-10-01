@@ -6,12 +6,12 @@ const status = value => value === 'not_started' ? 'Not started' : value.replaceA
 export default function Accounts({ run }) {
   const [result, setResult] = useState(null), [search, setSearch] = useState(''), [query, setQuery] = useState('');
   const [history, setHistory] = useState(null), [person, setPerson] = useState(null);
-  const [admins, setAdmins] = useState([]), [newAdmin, setNewAdmin] = useState(''), [confirmClear, setConfirmClear] = useState(false), [revoking, setRevoking] = useState('');
+  const [admins, setAdmins] = useState([]), [newAdmin, setNewAdmin] = useState(''), [revoking, setRevoking] = useState('');
   const seq = useRef(0);
   // Only the latest request may set the table; a slow first load must not overwrite a search.
   const load = (page = 1, term = query) => { const n = ++seq.current; return run(async () => { const r = await api.accounts(term, page); if (n === seq.current) setResult(r); }); };
   const saveAdmins = (list, message = 'Office access updated.') => run(async () => { setAdmins((await api.saveSettings({ ADMIN_EMAILS: list.join(',') })).admins || []); setNewAdmin(''); }, message);
-  const remove = (body, message) => run(async () => { await api.removeAccounts(body); setConfirmClear(false); const n = ++seq.current; const r = await api.accounts(query, 1); if (n === seq.current) setResult(r); }, message);
+  const remove = (body, message) => run(async () => { await api.removeAccounts(body); const n = ++seq.current; const r = await api.accounts(query, 1); if (n === seq.current) setResult(r); }, message);
   useEffect(() => { load(); run(async () => setAdmins((await api.listSettings()).admins || [])); }, []);
   // Results appear as you type (name or email), after a short pause between keystrokes.
   useEffect(() => { const t = setTimeout(() => { if (search !== query) { setQuery(search); load(1, search); } }, 250); return () => clearTimeout(t); }, [search]);
@@ -30,11 +30,6 @@ export default function Accounts({ run }) {
       <form className="reg-account-search" onSubmit={e => { e.preventDefault(); setQuery(search); load(1, search); }}>
         <label className="reg-field">Find an account<input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder="Start typing a name or email address" maxLength={254} autoComplete="off" /></label><button className="reg-primary">Search accounts</button>
       </form>
-      <div className="reg-reset-row">
-      {(confirmClear
-        ? <div className="reg-review-buttons"><button className="reg-secondary danger" onClick={() => remove({ all: true }, 'Reset done: every registration, list, photo and activity record was removed. Office sign-ins were kept.')}>Yes, reset everything</button><button className="reg-secondary" onClick={() => setConfirmClear(false)}>Keep them</button></div>
-        : <button className="reg-text danger" onClick={() => setConfirmClear(true)}>Reset for launch: remove every member account, registration, pastor list, photo and activity record (office sign-ins and the original data are kept)</button>)}
-      </div>
       <p className="reg-account-note">An account is created when someone first signs in. Removing an account deletes their profile, registration, uploads and sign-in history; office members cannot be removed here.</p>
       {result && !result.data.length ? <p>No accounts found.</p> : result && <div className="reg-account-table"><table><thead><tr><th>Person</th><th>Account created</th><th>Last successful login</th><th>Registration</th><th>Activity</th></tr></thead><tbody>{result.data.map(account => <tr key={account.id}>
         <td><strong>{account.name || 'Name not yet provided'}</strong><span>{account.email}</span><small>{account.office ? 'Office member' : account.role || 'Role not yet selected'}</small></td>

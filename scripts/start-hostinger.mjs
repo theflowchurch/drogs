@@ -8,7 +8,7 @@ if (!dev) process.env.NODE_ENV = 'production';
 if (process.env.NEXT_PUBLIC_REGISTRATION_BACKEND !== 'mysql') throw Error('Set NEXT_PUBLIC_REGISTRATION_BACKEND=mysql before building and starting Hostinger.');
 if (process.env.NEXT_PUBLIC_BASE_PATH) throw Error('Hostinger must use an empty NEXT_PUBLIC_BASE_PATH.');
 const { configuration } = await import('../src/server/config.mjs');
-const { createPool, migrate } = await import('../src/server/database.mjs');
+const { createPool, migrate, launchReset } = await import('../src/server/database.mjs');
 const { createAuth } = await import('../src/server/auth.mjs');
 const { createStorage } = await import('../src/server/storage.mjs');
 const { createApi } = await import('../src/server/api.mjs');
@@ -23,6 +23,7 @@ const config = configuration();
 const pool = createPool(config);
 await migrate(pool); // idempotent: creates any missing dr_ tables
 await pool.query('SELECT current_year FROM dr_settings WHERE id=1');
+if (await launchReset(pool, config)) console.log('Launch reset applied: member accounts and records cleared; original data, structure and settings kept.');
 await applySettings(config, pool);
 // The transport is created per message so mail settings saved in /admin/ apply at once.
 const mailer = { sendMail: message => nodemailer.createTransport(config.smtp).sendMail(message) };
