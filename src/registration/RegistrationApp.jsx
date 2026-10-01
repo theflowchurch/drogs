@@ -28,6 +28,7 @@ import {
   dobClose,
   titleFor,
   orgLabel,
+  REFERENCE_FIELDS,
   catalogOf,
   overlayReferences,
   attireExample,
@@ -685,7 +686,7 @@ export default function RegistrationApp({
                   </div>
                   {tab === "Accounts" && <Accounts run={run} />}
                   {tab === "API keys" && <ApiKeys run={run} />}
-                  {tab === "Settings" && <Settings run={run} />}
+                  {tab === "Settings" && <Settings run={run} state={state} perform={perform} />}
                   {tab === "Directory" &&
                     (office ? (
                       <Directory
@@ -694,6 +695,7 @@ export default function RegistrationApp({
                         role={directoryRole}
                         setRole={setDirectoryRole}
                         perform={perform}
+                        actor={actor}
                         mode="registered"
                       />
                     ) : (
@@ -709,6 +711,7 @@ export default function RegistrationApp({
                       role={directoryRole}
                       setRole={setDirectoryRole}
                       perform={perform}
+                      actor={actor}
                       mode="original"
                     />
                   )}
@@ -717,6 +720,7 @@ export default function RegistrationApp({
                       records={scoped.filter((r) => r.status === "unclaimed")}
                       state={state}
                       perform={perform}
+                      actor={actor}
                       office={office}
                       canEdit={Number(year) === state.year}
                     />
@@ -725,6 +729,8 @@ export default function RegistrationApp({
                     <BishopApprovals
                       records={scoped}
                       directory={state.directory || []}
+                      state={state}
+                      actor={actor}
                       perform={perform}
                       canEdit={Number(year) === state.year}
                     />
@@ -2275,7 +2281,7 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
 }
 const directoryHeading = (role) =>
   `Directory · ${role === "bishop" ? "Bishops" : "Pastors"} Roll of Good Standing`;
-function Directory({ state, year, role, setRole, perform, mode = "original" }) {
+function Directory({ state, year, role, setRole, perform, actor, mode = "original" }) {
   const [filter, setFilter] = useState({
       q: "",
       org: "",
@@ -2283,7 +2289,7 @@ function Directory({ state, year, role, setRole, perform, mode = "original" }) {
       state: "",
     }),
     [limit, setLimit] = useState(PAGE),
-    [selected, setSelected] = useState(null);
+    [selectedId, setSelectedId] = useState(null);
   const all = useMemo(() => {
     const everyone = directoryPeople(state, people, year);
     // The registered view is what the public roll counts: people confirmed this year.
@@ -2291,6 +2297,9 @@ function Directory({ state, year, role, setRole, perform, mode = "original" }) {
       ? everyone.filter((p) => p.registration?.status === "confirmed")
       : everyone;
   }, [state, year, mode]);
+  // The open record follows the live list, so office edits show at once and a deleted record closes.
+  const selected = selectedId ? all.find((p) => p.id === selectedId) || null : null;
+  const setSelected = (p) => setSelectedId(p ? p.id : null);
   const scope = useMemo(
     () => all.filter((p) => personMatches(p, filter)),
     [all, filter],
@@ -2323,8 +2332,21 @@ function Directory({ state, year, role, setRole, perform, mode = "original" }) {
         (ids.has(q.id) || (q.registration?.status === "confirmed" && keys.has(q.registration.data.bishopId))),
     );
   };
+  const [adding, setAdding] = useState(false);
   return (
     <>
+      {perform && (
+        <div className="reg-office-bar">
+          <button className="reg-secondary" onClick={() => setAdding(true)}>
+            {mode === "registered" ? "+ Add a person to the roll" : "+ Add a record to the original data"}
+          </button>
+        </div>
+      )}
+      {adding && (
+        <Dialog title={mode === "registered" ? "Add a person to the roll" : "Add a record to the original data"} onClose={() => setAdding(false)}>
+          <AddPersonForm state={state} mode={mode} onDone={() => setAdding(false)} perform={perform} />
+        </Dialog>
+      )}
       <div className="reg-stats">
         {[
           ["Bishops", scope.filter((p) => p.role === "bishop").length],
@@ -2388,13 +2410,15 @@ function Directory({ state, year, role, setRole, perform, mode = "original" }) {
             under={linkedPastors(selected)}
             onOpen={setSelected}
             perform={perform}
+            state={state}
+            actor={actor}
           />
         </Dialog>
       )}
     </>
   );
 }
-function RecordDetails({ person: p, under = [], onOpen, perform }) {
+function RecordDetails({ person: p, under = [], onOpen, perform, state, actor }) {
   const changed = (field) =>
     p.recorded && p.recorded[field] && p.recorded[field] !== p[field];
   const r = p.registration;
@@ -2501,7 +2525,187 @@ function RecordDetails({ person: p, under = [], onOpen, perform }) {
       {p.role === "bishop" && (
         <PastorsUnder bishop={p} extra={under} onOpen={onOpen} dots />
       )}
+      {perform && state && (p.registration
+        ? <OfficeEditor registration={p.registration} state={state} perform={perform} actor={actor} />
+        : <ReferenceEditor person={p} state={state} perform={perform} />)}
     </>
+  );
+}
+// ---- Office editing ----------------------------------------------------
+// Every detail of a registration is editable by the office; each save is one
+// `officeEdit` action and lands in History with what changed.
+function OfficeEditor({ registration: r, state, perform, actor }) {
+  const [open, setOpen] = useState(false),
+    [form, setForm] = useState(null),
+    [note, setNote] = useState(""),
+    [confirmDelete, setConfirmDelete] = useState(false),
+    [busyPhoto, setBusyPhoto] = useState(false);
+  const catalog = state.catalog || catalogOf(state);
+  const d = r.data;
+  const begin = () => { setForm({ firstName: d.firstName || "", lastName: d.lastName || "", gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", phone: d.phone || "", dob: d.dob || "", country: d.country || "", city: d.city || "", email: d.email || "", bishopId: d.bishopId || "", role: d.role }); setOpen(true); };
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
+  const save = () => perform("officeEdit", { userId: r.userId, data: form }, "Details updated.").then((ok) => ok && setOpen(false));
+  const statuses = d.role === "bishop" ? ["confirmed", "pending", "denied"] : ["confirmed", "unclaimed", "removed"];
+  const bishops = state.bishops || [];
+  return (
+    <section className="reg-office-editor">
+      <h3>Office tools</h3>
+      <div className="reg-office-actions">
+        <button type="button" className="reg-secondary" onClick={() => (open ? setOpen(false) : begin())}>{open ? "Close editor" : "Edit details"}</button>
+        <label className={`reg-secondary reg-file-button ${busyPhoto ? "busy" : ""}`}>
+          {busyPhoto ? "Uploading…" : "Replace photo"}
+          <input type="file" accept="image/jpeg,image/png,image/webp" disabled={busyPhoto} onChange={(e) => {
+            const file = e.target.files?.[0]; e.target.value = "";
+            if (!file) return;
+            setBusyPhoto(true);
+            api.upload(actor, file, "portrait").then((key) => perform("officeEdit", { userId: r.userId, data: { photo: key } }, "Photo replaced.")).finally(() => setBusyPhoto(false));
+          }} />
+        </label>
+        <button type="button" className="reg-secondary" onClick={() => perform("setVisibility", { userId: r.userId, hidden: !r.hidden }, r.hidden ? "Shown on the public roll again." : "Hidden from the public roll.")}>
+          {r.hidden ? "Show on public roll" : "Hide from public roll"}
+        </button>
+        {r.payment === "verified" ? (
+          r.paymentMethod !== "paystack" && <button type="button" className="reg-secondary" onClick={() => perform("markPaid", { userId: r.userId, paid: false }, "Marked unpaid.")}>Mark unpaid</button>
+        ) : (
+          <button type="button" className="reg-secondary" onClick={() => perform("markPaid", { userId: r.userId, paid: true, note: note || "Received by the office" }, "Marked as paid.")}>Mark paid (other means)</button>
+        )}
+      </div>
+      <div className="reg-office-actions">
+        <label className="reg-inline">Status
+          <select value={r.status} onChange={(e) => perform("setStatus", { userId: r.userId, status: e.target.value }, `Status set to ${statusLabel[e.target.value] || e.target.value}.`)}>
+            {statuses.map((x) => <option key={x} value={x}>{statusLabel[x] || x}</option>)}
+          </select>
+        </label>
+        {r.payment !== "verified" && <input className="reg-inline-input" placeholder="Payment note (e.g. cash, 12 Oct)" value={note} onChange={(e) => setNote(e.target.value)} />}
+        {!confirmDelete ? (
+          <button type="button" className="reg-text danger" onClick={() => setConfirmDelete(true)}>Delete this registration</button>
+        ) : (
+          <span className="reg-confirm-inline">Delete {d.name}’s {r.year} registration? Their account stays.
+            <button type="button" className="reg-secondary danger" onClick={() => perform("deleteRegistration", { userId: r.userId }, "Registration deleted.")}>Yes, delete</button>
+            <button type="button" className="reg-text" onClick={() => setConfirmDelete(false)}>Keep</button>
+          </span>
+        )}
+      </div>
+      {open && form && (
+        <div className="reg-fields reg-office-form">
+          <Field label="Ministerial category"><select value={form.role} onChange={(e) => set("role", e.target.value)}><option value="bishop">Bishop</option><option value="pastor">Pastor</option></select></Field>
+          <Field label="Organization"><select value={form.organization} onChange={(e) => set("organization", e.target.value)}><option value="">Select</option>{catalog.organizations.map((o) => <option key={o} value={o}>{orgLabel(o)}</option>)}</select></Field>
+          <Field label="First name"><input value={form.firstName} onChange={(e) => set("firstName", e.target.value)} /></Field>
+          <Field label="Last name"><input value={form.lastName} onChange={(e) => set("lastName", e.target.value)} /></Field>
+          <Field label="Gender"><select value={form.gender} onChange={(e) => set("gender", e.target.value)}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></Field>
+          <Field label="Email address"><input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} /></Field>
+          <Field label="WhatsApp number"><input value={form.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
+          <Field label="Date of birth"><input type="date" value={form.dob} onChange={(e) => set("dob", e.target.value)} /></Field>
+          {(catalog.denominations[form.organization] || []).length > 0 && (
+            <Field label="Denomination"><select value={form.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{catalog.denominations[form.organization].map((x) => <option key={x}>{x}</option>)}</select></Field>
+          )}
+          <Field label="Country"><input value={form.country} onChange={(e) => set("country", e.target.value)} /></Field>
+          <Field label="City"><input value={form.city} onChange={(e) => set("city", e.target.value)} /></Field>
+          {form.role === "pastor" && (
+            <Field label="Bishop"><select value={form.bishopId} onChange={(e) => set("bishopId", e.target.value)}><option value="">None</option>{bishops.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></Field>
+          )}
+          <div className="reg-form-actions wide">
+            <button type="button" className="reg-secondary" onClick={() => setOpen(false)}>Cancel</button>
+            <button type="button" className="reg-primary" onClick={save}>Save changes</button>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+// Corrections to a record from the original data: fields, hide/show, delete/restore.
+function ReferenceEditor({ person: p, state, perform }) {
+  const [open, setOpen] = useState(false),
+    [form, setForm] = useState(null);
+  const hidden = (state.hidden || []).includes(p.id), deleted = Boolean((state.overrides || {})[p.id]?.deleted);
+  const begin = () => { setForm(Object.fromEntries(REFERENCE_FIELDS.map((f) => [f, p[f] || ""]))); setOpen(true); };
+  return (
+    <section className="reg-office-editor">
+      <h3>Office tools · original record</h3>
+      <div className="reg-office-actions">
+        <button type="button" className="reg-secondary" onClick={() => (open ? setOpen(false) : begin())}>{open ? "Close editor" : "Edit record"}</button>
+        <button type="button" className="reg-secondary" onClick={() => perform("hideReference", { referenceId: p.id, hidden: !hidden }, hidden ? "Shown on the public roll again." : "Hidden from the public roll.")}>{hidden ? "Show on public roll" : "Hide from public roll"}</button>
+        <button type="button" className={`reg-secondary ${deleted ? "" : "danger"}`} onClick={() => perform("deleteReference", { referenceId: p.id, deleted: !deleted }, deleted ? "Record restored." : "Record deleted from the directory.")}>{deleted ? "Restore record" : "Delete record"}</button>
+      </div>
+      {open && form && (
+        <div className="reg-fields reg-office-form">
+          {REFERENCE_FIELDS.map((f) => (
+            <Field key={f} label={{ name: "Full name", title: "Title", organization: "Organization", denomination: "Denomination", city: "City", country: "Country", bishop: "Bishop (as written on their record)", branch: "Branch" }[f]}>
+              <input value={form[f]} onChange={(e) => setForm({ ...form, [f]: e.target.value })} />
+            </Field>
+          ))}
+          <div className="reg-form-actions wide">
+            <button type="button" className="reg-secondary" onClick={() => setOpen(false)}>Cancel</button>
+            <button type="button" className="reg-primary" onClick={() => perform("editReference", { referenceId: p.id, fields: form }, "Record updated.").then((ok) => ok && setOpen(false))}>Save changes</button>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+// A person added by the office: straight onto this year's roll, or into the original data.
+function AddPersonForm({ state, mode, perform, onDone }) {
+  const catalog = state.catalog || catalogOf(state);
+  const [f, setF] = useState({ role: "pastor", firstName: "", lastName: "", gender: "", organization: catalog.organizations[0] || "", denomination: "", city: "", country: "", phone: "", email: "", dob: "", bishopId: "", bishop: "", title: "" });
+  const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
+  const submit = () => {
+    if (mode === "registered") return perform("addPerson", { data: f }, "Added to the roll.").then((ok) => ok && onDone());
+    return perform("addReference", { fields: { role: f.role, name: `${f.firstName} ${f.lastName}`.trim(), title: f.title, organization: f.organization, denomination: f.denomination, city: f.city, country: f.country, bishop: f.bishop } }, "Added to the original data.").then((ok) => ok && onDone());
+  };
+  return (
+    <div className="reg-fields reg-office-form">
+      <Field label="Ministerial category"><select value={f.role} onChange={(e) => set("role", e.target.value)}><option value="bishop">Bishop</option><option value="pastor">Pastor</option></select></Field>
+      <Field label="Organization"><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{orgLabel(o)}</option>)}</select></Field>
+      <Field label="First name"><input value={f.firstName} onChange={(e) => set("firstName", e.target.value)} /></Field>
+      <Field label="Last name"><input value={f.lastName} onChange={(e) => set("lastName", e.target.value)} /></Field>
+      {mode === "registered" && <Field label="Gender"><select value={f.gender} onChange={(e) => set("gender", e.target.value)}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></Field>}
+      {(catalog.denominations[f.organization] || []).length > 0 && (
+        <Field label="Denomination"><select value={f.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{catalog.denominations[f.organization].map((x) => <option key={x}>{x}</option>)}</select></Field>
+      )}
+      <Field label="Country"><input value={f.country} onChange={(e) => set("country", e.target.value)} /></Field>
+      <Field label="City"><input value={f.city} onChange={(e) => set("city", e.target.value)} /></Field>
+      {mode === "registered" ? (
+        <>
+          <Field label="Email (optional)"><input type="email" value={f.email} onChange={(e) => set("email", e.target.value)} /></Field>
+          <Field label="WhatsApp number (optional)"><input value={f.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
+          <Field label="Date of birth (optional)"><input type="date" value={f.dob} onChange={(e) => set("dob", e.target.value)} /></Field>
+          {f.role === "pastor" && <Field label="Bishop (optional)"><select value={f.bishopId} onChange={(e) => set("bishopId", e.target.value)}><option value="">None</option>{(state.bishops || []).map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></Field>}
+        </>
+      ) : (
+        <>
+          <Field label="Title (optional)"><input value={f.title} onChange={(e) => set("title", e.target.value)} placeholder={f.role === "bishop" ? "Bishop" : "Pastor"} /></Field>
+          {f.role === "pastor" && <Field label="Bishop’s name (optional)"><input value={f.bishop} onChange={(e) => set("bishop", e.target.value)} /></Field>}
+        </>
+      )}
+      <div className="reg-form-actions wide">
+        <button type="button" className="reg-secondary" onClick={onDone}>Cancel</button>
+        <button type="button" className="reg-primary" onClick={submit}>Add</button>
+      </div>
+    </div>
+  );
+}
+// A list row's name, date of birth and (office) owning bishop.
+function RosterRowEditor({ row, state, office, perform, onDone }) {
+  const [name, setName] = useState(row.name), [dob, setDob] = useState(row.dob || ""), [bishopId, setBishopId] = useState("");
+  const owner = (state.bishops || []).find((b) => b.accountId === row.bishopId);
+  return (
+    <div className="reg-fields reg-office-form">
+      <Field label="Full name"><input value={name} onChange={(e) => setName(e.target.value)} /></Field>
+      <Field label="Date of birth"><input type="date" value={dob} onChange={(e) => setDob(e.target.value)} /></Field>
+      {office && (
+        <Field label="Move to another bishop" hint={owner ? `Currently under ${owner.name}.` : undefined}>
+          <select value={bishopId} onChange={(e) => setBishopId(e.target.value)}><option value="">Keep current bishop</option>{(state.bishops || []).filter((b) => b.accountId !== row.bishopId).map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select>
+        </Field>
+      )}
+      <div className="reg-form-actions wide">
+        <button type="button" className="reg-secondary" onClick={onDone}>Cancel</button>
+        <button type="button" className="reg-primary" onClick={async () => {
+          const ok = await perform("editRoster", { id: row.id, name, dob }, "List entry updated.");
+          if (ok && bishopId) await perform("moveRoster", { id: row.id, bishopId }, "Pastor moved to the other bishop’s list.");
+          if (ok) onDone();
+        }}>Save</button>
+      </div>
+    </div>
   );
 }
 // Members search the published roster: portrait, name, title, country,
@@ -2816,7 +3020,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
     </>
   );
 }
-function ReviewQueue({ records, state, perform, office, canEdit }) {
+function ReviewQueue({ records, state, perform, actor, office, canEdit }) {
   const [filter, setFilter] = useState({ q: "", org: "" }),
     [selectedId, setSelectedId] = useState(null),
     [bishopId, setBishopId] = useState(""),
@@ -2905,6 +3109,7 @@ function ReviewQueue({ records, state, perform, office, canEdit }) {
           onClose={() => setSelectedId(null)}
         >
           <ProfileDetails record={selected} directory={state.directory} />
+          {office && <OfficeEditor registration={selected} state={state} perform={perform} actor={actor} />}
           {selectedHints.length > 0 && (
             <div className="reg-status-message pending">
               <b>The list nearly matches</b>
@@ -3020,7 +3225,7 @@ const REVIEW_REASONS = [
 ];
 // Bishops waiting on the office, plus everyone (bishops and pastors) already
 // approved this year. Approved rows open read-only.
-function BishopApprovals({ records, directory = [], perform, canEdit }) {
+function BishopApprovals({ records, directory = [], state, actor, perform, canEdit }) {
   const [selectedId, setSelectedId] = useState(null),
     [ref, setRef] = useState(""),
     [confirmed, setConfirmed] = useState(false),
@@ -3102,6 +3307,7 @@ function BishopApprovals({ records, directory = [], perform, canEdit }) {
       {selected && !reviewing && (
         <Dialog title={`${titleFor(selected.data)} ${selected.data.name}`} onClose={() => setSelectedId(null)}>
           <ProfileDetails record={selected} directory={directory} />
+          {state && <OfficeEditor registration={selected} state={state} perform={perform} actor={actor} />}
         </Dialog>
       )}
       {reviewing && (
@@ -3110,6 +3316,7 @@ function BishopApprovals({ records, directory = [], perform, canEdit }) {
           onClose={() => setSelectedId(null)}
         >
           <ProfileDetails record={selected} />
+          {state && <OfficeEditor registration={selected} state={state} perform={perform} actor={actor} />}
           {(() => {
             const suggestions = bishopSuggestionsFor(selected);
             const chosen = index.byId.get(ref);
@@ -3517,6 +3724,7 @@ function Roster({ state, year, actor, office, perform }) {
     [q, setQ] = useState(""),
     [inputError, setInputError] = useState(""),
     [moreSlots, setMoreSlots] = useState(() => blankSlots(5)),
+    [editRow, setEditRow] = useState(null),
     [remove, setRemove] = useState(null),
     [reason, setReason] = useState("Transferred"),
     [note, setNote] = useState(""),
@@ -3625,7 +3833,10 @@ function Roster({ state, year, actor, office, perform }) {
                     )}
                     {r.note && <small>{r.note}</small>}
                   </td>
-                  <td>
+                  <td className="reg-row-actions">
+                    {year === state.year && (
+                      <button className="reg-text" onClick={() => setEditRow(r)}>Edit</button>
+                    )}
                     {r.status === "active" && year === state.year && (
                       <button
                         className="reg-text danger"
@@ -3637,6 +3848,9 @@ function Roster({ state, year, actor, office, perform }) {
                       >
                         Remove
                       </button>
+                    )}
+                    {r.status !== "active" && year === state.year && (
+                      <button className="reg-text" onClick={() => perform("restoreRoster", { id: r.id }, `${r.name} is back on the list.`)}>Restore</button>
                     )}
                   </td>
                 </tr>
@@ -3701,6 +3915,11 @@ function Roster({ state, year, actor, office, perform }) {
             </button>
           )}
         </section>
+      )}
+      {editRow && (
+        <Dialog title={`Edit ${editRow.name}`} onClose={() => setEditRow(null)}>
+          <RosterRowEditor row={editRow} state={state} office={office} perform={perform} onDone={() => setEditRow(null)} />
+        </Dialog>
       )}
       {remove && (
         <Dialog title={`Remove ${remove.name}`} onClose={() => setRemove(null)}>

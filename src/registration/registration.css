@@ -3070,3 +3070,111 @@ input[type="date"] {
     display: none;
   }
 }
+
+/* Office editing */
+.reg-office-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 14px;
+}
+.reg-office-editor {
+  margin-top: 22px;
+  padding: 16px 18px;
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--panel-soft) 60%, transparent);
+}
+.reg-office-editor h3 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.reg-office-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.reg-office-actions .reg-secondary {
+  padding: 8px 14px;
+  font-size: 13px;
+}
+.reg-file-button {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+.reg-file-button input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.reg-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.reg-inline select,
+.reg-inline-input {
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 13px;
+}
+.reg-confirm-inline {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+}
+.reg-office-form {
+  margin-top: 8px;
+}
+.reg-row-actions {
+  white-space: nowrap;
+}
+.reg-row-actions .reg-text {
+  margin-right: 10px;
+}
+.reg-catalog-org {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 0 0 12px;
+}
+.reg-catalog-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.reg-catalog-head .reg-text {
+  margin-left: auto;
+}
+.reg-catalog-list {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.reg-catalog-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+}

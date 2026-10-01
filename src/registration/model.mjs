@@ -801,7 +801,7 @@ export function applyAction(
     const merged = { ...r.data, ...incoming };
     if (!["bishop", "pastor"].includes(merged.role)) throw Error("Choose Bishop or Pastor.");
     const data = validateProfile(merged, merged.email || r.data.email, { draft: true, catalog });
-    if (incoming.phone !== undefined && !data.phone) throw Error("Enter the WhatsApp number with its country code.");
+    if (incoming.phone && !data.phone) throw Error("Enter the WhatsApp number with its country code.");
     detail = Object.fromEntries(Object.keys(incoming).filter((k) => JSON.stringify(r.data[k] ?? "") !== JSON.stringify(data[k] ?? "")).map((k) => [k, [r.data[k] ?? "", data[k] ?? ""]]));
     r.data = { ...data, consentedAt: r.data.consentedAt, photoConfirmed: true, referenceId: data.referenceId || r.data.referenceId || "", bishopId: data.bishopId || r.data.bishopId || "" };
     r.updatedAt = now;

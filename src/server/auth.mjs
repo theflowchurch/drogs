@@ -1,3 +1,4 @@
+import { brandedMail } from './mail.mjs';
 import { createHmac, randomBytes, randomInt, randomUUID, timingSafeEqual } from 'node:crypto';
 import { transaction } from './database.mjs';
 export class HttpError extends Error { constructor(status, message) { super(message); this.status = status; } }
@@ -91,8 +92,9 @@ export function createAuth({ pool, config, mailer }) {
       const hash = digest(config.secret, `otp:${email}:${token}`);
       await pool.execute('INSERT INTO dr_otp (email,code_hash,expires_at,attempts) VALUES (?,?,?,0) ON DUPLICATE KEY UPDATE code_hash=VALUES(code_hash),expires_at=VALUES(expires_at),attempts=0', [email, hash, Date.now() + 600000]);
       try {
-        await mailer.sendMail({ from: config.from, to: email, subject: 'Your Kuriake Castle sign-in code',
-          text: `Your Kuriake Castle sign-in code is ${token}. It expires in 10 minutes.\n\nUse it at ${origin}. If you did not request this code, you can ignore this email.` });
+        await mailer.sendMail(brandedMail({ from: config.from, to: email, subject: 'Your Kuriake Castle sign-in code',
+          text: `Your Kuriake Castle sign-in code is ${token}. It expires in 10 minutes.\n\nUse it at ${origin}. If you did not request this code, you can ignore this email.`,
+          html: `<p style="margin:0 0 6px;color:#6a7283">Your sign-in code</p><p style="margin:0 0 18px;font:700 36px/1 -apple-system,Arial,sans-serif;letter-spacing:6px;color:#13324c">${token}</p><p style="margin:0 0 12px">It expires in 10 minutes. Use it at <a href="${origin}" style="color:#1e3a8a">${origin.replace(/^https?:\/\//, '')}</a>.</p><p style="margin:0;color:#6a7283;font-size:13px">If you did not request this code, you can ignore this email.</p>` }));
       } catch {
         await pool.execute('DELETE FROM dr_otp WHERE email=? AND code_hash=?', [email, hash]);
         throw new HttpError(503, 'Unable to send your code. Please try again shortly.');

@@ -4,6 +4,7 @@ import { createSupport } from './support.mjs';
 import { applySettings, bootstrapSettings, describeSettings, officeMembers, readSettings, writeSettings } from './settings.mjs';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { brandedMail } from './mail.mjs';
 import { applyAction, visibleState, publicRoll, attireExample } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, rateLimit } from './auth.mjs';
@@ -206,9 +207,9 @@ ${photoIssue ? `<p><b>Photo Requirement</b><br>The photo submitted does not meet
 ${others.length ? `<p><b>${photoIssue ? 'Other Updates' : 'Updates Needed'}</b></p><ul>${others.map(r => `<li>${esc(r)}</li>`).join('')}</ul>` : ''}
 <p>${esc(closing).replace(/(https?:\/\/\S+?)(\s|$)/, '<a href="$1">$1</a>$2').replace(/\n\n/g, '</p><p>')}</p>
 <p>Blessings,<br>Kuriake Castle Office</p></div>`;
-          mailer.sendMail({ from: config.from, to: reviewed.data.email,
+          mailer.sendMail(brandedMail({ from: config.from, to: reviewed.data.email,
             subject: resubmit ? `Action required: your ${role} registration is not confirmed yet` : `Your Kuriake Castle ${role} registration was not approved`,
-            text, html, attachments })
+            text, html, attachments }))
             .catch(error => logger.error('Review mail failed', { type: error.name, code: error.code }));
         }
         return json({ ok: true });
