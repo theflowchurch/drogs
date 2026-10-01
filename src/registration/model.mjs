@@ -14,6 +14,9 @@ export const orgLabel = (key) => ORGANIZATION_LABEL[key] || key || "";
 // red, United Denominations yellow), men by role (bishop red jacket, pastor
 // clerical collar; a dark suit and tie is the accepted alternative).
 export function attireExample({ role, gender, organization } = {}) {
+  // Women bishops, whichever organization: the office's reference portrait (red jacket and hat).
+  if (gender === "female" && role === "bishop")
+    return { file: "assets/brand/female-bishop-example.jpg", caption: "Required: official attire for women bishops", alt: "Required attire example for women bishops" };
   if (gender === "female")
     return organization === "United Denominations"
       ? { file: "assets/brand/female-united-denominations-example.jpg", caption: "Required: official attire (United Denominations)", alt: "Required attire example for women in the United Denominations" }

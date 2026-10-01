@@ -1811,7 +1811,7 @@ function RegistrationForm({
                           ))}
                         </div>
                         <button type="button" className="reg-text" onClick={() => setDismissed(true)}>
-                          None of these are me
+                          {candidates.length === 1 ? "This is not me" : "None of these are me"}
                         </button>
                       </>
                     )}
