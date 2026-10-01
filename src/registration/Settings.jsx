@@ -23,7 +23,6 @@ function SignupControl({ state, perform }) {
   const [notes, setNotes] = useState({ general: all.notice, appointments: all.appointments.notice });
   useEffect(() => setNotes({ general: all.notice, appointments: all.appointments.notice }), [all.notice, all.appointments.notice]);
   return <Category title="Registration" summary={`General sign-up ${all.closed ? 'paused' : 'open'} · Appointments ${all.appointments.closed ? 'paused' : 'open'}`}>
-    <p>Two doors, paused separately. A paused door shows its message to new people and accepts no new registrations; everyone already registered is unaffected.</p>
     {doors.map(d => <div key={d.scope} className="reg-door-control">
       <h3>{d.title} <small>{d.path} · {d.what}</small></h3>
       <p>Currently <b>{d.current.closed ? 'paused' : 'open'}</b>.</p>
@@ -89,12 +88,10 @@ function Structure({ state, perform }) {
   const saveLists = (label = 'Save lists') => <div className="reg-form-actions reg-save-row"><small>{dirty ? 'Unsaved changes.' : 'Saved.'}</small><button type="button" className="reg-primary" disabled={!dirty} onClick={() => perform('setCatalog', { catalog: cat }, 'Organizations and denominations saved.')}>{label}</button></div>;
   return <>
   <Category title="Groups" summary={`${groupCount} groups under UD – OLGC${dirty ? ' · unsaved changes' : ''}`}>
-    <p>UD – OLGC is organised in groups (UD Ghana, UD Africa, United Islands…); tap a card to see its denomination/country entries and drag one onto another card to move it. First Love, FLOW and Healing Jesus Campaign have no groups and list their denominations directly. The office directory and the members’ directory can filter by group; the public page does not show groups.</p>
     {cat.organizations.map(o => <div key={o} className="reg-group-org">
       <h3>{officeOrg(o)}</h3>
       {!Object.values(groups).some(g => g.organization === o) ? (
         <>
-          <p className="reg-small">No groups: the denominations are listed directly.</p>
           <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(d => <li key={d}><span>{d}</span></li>)}</ul>
           {!(cat.denominations[o] || []).length && <p className="reg-small reg-catalog-empty">No denominations listed.</p>}
         </>
@@ -124,7 +121,6 @@ function Structure({ state, perform }) {
   </Category>
   <Category title="Organizations and denominations" summary={`${cat.organizations.length} organizations · ${denCount} denominations${dirty ? ' · unsaved changes' : ''}`}>
     {saveLists()}
-    <p>What the sign-up form offers. Add a new fellowship or grouping here and it appears on the form at once. An organization with no denominations hides the denomination field. Drag a denomination onto another organization to move it there.</p>
     {cat.organizations.map(o => <div key={o} className={`reg-catalog-org ${over === o ? 'over' : ''}`} {...dropProps(o)}>
       <div className="reg-catalog-head"><b>{officeOrg(o)}</b>{dirty && <button type="button" className="reg-secondary reg-inline-save" onClick={() => perform('setCatalog', { catalog: cat }, 'Organizations and denominations saved.')}>Save</button>}<button type="button" className="reg-text danger" onClick={() => removeOrg(o)}>Remove organization</button></div>
       <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => <li key={v} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ from: o, den: v })); }}><span>{v}</span><button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button></li>)}</ul>
@@ -135,7 +131,6 @@ function Structure({ state, perform }) {
     {saveLists()}
   </Category>
   <Category title="Fees" summary={`Bishop $${feesOf(state).bishop} · Pastor $${feesOf(state).pastor}`}>
-    <p>Whole US dollars. Applies to registrations submitted from now on.</p>
     <div className="reg-fields">
       <label className="reg-field"><span>Bishop</span><input type="number" min="1" step="1" value={fees.bishop} onChange={e => setFees({ ...fees, bishop: Number(e.target.value) })} /></label>
       <label className="reg-field"><span>Pastor</span><input type="number" min="1" step="1" value={fees.pastor} onChange={e => setFees({ ...fees, pastor: Number(e.target.value) })} /></label>
@@ -169,7 +164,6 @@ export default function Settings({ run, state, perform }) {
   {state && perform && <SignupControl state={state} perform={perform} />}
   {state && perform && <Structure state={state} perform={perform} />}
   <Category title="Links to share" summary={`${links.length} links`}>
-    <p>Send people the right door. Office access itself is granted under Accounts; anyone you add there signs in at the office link.</p>
     <ul className="reg-admin-list">{links.map(([label, path]) => <li key={path}><span><b>{label}</b><br /><a href={origin + path}>{origin + path}</a></span><button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button></li>)}</ul>
   </Category>
   <form className="reg-settings-form" onSubmit={event => {
@@ -180,7 +174,6 @@ export default function Settings({ run, state, perform }) {
     }, 'Settings saved and in effect.');
   }}>
     {CATEGORIES.map(([title, blurb, keys]) => <Category key={title} title={title} summary={`${blurb}${setCount(keys) ? ` · ${setCount(keys)}` : ''}`}>
-      <p className="reg-small">Leave a field blank to keep its current value; type a single space to clear it.</p>
       {settings.filter(s => keys.includes(s.key)).map(field)}
       {title === 'Telegram' && <>
         <button type="button" className="reg-secondary" disabled={!settings.find(s => s.key === 'TELEGRAM_CHAT_ID')?.set} onClick={() => run(async () => { const r = await api.telegramTest(); setTelegramResult(`Test message posted to “${r.chat}”.`); }, 'Telegram is connected.')}>Send a Telegram test message</button>
