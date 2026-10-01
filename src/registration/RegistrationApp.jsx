@@ -2603,10 +2603,67 @@ function PublicRecord({ person: p, onOpen, from }) {
 // The public directory: a search bar, then two doors — Bishops and Pastors with
 // their totals — before any faces are shown. Lists the existing roster until the
 // office switches the source to this year's roll.
+// The open directory at /directory/: two alphabetical lists with small square
+// photos, bishops left and pastors right. On a phone a toggle shows one at a
+// time. Rows are plain: no dialogs, no pastors-under-bishop.
+function PublicList({ list }) {
+  const [q, setQ] = useState(""),
+    [role, setRole] = useState("bishop");
+  const term = normalName(q);
+  const matches = (p) =>
+    !term || normalName(`${p.name} ${p.city || ""} ${p.country || ""} ${p.denomination || ""}`).includes(term);
+  const column = (r) => list.filter((p) => p.role === r && matches(p)).sort((a, b) => a.name.localeCompare(b.name));
+  const columns = [["bishop", "Bishops"], ["pastor", "Pastors"]].map(([r, label]) => [r, label, column(r)]);
+  return (
+    <section className="reg-roll">
+      <h1 className="reg-doors-title">Roll of Good Standing</h1>
+      <input
+        type="search"
+        className="reg-doors-search"
+        aria-label="Search people"
+        placeholder="Search by name, city or denomination"
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+      />
+      <div className="reg-switch reg-roll-switch" role="group" aria-label="Bishops or pastors">
+        {columns.map(([r, label, people]) => (
+          <button key={r} aria-pressed={role === r} className={role === r ? "active" : ""} onClick={() => setRole(r)}>
+            {label} <strong>{people.length.toLocaleString()}</strong>
+          </button>
+        ))}
+      </div>
+      <div className="reg-roll-columns">
+        {columns.map(([r, label, people]) => (
+          <div key={r} className={`reg-roll-column ${role === r ? "shown" : ""}`}>
+            <h2>
+              {label} <b>{people.length.toLocaleString()}</b>
+            </h2>
+            {people.length ? (
+              <ol>
+                {people.map((p) => (
+                  <li key={p.id}>
+                    <Portrait person={p} className="reg-roll-photo" />
+                    <div>
+                      <span className="reg-roll-name">{p.name}</span>
+                      <small>{[p.denomination, [p.city, p.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="reg-small">{term ? "No one matches." : "Nobody listed yet."}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 function PublicDirectory({ data, embedded = false }) {
   const list = data.source === "roll" ? data.roll : publicPeople;
   const [role, setRole] = useState(null),
     [q, setQ] = useState("");
+  if (!embedded) return <PublicList list={list} />;
   const counts = {
     bishop: list.filter((p) => p.role === "bishop").length,
     pastor: list.filter((p) => p.role === "pastor").length,

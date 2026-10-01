@@ -2955,3 +2955,106 @@ input[type="date"] {
     max-width: 260px;
   }
 }
+
+/* Public roll: two columns of small square photos with name, denomination and place */
+.reg-roll {
+  padding: 44px max(24px, 4vw) 60px;
+  display: grid;
+  gap: 22px;
+  justify-items: center;
+}
+.reg-roll .reg-doors-search {
+  margin: 0;
+}
+.reg-roll-switch {
+  display: none;
+}
+.reg-roll-columns {
+  width: 100%;
+  max-width: 1180px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+.reg-roll-column {
+  background: rgba(255, 255, 255, 0.6);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+:root[data-theme="dark"] .reg-roll-column {
+  background: rgba(19, 26, 39, 0.6);
+}
+.reg-roll-column h2 {
+  margin: 0 0 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-size: clamp(30px, 3.2vw, 44px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1;
+}
+.reg-roll-column h2 b {
+  font-size: clamp(26px, 2.8vw, 38px);
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -1px;
+}
+.reg-roll-column ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.reg-roll-column li {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.reg-roll-column li:last-child {
+  border-bottom: 0;
+}
+.reg-roll-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  object-position: center 20%;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  background: var(--panel-soft);
+}
+.reg-roll-name {
+  display: block;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 15px;
+}
+.reg-roll-column small {
+  color: var(--muted);
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .reg-roll-switch {
+    display: inline-flex;
+  }
+  .reg-roll-columns {
+    grid-template-columns: 1fr;
+  }
+  .reg-roll-column {
+    display: none;
+  }
+  .reg-roll-column.shown {
+    display: block;
+  }
+  .reg-roll-column h2 {
+    display: none;
+  }
+}
