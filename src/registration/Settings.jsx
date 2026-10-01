@@ -25,13 +25,44 @@ function SignupControl({ state, perform }) {
 function Structure({ state, perform }) {
   const base = state ? catalogOf(state) : null;
   const [cat, setCat] = useState(null), [fees, setFees] = useState(null), [newOrg, setNewOrg] = useState(''), [newDen, setNewDen] = useState({}), [over, setOver] = useState(null);
+  const [newGroup, setNewGroup] = useState({ name: '', organization: '' }), [overGroup, setOverGroup] = useState(null), [openGroup, setOpenGroup] = useState(null);
   useEffect(() => { if (base && !cat) setCat(JSON.parse(JSON.stringify(base))); if (state && !fees) setFees({ ...feesOf(state) }); }, [state]);
   if (!cat || !fees) return null;
   const dirty = JSON.stringify(cat) !== JSON.stringify(base);
-  const addOrg = () => { const o = newOrg.trim(); if (!o || cat.organizations.includes(o)) return; setCat({ organizations: [...cat.organizations, o], denominations: { ...cat.denominations, [o]: [] } }); setNewOrg(''); };
-  const removeOrg = (o) => { const d = { ...cat.denominations }; delete d[o]; setCat({ organizations: cat.organizations.filter(x => x !== o), denominations: d }); };
+  const addOrg = () => { const o = newOrg.trim(); if (!o || cat.organizations.includes(o)) return; setCat({ ...cat, organizations: [...cat.organizations, o], denominations: { ...cat.denominations, [o]: [] } }); setNewOrg(''); };
+  const removeOrg = (o) => { const d = { ...cat.denominations }; delete d[o]; setCat({ ...cat, organizations: cat.organizations.filter(x => x !== o), denominations: d, groups: Object.fromEntries(Object.entries(cat.groups || {}).filter(([, g]) => g.organization !== o)) }); };
   const addDen = (o) => { const v = (newDen[o] || '').trim(); if (!v || (cat.denominations[o] || []).includes(v)) return; setCat({ ...cat, denominations: { ...cat.denominations, [o]: [...(cat.denominations[o] || []), v].sort((a, b) => a.localeCompare(b)) } }); setNewDen({ ...newDen, [o]: '' }); };
   const removeDen = (o, v) => setCat({ ...cat, denominations: { ...cat.denominations, [o]: cat.denominations[o].filter(x => x !== v) } });
+  // Groups: cards per group; denomination chips drag between groups of the same
+  // organization, or back to “Not in a group”. Adding a denomination to a group
+  // also lists it on the sign-up form for that organization.
+  const groups = cat.groups || {};
+  const normal = v => String(v || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+  const grouped = o => new Set(Object.values(groups).filter(g => g.organization === o).flatMap(g => g.denominations.map(normal)));
+  const ungrouped = o => (cat.denominations[o] || []).filter(d => !grouped(o).has(normal(d)));
+  const setGroupDens = (name, dens) => setCat({ ...cat, groups: { ...groups, [name]: { ...groups[name], denominations: dens } } });
+  const moveToGroup = (from, to, den) => {
+    if (!den || from === to) return;
+    let next = { ...groups };
+    if (from && next[from]) next = { ...next, [from]: { ...next[from], denominations: next[from].denominations.filter(x => normal(x) !== normal(den)) } };
+    let dens = { ...cat.denominations };
+    if (to && next[to]) {
+      const o = next[to].organization;
+      if (!next[to].denominations.some(x => normal(x) === normal(den))) next = { ...next, [to]: { ...next[to], denominations: [...next[to].denominations, den] } };
+      if (!(dens[o] || []).some(x => normal(x) === normal(den))) dens = { ...dens, [o]: [...(dens[o] || []), den].sort((a, b) => a.localeCompare(b)) };
+    }
+    setCat({ ...cat, groups: next, denominations: dens });
+  };
+  const addGroup = () => { const n = newGroup.name.trim(), o = newGroup.organization || cat.organizations[0]; if (!n || groups[n]) return; setCat({ ...cat, groups: { ...groups, [n]: { organization: o, denominations: [] } } }); setNewGroup({ name: '', organization: '' }); };
+  const removeGroup = (n) => { const next = { ...groups }; delete next[n]; setCat({ ...cat, groups: next }); if (openGroup === n) setOpenGroup(null); };
+  const groupDrop = (target) => ({
+    onDragOver: e => { e.preventDefault(); if (overGroup !== target) setOverGroup(target); },
+    onDragLeave: e => { if (!e.currentTarget.contains(e.relatedTarget)) setOverGroup(null); },
+    onDrop: e => { e.preventDefault(); setOverGroup(null); const { fromGroup, den } = JSON.parse(e.dataTransfer.getData('text/plain') || '{}'); if (den !== undefined) moveToGroup(fromGroup || '', target.startsWith('ungrouped:') ? '' : target, den); },
+  });
+  const chip = (den, fromGroup) => <li key={den} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ fromGroup, den })); }}><span>{den}</span>{fromGroup && <button type="button" className="reg-text danger" aria-label={`Take ${den} out of ${fromGroup}`} onClick={() => moveToGroup(fromGroup, '', den)}>×</button>}</li>;
+  const OFFICE_ORG = { 'United Denominations': 'UD – OLGC' };
+  const officeOrg = o => OFFICE_ORG[o] || orgLabel(o);
   // Drag a denomination chip onto another organization's card to move it.
   const moveDen = (from, to, v) => { if (!from || from === to || !v) return; const d = { ...cat.denominations, [from]: cat.denominations[from].filter(x => x !== v) }; d[to] = [...new Set([...(d[to] || []), v])].sort((a, b) => a.localeCompare(b)); setCat({ ...cat, denominations: d }); };
   const dropProps = (o) => ({
@@ -41,10 +72,37 @@ function Structure({ state, perform }) {
   });
   return <>
   <section className="reg-card reg-settings">
+    <h2>Groups</h2>
+    <p>Each organization’s denominations fall into groups (UD Ghana, UD Africa, United Islands…). Tap a card to see its denominations; drag a denomination onto another card to move it. The office directory and the members’ directory can filter by group; the public page does not show groups.</p>
+    {cat.organizations.map(o => <div key={o} className="reg-group-org">
+      <h3>{officeOrg(o)}</h3>
+      <div className="reg-group-grid">
+        {Object.entries(groups).filter(([, g]) => g.organization === o).map(([name, g]) => <div key={name} className={`reg-group-card ${overGroup === name ? 'over' : ''} ${openGroup === name ? 'open' : ''}`} {...groupDrop(name)}>
+          <button type="button" className="reg-group-head" onClick={() => setOpenGroup(openGroup === name ? null : name)} aria-expanded={openGroup === name}><b>{name}</b><small>{g.denominations.length} denomination{g.denominations.length === 1 ? '' : 's'}</small></button>
+          {openGroup === name && <>
+            <ul className="reg-catalog-list">{g.denominations.map(d => chip(d, name))}</ul>
+            {!g.denominations.length && <p className="reg-small reg-catalog-empty">Nothing here yet. Drop a denomination onto this card.</p>}
+            <button type="button" className="reg-text danger" onClick={() => removeGroup(name)}>Remove group</button>
+          </>}
+        </div>)}
+        <div className={`reg-group-card muted ${overGroup === `ungrouped:${o}` ? 'over' : ''} ${openGroup === `ungrouped:${o}` ? 'open' : ''}`} {...groupDrop(`ungrouped:${o}`)}>
+          <button type="button" className="reg-group-head" onClick={() => setOpenGroup(openGroup === `ungrouped:${o}` ? null : `ungrouped:${o}`)} aria-expanded={openGroup === `ungrouped:${o}`}><b>Not in a group</b><small>{ungrouped(o).length} denomination{ungrouped(o).length === 1 ? '' : 's'}</small></button>
+          {openGroup === `ungrouped:${o}` && <ul className="reg-catalog-list">{ungrouped(o).map(d => chip(d, ''))}</ul>}
+        </div>
+      </div>
+    </div>)}
+    <div className="reg-admin-add">
+      <input placeholder="New group (e.g. UD Asia)" value={newGroup.name} onChange={e => setNewGroup({ ...newGroup, name: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addGroup(); } }} />
+      <select aria-label="Organization for the new group" value={newGroup.organization || cat.organizations[0]} onChange={e => setNewGroup({ ...newGroup, organization: e.target.value })}>{cat.organizations.map(o => <option key={o} value={o}>{officeOrg(o)}</option>)}</select>
+      <button type="button" className="reg-secondary" onClick={addGroup}>Add group</button>
+    </div>
+    <div className="reg-form-actions"><small>{dirty ? 'Unsaved changes.' : 'Saved.'}</small><button type="button" className="reg-primary" disabled={!dirty} onClick={() => perform('setCatalog', { catalog: cat }, 'Groups saved.')}>Save groups</button></div>
+  </section>
+  <section className="reg-card reg-settings">
     <h2>Organizations and denominations</h2>
     <p>What the sign-up form offers. Add a new fellowship or grouping here and it appears on the form at once. An organization with no denominations hides the denomination field. Drag a denomination onto another organization to move it there.</p>
     {cat.organizations.map(o => <div key={o} className={`reg-catalog-org ${over === o ? 'over' : ''}`} {...dropProps(o)}>
-      <div className="reg-catalog-head"><b>{orgLabel(o)}</b><button type="button" className="reg-text danger" onClick={() => removeOrg(o)}>Remove organization</button></div>
+      <div className="reg-catalog-head"><b>{officeOrg(o)}</b><button type="button" className="reg-text danger" onClick={() => removeOrg(o)}>Remove organization</button></div>
       <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => <li key={v} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ from: o, den: v })); }}><span>{v}</span><button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button></li>)}</ul>
       {!(cat.denominations[o] || []).length && <p className="reg-small reg-catalog-empty">No denominations. Drop one here or add it below.</p>}
       <div className="reg-admin-add"><input placeholder="New denomination" value={newDen[o] || ''} onChange={e => setNewDen({ ...newDen, [o]: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addDen(o); } }} /><button type="button" className="reg-secondary" onClick={() => addDen(o)}>Add denomination</button></div>

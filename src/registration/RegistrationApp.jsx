@@ -581,7 +581,7 @@ export default function RegistrationApp({
         "Registration",
         ...(current && current.status !== "draft" ? ["Directory"] : []),
         ...(profile?.role === "bishop" && current && !["draft", "denied"].includes(current.status)
-          ? ["My pastors", "Unclaimed"]
+          ? ["My pastors"]
           : []),
       ];
   async function logout() {
@@ -2394,6 +2394,7 @@ function Dot({ person }) {
 }
 const personMatches = (p, f) =>
   (!f.org || p.organization === f.org) &&
+  (!f.group || p.group === f.group) &&
   (!f.denomination || p.denomination === f.denomination) &&
   (!f.country || p.country === f.country) &&
   (!f.state ||
@@ -2418,7 +2419,7 @@ function DirectoryFilters({ filter, setFilter, options }) {
         aria-label="Filter organization"
         value={filter.org}
         onChange={(e) =>
-          set({ org: e.target.value, denomination: "", country: "" })
+          set({ org: e.target.value, group: "", denomination: "", country: "" })
         }
       >
         <option value="">All organizations</option>
@@ -2426,6 +2427,18 @@ function DirectoryFilters({ filter, setFilter, options }) {
           <option key={o} value={o}>{orgLabel(o)}</option>
         ))}
       </select>
+      {"group" in filter && (
+        <select
+          aria-label="Filter group"
+          value={filter.group}
+          onChange={(e) => set({ group: e.target.value, denomination: "" })}
+        >
+          <option value="">All groups</option>
+          {options.group.map((g) => (
+            <option key={g}>{g}</option>
+          ))}
+        </select>
+      )}
       <select
         aria-label="Filter denomination"
         value={filter.denomination}
@@ -2464,12 +2477,13 @@ function DirectoryFilters({ filter, setFilter, options }) {
 }
 // Choices come from the records in view, so an organization narrows the
 // denominations and countries offered.
-const filterOptions = (list, org) => {
-  const scope = list.filter((p) => !org || p.organization === org);
+const filterOptions = (list, org, group = "") => {
+  const scope = list.filter((p) => (!org || p.organization === org) && (!group || p.group === group));
   const unique = (field, from) =>
     [...new Set(from.map((p) => p[field]).filter(Boolean))].sort();
   return {
     organization: unique("organization", list),
+    group: unique("group", scope),
     denomination: unique("denomination", scope),
     country: unique("country", scope),
   };
@@ -2559,6 +2573,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
   const [filter, setFilter] = useState({
       q: "",
       org: "",
+      group: "",
       denomination: "",
       state: "",
     }),
@@ -2585,8 +2600,8 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
   );
   useEffect(() => setLimit(pageFor(role)), [filter, role]);
   const options = useMemo(
-    () => filterOptions(all, filter.org),
-    [all, filter.org],
+    () => filterOptions(all, filter.org, filter.group),
+    [all, filter.org, filter.group],
   );
   // Pastors a bishop confirmed on this cycle's annual list.
   const linkedPastors = (bishop) => {
@@ -2939,6 +2954,7 @@ function ReferenceEditor({ person: p, state, perform, actor }) {
           <Field label="Title"><Choice value={form.title} options={TITLES} onChange={set("title")} blank={null} /></Field>
           <Field label="Organization"><Choice value={form.organization} options={catalog.organizations} onChange={set("organization")} labelOf={orgLabel} blank="Choose…" /></Field>
           <Field label="Denomination"><Choice value={form.denomination} options={denominations} onChange={set("denomination")} blank="None" /></Field>
+          <Field label="Group"><Choice value={form.group} options={Object.keys(catalog.groups || {}).filter((g) => !form.organization || catalog.groups[g].organization === form.organization)} onChange={set("group")} blank="By denomination" /></Field>
           <Field label="City"><input value={form.city} onChange={(e) => set("city")(e.target.value)} /></Field>
           <Field label="Country"><Choice value={form.country} options={countries} onChange={set("country")} blank="Choose…" /></Field>
           {p.role !== "bishop" && (
@@ -3297,6 +3313,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
   const [filter, setFilter] = useState({
       q: initialQuery,
       org: "",
+      group: "",
       denomination: "",
       country: "",
     }),
@@ -3313,8 +3330,8 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
   );
   useEffect(() => setLimit(pageFor(role)), [filter, role]);
   const options = useMemo(
-    () => filterOptions(roll, filter.org),
-    [roll, filter.org],
+    () => filterOptions(roll, filter.org, filter.group),
+    [roll, filter.org, filter.group],
   );
   return (
     <>

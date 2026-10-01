@@ -14,6 +14,7 @@ import {
   overlayReferences,
   broadcastRecipients,
   catalogOf,
+  groupOf,
   whatsappNumber,
   nearMatches,
   namesAlike,
@@ -680,4 +681,13 @@ test("paused sign-up blocks new registrations but not existing members", () => {
   s = applyAction(s, office, "setSignup", { closed: false });
   s = applyAction(s, pastor, "submit", profile(pastor));
   assert.equal(s.registrations.at(-1).data.name, "John Doe");
+});
+test("groups: a person's group comes from their record or their denomination; the office can regroup", () => {
+  const cat = catalogOf(emptyState());
+  assert.equal(groupOf(cat, { organization: "United Denominations", denomination: "Makarios Church" }), "UD Ghana");
+  assert.equal(groupOf(cat, { group: "UD Asia", denomination: "Makarios Church" }), "UD Asia", "a group on the record wins");
+  assert.equal(groupOf(cat, { organization: "United Denominations", denomination: "Unknown Chapel" }), "");
+  let s = applyAction(emptyState(), office, "setCatalog", { catalog: { ...cat, groups: { ...cat.groups, "UD Asia": { organization: "United Denominations", denominations: ["Unknown Chapel"] } } } });
+  assert.equal(groupOf(catalogOf(s), { organization: "United Denominations", denomination: "Unknown Chapel" }), "UD Asia");
+  assert.throws(() => applyAction(s, office, "setCatalog", { catalog: { ...cat, groups: { Loose: { organization: "Nowhere", denominations: [] } } } }), /must belong/);
 });

@@ -1,0 +1,514 @@
+{
+ "retired": [
+  {
+   "id": "B18",
+   "name": "Brian Yaw Adu",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "Ghana",
+   "pastorsInOriginalData": 0
+  },
+  {
+   "id": "B21",
+   "name": "Christian Ago Mensah",
+   "organization": "United Denominations",
+   "denomination": "JESUS SAVIOUR OF THE WORLD CHURCH INTERNATIONAL",
+   "country": "Ghana",
+   "pastorsInOriginalData": 0
+  },
+  {
+   "id": "B47",
+   "name": "Emmanuel Baiden",
+   "organization": "United Denominations",
+   "denomination": "IT IS A GREAT THING TO SERVE THE LORD",
+   "country": "United Kingdom",
+   "pastorsInOriginalData": 0
+  },
+  {
+   "id": "B50",
+   "name": "Emmanuel Buernor Alimo",
+   "organization": "United Denominations",
+   "denomination": "JESUS SAVIOUR OF THE WORLD CHURCH INTERNATIONAL",
+   "country": "Ghana",
+   "pastorsInOriginalData": 0
+  },
+  {
+   "id": "B197",
+   "name": "Jane Hyde",
+   "organization": "First Love",
+   "denomination": "FIRST LOVE CHURCH",
+   "country": "United Kingdom",
+   "pastorsInOriginalData": 0
+  },
+  {
+   "id": "B103",
+   "name": "Kakra Baiden",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "Ghana",
+   "pastorsInOriginalData": 0
+  },
+  {
+   "id": "B224",
+   "name": "Latisha Freda Appiah Kubi",
+   "organization": "First Love",
+   "denomination": "FIRST LOVE CHURCH",
+   "country": "Ghana",
+   "pastorsInOriginalData": 0
+  },
+  {
+   "id": "B128",
+   "name": "Lovell Ankrah",
+   "organization": "HJC",
+   "denomination": "Healing Jesus Campaign",
+   "country": "Ghana",
+   "pastorsInOriginalData": 0
+  },
+  {
+   "id": "B159",
+   "name": "Ransford Owusu",
+   "organization": "United Denominations",
+   "denomination": "THE MACHANEH CHURCH INTERNATIONAL",
+   "country": "Ghana",
+   "pastorsInOriginalData": 0
+  }
+ ],
+ "added": [
+  {
+   "id": "BO15",
+   "name": "Esther-Richie Okyere",
+   "group": "UD Ghana",
+   "organization": "United Denominations",
+   "denomination": "The Mega Church",
+   "country": "",
+   "listedPastors": 20
+  },
+  {
+   "id": "BO38",
+   "name": "Charles Bonsu",
+   "group": "UD Ghana",
+   "organization": "United Denominations",
+   "denomination": "The Mega Church",
+   "country": "",
+   "listedPastors": 6
+  },
+  {
+   "id": "BO21",
+   "name": "Sompa Osei",
+   "group": "UD Ghana",
+   "organization": "United Denominations",
+   "denomination": "Machaneh Church Int",
+   "country": "",
+   "listedPastors": 38
+  },
+  {
+   "id": "BO104",
+   "name": "Baara Woode",
+   "group": "UD Africa",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "Malawi",
+   "listedPastors": 0
+  },
+  {
+   "id": "BO128",
+   "name": "Nee Nunoo",
+   "group": "UD Africa",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "Seychelles",
+   "listedPastors": 10
+  },
+  {
+   "id": "BO165",
+   "name": "Phillip Obeng Asamoah",
+   "group": "United Jesus",
+   "organization": "United Denominations",
+   "denomination": "Jesus Is The Answer Church",
+   "country": "",
+   "listedPastors": 32
+  },
+  {
+   "id": "BO282",
+   "name": "Courage Ahedor",
+   "group": "United Jesus",
+   "organization": "United Denominations",
+   "denomination": "Jesus Is The Master",
+   "country": "",
+   "listedPastors": null
+  },
+  {
+   "id": "BO172",
+   "name": "Ebenezer Fiifi Biney",
+   "group": "Eschatos International",
+   "organization": "United Denominations",
+   "denomination": "Middle East",
+   "country": "",
+   "listedPastors": 0
+  },
+  {
+   "id": "BO175",
+   "name": "Kenrick Thomas",
+   "group": "Eschatos International",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "Brazil",
+   "listedPastors": 11
+  },
+  {
+   "id": "BO177",
+   "name": "Daniel Darku",
+   "group": "Eschatos International",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "Panama",
+   "listedPastors": 3
+  },
+  {
+   "id": "BO178",
+   "name": "Charles Smith",
+   "group": "Eschatos International",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "Costa Rica",
+   "listedPastors": 0
+  },
+  {
+   "id": "BO179",
+   "name": "Kay Francis Quao",
+   "group": "Eschatos International",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "Bangladesh",
+   "listedPastors": 2
+  },
+  {
+   "id": "BO180",
+   "name": "Harold Befu- Addo",
+   "group": "Eschatos International",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "Chile",
+   "listedPastors": 6
+  },
+  {
+   "id": "BO181",
+   "name": "Andrae George Woode",
+   "group": "Eschatos International",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "Jamaica",
+   "listedPastors": 23
+  },
+  {
+   "id": "BO182",
+   "name": "Emmanuel John Peters",
+   "group": "Eschatos International",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "Taiwan",
+   "listedPastors": 6
+  },
+  {
+   "id": "BO183",
+   "name": "Brian Bonnah",
+   "group": "Eschatos International",
+   "organization": "United Denominations",
+   "denomination": "American Samoa",
+   "country": "",
+   "listedPastors": 1
+  },
+  {
+   "id": "BO185",
+   "name": "Prince Paul",
+   "group": "Eschatos International",
+   "organization": "United Denominations",
+   "denomination": "",
+   "country": "India",
+   "listedPastors": 2
+  },
+  {
+   "id": "BO200",
+   "name": "Sam Sawyerr",
+   "group": "Reasonable Service",
+   "organization": "United Denominations",
+   "denomination": "Anointed People International",
+   "country": "",
+   "listedPastors": 9
+  },
+  {
+   "id": "BO201",
+   "name": "Stephen Sawyerr",
+   "group": "Reasonable Service",
+   "organization": "United Denominations",
+   "denomination": "Anointed People International",
+   "country": "",
+   "listedPastors": 1
+  },
+  {
+   "id": "BO202",
+   "name": "Steve Asare",
+   "group": "Reasonable Service",
+   "organization": "United Denominations",
+   "denomination": "Allos Mega Church",
+   "country": "",
+   "listedPastors": 17
+  },
+  {
+   "id": "BO207",
+   "name": "Mawusi Adabge",
+   "group": "Reasonable Service",
+   "organization": "United Denominations",
+   "denomination": "True Son Chapel International",
+   "country": "",
+   "listedPastors": 0
+  },
+  {
+   "id": "BO208",
+   "name": "Olivia Sam",
+   "group": "Reasonable Service",
+   "organization": "United Denominations",
+   "denomination": "True Son Chapel International",
+   "country": "",
+   "listedPastors": 30
+  },
+  {
+   "id": "BO214",
+   "name": "Adara Hyde",
+   "group": "First Love",
+   "organization": "First Love",
+   "denomination": "First Love Church",
+   "country": "",
+   "listedPastors": 0
+  },
+  {
+   "id": "BO215",
+   "name": "Alice Renatta Obaka",
+   "group": "First Love",
+   "organization": "First Love",
+   "denomination": "First Love Church",
+   "country": "",
+   "listedPastors": 0
+  },
+  {
+   "id": "BO221",
+   "name": "Paula Chela Mills Thompson",
+   "group": "First Love",
+   "organization": "First Love",
+   "denomination": "First Love Church",
+   "country": "",
+   "listedPastors": 0
+  },
+  {
+   "id": "BO224",
+   "name": "Daniel Adjei",
+   "group": "First Love",
+   "organization": "First Love",
+   "denomination": "First Love Church",
+   "country": "",
+   "listedPastors": 7
+  },
+  {
+   "id": "BO250",
+   "name": "Mary Rea Bandoh",
+   "group": "First Love",
+   "organization": "First Love",
+   "denomination": "First Love Church",
+   "country": "",
+   "listedPastors": 0
+  },
+  {
+   "id": "BO251",
+   "name": "Maya Aida Asiedu",
+   "group": "First Love",
+   "organization": "First Love",
+   "denomination": "First Love Church",
+   "country": "",
+   "listedPastors": 0
+  },
+  {
+   "id": "BO264",
+   "name": "Ruthie Appiah Denkyira",
+   "group": "First Love",
+   "organization": "First Love",
+   "denomination": "First Love Church",
+   "country": "",
+   "listedPastors": 0
+  },
+  {
+   "id": "BO265",
+   "name": "Serena Ariana Ababio",
+   "group": "First Love",
+   "organization": "First Love",
+   "denomination": "First Love Church",
+   "country": "",
+   "listedPastors": 0
+  },
+  {
+   "id": "BO281",
+   "name": "George Seneagya",
+   "group": "First Love",
+   "organization": "First Love",
+   "denomination": "First Love Church",
+   "country": "",
+   "listedPastors": 7
+  }
+ ],
+ "handResolved": [
+  {
+   "official": "Kwabena Asamoah",
+   "id": "B116",
+   "oldName": "Kwabena Asare Asamoa"
+  },
+  {
+   "official": "Kwabena Asamoa Jnr",
+   "id": "B117",
+   "oldName": "Kwabena Junior Asamoah"
+  },
+  {
+   "official": "Leonora Hyde",
+   "id": "B124",
+   "oldName": "Leonora-Jamie Hyde"
+  },
+  {
+   "official": "Andrew Kwaku Osei",
+   "id": "B10",
+   "oldName": "Andrew Kwaku Osei"
+  },
+  {
+   "official": "Edwin Morgan Ogoe",
+   "id": "B45",
+   "oldName": "Edwin Morgan Ogoe"
+  },
+  {
+   "official": "Edwin Ogoe Jnr",
+   "id": "B196",
+   "oldName": "Edwin Morgan Ogoe Jr"
+  },
+  {
+   "official": "Joseph Owusu Adjei",
+   "id": "B91",
+   "oldName": "Joe Owusu-Adjei"
+  },
+  {
+   "official": "Alex Kofi-opata",
+   "id": "B7",
+   "oldName": "Alexander Gottlieb Kofi-Opata"
+  },
+  {
+   "official": "Yoku Amonoo-neizer",
+   "id": "B121",
+   "oldName": "Kweku Amonoo-Neizer"
+  },
+  {
+   "official": "Kate Allotey",
+   "id": "B104",
+   "oldName": "Kathleen-Sarah Parker-Allotey"
+  },
+  {
+   "official": "Joe Amable",
+   "id": "B98",
+   "oldName": "Joseph Kofi Amable"
+  },
+  {
+   "official": "Dayo Adeniji",
+   "id": "B3",
+   "oldName": "Adedayo Adeyemi Adeniji"
+  },
+  {
+   "official": "Edward Cofie",
+   "id": "B42",
+   "oldName": "Eddy Cofie"
+  },
+  {
+   "official": "Joe Aryee",
+   "id": "B97",
+   "oldName": "Joseph Aryee"
+  },
+  {
+   "official": "Fred Nortey",
+   "id": "B72",
+   "oldName": "Frederick Nortey"
+  },
+  {
+   "official": "Zoe Freda Asamoah",
+   "id": "B193",
+   "oldName": "Zoe-Andria Asamoah"
+  },
+  {
+   "official": "Jake Godwyll",
+   "id": "B86",
+   "oldName": "Jacob Etrue Godwyll"
+  },
+  {
+   "official": "Foster Baodi",
+   "id": "B247",
+   "oldName": "Foster Boadi"
+  },
+  {
+   "official": "Christian Aduopo",
+   "id": "B22",
+   "oldName": "Christian Assi Adoupo"
+  },
+  {
+   "official": "Dayanara Hart",
+   "id": "B208",
+   "oldName": "Daniella Hart"
+  },
+  {
+   "official": "Nii Nortey Quist Therson",
+   "id": "B141",
+   "oldName": "James Quist-Therson"
+  },
+  {
+   "official": "Pree Heward Mills",
+   "id": "B195",
+   "oldName": "Kiki Heward-Mills"
+  },
+  {
+   "official": "Lucca Aryee",
+   "id": "B59",
+   "oldName": "Erica-Luka Aryee"
+  },
+  {
+   "official": "Pius Akator",
+   "id": "B336",
+   "oldName": "Pius Worlano"
+  },
+  {
+   "official": "Nely Masuku",
+   "id": "B334",
+   "oldName": "Nely Nina Masuku"
+  },
+  {
+   "official": "Richard Aryee (jnr)",
+   "id": "B169",
+   "oldName": "Richard Nii Okai Aryee"
+  },
+  {
+   "official": "Richard Aryee",
+   "id": "B167",
+   "oldName": "Richard Aryee"
+  }
+ ],
+ "notBishops": [
+  {
+   "name": "Rev Kobby Quansah",
+   "pastors": 67,
+   "group": "UD Ghana",
+   "denomination": "Lighthouse Chapel International"
+  },
+  {
+   "name": "Rev Eben Johnson",
+   "pastors": 29,
+   "group": "UD Europe",
+   "denomination": "Living Waters Church"
+  },
+  {
+   "name": "Rev Justice Hagan",
+   "pastors": 92,
+   "group": "UD North America",
+   "denomination": "Laikos"
+  }
+ ]
+}

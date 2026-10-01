@@ -3440,3 +3440,54 @@ input[type="date"] {
   font-size: 12px;
   white-space: nowrap;
 }
+
+/* Office structure: group cards */
+.reg-group-org {
+  margin: 0 0 18px;
+}
+.reg-group-org h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.reg-group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+.reg-group-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: var(--panel);
+  min-height: 64px;
+}
+.reg-group-card.open {
+  grid-column: 1 / -1;
+}
+.reg-group-card.muted {
+  border-style: dashed;
+}
+.reg-group-card.over {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.reg-group-head {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+.reg-group-head small {
+  color: var(--muted);
+}
+.reg-group-card .reg-catalog-list {
+  margin-top: 10px;
+}

@@ -1,4 +1,5 @@
 import { DENOMINATIONS } from "./denominations.mjs";
+import { GROUPS } from "./groups.mjs";
 // Full names for display; the short keys stay as stored identifiers.
 export const ORGANIZATION_LABEL = {
   "First Love": "First Love Church",
@@ -126,13 +127,26 @@ export const emptyState = () => ({
 export const SIGNUP_PAUSED = "Registration is paused at the moment. Please check back later.";
 export const signupOf = (state) => ({ closed: Boolean(state?.signup?.closed), notice: String(state?.signup?.notice || "").trim() });
 // The organizations and denominations in force: the office's edited catalog, else the built-in lists.
+// Groups sit between an organization and its denominations (UD Ghana, UD Africa,
+// United Islands…). A person's group is the one on their record, else the group
+// that lists their denomination.
 export const catalogOf = (state) =>
   state?.catalog?.organizations?.length
-    ? state.catalog
-    : { organizations: ORGANIZATIONS, denominations: DENOMINATIONS };
+    ? { ...state.catalog, groups: state.catalog.groups || GROUPS }
+    : { organizations: ORGANIZATIONS, denominations: DENOMINATIONS, groups: GROUPS };
+export function groupOf(catalog, person) {
+  if (person?.group) return person.group;
+  const want = normalName(person?.denomination || "");
+  if (!want) return "";
+  for (const [name, g] of Object.entries(catalog?.groups || {})) {
+    if (g.organization && person.organization && g.organization !== person.organization) continue;
+    if ((g.denominations || []).some((d) => { const k = normalName(d); return k && (k === want || want.startsWith(k) || k.startsWith(want)); })) return name;
+  }
+  return "";
+}
 export const feesOf = (state) => state?.fees?.bishop ? state.fees : AMOUNTS;
 // Fields of an old roster record the office may correct.
-export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination", "city", "country", "bishop", "branch", "photo", "phone", "email"];
+export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination", "group", "city", "country", "bishop", "branch", "photo", "phone", "email"];
 // Contact details never leave the office: the public page and members see the
 // corrected records without phone or email.
 const CONTACT_FIELDS = ["phone", "email"];
@@ -1014,8 +1028,18 @@ export function applyAction(
     if (!organizations.length) throw Error("Keep at least one organization.");
     const denominations = {};
     for (const o of organizations) denominations[o] = [...new Set(((c.denominations || {})[o] || []).map((d) => String(d || "").trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-    state.catalog = { organizations, denominations };
-    detail = { organizations: organizations.length, denominations: Object.values(denominations).reduce((n, d) => n + d.length, 0) };
+    const groups = {};
+    const supplied = Boolean(c.groups);
+    for (const [name, g] of Object.entries(c.groups || catalogOf(state).groups || {})) {
+      const key = String(name || "").trim();
+      if (!key) continue;
+      const organization = String(g?.organization || "").trim();
+      // Groups of a removed organization go with it; a supplied group must name a real one.
+      if (!organizations.includes(organization)) { if (supplied) throw Error(`The group “${key}” must belong to one of the organizations.`); continue; }
+      groups[key] = { organization, denominations: [...new Set((g.denominations || []).map((d) => String(d || "").trim()).filter(Boolean))] };
+    }
+    state.catalog = { organizations, denominations, groups };
+    detail = { organizations: organizations.length, denominations: Object.values(denominations).reduce((n, d) => n + d.length, 0), groups: Object.keys(groups).length };
   } else if (action === "setFees") {
     office();
     const bishop = Number(payload.bishop), pastor = Number(payload.pastor);
@@ -1101,6 +1125,7 @@ export function publicRoll(state, people, year = state.year) {
         title: r.data.gender ? titleFor(r.data) : ref?.title || (r.data.role === "bishop" ? "Bishop" : "Pastor"),
         organization: r.data.organization,
         denomination: r.data.denomination || r.data.church || ref?.denomination || "",
+        group: ref?.group || groupOf(catalogOf(state), r.data),
         denominationLogo:
           ref?.denominationLogo ||
           ({ FLOW: "assets/brand/flow-logo.png", HJC: "assets/brand/hjc-logo.png", DHMM: "assets/brand/dhmm-logo-black.png" })[r.data.organization] ||
@@ -1246,6 +1271,7 @@ export function directoryPeople(state, references, year = state.year) {
       city: r.data.city,
       country: r.data.country,
       image: "",
+      group: groupOf(catalogOf(state), r.data),
       photo: r.data.photo,
       email: r.data.email,
       phone: r.data.phone,

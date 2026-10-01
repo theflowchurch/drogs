@@ -1,0 +1,1990 @@
+{
+ "groups": [
+  {
+   "name": "UD Ghana",
+   "organization": "United Denominations",
+   "denominations": [
+    {
+     "name": "Makarios Church",
+     "bishops": [
+      {
+       "n": 1,
+       "name": "Emmanuel Samuel Baidoo",
+       "pastors": 58
+      },
+      {
+       "n": 2,
+       "name": "Ebenezer Adom Barnor",
+       "pastors": 30
+      },
+      {
+       "n": 3,
+       "name": "Abraham Aryee",
+       "pastors": 15
+      },
+      {
+       "n": 4,
+       "name": "Samuel Obeng",
+       "pastors": 37
+      }
+     ]
+    },
+    {
+     "name": "Makarios Western North",
+     "bishops": [
+      {
+       "n": 5,
+       "name": "Robert Amanquanor",
+       "pastors": 6
+      },
+      {
+       "n": 6,
+       "name": "Harry Dodd",
+       "pastors": 14
+      }
+     ]
+    },
+    {
+     "name": "Jesus Saviour of the World Church",
+     "bishops": [
+      {
+       "n": 7,
+       "name": "David Asiedu",
+       "pastors": 5
+      },
+      {
+       "n": 8,
+       "name": "David Ashong",
+       "pastors": 16
+      },
+      {
+       "n": 9,
+       "name": "Hamish Oddoye",
+       "pastors": 16
+      },
+      {
+       "n": 23,
+       "name": "Wisdom Kwesi Eli Tsyi",
+       "pastors": 31
+      },
+      {
+       "n": 24,
+       "name": "Emmanuel Ankrah",
+       "pastors": 9
+      },
+      {
+       "n": 39,
+       "name": "David Afreh",
+       "pastors": 13
+      }
+     ]
+    },
+    {
+     "name": "Qodesh Family Church",
+     "bishops": [
+      {
+       "n": 10,
+       "name": "Kofi Hene Asare",
+       "pastors": 75
+      },
+      {
+       "n": 11,
+       "name": "Eddie Fabin",
+       "pastors": 0
+      },
+      {
+       "n": 51,
+       "name": "Rebecca-Joana Addae",
+       "pastors": 8
+      },
+      {
+       "n": 52,
+       "name": "Michael Tengabo",
+       "pastors": 19
+      }
+     ]
+    },
+    {
+     "name": "The Mega Church",
+     "bishops": [
+      {
+       "n": 12,
+       "name": "Sampson Kwaku Kissi",
+       "pastors": 9
+      },
+      {
+       "n": 13,
+       "name": "Henry Oti Frimpong",
+       "pastors": 56
+      },
+      {
+       "n": 14,
+       "name": "Dennis Agyei-Gyan",
+       "pastors": 49
+      },
+      {
+       "n": 15,
+       "name": "Esther-Richie Okyere",
+       "pastors": 20
+      },
+      {
+       "n": 16,
+       "name": "Francis Okyere",
+       "pastors": 43
+      },
+      {
+       "n": 17,
+       "name": "Noble Nobleson",
+       "pastors": 7
+      },
+      {
+       "n": 38,
+       "name": "Charles Bonsu",
+       "pastors": 6
+      }
+     ]
+    },
+    {
+     "name": "East End City Church",
+     "bishops": [
+      {
+       "n": 18,
+       "name": "Fred Ansah Quartey",
+       "pastors": 56
+      }
+     ]
+    },
+    {
+     "name": "Castle City Church",
+     "bishops": [
+      {
+       "n": 19,
+       "name": "Paschal Godwyll",
+       "pastors": 45
+      },
+      {
+       "n": 68,
+       "name": "Raymond Amarkyne",
+       "pastors": 18
+      }
+     ]
+    },
+    {
+     "name": "Machaneh Church Int",
+     "bishops": [
+      {
+       "n": 20,
+       "name": "Kwame Owusu Asiedu",
+       "pastors": 3
+      },
+      {
+       "n": 21,
+       "name": "Sompa Osei",
+       "pastors": 38
+      }
+     ]
+    },
+    {
+     "name": "The Machaneh Church",
+     "bishops": [
+      {
+       "n": 25,
+       "name": "Kwabena Asamoah",
+       "pastors": 54
+      },
+      {
+       "n": 27,
+       "name": "Yoku Amonoo-neizer",
+       "pastors": 6
+      },
+      {
+       "n": 29,
+       "name": "Kenneth Agyei",
+       "pastors": 0
+      },
+      {
+       "n": 59,
+       "name": "Solomon Boateng",
+       "pastors": 24
+      }
+     ]
+    },
+    {
+     "name": "Lighthouse Chapel International",
+     "bishops": [
+      {
+       "n": 26,
+       "name": "Emmanuel Tetteh",
+       "pastors": 27
+      },
+      {
+       "n": 28,
+       "name": "Jamel Amponsah Baa",
+       "pastors": 37
+      },
+      {
+       "n": 30,
+       "name": "Morrison Addo",
+       "pastors": 23
+      },
+      {
+       "n": 47,
+       "name": "Kenneth Kissi Bamfo",
+       "pastors": 30
+      }
+     ]
+    },
+    {
+     "name": "Loyalty House Internatioanal",
+     "bishops": [
+      {
+       "n": 31,
+       "name": "Raymond Mensah",
+       "pastors": 25
+      }
+     ]
+    },
+    {
+     "name": "Makarios City Church",
+     "bishops": [
+      {
+       "n": 32,
+       "name": "Selasy Mcsaint",
+       "pastors": 42
+      },
+      {
+       "n": 33,
+       "name": "Kwabena Amoako-doku",
+       "pastors": 0
+      },
+      {
+       "n": 22,
+       "name": "Kingsley Gyasi",
+       "pastors": 8
+      }
+     ]
+    },
+    {
+     "name": "Jesus is the Rock Church",
+     "bishops": [
+      {
+       "n": 34,
+       "name": "Kudzo Bekui",
+       "pastors": 21
+      },
+      {
+       "n": 35,
+       "name": "Foster Mensah",
+       "pastors": 7
+      },
+      {
+       "n": 53,
+       "name": "Ato Dickson",
+       "pastors": 50
+      },
+      {
+       "n": 54,
+       "name": "Pamela Marnette Dickson",
+       "pastors": 0
+      },
+      {
+       "n": 55,
+       "name": "David Yalleh",
+       "pastors": 0
+      },
+      {
+       "n": 56,
+       "name": "Richard Gyamena",
+       "pastors": 70
+      },
+      {
+       "n": 57,
+       "name": "Emmanuel Klutse",
+       "pastors": 3
+      }
+     ]
+    },
+    {
+     "name": "Lighthouse City Church",
+     "bishops": [
+      {
+       "n": 36,
+       "name": "Benjamin Lokko",
+       "pastors": 72
+      },
+      {
+       "n": 37,
+       "name": "Wisdom Ahiagah",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "The Glorious Mega Church",
+     "bishops": [
+      {
+       "n": 40,
+       "name": "Jude Orraca-tetteh",
+       "pastors": 31
+      },
+      {
+       "n": 41,
+       "name": "Kate Allotey",
+       "pastors": 3
+      },
+      {
+       "n": 45,
+       "name": "Eric Asare",
+       "pastors": 22
+      },
+      {
+       "n": 46,
+       "name": "Isaac Ssali",
+       "pastors": 18
+      }
+     ]
+    },
+    {
+     "name": "Anagkazo Assemblies",
+     "bishops": [
+      {
+       "n": 42,
+       "name": "Francis Asamoah",
+       "pastors": 29
+      },
+      {
+       "n": 43,
+       "name": "Isaac Tetteh Kwame Sappor",
+       "pastors": 4
+      },
+      {
+       "n": 44,
+       "name": "Francis Hammond",
+       "pastors": 25
+      }
+     ]
+    },
+    {
+     "name": "East Mountain Church",
+     "bishops": [
+      {
+       "n": 48,
+       "name": "Robert Nunoo",
+       "pastors": 17
+      },
+      {
+       "n": 49,
+       "name": "Clarence Welds",
+       "pastors": 0
+      },
+      {
+       "n": 50,
+       "name": "Rory Aryee",
+       "pastors": 19
+      },
+      {
+       "n": 64,
+       "name": "Emmanuel Sakyi",
+       "pastors": 8
+      },
+      {
+       "n": 65,
+       "name": "Kwabena Appiah- Denkyira",
+       "pastors": 1
+      },
+      {
+       "n": 66,
+       "name": "Charles Amoo",
+       "pastors": 2
+      },
+      {
+       "n": 67,
+       "name": "David Asomani",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "West End City Church",
+     "bishops": [
+      {
+       "n": 58,
+       "name": "Richard Tsaku",
+       "pastors": 65
+      }
+     ]
+    },
+    {
+     "name": "Qodesh City Church",
+     "bishops": [
+      {
+       "n": 60,
+       "name": "Glen Opoku",
+       "pastors": 137
+      },
+      {
+       "n": 61,
+       "name": "Adelaide Heward-Mills",
+       "pastors": 4
+      },
+      {
+       "n": 62,
+       "name": "Amelia Beracha Aidoo",
+       "pastors": 0
+      },
+      {
+       "n": 63,
+       "name": "Jojo Stephens",
+       "pastors": 0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "UD Africa",
+   "organization": "United Denominations",
+   "denominations": [
+    {
+     "name": "1000 Micro Church Network",
+     "bishops": [
+      {
+       "n": 69,
+       "name": "Paul Gustav Offei-manu",
+       "pastors": 50
+      },
+      {
+       "n": 70,
+       "name": "Bernard Koranteng",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "Bema International",
+     "bishops": [
+      {
+       "n": 71,
+       "name": "Joseph Owusu Adjei",
+       "pastors": 25
+      }
+     ]
+    },
+    {
+     "name": "Double Mega Missionary Church",
+     "bishops": [
+      {
+       "n": 72,
+       "name": "Daniel Arthur Baidoo",
+       "pastors": 29
+      },
+      {
+       "n": 73,
+       "name": "Joe Amable",
+       "pastors": 15
+      },
+      {
+       "n": 74,
+       "name": "Augustine Appiah",
+       "pastors": 40
+      },
+      {
+       "n": 75,
+       "name": "Christos Abbey",
+       "pastors": 9
+      },
+      {
+       "n": 76,
+       "name": "Dennis Cudjoe Ampofo",
+       "pastors": 9
+      }
+     ]
+    },
+    {
+     "name": "Everything By Prayer Church",
+     "bishops": [
+      {
+       "n": 77,
+       "name": "Alex Kofi-opata",
+       "pastors": 17
+      },
+      {
+       "n": 78,
+       "name": "Olivia-anna Kofi-opata",
+       "pastors": 1
+      },
+      {
+       "n": 79,
+       "name": "Peter Okereke",
+       "pastors": 5
+      },
+      {
+       "n": 80,
+       "name": "Adeolu Adepoju",
+       "pastors": 0
+      },
+      {
+       "n": 81,
+       "name": "Otonye Ekefre",
+       "pastors": 1
+      },
+      {
+       "n": 82,
+       "name": "Jason Kofi-opata",
+       "pastors": 1
+      },
+      {
+       "n": 83,
+       "name": "Martin Luther Moro",
+       "pastors": 4
+      },
+      {
+       "n": 84,
+       "name": "Felix Bediako",
+       "pastors": 3
+      },
+      {
+       "n": 85,
+       "name": "Tennyson Ojeisekhoba",
+       "pastors": 2
+      },
+      {
+       "n": 86,
+       "name": "Dayo Adeniji",
+       "pastors": 5
+      }
+     ]
+    },
+    {
+     "name": "Onction Internationale",
+     "bishops": [
+      {
+       "n": 87,
+       "name": "Armstrong Simpson Nartey",
+       "pastors": 16
+      },
+      {
+       "n": 88,
+       "name": "Jeremy Menyisse",
+       "pastors": 11
+      }
+     ]
+    },
+    {
+     "name": "Fruitiferos Internationale",
+     "bishops": [
+      {
+       "n": 89,
+       "name": "Jeffrey Ocran",
+       "pastors": 19
+      }
+     ]
+    },
+    {
+     "name": "Primeiras Obras",
+     "bishops": [
+      {
+       "n": 90,
+       "name": "Frank Otchere",
+       "pastors": 39
+      },
+      {
+       "n": 91,
+       "name": "Rodino Nhanbanga",
+       "pastors": 29
+      },
+      {
+       "n": 92,
+       "name": "Nelson Cudjoe Agbemava",
+       "pastors": 25
+      }
+     ]
+    },
+    {
+     "name": "Rencontre Prophetique Internationale",
+     "bishops": [
+      {
+       "n": 93,
+       "name": "Francis Tsikata-akatto",
+       "pastors": 21
+      },
+      {
+       "n": 94,
+       "name": "Alfred Adigbo",
+       "pastors": 13
+      }
+     ]
+    },
+    {
+     "name": "Serious Christian Church",
+     "bishops": [
+      {
+       "n": 95,
+       "name": "Napoleon Essien",
+       "pastors": 46
+      },
+      {
+       "n": 96,
+       "name": "Daniel Harlley",
+       "pastors": 14
+      }
+     ]
+    },
+    {
+     "name": "Strait Gate Church",
+     "bishops": [
+      {
+       "n": 97,
+       "name": "Frank Ofori Adjei",
+       "pastors": 43
+      }
+     ]
+    },
+    {
+     "name": "Strong Christian Church",
+     "bishops": [
+      {
+       "n": 98,
+       "name": "Peter Mokganya",
+       "pastors": 81
+      },
+      {
+       "n": 99,
+       "name": "Xola Mpupu",
+       "pastors": 6
+      },
+      {
+       "n": 100,
+       "name": "Mcivin Mafora",
+       "pastors": 28
+      },
+      {
+       "n": 101,
+       "name": "Elaine Klufio",
+       "pastors": 25
+      },
+      {
+       "n": 102,
+       "name": "Emmanuel Klufio",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "Malawi",
+     "bishops": [
+      {
+       "n": 103,
+       "name": "Kwesi Woode",
+       "pastors": 5
+      },
+      {
+       "n": 104,
+       "name": "Baara Woode",
+       "pastors": 0
+      },
+      {
+       "n": 105,
+       "name": "Paul Mbah",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "Talanta International",
+     "bishops": [
+      {
+       "n": 106,
+       "name": "Wisdom Nii Adams",
+       "pastors": 18
+      }
+     ]
+    },
+    {
+     "name": "Primero Amor",
+     "bishops": [
+      {
+       "n": 107,
+       "name": "Eric Lamptey",
+       "pastors": 9
+      }
+     ]
+    },
+    {
+     "name": "Gabon – Libreville",
+     "bishops": [
+      {
+       "n": 108,
+       "name": "Emmanuel Yeboah",
+       "pastors": 19,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Gabon – Port Gentil",
+     "bishops": [
+      {
+       "n": 109,
+       "name": "Paschal Erasmus Mensah",
+       "pastors": 5,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Other International",
+     "bishops": [
+      {
+       "n": 110,
+       "name": "Daniel Marcus Annan",
+       "pastors": 35,
+       "title": "Bishop"
+      },
+      {
+       "n": 111,
+       "name": "Nii Adjeidu Armar",
+       "pastors": 0,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Congo Brazaville",
+     "bishops": [
+      {
+       "n": 112,
+       "name": "Kenneth Awutey",
+       "pastors": 5,
+       "title": "Bishop"
+      },
+      {
+       "n": 113,
+       "name": "Joseph Aboagye",
+       "pastors": 9,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Poimen Church - Senegal",
+     "bishops": [
+      {
+       "n": 114,
+       "name": "Joshua Dormediame",
+       "pastors": 8,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Guinea Conakry",
+     "bishops": [
+      {
+       "n": 115,
+       "name": "Edward Cofie",
+       "pastors": 15,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Amour International",
+     "bishops": [
+      {
+       "n": 116,
+       "name": "Baffour Kwaku Kyei",
+       "pastors": 9,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Precious Souls Church – Namibia",
+     "bishops": [
+      {
+       "n": 117,
+       "name": "Andy Jumah",
+       "pastors": 31,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Precious Souls Church – Eswatini",
+     "bishops": [
+      {
+       "n": 118,
+       "name": "Joe Aryee",
+       "pastors": 16,
+       "title": "Bishop"
+      },
+      {
+       "n": 119,
+       "name": "George Obeng",
+       "pastors": null,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Central African Republic",
+     "bishops": [
+      {
+       "n": 120,
+       "name": "Christian Aduopo",
+       "pastors": 9
+      }
+     ]
+    },
+    {
+     "name": "Poimen Church Gambia",
+     "bishops": [
+      {
+       "n": 121,
+       "name": "Edward Botwe",
+       "pastors": 18
+      }
+     ]
+    },
+    {
+     "name": "Equatorial Guinea( Malabo)",
+     "bishops": [
+      {
+       "n": 122,
+       "name": "Oreal Lartey",
+       "pastors": 3
+      }
+     ]
+    },
+    {
+     "name": "Cape Verde",
+     "bishops": [
+      {
+       "n": 123,
+       "name": "Abednego Nyarko Mensah",
+       "pastors": 3
+      }
+     ]
+    },
+    {
+     "name": "Equatorial Guinea (Bata)",
+     "bishops": [
+      {
+       "n": 124,
+       "name": "Kwabena Asamoa Jnr",
+       "pastors": 0
+      },
+      {
+       "n": 125,
+       "name": "Josie Asamoah",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "Lesotho",
+     "bishops": [
+      {
+       "n": 126,
+       "name": "Khauhelo Mokobocho",
+       "pastors": 1
+      }
+     ]
+    },
+    {
+     "name": "Burkina Faso",
+     "bishops": [
+      {
+       "n": 127,
+       "name": "Samuel Gaspar",
+       "pastors": 12
+      }
+     ]
+    },
+    {
+     "name": "Seychelles",
+     "bishops": [
+      {
+       "n": 128,
+       "name": "Nee Nunoo",
+       "pastors": 10
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "UD Europe",
+   "organization": "United Denominations",
+   "denominations": [
+    {
+     "name": "Candle In The Dark",
+     "bishops": [
+      {
+       "n": 129,
+       "name": "Immanuel Obeng",
+       "pastors": 32,
+       "title": "Bishop"
+      },
+      {
+       "n": 130,
+       "name": "Kweku Amponsah",
+       "pastors": 10,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Jesus Gefunden",
+     "bishops": [
+      {
+       "n": 131,
+       "name": "Edwin Tutu",
+       "pastors": 9,
+       "title": "Bishop"
+      },
+      {
+       "n": 132,
+       "name": "Michael Amoh",
+       "pastors": 6,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Mustard Seed Chapel",
+     "bishops": [
+      {
+       "n": 133,
+       "name": "Sena Agyapong",
+       "pastors": 108
+      },
+      {
+       "n": 134,
+       "name": "Phillippa-marka Coker",
+       "pastors": 65,
+       "title": "Episcopal Sister"
+      },
+      {
+       "n": 135,
+       "name": "Linda Abana Aryee",
+       "pastors": 0,
+       "title": "Episcopal Sister"
+      },
+      {
+       "n": 136,
+       "name": "Leonora Hyde",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "Pleasant Surprise Church",
+     "bishops": [
+      {
+       "n": 137,
+       "name": "Stephen Poku",
+       "pastors": 28,
+       "title": "Bishop"
+      },
+      {
+       "n": 138,
+       "name": "Nana Kwame Adu Gyamfi",
+       "pastors": 29
+      }
+     ]
+    },
+    {
+     "name": "It Is A Great Thing To Serve The Lord",
+     "bishops": [
+      {
+       "n": 140,
+       "name": "Richard Aryee (jnr)",
+       "pastors": 20
+      },
+      {
+       "n": 141,
+       "name": "Richard Aryee",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "Go Church",
+     "bishops": [
+      {
+       "n": 139,
+       "name": "King Appiagyei",
+       "pastors": 8
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "UD North America",
+   "organization": "United Denominations",
+   "denominations": [
+    {
+     "name": "Revival International",
+     "bishops": [
+      {
+       "n": 142,
+       "name": "Kodwo Lindsay",
+       "pastors": 102
+      }
+     ]
+    },
+    {
+     "name": "American Missionary Church",
+     "bishops": [
+      {
+       "n": 143,
+       "name": "Luke Akwasi Frimpong Mensah",
+       "pastors": 51
+      }
+     ]
+    },
+    {
+     "name": "Rejoice Greatly",
+     "bishops": [
+      {
+       "n": 144,
+       "name": "Norman Darkwu",
+       "pastors": 29
+      }
+     ]
+    },
+    {
+     "name": "Laikos",
+     "bishops": [
+      {
+       "n": 145,
+       "name": "Akwele Ivanna Kiruja",
+       "pastors": 0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "United Islands",
+   "organization": "United Denominations",
+   "denominations": [
+    {
+     "name": "",
+     "bishops": [
+      {
+       "n": 146,
+       "name": "Joel Obuobisa",
+       "pastors": 0
+      },
+      {
+       "n": 147,
+       "name": "Sara Lanita Obuobisa",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "PACIFIC ISLANDS MISSIONARY CHURCH- Fiji",
+     "bishops": [
+      {
+       "n": 148,
+       "name": "Andrew Kwaku Osei",
+       "pastors": 9
+      }
+     ]
+    },
+    {
+     "name": "PACIFIC ISLANDS MISSIONARY CHURCH- Solomon Islands",
+     "bishops": [
+      {
+       "n": 149,
+       "name": "Kristoffer Yemoh",
+       "pastors": 10
+      }
+     ]
+    },
+    {
+     "name": "PACIFIC ISLANDS MISSIONARY CHURCH- Papau New Guinea",
+     "bishops": [
+      {
+       "n": 150,
+       "name": "John Boffah",
+       "pastors": 13
+      }
+     ]
+    },
+    {
+     "name": "Favourite Child Church",
+     "bishops": [
+      {
+       "n": 151,
+       "name": "John Yaw Frimpong",
+       "pastors": 42
+      }
+     ]
+    },
+    {
+     "name": "PACIFIC ISLANDS MISSIONARY CHURCH- Vanuatu",
+     "bishops": [
+      {
+       "n": 152,
+       "name": "Phillip Asante",
+       "pastors": 5
+      }
+     ]
+    },
+    {
+     "name": "Suriname",
+     "bishops": [
+      {
+       "n": 153,
+       "name": "Victor Collins Asabere",
+       "pastors": 6
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "United Jesus",
+   "organization": "United Denominations",
+   "denominations": [
+    {
+     "name": "Jesus is The Answer",
+     "bishops": [
+      {
+       "n": 160,
+       "name": "Daniel Atiemoh",
+       "pastors": 12
+      },
+      {
+       "n": 162,
+       "name": "Dennis Djagblatey",
+       "pastors": 13
+      },
+      {
+       "n": 161,
+       "name": "Fred Nortey",
+       "pastors": 17
+      },
+      {
+       "n": 164,
+       "name": "Nelson Tika",
+       "pastors": 2
+      },
+      {
+       "n": 165,
+       "name": "Phillip Obeng Asamoah",
+       "pastors": 32
+      },
+      {
+       "n": 159,
+       "name": "Raphael Essien",
+       "pastors": 13
+      }
+     ]
+    },
+    {
+     "name": "Jesus is the Door",
+     "bishops": [
+      {
+       "n": 156,
+       "name": "Frank Tawiah",
+       "pastors": 12
+      },
+      {
+       "n": 155,
+       "name": "Andrews Osei",
+       "pastors": 22
+      },
+      {
+       "n": 157,
+       "name": "Michael Dzokoto",
+       "pastors": 15
+      },
+      {
+       "n": 158,
+       "name": "Romeo Sosu",
+       "pastors": 19
+      },
+      {
+       "n": 163,
+       "name": "Ernest Aryee",
+       "pastors": 6
+      }
+     ]
+    },
+    {
+     "name": "Jesus is The Master",
+     "bishops": [
+      {
+       "n": 166,
+       "name": "Raymond Stephens",
+       "pastors": 12
+      },
+      {
+       "n": 282,
+       "name": "Courage Ahedor",
+       "pastors": null
+      },
+      {
+       "n": 154,
+       "name": "Toss Mills Odoi",
+       "pastors": 98
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Eschatos International",
+   "organization": "United Denominations",
+   "denominations": [
+    {
+     "name": "Nicaragua",
+     "bishops": [
+      {
+       "n": 167,
+       "name": "Ernest Addai Duah",
+       "pastors": 8
+      }
+     ]
+    },
+    {
+     "name": "Columbia",
+     "bishops": [
+      {
+       "n": 168,
+       "name": "David Gyedu",
+       "pastors": 9
+      }
+     ]
+    },
+    {
+     "name": "Vietnam",
+     "bishops": [
+      {
+       "n": 169,
+       "name": "Daniel Odei-siaw",
+       "pastors": 3
+      },
+      {
+       "n": 170,
+       "name": "Irene Odei-siaw",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "Middle East",
+     "bishops": [
+      {
+       "n": 171,
+       "name": "Lilian Hasia Commey",
+       "pastors": 20
+      },
+      {
+       "n": 172,
+       "name": "Ebenezer Fiifi Biney",
+       "pastors": 0
+      },
+      {
+       "n": 173,
+       "name": "Isaac Ob Commey",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "Guyana",
+     "bishops": [
+      {
+       "n": 174,
+       "name": "Henry Asare Duah",
+       "pastors": 5
+      }
+     ]
+    },
+    {
+     "name": "Brazil",
+     "bishops": [
+      {
+       "n": 175,
+       "name": "Kenrick Thomas",
+       "pastors": 11
+      },
+      {
+       "n": 176,
+       "name": "Robert Dodoo",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "Panama",
+     "bishops": [
+      {
+       "n": 177,
+       "name": "Daniel Darku",
+       "pastors": 3
+      }
+     ]
+    },
+    {
+     "name": "Costa Rica",
+     "bishops": [
+      {
+       "n": 178,
+       "name": "Charles Smith",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "Bangladesh",
+     "bishops": [
+      {
+       "n": 179,
+       "name": "Kay Francis Quao",
+       "pastors": 2
+      }
+     ]
+    },
+    {
+     "name": "Chile",
+     "bishops": [
+      {
+       "n": 180,
+       "name": "Harold Befu- Addo",
+       "pastors": 6
+      }
+     ]
+    },
+    {
+     "name": "Jamaica",
+     "bishops": [
+      {
+       "n": 181,
+       "name": "Andrae George Woode",
+       "pastors": 23
+      }
+     ]
+    },
+    {
+     "name": "Taiwan",
+     "bishops": [
+      {
+       "n": 182,
+       "name": "Emmanuel John Peters",
+       "pastors": 6
+      }
+     ]
+    },
+    {
+     "name": "American Samoa",
+     "bishops": [
+      {
+       "n": 183,
+       "name": "Brian Bonnah",
+       "pastors": 1
+      }
+     ]
+    },
+    {
+     "name": "Mauritius",
+     "bishops": [
+      {
+       "n": 184,
+       "name": "Maxwell Manu",
+       "pastors": 4
+      }
+     ]
+    },
+    {
+     "name": "India",
+     "bishops": [
+      {
+       "n": 185,
+       "name": "Prince Paul",
+       "pastors": 2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "FLOW & Healing Jesus Campaign",
+   "organization": "FLOW",
+   "denominations": [
+    {
+     "name": "",
+     "bishops": [
+      {
+       "n": 186,
+       "name": "Prince Addae",
+       "pastors": 0
+      },
+      {
+       "n": 187,
+       "name": "Ebo Ankrah",
+       "pastors": 0
+      },
+      {
+       "n": 188,
+       "name": "Marcel Aboagye",
+       "pastors": 0
+      },
+      {
+       "n": 189,
+       "name": "Randy Mills Thompson",
+       "pastors": 0
+      },
+      {
+       "n": 190,
+       "name": "Leonard Hyde",
+       "pastors": 0
+      },
+      {
+       "n": 191,
+       "name": "Brian Masuku",
+       "pastors": 0
+      },
+      {
+       "n": 192,
+       "name": "Iris Carlah Krofuah",
+       "pastors": 0
+      },
+      {
+       "n": 193,
+       "name": "Miranda Siweya",
+       "pastors": 0
+      },
+      {
+       "n": 194,
+       "name": "Faustina Boateng",
+       "pastors": 0
+      },
+      {
+       "n": 195,
+       "name": "George Antwi",
+       "pastors": 0
+      },
+      {
+       "n": 196,
+       "name": "Pius Akator",
+       "pastors": 0
+      },
+      {
+       "n": 197,
+       "name": "Nely Masuku",
+       "pastors": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Reasonable Service",
+   "organization": "United Denominations",
+   "denominations": [
+    {
+     "name": "Anointed People International",
+     "bishops": [
+      {
+       "n": 198,
+       "name": "Edwin Morgan Ogoe",
+       "pastors": 26
+      },
+      {
+       "n": 199,
+       "name": "Bridgette marian ogoe",
+       "pastors": null
+      },
+      {
+       "n": 200,
+       "name": "Sam Sawyerr",
+       "pastors": 9
+      },
+      {
+       "n": 201,
+       "name": "Stephen Sawyerr",
+       "pastors": 1
+      }
+     ]
+    },
+    {
+     "name": "Allos Mega Church",
+     "bishops": [
+      {
+       "n": 202,
+       "name": "Steve Asare",
+       "pastors": 17
+      }
+     ]
+    },
+    {
+     "name": "Keep My Word Chapel International",
+     "bishops": [
+      {
+       "n": 203,
+       "name": "Emmanuel Louis Nterful",
+       "pastors": 33
+      },
+      {
+       "n": 212,
+       "name": "Paa Kwesi Nyarkoh",
+       "pastors": 0
+      }
+     ]
+    },
+    {
+     "name": "True Son Chapel International",
+     "bishops": [
+      {
+       "n": 204,
+       "name": "Ishmael Sam",
+       "pastors": 0
+      },
+      {
+       "n": 207,
+       "name": "Mawusi Adabge",
+       "pastors": 0
+      },
+      {
+       "n": 208,
+       "name": "Olivia Sam",
+       "pastors": 30
+      }
+     ]
+    },
+    {
+     "name": "The Mega Church – Grace Chapel",
+     "bishops": [
+      {
+       "n": 205,
+       "name": "Patrick Bruce",
+       "pastors": 14
+      }
+     ]
+    },
+    {
+     "name": "The Mega Church – Nachal Cathedral",
+     "bishops": [
+      {
+       "n": 206,
+       "name": "Nassib Hage",
+       "pastors": 10
+      }
+     ]
+    },
+    {
+     "name": "Anointed Word Chapel Int",
+     "bishops": [
+      {
+       "n": 209,
+       "name": "Eddy Addy",
+       "pastors": 23,
+       "title": "Bishop"
+      }
+     ]
+    },
+    {
+     "name": "Glory Life Hope Center",
+     "bishops": [
+      {
+       "n": 210,
+       "name": "Eat Sackey",
+       "pastors": 31,
+       "title": "Bishop"
+      },
+      {
+       "n": 211,
+       "name": "Ato Wilson",
+       "pastors": 0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "First Love",
+   "organization": "First Love",
+   "denominations": [
+    {
+     "name": "",
+     "bishops": [
+      {
+       "n": 213,
+       "name": "Cleland Cofie Bruce",
+       "pastors": 2
+      },
+      {
+       "n": 214,
+       "name": "Adara Hyde",
+       "pastors": 0
+      },
+      {
+       "n": 215,
+       "name": "Alice Renatta Obaka",
+       "pastors": 0
+      },
+      {
+       "n": 216,
+       "name": "Andrew Gyamfi",
+       "pastors": 0
+      },
+      {
+       "n": 217,
+       "name": "Anika Dwimoh",
+       "pastors": 0
+      },
+      {
+       "n": 218,
+       "name": "Ariel Orleans Lindsay",
+       "pastors": 0
+      },
+      {
+       "n": 219,
+       "name": "Augustine Kunituo",
+       "pastors": 4
+      },
+      {
+       "n": 220,
+       "name": "Benjamin Fiadonu",
+       "pastors": 5
+      },
+      {
+       "n": 221,
+       "name": "Paula Chela Mills Thompson",
+       "pastors": 0
+      },
+      {
+       "n": 222,
+       "name": "Christian Agbosu",
+       "pastors": 9
+      },
+      {
+       "n": 223,
+       "name": "Clement Asante",
+       "pastors": 29
+      },
+      {
+       "n": 224,
+       "name": "Daniel Adjei",
+       "pastors": 7
+      },
+      {
+       "n": 225,
+       "name": "Daniel Amofah",
+       "pastors": 2
+      },
+      {
+       "n": 226,
+       "name": "Daniel Fiifi Gyamerah",
+       "pastors": 0
+      },
+      {
+       "n": 227,
+       "name": "Dayanara Hart",
+       "pastors": 0
+      },
+      {
+       "n": 228,
+       "name": "Edwin Ogoe Jnr",
+       "pastors": 0
+      },
+      {
+       "n": 229,
+       "name": "Emmanuel Amartey",
+       "pastors": 0
+      },
+      {
+       "n": 230,
+       "name": "Emmanuel Fosu",
+       "pastors": 0
+      },
+      {
+       "n": 231,
+       "name": "Emmanuel Opoku Baah",
+       "pastors": 1
+      },
+      {
+       "n": 232,
+       "name": "Enoch Boakye-yiadom",
+       "pastors": 6
+      },
+      {
+       "n": 233,
+       "name": "Enoch Lamptey",
+       "pastors": 2
+      },
+      {
+       "n": 234,
+       "name": "Enoch Tetteh Angmor",
+       "pastors": 28
+      },
+      {
+       "n": 235,
+       "name": "Esme Mantiziba",
+       "pastors": 0
+      },
+      {
+       "n": 236,
+       "name": "Ferrel N. Bruce",
+       "pastors": 6
+      },
+      {
+       "n": 237,
+       "name": "Foster Baodi",
+       "pastors": 0
+      },
+      {
+       "n": 238,
+       "name": "Frank Opoku",
+       "pastors": 1
+      },
+      {
+       "n": 239,
+       "name": "Geraldo Amoa",
+       "pastors": 8
+      },
+      {
+       "n": 240,
+       "name": "Isaac Agyeman",
+       "pastors": 35
+      },
+      {
+       "n": 241,
+       "name": "Isaac Koranteng",
+       "pastors": 40
+      },
+      {
+       "n": 242,
+       "name": "Isaac Nakoja",
+       "pastors": 0
+      },
+      {
+       "n": 243,
+       "name": "Jennis Opoku",
+       "pastors": 19
+      },
+      {
+       "n": 244,
+       "name": "Joseph Mills",
+       "pastors": 0
+      },
+      {
+       "n": 245,
+       "name": "Joshua Heward-mills",
+       "pastors": 120
+      },
+      {
+       "n": 246,
+       "name": "Kent Njeru",
+       "pastors": 43
+      },
+      {
+       "n": 247,
+       "name": "Kojo Yeboah Atiemo",
+       "pastors": 1
+      },
+      {
+       "n": 248,
+       "name": "Louisa Timothea Mills Odoi",
+       "pastors": 0
+      },
+      {
+       "n": 249,
+       "name": "Lucca Aryee",
+       "pastors": 0
+      },
+      {
+       "n": 250,
+       "name": "Mary Rea Bandoh",
+       "pastors": 0
+      },
+      {
+       "n": 251,
+       "name": "Maya Aida Asiedu",
+       "pastors": 0
+      },
+      {
+       "n": 252,
+       "name": "Michael Oddoye",
+       "pastors": 10
+      },
+      {
+       "n": 253,
+       "name": "Nana Kwesi Mensah",
+       "pastors": 3
+      },
+      {
+       "n": 254,
+       "name": "Nii Nortey Quist Therson",
+       "pastors": 53
+      },
+      {
+       "n": 255,
+       "name": "Patrick Inkoom",
+       "pastors": 83
+      },
+      {
+       "n": 256,
+       "name": "Paul Akuaku",
+       "pastors": 30
+      },
+      {
+       "n": 257,
+       "name": "Paul Baidoo",
+       "pastors": 1
+      },
+      {
+       "n": 258,
+       "name": "Peter Onasis",
+       "pastors": 0
+      },
+      {
+       "n": 259,
+       "name": "Pree Heward Mills",
+       "pastors": 0
+      },
+      {
+       "n": 260,
+       "name": "Reginald Sarkodie",
+       "pastors": 1
+      },
+      {
+       "n": 261,
+       "name": "Roger Hiltbruner",
+       "pastors": 0
+      },
+      {
+       "n": 262,
+       "name": "Rudy Vaye",
+       "pastors": 7
+      },
+      {
+       "n": 263,
+       "name": "Rutendo Mantaziba",
+       "pastors": 43
+      },
+      {
+       "n": 264,
+       "name": "Ruthie Appiah Denkyira",
+       "pastors": 0
+      },
+      {
+       "n": 265,
+       "name": "Serena Ariana Ababio",
+       "pastors": 0
+      },
+      {
+       "n": 266,
+       "name": "Solomon Tay",
+       "pastors": 34
+      },
+      {
+       "n": 267,
+       "name": "Stephen Jaiden Asamoah",
+       "pastors": 0
+      },
+      {
+       "n": 268,
+       "name": "Terry Bartels",
+       "pastors": 0
+      },
+      {
+       "n": 269,
+       "name": "Tomi Njoku",
+       "pastors": 0
+      },
+      {
+       "n": 270,
+       "name": "Vivaldi Aboagye",
+       "pastors": 0
+      },
+      {
+       "n": 271,
+       "name": "Zoe Freda Asamoah",
+       "pastors": 0
+      },
+      {
+       "n": 272,
+       "name": "Michael Asare",
+       "pastors": 1
+      },
+      {
+       "n": 273,
+       "name": "Nelly Masuku",
+       "pastors": 0
+      },
+      {
+       "n": 274,
+       "name": "Joseph Wachirah Kabiro",
+       "pastors": 14
+      },
+      {
+       "n": 275,
+       "name": "Henry Fogwe",
+       "pastors": 0
+      },
+      {
+       "n": 276,
+       "name": "Reginald Dadzie",
+       "pastors": 7
+      },
+      {
+       "n": 277,
+       "name": "Simone Pierre Ademola",
+       "pastors": 0
+      },
+      {
+       "n": 278,
+       "name": "Jake Godwyll",
+       "pastors": 0
+      },
+      {
+       "n": 279,
+       "name": "Prince Samuel Osei",
+       "pastors": 5
+      },
+      {
+       "n": 280,
+       "name": "Joy Bruce",
+       "pastors": 25
+      },
+      {
+       "n": 281,
+       "name": "George Seneagya",
+       "pastors": 7
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "notBishops": [
+  {
+   "name": "Rev Kobby Quansah",
+   "pastors": 67,
+   "group": "UD Ghana",
+   "denomination": "Lighthouse Chapel International"
+  },
+  {
+   "name": "Rev Eben Johnson",
+   "pastors": 29,
+   "group": "UD Europe",
+   "denomination": "Living Waters Church"
+  },
+  {
+   "name": "Rev Justice Hagan",
+   "pastors": 92,
+   "group": "UD North America",
+   "denomination": "Laikos"
+  }
+ ]
+}
