@@ -1257,8 +1257,9 @@ function Participant({
               <span className="reg-eyebrow">{titleFor(current.data).toUpperCase()}</span>
               <h2>{current.data.name}</h2>
               <p>
-                {orgLabel(current.data.organization)}
-                {current.data.denomination || current.data.church ? ` · ${current.data.denomination || current.data.church}` : ""}
+                {[orgLabel(current.data.organization), current.data.denomination || current.data.church]
+                  .filter((v, i, a) => v && a.indexOf(v) === i)
+                  .join(" · ")}
               </p>
             </div>
           </div>
