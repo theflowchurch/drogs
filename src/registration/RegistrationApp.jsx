@@ -154,7 +154,19 @@ const stepper = (list, selected, setSelected) => {
     onNext: i >= 0 && i < list.length - 1 ? () => setSelected(list[i + 1]) : undefined,
   };
 };
-function Dialog({ title, onClose, onPrev, onNext, children }) {
+// Opening a pastor from a bishop's record leaves a trail, so the dialog can go back.
+function useTrail(selected, setSelected) {
+  const [trail, setTrail] = useState([]);
+  const prev = trail.at(-1);
+  return {
+    open: (p) => { if (selected) setTrail((t) => [...t, selected]); setSelected(p); },
+    step: (p) => { setTrail([]); setSelected(p); },
+    close: () => { setTrail([]); setSelected(null); },
+    back: prev ? () => { setTrail((t) => t.slice(0, -1)); setSelected(prev); } : undefined,
+    backLabel: prev?.name,
+  };
+}
+function Dialog({ title, onClose, onPrev, onNext, onBack, backLabel, children }) {
   const host = useRef(null),
     close = useRef(onClose),
     nav = useRef({}),
@@ -213,6 +225,11 @@ function Dialog({ title, onClose, onPrev, onNext, children }) {
           if (dx < -70) nav.current.onNext?.();
         }}
       >
+        {onBack && (
+          <button type="button" className="reg-text reg-dialog-back" onClick={onBack}>
+            ← Back to {backLabel || "the previous record"}
+          </button>
+        )}
         <div className="reg-section-head">
           <h2>{title}</h2>
           {(onPrev || onNext) && (
@@ -478,6 +495,11 @@ export default function RegistrationApp({
               <button className="reg-primary reg-signin-button" onClick={() => setSigninOpen("signup")}>
                 Sign up
               </button>
+            </>
+          ) : browse ? (
+            <>
+              <a className="reg-text" href={`${base}/signup/#signin`}>Sign in</a>
+              <a className="reg-primary reg-signin-button" href={`${base}/signup/`}>Sign up</a>
             </>
           ) : null}
           <button className="reg-theme-toggle" onClick={toggleTheme} aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} title={theme === "dark" ? "Light mode" : "Dark mode"}>
@@ -2274,6 +2296,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
   // The open record follows the live list, so office edits show at once and a deleted record closes.
   const selected = selectedId ? all.find((p) => p.id === selectedId) || null : null;
   const setSelected = (p) => setSelectedId(p ? p.id : null);
+  const trail = useTrail(selected, setSelected);
   const scope = useMemo(
     () => all.filter((p) => personMatches(p, filter)),
     [all, filter],
@@ -2378,11 +2401,11 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
             </Empty>
           )}
       {selected && (
-        <Dialog title={selected.name} onClose={() => setSelected(null)} {...stepper(list, selected, setSelected)}>
+        <Dialog title={selected.name} onClose={trail.close} onBack={trail.back} backLabel={trail.backLabel} {...stepper(list, selected, trail.step)}>
           <RecordDetails
             person={selected}
             under={linkedPastors(selected)}
-            onOpen={setSelected}
+            onOpen={trail.open}
             perform={perform}
             state={state}
             actor={actor}
@@ -2926,6 +2949,7 @@ function PublicDirectory({ data, embedded = false }) {
 // Results for the single search box on the doors page: names first.
 function SearchResults({ list, q }) {
   const [selected, setSelected] = useState(null);
+  const trail = useTrail(selected, setSelected);
   const words = normalName(q);
   const byName = list.filter((p) => normalName(p.name).includes(words));
   const elsewhere = list.filter(
@@ -2939,13 +2963,13 @@ function SearchResults({ list, q }) {
         {elsewhere.length ? ` · ${elsewhere.length.toLocaleString()} by place or denomination` : ""}
       </p>
       {shown.length ? (
-        <PeopleGrid list={shown} limit={60} onMore={() => {}} onOpen={setSelected} dots={false} />
+        <PeopleGrid list={shown} limit={60} onMore={() => {}} onOpen={trail.open} dots={false} />
       ) : (
         <Empty title="No one matches">Try another spelling.</Empty>
       )}
       {selected && (
-        <Dialog title={selected.name} onClose={() => setSelected(null)} {...stepper(shown, selected, setSelected)}>
-          <PublicRecord person={selected} onOpen={setSelected} from={list} />
+        <Dialog title={selected.name} onClose={trail.close} onBack={trail.back} backLabel={trail.backLabel} {...stepper(shown, selected, trail.step)}>
+          <PublicRecord person={selected} onOpen={trail.open} from={list} />
         </Dialog>
       )}
     </div>
@@ -2960,6 +2984,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
     }),
     [limit, setLimit] = useState(PAGE),
     [selected, setSelected] = useState(null);
+  const trail = useTrail(selected, setSelected);
   const scope = useMemo(
     () => roll.filter((p) => personMatches(p, filter)),
     [roll, filter],
@@ -3013,8 +3038,8 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
         </Empty>
       )}
       {selected && (
-        <Dialog title={selected.name} onClose={() => setSelected(null)} {...stepper(list, selected, setSelected)}>
-          <PublicRecord person={selected} onOpen={setSelected} from={roll} />
+        <Dialog title={selected.name} onClose={trail.close} onBack={trail.back} backLabel={trail.backLabel} {...stepper(list, selected, trail.step)}>
+          <PublicRecord person={selected} onOpen={trail.open} from={roll} />
         </Dialog>
       )}
     </>

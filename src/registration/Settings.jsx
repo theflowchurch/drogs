@@ -7,7 +7,7 @@ import { catalogOf, feesOf, orgLabel } from './model.mjs';
 // Organizations, their denominations and the fees: editable lists saved as one action each.
 function Structure({ state, perform }) {
   const base = state ? catalogOf(state) : null;
-  const [cat, setCat] = useState(null), [fees, setFees] = useState(null), [newOrg, setNewOrg] = useState(''), [newDen, setNewDen] = useState({});
+  const [cat, setCat] = useState(null), [fees, setFees] = useState(null), [newOrg, setNewOrg] = useState(''), [newDen, setNewDen] = useState({}), [over, setOver] = useState(null);
   useEffect(() => { if (base && !cat) setCat(JSON.parse(JSON.stringify(base))); if (state && !fees) setFees({ ...feesOf(state) }); }, [state]);
   if (!cat || !fees) return null;
   const dirty = JSON.stringify(cat) !== JSON.stringify(base);
@@ -15,13 +15,21 @@ function Structure({ state, perform }) {
   const removeOrg = (o) => { const d = { ...cat.denominations }; delete d[o]; setCat({ organizations: cat.organizations.filter(x => x !== o), denominations: d }); };
   const addDen = (o) => { const v = (newDen[o] || '').trim(); if (!v || (cat.denominations[o] || []).includes(v)) return; setCat({ ...cat, denominations: { ...cat.denominations, [o]: [...(cat.denominations[o] || []), v].sort((a, b) => a.localeCompare(b)) } }); setNewDen({ ...newDen, [o]: '' }); };
   const removeDen = (o, v) => setCat({ ...cat, denominations: { ...cat.denominations, [o]: cat.denominations[o].filter(x => x !== v) } });
+  // Drag a denomination chip onto another organization's card to move it.
+  const moveDen = (from, to, v) => { if (!from || from === to || !v) return; const d = { ...cat.denominations, [from]: cat.denominations[from].filter(x => x !== v) }; d[to] = [...new Set([...(d[to] || []), v])].sort((a, b) => a.localeCompare(b)); setCat({ ...cat, denominations: d }); };
+  const dropProps = (o) => ({
+    onDragOver: e => { e.preventDefault(); if (over !== o) setOver(o); },
+    onDragLeave: e => { if (!e.currentTarget.contains(e.relatedTarget)) setOver(null); },
+    onDrop: e => { e.preventDefault(); setOver(null); const { from, den } = JSON.parse(e.dataTransfer.getData('text/plain') || '{}'); moveDen(from, o, den); },
+  });
   return <>
   <section className="reg-card reg-settings">
     <h2>Organizations and denominations</h2>
-    <p>What the sign-up form offers. Add a new fellowship or grouping here and it appears on the form at once. An organization with no denominations hides the denomination field.</p>
-    {cat.organizations.map(o => <div key={o} className="reg-catalog-org">
-      <div className="reg-catalog-head"><b>{orgLabel(o)}</b>{o !== orgLabel(o) && <small> ({o})</small>}<button type="button" className="reg-text danger" onClick={() => removeOrg(o)}>Remove organization</button></div>
-      <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => <li key={v}><span>{v}</span><button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button></li>)}</ul>
+    <p>What the sign-up form offers. Add a new fellowship or grouping here and it appears on the form at once. An organization with no denominations hides the denomination field. Drag a denomination onto another organization to move it there.</p>
+    {cat.organizations.map(o => <div key={o} className={`reg-catalog-org ${over === o ? 'over' : ''}`} {...dropProps(o)}>
+      <div className="reg-catalog-head"><b>{orgLabel(o)}</b><button type="button" className="reg-text danger" onClick={() => removeOrg(o)}>Remove organization</button></div>
+      <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => <li key={v} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ from: o, den: v })); }}><span>{v}</span><button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button></li>)}</ul>
+      {!(cat.denominations[o] || []).length && <p className="reg-small reg-catalog-empty">No denominations. Drop one here or add it below.</p>}
       <div className="reg-admin-add"><input placeholder="New denomination" value={newDen[o] || ''} onChange={e => setNewDen({ ...newDen, [o]: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addDen(o); } }} /><button type="button" className="reg-secondary" onClick={() => addDen(o)}>Add denomination</button></div>
     </div>)}
     <div className="reg-admin-add"><input placeholder="New organization or grouping" value={newOrg} onChange={e => setNewOrg(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addOrg(); } }} /><button type="button" className="reg-secondary" onClick={addOrg}>Add organization</button></div>
@@ -74,3 +82,4 @@ export default function Settings({ run, state, perform }) {
   </form>
   </>;
 }
+export { Structure };

@@ -3178,3 +3178,25 @@ input[type="date"] {
   border-radius: 999px;
   font-size: 13px;
 }
+
+/* Office structure: denomination chips drag between organizations */
+.reg-catalog-list li[draggable] {
+  cursor: grab;
+}
+.reg-catalog-list li[draggable]:active {
+  cursor: grabbing;
+}
+.reg-catalog-org.over {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.reg-catalog-empty {
+  margin: 0 0 10px;
+  color: var(--muted);
+}
+/* Dialog: the way back to the bishop a pastor was opened from */
+.reg-dialog-back {
+  margin: 0 0 6px;
+  padding: 0;
+  font-size: 14px;
+}
