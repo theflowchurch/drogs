@@ -3595,3 +3595,48 @@ input[type="date"] {
   font-size: 12px;
   margin-top: 2px;
 }
+
+/* Inline spelling edits in the structure lists */
+.reg-rename {
+  font: inherit;
+  font-size: 13px;
+  padding: 2px 6px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  min-width: 160px;
+}
+.reg-catalog-list li .reg-text {
+  padding: 0 4px;
+  font-size: 12px;
+}
+
+/* Denomination logos in the structure lists */
+.reg-logo-chip {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px dashed var(--line);
+  overflow: hidden;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 12px;
+  margin-right: 4px;
+}
+.reg-logo-chip.has {
+  border-style: solid;
+}
+.reg-logo-chip img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.reg-logo-chip input {
+  display: none;
+}
+.reg-denomination-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}

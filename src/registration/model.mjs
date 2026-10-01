@@ -1,5 +1,6 @@
 import { DENOMINATIONS } from "./denominations.mjs";
 import { GROUPS } from "./groups.mjs";
+import { LOGOS } from "./logos.mjs";
 // Full names for display; the short keys stay as stored identifiers.
 export const ORGANIZATION_LABEL = {
   "First Love": "First Love Church",
@@ -140,9 +141,9 @@ export const pauseFor = (state, entrance) => { const s = signupOf(state); return
 // United Islands…). A person's group is the one on their record, else the group
 // that lists their denomination.
 export const catalogOf = (state) => {
-  if (!state?.catalog?.organizations?.length) return { organizations: ORGANIZATIONS, denominations: DENOMINATIONS, groups: GROUPS };
+  if (!state?.catalog?.organizations?.length) return { organizations: ORGANIZATIONS, denominations: DENOMINATIONS, groups: GROUPS, logos: LOGOS };
   // The office's saved groups are the truth; nothing is added or repaired behind their back.
-  return { ...state.catalog, groups: state.catalog.groups || GROUPS };
+  return { ...state.catalog, groups: state.catalog.groups || GROUPS, logos: state.catalog.logos || LOGOS };
 };
 const denominationKey = (value) => normalName(value).replace(/^the /, "");
 // Does the person's denomination still exist in the office's lists for their
@@ -162,6 +163,13 @@ export function denominationListed(catalog, person) {
   return pool.some((d) => { const k = denominationKey(d); return k && (k === want || want.startsWith(k) || k.startsWith(want)); });
 }
 export const NO_DENOMINATION = "__none__";
+// The logo for a denomination: the office's saved one, else the one carried by the old records.
+export function logoFor(catalog, denomination) {
+  const want = denominationKey(denomination || "");
+  if (!want) return "";
+  for (const [name, path] of Object.entries(catalog?.logos || {})) if (path && denominationKey(name) === want) return path;
+  return "";
+}
 export function groupOf(catalog, person) {
   if (person?.group) return person.group;
   const want = denominationKey(person?.denomination || "");
@@ -1074,7 +1082,8 @@ export function applyAction(
       if (!organizations.includes(organization)) { if (supplied) throw Error(`The group “${key}” must belong to one of the organizations.`); continue; }
       groups[key] = { organization, denominations: [...new Set((g.denominations || []).map((d) => String(d || "").trim()).filter(Boolean))] };
     }
-    state.catalog = { organizations, denominations, groups };
+    const logos = Object.fromEntries(Object.entries(c.logos || catalogOf(state).logos || {}).map(([k, v]) => [String(k).trim(), String(v || "").trim()]).filter(([k, v]) => k && v && v.length <= 512));
+    state.catalog = { organizations, denominations, groups, logos };
     detail = { organizations: organizations.length, denominations: Object.values(denominations).reduce((n, d) => n + d.length, 0), groups: Object.keys(groups).length };
   } else if (action === "setFees") {
     office();

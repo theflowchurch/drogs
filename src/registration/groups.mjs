@@ -41,7 +41,7 @@ export const GROUPS = {
       "Talanta International Tanzania",
       "Premiero Amor",
       "La Belle Eglise Gabon",
-      "Other International",
+      "Others International Church",
       "Victoire Internationale",
       "Poimen Church Senegal-Gambia",
       "Sagesse Internationale Guinea",

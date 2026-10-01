@@ -1,6 +1,7 @@
 export const DENOMINATIONS = {
   "First Love": [
     "First Love Church",
+    "La Belle Eglise",
     "Go Ye Church",
     "Go Church",
     "Jesus Gefunden",
@@ -35,7 +36,6 @@ export const DENOMINATIONS = {
     "Jesus Is The Door",
     "Jesus Is The Rock Church",
     "Jesus Saviour Of The World Church International",
-    "La Belle Eglise",
     "La Belle Eglise Gabon",
     "Laikos International Church",
     "Lighthouse Chapel International",

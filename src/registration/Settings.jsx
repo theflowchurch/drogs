@@ -7,6 +7,13 @@ import { catalogOf, feesOf, orgLabel, signupOf, SIGNUP_PAUSED } from './model.mj
 // Organizations, their denominations and the fees: editable lists saved as one action each.
 // Pause or reopen sign-up. Paused: new people cannot request a code or submit;
 // everyone already registered keeps signing in, paying and editing.
+const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+// An uploaded logo lives in photo storage; fetch its URL like any media.
+function LogoMedia({ path }) {
+  const [url, setUrl] = useState('');
+  useEffect(() => { let live = true; api.mediaUrl(path).then(u => live && setUrl(u)).catch(() => {}); return () => { live = false; }; }, [path]);
+  return url ? <img src={url} alt="" /> : <span aria-hidden="true">◌</span>;
+}
 // Settings fold into categories so the page reads as a short list; open the one you need.
 function Category({ title, summary, children, open = false }) {
   return <details className="reg-settings-cat" open={open}>
@@ -35,10 +42,12 @@ function SignupControl({ state, perform }) {
     </div>)}
   </Category>;
 }
-function Structure({ state, perform }) {
+function Structure({ state, perform, actor }) {
   const base = state ? catalogOf(state) : null;
   const [cat, setCat] = useState(null), [fees, setFees] = useState(null), [newOrg, setNewOrg] = useState(''), [newDen, setNewDen] = useState({}), [over, setOver] = useState(null);
   const [newGroup, setNewGroup] = useState({ name: '', organization: '' }), [overGroup, setOverGroup] = useState(null), [openGroups, setOpenGroups] = useState([]);
+  const [renaming, setRenaming] = useState(null); // { kind: 'den'|'group', org, name, value }
+  const [logoBusy, setLogoBusy] = useState('');
   useEffect(() => { if (base && !cat) setCat(JSON.parse(JSON.stringify(base))); if (state && !fees) setFees({ ...feesOf(state) }); }, [state]);
   if (!cat || !fees) return null;
   const dirty = JSON.stringify(cat) !== JSON.stringify(base);
@@ -46,6 +55,19 @@ function Structure({ state, perform }) {
   const removeOrg = (o) => { const d = { ...cat.denominations }; delete d[o]; setCat({ ...cat, organizations: cat.organizations.filter(x => x !== o), denominations: d, groups: Object.fromEntries(Object.entries(cat.groups || {}).filter(([, g]) => g.organization !== o)) }); };
   const addDen = (o) => { const v = (newDen[o] || '').trim(); if (!v || (cat.denominations[o] || []).includes(v)) return; setCat({ ...cat, denominations: { ...cat.denominations, [o]: [...(cat.denominations[o] || []), v].sort((a, b) => a.localeCompare(b)) } }); setNewDen({ ...newDen, [o]: '' }); };
   const removeDen = (o, v) => setCat({ ...cat, denominations: { ...cat.denominations, [o]: cat.denominations[o].filter(x => x !== v) } });
+  // Spelling fixes: a denomination is renamed everywhere it appears (its organization's list and every group card); a group keeps its contents under the new name.
+  const renameDen = (o, from, to) => { const v = to.trim(); if (!v || v === from) return setRenaming(null); const fix = list => [...new Set(list.map(x => (x === from ? v : x)))]; setCat({ ...cat, logos: Object.fromEntries(Object.entries(cat.logos || {}).map(([k, x]) => [k === from ? v : k, x])), denominations: { ...cat.denominations, [o]: fix(cat.denominations[o] || []).sort((a, b) => a.localeCompare(b)) }, groups: Object.fromEntries(Object.entries(cat.groups || {}).map(([g, x]) => [g, x.organization === o ? { ...x, denominations: fix(x.denominations) } : x])) }); setRenaming(null); };
+  const renameGroup = (from, to) => { const v = to.trim(); if (!v || v === from || (cat.groups || {})[v]) return setRenaming(null); const next = {}; for (const [g, x] of Object.entries(cat.groups || {})) next[g === from ? v : g] = x; setCat({ ...cat, groups: next }); setOpenGroups(openGroups.map(x => (x === from ? v : x))); setRenaming(null); };
+  const renameBox = (onDone) => <input className="reg-rename" autoFocus aria-label="New spelling" value={renaming.value} onChange={e => setRenaming({ ...renaming, value: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); onDone(renaming.value); } if (e.key === 'Escape') setRenaming(null); }} onBlur={() => onDone(renaming.value)} />;
+  // Denomination logos: a small picture per denomination, uploaded by the office and saved with the lists.
+  const logos = cat.logos || {};
+  const logoSrc = v => { const k = logos[v]; return k ? (k.startsWith('assets/') ? `${base}/${k}` : null) : ''; };
+  const setLogo = (v, file) => { if (!file || !actor) return; setLogoBusy(v); api.upload(actor, file, 'logo').then(key => setCat({ ...cat, logos: { ...logos, [v]: key } })).catch(() => {}).finally(() => setLogoBusy('')); };
+  const logoControl = (v) => <label className={`reg-logo-chip ${logos[v] ? 'has' : ''}`} title={logos[v] ? 'Change logo' : 'Add logo'}>
+    {logos[v] ? (logoSrc(v) ? <img src={logoSrc(v)} alt="" /> : <LogoMedia path={logos[v]} />) : <span aria-hidden="true">◌</span>}
+    <input type="file" accept="image/png,image/jpeg,image/webp" disabled={!actor || logoBusy === v} onChange={e => { const f = e.target.files?.[0]; e.target.value = ''; setLogo(v, f); }} />
+  </label>;
+  const denChip = (o, v, extra = null) => <li key={v}>{logoControl(v)}{renaming?.kind === 'den' && renaming.org === o && renaming.name === v ? renameBox(val => renameDen(o, v, val)) : <span>{v}</span>}<button type="button" className="reg-text" aria-label={`Edit the spelling of ${v}`} title="Edit spelling" onClick={() => setRenaming({ kind: 'den', org: o, name: v, value: v })}>✎</button>{extra}</li>;
   // Groups: cards per group; denomination chips drag between groups of the same
   // organization, or back to “Not in a group”. Adding a denomination to a group
   // also lists it on the sign-up form for that organization.
@@ -74,7 +96,7 @@ function Structure({ state, perform }) {
     onDragLeave: e => { if (!e.currentTarget.contains(e.relatedTarget)) setOverGroup(null); },
     onDrop: e => { e.preventDefault(); setOverGroup(null); const { fromGroup, den } = JSON.parse(e.dataTransfer.getData('text/plain') || '{}'); if (den !== undefined) moveToGroup(fromGroup || '', target.startsWith('ungrouped:') ? '' : target, den); },
   });
-  const chip = (den, fromGroup) => <li key={den} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ fromGroup, den })); }}><span>{den}</span>{fromGroup && <button type="button" className="reg-text danger" aria-label={`Take ${den} out of ${fromGroup}`} onClick={() => moveToGroup(fromGroup, '', den)}>×</button>}</li>;
+  const chip = (den, fromGroup, org) => <li key={den} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ fromGroup, den })); }}>{org ? logoControl(den) : null}{renaming?.kind === 'den' && renaming.org === org && renaming.name === den ? renameBox(val => renameDen(org, den, val)) : <span>{den}</span>}{org && <button type="button" className="reg-text" aria-label={`Edit the spelling of ${den}`} title="Edit spelling" onClick={() => setRenaming({ kind: 'den', org, name: den, value: den })}>✎</button>}{fromGroup && <button type="button" className="reg-text danger" aria-label={`Take ${den} out of ${fromGroup}`} onClick={() => moveToGroup(fromGroup, '', den)}>×</button>}</li>;
   const OFFICE_ORG = { 'United Denominations': 'UD – OLGC' };
   const officeOrg = o => OFFICE_ORG[o] || orgLabel(o);
   // Drag a denomination chip onto another organization's card to move it.
@@ -92,23 +114,25 @@ function Structure({ state, perform }) {
       <h3>{officeOrg(o)}</h3>
       {!Object.values(groups).some(g => g.organization === o) ? (
         <>
-          <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => <li key={v}><span>{v}</span><button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button></li>)}</ul>
+          <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => denChip(o, v, <button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button>))}</ul>
           {!(cat.denominations[o] || []).length && <p className="reg-small reg-catalog-empty">No denominations listed.</p>}
           <div className="reg-admin-add"><input placeholder="New denomination" value={newDen[o] || ''} onChange={e => setNewDen({ ...newDen, [o]: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addDen(o); } }} /><button type="button" className="reg-secondary" onClick={() => addDen(o)}>Add denomination</button>{dirty && <button type="button" className="reg-primary" onClick={() => perform('setCatalog', { catalog: cat }, 'Groups saved.')}>Save</button>}</div>
         </>
       ) : (
       <div className="reg-group-grid">
         {Object.entries(groups).filter(([, g]) => g.organization === o).map(([name, g]) => <div key={name} className={`reg-group-card ${overGroup === name ? 'over' : ''} ${isOpen(name) ? 'open' : ''}`} {...groupDrop(name)}>
-          <button type="button" className="reg-group-head" onClick={() => toggle(name)} aria-expanded={isOpen(name)}><b>{name}</b><small>{g.denominations.length} denomination/country</small></button>
+          {renaming?.kind === 'group' && renaming.name === name
+            ? <div className="reg-group-head">{renameBox(val => renameGroup(name, val))}</div>
+            : <button type="button" className="reg-group-head" onClick={() => toggle(name)} aria-expanded={isOpen(name)}><b>{name}</b><small>{g.denominations.length} denomination/country</small></button>}
           {isOpen(name) && <>
-            <ul className="reg-catalog-list">{g.denominations.map(d => chip(d, name))}</ul>
+            <ul className="reg-catalog-list">{g.denominations.map(d => chip(d, name, o))}</ul>
             {!g.denominations.length && <p className="reg-small reg-catalog-empty">Nothing here yet. Drop a denomination/country onto this card.</p>}
-            <button type="button" className="reg-text danger" onClick={() => removeGroup(name)}>Remove group</button>
+            <div className="reg-row-actions"><button type="button" className="reg-text" onClick={() => setRenaming({ kind: 'group', name, value: name })}>Edit spelling</button><button type="button" className="reg-text danger" onClick={() => removeGroup(name)}>Remove group</button></div>
           </>}
         </div>)}
         <div className={`reg-group-card muted ${overGroup === `ungrouped:${o}` ? 'over' : ''} ${isOpen(`ungrouped:${o}`) ? 'open' : ''}`} {...groupDrop(`ungrouped:${o}`)}>
           <button type="button" className="reg-group-head" onClick={() => toggle(`ungrouped:${o}`)} aria-expanded={isOpen(`ungrouped:${o}`)}><b>Not in a group</b><small>{ungrouped(o).length} denomination/country</small></button>
-          {isOpen(`ungrouped:${o}`) && <ul className="reg-catalog-list">{ungrouped(o).map(d => chip(d, ''))}</ul>}
+          {isOpen(`ungrouped:${o}`) && <ul className="reg-catalog-list">{ungrouped(o).map(d => chip(d, '', o))}</ul>}
         </div>
       </div>
       )}
@@ -124,7 +148,7 @@ function Structure({ state, perform }) {
     {saveLists()}
     {cat.organizations.map(o => <div key={o} className={`reg-catalog-org ${over === o ? 'over' : ''}`} {...dropProps(o)}>
       <div className="reg-catalog-head"><b>{officeOrg(o)}</b>{dirty && <button type="button" className="reg-secondary reg-inline-save" onClick={() => perform('setCatalog', { catalog: cat }, 'Organizations and denominations saved.')}>Save</button>}<button type="button" className="reg-text danger" onClick={() => removeOrg(o)}>Remove organization</button></div>
-      <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => <li key={v} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ from: o, den: v })); }}><span>{v}</span><button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button></li>)}</ul>
+      <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => <li key={v} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ from: o, den: v })); }}>{logoControl(v)}{renaming?.kind === 'den' && renaming.org === o && renaming.name === v ? renameBox(val => renameDen(o, v, val)) : <span>{v}</span>}<button type="button" className="reg-text" aria-label={`Edit the spelling of ${v}`} title="Edit spelling" onClick={() => setRenaming({ kind: 'den', org: o, name: v, value: v })}>✎</button><button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button></li>)}</ul>
       {!(cat.denominations[o] || []).length && <p className="reg-small reg-catalog-empty">No denominations. Drop one here or add it below.</p>}
       <div className="reg-admin-add"><input placeholder="New denomination" value={newDen[o] || ''} onChange={e => setNewDen({ ...newDen, [o]: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addDen(o); } }} /><button type="button" className="reg-secondary" onClick={() => addDen(o)}>Add denomination</button></div>
     </div>)}
@@ -140,7 +164,7 @@ function Structure({ state, perform }) {
   </Category>
   </>;
 }
-export default function Settings({ run, state, perform }) {
+export default function Settings({ run, state, perform, actor }) {
   const [settings, setSettings] = useState([]), [values, setValues] = useState({}), [saved, setSaved] = useState(false), [copied, setCopied] = useState(''), [telegramResult, setTelegramResult] = useState('');
   const reload = async () => setSettings((await api.listSettings()).settings);
   useEffect(() => { run(reload); }, []);
@@ -163,7 +187,7 @@ export default function Settings({ run, state, perform }) {
   const setCount = keys => { const mine = settings.filter(s => keys.includes(s.key)); return mine.length ? `${mine.filter(s => s.set).length} of ${mine.length} set` : ''; };
   return <div className="reg-settings-list">
   {state && perform && <SignupControl state={state} perform={perform} />}
-  {state && perform && <Structure state={state} perform={perform} />}
+  {state && perform && <Structure state={state} perform={perform} actor={actor} />}
   <Category title="Links to share" summary={`${links.length} links`}>
     <ul className="reg-admin-list">{links.map(([label, path]) => <li key={path}><span><b>{label}</b><br /><a href={origin + path}>{origin + path}</a></span><button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button></li>)}</ul>
   </Category>

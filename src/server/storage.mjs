@@ -19,6 +19,8 @@ export function canReadMedia(state, actor, media) {
   if (actor && (media.owner_id === actor.id || actor.office)) return true;
   // A photo the office placed on this person's own registration.
   if (actor && state.registrations.some(r => r.userId === actor.id && r.data.photo === media.object_key)) return true;
+  // Denomination logos are public artwork.
+  if (media.kind === 'logo') return true;
   // A supervising bishop may see submitted portraits, but never someone else's receipt.
   if (media.kind !== 'portrait') return false;
   // Portraits on the public roll and on original-data records are part of the
@@ -44,7 +46,8 @@ export function createStorage({ config, pool, client, logger = console }) {
     requestChecksumCalculation: 'WHEN_REQUIRED', responseChecksumValidation: 'WHEN_REQUIRED' });
   return {
     async upload(actor, bytes, contentType, kind) {
-      if (!['portrait', 'receipt'].includes(kind)) throw new HttpError(400, 'Invalid upload type.');
+      if (!['portrait', 'receipt', 'logo'].includes(kind)) throw new HttpError(400, 'Invalid upload type.');
+      if (kind === 'logo' && !actor.office) throw new HttpError(403, 'Only the office uploads logos.');
       await rateLimit(pool, config, `upload:${actor.id}`, 30, 3600000);
       let body = await prepareImage(bytes, contentType);
       let Key = `${actor.id}/${kind}/${randomUUID()}.webp`;

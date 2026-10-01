@@ -17,6 +17,7 @@ import {
   groupOf,
   signupOf,
   denominationListed,
+  logoFor,
   whatsappNumber,
   nearMatches,
   namesAlike,
@@ -725,4 +726,11 @@ test("a denomination removed from the lists leaves its people as No denomination
   assert.deepEqual(saved.groups.Eschatos.denominations, ["Eschatos", "Revelation Church Of Asia"], "the office's saved card is returned exactly as saved");
   const trimmed = { ...cat, denominations: { ...cat.denominations, "First Love": cat.denominations["First Love"].filter((d) => d !== "Go Ye Church") } };
   assert.equal(denominationListed(trimmed, { organization: "First Love", denomination: "Go Ye Church" }), false);
+});
+test("denomination logos: defaults from the old records, office uploads saved with the lists", () => {
+  const cat = catalogOf(emptyState());
+  assert.ok(logoFor(cat, "First Love Church").startsWith("assets/"), "the old artwork is the default");
+  assert.equal(logoFor(cat, "No Such Chapel"), "");
+  const s = applyAction(emptyState(), office, "setCatalog", { catalog: { ...cat, logos: { ...cat.logos, "No Such Chapel": "office/logo/x.webp" } } });
+  assert.equal(logoFor(catalogOf(s), "no such chapel"), "office/logo/x.webp");
 });

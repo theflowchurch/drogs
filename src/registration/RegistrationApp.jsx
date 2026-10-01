@@ -39,6 +39,7 @@ import {
   SIGNUP_PAUSED,
   denominationListed,
   NO_DENOMINATION,
+  logoFor,
   attireExample,
   paymentReference,
   referenceIndex,
@@ -318,6 +319,12 @@ function DashboardFrame() {
       <iframe className="reg-dash-frame" src={DASHBOARD_URL} title="Kuriake Castle dashboard" allow="clipboard-read; clipboard-write; fullscreen" />
     </section>
   );
+}
+// A denomination's logo: the record's own artwork, else the catalog's (asset path or uploaded key).
+function DenominationLogo({ person, catalog }) {
+  const src = person.denominationLogo || logoFor(catalog, person.denomination);
+  if (!src) return null;
+  return src.startsWith("assets/") ? <img src={`${base}/${src}`} alt="" /> : <Media path={src} alt="" className="reg-denomination-logo" />;
 }
 // Opening a pastor from a bishop's record leaves a trail, so the dialog can go back.
 function useTrail(selected, setSelected) {
@@ -882,7 +889,7 @@ export default function RegistrationApp({
                   {tab === "Communication" && <Communication state={state} run={run} />}
                   {tab === "Accounts" && <Accounts run={run} />}
                   {tab === "API keys" && <ApiKeys run={run} />}
-                  {tab === "Settings" && <Settings run={run} state={state} perform={perform} />}
+                  {tab === "Settings" && <Settings run={run} state={state} perform={perform} actor={actor} />}
                   {tab === "Directory" &&
                     (office ? (
                       <Directory
@@ -2780,13 +2787,13 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
           </p>
           {p.denomination && (
             <p className="reg-record-denomination">
-              {p.denominationLogo && (
-                <img src={`${base}/${p.denominationLogo}`} alt="" />
-              )}
+              <DenominationLogo person={p} catalog={catalogOf(state)} />
               <span>{p.denomination}</span>
             </p>
           )}
-          <p className="reg-record-line">{orgLabel(p.organization)}</p>
+          {normalName(orgLabel(p.organization)) !== normalName(p.denomination || "") && normalName(p.organization) !== normalName(p.denomination || "") && (
+            <p className="reg-record-line">{orgLabel(p.organization)}</p>
+          )}
           <span className={`reg-badge ${p.updated ? "verified" : "unclaimed"}`}>
             {statusWords(p)}
           </span>
@@ -3139,7 +3146,7 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
     </section>
   );
 }
-function PublicRecord({ person: p, onOpen, from, pastors = true }) {
+function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null }) {
   return (
     <>
       <div className="reg-record-hero">
@@ -3153,9 +3160,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true }) {
           </p>
           {p.denomination && (
             <p className="reg-record-denomination">
-              {p.denominationLogo && (
-                <img src={`${base}/${p.denominationLogo}`} alt="" />
-              )}
+              <DenominationLogo person={p} catalog={catalog || catalogOf(null)} />
               <span>{p.denomination}</span>
             </p>
           )}
