@@ -413,6 +413,7 @@ export function applyAction(
   action,
   payload = {},
   makeId = () => crypto.randomUUID(),
+  references = [],
 ) {
   const state = { ...emptyState(), ...structuredClone(source) };
   if (!actor?.id) throw Error("Sign in first.");
@@ -486,6 +487,21 @@ export function applyAction(
           ? "pending"
           : "unclaimed";
     if (action === "submit") r.submittedAt = now;
+    // A bishop already in the original data is approved on the spot: the linked
+    // record must be a bishop, unclaimed by another account, and carry the same
+    // name. Everyone else waits in Approvals for the Archbishop.
+    if (action === "submit" && data.role === "bishop" && !profile.bishopApproved && data.referenceId) {
+      const ref = overlayReferences(references, state).find((x) => x.id === data.referenceId && x.role === "bishop");
+      const taken = state.profiles.some((p) => p.id !== actor.id && p.referenceId === data.referenceId);
+      if (ref && !taken && namesAlike(ref.name, data.name)) {
+        profile.bishopApproved = true;
+        profile.bishopDecision = null;
+        profile.referenceId = data.referenceId;
+        profile.approvedAt = now;
+        profile.autoApproved = true;
+        detail = { autoApproved: ref.name, referenceId: ref.id };
+      }
+    }
   } else if (action === "update") {
     // A member keeps their own details current after submitting; status and
     // payment are untouched and the record stays linked.

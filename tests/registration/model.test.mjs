@@ -613,3 +613,19 @@ test("office adds an original-data record with an uploaded photo; the overlay ca
   s = applyAction(s, office, "editReference", { referenceId: added.id, fields: { photo: "office/portrait/k2.webp" } });
   assert.equal(overlayReferences([], s).find((p) => p.id === added.id).photo, "office/portrait/k2.webp");
 });
+test("a bishop whose linked original record carries their name is approved on submit; others wait", () => {
+  const refs = [{ id: "B9", role: "bishop", name: "Ama Bishop", organization: "First Love" }];
+  let s = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Ama Bishop"), referenceId: "B9" }, undefined, refs);
+  assert.equal(s.registrations[0].status, "confirmed", "name matches the linked record");
+  assert.equal(s.profiles[0].autoApproved, true);
+  assert.equal(s.profiles[0].referenceId, "B9");
+  // Same record claimed by a second account: not automatic.
+  s = applyAction(s, other, "submit", { ...profile(other, "bishop", "Ama Bishop"), referenceId: "B9" }, undefined, refs);
+  assert.equal(s.registrations[1].status, "pending", "a record already linked elsewhere waits for the Archbishop");
+  // A different name on the linked record: not automatic.
+  let t = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Kofi Other"), referenceId: "B9" }, undefined, refs);
+  assert.equal(t.registrations[0].status, "pending");
+  // No link at all: not automatic.
+  t = applyAction(emptyState(), bishop, "submit", profile(bishop, "bishop", "Ama Bishop"), undefined, refs);
+  assert.equal(t.registrations[0].status, "pending");
+});

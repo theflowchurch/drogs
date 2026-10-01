@@ -723,7 +723,7 @@ export default function RegistrationApp({
                             Unclaimed:
                               "Registrations waiting for a bishop to confirm their place.",
                             Approvals:
-                              "Verify each bishop before they can confirm pastors, and see everyone approved so far.",
+                              "Bishops whose name matched the original data are approved on the spot. Everyone else waits here for the Archbishop before they can confirm pastors.",
                             "My pastors":
                               "Submit and maintain the names of the pastors under your oversight.",
                             "Pastor lists":
@@ -3388,6 +3388,7 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
                 <h3>{r.data.name}</h3>
                 <p>
                   {titleFor(r.data)} · {orgLabel(r.data.organization)} · {r.data.email}
+                  {state.profiles.find((p) => p.id === r.userId)?.autoApproved ? " · approved automatically: matched the original data" : ""}
                 </p>
               </div>
               <Badge status={r.status === "confirmed" ? "confirmed" : r.status === "denied" ? "denied" : "pending"}>{r.resubmit ? "Asked to resubmit" : null}</Badge>

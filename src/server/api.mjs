@@ -167,7 +167,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           if (name === 'approveBishop' && payload.referenceId && !references.some(r => r.id === payload.referenceId))
             throw new HttpError(400, 'Choose a listed bishop reference.');
           let after;
-          try { after = applyAction(before, actor, name, payload); }
+          try { after = applyAction(before, actor, name, payload, undefined, people); }
           catch (error) { throw new HttpError(400, error.message); }
           await persistState(conn, before, after);
           if (name === 'reviewBishop') reviewed = after.registrations.find(r => r.userId === payload.userId && r.year === after.year);

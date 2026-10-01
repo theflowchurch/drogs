@@ -158,7 +158,7 @@ export async function action(actor, name, payload) {
     return;
   }
   const write = () => {
-    const state = applyAction(read(), actor, name, payload);
+    const state = applyAction(read(), actor, name, payload, undefined, people);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     window.dispatchEvent(new Event("registration-change"));
   };
