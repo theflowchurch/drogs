@@ -1,0 +1,8 @@
+{
+ "_comment": "Portraits found in the office photo folders for bishops added from the official list (name → asset path).",
+ "photos": {
+  "Steve Asare": "assets/bishops/official-steve-asare.webp",
+  "Ebenezer Fiifi Biney": "assets/bishops/official-ebenezer-fiifi-biney.webp",
+  "Phillip Obeng Asamoah": "assets/bishops/official-phillip-obeng-asamoah.webp"
+ }
+}

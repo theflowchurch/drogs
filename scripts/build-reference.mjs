@@ -69,6 +69,7 @@ let people = [...BISHOPS.map(p => person('bishop', p)), ...PASTORS.map(p => pers
 const { namesAlike, normalName } = await import('../src/registration/model.mjs');
 const official = JSON.parse(await readFile(new URL('../data/official-bishops.json', import.meta.url), 'utf8'));
 const manual = JSON.parse(await readFile(new URL('../data/official-matches.json', import.meta.url), 'utf8')).matches;
+const officialPhotos = JSON.parse(await readFile(new URL('../data/official-photos.json', import.meta.url), 'utf8')).photos;
 const { COUNTRY_CURRENCY, countryKey } = await import('../src/registration/exchange.mjs');
 const COUNTRY_FIX = { columbia: 'Colombia', 'guinea conakry': 'Guinea', 'papau new guinea': 'Papua New Guinea', 'congo brazaville': 'Congo', 'equatorial guinea malabo': 'Equatorial Guinea', 'equatorial guinea bata': 'Equatorial Guinea', 'gabon libreville': 'Gabon', 'gabon port gentil': 'Gabon', 'precious souls church namibia': 'Namibia', 'precious souls church eswatini': 'Eswatini', 'poimen church senegal': 'Senegal', 'poimen church gambia': 'Gambia', 'pacific islands missionary church fiji': 'Fiji', 'pacific islands missionary church solomon islands': 'Solomon Islands', 'pacific islands missionary church vanuatu': 'Vanuatu', 'cape verde': 'Cape Verde' };
 const titleCase = t => t.replace(/[\p{L}'’]+/gu, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
@@ -90,7 +91,7 @@ for (const b of flat) {
   const old = linked.get(b.name);
   if (old === null) continue; // duplicate line in the document
   if (old) { old.group = b.group; old.listedPastors = b.pastors ?? null; if (b.title && old.title === 'Bishop') old.title = b.title; continue; }
-  const rec = { id: `BO${b.n}`, role: 'bishop', name: titleCase(b.name.replace(/\s+/g, ' ')), title: b.title || 'Bishop', organization: b.organization, denomination: denominationFor(b), denominationLogo: '', city: '', branch: '', country: headingCountry(b.heading || ''), image: '', email: '', phone: '', group: b.group, listedPastors: b.pastors ?? null };
+  const rec = { id: `BO${b.n}`, role: 'bishop', name: titleCase(b.name.replace(/\s+/g, ' ')), title: b.title || 'Bishop', organization: b.organization, denomination: denominationFor(b), denominationLogo: '', city: '', branch: '', country: headingCountry(b.heading || ''), image: officialPhotos[b.name] || '', email: '', phone: '', group: b.group, listedPastors: b.pastors ?? null };
   people.push(rec); added.push(rec);
 }
 // Pastors take their bishop's group; otherwise the group of their denomination.
