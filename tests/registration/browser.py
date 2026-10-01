@@ -32,7 +32,7 @@ with sync_playwright() as p:
   for org in ['DHMM','FLOW','HJC']:
    page.get_by_label('Organization',exact=True).select_option(org);expect(page.get_by_label('Denomination',exact=True)).not_to_be_visible()  # no denominations → the field is hidden
   page.get_by_label('Organization',exact=True).select_option('First Love');expect(page.get_by_label('Denomination',exact=True)).to_have_value('');page.get_by_label('Denomination',exact=True).select_option('First Love Church')
-  if role=='pastor':page.get_by_label('Find your bishop').fill('Demo Bish');page.get_by_role('button',name='This is my bishop').first.click();expect(page.get_by_text('Change bishop')).to_be_visible()
+  if role=='pastor':page.get_by_label('Your bishop').select_option(label='Demo Bishop · First Love Church');expect(page.get_by_text('Demo Bishop',exact=True)).to_be_visible()
   page.get_by_label('Photo in official attire',exact=True).set_input_files(PHOTO)
   expect(page.get_by_text('Photo uploaded · tap to replace it')).to_be_visible()
  def submit():

@@ -1216,26 +1216,17 @@ function RegistrationForm({
       }
       return next;
     });
-  // Pastors choose from bishops who have already registered; the search forgives
-  // spelling and word order.
-  const [bishopQuery, setBishopQuery] = useState("");
-  const registeredBishops = state.bishops || [];
+  // Pastors pick their bishop from a list of those who have already registered.
+  const registeredBishops = [...(state.bishops || [])].sort((a, b) => a.name.localeCompare(b.name));
   const chosenBishop = registeredBishops.find((b) => b.id === data.bishopId) || null;
-  const bishopMatches = useMemo(() => {
-    const q = normalName(bishopQuery);
-    if (data.role !== "pastor" || chosenBishop || q.length < 2) return [];
-    return registeredBishops
-      .filter((b) => normalName(b.name).includes(q) || namesAlike(b.name, bishopQuery))
-      .slice(0, 6);
-  }, [bishopQuery, data.role, chosenBishop, registeredBishops]);
   const pickBishop = (b) =>
     setData((d) => {
-      const parts = b.name.trim().split(/\s+/);
+      const parts = (b?.name || "").trim().split(/\s+/);
       return {
         ...d,
-        bishopId: b.id,
-        bishopFirstName: parts.slice(0, -1).join(" "),
-        bishopLastName: parts.at(-1) || "",
+        bishopId: b?.id || "",
+        bishopFirstName: b ? parts.slice(0, -1).join(" ") : "",
+        bishopLastName: b ? parts.at(-1) || "" : "",
         photoConfirmed: false,
       };
     });
@@ -1556,54 +1547,28 @@ function RegistrationForm({
                 </Field>
                 <CommitmentPreview role={data.role} country={data.country} />
                 {data.role === "pastor" && (
-                  <div className="reg-field wide">
-                    <label>Your bishop</label>
-                    {chosenBishop ? (
+                  <Field label="Your bishop" wide hint={registeredBishops.length
+                    ? "Only bishops who have already registered appear here. If yours is missing, ask them to sign up first at kuriakecastle.org/signup/bishop/."
+                    : "No bishop has registered yet. Ask your bishop to sign up first at kuriakecastle.org/signup/bishop/."}>
+                    <select
+                      value={data.bishopId}
+                      onChange={(e) => pickBishop(registeredBishops.find((b) => b.id === e.target.value))}
+                    >
+                      <option value="">Choose your bishop…</option>
+                      {registeredBishops.map((b) => (
+                        <option key={b.id} value={b.id}>{[b.name, b.denomination].filter(Boolean).join(" · ")}</option>
+                      ))}
+                    </select>
+                    {chosenBishop && (
                       <div className="reg-candidate chosen">
                         <Portrait person={chosenBishop} />
                         <div>
                           <b>{chosenBishop.name}</b>
                           <small>{[chosenBishop.denomination, chosenBishop.organization].filter(Boolean).join(" · ")}</small>
-                          <button type="button" className="reg-text" onClick={() => set("bishopId", "")}>
-                            Change bishop
-                          </button>
                         </div>
                       </div>
-                    ) : (
-                      <>
-                        <input
-                          aria-label="Find your bishop"
-                          placeholder="Type your bishop’s name"
-                          autoComplete="off"
-                          value={bishopQuery}
-                          onChange={(e) => setBishopQuery(e.target.value)}
-                        />
-                        {bishopMatches.length > 0 && (
-                          <div className="reg-candidates">
-                            {bishopMatches.map((b) => (
-                              <div key={b.id} className="reg-candidate">
-                                <Portrait person={b} />
-                                <div>
-                                  <b>{b.name}</b>
-                                  <small>{[b.denomination, b.organization].filter(Boolean).join(" · ")}</small>
-                                  <button type="button" className="reg-secondary" onClick={() => pickBishop(b)}>
-                                    This is my bishop
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                        <small>
-                          {registeredBishops.length
-                            ? bishopQuery.length >= 2 && !bishopMatches.length
-                              ? "No registered bishop matches that name. Bishops must register before their pastors; ask yours to sign up at kuriakecastle.org/signup/bishop/."
-                              : "Only bishops who have already registered appear here."
-                            : "No bishop has registered yet. Ask your bishop to sign up first at kuriakecastle.org/signup/bishop/."}
-                        </small>
-                      </>
                     )}
-                  </div>
+                  </Field>
                 )}
               </div>
               <div className="reg-form-actions">
