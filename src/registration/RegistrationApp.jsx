@@ -1945,7 +1945,7 @@ function RegistrationForm({
             <div>
               <div className="reg-section-head">
                 <div>
-                  <h2>Pastors Under Your Oversight</h2>
+                  <h2>Add pastors under your oversight</h2>
                   <p>
                     Type each pastor’s <b>full name</b> and <b>date of birth</b> on a row below. Empty rows are ignored. Each pastor adds their own photo when they register.
                   </p>
