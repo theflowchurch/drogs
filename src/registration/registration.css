@@ -3587,3 +3587,11 @@ input[type="date"] {
 .reg-reset-row .reg-text.danger {
   padding: 0;
 }
+
+/* People whose denomination no longer exists in the lists */
+.reg-no-denomination {
+  display: block;
+  color: var(--danger, #b42318);
+  font-size: 12px;
+  margin-top: 2px;
+}

@@ -144,6 +144,16 @@ export const catalogOf = (state) =>
     ? { ...state.catalog, groups: state.catalog.groups || GROUPS }
     : { organizations: ORGANIZATIONS, denominations: DENOMINATIONS, groups: GROUPS };
 const denominationKey = (value) => normalName(value).replace(/^the /, "");
+// Does the person's denomination still exist in the office's lists for their
+// organization? People whose denomination was removed read as "No denomination".
+export function denominationListed(catalog, person) {
+  const want = denominationKey(person?.denomination || "");
+  if (!want) return false;
+  const lists = catalog?.denominations || {};
+  const pool = person?.organization && lists[person.organization] ? lists[person.organization] : Object.values(lists).flat();
+  return pool.some((d) => { const k = denominationKey(d); return k === want || want.startsWith(k) || k.startsWith(want); });
+}
+export const NO_DENOMINATION = "__none__";
 export function groupOf(catalog, person) {
   if (person?.group) return person.group;
   const want = denominationKey(person?.denomination || "");
@@ -163,6 +173,7 @@ const CONTACT_FIELDS = ["phone", "email"];
 const scrubContacts = (o) => Object.fromEntries(Object.entries(o || {}).filter(([k]) => !CONTACT_FIELDS.includes(k)));
 export const publicOverlay = (state) => ({
   signup: signupOf(state),
+  catalog: catalogOf(state),
   hidden: state.hidden || [],
   overrides: Object.fromEntries(Object.entries(state.overrides || {}).map(([k, v]) => [k, scrubContacts(v)])),
   extraReferences: (state.extraReferences || []).map(scrubContacts),

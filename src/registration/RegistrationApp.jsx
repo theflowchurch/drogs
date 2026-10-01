@@ -37,6 +37,8 @@ import {
   overlayReferences,
   broadcastRecipients,
   SIGNUP_PAUSED,
+  denominationListed,
+  NO_DENOMINATION,
   attireExample,
   paymentReference,
   referenceIndex,
@@ -894,7 +896,7 @@ export default function RegistrationApp({
                       />
                     ) : (
                       <PublicDirectory
-                        data={{ source: state.publicDirectory || "original", roll: state.roll || [] }}
+                        data={{ source: state.publicDirectory || "original", roll: state.roll || [], catalog: catalogOf(state) }}
                         embedded
                       />
                     ))}
@@ -2415,7 +2417,7 @@ function Dot({ person }) {
 const personMatches = (p, f) =>
   (!f.org || p.organization === f.org) &&
   (!f.group || p.group === f.group) &&
-  (!f.denomination || p.denomination === f.denomination) &&
+  (!f.denomination || (f.denomination === NO_DENOMINATION ? p.denominationListed === false : p.denomination === f.denomination)) &&
   (!f.country || p.country === f.country) &&
   (!f.state ||
     (f.state === "updated" && p.updated) ||
@@ -2465,6 +2467,7 @@ function DirectoryFilters({ filter, setFilter, options }) {
         onChange={(e) => set({ denomination: e.target.value })}
       >
         <option value="">All denominations</option>
+        {options.unlisted > 0 && <option value={NO_DENOMINATION}>No denomination · {options.unlisted.toLocaleString()}</option>}
         {options.denomination.map((d) => (
           <option key={d}>{d}</option>
         ))}
@@ -2504,7 +2507,9 @@ const filterOptions = (list, org, group = "") => {
   return {
     organization: unique("organization", list),
     group: unique("group", scope),
-    denomination: unique("denomination", scope),
+    // Only denominations that still exist; the rest fall under "No denomination".
+    denomination: unique("denomination", scope.filter((p) => p.denominationListed !== false)),
+    unlisted: scope.filter((p) => p.denominationListed === false).length,
     country: unique("country", scope),
   };
 };
@@ -2575,6 +2580,7 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
             <div className="reg-person-name">
               <h3>{p.name}</h3>
               {dots && <Dot person={p} />}
+              {p.denominationListed === false && <small className="reg-no-denomination">No denomination{p.denomination ? ` · was ${p.denomination}` : ""}</small>}
             </div>
           </button>
         ))}
@@ -2600,7 +2606,8 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
     [limit, setLimit] = useState(PAGE),
     [selectedId, setSelectedId] = useState(null);
   const all = useMemo(() => {
-    const everyone = directoryPeople(state, people, year);
+    const catalog = catalogOf(state);
+    const everyone = directoryPeople(state, people, year).map((p) => ({ ...p, denominationListed: denominationListed(catalog, p) }));
     // The registered view is what the public roll counts: people confirmed this year.
     return mode === "registered"
       ? everyone.filter((p) => p.registration?.status === "confirmed")
@@ -3253,7 +3260,8 @@ function PublicList({ list }) {
   );
 }
 function PublicDirectory({ data, embedded = false }) {
-  const list = data.source === "roll" ? data.roll : overlayReferences(publicPeople, data);
+  const base = data.source === "roll" ? data.roll : overlayReferences(publicPeople, data);
+  const list = data.catalog ? base.map((p) => ({ ...p, denominationListed: denominationListed(data.catalog, p) })) : base;
   const [role, setRole] = useState(null),
     [q, setQ] = useState("");
   if (!embedded) return <PublicList list={list} />;

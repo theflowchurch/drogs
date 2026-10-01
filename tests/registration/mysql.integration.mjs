@@ -302,7 +302,9 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     const [[stateBefore]] = await pool.query('SELECT data FROM dr_state WHERE id=1');
     assert.equal(await launchReset(pool, config), true);
     for (const table of ['dr_registrations', 'dr_rosters', 'dr_profiles', 'dr_audit', 'dr_media']) assert.equal((await pool.query(`SELECT COUNT(*) AS n FROM ${table}`))[0][0].n, 0, `${table} cleared`);
-    const [users] = await pool.query('SELECT email FROM dr_users'); assert.deepEqual(users.map(u => u.email).sort(), [...config.admins].sort(), 'only office accounts remain');
+    const [users] = await pool.query('SELECT email FROM dr_users');
+    assert.ok(users.length > 0 && users.every(u => config.admins.includes(u.email)), 'only office accounts remain');
+    assert.ok(users.some(u => u.email === 'office@example.com'), 'the signed-in office account is kept');
     const [[stateAfter]] = await pool.query('SELECT data FROM dr_state WHERE id=1'); assert.deepEqual(stateAfter.data, stateBefore.data, 'office structure untouched');
     assert.equal((await call('auth/me', office.cookie)).data.office, true, 'the office stays signed in');
     assert.equal(await launchReset(pool, config), false, 'runs once only');

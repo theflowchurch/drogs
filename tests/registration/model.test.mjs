@@ -16,6 +16,7 @@ import {
   catalogOf,
   groupOf,
   signupOf,
+  denominationListed,
   whatsappNumber,
   nearMatches,
   namesAlike,
@@ -709,4 +710,13 @@ test("the appointments door pauses separately from the general sign-up", () => {
   const p9 = { id: "p9", email: "p9@example.com" };
   assert.throws(() => applyAction(s, p9, "submit", { ...profile(p9, "pastor", "New Appointee"), entrance: "appointments" }), /No appointments/);
   assert.equal(signupOf(s).closed, true); assert.equal(signupOf(s).appointments.closed, true);
+});
+test("a denomination removed from the lists leaves its people as No denomination", () => {
+  const cat = catalogOf(emptyState());
+  assert.equal(denominationListed(cat, { organization: "First Love", denomination: "First Love Church" }), true);
+  assert.equal(denominationListed(cat, { organization: "United Denominations", denomination: "THE MAKARIOS CHURCH" }), true, "case and a leading The do not matter");
+  assert.equal(denominationListed(cat, { organization: "First Love", denomination: "Gone Chapel" }), false);
+  assert.equal(denominationListed(cat, { organization: "First Love", denomination: "" }), false);
+  const trimmed = { ...cat, denominations: { ...cat.denominations, "First Love": cat.denominations["First Love"].filter((d) => d !== "Go Ye Church") } };
+  assert.equal(denominationListed(trimmed, { organization: "First Love", denomination: "Go Ye Church" }), false);
 });
