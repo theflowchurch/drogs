@@ -3576,3 +3576,14 @@ input[type="date"] {
     flex-basis: 100%;
   }
 }
+
+/* Accounts: the launch reset sits at the top of the member accounts card */
+.reg-reset-row {
+  margin: 12px 0 6px;
+  padding: 12px 14px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+}
+.reg-reset-row .reg-text.danger {
+  padding: 0;
+}

@@ -30,6 +30,11 @@ export default function Accounts({ run }) {
       <form className="reg-account-search" onSubmit={e => { e.preventDefault(); setQuery(search); load(1, search); }}>
         <label className="reg-field">Find an account<input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder="Start typing a name or email address" maxLength={254} autoComplete="off" /></label><button className="reg-primary">Search accounts</button>
       </form>
+      <div className="reg-reset-row">
+      {(confirmClear
+        ? <div className="reg-review-buttons"><button className="reg-secondary danger" onClick={() => remove({ all: true }, 'Reset done: every registration, list, photo and activity record was removed. Office sign-ins were kept.')}>Yes, reset everything</button><button className="reg-secondary" onClick={() => setConfirmClear(false)}>Keep them</button></div>
+        : <button className="reg-text danger" onClick={() => setConfirmClear(true)}>Reset for launch: remove every member account, registration, pastor list, photo and activity record (office sign-ins and the original data are kept)</button>)}
+      </div>
       <p className="reg-account-note">An account is created when someone first signs in. Removing an account deletes their profile, registration, uploads and sign-in history; office members cannot be removed here.</p>
       {result && !result.data.length ? <p>No accounts found.</p> : result && <div className="reg-account-table"><table><thead><tr><th>Person</th><th>Account created</th><th>Last successful login</th><th>Registration</th><th>Activity</th></tr></thead><tbody>{result.data.map(account => <tr key={account.id}>
         <td><strong>{account.name || 'Name not yet provided'}</strong><span>{account.email}</span><small>{account.office ? 'Office member' : account.role || 'Role not yet selected'}</small></td>
@@ -38,9 +43,6 @@ export default function Accounts({ run }) {
           {!account.office && <button className="reg-text danger" onClick={() => remove({ user: account.id }, 'Account removed.')}>Remove</button>}</td>
       </tr>)}</tbody></table></div>}
       {result && result.total > 50 && <div className="reg-account-toolbar"><button className="reg-text" disabled={result.page === 1} onClick={() => load(result.page - 1)}>Previous</button><span>Page {result.page} of {Math.ceil(result.total / 50)}</span><button className="reg-text" disabled={result.page * 50 >= result.total} onClick={() => load(result.page + 1)}>Next</button></div>}
-      {result && (confirmClear
-        ? <div className="reg-review-buttons"><button className="reg-secondary danger" onClick={() => remove({ all: true }, 'Reset done: every registration, list, photo and activity record was removed. Office sign-ins were kept.')}>Yes, reset everything</button><button className="reg-secondary" onClick={() => setConfirmClear(false)}>Keep them</button></div>
-        : <button className="reg-text danger" onClick={() => setConfirmClear(true)}>Reset for launch: remove every member account, registration, pastor list, photo and activity record (office sign-ins and the original data are kept)</button>)}
     </section>
     {revoking && <div className="reg-overlay"><section className="reg-dialog" role="dialog" aria-modal="true" aria-label="Revoke office access">
       <div className="reg-section-head"><h2>Revoke office access?</h2><button className="reg-icon" onClick={() => setRevoking('')} aria-label="Close">×</button></div>
