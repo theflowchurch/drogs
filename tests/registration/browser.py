@@ -22,7 +22,7 @@ with sync_playwright() as p:
  def signout():
   page.get_by_role('button',name='Sign out',exact=True).click();page.get_by_role('link',name='View the full Pastoral directory').wait_for()
  def register(name,role='pastor',bishop='B1'):
-  page.get_by_label('Ministerial title').select_option(role)
+  page.get_by_label('Ministerial title').select_option(label=role.title())
   page.get_by_label('Organization',exact=True).select_option('First Love')
   page.get_by_label('First name',exact=True).fill(name.split(' ')[0]);page.get_by_label('Last name',exact=True).fill(' '.join(name.split(' ')[1:]))
   page.get_by_label('Gender',exact=True).select_option('male')
@@ -30,8 +30,12 @@ with sync_playwright() as p:
   page.get_by_label('Date of birth').fill('1990-02-01')
   page.get_by_label('Denomination',exact=True).select_option('First Love Church');page.get_by_label('Country where you currently serve',exact=True).fill('Ghana');page.get_by_label('City',exact=True).fill('Accra')
   choices=page.get_by_label('Denomination',exact=True).locator('option').all_text_contents();assert len(choices)==8 and 'Go Ye Church' in choices
+  if role=='pastor':
+   assert page.get_by_label('Ministerial title').locator('option').all_text_contents()==['Pastor','Rev.'],'a male pastor chooses Pastor or Rev.'
+   page.get_by_label('Gender',exact=True).select_option('female');assert 'Lady Rev.' in page.get_by_label('Ministerial title').locator('option').all_text_contents();page.get_by_label('Gender',exact=True).select_option('male')
   for org in ['DHMM','FLOW','HJC']:
    page.get_by_label('Organization',exact=True).select_option(org);expect(page.get_by_label('Denomination',exact=True)).not_to_be_visible()  # no denominations → the field is hidden
+   if role=='pastor':assert page.get_by_label('Your bishop').locator('option').count()==1,'only bishops of the chosen organization are offered'
   page.get_by_label('Organization',exact=True).select_option('First Love');expect(page.get_by_label('Denomination',exact=True)).to_have_value('');page.get_by_label('Denomination',exact=True).select_option('First Love Church')
   if role=='pastor':page.get_by_label('Your bishop').select_option(label='Demo Bishop · First Love Church');expect(page.get_by_text('Demo Bishop',exact=True)).to_be_visible()
   page.get_by_label('Photo in official attire',exact=True).set_input_files(PHOTO)

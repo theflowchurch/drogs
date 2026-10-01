@@ -31,6 +31,7 @@ import {
   nearMatches,
   dobClose,
   titleFor,
+  PASTOR_TITLES,
   orgLabel,
   REFERENCE_FIELDS,
   catalogOf,
@@ -171,16 +172,17 @@ const stepper = (list, selected, setSelected) => {
 function ProfileEditor({ current, state, actor, perform, onDone }) {
   const d = current.data;
   const catalog = state.catalog || catalogOf(state);
-  const [f, setF] = useState({ gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "" });
+  const [f, setF] = useState({ gender: d.gender || "", title: d.title || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "" });
   const [busyPhoto, setBusyPhoto] = useState(false), [problem, setProblem] = useState("");
   const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
   const countries = [...new Set([...overlayReferences(people, state).map((x) => x.country), f.country].filter(Boolean))].sort();
-  const bishops = [...(state.bishops || [])].filter((b) => b.approved).sort((a, b) => a.name.localeCompare(b.name));
+  const bishops = [...(state.bishops || [])].filter((b) => b.approved && b.organization === f.organization).sort((a, b) => a.name.localeCompare(b.name));
   const denominations = catalog.denominations[f.organization] || [];
   const save = () => perform("update", { ...f, photoConfirmed: true }, "Your details were updated.").then((ok) => ok && onDone());
   return (
     <div className="reg-fields reg-office-form">
       <p className="reg-field wide reg-small">Name: <b>{d.name}</b> · Date of birth: <b>{longDate(d.dob)}</b>. These cannot be changed here; contact the office if either is wrong.</p>
+      {d.role === "pastor" && <Field label="Title"><select value={titleFor({ ...d, ...f })} onChange={(e) => set("title", e.target.value)}>{PASTOR_TITLES.filter((t) => t !== "Lady Rev." || f.gender === "female").map((t) => <option key={t}>{t}</option>)}</select></Field>}
       <Field label="Gender"><select value={f.gender} onChange={(e) => set("gender", e.target.value)}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></Field>
       <Field label="WhatsApp number"><input value={f.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
       <Field label="Organization"><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{orgLabel(o)}</option>)}</select></Field>
@@ -1303,7 +1305,7 @@ const ACTION_LABELS = {
                   apiKeyCreated: "API key created",
                   apiKeyRevoked: "API key revoked",
 };
-const FIELD_LABELS = { firstName: "First name", lastName: "Last name", name: "Name", gender: "Gender", organization: "Organization", denomination: "Denomination", country: "Country", city: "City", phone: "WhatsApp number", email: "Email", bishopId: "Bishop", photo: "Photo", amount: "Amount", currency: "Currency", status: "Status", subject: "Subject", recipients: "Recipients", audience: "Audience", autoApproved: "Matched original record", closed: "Paused", notice: "Message" };
+const FIELD_LABELS = { firstName: "First name", lastName: "Last name", name: "Name", gender: "Gender", title: "Title", organization: "Organization", denomination: "Denomination", country: "Country", city: "City", phone: "WhatsApp number", email: "Email", bishopId: "Bishop", photo: "Photo", amount: "Amount", currency: "Currency", status: "Status", subject: "Subject", recipients: "Recipients", audience: "Audience", autoApproved: "Matched original record", closed: "Paused", notice: "Message" };
 // What an audit entry changed, in words: "City: Kumasi · WhatsApp number: +233…".
 function detailWords(detail, state) {
   if (!detail || typeof detail !== "object") return "";
@@ -1534,6 +1536,7 @@ function RegistrationForm({
         entrance,
         role: fixedRole || profile?.role || "pastor",
         gender: "",
+        title: "",
         name: "",
         firstName: "",
         lastName: "",
@@ -1590,7 +1593,7 @@ function RegistrationForm({
       return next;
     });
   // Pastors pick their bishop from a list of those who have already registered.
-  const registeredBishops = [...(state.bishops || [])].filter((b) => b.approved).sort((a, b) => a.name.localeCompare(b.name));
+  const registeredBishops = [...(state.bishops || [])].filter((b) => b.approved && (!data.organization || b.organization === data.organization)).sort((a, b) => a.name.localeCompare(b.name));
   const chosenBishop = registeredBishops.find((b) => b.id === data.bishopId) || null;
   const pickBishop = (b) =>
     setData((d) => {
@@ -1608,6 +1611,7 @@ function RegistrationForm({
       const next = { ...d, [key]: value, photoConfirmed: false };
       if (key === "organization") {
         next.denomination = "";
+        if (d.bishopId && (state.bishops || []).find((b) => b.id === d.bishopId)?.organization !== value) { next.bishopId = ""; next.bishopFirstName = ""; next.bishopLastName = ""; }
         // FLOW is an online fellowship: its members are listed as Online, Ghana.
         if (value === "FLOW") { next.city = "Online"; next.country = "Ghana"; }
       }
@@ -1771,14 +1775,12 @@ function RegistrationForm({
                   label="Ministerial title"
                 >
                   <select
-                    value={data.role}
-                    onChange={(e) => set("role", e.target.value)}
-                    disabled={Boolean(profile) || Boolean(fixedRole)}
+                    value={data.role === "bishop" ? "bishop" : `pastor|${titleFor(data)}`}
+                    onChange={(e) => { const [role, title] = e.target.value.split("|"); setData((d) => ({ ...d, role, title: title || "", photoConfirmed: false })); }}
+                    disabled={(profile?.role || fixedRole) === "bishop"}
                   >
-                    <option value="pastor">Pastor</option>
-                    <option value="bishop">
-                      Bishop
-                    </option>
+                    {(profile?.role || fixedRole) !== "bishop" && PASTOR_TITLES.filter((t) => t !== "Lady Rev." || data.gender === "female").map((t) => <option key={t} value={`pastor|${t}`}>{t}</option>)}
+                    {(profile?.role || fixedRole) !== "pastor" && <option value="bishop">Bishop</option>}
                   </select>
                 </Field>
                 <Field label="Organization">
@@ -2331,7 +2333,7 @@ function ProfileDetails({ record, directory = [] }) {
         <div>
           <h2>{p.name}</h2>
           <p>
-            {titleCase(p.role)} · {orgLabel(p.organization)}
+            {titleFor(p)} · {orgLabel(p.organization)}
           </p>
           {record.status && <Badge status={record.status} />}
         </div>
@@ -2913,7 +2915,7 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
     [busyPhoto, setBusyPhoto] = useState(false);
   const catalog = state.catalog || catalogOf(state);
   const d = r.data;
-  const begin = () => { setForm({ firstName: d.firstName || "", lastName: d.lastName || "", gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", phone: d.phone || "", dob: d.dob || "", country: d.country || "", city: d.city || "", email: d.email || "", bishopId: d.bishopId || "", role: d.role }); setOpen(true); };
+  const begin = () => { setForm({ firstName: d.firstName || "", lastName: d.lastName || "", title: d.title || "", gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", phone: d.phone || "", dob: d.dob || "", country: d.country || "", city: d.city || "", email: d.email || "", bishopId: d.bishopId || "", role: d.role }); setOpen(true); };
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
   const save = () => perform("officeEdit", { userId: r.userId, data: form }, "Details updated.").then((ok) => ok && setOpen(false));
   const statuses = d.role === "bishop" ? ["confirmed", "pending", "denied"] : ["confirmed", "unclaimed", "removed"];
@@ -2960,6 +2962,7 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
       {open && form && (
         <div className="reg-fields reg-office-form">
           <Field label="Ministerial category"><select value={form.role} onChange={(e) => set("role", e.target.value)}><option value="bishop">Bishop</option><option value="pastor">Pastor</option></select></Field>
+          {form.role === "pastor" && <Field label="Title"><select value={titleFor(form)} onChange={(e) => set("title", e.target.value)}>{PASTOR_TITLES.filter((t) => t !== "Lady Rev." || form.gender === "female").map((t) => <option key={t}>{t}</option>)}</select></Field>}
           <Field label="Organization"><select value={form.organization} onChange={(e) => set("organization", e.target.value)}><option value="">Select</option>{catalog.organizations.map((o) => <option key={o} value={o}>{orgLabel(o)}</option>)}</select></Field>
           <Field label="First name"><input value={form.firstName} onChange={(e) => set("firstName", e.target.value)} /></Field>
           <Field label="Last name"><input value={form.lastName} onChange={(e) => set("lastName", e.target.value)} /></Field>
@@ -4461,7 +4464,7 @@ function History({ state, records, office, actor, year, perform }) {
                   .map((r) => (
                     <tr key={r.userId}>
                       <td>{r.data.name}</td>
-                      <td>{titleCase(r.data.role)}</td>
+                      <td>{titleFor(r.data)}</td>
                       <td>
                         <Badge status={r.status} />
                       </td>

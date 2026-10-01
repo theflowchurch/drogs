@@ -458,6 +458,12 @@ test("female bishops are addressed by their organization's title", () => {
   assert.equal(titleFor({ role: "bishop", gender: "female", organization: "First Love" }), "Mother");
   assert.equal(titleFor({ role: "bishop", gender: "male", organization: "First Love" }), "Bishop");
   assert.equal(titleFor({ role: "pastor", gender: "female", organization: "First Love" }), "Pastor");
+  assert.equal(titleFor({ role: "pastor", gender: "male", title: "Rev." }), "Rev.");
+  assert.equal(titleFor({ role: "pastor", gender: "female", title: "Lady Rev." }), "Lady Rev.");
+  assert.equal(titleFor({ role: "pastor", gender: "male", title: "Lady Rev." }), "Pastor", "Lady Rev. is for women");
+  assert.equal(titleFor({ role: "bishop", gender: "male", title: "Rev." }), "Bishop", "a bishop's title is not chosen");
+  assert.equal(validateProfile({ ...profile(pastor), title: "Rev." }, pastor.email).title, "Rev.");
+  assert.equal(validateProfile({ ...profile(pastor), title: "Archdeacon" }, pastor.email).title, "");
   assert.throws(() => validateProfile({ ...profile(pastor), gender: "" }, pastor.email), /male or female/);
 });
 test("a pastor matched under a pending bishop stays on the roll when the office confirms the bishop with a reference", () => {

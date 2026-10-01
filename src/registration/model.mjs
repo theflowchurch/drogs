@@ -265,6 +265,8 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
     organization: p.organization || "",
     photo: p.photo || "",
     gender: ["male", "female"].includes(p.gender) ? p.gender : "",
+    // A pastor chooses how they are addressed; a bishop's title follows from gender and organization.
+    title: PASTOR_TITLES.includes(p.title) ? p.title : "",
     bishopId: p.bishopId || "",
     referenceId: /^[A-Za-z]{1,2}[A-Za-z0-9]{1,14}$/.test(String(p.referenceId || "")) ? p.referenceId : "",
     bishopFirstName: String(p.bishopFirstName || "").trim(),
@@ -941,7 +943,7 @@ export function applyAction(
     office();
     const r = registration();
     if (!r) throw Error("Select a registration.");
-    const EDITABLE = ["firstName", "lastName", "gender", "organization", "denomination", "church", "phone", "dob", "country", "city", "email", "bishopId", "referenceId", "photo", "role"];
+    const EDITABLE = ["firstName", "lastName", "title", "gender", "organization", "denomination", "church", "phone", "dob", "country", "city", "email", "bishopId", "referenceId", "photo", "role"];
     const incoming = Object.fromEntries(Object.entries(payload.data || {}).filter(([k, v]) => EDITABLE.includes(k) && v !== undefined));
     const merged = { ...r.data, ...incoming };
     if (!["bishop", "pastor"].includes(merged.role)) throw Error("Choose Bishop or Pastor.");
@@ -1167,8 +1169,9 @@ export function directoryFor(state, references) {
 }
 // How a person is addressed: a female bishop is an Episcopal Sister in United
 // Denominations and a Mother in First Love; everyone else is Bishop or Pastor.
-export function titleFor({ role, gender, organization }) {
-  if (role !== "bishop") return "Pastor";
+export const PASTOR_TITLES = ["Pastor", "Rev.", "Lady Rev."];
+export function titleFor({ role, gender, organization, title }) {
+  if (role !== "bishop") return title === "Rev." || (title === "Lady Rev." && gender === "female") ? title : "Pastor";
   if (gender === "female") return organization === "United Denominations" ? "Episcopal Sister" : organization === "First Love" ? "Mother" : "Bishop";
   return "Bishop";
 }
@@ -1186,7 +1189,7 @@ export function publicRoll(state, people, year = state.year) {
             .filter((x) => x.year === year && x.bishopId === r.userId && x.status === "active")
             .map((x) => {
               const reg = x.pastorId && state.registrations.find((y) => y.userId === x.pastorId && y.year === year);
-              return { id: `p:${x.id}`, role: "pastor", name: reg?.data.name || x.name, title: "Pastor", photo: reg?.data.photo || "", city: reg?.data.city || "", country: reg?.data.country || "", registered: Boolean(reg) };
+              return { id: `p:${x.id}`, role: "pastor", name: reg?.data.name || x.name, title: reg ? titleFor(reg.data) : "Pastor", photo: reg?.data.photo || "", city: reg?.data.city || "", country: reg?.data.country || "", registered: Boolean(reg) };
             })
             .sort((a, b) => a.name.localeCompare(b.name))
         : undefined;
