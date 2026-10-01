@@ -85,7 +85,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         await rateLimit(pool, config, `public-directory:${request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'all'}`, 120, 60000);
         if (!publicCache.value || Date.now() - publicCache.at > 30000) {
           const state = await transaction(pool, conn => readState(conn));
-          publicCache = { at: Date.now(), value: { source: config.publicDirectory, roll: publicRoll(state, people) } };
+          publicCache = { at: Date.now(), value: { source: config.publicDirectory, roll: publicRoll(state, people), hidden: state.hidden || [], overrides: state.overrides || {}, extraReferences: state.extraReferences || [] } };
         }
         return json(publicCache.value, 200, { 'Cache-Control': 'public, max-age=30' });
       }

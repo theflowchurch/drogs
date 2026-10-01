@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS dr_state (
+  id TINYINT PRIMARY KEY, data JSON NOT NULL
+) ENGINE=InnoDB;
+INSERT IGNORE INTO dr_state (id, data) VALUES (1, '{}');

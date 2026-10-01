@@ -17,6 +17,8 @@ export async function prepareImage(bytes, contentType) {
 }
 export function canReadMedia(state, actor, media) {
   if (media.owner_id === actor.id || actor.office) return true;
+  // A photo the office placed on this person's own registration.
+  if (state.registrations.some(r => r.userId === actor.id && r.data.photo === media.object_key)) return true;
   // A supervising bishop may see submitted portraits, but never someone else's receipt.
   if (media.kind !== 'portrait') return false;
   // Portraits of people confirmed on the roll are part of the directory every member sees.

@@ -115,8 +115,35 @@ export const emptyState = () => ({
   registrations: [],
   rosters: [],
   audit: [],
+  // Office-editable structure and roster corrections (all optional; defaults apply when empty).
+  hidden: [], // reference ids hidden from the public roll
+  catalog: null, // { organizations: [...], denominations: { org: [...] } } or null for the built-in lists
+  fees: null, // { bishop, pastor } in USD or null for AMOUNTS
+  overrides: {}, // reference id → corrected fields, or { deleted: true }
+  extraReferences: [], // people added to the roster by hand
 });
-export function validateProfile(p, email, { draft = false } = {}) {
+// The organizations and denominations in force: the office's edited catalog, else the built-in lists.
+export const catalogOf = (state) =>
+  state?.catalog?.organizations?.length
+    ? state.catalog
+    : { organizations: ORGANIZATIONS, denominations: DENOMINATIONS };
+export const feesOf = (state) => state?.fees?.bishop ? state.fees : AMOUNTS;
+// Fields of an old roster record the office may correct.
+export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination", "city", "country", "bishop", "branch"];
+// The old roster as the office has corrected it: hidden and deleted records out,
+// corrected fields in, hand-added people appended.
+export function overlayReferences(references, state) {
+  const hidden = new Set(state?.hidden || []), overrides = state?.overrides || {};
+  const out = [];
+  for (const p of references) {
+    const o = overrides[p.id];
+    if (o?.deleted || hidden.has(p.id)) continue;
+    out.push(o ? { ...p, ...Object.fromEntries(REFERENCE_FIELDS.filter((f) => o[f] !== undefined).map((f) => [f, o[f]])) } : p);
+  }
+  for (const p of state?.extraReferences || []) if (!hidden.has(p.id)) out.push(p);
+  return out;
+}
+export function validateProfile(p, email, { draft = false, catalog = { organizations: ORGANIZATIONS, denominations: DENOMINATIONS } } = {}) {
   const q = {
     role: p.role,
     firstName: String(p.firstName || "").trim(),
@@ -146,12 +173,14 @@ export function validateProfile(p, email, { draft = false } = {}) {
   q.bishopName = [q.bishopFirstName, q.bishopLastName].filter(Boolean).join(" ");
   if (!["bishop", "pastor"].includes(q.role))
     throw Error("Choose Bishop or Pastor.");
+  // WhatsApp numbers are always kept in international form; a number that
+  // cannot be placed is refused once the registration is submitted.
+  if (q.phone) q.phone = whatsappNumber(q.phone, q.country) || (draft ? q.phone : "");
   if (!draft) {
     if (!q.firstName || !q.lastName || q.name.length > 160)
       throw Error("Enter your first and last names.");
     if (!/^\S+@\S+\.\S+$/.test(q.email))
       throw Error("Enter a valid email address.");
-    q.phone = whatsappNumber(q.phone, q.country);
     if (!q.phone)
       throw Error("Enter your WhatsApp number with its country code, e.g. +233 24 123 4567 (no leading 0).");
     if (
@@ -164,17 +193,17 @@ export function validateProfile(p, email, { draft = false } = {}) {
       throw Error("Enter a valid date of birth in the past.");
     if (!q.country || !q.city) throw Error("Enter your country and city.");
     if (!q.gender) throw Error("Select male or female.");
-    const denominations = DENOMINATIONS[q.organization] || [];
+    const denominations = catalog.denominations[q.organization] || [];
     if (denominations.length && !denominations.includes(q.denomination))
       throw Error("Select a denomination listed under your organization.");
-    if (!ORGANIZATIONS.includes(q.organization))
+    if (!catalog.organizations.includes(q.organization))
       throw Error("Choose your organization.");
     if (!q.photo) throw Error("Upload your official-attire photo.");
     if (q.role === "pastor" && !q.bishopId)
       throw Error("Choose your bishop from the registered bishops.");
   }
   if (q.bishopId === "missing") q.bishopId = "";
-  if (!(DENOMINATIONS[q.organization] || []).length) q.denomination = "";
+  if (!(catalog.denominations[q.organization] || []).length) q.denomination = "";
   if (q.role === "bishop") {
     q.bishopId = "";
     q.bishopName = "";
@@ -309,6 +338,7 @@ function reconcile(state) {
     (r) => r.status !== "draft" && r.year === state.year,
   )) {
     const profile = state.profiles.find((p) => p.id === r.userId);
+    if (r.manual) { r.status = "confirmed"; continue; }
     if (r.data.role === "bishop") {
       r.status = profile?.bishopApproved
         ? "confirmed"
@@ -334,7 +364,7 @@ function reconcile(state) {
       const named = bishopNamed(state, r.data.bishopName);
       if (named) r.data.bishopId = bishopKey(named);
     }
-    const match = matchFor(state, r);
+    const match = r.holdMatch ? null : matchFor(state, r);
     if (match) {
       match.pastorId = r.userId;
       r.status = "confirmed";
@@ -384,9 +414,11 @@ export function applyAction(
   payload = {},
   makeId = () => crypto.randomUUID(),
 ) {
-  const state = structuredClone(source);
+  const state = { ...emptyState(), ...structuredClone(source) };
   if (!actor?.id) throw Error("Sign in first.");
   const now = new Date().toISOString();
+  const catalog = catalogOf(state);
+  let detail = null; // what an office edit changed, kept in the audit trail
   let profile = state.profiles.find((p) => p.id === actor.id);
   const office = () => {
     if (!actor.office) throw Error("Office access required.");
@@ -403,6 +435,7 @@ export function applyAction(
   if (action === "save" || action === "submit") {
     const data = validateProfile(payload, actor.email, {
       draft: action === "save",
+      catalog,
     });
     // Consent is collected on the review screen, so it is checked at submit only.
     if (action === "submit" && !data.consentedAt)
@@ -439,7 +472,7 @@ export function applyAction(
         year: state.year,
         status: "draft",
         payment: "unpaid",
-        amount: AMOUNTS[data.role],
+        amount: feesOf(state)[data.role],
         createdAt: now,
       };
       state.registrations.push(r);
@@ -462,7 +495,7 @@ export function applyAction(
     if (!r || r.status === "draft") throw Error("Submit your registration first.");
     if (!r.resubmit)
       throw Error("Your details are locked after submission. Contact the office for a correction.");
-    const data = validateProfile({ ...r.data, ...payload, role: r.data.role }, actor.email);
+    const data = validateProfile({ ...r.data, ...payload, role: r.data.role }, actor.email, { catalog });
     if (!data.photoConfirmed) throw Error("Confirm your photo before saving.");
     r.data = { ...data, referenceId: data.referenceId || r.data.referenceId, bishopId: r.data.bishopId };
     if (profile) {
@@ -568,6 +601,7 @@ export function applyAction(
         "Only the selected bishop or office can confirm this pastor.",
       );
     r.data.bishopId = bishopKey(bishop);
+    r.holdMatch = false;
     let row = state.rosters.find(
       (x) =>
         x.id === payload.rosterId &&
@@ -757,6 +791,174 @@ export function applyAction(
     r.payment = payload.result;
     r.paymentNote = String(payload.note || "");
     r.paymentReviewedAt = now;
+  } else if (action === "officeEdit") {
+    // The office corrects any detail of any registration; the change is recorded.
+    office();
+    const r = registration();
+    if (!r) throw Error("Select a registration.");
+    const EDITABLE = ["firstName", "lastName", "gender", "organization", "denomination", "church", "phone", "dob", "country", "city", "email", "bishopId", "referenceId", "photo", "role"];
+    const incoming = Object.fromEntries(Object.entries(payload.data || {}).filter(([k, v]) => EDITABLE.includes(k) && v !== undefined));
+    const merged = { ...r.data, ...incoming };
+    if (!["bishop", "pastor"].includes(merged.role)) throw Error("Choose Bishop or Pastor.");
+    const data = validateProfile(merged, merged.email || r.data.email, { draft: true, catalog });
+    if (incoming.phone !== undefined && !data.phone) throw Error("Enter the WhatsApp number with its country code.");
+    detail = Object.fromEntries(Object.keys(incoming).filter((k) => JSON.stringify(r.data[k] ?? "") !== JSON.stringify(data[k] ?? "")).map((k) => [k, [r.data[k] ?? "", data[k] ?? ""]]));
+    r.data = { ...data, consentedAt: r.data.consentedAt, photoConfirmed: true, referenceId: data.referenceId || r.data.referenceId || "", bishopId: data.bishopId || r.data.bishopId || "" };
+    r.updatedAt = now;
+    const p = state.profiles.find((x) => x.id === r.userId);
+    if (p) { p.name = data.name; p.organization = data.organization; p.role = data.role; if (incoming.referenceId !== undefined) p.referenceId = data.referenceId || ""; }
+  } else if (action === "setStatus") {
+    office();
+    const r = registration();
+    if (!r || r.status === "draft") throw Error("Select a submitted registration.");
+    const p = state.profiles.find((x) => x.id === r.userId);
+    detail = { status: [r.status, payload.status] };
+    if (r.data.role === "bishop") {
+      if (!["confirmed", "pending", "denied"].includes(payload.status)) throw Error("A bishop can be confirmed, pending or denied.");
+      p.bishopApproved = payload.status === "confirmed";
+      p.bishopDecision = payload.status === "denied" ? "denied" : null;
+      r.resubmit = false;
+      if (payload.status === "confirmed") { p.approvedAt = now; if (!p.referenceId && r.data.referenceId) p.referenceId = r.data.referenceId; }
+    } else {
+      if (!["confirmed", "unclaimed", "removed"].includes(payload.status)) throw Error("A pastor can be confirmed, unclaimed or removed.");
+      const mine = state.rosters.filter((x) => x.year === r.year && x.pastorId === r.userId);
+      if (payload.status === "confirmed") {
+        r.holdMatch = false;
+        const bishop = bishopKeyed(state, r.data.bishopId);
+        if (!bishop) throw Error("Give this pastor a registered bishop first.");
+        if (!mine.some((x) => x.status === "active")) {
+          const row = mine[0] || { id: makeId(), bishopId: bishop.id, year: state.year, name: r.data.name, dob: r.data.dob, email: r.data.email, phone: r.data.phone, status: "active" };
+          if (!mine[0]) state.rosters.push(row);
+          row.status = "active"; row.reason = undefined; row.note = undefined; row.pastorId = r.userId; row.confirmedBy = actor.id; row.confirmedAt = now;
+        }
+      } else if (payload.status === "unclaimed") {
+        // Unlink and hold: automatic matching must not re-link them until someone confirms by hand.
+        for (const x of mine) { x.pastorId = null; }
+        r.holdMatch = true;
+      } else {
+        for (const x of mine.filter((x) => x.status === "active")) { x.status = "removed"; x.reason = "Other"; x.note = String(payload.note || "Set by the office"); x.removedAt = now; x.removedBy = actor.id; }
+        if (!mine.length) throw Error("This pastor is not on any list to remove from.");
+      }
+    }
+  } else if (action === "markPaid") {
+    // Fee received some other way (cash, transfer) or a payment mark undone.
+    office();
+    const r = registration();
+    if (!r || r.status === "draft") throw Error("Select a submitted registration.");
+    if (r.paymentMethod === "paystack" && r.payment === "verified" && payload.paid === false)
+      throw Error("A Paystack payment cannot be marked unpaid; refund it in Paystack instead.");
+    detail = { payment: [r.payment, payload.paid ? "verified" : "unpaid"] };
+    if (payload.paid) {
+      r.payment = "verified"; r.paymentMethod = "manual"; r.paymentNote = String(payload.note || "").trim(); r.paymentReviewedAt = now; r.paymentSubmittedAt = r.paymentSubmittedAt || now; r.nonrefundableAt = r.nonrefundableAt || now;
+    } else {
+      r.payment = "unpaid"; r.paymentMethod = ""; r.paymentNote = String(payload.note || "").trim(); r.paymentReviewedAt = now;
+    }
+  } else if (action === "setVisibility") {
+    office();
+    const r = registration();
+    if (!r) throw Error("Select a registration.");
+    r.hidden = payload.hidden === true;
+    detail = { hidden: [!payload.hidden, Boolean(payload.hidden)] };
+  } else if (action === "deleteRegistration") {
+    // Removes this year's registration; the person keeps their account and can register again.
+    office();
+    const r = registration();
+    if (!r) throw Error("Select a registration.");
+    state.registrations = state.registrations.filter((x) => x !== r);
+    for (const x of state.rosters) if (x.pastorId === r.userId) x.pastorId = null;
+    const p = state.profiles.find((x) => x.id === r.userId);
+    if (p && r.data.role === "bishop") { p.bishopApproved = false; p.bishopDecision = null; }
+    detail = { deleted: r.data.name };
+  } else if (action === "addPerson") {
+    // A person the office puts on the roll directly, without them registering.
+    office();
+    const d = payload.data || {};
+    if (!["bishop", "pastor"].includes(d.role)) throw Error("Choose Bishop or Pastor.");
+    const id = `manual:${makeId()}`;
+    const data = validateProfile({ ...d, photoConfirmed: true }, d.email || `${id}@manual.invalid`, { draft: true, catalog });
+    if (!data.firstName || !data.lastName) throw Error("Enter the person’s first and last names.");
+    if (d.role === "pastor" && data.bishopId && !bishopKeyed(state, data.bishopId)) throw Error("Choose a registered bishop, or leave the bishop empty.");
+    state.profiles.push({ id, email: data.email, role: d.role, name: data.name, organization: data.organization, bishopApproved: d.role === "bishop", referenceId: "", manual: true, createdAt: now });
+    state.registrations.push({ userId: id, year: state.year, status: "confirmed", payment: "waived", amount: 0, manual: true, data: { ...data, photoConfirmed: true }, createdAt: now, submittedAt: now, updatedAt: now });
+    detail = { added: data.name };
+  } else if (action === "editRoster") {
+    const row = state.rosters.find((x) => x.id === payload.id && x.year === state.year);
+    if (!row) throw Error("Select a list entry.");
+    if (!actor.office && row.bishopId !== actor.id) throw Error("Only the supervising bishop or office can edit this entry.");
+    const name = String(payload.name ?? row.name).trim().replace(/\s+/g, " ");
+    if (name.split(" ").length < 2) throw Error("Enter the pastor’s full name.");
+    const dob = payload.dob === undefined ? row.dob : parseDob(payload.dob);
+    if (payload.dob !== undefined && !dob) throw Error("Enter the date of birth as day/month/year.");
+    detail = { name: [row.name, name], dob: [row.dob, dob] };
+    row.name = name; row.dob = dob;
+    if (payload.email !== undefined) row.email = normalEmail(payload.email);
+    if (payload.phone !== undefined) row.phone = String(payload.phone || "").trim();
+    row.editedAt = now; row.editedBy = actor.id;
+  } else if (action === "restoreRoster") {
+    const row = state.rosters.find((x) => x.id === payload.id && x.year === state.year);
+    if (!row || row.status === "active") throw Error("Select a removed list entry.");
+    if (!actor.office && row.bishopId !== actor.id) throw Error("Only the supervising bishop or office can restore this entry.");
+    row.status = "active"; row.reason = undefined; row.note = undefined; row.restoredAt = now; row.restoredBy = actor.id;
+    detail = { restored: row.name };
+  } else if (action === "moveRoster") {
+    office();
+    const row = state.rosters.find((x) => x.id === payload.id && x.year === state.year);
+    if (!row) throw Error("Select a list entry.");
+    const target = bishopKeyed(state, payload.bishopId);
+    if (!target) throw Error("Choose a registered bishop to move this pastor to.");
+    detail = { bishopId: [row.bishopId, target.id] };
+    row.bishopId = target.id; row.movedAt = now; row.movedBy = actor.id;
+    const reg = row.pastorId && state.registrations.find((x) => x.userId === row.pastorId && x.year === state.year);
+    if (reg) reg.data.bishopId = bishopKey(target);
+  } else if (action === "hideReference") {
+    office();
+    const id = String(payload.referenceId || "");
+    if (!id) throw Error("Select a record.");
+    state.hidden = (state.hidden || []).filter((x) => x !== id);
+    if (payload.hidden) state.hidden.push(id);
+    detail = { hidden: [!payload.hidden, Boolean(payload.hidden)] };
+  } else if (action === "editReference") {
+    office();
+    const id = String(payload.referenceId || "");
+    if (!id) throw Error("Select a record.");
+    const fields = Object.fromEntries(Object.entries(payload.fields || {}).filter(([k]) => REFERENCE_FIELDS.includes(k)).map(([k, v]) => [k, String(v ?? "").trim()]));
+    if (fields.name !== undefined && fields.name.split(/\s+/).length < 2) throw Error("Enter the full name.");
+    state.overrides = { ...(state.overrides || {}), [id]: { ...((state.overrides || {})[id] || {}), ...fields, deleted: false } };
+    const extra = (state.extraReferences || []).find((x) => x.id === id);
+    if (extra) Object.assign(extra, fields);
+    detail = fields;
+  } else if (action === "deleteReference") {
+    office();
+    const id = String(payload.referenceId || "");
+    if (!id) throw Error("Select a record.");
+    state.overrides = { ...(state.overrides || {}), [id]: { ...((state.overrides || {})[id] || {}), deleted: payload.deleted !== false } };
+    if (payload.deleted === false) delete state.overrides[id].deleted;
+    detail = { deleted: payload.deleted !== false };
+  } else if (action === "addReference") {
+    office();
+    const d = payload.fields || {};
+    const name = String(d.name || "").trim().replace(/\s+/g, " ");
+    if (name.split(" ").length < 2) throw Error("Enter the full name.");
+    if (!["bishop", "pastor"].includes(d.role)) throw Error("Choose Bishop or Pastor.");
+    const id = `X${makeId().replace(/-/g, "").slice(0, 10)}`;
+    state.extraReferences = [...(state.extraReferences || []), { id, role: d.role, name, title: String(d.title || (d.role === "bishop" ? "Bishop" : "Pastor")), organization: String(d.organization || ""), denomination: String(d.denomination || ""), denominationLogo: "", city: String(d.city || ""), country: String(d.country || ""), branch: String(d.branch || ""), image: String(d.image || ""), email: "", phone: "", ...(d.role === "pastor" && d.bishop ? { bishop: String(d.bishop) } : {}) }];
+    detail = { added: name, id };
+  } else if (action === "setCatalog") {
+    // Organizations and denominations offered on the sign-up form.
+    office();
+    const c = payload.catalog || {};
+    const organizations = [...new Set((c.organizations || []).map((o) => String(o || "").trim()).filter(Boolean))];
+    if (!organizations.length) throw Error("Keep at least one organization.");
+    const denominations = {};
+    for (const o of organizations) denominations[o] = [...new Set(((c.denominations || {})[o] || []).map((d) => String(d || "").trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    state.catalog = { organizations, denominations };
+    detail = { organizations: organizations.length, denominations: Object.values(denominations).reduce((n, d) => n + d.length, 0) };
+  } else if (action === "setFees") {
+    office();
+    const bishop = Number(payload.bishop), pastor = Number(payload.pastor);
+    if (!(bishop > 0 && pastor > 0 && Number.isInteger(bishop) && Number.isInteger(pastor))) throw Error("Enter whole-dollar amounts above zero.");
+    detail = { fees: [feesOf(state), { bishop, pastor }] };
+    state.fees = { bishop, pastor };
   } else if (action === "openYear") {
     office();
     if (Number(payload.year) !== state.year + 1)
@@ -769,13 +971,14 @@ export function applyAction(
     actor: actor.id,
     action,
     year: state.year,
-    target: payload.userId || payload.id || actor.id,
+    target: payload.userId || payload.id || payload.referenceId || actor.id,
     at: now,
+    ...(detail && Object.keys(detail).length ? { detail } : {}),
   });
   return state;
 }
 export function directoryFor(state, references) {
-  const records = references.map((p) => ({
+  const records = overlayReferences(references, state).map((p) => ({
     ...p,
     accountId:
       state.profiles.find((x) => x.bishopApproved && x.referenceId === p.id)
@@ -801,10 +1004,10 @@ export function titleFor({ role, gender, organization }) {
   return "Bishop";
 }
 export function publicRoll(state, people, year = state.year) {
-  const byId = new Map(people.map((p) => [p.id, p]));
+  const byId = new Map(overlayReferences(people, state).map((p) => [p.id, p]));
   const bishopOf = (r) => state.profiles.find((p) => (p.referenceId || p.id) === r.data.bishopId && p.bishopApproved);
   return state.registrations
-    .filter((r) => r.year === year && r.status === "confirmed" && (r.data.role === "bishop" || bishopOf(r)))
+    .filter((r) => r.year === year && r.status === "confirmed" && !r.hidden && (r.data.role === "bishop" || r.manual || bishopOf(r)))
     .map((r) => {
       const ref = byId.get(r.data.referenceId) || null;
       const profile = state.profiles.find((p) => p.id === r.userId);
@@ -867,6 +1070,11 @@ export function visibleState(state, actor, references, people = references) {
     directory: directoryFor(state, references),
     roll: publicRoll(state, people),
     bishops: registeredBishops(state),
+    catalog: catalogOf(state),
+    fees: feesOf(state),
+    hidden: state.hidden || [],
+    overrides: state.overrides || {},
+    extraReferences: state.extraReferences || [],
   };
 }
 export const samePhone = (a, b) => {
@@ -909,6 +1117,7 @@ export function referenceMatches(index, row, role = "pastor") {
 // current. Green (updated) means the person registered this cycle or their
 // bishop confirmed their details; red means this is still the older record.
 export function directoryPeople(state, references, year = state.year) {
+  references = overlayReferences(references, state);
   const rows = state.rosters.filter(
     (r) => r.year === year && r.status === "active",
   );

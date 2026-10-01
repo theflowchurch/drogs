@@ -9,7 +9,7 @@ export async function transaction(pool, fn) {
   finally { conn.release(); }
 }
 export async function migrate(pool) {
-  for (const name of ['001_registration.sql', '002_api_keys.sql', '003_account_activity.sql', '004_media_blobs.sql', '005_config.sql']) {
+  for (const name of ['001_registration.sql', '002_api_keys.sql', '003_account_activity.sql', '004_media_blobs.sql', '005_config.sql', '006_office.sql']) {
     const sql = await readFile(new URL(`../../mysql/${name}`, import.meta.url), 'utf8');
     for (const statement of sql.split(';').map(s => s.trim()).filter(Boolean)) await pool.query(statement);
   }
@@ -24,10 +24,22 @@ export async function readState(conn, lock = false) {
     const [rows] = await conn.query(`SELECT data FROM ${table}`);
     state[field] = rows.map(parse);
   }
+  // Office-editable structure (hidden records, catalog, fees, roster corrections) lives in one JSON row.
+  const [extra] = await conn.query('SELECT data FROM dr_state WHERE id=1');
+  if (extra.length) Object.assign(state, Object.fromEntries(Object.entries(parse(extra[0])).filter(([k]) => OFFICE_FIELDS.includes(k))));
   return state;
 }
+const OFFICE_FIELDS = ['hidden', 'catalog', 'fees', 'overrides', 'extraReferences'];
 export async function persistState(conn, before, after) {
   if (before.year !== after.year) await conn.execute('UPDATE dr_settings SET current_year=? WHERE id=1', [after.year]);
+  if (OFFICE_FIELDS.some(k => JSON.stringify(before[k] ?? null) !== JSON.stringify(after[k] ?? null)))
+    await conn.execute('UPDATE dr_state SET data=? WHERE id=1', [JSON.stringify(Object.fromEntries(OFFICE_FIELDS.map(k => [k, after[k] ?? null])))]);
+  // Records the office deleted
+  const gone = (field, key) => { const keep = new Set(after[field].map(key)); return before[field].filter(v => !keep.has(key(v))); };
+  for (const r of gone('registrations', r => `${r.userId}:${r.year}`))
+    await conn.execute('DELETE FROM dr_registrations WHERE user_id=? AND registration_year=?', [r.userId, r.year]);
+  for (const r of gone('rosters', r => r.id))
+    await conn.execute('DELETE FROM dr_rosters WHERE id=?', [r.id]);
   const changed = (field, key) => {
     const old = new Map(before[field].map(v => [key(v), JSON.stringify(v)]));
     return after[field].filter(v => old.get(key(v)) !== JSON.stringify(v));

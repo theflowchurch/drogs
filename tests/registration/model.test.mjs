@@ -11,6 +11,8 @@ import {
   referenceMatches,
   directoryPeople,
   publicRoll,
+  overlayReferences,
+  catalogOf,
   whatsappNumber,
   nearMatches,
   namesAlike,
@@ -518,4 +520,88 @@ test("WhatsApp numbers are stored in international form without the trunk zero",
   const p = validateProfile({ ...profile(pastor), phone: "024 123 4567", country: "Ghana" }, pastor.email);
   assert.equal(p.phone, "+233241234567");
   assert.throws(() => validateProfile({ ...profile(pastor), phone: "0241234567", country: "Atlantis" }, pastor.email), /country code/);
+});
+
+test("the office can edit any detail of a registration and the change is recorded", () => {
+  let s = setup();
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: "B1" });
+  s = applyAction(s, office, "officeEdit", { userId: pastor.id, data: { lastName: "Doe-Mensah", city: "Kumasi", phone: "024 999 8888", country: "Ghana" } });
+  const r = s.registrations.find((x) => x.userId === pastor.id);
+  assert.equal(r.data.name, "John Doe-Mensah");
+  assert.equal(r.data.city, "Kumasi");
+  assert.equal(r.data.phone, "+233249998888", "phone normalised like any member's");
+  assert.equal(s.profiles.find((p) => p.id === pastor.id).name, "John Doe-Mensah");
+  const last = s.audit.at(-1);
+  assert.equal(last.action, "officeEdit");
+  assert.deepEqual(last.detail.city, ["Accra", "Kumasi"]);
+  assert.throws(() => applyAction(s, pastor, "officeEdit", { userId: pastor.id, data: { city: "X" } }), /Office/);
+});
+test("the office sets status, marks fees paid by other means, hides people and deletes registrations", () => {
+  let s = setup();
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: "B1" });
+  assert.equal(s.registrations.at(-1).status, "unclaimed");
+  s = applyAction(s, office, "setStatus", { userId: pastor.id, status: "confirmed" });
+  assert.equal(s.registrations.find((x) => x.userId === pastor.id).status, "confirmed", "a list row is created under the bishop");
+  s = applyAction(s, office, "markPaid", { userId: pastor.id, paid: true, note: "Cash at the office" });
+  assert.equal(s.registrations.find((x) => x.userId === pastor.id).payment, "verified");
+  assert.equal(s.registrations.find((x) => x.userId === pastor.id).paymentMethod, "manual");
+  s = applyAction(s, office, "setVisibility", { userId: pastor.id, hidden: true });
+  assert.ok(!publicRoll(s, []).some((p) => p.name === "John Doe"), "hidden people leave the roll");
+  s = applyAction(s, office, "setVisibility", { userId: pastor.id, hidden: false });
+  s = applyAction(s, office, "setStatus", { userId: pastor.id, status: "unclaimed" });
+  assert.equal(s.registrations.find((x) => x.userId === pastor.id).status, "unclaimed");
+  s = applyAction(s, office, "setStatus", { userId: bishop.id, status: "pending" });
+  assert.equal(s.registrations.find((x) => x.userId === bishop.id).status, "pending");
+  s = applyAction(s, office, "deleteRegistration", { userId: pastor.id });
+  assert.ok(!s.registrations.some((x) => x.userId === pastor.id));
+  assert.ok(s.rosters.every((x) => x.pastorId !== pastor.id), "list rows are unlinked, not lost");
+});
+test("the office adds people to the roll by hand and edits, restores and moves list rows", () => {
+  let s = setup();
+  s = applyAction(s, office, "addPerson", { data: { role: "bishop", firstName: "Elder", lastName: "Mensah", gender: "male", organization: "First Love", denomination: "First Love Church", city: "Accra", country: "Ghana" } });
+  const added = publicRoll(s, []).find((p) => p.name === "Elder Mensah");
+  assert.ok(added, "hand-added bishops appear on the roll at once");
+  s = applyAction(s, bishop, "addRoster", { rows: [{ name: "Jon Doe", dob: "01/02/1990" }] });
+  const row = s.rosters[0];
+  s = applyAction(s, office, "editRoster", { id: row.id, name: "John Doe", dob: "02/02/1990" });
+  assert.equal(s.rosters[0].name, "John Doe");
+  assert.equal(s.rosters[0].dob, "1990-02-02");
+  s = applyAction(s, bishop, "removeRoster", { id: row.id, reason: "Transferred" });
+  assert.equal(s.rosters[0].status, "removed");
+  s = applyAction(s, office, "restoreRoster", { id: row.id });
+  assert.equal(s.rosters[0].status, "active");
+  s = applyAction(s, office, "moveRoster", { id: row.id, bishopId: added.bishopKey });
+  assert.equal(s.rosters[0].bishopId, s.profiles.find((p) => p.name === "Elder Mensah").id);
+});
+test("the office corrects, hides, deletes and adds old roster records without touching the source file", () => {
+  const references = [
+    { id: "B1", role: "bishop", name: "Ama Bishop", title: "Bishop", organization: "First Love", denomination: "FIRST LOVE CHURCH", city: "Accra", country: "Ghana", image: "" },
+    { id: "P9", role: "pastor", name: "Kofi Mensa", title: "Pastor", organization: "First Love", denomination: "FIRST LOVE CHURCH", city: "Accra", country: "Ghana", image: "", bishop: "Ama Bishop" },
+  ];
+  let s = emptyState();
+  s = applyAction(s, office, "editReference", { referenceId: "P9", fields: { name: "Kofi Mensah", city: "Tema" } });
+  s = applyAction(s, office, "hideReference", { referenceId: "B1", hidden: true });
+  s = applyAction(s, office, "addReference", { fields: { role: "pastor", name: "New Person", organization: "First Love", denomination: "FIRST LOVE CHURCH", city: "Accra", country: "Ghana" } });
+  const shown = overlayReferences(references, s);
+  assert.deepEqual(shown.map((p) => p.name), ["Kofi Mensah", "New Person"]);
+  assert.equal(shown[0].city, "Tema");
+  s = applyAction(s, office, "deleteReference", { referenceId: "P9" });
+  assert.deepEqual(overlayReferences(references, s).map((p) => p.name), ["New Person"]);
+  s = applyAction(s, office, "deleteReference", { referenceId: "P9", deleted: false });
+  s = applyAction(s, office, "hideReference", { referenceId: "B1", hidden: false });
+  assert.equal(overlayReferences(references, s).length, 3);
+});
+test("the office edits the organization and denomination lists and the fees, and sign-up follows", () => {
+  let s = setup();
+  s = applyAction(s, office, "setCatalog", { catalog: { organizations: ["First Love", "New Fellowship"], denominations: { "First Love": ["First Love Church"], "New Fellowship": ["Zion Assembly", "Grace House"] } } });
+  assert.deepEqual(catalogOf(s).organizations, ["First Love", "New Fellowship"]);
+  const other = { id: "p7", email: "p7@example.com" };
+  s = applyAction(s, other, "submit", { ...profile(other, "pastor", "Zion Member"), organization: "New Fellowship", denomination: "Grace House", bishopId: "B1" });
+  assert.equal(s.registrations.at(-1).data.denomination, "Grace House");
+  assert.throws(() => applyAction(s, other, "update", { organization: "United Denominations" }), /organization|Denomination|locked/i);
+  s = applyAction(s, office, "setFees", { bishop: 120, pastor: 60 });
+  const p8 = { id: "p8", email: "p8@example.com" };
+  s = applyAction(s, p8, "submit", { ...profile(p8, "pastor", "Fee Tester"), organization: "First Love", denomination: "First Love Church", bishopId: "B1" });
+  assert.equal(s.registrations.at(-1).amount, 60);
+  assert.throws(() => applyAction(s, office, "setCatalog", { catalog: { organizations: [] } }), /at least one/);
 });

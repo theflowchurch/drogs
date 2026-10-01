@@ -28,6 +28,8 @@ import {
   dobClose,
   titleFor,
   orgLabel,
+  catalogOf,
+  overlayReferences,
   attireExample,
   paymentReference,
   referenceIndex,
@@ -1199,7 +1201,7 @@ function RegistrationForm({
       if (!d.city && ref.city) next.city = ref.city;
       if (!d.organization && ORGANIZATIONS.includes(ref.organization)) next.organization = ref.organization;
       // Older records shout their denomination in capitals; match it to the list by normalised name.
-      const listed = (DENOMINATIONS[next.organization] || []).find((d) => normalName(d) === normalName(ref.denomination));
+      const listed = (catalog.denominations[next.organization] || []).find((d) => normalName(d) === normalName(ref.denomination));
       if (!next.denomination && listed) next.denomination = listed;
       if (d.role === "pastor" && ref.bishop && !d.bishopFirstName && !d.bishopLastName) {
         const parts = ref.bishop.trim().split(/\s+/);
@@ -1243,6 +1245,8 @@ function RegistrationForm({
         next.name = [next.firstName, next.lastName].filter(Boolean).join(" ");
       return next;
     });
+  const catalog = state.catalog || catalogOf(state);
+  const fees = state.fees || AMOUNTS;
   const steps = editing
     ? ["details", "review"]
     : data.role === "bishop"
@@ -1361,7 +1365,7 @@ function RegistrationForm({
           <div className="reg-amount">
             <span>Annual renewal ministerial fee</span>
             <strong>
-              ${AMOUNTS[data.role]}
+              ${fees[data.role]}
               <small>USD</small>
             </strong>
             <p>
@@ -1377,7 +1381,7 @@ function RegistrationForm({
               onSubmit={(e) => {
                 e.preventDefault();
                 run(async () => {
-                  validateProfile(data, actor.email);
+                  validateProfile(data, actor.email, { catalog });
                   setData((d) => ({ ...d, photoConfirmed: false }));
                   setAccurate(false);
                   next();
@@ -1410,7 +1414,7 @@ function RegistrationForm({
                     required
                   >
                     <option value="">Select organization</option>
-                    {ORGANIZATIONS.map((o) => (
+                    {catalog.organizations.map((o) => (
                       <option key={o} value={o}>{orgLabel(o)}</option>
                     ))}
                   </select>
@@ -1514,7 +1518,7 @@ function RegistrationForm({
                     autoComplete="bday"
                   />
                 </Field>
-                {(DENOMINATIONS[data.organization] || []).length > 0 && (
+                {(catalog.denominations[data.organization] || []).length > 0 && (
                   <Field label="Denomination">
                     <select
                       value={data.denomination}
@@ -1522,7 +1526,7 @@ function RegistrationForm({
                       required
                     >
                       <option value="">Select denomination</option>
-                      {(DENOMINATIONS[data.organization] || []).map((d) => (
+                      {(catalog.denominations[data.organization] || []).map((d) => (
                         <option key={d}>{d}</option>
                       ))}
                     </select>
@@ -1667,8 +1671,8 @@ function RegistrationForm({
               <div className="reg-section-head">
                 <div>
                   <h2>
-                    ${AMOUNTS[data.role]} <small>USD</small>
-                    {rate > 0 ? <small> · about {localAmount(AMOUNTS[data.role], rate, currency)}</small> : null}
+                    ${fees[data.role]} <small>USD</small>
+                    {rate > 0 ? <small> · about {localAmount(fees[data.role], rate, currency)}</small> : null}
                   </h2>
                   <p>Annual renewal ministerial fee · {titleCase(data.role)} · {state.year} · non-refundable.</p>
                 </div>
@@ -1676,13 +1680,13 @@ function RegistrationForm({
               {mine?.payment === "verified" ? (
                 <div className="reg-status-message confirmed">
                   <h3>Thank you for your commitment.</h3>
-                  <p>${AMOUNTS[data.role]} USD received by card or mobile money. Next, look over your profile{data.role === "bishop" ? " and your pastors" : ""} and confirm.</p>
+                  <p>${fees[data.role]} USD received by card or mobile money. Next, look over your profile{data.role === "bishop" ? " and your pastors" : ""} and confirm.</p>
                 </div>
               ) : state.paystackKey ? (
                 <>
                   <p>Pay securely by card or mobile money (MTN, Telecel, AT). You will come back here once the payment goes through.</p>
                   <PaystackButton
-                    current={{ amount: AMOUNTS[data.role], year: state.year, data }}
+                    current={{ amount: fees[data.role], year: state.year, data }}
                     actor={actor}
                     run={run}
                     refresh={refresh}
@@ -1781,7 +1785,7 @@ function RegistrationForm({
                 <section className="reg-review-block">
                   <h3>Payment</h3>
                   {mine?.payment === "verified" ? (
-                    <p>${AMOUNTS[data.role]} USD paid by card or mobile money. <Badge status="verified" /></p>
+                    <p>${fees[data.role]} USD paid by card or mobile money. <Badge status="verified" /></p>
                   ) : (
                     <p className="reg-small">Payment is not switched on yet; the office will let you know when to pay.</p>
                   )}
@@ -1814,7 +1818,7 @@ function RegistrationForm({
                 </span>
               </label>
               <p className="reg-small">
-                The annual renewal ministerial fee is ${AMOUNTS[data.role]} USD and is
+                The annual renewal ministerial fee is ${fees[data.role]} USD and is
                 non-refundable.
               </p>
               <div className="reg-form-actions">
@@ -2668,7 +2672,7 @@ function PublicList({ list }) {
   );
 }
 function PublicDirectory({ data, embedded = false }) {
-  const list = data.source === "roll" ? data.roll : publicPeople;
+  const list = data.source === "roll" ? data.roll : overlayReferences(publicPeople, data);
   const [role, setRole] = useState(null),
     [q, setQ] = useState("");
   if (!embedded) return <PublicList list={list} />;

@@ -223,7 +223,8 @@ export const supportAvailable = mysqlBackend;
 // The public directory needs no account. Locally it is the saved roll.
 export async function publicDirectory() {
   if (mysqlBackend) return server("public-directory");
-  return { source: "original", roll: visibleState(read(), { id: "public", email: "", office: false }, references, people).roll };
+  const v = visibleState(read(), { id: "public", email: "", office: false }, references, people);
+  return { source: "original", roll: v.roll, hidden: v.hidden, overrides: v.overrides, extraReferences: v.extraReferences };
 }
 export const settingsAvailable = mysqlBackend;
 export const listSettings = () => server('settings');
