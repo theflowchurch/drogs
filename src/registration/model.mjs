@@ -143,13 +143,14 @@ export const catalogOf = (state) =>
   state?.catalog?.organizations?.length
     ? { ...state.catalog, groups: state.catalog.groups || GROUPS }
     : { organizations: ORGANIZATIONS, denominations: DENOMINATIONS, groups: GROUPS };
+const denominationKey = (value) => normalName(value).replace(/^the /, "");
 export function groupOf(catalog, person) {
   if (person?.group) return person.group;
-  const want = normalName(person?.denomination || "");
+  const want = denominationKey(person?.denomination || "");
   if (!want) return "";
   for (const [name, g] of Object.entries(catalog?.groups || {})) {
     if (g.organization && person.organization && g.organization !== person.organization) continue;
-    if ((g.denominations || []).some((d) => { const k = normalName(d); return k && (k === want || want.startsWith(k) || k.startsWith(want)); })) return name;
+    if ((g.denominations || []).some((d) => { const k = denominationKey(d); return k && (k === want || want.startsWith(k) || k.startsWith(want)); })) return name;
   }
   return "";
 }

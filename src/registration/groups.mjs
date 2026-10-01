@@ -3,70 +3,62 @@ export const GROUPS = {
   "UD Ghana": {
     "organization": "United Denominations",
     "denominations": [
-      "Makarios Church",
+      "The Makarios Church",
       "Makarios Western North",
-      "Jesus Saviour of the World Church",
-      "Qodesh Family Church",
+      "Jesus Saviour Of The World Church International",
+      "Qodesh Family Churches",
       "The Mega Church",
-      "East End City Church",
+      "East End City Churches",
       "Castle City Church",
-      "Machaneh Church Int",
-      "The Machaneh Church",
+      "The Machaneh Church International",
       "Lighthouse Chapel International",
-      "Loyalty House Internatioanal",
+      "Loyalty House International",
       "Makarios City Church",
-      "Jesus is the Rock Church",
-      "Lighthouse City Church",
-      "The Glorious Mega Church",
+      "Jesus Is The Rock Church",
+      "Lighthouse City Churches",
+      "The Glorious Church",
       "Anagkazo Assemblies",
-      "East Mountain Church",
-      "West End City Church",
-      "Qodesh City Church"
+      "East Mountain Churches",
+      "West End City Churches",
+      "Qodesh City Churches"
     ]
   },
   "UD Africa": {
     "organization": "United Denominations",
     "denominations": [
-      "1000 Micro Church Network",
-      "Bema International",
+      "1000 Micro Church Network International",
+      "Bema International Church",
       "Double Mega Missionary Church",
-      "Everything By Prayer Church",
-      "Onction Internationale",
-      "Fruitiferos Internationale",
+      "Everything By Prayer Center",
+      "Onction Internationale Benin",
+      "Fruitferos Internacional Guinea Bissau",
       "Primeiras Obras",
       "Rencontre Prophetique Internationale",
       "Serious Christian Church",
-      "Strait Gate Church",
+      "Strait Gate Church Liberia",
       "Strong Christian Church",
       "Malawi",
-      "Talanta International",
-      "Primero Amor",
-      "Gabon – Libreville",
-      "Gabon – Port Gentil",
+      "Talanta International Tanzania",
+      "Premiero Amor",
+      "La Belle Eglise Gabon",
       "Other International",
-      "Congo Brazaville",
-      "Poimen Church - Senegal",
-      "Guinea Conakry",
-      "Amour International",
-      "Precious Souls Church – Namibia",
-      "Precious Souls Church – Eswatini",
-      "Central African Republic",
-      "Poimen Church Gambia",
-      "Equatorial Guinea( Malabo)",
-      "Cape Verde",
-      "Equatorial Guinea (Bata)",
-      "Lesotho",
-      "Burkina Faso",
+      "Victoire Internationale",
+      "Poimen Church Senegal-Gambia",
+      "Sagesse Internationale Guinea",
+      "Amour Internationale",
+      "Precious Souls Namibia",
+      "Precious Souls Swaziland",
+      "United Cities",
       "Seychelles"
     ]
   },
   "UD Europe": {
     "organization": "United Denominations",
     "denominations": [
-      "Candle In The Dark",
+      "Candle In The Dark Church",
       "Jesus Gefunden",
-      "Mustard Seed Chapel",
-      "Pleasant Surprise Church",
+      "Mustard Seed Chapel International",
+      "Pleasant Surprise",
       "It Is A Great Thing To Serve The Lord",
       "Go Church"
     ]
@@ -77,26 +69,22 @@ export const GROUPS = {
       "Revival International",
       "American Missionary Church",
       "Rejoice Greatly",
-      "Laikos"
+      "Laikos International Church"
     ]
   },
   "United Islands": {
     "organization": "United Denominations",
     "denominations": [
-      "PACIFIC ISLANDS MISSIONARY CHURCH- Fiji",
-      "PACIFIC ISLANDS MISSIONARY CHURCH- Solomon Islands",
-      "PACIFIC ISLANDS MISSIONARY CHURCH- Papau New Guinea",
-      "Favourite Child Church",
-      "PACIFIC ISLANDS MISSIONARY CHURCH- Vanuatu",
-      "Suriname"
+      "United Cities",
+      "Good Shepherd Church Guyana"
     ]
   },
   "United Jesus": {
     "organization": "United Denominations",
     "denominations": [
-      "Jesus is The Answer",
-      "Jesus is the Door",
-      "Jesus is The Master"
+      "Jesus Is The Answer Church",
+      "Jesus Is The Door",
+      "Castle City Church"
     ]
   },
   "Eschatos": {
@@ -108,14 +96,13 @@ export const GROUPS = {
   "Reasonable Service": {
     "organization": "United Denominations",
     "denominations": [
-      "Anointed People International",
+      "The Machaneh Church International",
       "Allos Mega Church",
-      "Keep My Word Chapel International",
-      "True Son Chapel International",
-      "The Mega Church – Grace Chapel",
-      "The Mega Church – Nachal Cathedral",
+      "Others International Church",
+      "Loyalty House International",
+      "The Mega Church",
       "Anointed Word Chapel Int",
-      "Glory Life Hope Center"
+      "Shepherd House International"
     ]
   }
 };

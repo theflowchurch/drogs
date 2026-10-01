@@ -33,7 +33,7 @@ function SignupControl({ state, perform }) {
 function Structure({ state, perform }) {
   const base = state ? catalogOf(state) : null;
   const [cat, setCat] = useState(null), [fees, setFees] = useState(null), [newOrg, setNewOrg] = useState(''), [newDen, setNewDen] = useState({}), [over, setOver] = useState(null);
-  const [newGroup, setNewGroup] = useState({ name: '', organization: '' }), [overGroup, setOverGroup] = useState(null), [openGroup, setOpenGroup] = useState(null);
+  const [newGroup, setNewGroup] = useState({ name: '', organization: '' }), [overGroup, setOverGroup] = useState(null), [openGroups, setOpenGroups] = useState([]);
   useEffect(() => { if (base && !cat) setCat(JSON.parse(JSON.stringify(base))); if (state && !fees) setFees({ ...feesOf(state) }); }, [state]);
   if (!cat || !fees) return null;
   const dirty = JSON.stringify(cat) !== JSON.stringify(base);
@@ -62,7 +62,8 @@ function Structure({ state, perform }) {
     setCat({ ...cat, groups: next, denominations: dens });
   };
   const addGroup = () => { const n = newGroup.name.trim(), o = newGroup.organization || cat.organizations[0]; if (!n || groups[n]) return; setCat({ ...cat, groups: { ...groups, [n]: { organization: o, denominations: [] } } }); setNewGroup({ name: '', organization: '' }); };
-  const removeGroup = (n) => { const next = { ...groups }; delete next[n]; setCat({ ...cat, groups: next }); if (openGroup === n) setOpenGroup(null); };
+  const removeGroup = (n) => { const next = { ...groups }; delete next[n]; setCat({ ...cat, groups: next }); setOpenGroups(openGroups.filter(x => x !== n)); };
+  const isOpen = n => openGroups.includes(n), toggle = n => setOpenGroups(isOpen(n) ? openGroups.filter(x => x !== n) : [...openGroups, n]);
   const groupDrop = (target) => ({
     onDragOver: e => { e.preventDefault(); if (overGroup !== target) setOverGroup(target); },
     onDragLeave: e => { if (!e.currentTarget.contains(e.relatedTarget)) setOverGroup(null); },
@@ -92,17 +93,17 @@ function Structure({ state, perform }) {
         </>
       ) : (
       <div className="reg-group-grid">
-        {Object.entries(groups).filter(([, g]) => g.organization === o).map(([name, g]) => <div key={name} className={`reg-group-card ${overGroup === name ? 'over' : ''} ${openGroup === name ? 'open' : ''}`} {...groupDrop(name)}>
-          <button type="button" className="reg-group-head" onClick={() => setOpenGroup(openGroup === name ? null : name)} aria-expanded={openGroup === name}><b>{name}</b><small>{g.denominations.length} denomination/country</small></button>
-          {openGroup === name && <>
+        {Object.entries(groups).filter(([, g]) => g.organization === o).map(([name, g]) => <div key={name} className={`reg-group-card ${overGroup === name ? 'over' : ''} ${isOpen(name) ? 'open' : ''}`} {...groupDrop(name)}>
+          <button type="button" className="reg-group-head" onClick={() => toggle(name)} aria-expanded={isOpen(name)}><b>{name}</b><small>{g.denominations.length} denomination/country</small></button>
+          {isOpen(name) && <>
             <ul className="reg-catalog-list">{g.denominations.map(d => chip(d, name))}</ul>
             {!g.denominations.length && <p className="reg-small reg-catalog-empty">Nothing here yet. Drop a denomination/country onto this card.</p>}
             <button type="button" className="reg-text danger" onClick={() => removeGroup(name)}>Remove group</button>
           </>}
         </div>)}
-        <div className={`reg-group-card muted ${overGroup === `ungrouped:${o}` ? 'over' : ''} ${openGroup === `ungrouped:${o}` ? 'open' : ''}`} {...groupDrop(`ungrouped:${o}`)}>
-          <button type="button" className="reg-group-head" onClick={() => setOpenGroup(openGroup === `ungrouped:${o}` ? null : `ungrouped:${o}`)} aria-expanded={openGroup === `ungrouped:${o}`}><b>Not in a group</b><small>{ungrouped(o).length} denomination/country</small></button>
-          {openGroup === `ungrouped:${o}` && <ul className="reg-catalog-list">{ungrouped(o).map(d => chip(d, ''))}</ul>}
+        <div className={`reg-group-card muted ${overGroup === `ungrouped:${o}` ? 'over' : ''} ${isOpen(`ungrouped:${o}`) ? 'open' : ''}`} {...groupDrop(`ungrouped:${o}`)}>
+          <button type="button" className="reg-group-head" onClick={() => toggle(`ungrouped:${o}`)} aria-expanded={isOpen(`ungrouped:${o}`)}><b>Not in a group</b><small>{ungrouped(o).length} denomination/country</small></button>
+          {isOpen(`ungrouped:${o}`) && <ul className="reg-catalog-list">{ungrouped(o).map(d => chip(d, ''))}</ul>}
         </div>
       </div>
       )}
