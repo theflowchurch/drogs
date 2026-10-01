@@ -8,18 +8,26 @@ import { catalogOf, feesOf, orgLabel, signupOf, SIGNUP_PAUSED } from './model.mj
 // Pause or reopen sign-up. Paused: new people cannot request a code or submit;
 // everyone already registered keeps signing in, paying and editing.
 function SignupControl({ state, perform }) {
-  const current = signupOf(state);
-  const [notice, setNotice] = useState(current.notice);
-  useEffect(() => setNotice(current.notice), [current.notice]);
+  const all = signupOf(state);
+  const doors = [
+    { scope: 'general', title: 'General sign-up', path: '/signup/', current: { closed: all.closed, notice: all.notice }, what: 'bishops and pastors registering for the year' },
+    { scope: 'appointments', title: 'Pastoral appointments', path: '/appointments/', current: all.appointments, what: 'newly appointed bishops and pastors registering through the appointments link' },
+  ];
+  const [notes, setNotes] = useState({ general: all.notice, appointments: all.appointments.notice });
+  useEffect(() => setNotes({ general: all.notice, appointments: all.appointments.notice }), [all.notice, all.appointments.notice]);
   return <section className="reg-card reg-settings">
     <h2>Registration</h2>
-    <p>Currently <b>{current.closed ? 'paused' : 'open'}</b>. {current.closed ? 'New people see the message below and cannot sign up; members who already registered are unaffected.' : 'Anyone can sign up. Pause it to stop new registrations, for example once the cycle has closed.'}</p>
-    <label className="reg-field wide"><span>Message shown while paused</span><textarea rows={3} value={notice} onChange={e => setNotice(e.target.value)} placeholder={SIGNUP_PAUSED} /></label>
-    <div className="reg-form-actions">
-      {current.closed
-        ? <><button type="button" className="reg-secondary" onClick={() => perform('setSignup', { closed: true, notice }, 'Message saved.')}>Save message</button><button type="button" className="reg-primary" onClick={() => perform('setSignup', { closed: false, notice }, 'Sign-up is open again.')}>Reopen sign-up</button></>
-        : <button type="button" className="reg-primary danger" onClick={() => perform('setSignup', { closed: true, notice }, 'Sign-up is paused.')}>Pause sign-up</button>}
-    </div>
+    <p>Two doors, paused separately. A paused door shows its message to new people and accepts no new registrations; everyone already registered is unaffected.</p>
+    {doors.map(d => <div key={d.scope} className="reg-door-control">
+      <h3>{d.title} <small>{d.path} · {d.what}</small></h3>
+      <p>Currently <b>{d.current.closed ? 'paused' : 'open'}</b>.</p>
+      <label className="reg-field wide"><span>Message shown while paused</span><textarea rows={2} value={notes[d.scope]} onChange={e => setNotes({ ...notes, [d.scope]: e.target.value })} placeholder={SIGNUP_PAUSED} /></label>
+      <div className="reg-form-actions">
+        {d.current.closed
+          ? <><button type="button" className="reg-secondary" onClick={() => perform('setSignup', { scope: d.scope, closed: true, notice: notes[d.scope] }, 'Message saved.')}>Save message</button><button type="button" className="reg-primary" onClick={() => perform('setSignup', { scope: d.scope, closed: false, notice: notes[d.scope] }, `${d.title} is open again.`)}>Reopen</button></>
+          : <button type="button" className="reg-secondary" onClick={() => perform('setSignup', { scope: d.scope, closed: true, notice: notes[d.scope] }, `${d.title} is paused.`)}>Pause {d.title.toLowerCase()}</button>}
+      </div>
+    </div>)}
   </section>;
 }
 function Structure({ state, perform }) {
@@ -73,7 +81,7 @@ function Structure({ state, perform }) {
   return <>
   <section className="reg-card reg-settings">
     <h2>Groups</h2>
-    <p>UD – OLGC is organised in groups (UD Ghana, UD Africa, United Islands…); tap a card to see its denominations and drag a denomination onto another card to move it. First Love, FLOW and Healing Jesus Campaign have no groups and list their denominations directly. The office directory and the members’ directory can filter by group; the public page does not show groups.</p>
+    <p>UD – OLGC is organised in groups (UD Ghana, UD Africa, United Islands…); tap a card to see its denomination/country entries and drag one onto another card to move it. First Love, FLOW and Healing Jesus Campaign have no groups and list their denominations directly. The office directory and the members’ directory can filter by group; the public page does not show groups.</p>
     {cat.organizations.map(o => <div key={o} className="reg-group-org">
       <h3>{officeOrg(o)}</h3>
       {!Object.values(groups).some(g => g.organization === o) ? (
@@ -85,15 +93,15 @@ function Structure({ state, perform }) {
       ) : (
       <div className="reg-group-grid">
         {Object.entries(groups).filter(([, g]) => g.organization === o).map(([name, g]) => <div key={name} className={`reg-group-card ${overGroup === name ? 'over' : ''} ${openGroup === name ? 'open' : ''}`} {...groupDrop(name)}>
-          <button type="button" className="reg-group-head" onClick={() => setOpenGroup(openGroup === name ? null : name)} aria-expanded={openGroup === name}><b>{name}</b><small>{g.denominations.length} denomination{g.denominations.length === 1 ? '' : 's'}</small></button>
+          <button type="button" className="reg-group-head" onClick={() => setOpenGroup(openGroup === name ? null : name)} aria-expanded={openGroup === name}><b>{name}</b><small>{g.denominations.length} denomination/country</small></button>
           {openGroup === name && <>
             <ul className="reg-catalog-list">{g.denominations.map(d => chip(d, name))}</ul>
-            {!g.denominations.length && <p className="reg-small reg-catalog-empty">Nothing here yet. Drop a denomination onto this card.</p>}
+            {!g.denominations.length && <p className="reg-small reg-catalog-empty">Nothing here yet. Drop a denomination/country onto this card.</p>}
             <button type="button" className="reg-text danger" onClick={() => removeGroup(name)}>Remove group</button>
           </>}
         </div>)}
         <div className={`reg-group-card muted ${overGroup === `ungrouped:${o}` ? 'over' : ''} ${openGroup === `ungrouped:${o}` ? 'open' : ''}`} {...groupDrop(`ungrouped:${o}`)}>
-          <button type="button" className="reg-group-head" onClick={() => setOpenGroup(openGroup === `ungrouped:${o}` ? null : `ungrouped:${o}`)} aria-expanded={openGroup === `ungrouped:${o}`}><b>Not in a group</b><small>{ungrouped(o).length} denomination{ungrouped(o).length === 1 ? '' : 's'}</small></button>
+          <button type="button" className="reg-group-head" onClick={() => setOpenGroup(openGroup === `ungrouped:${o}` ? null : `ungrouped:${o}`)} aria-expanded={openGroup === `ungrouped:${o}`}><b>Not in a group</b><small>{ungrouped(o).length} denomination/country</small></button>
           {openGroup === `ungrouped:${o}` && <ul className="reg-catalog-list">{ungrouped(o).map(d => chip(d, ''))}</ul>}
         </div>
       </div>
@@ -135,7 +143,7 @@ export default function Settings({ run, state, perform }) {
   useEffect(() => { run(reload); }, []);
   const changed = Object.entries(values).filter(([, v]) => v !== undefined);
   const origin = typeof window === 'undefined' ? 'https://kuriakecastle.org' : window.location.origin;
-  const links = [['Public roll', '/directory/'], ['Sign in', '/signup/#signin'], ['Sign up as a bishop', '/signup/bishop/'], ['Sign up as a pastor', '/signup/pastor/'], ['Office sign in', '/admin/'], ['API documentation', '/docs/']];
+  const links = [['Public roll', '/directory/'], ['Sign in', '/signup/#signin'], ['Sign up as a bishop', '/signup/bishop/'], ['Sign up as a pastor', '/signup/pastor/'], ['Pastoral appointments', '/appointments/'], ['Office sign in', '/admin/'], ['API documentation', '/docs/']];
   return <>
   {state && perform && <SignupControl state={state} perform={perform} />}
   {state && perform && <Structure state={state} perform={perform} />}

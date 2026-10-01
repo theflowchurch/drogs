@@ -97,8 +97,8 @@ export async function currentActor(office = false) {
 }
 export const officeCode = (code) =>
   mysqlBackend ? server("auth/office-code", { code }) : Promise.resolve({ ok: code === "1234" });
-export async function requestCode(email, mode = "signup") {
-  if (mysqlBackend) return server("auth/request", { email, mode });
+export async function requestCode(email, mode = "signup", entrance = "general") {
+  if (mysqlBackend) return server("auth/request", { email, mode, entrance });
   const { error } = await supabase().auth.signInWithOtp({
     email,
     options: { shouldCreateUser: true },

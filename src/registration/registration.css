@@ -3491,3 +3491,22 @@ input[type="date"] {
 .reg-group-card .reg-catalog-list {
   margin-top: 10px;
 }
+
+/* Settings: the two registration doors */
+.reg-door-control {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+.reg-door-control h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+.reg-door-control h3 small {
+  display: block;
+  font-weight: 400;
+  color: var(--muted);
+}
+.reg-entrance-note {
+  margin: 0 0 12px;
+}

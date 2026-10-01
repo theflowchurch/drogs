@@ -15,6 +15,7 @@ import {
   broadcastRecipients,
   catalogOf,
   groupOf,
+  signupOf,
   whatsappNumber,
   nearMatches,
   namesAlike,
@@ -690,4 +691,15 @@ test("groups: a person's group comes from their record or their denomination; th
   let s = applyAction(emptyState(), office, "setCatalog", { catalog: { ...cat, groups: { ...cat.groups, "UD Asia": { organization: "United Denominations", denominations: ["Unknown Chapel"] } } } });
   assert.equal(groupOf(catalogOf(s), { organization: "United Denominations", denomination: "Unknown Chapel" }), "UD Asia");
   assert.throws(() => applyAction(s, office, "setCatalog", { catalog: { ...cat, groups: { Loose: { organization: "Nowhere", denominations: [] } } } }), /must belong/);
+});
+test("the appointments door pauses separately from the general sign-up", () => {
+  let s = setup();
+  s = applyAction(s, office, "setSignup", { scope: "general", closed: true, notice: "Yearly registration has closed." });
+  assert.throws(() => applyAction(s, pastor, "submit", profile(pastor)), /has closed/);
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), entrance: "appointments" });
+  assert.equal(s.registrations.at(-1).entrance, "appointments", "the appointments door stays open and is recorded");
+  s = applyAction(s, office, "setSignup", { scope: "appointments", closed: true, notice: "No appointments right now." });
+  const p9 = { id: "p9", email: "p9@example.com" };
+  assert.throws(() => applyAction(s, p9, "submit", { ...profile(p9, "pastor", "New Appointee"), entrance: "appointments" }), /No appointments/);
+  assert.equal(signupOf(s).closed, true); assert.equal(signupOf(s).appointments.closed, true);
 });

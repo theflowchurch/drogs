@@ -5,7 +5,7 @@ import { applySettings, bootstrapSettings, describeSettings, officeMembers, read
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
-import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, signupOf, SIGNUP_PAUSED } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, signupOf, pauseFor, SIGNUP_PAUSED } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, canReadMedia } from './storage.mjs';
@@ -70,13 +70,13 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         return json(await auth.checkOfficeCode((await jsonBody(request)).code));
       }
       if (path === '/api/registration/auth/request' && method === 'POST') {
-        const { email, mode } = await jsonBody(request);
+        const { email, mode, entrance } = await jsonBody(request);
         const address = emailAddress(email);
         if (!['signin', 'office'].includes(mode)) {
           // Paused sign-up turns new people away at the first step; existing accounts still sign in.
           const [[known]] = await pool.execute('SELECT 1 FROM dr_users WHERE email=?', [address]);
           if (!known) {
-            const pause = signupOf(await transaction(pool, conn => readState(conn)));
+            const pause = pauseFor(await transaction(pool, conn => readState(conn)), entrance);
             if (pause.closed) throw new HttpError(403, pause.notice || SIGNUP_PAUSED);
           }
         }

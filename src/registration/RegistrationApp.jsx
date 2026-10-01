@@ -3,6 +3,8 @@ import Accounts from './Accounts';
 import ApiKeys from './ApiKeys';
 import Settings from './Settings';
 import {
+  createContext,
+  useContext,
   useEffect,
   useMemo,
   useState,
@@ -13,6 +15,8 @@ import {
   isValidElement,
   cloneElement,
 } from "react";
+// Which door the person came through: the general sign-up or pastoral appointments.
+const EntranceContext = createContext("general");
 import * as api from "./client";
 import { LegalFooter } from "./Docs";
 import { DENOMINATIONS } from "./denominations.mjs";
@@ -406,6 +410,7 @@ export default function RegistrationApp({
   office = false,
   browse = false,
   signup = false,
+  entrance = "general",
 }) {
   // Members sign in with their email; only the office and the browse-only
   // directory sit behind an access code.
@@ -609,6 +614,7 @@ export default function RegistrationApp({
       </div>
     );
   return (
+    <EntranceContext.Provider value={entrance}>
     <div className="reg-app">
       {!hero && (
         <div
@@ -951,6 +957,7 @@ export default function RegistrationApp({
       )}
       <LegalFooter hidden={hero || browse} />
     </div>
+    </EntranceContext.Provider>
   );
 }
 // Anyone stuck can report it from any screen. The office receives an email,
@@ -1068,19 +1075,20 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
   const [remember, setRemember] = useState(false);
   // New sign-ups check whether registration is paused; the notice replaces the form.
   const [paused, setPaused] = useState(null);
+  const entrance = useContext(EntranceContext);
   useEffect(() => {
     if (mode !== "signup") return;
     let live = true;
-    api.publicDirectory().then((d) => live && d?.signup?.closed && setPaused(d.signup.notice || SIGNUP_PAUSED)).catch(() => {});
+    api.publicDirectory().then((d) => { const flag = entrance === "appointments" ? d?.signup?.appointments : d?.signup; if (live && flag?.closed) setPaused(flag.notice || SIGNUP_PAUSED); }).catch(() => {});
     return () => { live = false; };
-  }, [mode]);
+  }, [mode, entrance]);
   const [email, setEmail] = useState(""),
     [sent, setSent] = useState(false),
     [token, setToken] = useState("");
   if (paused)
     return (
       <div className="reg-paused" role="status">
-        <h3>Sign-up is paused</h3>
+        <h3>{entrance === "appointments" ? "Appointment registration is paused" : "Sign-up is paused"}</h3>
         <p>{paused}</p>
         <p className="reg-small">Already registered? Use Sign in instead.</p>
       </div>
@@ -1100,12 +1108,15 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
         onActor(await api.verifyCode(email, token, mode, remember));
       }
       else {
-        await api.requestCode(email, mode);
+        await api.requestCode(email, mode, entrance);
         setSent(true);
       }
     });
   }}
 >
+  {entrance === "appointments" && mode === "signup" && (
+    <p className="reg-eyebrow reg-entrance-note">PASTORAL APPOINTMENT · registering a newly appointed bishop or pastor</p>
+  )}
   <Field label="Email address">
     <input
       type="email"
@@ -1457,8 +1468,10 @@ function RegistrationForm({
   refresh,
   busy,
 }) {
+  const entrance = useContext(EntranceContext);
   const [data, setData] = useState(() => ({
       ...{
+        entrance,
         role: fixedRole || profile?.role || "pastor",
         gender: "",
         name: "",
@@ -3435,7 +3448,7 @@ function ReviewQueue({ records, state, perform, actor, office, canEdit }) {
                     <div>
                       <h3>{r.data.name}</h3>
                       <p>
-                        {orgLabel(r.data.organization)} · {r.data.denomination || r.data.church}
+                        {orgLabel(r.data.organization)} · {r.data.denomination || r.data.church}{r.entrance === "appointments" ? " · Pastoral appointment" : ""}
                       </p>
                       <small>
                         Bishop:{" "}
@@ -3649,7 +3662,7 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
               <div>
                 <h3>{r.data.name}</h3>
                 <p>
-                  {titleFor(r.data)} · {orgLabel(r.data.organization)} · {r.data.email}
+                  {titleFor(r.data)} · {orgLabel(r.data.organization)} · {r.data.email}{r.entrance === "appointments" ? " · Pastoral appointment" : ""}
                   {state.profiles.find((p) => p.id === r.userId)?.autoApproved ? " · approved automatically: matched the original data" : ""}
                 </p>
               </div>

@@ -267,6 +267,10 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(paused.status, 403); assert.match(paused.data.error, /closed for this cycle/);
     assert.equal((await call('auth/request', '', { email: 'bishop@example.com', mode: 'signup' })).status, 200, 'an existing member is unaffected');
     assert.equal((await call('public-directory')).data.signup.closed, true);
+    assert.equal((await call('auth/request', '', { email: 'appointee@example.com', mode: 'signup', entrance: 'appointments' })).status, 200, 'the appointments door is still open');
+    assert.equal((await call('action', office.cookie, { name: 'setSignup', payload: { scope: 'appointments', closed: true, notice: 'No appointments right now.' } })).status, 200);
+    assert.equal((await call('auth/request', '', { email: 'appointee2@example.com', mode: 'signup', entrance: 'appointments' })).status, 403);
+    assert.equal((await call('action', office.cookie, { name: 'setSignup', payload: { scope: 'appointments', closed: false } })).status, 200);
     assert.equal((await call('action', office.cookie, { name: 'setSignup', payload: { closed: false } })).status, 200);
     // Office emails are bishops too: they may register and sign in as members.
     await pool.execute('DELETE FROM dr_rate_limits');

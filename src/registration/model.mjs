@@ -122,10 +122,19 @@ export const emptyState = () => ({
   fees: null, // { bishop, pastor } in USD or null for AMOUNTS
   overrides: {}, // reference id → corrected fields, or { deleted: true }
   extraReferences: [], // people added to the roster by hand
-  signup: { closed: false, notice: "" }, // pause new sign-ups; existing members carry on
+  // Pause new sign-ups (general door and the pastoral-appointments door separately); existing members carry on.
+  signup: { closed: false, notice: "", appointments: { closed: false, notice: "" } },
 });
 export const SIGNUP_PAUSED = "Registration is paused at the moment. Please check back later.";
-export const signupOf = (state) => ({ closed: Boolean(state?.signup?.closed), notice: String(state?.signup?.notice || "").trim() });
+export const ENTRANCES = ["general", "appointments"];
+export const entranceOf = (value) => (value === "appointments" ? "appointments" : "general");
+export const signupOf = (state) => ({
+  closed: Boolean(state?.signup?.closed),
+  notice: String(state?.signup?.notice || "").trim(),
+  appointments: { closed: Boolean(state?.signup?.appointments?.closed), notice: String(state?.signup?.appointments?.notice || "").trim() },
+});
+// The pause that applies to a given door: { closed, notice }.
+export const pauseFor = (state, entrance) => { const s = signupOf(state); return entranceOf(entrance) === "appointments" ? s.appointments : { closed: s.closed, notice: s.notice }; };
 // The organizations and denominations in force: the office's edited catalog, else the built-in lists.
 // Groups sit between an organization and its denominations (UD Ghana, UD Africa,
 // United Islands…). A person's group is the one on their record, else the group
@@ -483,8 +492,9 @@ export function applyAction(
   if (action === "save" || action === "submit") {
     // While sign-up is paused, nobody new may start or finish a registration;
     // people who already submitted keep full use of their account.
-    if (signupOf(state).closed && !state.registrations.some((x) => x.userId === actor.id && x.year === state.year && x.status !== "draft"))
-      throw Error(signupOf(state).notice || SIGNUP_PAUSED);
+    const pause = pauseFor(state, payload.entrance);
+    if (pause.closed && !state.registrations.some((x) => x.userId === actor.id && x.year === state.year && x.status !== "draft"))
+      throw Error(pause.notice || SIGNUP_PAUSED);
     const data = validateProfile(payload, actor.email, {
       draft: action === "save",
       catalog,
@@ -525,6 +535,7 @@ export function applyAction(
         status: "draft",
         payment: "unpaid",
         amount: feesOf(state)[data.role],
+        entrance: entranceOf(payload.entrance),
         createdAt: now,
       };
       state.registrations.push(r);
@@ -1048,8 +1059,12 @@ export function applyAction(
     state.fees = { bishop, pastor };
   } else if (action === "setSignup") {
     office();
-    state.signup = { closed: Boolean(payload.closed), notice: String(payload.notice || "").trim().slice(0, 500) };
-    detail = { ...state.signup };
+    const next = { closed: Boolean(payload.closed), notice: String(payload.notice || "").trim().slice(0, 500) };
+    const current = signupOf(state);
+    state.signup = entranceOf(payload.scope) === "appointments"
+      ? { closed: current.closed, notice: current.notice, appointments: next }
+      : { ...next, appointments: current.appointments };
+    detail = { scope: entranceOf(payload.scope), ...next };
   } else if (action === "broadcast") {
     // The message itself goes out by email; the audit trail keeps what was sent and to how many.
     office();
