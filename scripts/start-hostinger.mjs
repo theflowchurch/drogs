@@ -23,8 +23,8 @@ const config = configuration();
 const pool = createPool(config);
 await migrate(pool); // idempotent: creates any missing dr_ tables
 await pool.query('SELECT current_year FROM dr_settings WHERE id=1');
+await applySettings(config, pool); // saved settings (office emails included) apply before anything acts on them
 if (await launchReset(pool, config)) console.log('Launch reset applied: member accounts and records cleared; original data, structure and settings kept.');
-await applySettings(config, pool);
 // The transport is created per message so mail settings saved in /admin/ apply at once.
 const mailer = { sendMail: message => nodemailer.createTransport(config.smtp).sendMail(message) };
 const auth = createAuth({ pool, config, mailer });

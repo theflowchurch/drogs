@@ -476,6 +476,8 @@ export default function RegistrationApp({
       if (message) setNotice(message);
       return true;
     } catch (e) {
+      // A session the server no longer knows: back to sign-in instead of a dead end of failed saves.
+      if (e.message === "Please sign in again.") { setActor(null); setState(null); setError("Your session ended. Please sign in again; nothing was saved."); return false; }
       setError(e.message);
       return false;
     } finally {
@@ -543,7 +545,8 @@ export default function RegistrationApp({
   useEffect(() => {
     if (!actor) return;
     // Background refreshes stay quiet when the network hiccups; the next tick tries again.
-    const update = () => refresh().catch(() => {});
+    // Background refreshes stay quiet, except when the session has ended: then show sign-in.
+    const update = () => refresh().catch((e) => { if (e.message === "Please sign in again.") { setActor(null); setState(null); setError("Your session ended. Please sign in again."); } });
     window.addEventListener("storage", update);
     window.addEventListener("registration-change", update);
     const timer = setInterval(update, 30000);
