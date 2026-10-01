@@ -86,7 +86,7 @@ p {
 .reg-header {
   position: sticky;
   top: 0;
-  z-index: 40;
+  z-index: 20; /* below dialogs (30) so their Close button stays clickable */
   height: 92px;
   padding: 0 4vw;
   display: flex;

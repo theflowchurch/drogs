@@ -19,7 +19,7 @@ export function attireExample({ role, gender, organization } = {}) {
       ? { file: "assets/brand/female-united-denominations-example.jpg", caption: "Required: official attire (United Denominations)", alt: "Required attire example for women in the United Denominations" }
       : { file: "assets/brand/female-first-love-example.jpg", caption: "Required: official attire (First Love)", alt: "Required attire example for women in First Love" };
   if (role === "bishop")
-    return { file: "assets/brand/bishop-example.jpg", caption: "Required: official red jacket", alt: "Required bishop red-jacket example" };
+    return { file: "assets/brand/bishop-example-2.jpg", caption: "Required: official red jacket", alt: "Required bishop red-jacket example" };
   return { file: "assets/brand/pastor-example.jpg", caption: "Required: official pastoral attire", alt: "Required pastoral attire example", alternative: { file: "assets/brand/pastor-suit-example.jpg", caption: "Also accepted: dark suit and tie", alt: "Accepted alternative: dark suit and tie" } };
 }
 export const ORGANIZATIONS = [
