@@ -7,6 +7,13 @@ import { catalogOf, feesOf, orgLabel, signupOf, SIGNUP_PAUSED } from './model.mj
 // Organizations, their denominations and the fees: editable lists saved as one action each.
 // Pause or reopen sign-up. Paused: new people cannot request a code or submit;
 // everyone already registered keeps signing in, paying and editing.
+// Settings fold into categories so the page reads as a short list; open the one you need.
+function Category({ title, summary, children, open = false }) {
+  return <details className="reg-settings-cat" open={open}>
+    <summary><b>{title}</b>{summary ? <small>{summary}</small> : null}<span className="reg-settings-chevron" aria-hidden="true">›</span></summary>
+    <div className="reg-settings-cat-body">{children}</div>
+  </details>;
+}
 function SignupControl({ state, perform }) {
   const all = signupOf(state);
   const doors = [
@@ -15,8 +22,7 @@ function SignupControl({ state, perform }) {
   ];
   const [notes, setNotes] = useState({ general: all.notice, appointments: all.appointments.notice });
   useEffect(() => setNotes({ general: all.notice, appointments: all.appointments.notice }), [all.notice, all.appointments.notice]);
-  return <section className="reg-card reg-settings">
-    <h2>Registration</h2>
+  return <Category title="Registration" summary={`General sign-up ${all.closed ? 'paused' : 'open'} · Appointments ${all.appointments.closed ? 'paused' : 'open'}`}>
     <p>Two doors, paused separately. A paused door shows its message to new people and accepts no new registrations; everyone already registered is unaffected.</p>
     {doors.map(d => <div key={d.scope} className="reg-door-control">
       <h3>{d.title} <small>{d.path} · {d.what}</small></h3>
@@ -28,7 +34,7 @@ function SignupControl({ state, perform }) {
           : <button type="button" className="reg-secondary" onClick={() => perform('setSignup', { scope: d.scope, closed: true, notice: notes[d.scope] }, `${d.title} is paused.`)}>Pause {d.title.toLowerCase()}</button>}
       </div>
     </div>)}
-  </section>;
+  </Category>;
 }
 function Structure({ state, perform }) {
   const base = state ? catalogOf(state) : null;
@@ -79,9 +85,10 @@ function Structure({ state, perform }) {
     onDragLeave: e => { if (!e.currentTarget.contains(e.relatedTarget)) setOver(null); },
     onDrop: e => { e.preventDefault(); setOver(null); const { from, den } = JSON.parse(e.dataTransfer.getData('text/plain') || '{}'); moveDen(from, o, den); },
   });
+  const groupCount = Object.keys(groups).length, denCount = Object.values(cat.denominations).reduce((n, d) => n + d.length, 0);
+  const saveLists = (label = 'Save lists') => <div className="reg-form-actions reg-save-row"><small>{dirty ? 'Unsaved changes.' : 'Saved.'}</small><button type="button" className="reg-primary" disabled={!dirty} onClick={() => perform('setCatalog', { catalog: cat }, 'Organizations and denominations saved.')}>{label}</button></div>;
   return <>
-  <section className="reg-card reg-settings">
-    <h2>Groups</h2>
+  <Category title="Groups" summary={`${groupCount} groups under UD – OLGC${dirty ? ' · unsaved changes' : ''}`}>
     <p>UD – OLGC is organised in groups (UD Ghana, UD Africa, United Islands…); tap a card to see its denomination/country entries and drag one onto another card to move it. First Love, FLOW and Healing Jesus Campaign have no groups and list their denominations directly. The office directory and the members’ directory can filter by group; the public page does not show groups.</p>
     {cat.organizations.map(o => <div key={o} className="reg-group-org">
       <h3>{officeOrg(o)}</h3>
@@ -114,28 +121,27 @@ function Structure({ state, perform }) {
       <button type="button" className="reg-secondary" onClick={addGroup}>Add group</button>
     </div>
     <div className="reg-form-actions"><small>{dirty ? 'Unsaved changes.' : 'Saved.'}</small><button type="button" className="reg-primary" disabled={!dirty} onClick={() => perform('setCatalog', { catalog: cat }, 'Groups saved.')}>Save groups</button></div>
-  </section>
-  <section className="reg-card reg-settings">
-    <h2>Organizations and denominations</h2>
+  </Category>
+  <Category title="Organizations and denominations" summary={`${cat.organizations.length} organizations · ${denCount} denominations${dirty ? ' · unsaved changes' : ''}`}>
+    {saveLists()}
     <p>What the sign-up form offers. Add a new fellowship or grouping here and it appears on the form at once. An organization with no denominations hides the denomination field. Drag a denomination onto another organization to move it there.</p>
     {cat.organizations.map(o => <div key={o} className={`reg-catalog-org ${over === o ? 'over' : ''}`} {...dropProps(o)}>
-      <div className="reg-catalog-head"><b>{officeOrg(o)}</b><button type="button" className="reg-text danger" onClick={() => removeOrg(o)}>Remove organization</button></div>
+      <div className="reg-catalog-head"><b>{officeOrg(o)}</b>{dirty && <button type="button" className="reg-secondary reg-inline-save" onClick={() => perform('setCatalog', { catalog: cat }, 'Organizations and denominations saved.')}>Save</button>}<button type="button" className="reg-text danger" onClick={() => removeOrg(o)}>Remove organization</button></div>
       <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => <li key={v} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ from: o, den: v })); }}><span>{v}</span><button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button></li>)}</ul>
       {!(cat.denominations[o] || []).length && <p className="reg-small reg-catalog-empty">No denominations. Drop one here or add it below.</p>}
       <div className="reg-admin-add"><input placeholder="New denomination" value={newDen[o] || ''} onChange={e => setNewDen({ ...newDen, [o]: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addDen(o); } }} /><button type="button" className="reg-secondary" onClick={() => addDen(o)}>Add denomination</button></div>
     </div>)}
     <div className="reg-admin-add"><input placeholder="New organization or grouping" value={newOrg} onChange={e => setNewOrg(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addOrg(); } }} /><button type="button" className="reg-secondary" onClick={addOrg}>Add organization</button></div>
-    <div className="reg-form-actions"><small>{dirty ? 'Unsaved changes.' : 'Saved.'}</small><button type="button" className="reg-primary" disabled={!dirty} onClick={() => perform('setCatalog', { catalog: cat }, 'Organizations and denominations saved.')}>Save lists</button></div>
-  </section>
-  <section className="reg-card reg-settings">
-    <h2>Fees</h2>
+    {saveLists()}
+  </Category>
+  <Category title="Fees" summary={`Bishop $${feesOf(state).bishop} · Pastor $${feesOf(state).pastor}`}>
     <p>Whole US dollars. Applies to registrations submitted from now on.</p>
     <div className="reg-fields">
       <label className="reg-field"><span>Bishop</span><input type="number" min="1" step="1" value={fees.bishop} onChange={e => setFees({ ...fees, bishop: Number(e.target.value) })} /></label>
       <label className="reg-field"><span>Pastor</span><input type="number" min="1" step="1" value={fees.pastor} onChange={e => setFees({ ...fees, pastor: Number(e.target.value) })} /></label>
     </div>
     <div className="reg-form-actions"><small>Current: ${feesOf(state).bishop} / ${feesOf(state).pastor}</small><button type="button" className="reg-primary" disabled={fees.bishop === feesOf(state).bishop && fees.pastor === feesOf(state).pastor} onClick={() => perform('setFees', fees, 'Fees saved.')}>Save fees</button></div>
-  </section>
+  </Category>
   </>;
 }
 export default function Settings({ run, state, perform }) {
@@ -145,34 +151,44 @@ export default function Settings({ run, state, perform }) {
   const changed = Object.entries(values).filter(([, v]) => v !== undefined);
   const origin = typeof window === 'undefined' ? 'https://kuriakecastle.org' : window.location.origin;
   const links = [['Public roll', '/directory/'], ['Sign in', '/signup/#signin'], ['Sign up as a bishop', '/signup/bishop/'], ['Sign up as a pastor', '/signup/pastor/'], ['Pastoral appointments', '/appointments/'], ['Office sign in', '/admin/'], ['API documentation', '/docs/']];
-  return <>
+  const CATEGORIES = [
+    ['Email', 'Sign-in codes, broadcasts and issue reports', ['RESEND_API_KEY', 'SMTP_FROM', 'SUPPORT_EMAIL']],
+    ['Payments', 'Paystack card and mobile-money checkout', ['PAYSTACK_PUBLIC_KEY', 'PAYSTACK_SECRET_KEY']],
+    ['Telegram', 'A heads-up channel for issue reports', ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID']],
+    ['Photo storage', 'Cloudflare R2 for uploaded portraits and receipts', ['R2_ACCOUNT_ID', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY']],
+    ['Access and public page', 'Office access code and what the public directory shows', ['ADMIN_ACCESS_CODE', 'PUBLIC_DIRECTORY_SOURCE']],
+  ];
+  const field = s => <label className="reg-field" key={s.key}>
+    <span>{s.label} <small className={`reg-badge ${s.set ? 'verified' : 'unclaimed'}`}>{s.set ? 'Set' : 'Not set'}</small></span>
+    <input aria-label={s.label} type={/KEY|SECRET|TOKEN|CODE/.test(s.key) ? 'password' : 'text'} autoComplete="off"
+      value={values[s.key] ?? ''} placeholder={s.set ? '••••••••' : ''} onChange={e => setValues({ ...values, [s.key]: e.target.value })} />
+    {s.hint && <small>{s.hint}</small>}
+  </label>;
+  const setCount = keys => { const mine = settings.filter(s => keys.includes(s.key)); return mine.length ? `${mine.filter(s => s.set).length} of ${mine.length} set` : ''; };
+  return <div className="reg-settings-list">
   {state && perform && <SignupControl state={state} perform={perform} />}
   {state && perform && <Structure state={state} perform={perform} />}
-  <section className="reg-card reg-settings">
-    <h2>Links to share</h2>
+  <Category title="Links to share" summary={`${links.length} links`}>
     <p>Send people the right door. Office access itself is granted under Accounts; anyone you add there signs in at the office link.</p>
     <ul className="reg-admin-list">{links.map(([label, path]) => <li key={path}><span><b>{label}</b><br /><a href={origin + path}>{origin + path}</a></span><button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button></li>)}</ul>
-  </section>
-  <form className="reg-card reg-settings" onSubmit={event => {
+  </Category>
+  <form className="reg-settings-form" onSubmit={event => {
     event.preventDefault();
     run(async () => {
       setSettings((await api.saveSettings(Object.fromEntries(changed))).settings);
       setValues({}); setSaved(true);
     }, 'Settings saved and in effect.');
   }}>
-    <h2>Connected services</h2>
-    <p>Email delivery, payments, storage and access codes. Office members are managed under Accounts. Leave a field blank to keep its current value; type a single space to clear it.</p>
-    {settings.filter(s => s.key !== 'ADMIN_EMAILS').map(s => <label className="reg-field" key={s.key}>
-      <span>{s.label} <small className={`reg-badge ${s.set ? 'verified' : 'unclaimed'}`}>{s.set ? 'Set' : 'Not set'}</small></span>
-      <input aria-label={s.label} type={/KEY|SECRET|TOKEN|CODE/.test(s.key) ? 'password' : 'text'} autoComplete="off"
-        value={values[s.key] ?? ''} placeholder={s.set ? '••••••••' : ''} onChange={e => setValues({ ...values, [s.key]: e.target.value })} />
-      {s.hint && <small>{s.hint}</small>}
-    </label>)}
-    <button className="reg-primary" disabled={!changed.length}>Save settings</button>
-    <button type="button" className="reg-secondary" disabled={!settings.find(s => s.key === 'TELEGRAM_CHAT_ID')?.set} onClick={() => run(async () => { const r = await api.telegramTest(); setTelegramResult(`Test message posted to “${r.chat}”.`); }, 'Telegram is connected.')}>Send a Telegram test message</button>
-    {telegramResult && <p className="reg-small">{telegramResult}</p>}
-    {saved && !changed.length && <p className="reg-small">Saved.</p>}
+    {CATEGORIES.map(([title, blurb, keys]) => <Category key={title} title={title} summary={`${blurb}${setCount(keys) ? ` · ${setCount(keys)}` : ''}`}>
+      <p className="reg-small">Leave a field blank to keep its current value; type a single space to clear it.</p>
+      {settings.filter(s => keys.includes(s.key)).map(field)}
+      {title === 'Telegram' && <>
+        <button type="button" className="reg-secondary" disabled={!settings.find(s => s.key === 'TELEGRAM_CHAT_ID')?.set} onClick={() => run(async () => { const r = await api.telegramTest(); setTelegramResult(`Test message posted to “${r.chat}”.`); }, 'Telegram is connected.')}>Send a Telegram test message</button>
+        {telegramResult && <p className="reg-small">{telegramResult}</p>}
+      </>}
+      <div className="reg-form-actions"><small>{changed.length ? `${changed.length} change${changed.length === 1 ? '' : 's'} to save` : saved ? 'Saved.' : ''}</small><button className="reg-primary" disabled={!changed.length}>Save settings</button></div>
+    </Category>)}
   </form>
-  </>;
+  </div>;
 }
 export { Structure, SignupControl };

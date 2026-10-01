@@ -5,7 +5,7 @@ import { applySettings, bootstrapSettings, describeSettings, officeMembers, read
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
-import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, signupOf, pauseFor, SIGNUP_PAUSED } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, canReadMedia } from './storage.mjs';
@@ -170,21 +170,28 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         const { subject, message, audience = 'all', ids = [] } = await jsonBody(request);
         const subj = String(subject || '').trim().slice(0, 200), text = String(message || '').trim();
         if (!subj || !text) throw new HttpError(400, 'Enter a subject and a message.');
-        if (!['all', 'bishops', 'pastors', 'selected'].includes(audience)) throw new HttpError(400, 'Choose who should receive it.');
+        if (!BROADCAST_AUDIENCES.includes(audience)) throw new HttpError(400, 'Choose who should receive it.');
         await rateLimit(pool, config, `broadcast:${actor.id}`, 20, 3600000);
         const state = await transaction(pool, conn => readState(conn));
-        const targets = broadcastRecipients(state, audience, Array.isArray(ids) ? ids.map(String) : []);
+        const targets = broadcastRecipients(state, audience, Array.isArray(ids) ? ids.map(String) : [], people);
         if (!targets.length) throw new HttpError(400, 'Nobody matches that audience yet.');
-        let sent = 0; const failed = [];
-        for (const t of targets) {
-          try { await mailer.sendMail(brandedMail({ from: config.from, to: t.email, subject: subj, text: `Dear ${t.name.split(' ')[0]},\n\n${text}\n\nKuriake Castle Office` })); sent++; }
-          catch (error) { failed.push(t.email); logger.error('broadcast failed for', t.email, error.message); }
-        }
-        await transaction(pool, async conn => {
-          const before = await readState(conn, true);
-          await persistState(conn, before, applyAction(before, actor, 'broadcast', { subject: subj, audience, recipients: sent }, undefined, people));
-        });
-        return json({ sent, failed });
+        // Each person gets their own email. Big audiences (the original data runs to
+        // thousands) are delivered in the background so the request returns at once;
+        // the audit entry is written when delivery finishes either way.
+        const deliver = async () => {
+          let sent = 0; const failed = [];
+          for (const t of targets) {
+            try { await mailer.sendMail(brandedMail({ from: config.from, to: t.email, subject: subj, text: `Dear ${t.name.split(' ')[0]},\n\n${text}\n\nKuriake Castle Office` })); sent++; }
+            catch (error) { failed.push(t.email); logger.error('broadcast failed for', t.email, error.message); }
+          }
+          await transaction(pool, async conn => {
+            const before = await readState(conn, true);
+            await persistState(conn, before, applyAction(before, actor, 'broadcast', { subject: subj, audience, recipients: sent, failed: failed.length }, undefined, people));
+          }).catch(error => logger.error('broadcast audit failed', error.message));
+          return { sent, failed };
+        };
+        if (targets.length > 50) { deliver().catch(error => logger.error('broadcast failed', error.message)); return json({ queued: targets.length }); }
+        return json(await deliver());
       }
       if (path === '/api/registration/action' && method === 'POST') {
         await rateLimit(pool, config, `action:${actor.id}`, 120, 60000);

@@ -667,9 +667,16 @@ test("broadcast audiences: everyone, bishops, pastors or chosen people; placehol
   assert.deepEqual(broadcastRecipients(s, "bishops").map((p) => p.email), ["bishop@example.com"]);
   assert.deepEqual(broadcastRecipients(s, "pastors").map((p) => p.email), ["john@example.com"]);
   assert.deepEqual(broadcastRecipients(s, "selected", [pastor.id]).map((p) => p.email), ["john@example.com"]);
+  const refs = [{ id: "B1", role: "bishop", name: "Ama Bishop", email: "bishop@example.com" }, { id: "B2", role: "bishop", name: "Old Bishop", email: "old@example.com" }, { id: "P1", role: "pastor", name: "Old Pastor", email: "oldp@example.com" }, { id: "P2", role: "pastor", name: "No Email", email: "" }];
+  assert.deepEqual(broadcastRecipients(s, "original-bishops", [], refs).map((p) => p.email).sort(), ["bishop@example.com", "old@example.com"]);
+  assert.deepEqual(broadcastRecipients(s, "original-pastors", [], refs).map((p) => p.email), ["oldp@example.com"]);
+  assert.deepEqual(broadcastRecipients(s, "selected", [pastor.id, "P1"], refs).map((p) => p.email), ["john@example.com", "oldp@example.com"]);
+  assert.equal(broadcastRecipients(s, "original-all", [], refs).length, 3, "one email per address");
   assert.throws(() => applyAction(s, bishop, "broadcast", { subject: "x" }), /Office/);
   s = applyAction(s, office, "broadcast", { subject: "Convention dates", audience: "bishops", recipients: 1 });
   assert.deepEqual(s.audit.at(-1).detail, { subject: "Convention dates", audience: "bishops", recipients: 1 });
+  s = applyAction(s, office, "broadcast", { subject: "Big send", audience: "original-all", recipients: 4400, failed: 12 });
+  assert.deepEqual(s.audit.at(-1).detail, { subject: "Big send", audience: "original-all", recipients: 4400, failed: 12 });
 });
 test("paused sign-up blocks new registrations but not existing members", () => {
   let s = setup();

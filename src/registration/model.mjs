@@ -177,15 +177,19 @@ function syncReference(state, r) {
 }
 // Who a broadcast reaches: everyone with an account email, all bishops, all
 // pastors, or the people picked by hand. Office-created placeholders are skipped.
-export function broadcastRecipients(state, audience = "all", ids = []) {
+// Audiences: registered members (all / bishops / pastors), the original data's
+// emails (original-all / original-bishops / original-pastors), or people picked
+// by hand from either. One email per address.
+export const BROADCAST_AUDIENCES = ["all", "bishops", "pastors", "original-all", "original-bishops", "original-pastors", "selected"];
+export function broadcastRecipients(state, audience = "all", ids = [], references = []) {
   const chosen = new Set(ids || []);
   const seen = new Set();
-  return state.profiles.filter((p) => {
-    if (!p.email || /@manual\.invalid$/.test(p.email) || seen.has(p.email)) return false;
-    const ok = audience === "all" || (audience === "bishops" && p.role === "bishop") || (audience === "pastors" && p.role === "pastor") || (audience === "selected" && chosen.has(p.id));
-    if (ok) seen.add(p.email);
-    return ok;
-  });
+  const take = (p) => { const key = normalEmail(p.email); if (!key || seen.has(key)) return false; seen.add(key); return true; };
+  const members = state.profiles.filter((p) => p.email && !/@manual\.invalid$/.test(p.email) && (
+    audience === "all" || (audience === "bishops" && p.role === "bishop") || (audience === "pastors" && p.role === "pastor") || (audience === "selected" && chosen.has(p.id))));
+  const original = overlayReferences(references, state).filter((p) => p.email && (
+    audience === "original-all" || (audience === "original-bishops" && p.role === "bishop") || (audience === "original-pastors" && p.role === "pastor") || (audience === "selected" && chosen.has(p.id))));
+  return [...members, ...original.map((p) => ({ id: p.id, name: p.name, email: p.email, role: p.role, original: true }))].filter(take);
 }
 // The old roster as the office has corrected it: hidden and deleted records out,
 // corrected fields in, hand-added people appended.
@@ -1069,7 +1073,7 @@ export function applyAction(
   } else if (action === "broadcast") {
     // The message itself goes out by email; the audit trail keeps what was sent and to how many.
     office();
-    detail = { subject: String(payload.subject || "").slice(0, 200), audience: String(payload.audience || "all"), recipients: Number(payload.recipients) || 0 };
+    detail = { subject: String(payload.subject || "").slice(0, 200), audience: String(payload.audience || "all"), recipients: Number(payload.recipients) || 0, ...(payload.failed ? { failed: Number(payload.failed) } : {}) };
   } else if (action === "openYear") {
     office();
     if (Number(payload.year) !== state.year + 1)

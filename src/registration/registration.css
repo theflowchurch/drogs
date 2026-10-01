@@ -3510,3 +3510,69 @@ input[type="date"] {
 .reg-entrance-note {
   margin: 0 0 12px;
 }
+
+/* Settings as folded categories */
+.reg-settings-list,
+.reg-settings-form {
+  display: grid;
+  gap: 10px;
+}
+.reg-settings-cat {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+}
+.reg-settings-cat > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+}
+.reg-settings-cat > summary::-webkit-details-marker {
+  display: none;
+}
+.reg-settings-cat > summary b {
+  font-size: 16px;
+}
+.reg-settings-cat > summary small {
+  color: var(--muted);
+  flex: 1;
+}
+.reg-settings-chevron {
+  color: var(--muted);
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 0.15s;
+}
+.reg-settings-cat[open] > summary .reg-settings-chevron {
+  transform: rotate(90deg);
+}
+.reg-settings-cat-body {
+  padding: 0 18px 18px;
+  border-top: 1px solid var(--line);
+}
+.reg-settings-cat-body > p:first-child,
+.reg-settings-cat-body > .reg-save-row:first-child {
+  margin-top: 14px;
+}
+.reg-settings-cat-body .reg-field {
+  margin-top: 12px;
+}
+.reg-inline-save {
+  margin-left: auto;
+  padding: 4px 12px;
+  min-height: 0;
+}
+.reg-catalog-head .reg-inline-save + .reg-text {
+  margin-left: 10px;
+}
+@media (max-width: 640px) {
+  .reg-settings-cat > summary {
+    flex-wrap: wrap;
+  }
+  .reg-settings-cat > summary small {
+    flex-basis: 100%;
+  }
+}

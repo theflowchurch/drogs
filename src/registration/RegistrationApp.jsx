@@ -217,21 +217,25 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
 function Communication({ state, run }) {
   const [audience, setAudience] = useState("all"), [q, setQ] = useState(""), [picked, setPicked] = useState([]),
     [subject, setSubject] = useState(""), [message, setMessage] = useState(""), [confirming, setConfirming] = useState(false), [result, setResult] = useState(null);
-  const members = (state.profiles || []).filter((p) => p.email && !/@manual\.invalid$/.test(p.email)).sort((a, b) => a.name.localeCompare(b.name));
-  const targets = broadcastRecipients(state, audience, picked);
+  // Registered members and the original data's emails can both be picked.
+  const members = [
+    ...(state.profiles || []).filter((p) => p.email && !/@manual\.invalid$/.test(p.email)),
+    ...overlayReferences(people, state).filter((p) => p.email).map((p) => ({ id: p.id, name: p.name, email: p.email, role: p.role, original: true })),
+  ].sort((a, b) => a.name.localeCompare(b.name));
+  const targets = broadcastRecipients(state, audience, picked, people);
   const term = q.trim().toLowerCase();
   const matches = term ? members.filter((p) => !picked.includes(p.id) && (normalName(p.name).includes(normalName(q)) || p.email.toLowerCase().includes(term))).slice(0, 12) : [];
   const ready = subject.trim() && message.trim() && targets.length > 0;
   const send = () => run(async () => {
     const r = await api.sendBroadcast({ subject: subject.trim(), message: message.trim(), audience, ids: picked });
     setResult(r); setConfirming(false); setSubject(""); setMessage("");
-  }, "Message sent.");
+  }, "Message on its way.");
   return (
     <div className="reg-communication">
       <section className="reg-card">
         <h2>Who receives it</h2>
         <div className="reg-audience" role="radiogroup" aria-label="Audience">
-          {[["all", "Everyone"], ["bishops", "All bishops"], ["pastors", "All pastors"], ["selected", "Selected people"]].map(([value, label]) => (
+          {[["all", "Everyone registered"], ["bishops", "Registered bishops"], ["pastors", "Registered pastors"], ["original-all", "Original data: everyone with an email"], ["original-bishops", "Original data: bishops"], ["original-pastors", "Original data: pastors"], ["selected", "Selected people"]].map(([value, label]) => (
             <label key={value} className={audience === value ? "active" : ""}>
               <input type="radio" name="audience" value={value} checked={audience === value} onChange={() => setAudience(value)} />
               {label}
@@ -244,7 +248,7 @@ function Communication({ state, run }) {
             {matches.length > 0 && (
               <ul className="reg-recipient-matches">
                 {matches.map((p) => (
-                  <li key={p.id}><button type="button" className="reg-text" onClick={() => { setPicked([...picked, p.id]); setQ(""); }}>+ {p.name} <small>{p.role} · {p.email}</small></button></li>
+                  <li key={p.id}><button type="button" className="reg-text" onClick={() => { setPicked([...picked, p.id]); setQ(""); }}>+ {p.name} <small>{p.role} · {p.email}{p.original ? " · original data" : ""}</small></button></li>
                 ))}
               </ul>
             )}
@@ -257,7 +261,7 @@ function Communication({ state, run }) {
             )}
           </div>
         )}
-        <p className="reg-small">{targets.length.toLocaleString()} {targets.length === 1 ? "person" : "people"} will receive this email.</p>
+        <p className="reg-small">{targets.length.toLocaleString()} {targets.length === 1 ? "person" : "people"} will receive this email.{audience.startsWith("original") ? " Original-data addresses are the emails Kuriake Castle held before this year's registration; some may be out of date." : ""}</p>
       </section>
       <section className="reg-card">
         <h2>Message</h2>
@@ -266,7 +270,7 @@ function Communication({ state, run }) {
           <Field label="Message" wide hint="Each person is addressed by name. Plain text; line breaks are kept."><textarea rows={8} value={message} onChange={(e) => setMessage(e.target.value)} /></Field>
         </div>
         {!api.communicationAvailable && <p className="reg-small">Sending works on the live site, where email is connected.</p>}
-        {result && <p className="reg-small" role="status">Sent to {result.sent.toLocaleString()} {result.sent === 1 ? "person" : "people"}{result.failed?.length ? `; ${result.failed.length} could not be delivered (${result.failed.slice(0, 3).join(", ")}${result.failed.length > 3 ? "…" : ""})` : ""}.</p>}
+        {result && <p className="reg-small" role="status">{result.queued ? `Sending to ${result.queued.toLocaleString()} people in the background. It will take a few minutes; the result is recorded under History when it finishes.` : `Sent to ${result.sent.toLocaleString()} ${result.sent === 1 ? "person" : "people"}${result.failed?.length ? `; ${result.failed.length} could not be delivered (${result.failed.slice(0, 3).join(", ")}${result.failed.length > 3 ? "…" : ""})` : ""}.`}</p>}
         <div className="reg-form-actions">
           {confirming ? (
             <>
