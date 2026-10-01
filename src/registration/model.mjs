@@ -129,7 +129,36 @@ export const catalogOf = (state) =>
     : { organizations: ORGANIZATIONS, denominations: DENOMINATIONS };
 export const feesOf = (state) => state?.fees?.bishop ? state.fees : AMOUNTS;
 // Fields of an old roster record the office may correct.
-export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination", "city", "country", "bishop", "branch", "photo"];
+export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination", "city", "country", "bishop", "branch", "photo", "phone", "email"];
+// Contact details never leave the office: the public page and members see the
+// corrected records without phone or email.
+const CONTACT_FIELDS = ["phone", "email"];
+const scrubContacts = (o) => Object.fromEntries(Object.entries(o || {}).filter(([k]) => !CONTACT_FIELDS.includes(k)));
+export const publicOverlay = (state) => ({
+  hidden: state.hidden || [],
+  overrides: Object.fromEntries(Object.entries(state.overrides || {}).map(([k, v]) => [k, scrubContacts(v)])),
+  extraReferences: (state.extraReferences || []).map(scrubContacts),
+});
+// A member's own details flow back onto their original-data record, so the
+// office always sees the current number, city and denomination.
+function syncReference(state, r) {
+  const id = r?.data?.referenceId;
+  if (!id) return;
+  const d = r.data;
+  state.overrides = { ...(state.overrides || {}), [id]: { ...((state.overrides || {})[id] || {}), name: d.name, city: d.city, country: d.country, denomination: d.denomination, organization: d.organization, phone: d.phone, email: d.email } };
+}
+// Who a broadcast reaches: everyone with an account email, all bishops, all
+// pastors, or the people picked by hand. Office-created placeholders are skipped.
+export function broadcastRecipients(state, audience = "all", ids = []) {
+  const chosen = new Set(ids || []);
+  const seen = new Set();
+  return state.profiles.filter((p) => {
+    if (!p.email || /@manual\.invalid$/.test(p.email) || seen.has(p.email)) return false;
+    const ok = audience === "all" || (audience === "bishops" && p.role === "bishop") || (audience === "pastors" && p.role === "pastor") || (audience === "selected" && chosen.has(p.id));
+    if (ok) seen.add(p.email);
+    return ok;
+  });
+}
 // The old roster as the office has corrected it: hidden and deleted records out,
 // corrected fields in, hand-added people appended.
 export function overlayReferences(references, state) {
@@ -502,6 +531,8 @@ export function applyAction(
         detail = { autoApproved: ref.name, referenceId: ref.id };
       }
     }
+    // Only after the name check: the member's details then flow onto their original record.
+    if (action === "submit") syncReference(state, r);
   } else if (action === "update") {
     // A member keeps their own details current after submitting; status and
     // payment are untouched and the record stays linked.
@@ -509,18 +540,24 @@ export function applyAction(
       (x) => x.userId === actor.id && x.year === state.year,
     );
     if (!r || r.status === "draft") throw Error("Submit your registration first.");
-    if (!r.resubmit)
-      throw Error("Your details are locked after submission. Contact the office for a correction.");
-    const data = validateProfile({ ...r.data, ...payload, role: r.data.role }, actor.email, { catalog });
+    // Everything but the date of birth may change; a different bishop re-runs the match.
+    const data = validateProfile({ ...r.data, ...payload, role: r.data.role, dob: r.data.dob }, actor.email, { catalog });
     if (!data.photoConfirmed) throw Error("Confirm your photo before saving.");
-    r.data = { ...data, referenceId: data.referenceId || r.data.referenceId, bishopId: r.data.bishopId };
+    const newBishop = data.role === "pastor" && data.bishopId && data.bishopId !== r.data.bishopId;
+    if (newBishop) {
+      for (const row of state.rosters) if (row.pastorId === r.userId) row.pastorId = null;
+      r.holdMatch = false;
+    }
+    r.data = { ...data, referenceId: data.referenceId || r.data.referenceId, bishopId: newBishop ? data.bishopId : r.data.bishopId };
     if (profile) {
       profile.name = data.name;
+      profile.organization = data.organization;
       profile.bishopDecision = null;
     }
-    r.resubmit = false;
-    r.resubmittedAt = now;
+    if (r.resubmit) { r.resubmit = false; r.resubmittedAt = now; }
     r.updatedAt = now;
+    detail = Object.fromEntries(Object.keys(payload).filter((k) => k in data && JSON.stringify(data[k]) !== JSON.stringify(source.registrations.find((x) => x.userId === actor.id && x.year === state.year)?.data?.[k])).map((k) => [k, data[k]]));
+    syncReference(state, r);
   } else if (action === "approveBishop") {
     office();
     const p = state.profiles.find((p) => p.id === payload.userId);
@@ -823,6 +860,7 @@ export function applyAction(
     r.updatedAt = now;
     const p = state.profiles.find((x) => x.id === r.userId);
     if (p) { p.name = data.name; p.organization = data.organization; p.role = data.role; if (incoming.referenceId !== undefined) p.referenceId = data.referenceId || ""; }
+    syncReference(state, r);
   } else if (action === "setStatus") {
     office();
     const r = registration();
@@ -975,6 +1013,10 @@ export function applyAction(
     if (!(bishop > 0 && pastor > 0 && Number.isInteger(bishop) && Number.isInteger(pastor))) throw Error("Enter whole-dollar amounts above zero.");
     detail = { fees: [feesOf(state), { bishop, pastor }] };
     state.fees = { bishop, pastor };
+  } else if (action === "broadcast") {
+    // The message itself goes out by email; the audit trail keeps what was sent and to how many.
+    office();
+    detail = { subject: String(payload.subject || "").slice(0, 200), audience: String(payload.audience || "all"), recipients: Number(payload.recipients) || 0 };
   } else if (action === "openYear") {
     office();
     if (Number(payload.year) !== state.year + 1)
@@ -1089,8 +1131,8 @@ export function visibleState(state, actor, references, people = references) {
     catalog: catalogOf(state),
     fees: feesOf(state),
     hidden: state.hidden || [],
-    overrides: state.overrides || {},
-    extraReferences: state.extraReferences || [],
+    overrides: actor.office ? state.overrides || {} : publicOverlay(state).overrides,
+    extraReferences: actor.office ? state.extraReferences || [] : publicOverlay(state).extraReferences,
   };
 }
 export const samePhone = (a, b) => {

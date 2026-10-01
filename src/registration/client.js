@@ -239,3 +239,6 @@ export async function reportIssue(actor, input) {
   localStorage.setItem(SUPPORT_KEY, JSON.stringify(saved.slice(-50)));
   return { ok: true, delivered: false };
 }
+// Office broadcasts go through the server's mailer; nothing to send in browser-only mode.
+export const communicationAvailable = mysqlBackend;
+export const sendBroadcast = (body) => server('communication/send', body);

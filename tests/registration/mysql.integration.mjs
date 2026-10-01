@@ -260,6 +260,17 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(signin.status, 200);
     assert.equal(signin.data.codeRequired, true, 'sign-in always needs the emailed code');
     assert.equal((await call('auth/verify', '', { email: 'bishop@example.com', token: mails.at(-1).text.match(/code is (\d{6})/)[1], mode: 'signin' })).status, 200);
+    // Office emails are bishops too: they may register and sign in as members.
+    assert.equal((await call('auth/request', '', { email: config.admins[0], mode: 'signup' })).status, 200, 'an office email can start a member registration');
+    // Broadcasts: office only; one personalised email per recipient.
+    assert.equal((await call('communication/send', bishop.cookie, { subject: 'Hello', message: 'Test' })).status, 403);
+    const mailsBefore = mails.length;
+    const broadcast = await call('communication/send', office.cookie, { subject: 'Convention dates', message: 'Please note the dates.', audience: 'bishops' });
+    assert.equal(broadcast.status, 200);
+    assert.ok(broadcast.data.sent >= 1);
+    assert.equal(mails.length, mailsBefore + broadcast.data.sent);
+    assert.match(mails.at(-1).text, /^Dear /);
+    assert.equal(mails.at(-1).subject, 'Convention dates');
     // The office can remove member accounts; office members and non-office callers cannot.
     assert.equal((await call('accounts/remove', bishop.cookie, { user: 'x' })).status, 403);
     const strangerId = (await call('accounts?search=stranger%40example.com', office.cookie)).data.data[0].id;

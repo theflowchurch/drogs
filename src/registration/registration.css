@@ -3304,3 +3304,88 @@ input[type="date"] {
 .reg-dash-minbar small {
   color: var(--muted);
 }
+
+/* Member profile: photo and name up top */
+.reg-profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 18px;
+}
+.reg-profile-hero .reg-record-photo {
+  width: 132px;
+  height: 160px;
+  border-radius: 16px;
+  object-fit: cover;
+  flex: none;
+}
+.reg-profile-hero h2 {
+  margin: 4px 0 6px;
+  font-size: 26px;
+}
+.reg-profile-hero p {
+  margin: 0;
+  color: var(--muted);
+}
+/* Office communication */
+.reg-communication {
+  display: grid;
+  gap: 18px;
+}
+.reg-audience {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 14px;
+}
+.reg-audience label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.reg-audience label.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.reg-recipients {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.reg-recipient-matches,
+.reg-recipient-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.reg-recipient-matches {
+  flex-direction: column;
+}
+.reg-recipient-matches small {
+  color: var(--muted);
+  margin-left: 6px;
+}
+.reg-recipient-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+}
+.reg-recipient-chips button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 15px;
+}

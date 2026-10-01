@@ -5,7 +5,7 @@ import { applySettings, bootstrapSettings, describeSettings, officeMembers, read
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
-import { applyAction, visibleState, publicRoll, attireExample } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, canReadMedia } from './storage.mjs';
@@ -86,7 +86,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         await rateLimit(pool, config, `public-directory:${request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'all'}`, 120, 60000);
         if (!publicCache.value || Date.now() - publicCache.at > 30000) {
           const state = await transaction(pool, conn => readState(conn));
-          publicCache = { at: Date.now(), value: { source: config.publicDirectory, roll: publicRoll(state, people), hidden: state.hidden || [], overrides: state.overrides || {}, extraReferences: state.extraReferences || [] } };
+          publicCache = { at: Date.now(), value: { source: config.publicDirectory, roll: publicRoll(state, people), ...publicOverlay(state) } };
         }
         return json(publicCache.value, 200, { 'Cache-Control': 'public, max-age=30' });
       }
@@ -153,6 +153,29 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           view.registrations = view.registrations.map(r => r.userId === actor.id ? r : { ...r, proof: undefined });
         }
         return json({ ...view, office: actor.office, payment: config.momo, paystackKey: config.paystackPublic, publicDirectory: config.publicDirectory });
+      }
+      if (path === '/api/registration/communication/send' && method === 'POST') {
+        // A broadcast from the office to everyone, all bishops, all pastors, or chosen people.
+        if (!actor.office) throw new HttpError(403, 'Office access required.');
+        if (!mailer) throw new HttpError(503, 'Email is not set up yet. Add the Resend key in Settings first.');
+        const { subject, message, audience = 'all', ids = [] } = await jsonBody(request);
+        const subj = String(subject || '').trim().slice(0, 200), text = String(message || '').trim();
+        if (!subj || !text) throw new HttpError(400, 'Enter a subject and a message.');
+        if (!['all', 'bishops', 'pastors', 'selected'].includes(audience)) throw new HttpError(400, 'Choose who should receive it.');
+        await rateLimit(pool, config, `broadcast:${actor.id}`, 20, 3600000);
+        const state = await transaction(pool, conn => readState(conn));
+        const targets = broadcastRecipients(state, audience, Array.isArray(ids) ? ids.map(String) : []);
+        if (!targets.length) throw new HttpError(400, 'Nobody matches that audience yet.');
+        let sent = 0; const failed = [];
+        for (const t of targets) {
+          try { await mailer.sendMail(brandedMail({ from: config.from, to: t.email, subject: subj, text: `Dear ${t.name.split(' ')[0]},\n\n${text}\n\nKuriake Castle Office` })); sent++; }
+          catch (error) { failed.push(t.email); logger.error('broadcast failed for', t.email, error.message); }
+        }
+        await transaction(pool, async conn => {
+          const before = await readState(conn, true);
+          await persistState(conn, before, applyAction(before, actor, 'broadcast', { subject: subj, audience, recipients: sent }, undefined, people));
+        });
+        return json({ sent, failed });
       }
       if (path === '/api/registration/action' && method === 'POST') {
         await rateLimit(pool, config, `action:${actor.id}`, 120, 60000);

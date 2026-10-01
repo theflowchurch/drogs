@@ -12,6 +12,7 @@ import {
   directoryPeople,
   publicRoll,
   overlayReferences,
+  broadcastRecipients,
   catalogOf,
   whatsappNumber,
   nearMatches,
@@ -84,7 +85,7 @@ test("a bishop cannot self-approve but may list pastors while pending", () => {
   assert.equal(s.registrations[0].status, "pending");
   s = applyAction(s, bishop, "update", { ...profile(bishop, "bishop"), city: "Tema" });
   assert.equal(s.registrations[0].data.city, "Tema");
-  assert.throws(() => applyAction(s, bishop, "update", { ...profile(bishop, "bishop") }), /locked/);
+  assert.equal(s.registrations[0].resubmit, false, "answering the office clears the resubmit flag");
   s = applyAction(s, office, "reviewBishop", { userId: "b1", decision: "denied", note: "Not a bishop of this fellowship." });
   assert.equal(s.registrations[0].status, "denied");
   assert.throws(() => applyAction(s, bishop, "addRoster", { rows: [{ name: "Ama Owusu", dob: "02/02/1990" }] }), /Submit your bishop registration/);
@@ -435,12 +436,15 @@ test("names are alike across order, missing middle names and small typos", () =>
   assert.ok(!namesAlike("Nina", "Nina Masuku"), "one word is never enough");
 });
 
-test("a submitted profile is locked", () => {
+test("a submitted profile stays editable, but status and payment are untouched", () => {
   let s = setup();
   s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
   s = applyAction(s, pastor, "submit", profile(pastor));
-  assert.throws(() => applyAction(s, pastor, "update", { ...profile(pastor), city: "Kumasi" }), /locked/);
-  assert.equal(s.registrations.find((x) => x.userId === pastor.id).data.city, "Accra");
+  s = applyAction(s, pastor, "update", { city: "Kumasi", photoConfirmed: true });
+  const r = s.registrations.find((x) => x.userId === pastor.id);
+  assert.equal(r.data.city, "Kumasi");
+  assert.equal(r.status, "confirmed", "still matched under the same bishop");
+  assert.equal(r.payment, "unpaid");
 });
 
 test("female bishops are addressed by their organization's title", () => {
@@ -628,4 +632,40 @@ test("a bishop whose linked original record carries their name is approved on su
   // No link at all: not automatic.
   t = applyAction(emptyState(), bishop, "submit", profile(bishop, "bishop", "Ama Bishop"), undefined, refs);
   assert.equal(t.registrations[0].status, "pending");
+});
+test("members update their own details any time; date of birth is fixed; corrections reach the original record", () => {
+  let s = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Ama Bishop"), referenceId: "B1" });
+  assert.equal(s.overrides.B1.phone, "+233201234567", "the submitted number lands on the original record");
+  s = applyAction(s, bishop, "update", { city: "Kumasi", phone: "+233 24 000 0000", dob: "1950-01-01", photoConfirmed: true });
+  const r = s.registrations[0];
+  assert.equal(r.data.city, "Kumasi");
+  assert.equal(r.data.dob, "1990-02-01", "date of birth cannot be changed by the member");
+  assert.equal(s.overrides.B1.city, "Kumasi");
+  assert.equal(s.overrides.B1.phone, "+233240000000");
+  assert.deepEqual(Object.keys(s.audit.at(-1).detail).sort(), ["city", "phone"]);
+});
+test("a pastor who picks a different bishop is re-matched under the new one", () => {
+  let s = setup();
+  s = applyAction(s, other, "submit", profile(other, "bishop", "Kofi Other"));
+  s = applyAction(s, office, "approveBishop", { userId: other.id });
+  s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
+  s = applyAction(s, pastor, "submit", profile(pastor));
+  assert.equal(s.registrations.at(-1).status, "confirmed", "matched under the first bishop");
+  s = applyAction(s, pastor, "update", { bishopId: other.id, photoConfirmed: true });
+  const r = s.registrations.find((x) => x.userId === pastor.id);
+  assert.equal(r.data.bishopId, other.id);
+  assert.equal(r.status, "unclaimed", "no list row under the new bishop yet");
+  assert.equal(s.rosters[0].pastorId, null, "the old row is released");
+});
+test("broadcast audiences: everyone, bishops, pastors or chosen people; placeholders skipped", () => {
+  let s = setup();
+  s = applyAction(s, pastor, "submit", profile(pastor));
+  s = applyAction(s, office, "addPerson", { data: { role: "pastor", firstName: "Hand", lastName: "Added", gender: "male", organization: "First Love", denomination: "First Love Church", country: "Ghana", city: "Accra" } });
+  assert.deepEqual(broadcastRecipients(s, "all").map((p) => p.email).sort(), ["bishop@example.com", "john@example.com"]);
+  assert.deepEqual(broadcastRecipients(s, "bishops").map((p) => p.email), ["bishop@example.com"]);
+  assert.deepEqual(broadcastRecipients(s, "pastors").map((p) => p.email), ["john@example.com"]);
+  assert.deepEqual(broadcastRecipients(s, "selected", [pastor.id]).map((p) => p.email), ["john@example.com"]);
+  assert.throws(() => applyAction(s, bishop, "broadcast", { subject: "x" }), /Office/);
+  s = applyAction(s, office, "broadcast", { subject: "Convention dates", audience: "bishops", recipients: 1 });
+  assert.deepEqual(s.audit.at(-1).detail, { subject: "Convention dates", audience: "bishops", recipients: 1 });
 });

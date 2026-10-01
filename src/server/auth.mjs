@@ -83,8 +83,6 @@ export function createAuth({ pool, config, mailer }) {
       if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
       mode = await effectiveMode(email, mode);
       if (mode === 'signin') await requireMember(email);
-      // Office addresses only ever sign in through /admin/ (access code first).
-      if (mode !== 'office' && config.admins.includes(email)) throw new HttpError(403, 'Office accounts sign in with the admin code at /admin/.');
       await rateLimit(pool, config, `otp-minute:${email}`, 1, 60000);
       await rateLimit(pool, config, `otp-hour:${email}`, 5, 3600000);
       await rateLimit(pool, config, 'otp-global', 500, 3600000);
@@ -107,7 +105,6 @@ export function createAuth({ pool, config, mailer }) {
       // Every path needs the emailed code: nobody reaches the form on an email alone.
       const open = false;
       if (mode === 'signin') await requireMember(email);
-      if (mode !== 'office' && config.admins.includes(email)) throw new HttpError(403, 'Office accounts sign in with the admin code at /admin/.');
       if (typeof code !== 'string' || !/^\d{6}$/.test(code)) throw new HttpError(400, 'Enter the six-digit code from your email.');
       await rateLimit(pool, config, `verify:${email}`, 20, 3600000);
       const result = await transaction(pool, async conn => {

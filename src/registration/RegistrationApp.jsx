@@ -31,6 +31,7 @@ import {
   REFERENCE_FIELDS,
   catalogOf,
   overlayReferences,
+  broadcastRecipients,
   attireExample,
   paymentReference,
   referenceIndex,
@@ -154,6 +155,128 @@ const stepper = (list, selected, setSelected) => {
     onNext: i >= 0 && i < list.length - 1 ? () => setSelected(list[i + 1]) : undefined,
   };
 };
+// A member keeps their own record current: everything except the date of
+// birth, with the same lists the sign-up form uses. Pastors can move to
+// another registered bishop; the match is re-run.
+function ProfileEditor({ current, state, actor, perform, onDone }) {
+  const d = current.data;
+  const catalog = state.catalog || catalogOf(state);
+  const [f, setF] = useState({ firstName: d.firstName || "", lastName: d.lastName || "", gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "" });
+  const [busyPhoto, setBusyPhoto] = useState(false), [problem, setProblem] = useState("");
+  const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
+  const countries = [...new Set([...overlayReferences(people, state).map((x) => x.country), f.country].filter(Boolean))].sort();
+  const bishops = [...(state.bishops || [])].sort((a, b) => a.name.localeCompare(b.name));
+  const denominations = catalog.denominations[f.organization] || [];
+  const save = () => perform("update", { ...f, photoConfirmed: true }, "Your details were updated.").then((ok) => ok && onDone());
+  return (
+    <div className="reg-fields reg-office-form">
+      <Field label="First name"><input value={f.firstName} onChange={(e) => set("firstName", e.target.value)} /></Field>
+      <Field label="Last name"><input value={f.lastName} onChange={(e) => set("lastName", e.target.value)} /></Field>
+      <Field label="Gender"><select value={f.gender} onChange={(e) => set("gender", e.target.value)}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></Field>
+      <Field label="WhatsApp number"><input value={f.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
+      <Field label="Organization"><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{orgLabel(o)}</option>)}</select></Field>
+      {denominations.length > 0 && (
+        <Field label="Denomination"><select value={f.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{denominations.map((x) => <option key={x}>{x}</option>)}</select></Field>
+      )}
+      <Field label="Country where you currently serve"><Choice value={f.country} options={countries} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
+      <Field label="City"><input value={f.city} onChange={(e) => set("city", e.target.value)} /></Field>
+      {d.role === "pastor" && (
+        <Field label="Your bishop" wide hint="Only bishops who have registered appear here. Choosing a different bishop re-runs the match against their list.">
+          <select value={f.bishopId} onChange={(e) => set("bishopId", e.target.value)}>
+            <option value="">Choose your bishop…</option>
+            {bishops.map((b) => <option key={b.id} value={b.id}>{[b.name, b.denomination].filter(Boolean).join(" · ")}</option>)}
+          </select>
+        </Field>
+      )}
+      <div className="reg-field wide">
+        <label>Photo</label>
+        <label className={`reg-secondary reg-file-button ${busyPhoto ? "busy" : ""}`}>
+          {busyPhoto ? "Uploading…" : "Replace my photo"}
+          <input type="file" accept="image/jpeg,image/png,image/webp" disabled={busyPhoto} onChange={(e) => {
+            const file = e.target.files?.[0]; e.target.value = ""; if (!file) return; setBusyPhoto(true); setProblem("");
+            api.upload(actor, file, "portrait").then((key) => perform("update", { photo: key, photoConfirmed: true }, "Photo updated.")).catch((err) => setProblem(err.message || "The photo could not be uploaded.")).finally(() => setBusyPhoto(false));
+          }} />
+        </label>
+        <small>Date of birth: {d.dob}. It cannot be changed here; contact the office if it is wrong.</small>
+      </div>
+      {problem && <p className="reg-field wide reg-error-text" role="alert">{problem}</p>}
+      <div className="reg-form-actions wide">
+        <button type="button" className="reg-secondary" onClick={onDone}>Cancel</button>
+        <button type="button" className="reg-primary" onClick={save}>Save changes</button>
+      </div>
+    </div>
+  );
+}
+// Office broadcasts: pick who receives it, write it, confirm, send. Each
+// person gets their own email addressed to them.
+function Communication({ state, run }) {
+  const [audience, setAudience] = useState("all"), [q, setQ] = useState(""), [picked, setPicked] = useState([]),
+    [subject, setSubject] = useState(""), [message, setMessage] = useState(""), [confirming, setConfirming] = useState(false), [result, setResult] = useState(null);
+  const members = (state.profiles || []).filter((p) => p.email && !/@manual\.invalid$/.test(p.email)).sort((a, b) => a.name.localeCompare(b.name));
+  const targets = broadcastRecipients(state, audience, picked);
+  const term = q.trim().toLowerCase();
+  const matches = term ? members.filter((p) => !picked.includes(p.id) && (normalName(p.name).includes(normalName(q)) || p.email.toLowerCase().includes(term))).slice(0, 12) : [];
+  const ready = subject.trim() && message.trim() && targets.length > 0;
+  const send = () => run(async () => {
+    const r = await api.sendBroadcast({ subject: subject.trim(), message: message.trim(), audience, ids: picked });
+    setResult(r); setConfirming(false); setSubject(""); setMessage("");
+  }, "Message sent.");
+  return (
+    <div className="reg-communication">
+      <section className="reg-card">
+        <h2>Who receives it</h2>
+        <div className="reg-audience" role="radiogroup" aria-label="Audience">
+          {[["all", "Everyone"], ["bishops", "All bishops"], ["pastors", "All pastors"], ["selected", "Selected people"]].map(([value, label]) => (
+            <label key={value} className={audience === value ? "active" : ""}>
+              <input type="radio" name="audience" value={value} checked={audience === value} onChange={() => setAudience(value)} />
+              {label}
+            </label>
+          ))}
+        </div>
+        {audience === "selected" && (
+          <div className="reg-recipients">
+            <input type="search" aria-label="Find people" placeholder="Search by name or email" value={q} onChange={(e) => setQ(e.target.value)} />
+            {matches.length > 0 && (
+              <ul className="reg-recipient-matches">
+                {matches.map((p) => (
+                  <li key={p.id}><button type="button" className="reg-text" onClick={() => { setPicked([...picked, p.id]); setQ(""); }}>+ {p.name} <small>{p.role} · {p.email}</small></button></li>
+                ))}
+              </ul>
+            )}
+            {picked.length > 0 ? (
+              <ul className="reg-recipient-chips">
+                {picked.map((id) => { const p = members.find((m) => m.id === id); return p ? <li key={id}>{p.name}<button type="button" aria-label={`Remove ${p.name}`} onClick={() => setPicked(picked.filter((x) => x !== id))}>×</button></li> : null; })}
+              </ul>
+            ) : (
+              <p className="reg-small">Nobody picked yet. Search above and tap a name to add them.</p>
+            )}
+          </div>
+        )}
+        <p className="reg-small">{targets.length.toLocaleString()} {targets.length === 1 ? "person" : "people"} will receive this email.</p>
+      </section>
+      <section className="reg-card">
+        <h2>Message</h2>
+        <div className="reg-fields">
+          <Field label="Subject" wide><input value={subject} onChange={(e) => setSubject(e.target.value)} maxLength={200} /></Field>
+          <Field label="Message" wide hint="Each person is addressed by name. Plain text; line breaks are kept."><textarea rows={8} value={message} onChange={(e) => setMessage(e.target.value)} /></Field>
+        </div>
+        {!api.communicationAvailable && <p className="reg-small">Sending works on the live site, where email is connected.</p>}
+        {result && <p className="reg-small" role="status">Sent to {result.sent.toLocaleString()} {result.sent === 1 ? "person" : "people"}{result.failed?.length ? `; ${result.failed.length} could not be delivered (${result.failed.slice(0, 3).join(", ")}${result.failed.length > 3 ? "…" : ""})` : ""}.</p>}
+        <div className="reg-form-actions">
+          {confirming ? (
+            <>
+              <span className="reg-small">Send “{subject.trim()}” to {targets.length.toLocaleString()} {targets.length === 1 ? "person" : "people"}?</span>
+              <button type="button" className="reg-secondary" onClick={() => setConfirming(false)}>Cancel</button>
+              <button type="button" className="reg-primary" onClick={send}>Yes, send</button>
+            </>
+          ) : (
+            <button type="button" className="reg-primary" disabled={!ready || !api.communicationAvailable} onClick={() => setConfirming(true)}>Send →</button>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
 // The live dashboard at dashboard.kuriakecastle.org, shown inside the office
 // like an app: fills the work area, expands over the whole screen, minimises to a bar.
 const DASHBOARD_URL = "https://dashboard.kuriakecastle.org/";
@@ -448,6 +571,7 @@ export default function RegistrationApp({
         "Payments",
         "Pastor lists",
         "History",
+        "Communication",
         ...(api.apiKeysAvailable ? ["Accounts", "API keys"] : []),
         "Dashboard",
         ...(api.settingsAvailable ? ["Settings"] : []),
@@ -731,6 +855,7 @@ export default function RegistrationApp({
                             Payments:
                               "Review payment screenshots and confirm received commitments.",
                             History: "Previous cycles and what changed.",
+                            Communication: "Email everyone, all bishops, all pastors, or the people you pick.",
                             Accounts: "See who has created an account and when they last signed in.",
                             "API keys": "Give connected applications controlled, read-only access to Kuriake Castle.",
                             Settings: "Email delivery, payments, photo storage and access codes.",
@@ -739,6 +864,7 @@ export default function RegistrationApp({
                       </p>
                     </div>
                   </div>
+                  {tab === "Communication" && <Communication state={state} run={run} />}
                   {tab === "Accounts" && <Accounts run={run} />}
                   {tab === "API keys" && <ApiKeys run={run} />}
                   {tab === "Settings" && <Settings run={run} state={state} perform={perform} />}
@@ -1088,7 +1214,9 @@ function Participant({
   const previous = state.registrations
     .filter((r) => r.userId === actor.id && r.year < state.year)
     .sort((a, b) => b.year - a.year)[0];
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(false), [editDetails, setEditDetails] = useState(false);
+  // The thank-you is for the moment of finishing; anyone returning later sees their profile.
+  const [startedHere] = useState(() => !current || current.status === "draft");
   if (!current || current.status === "draft" || editing)
     return (
       <RegistrationForm
@@ -1112,25 +1240,26 @@ function Participant({
       <div className="reg-page-heading">
         <div>
           <span className="reg-eyebrow">{state.year} / MY PROFILE</span>
-          <h1>Thank you, {current.data.name.split(" ")[0]}.</h1>
-          <p>Your registration is complete. This is the information you gave us.</p>
+          <h1>{startedHere ? `Thank you, ${current.data.name.split(" ")[0]}.` : "My profile"}</h1>
+          <p>{startedHere ? "Your registration is complete. This is the information you gave us." : "Your place on the Roll of Good Standing. You can update your details at any time."}</p>
         </div>
         <Badge status={current.status === "unclaimed" ? "pending" : current.status} />
       </div>
       <div className="reg-status-layout">
         <section className="reg-card">
-          <div className="reg-person-summary">
+          <div className="reg-profile-hero">
             <Media
               path={current.data.photo}
               alt={current.data.name}
-              className="reg-avatar"
+              className="reg-record-photo"
             />
             <div>
+              <span className="reg-eyebrow">{titleFor(current.data).toUpperCase()}</span>
               <h2>{current.data.name}</h2>
               <p>
-                {titleCase(current.data.role)} · {orgLabel(current.data.organization)}
+                {orgLabel(current.data.organization)}
+                {current.data.denomination || current.data.church ? ` · ${current.data.denomination || current.data.church}` : ""}
               </p>
-              <small>{current.data.denomination || current.data.church}</small>
             </div>
           </div>
           <dl className="reg-details">
@@ -1183,10 +1312,19 @@ function Participant({
                       : `${current.payment === "verified" ? "Your payment has been received. " : ""}Your bishop and the office are confirming your registration; you will see the result here.`}
             </p>
           </div>
-          {current.resubmit && (
+          {current.resubmit ? (
             <button className="reg-secondary" onClick={() => setEditing(true)}>
               Update my registration
             </button>
+          ) : (
+            <button className="reg-secondary" onClick={() => setEditDetails(true)}>
+              Edit my details
+            </button>
+          )}
+          {editDetails && (
+            <Dialog title="Edit my details" onClose={() => setEditDetails(false)}>
+              <ProfileEditor current={current} state={state} actor={actor} perform={perform} onDone={() => setEditDetails(false)} />
+            </Dialog>
           )}
         </section>
         <Payment
