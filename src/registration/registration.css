@@ -3221,3 +3221,86 @@ input[type="date"] {
   color: var(--danger, #b42318);
   margin: 0;
 }
+
+/* Dashboard tab: the live dashboard framed like an app */
+.reg-main-flush {
+  padding: 0;
+  max-width: none;
+}
+.reg-main-flush .reg-workspace-fieldset {
+  height: 100%;
+}
+.reg-dash {
+  position: relative;
+  height: calc(100vh - 92px);
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+}
+.reg-dash.full {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  height: 100vh;
+  min-height: 0;
+}
+.reg-dash.min {
+  height: auto;
+  min-height: 0;
+  margin: 18px clamp(24px, 4vw, 65px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.reg-dash-frame {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  background: #fff;
+}
+.reg-dash.min .reg-dash-frame {
+  display: none;
+}
+.reg-dash-tools {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  gap: 6px;
+}
+.reg-dash.min .reg-dash-tools {
+  position: static;
+  order: 2;
+  padding: 0 14px 12px;
+}
+.reg-dash-tool {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  color: var(--ink);
+  border-radius: 10px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 15px;
+  line-height: 32px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+.reg-dash-tool:hover {
+  border-color: var(--accent);
+}
+.reg-dash-minbar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 14px 8px;
+}
+.reg-dash-minbar small {
+  color: var(--muted);
+}

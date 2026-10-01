@@ -154,6 +154,37 @@ const stepper = (list, selected, setSelected) => {
     onNext: i >= 0 && i < list.length - 1 ? () => setSelected(list[i + 1]) : undefined,
   };
 };
+// The live dashboard at dashboard.kuriakecastle.org, shown inside the office
+// like an app: fills the work area, expands over the whole screen, minimises to a bar.
+const DASHBOARD_URL = "https://dashboard.kuriakecastle.org/";
+function DashboardFrame() {
+  const [view, setView] = useState("fit"); // fit | full | min
+  useEffect(() => {
+    if (view !== "full") return;
+    const key = (e) => { if (e.key === "Escape") setView("fit"); };
+    document.addEventListener("keydown", key);
+    const old = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", key); document.body.style.overflow = old; };
+  }, [view]);
+  return (
+    <section className={`reg-dash ${view}`} aria-label="Dashboard">
+      <div className="reg-dash-tools">
+        {view === "min" ? (
+          <button type="button" className="reg-dash-tool" onClick={() => setView("fit")} title="Restore the dashboard">▢ Restore</button>
+        ) : (
+          <>
+            <button type="button" className="reg-dash-tool" onClick={() => setView("min")} aria-label="Minimise" title="Minimise">—</button>
+            <button type="button" className="reg-dash-tool" onClick={() => setView(view === "full" ? "fit" : "full")} aria-label={view === "full" ? "Exit full screen" : "Full screen"} title={view === "full" ? "Exit full screen (Esc)" : "Full screen"}>{view === "full" ? "⤡" : "⤢"}</button>
+            <a className="reg-dash-tool" href={DASHBOARD_URL} target="_blank" rel="noreferrer" title="Open in a new tab">↗</a>
+          </>
+        )}
+      </div>
+      {view === "min" && <div className="reg-dash-minbar"><b>Dashboard</b><small>Minimised · it keeps running</small></div>}
+      <iframe className="reg-dash-frame" src={DASHBOARD_URL} title="Kuriake Castle dashboard" allow="clipboard-read; clipboard-write; fullscreen" />
+    </section>
+  );
+}
 // Opening a pastor from a bishop's record leaves a trail, so the dialog can go back.
 function useTrail(selected, setSelected) {
   const [trail, setTrail] = useState([]);
@@ -418,6 +449,7 @@ export default function RegistrationApp({
         "Pastor lists",
         "History",
         ...(api.apiKeysAvailable ? ["Accounts", "API keys"] : []),
+        "Dashboard",
         ...(api.settingsAvailable ? ["Settings"] : []),
       ]
     : [
@@ -650,8 +682,9 @@ export default function RegistrationApp({
               <small>{api.live ? "Secure account" : "Local account"}</small>
             </div>
           </aside>
-          <main className="reg-main" aria-busy={busy}>
+          <main className={`reg-main ${tab === "Dashboard" ? "reg-main-flush" : ""}`} aria-busy={busy}>
             <fieldset className="reg-workspace-fieldset" disabled={busy}>
+              {tab === "Dashboard" && <DashboardFrame />}
               {tab === "Registration" && (
                 <Participant
                   fixedRole={typeof signup === "string" ? signup : ""}
@@ -665,7 +698,7 @@ export default function RegistrationApp({
                   refresh={refresh}
                 />
               )}
-              {tab !== "Registration" && (
+              {tab !== "Registration" && tab !== "Dashboard" && (
                 <>
                   <div className="reg-page-heading">
                     <div>
