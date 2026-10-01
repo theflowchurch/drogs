@@ -200,11 +200,17 @@ export const publicOverlay = (state) => ({
 });
 // A member's own details flow back onto their original-data record, so the
 // office always sees the current number, city and denomination.
-function syncReference(state, r) {
+function syncReference(state, r, { byOffice = false } = {}) {
   const id = r?.data?.referenceId;
   if (!id) return;
   const d = r.data;
-  state.overrides = { ...(state.overrides || {}), [id]: { ...((state.overrides || {})[id] || {}), name: d.name, city: d.city, country: d.country, denomination: d.denomination, organization: d.organization, phone: d.phone, email: d.email } };
+  state.overrides = { ...(state.overrides || {}), [id]: { ...((state.overrides || {})[id] || {}), ...(byOffice ? { name: d.name } : {}), city: d.city, country: d.country, denomination: d.denomination, organization: d.organization, phone: d.phone, email: d.email } };
+}
+// A member may link only to a record of their own role that carries their name.
+function ownRecord(references, state, data) {
+  if (!data.referenceId) return "";
+  const ref = overlayReferences(references, state).find((x) => x.id === data.referenceId);
+  return ref && ref.role === data.role && namesAlike(ref.name, data.name) ? data.referenceId : "";
 }
 // Who a broadcast reaches: everyone with an account email, all bishops, all
 // pastors, or the people picked by hand. Office-created placeholders are skipped.
@@ -260,7 +266,7 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
     photo: p.photo || "",
     gender: ["male", "female"].includes(p.gender) ? p.gender : "",
     bishopId: p.bishopId || "",
-    referenceId: /^[BP]\d+$/.test(String(p.referenceId || "")) ? p.referenceId : "",
+    referenceId: /^[A-Za-z]{1,2}[A-Za-z0-9]{1,14}$/.test(String(p.referenceId || "")) ? p.referenceId : "",
     bishopFirstName: String(p.bishopFirstName || "").trim(),
     bishopLastName: String(p.bishopLastName || "").trim(),
     // When the person agreed to the public listing (ISO time); kept as a record.
@@ -542,6 +548,7 @@ export function applyAction(
       draft: action === "save",
       catalog,
     });
+    data.referenceId = ownRecord(references, state, data);
     // Consent is collected on the review screen, so it is checked at submit only.
     if (action === "submit" && !data.consentedAt)
       throw Error("Please consent to the public listing before submitting.");
@@ -624,7 +631,8 @@ export function applyAction(
       for (const row of state.rosters) if (row.pastorId === r.userId) row.pastorId = null;
       r.holdMatch = false;
     }
-    r.data = { ...data, referenceId: data.referenceId || r.data.referenceId, bishopId: newBishop ? data.bishopId : r.data.bishopId };
+    if (payload.photo && payload.photo !== r.data.photo && r.status === "confirmed") r.photoChangedAt = now; // the office re-checks a new photo on an approved person
+    r.data = { ...data, referenceId: r.data.referenceId, bishopId: newBishop ? data.bishopId : r.data.bishopId };
     if (profile) {
       profile.name = data.name;
       profile.organization = data.organization;
@@ -632,7 +640,8 @@ export function applyAction(
     }
     if (r.resubmit) { r.resubmit = false; r.resubmittedAt = now; }
     r.updatedAt = now;
-    detail = Object.fromEntries(Object.keys(payload).filter((k) => k in data && JSON.stringify(data[k]) !== JSON.stringify(source.registrations.find((x) => x.userId === actor.id && x.year === state.year)?.data?.[k])).map((k) => [k, data[k]]));
+    const wasData = source.registrations.find((x) => x.userId === actor.id && x.year === state.year)?.data || {};
+    detail = Object.fromEntries(Object.keys(payload).filter((k) => k in r.data && JSON.stringify(r.data[k]) !== JSON.stringify(wasData[k])).map((k) => [k, r.data[k]]));
     syncReference(state, r);
   } else if (action === "approveBishop") {
     office();
@@ -654,6 +663,7 @@ export function applyAction(
     p.bishopDecision = null;
     r.resubmit = false;
     p.referenceId = payload.referenceId || r.data.referenceId || null;
+    if (payload.referenceId) r.data.referenceId = payload.referenceId; // the office's link is authoritative
   } else if (action === "reviewBishop") {
     office();
     const p = state.profiles.find((p) => p.id === payload.userId);
@@ -725,6 +735,7 @@ export function applyAction(
         ? profile
         : null);
     if (!bishop) throw Error("Assign a registered bishop first.");
+    if (!actor.office && !profile?.bishopApproved) throw Error("Your bishop registration must be approved before you can confirm pastors.");
     if (!actor.office && bishop.id !== actor.id)
       throw Error(
         "Only the selected bishop or office can confirm this pastor.",
@@ -777,6 +788,10 @@ export function applyAction(
         "Only the supervising bishop or office can confirm this entry.",
       );
     const id = String(payload.referenceId || "");
+    if (references.length) {
+      const ref = overlayReferences(references, state).find((x) => x.id === id);
+      if (!ref || ref.role !== "pastor" || !namesAlike(ref.name, row.name)) throw Error("That record does not carry this pastor’s name.");
+    }
     if (!/^[BP]\d+$/.test(id))
       throw Error("Choose the pastor to confirm.");
     if (
@@ -937,7 +952,7 @@ export function applyAction(
     r.updatedAt = now;
     const p = state.profiles.find((x) => x.id === r.userId);
     if (p) { p.name = data.name; p.organization = data.organization; p.role = data.role; if (incoming.referenceId !== undefined) p.referenceId = data.referenceId || ""; }
-    syncReference(state, r);
+    syncReference(state, r, { byOffice: true });
   } else if (action === "setStatus") {
     office();
     const r = registration();
@@ -1209,6 +1224,7 @@ export function visibleState(state, actor, references, people = references) {
     r.userId === actor.id ||
     (r.status !== "draft" &&
       r.data.role === "pastor" &&
+      me?.bishopApproved &&
       (bishopKeyed(state, r.data.bishopId)?.id === actor.id ||
         (r.status === "unclaimed" &&
           !bishopKeyed(state, r.data.bishopId) &&
@@ -1228,6 +1244,8 @@ export function visibleState(state, actor, references, people = references) {
     catalog: catalogOf(state),
     fees: feesOf(state),
     signup: signupOf(state),
+    // Contact details of the original data are for the office alone; they never travel to members or the public bundle.
+    ...(actor.office ? { contacts: Object.fromEntries(people.filter((p) => p.email || p.phone).map((p) => [p.id, { email: p.email || "", phone: p.phone || "" }])) } : {}),
     hidden: state.hidden || [],
     overrides: actor.office ? state.overrides || {} : publicOverlay(state).overrides,
     extraReferences: actor.office ? state.extraReferences || [] : publicOverlay(state).extraReferences,

@@ -175,7 +175,7 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
   const [busyPhoto, setBusyPhoto] = useState(false), [problem, setProblem] = useState("");
   const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
   const countries = [...new Set([...overlayReferences(people, state).map((x) => x.country), f.country].filter(Boolean))].sort();
-  const bishops = [...(state.bishops || [])].sort((a, b) => a.name.localeCompare(b.name));
+  const bishops = [...(state.bishops || [])].filter((b) => b.approved).sort((a, b) => a.name.localeCompare(b.name));
   const denominations = catalog.denominations[f.organization] || [];
   const save = () => perform("update", { ...f, photoConfirmed: true }, "Your details were updated.").then((ok) => ok && onDone());
   return (
@@ -223,7 +223,7 @@ function Communication({ state, run }) {
   // Registered members and the original data's emails can both be picked.
   const members = [
     ...(state.profiles || []).filter((p) => p.email && !/@manual\.invalid$/.test(p.email)),
-    ...overlayReferences(people, state).filter((p) => p.email).map((p) => ({ id: p.id, name: p.name, email: p.email, role: p.role, original: true })),
+    ...overlayReferences(people, state).map((p) => ({ ...p, ...(state.contacts?.[p.id] || {}) })).filter((p) => p.email).map((p) => ({ id: p.id, name: p.name, email: p.email, role: p.role, original: true })),
   ].sort((a, b) => a.name.localeCompare(b.name));
   const targets = broadcastRecipients(state, audience, picked, people);
   const term = q.trim().toLowerCase();
@@ -1590,7 +1590,7 @@ function RegistrationForm({
       return next;
     });
   // Pastors pick their bishop from a list of those who have already registered.
-  const registeredBishops = [...(state.bishops || [])].sort((a, b) => a.name.localeCompare(b.name));
+  const registeredBishops = [...(state.bishops || [])].filter((b) => b.approved).sort((a, b) => a.name.localeCompare(b.name));
   const chosenBishop = registeredBishops.find((b) => b.id === data.bishopId) || null;
   const pickBishop = (b) =>
     setData((d) => {
@@ -2657,7 +2657,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
     [selectedId, setSelectedId] = useState(null);
   const all = useMemo(() => {
     const catalog = catalogOf(state);
-    const everyone = directoryPeople(state, people, year).map((p) => ({ ...p, denominationListed: denominationListed(catalog, p) }));
+    const everyone = directoryPeople(state, people, year).map((p) => ({ ...p, ...(state.contacts?.[p.id] || {}), denominationListed: denominationListed(catalog, p) }));
     // The registered view is what the public roll counts: people confirmed this year.
     return mode === "registered"
       ? everyone.filter((p) => p.registration?.status === "confirmed")
@@ -2795,6 +2795,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
     <>
       <div className="reg-record-hero centred">
         <Portrait person={p} className="reg-record-photo large" />
+        {r?.photoChangedAt && <p className="reg-attire-flag warn">Photo changed after approval · {shortDateTime(r.photoChangedAt)}</p>}
         {r?.data?.photoCheck && attireWords(r.data.photoCheck) && (
           <p className={`reg-attire-flag ${r.data.photoCheck.verdict === "ok" ? "ok" : "warn"}`}>{attireWords(r.data.photoCheck)}</p>
         )}
@@ -3729,7 +3730,7 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
               <div>
                 <h3>{r.data.name}</h3>
                 <p>
-                  {titleFor(r.data)} · {orgLabel(r.data.organization)} · {r.data.email}{r.entrance === "appointments" ? " · Pastoral appointment" : ""}{r.data.photoCheck && r.data.photoCheck.verdict !== "ok" && r.data.photoCheck.verdict !== "skipped" ? ` · ${attireWords(r.data.photoCheck)}` : ""}
+                  {titleFor(r.data)} · {orgLabel(r.data.organization)} · {r.data.email}{r.entrance === "appointments" ? " · Pastoral appointment" : ""}{r.photoChangedAt ? " · Photo changed after approval" : ""}{r.data.photoCheck && r.data.photoCheck.verdict !== "ok" && r.data.photoCheck.verdict !== "skipped" ? ` · ${attireWords(r.data.photoCheck)}` : ""}
                   {state.profiles.find((p) => p.id === r.userId)?.autoApproved ? " · approved automatically: matched the original data" : ""}
                 </p>
               </div>

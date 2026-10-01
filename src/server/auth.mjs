@@ -70,24 +70,6 @@ export function createAuth({ pool, config, mailer }) {
       if (!timingSafeEqual(expected, supplied)) throw new HttpError(401, 'That access code is not correct.');
       return { ok: true };
     },
-    async accessWithCode(code, office = false) {
-      if (office) throw new HttpError(403, 'Office members sign in with an approved email.');
-      if (typeof code !== 'string' || code.length > 64) throw new HttpError(401, 'That access code is not correct.');
-      await rateLimit(pool, config, 'access-code:registration', 50, 60000);
-      const expected = Buffer.from(digest(config.secret, `access:${config.siteCode}`), 'hex');
-      const supplied = Buffer.from(digest(config.secret, `access:${code}`), 'hex');
-      if (!timingSafeEqual(expected, supplied)) throw new HttpError(401, 'That access code is not correct.');
-      return transaction(pool, async conn => {
-        const email = office ? config.admins[0] : `visitor-${randomUUID()}@drogs.invalid`;
-        const id = randomUUID();
-        await conn.execute('INSERT IGNORE INTO dr_users (id,email) VALUES (?,?)', [id, email]);
-        const [[user]] = await conn.execute('SELECT id,email FROM dr_users WHERE email=?', [email]);
-        const now = Date.now();
-        await conn.execute('INSERT INTO dr_account_activity (user_id,signed_up_at,last_login_at,login_count) VALUES (?,?,?,1) ON DUPLICATE KEY UPDATE last_login_at=VALUES(last_login_at),login_count=login_count+1', [user.id, now, now]);
-        await conn.execute('INSERT INTO dr_logins (user_id,logged_in_at) VALUES (?,?)', [user.id, now]);
-        return createSession(conn, user);
-      });
-    },
     async requestCode(email, origin = config.origin, mode = 'signup') {
       if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
       mode = await effectiveMode(email, mode);

@@ -9,7 +9,9 @@ import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, br
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, canReadMedia } from './storage.mjs';
-const people = JSON.parse(await readFile(new URL('../registration/reference-people.json', import.meta.url), 'utf8'));
+// The roster the browser gets has no contact details; the server merges them back for its own use (office views, broadcasts, matching).
+const contacts = JSON.parse(await readFile(new URL('../../data/reference-contacts.json', import.meta.url), 'utf8'));
+const people = JSON.parse(await readFile(new URL('../registration/reference-people.json', import.meta.url), 'utf8')).map(p => ({ ...p, ...(contacts[p.id] || {}) }));
 const references = people.filter(p => p.role === 'bishop');
 export async function readBody(request, limit = 256 * 1024) {
   if (Number(request.headers.get('content-length')) > limit) throw new HttpError(413, 'The upload is too large.');
@@ -82,12 +84,6 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         }
         await auth.requestCode(address, url.origin, ['signin', 'office'].includes(mode) ? mode : 'signup');
         return json({ ok: true, codeRequired: true });
-      }
-      if (path === '/api/registration/auth/access' && method === 'POST') {
-        const { code, office = false } = await jsonBody(request);
-        const session = await auth.accessWithCode(code, office === true);
-        await auth.signOut(request);
-        return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token) });
       }
       if (path === '/api/registration/public-directory' && method === 'GET') {
         // Open to everyone: the roll carries no contact details. Cached briefly and
@@ -290,8 +286,12 @@ ${others.length ? `<p><b>${photoIssue ? 'Other Updates' : 'Updates Needed'}</b><
         const result = await response.json().catch(() => ({}));
         const tx = result?.data;
         if (!response.ok || !result?.status || tx?.status !== 'success') throw new HttpError(400, 'Paystack has not confirmed this payment yet.');
+        // The payment has to belong to this person and this registration, not merely exist.
+        if (String(tx.customer?.email || '').toLowerCase() !== actor.email.toLowerCase()) throw new HttpError(400, 'This payment was made under a different email address.');
+        const tag = (tx.metadata?.custom_fields || []).find(f => f.variable_name === 'registration')?.value;
         await transaction(pool, async conn => {
           const before = await readState(conn, true);
+          if (!String(tag || '').startsWith(`${before.year} `)) throw new HttpError(400, 'This payment is not for this year’s registration.');
           let after;
           try { after = applyAction(before, actor, 'recordPaystack', { reference, amount: tx.amount, currency: tx.currency, expectedMinor: await paystackMinimum(before, actor, tx.currency, fetcher) }); }
           catch (error) { throw new HttpError(400, error.message); }

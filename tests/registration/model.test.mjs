@@ -12,6 +12,7 @@ import {
   directoryPeople,
   publicRoll,
   overlayReferences,
+  registeredBishops,
   broadcastRecipients,
   catalogOf,
   groupOf,
@@ -137,7 +138,7 @@ test("a close name and birthday match automatically; a wrong birthday waits for 
   assert.equal(s.registrations.at(-1).status, "unclaimed");
   assert.throws(
     () => applyAction(s, other, "claim", { userId: "p1" }),
-    /selected bishop/,
+    /selected bishop|must be approved/,
   );
   s = applyAction(s, bishop, "claim", {
     userId: "p1",
@@ -403,7 +404,8 @@ test("the public roll lists only confirmed people and the office can pick the ph
   const references = [
     { id: "B1", role: "bishop", name: "Ama Bishop", title: "Bishop", organization: "First Love", denomination: "First Love Church", city: "Accra", country: "Ghana", image: "assets/bishops/001.jpg", email: "old@example.com", phone: "+233200000001" },
   ];
-  let s = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Ama Bishop"), referenceId: "B1" });
+  let s = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Kofi Unknown"), referenceId: "B1" }, undefined, references);
+  assert.equal(s.registrations[0].data.referenceId, "", "a record with another name is not linked");
   assert.equal(publicRoll(s, references).length, 0, "a pending bishop is not on the roll");
   s = applyAction(s, office, "approveBishop", { userId: bishop.id, referenceId: "B1" });
   const roll = publicRoll(s, references);
@@ -638,9 +640,12 @@ test("a bishop whose linked original record carries their name is approved on su
   assert.equal(t.registrations[0].status, "pending");
 });
 test("members update their own details any time; date of birth is fixed; corrections reach the original record", () => {
-  let s = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Ama Bishop"), referenceId: "B1" });
+  const refs = [{ id: "B1", role: "bishop", name: "Ama Bishop", organization: "First Love", phone: "+233000000000" }];
+  let s = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Ama Bishop"), referenceId: "B1" }, undefined, refs);
   assert.equal(s.overrides.B1.phone, "+233201234567", "the submitted number lands on the original record");
-  s = applyAction(s, bishop, "update", { city: "Kumasi", phone: "+233 24 000 0000", dob: "1950-01-01", photoConfirmed: true });
+  assert.equal(s.overrides.B1.name, undefined, "a member never renames the record");
+  s = applyAction(s, bishop, "update", { city: "Kumasi", phone: "+233 24 000 0000", dob: "1950-01-01", referenceId: "B2", photoConfirmed: true }, undefined, refs);
+  assert.equal(s.registrations[0].data.referenceId, "B1", "a member cannot point their record at someone else");
   const r = s.registrations[0];
   assert.equal(r.data.city, "Kumasi");
   assert.equal(r.data.dob, "1990-02-01", "date of birth cannot be changed by the member");
@@ -751,4 +756,25 @@ test("a date of birth that gives an age under sixteen is rejected", () => {
   const young = new Date(Date.now() - 10 * 365.25 * 86400000).toISOString().slice(0, 10);
   assert.throws(() => validateProfile({ ...profile(pastor), dob: young }, pastor.email), /under 16/);
   assert.equal(validateProfile({ ...profile(pastor), dob: "1990-02-01" }, pastor.email).dob, "1990-02-01");
+});
+test("members link only to their own original record; strangers' records stay untouched", () => {
+  const refs = [{ id: "B1", role: "bishop", name: "Ama Bishop" }, { id: "B2", role: "bishop", name: "Someone Else" }, { id: "P1", role: "pastor", name: "John Doe" }];
+  let s = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Ama Bishop"), referenceId: "B2" }, undefined, refs);
+  assert.equal(s.registrations[0].data.referenceId, "", "a record with a different name is not linked");
+  assert.equal(s.overrides.B2, undefined, "and nothing is written onto it");
+  s = applyAction(emptyState(), pastor, "submit", { ...profile(pastor), referenceId: "B1" }, undefined, refs);
+  assert.equal(s.registrations[0].data.referenceId, "", "a record of another role is not linked");
+});
+test("bishop powers wait for approval: no claiming and no pastor visibility while pending", () => {
+  let s = applyAction(emptyState(), bishop, "submit", profile(bishop, "bishop", "Ama Bishop"));
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: "b1" });
+  const seen = visibleState(s, bishop, [], []);
+  assert.equal(seen.registrations.filter((r) => r.data.role === "pastor").length, 0, "a pending bishop sees no pastors");
+  assert.throws(() => applyAction(s, bishop, "claim", { userId: pastor.id }), /must be approved/);
+  assert.ok(registeredBishops(s).every((b) => b.approved === false), "the sign-up list marks them unapproved");
+});
+test("a confirmed member who replaces their photo is flagged for the office", () => {
+  let s = setup();
+  s = applyAction(s, bishop, "update", { photo: "b1/portrait/new.webp", photoConfirmed: true });
+  assert.ok(s.registrations[0].photoChangedAt, "photo change after approval is recorded");
 });

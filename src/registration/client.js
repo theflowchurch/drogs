@@ -115,9 +115,6 @@ export async function verifyCode(email, token, mode = "signup", remember = false
   check(error);
   return { id: data.user.id, email: data.user.email };
 }
-export const accessWithCode = (code, office = false) => mysqlBackend
-  ? server("auth/access", { code, office })
-  : null;
 export function demoSignIn(email, office = false, mode = "signup") {
   email = normalEmail(email);
   const p = read().profiles.find((p) => normalEmail(p.email) === email);

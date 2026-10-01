@@ -164,5 +164,9 @@ if (new Set(people.map(p => p.id)).size !== people.length) throw Error('Referenc
 // Self-check: the encoding repair must leave every name clean and starting with a letter.
 const broken = people.filter(p => /[√‚]/.test(p.name) || !/^\p{L}/u.test(p.name));
 if (broken.length) throw Error(`Garbled names remain: ${broken.map(p => p.name).join(', ')}`);
-await writeFile(new URL('../src/registration/reference-people.json', import.meta.url), JSON.stringify(people) + '\n');
+// Contact details never reach the browser: the public bundle gets the roster
+// without them; the server merges them back from data/reference-contacts.json.
+const contacts = Object.fromEntries(people.filter(p => p.email || p.phone).map(p => [p.id, { email: p.email || '', phone: p.phone || '' }]));
+await writeFile(new URL('../data/reference-contacts.json', import.meta.url), JSON.stringify(contacts) + '\n');
+await writeFile(new URL('../src/registration/reference-people.json', import.meta.url), JSON.stringify(people.map(({ email, phone, ...rest }) => rest)) + '\n');
 console.log(`${people.length} reference records (${people.filter(p => p.role === 'bishop').length} bishops, ${people.filter(p => p.role === 'pastor').length} pastors).`);
