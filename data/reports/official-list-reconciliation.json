@@ -140,90 +140,90 @@
   {
    "id": "BO172",
    "name": "Ebenezer Fiifi Biney",
-   "group": "Eschatos International",
+   "group": "Eschatos",
    "organization": "United Denominations",
-   "denomination": "Middle East",
+   "denomination": "Eschatos",
    "country": "",
    "listedPastors": 0
   },
   {
    "id": "BO175",
    "name": "Kenrick Thomas",
-   "group": "Eschatos International",
+   "group": "Eschatos",
    "organization": "United Denominations",
-   "denomination": "",
+   "denomination": "Eschatos",
    "country": "Brazil",
    "listedPastors": 11
   },
   {
    "id": "BO177",
    "name": "Daniel Darku",
-   "group": "Eschatos International",
+   "group": "Eschatos",
    "organization": "United Denominations",
-   "denomination": "",
+   "denomination": "Eschatos",
    "country": "Panama",
    "listedPastors": 3
   },
   {
    "id": "BO178",
    "name": "Charles Smith",
-   "group": "Eschatos International",
+   "group": "Eschatos",
    "organization": "United Denominations",
-   "denomination": "",
+   "denomination": "Eschatos",
    "country": "Costa Rica",
    "listedPastors": 0
   },
   {
    "id": "BO179",
    "name": "Kay Francis Quao",
-   "group": "Eschatos International",
+   "group": "Eschatos",
    "organization": "United Denominations",
-   "denomination": "",
+   "denomination": "Eschatos",
    "country": "Bangladesh",
    "listedPastors": 2
   },
   {
    "id": "BO180",
    "name": "Harold Befu- Addo",
-   "group": "Eschatos International",
+   "group": "Eschatos",
    "organization": "United Denominations",
-   "denomination": "",
+   "denomination": "Eschatos",
    "country": "Chile",
    "listedPastors": 6
   },
   {
    "id": "BO181",
    "name": "Andrae George Woode",
-   "group": "Eschatos International",
+   "group": "Eschatos",
    "organization": "United Denominations",
-   "denomination": "",
+   "denomination": "Eschatos",
    "country": "Jamaica",
    "listedPastors": 23
   },
   {
    "id": "BO182",
    "name": "Emmanuel John Peters",
-   "group": "Eschatos International",
+   "group": "Eschatos",
    "organization": "United Denominations",
-   "denomination": "",
+   "denomination": "Eschatos",
    "country": "Taiwan",
    "listedPastors": 6
   },
   {
    "id": "BO183",
    "name": "Brian Bonnah",
-   "group": "Eschatos International",
+   "group": "Eschatos",
    "organization": "United Denominations",
-   "denomination": "American Samoa",
+   "denomination": "Eschatos",
    "country": "",
    "listedPastors": 1
   },
   {
    "id": "BO185",
    "name": "Prince Paul",
-   "group": "Eschatos International",
+   "group": "Eschatos",
    "organization": "United Denominations",
-   "denomination": "",
+   "denomination": "Eschatos",
    "country": "India",
    "listedPastors": 2
   },
@@ -275,7 +275,7 @@
   {
    "id": "BO214",
    "name": "Adara Hyde",
-   "group": "First Love",
+   "group": "",
    "organization": "First Love",
    "denomination": "First Love Church",
    "country": "",
@@ -284,7 +284,7 @@
   {
    "id": "BO215",
    "name": "Alice Renatta Obaka",
-   "group": "First Love",
+   "group": "",
    "organization": "First Love",
    "denomination": "First Love Church",
    "country": "",
@@ -293,7 +293,7 @@
   {
    "id": "BO221",
    "name": "Paula Chela Mills Thompson",
-   "group": "First Love",
+   "group": "",
    "organization": "First Love",
    "denomination": "First Love Church",
    "country": "",
@@ -302,7 +302,7 @@
   {
    "id": "BO224",
    "name": "Daniel Adjei",
-   "group": "First Love",
+   "group": "",
    "organization": "First Love",
    "denomination": "First Love Church",
    "country": "",
@@ -311,7 +311,7 @@
   {
    "id": "BO250",
    "name": "Mary Rea Bandoh",
-   "group": "First Love",
+   "group": "",
    "organization": "First Love",
    "denomination": "First Love Church",
    "country": "",
@@ -320,7 +320,7 @@
   {
    "id": "BO251",
    "name": "Maya Aida Asiedu",
-   "group": "First Love",
+   "group": "",
    "organization": "First Love",
    "denomination": "First Love Church",
    "country": "",
@@ -329,7 +329,7 @@
   {
    "id": "BO264",
    "name": "Ruthie Appiah Denkyira",
-   "group": "First Love",
+   "group": "",
    "organization": "First Love",
    "denomination": "First Love Church",
    "country": "",
@@ -338,7 +338,7 @@
   {
    "id": "BO265",
    "name": "Serena Ariana Ababio",
-   "group": "First Love",
+   "group": "",
    "organization": "First Love",
    "denomination": "First Love Church",
    "country": "",
@@ -347,7 +347,7 @@
   {
    "id": "BO281",
    "name": "George Seneagya",
-   "group": "First Love",
+   "group": "",
    "organization": "First Love",
    "denomination": "First Love Church",
    "country": "",

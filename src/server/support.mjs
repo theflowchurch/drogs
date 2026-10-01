@@ -10,7 +10,7 @@ export function createSupport({ config, mailer, fetcher = fetch, logger = consol
     const replyTo = input?.contact ? emailAddress(input.contact) : actor.email;
     const heading = `Kuriake Castle website issue from ${replyTo}`;
     const body = `${heading}\nAccount: ${actor.id}\nOffice access: ${actor.office ? 'yes' : 'no'}\nReported: ${new Date().toISOString()}\n\n${message}\n`;
-    await mailer.sendMail(brandedMail({ from: config.from, to: config.admins.join(','), replyTo, subject: heading, text: body }));
+    await mailer.sendMail(brandedMail({ from: config.from, to: config.support || config.admins.join(','), replyTo, subject: heading, text: body }));
     if (config.telegram) {
       try {
         const response = await fetcher(`https://api.telegram.org/bot${config.telegram.token}/sendMessage`, {

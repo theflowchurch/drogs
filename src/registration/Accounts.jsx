@@ -38,9 +38,9 @@ export default function Accounts({ run }) {
           {!account.office && <button className="reg-text danger" onClick={() => remove({ user: account.id }, 'Account removed.')}>Remove</button>}</td>
       </tr>)}</tbody></table></div>}
       {result && result.total > 50 && <div className="reg-account-toolbar"><button className="reg-text" disabled={result.page === 1} onClick={() => load(result.page - 1)}>Previous</button><span>Page {result.page} of {Math.ceil(result.total / 50)}</span><button className="reg-text" disabled={result.page * 50 >= result.total} onClick={() => load(result.page + 1)}>Next</button></div>}
-      {result && result.total > 0 && (confirmClear
-        ? <div className="reg-review-buttons"><button className="reg-secondary danger" onClick={() => remove({ all: true }, 'Member accounts removed. Office members were kept.')}>Yes, remove every member account</button><button className="reg-secondary" onClick={() => setConfirmClear(false)}>Keep them</button></div>
-        : <button className="reg-text danger" onClick={() => setConfirmClear(true)}>Remove all member accounts (keeps office members)</button>)}
+      {result && (confirmClear
+        ? <div className="reg-review-buttons"><button className="reg-secondary danger" onClick={() => remove({ all: true }, 'Reset done: every registration, list, photo and activity record was removed. Office sign-ins were kept.')}>Yes, reset everything</button><button className="reg-secondary" onClick={() => setConfirmClear(false)}>Keep them</button></div>
+        : <button className="reg-text danger" onClick={() => setConfirmClear(true)}>Reset for launch: remove every member account, registration, pastor list, photo and activity record (office sign-ins and the original data are kept)</button>)}
     </section>
     {revoking && <div className="reg-overlay"><section className="reg-dialog" role="dialog" aria-modal="true" aria-label="Revoke office access">
       <div className="reg-section-head"><h2>Revoke office access?</h2><button className="reg-icon" onClick={() => setRevoking('')} aria-label="Close">×</button></div>

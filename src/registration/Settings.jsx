@@ -73,9 +73,16 @@ function Structure({ state, perform }) {
   return <>
   <section className="reg-card reg-settings">
     <h2>Groups</h2>
-    <p>Each organization’s denominations fall into groups (UD Ghana, UD Africa, United Islands…). Tap a card to see its denominations; drag a denomination onto another card to move it. The office directory and the members’ directory can filter by group; the public page does not show groups.</p>
+    <p>UD – OLGC is organised in groups (UD Ghana, UD Africa, United Islands…); tap a card to see its denominations and drag a denomination onto another card to move it. First Love, FLOW and Healing Jesus Campaign have no groups and list their denominations directly. The office directory and the members’ directory can filter by group; the public page does not show groups.</p>
     {cat.organizations.map(o => <div key={o} className="reg-group-org">
       <h3>{officeOrg(o)}</h3>
+      {!Object.values(groups).some(g => g.organization === o) ? (
+        <>
+          <p className="reg-small">No groups: the denominations are listed directly.</p>
+          <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(d => <li key={d}><span>{d}</span></li>)}</ul>
+          {!(cat.denominations[o] || []).length && <p className="reg-small reg-catalog-empty">No denominations listed.</p>}
+        </>
+      ) : (
       <div className="reg-group-grid">
         {Object.entries(groups).filter(([, g]) => g.organization === o).map(([name, g]) => <div key={name} className={`reg-group-card ${overGroup === name ? 'over' : ''} ${openGroup === name ? 'open' : ''}`} {...groupDrop(name)}>
           <button type="button" className="reg-group-head" onClick={() => setOpenGroup(openGroup === name ? null : name)} aria-expanded={openGroup === name}><b>{name}</b><small>{g.denominations.length} denomination{g.denominations.length === 1 ? '' : 's'}</small></button>
@@ -90,6 +97,7 @@ function Structure({ state, perform }) {
           {openGroup === `ungrouped:${o}` && <ul className="reg-catalog-list">{ungrouped(o).map(d => chip(d, ''))}</ul>}
         </div>
       </div>
+      )}
     </div>)}
     <div className="reg-admin-add">
       <input placeholder="New group (e.g. UD Asia)" value={newGroup.name} onChange={e => setNewGroup({ ...newGroup, name: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addGroup(); } }} />

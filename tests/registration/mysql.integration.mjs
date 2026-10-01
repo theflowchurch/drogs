@@ -241,7 +241,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('support', '', { message: 'Cannot upload my receipt.' })).status, 401);
     assert.equal((await call('support', bishop.cookie, { message: 'no' })).status, 400);
     assert.equal((await call('support', bishop.cookie, { message: 'The receipt upload rejects my screenshot.' })).status, 200);
-    assert.equal(mails.at(-1).to, config.admins.join(','), 'the office is emailed');
+    assert.equal(mails.at(-1).to, config.support, 'the Kuriake Castle support address is emailed');
     assert.match(mails.at(-1).text, /rejects my screenshot/);
     assert.equal(mails.at(-1).replyTo, 'bishop@example.com');
     assert.match(telegram.at(-1).url, /api\.telegram\.org\/bottest-token\/sendMessage/);

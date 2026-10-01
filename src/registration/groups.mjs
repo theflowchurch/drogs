@@ -99,29 +99,11 @@ export const GROUPS = {
       "Jesus is The Master"
     ]
   },
-  "Eschatos International": {
+  "Eschatos": {
     "organization": "United Denominations",
     "denominations": [
-      "Nicaragua",
-      "Columbia",
-      "Vietnam",
-      "Middle East",
-      "Guyana",
-      "Brazil",
-      "Panama",
-      "Costa Rica",
-      "Bangladesh",
-      "Chile",
-      "Jamaica",
-      "Taiwan",
-      "American Samoa",
-      "Mauritius",
-      "India"
+      "Eschatos"
     ]
-  },
-  "FLOW & Healing Jesus Campaign": {
-    "organization": "FLOW",
-    "denominations": []
   },
   "Reasonable Service": {
     "organization": "United Denominations",
@@ -135,9 +117,5 @@ export const GROUPS = {
       "Anointed Word Chapel Int",
       "Glory Life Hope Center"
     ]
-  },
-  "First Love": {
-    "organization": "First Love",
-    "denominations": []
   }
 };

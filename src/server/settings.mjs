@@ -5,6 +5,7 @@ import { HttpError, rateLimit } from './auth.mjs';
 // environment. Stored in dr_config and layered over process.env at runtime.
 export const SETTINGS = [
   ['RESEND_API_KEY', 'Resend API key', 'Outgoing email (sign-in codes, office reports) is sent through Resend when set.'],
+  ['SUPPORT_EMAIL', 'Issue reports go to', 'Where “Any issues?” reports and questions from the site are emailed. Kuriakecastle@gmail.com unless changed.'],
   ['SMTP_FROM', 'From address', 'e.g. Kuriake Castle <no-reply@notifications.kuriakecastle.org>'],
   ['PAYSTACK_PUBLIC_KEY', 'Paystack public key', 'Card and mobile-money checkout (the only payment path).'],
   ['PAYSTACK_SECRET_KEY', 'Paystack secret key', 'Used by the server to confirm each payment.'],

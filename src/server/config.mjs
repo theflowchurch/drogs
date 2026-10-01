@@ -33,6 +33,8 @@ export function configuration(env = process.env) {
       requireTLS: env.SMTP_SECURE !== 'true', auth: { user: env.SMTP_USER, pass: env.SMTP_PASSWORD },
       connectionTimeout: 15000, socketTimeout: 20000 },
     from: env.SMTP_FROM,
+    // Where "Any issues?" reports and questions from the site are emailed.
+    support: (env.SUPPORT_EMAIL || 'kuriakecastle@gmail.com').trim().toLowerCase(),
     // Optional: a Telegram heads-up alongside the office email for issue reports.
     // Where members send the annual fee by mobile money; shown on the payment screen once set.
     momo: { number: (env.MOMO_NUMBER || '').trim(), name: (env.MOMO_NAME || '').trim() },
