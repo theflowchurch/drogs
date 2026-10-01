@@ -261,6 +261,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(signin.data.codeRequired, true, 'sign-in always needs the emailed code');
     assert.equal((await call('auth/verify', '', { email: 'bishop@example.com', token: mails.at(-1).text.match(/code is (\d{6})/)[1], mode: 'signin' })).status, 200);
     // Paused sign-up: strangers are turned away at the first step; members still get codes.
+    await pool.execute('DELETE FROM dr_rate_limits'); // the one-code-a-minute rule is not what is under test here
     assert.equal((await call('action', office.cookie, { name: 'setSignup', payload: { closed: true, notice: 'Registration has closed for this cycle.' } })).status, 200);
     const paused = await call('auth/request', '', { email: 'newcomer@example.com', mode: 'signup' });
     assert.equal(paused.status, 403); assert.match(paused.data.error, /closed for this cycle/);
@@ -268,6 +269,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('public-directory')).data.signup.closed, true);
     assert.equal((await call('action', office.cookie, { name: 'setSignup', payload: { closed: false } })).status, 200);
     // Office emails are bishops too: they may register and sign in as members.
+    await pool.execute('DELETE FROM dr_rate_limits');
     assert.equal((await call('auth/request', '', { email: config.admins[0], mode: 'signup' })).status, 200, 'an office email can start a member registration');
     const asMember = await call('auth/verify', '', { email: config.admins[0], token: mails.at(-1).text.match(/code is (\d{6})/)[1] });
     assert.equal(asMember.status, 200); assert.equal(asMember.data.office, false, 'signed in through the member door, an office email is an ordinary member');
