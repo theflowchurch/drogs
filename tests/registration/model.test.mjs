@@ -717,6 +717,10 @@ test("a denomination removed from the lists leaves its people as No denomination
   assert.equal(denominationListed(cat, { organization: "United Denominations", denomination: "THE MAKARIOS CHURCH" }), true, "case and a leading The do not matter");
   assert.equal(denominationListed(cat, { organization: "First Love", denomination: "Gone Chapel" }), false);
   assert.equal(denominationListed(cat, { organization: "First Love", denomination: "" }), false);
+  assert.equal(denominationListed(cat, { organization: "FLOW", denomination: "FLOW" }), true, "an organization without a list has nothing to check");
+  assert.equal(denominationListed(cat, { organization: "United Denominations", denomination: "Eschatos" }), true, "a group name counts as a denomination");
+  assert.equal(groupOf(cat, { organization: "United Denominations", denomination: "Eschatos" }), "Eschatos");
+  assert.ok(cat.groups.Eschatos.denominations.includes("Nicaragua"), "the Eschatos card lists its countries");
   const trimmed = { ...cat, denominations: { ...cat.denominations, "First Love": cat.denominations["First Love"].filter((d) => d !== "Go Ye Church") } };
   assert.equal(denominationListed(trimmed, { organization: "First Love", denomination: "Go Ye Church" }), false);
 });

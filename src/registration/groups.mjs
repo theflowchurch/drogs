@@ -90,7 +90,21 @@ export const GROUPS = {
   "Eschatos": {
     "organization": "United Denominations",
     "denominations": [
-      "Eschatos"
+      "Nicaragua",
+      "Colombia",
+      "Vietnam",
+      "Middle East",
+      "Guyana",
+      "Brazil",
+      "Panama",
+      "Costa Rica",
+      "Bangladesh",
+      "Chile",
+      "Jamaica",
+      "Taiwan",
+      "American Samoa",
+      "Mauritius",
+      "India"
     ]
   },
   "Reasonable Service": {

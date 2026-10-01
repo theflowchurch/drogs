@@ -118,7 +118,7 @@ const canonical = (heading, group) => {
   if (byList.length) return byList.sort((a, b) => byList.filter(x => x === b).length - byList.filter(x => x === a).length)[0];
   return titleCase(heading);
 };
-const GROUP_ENTRIES = Object.fromEntries(official.groups.filter(g => g.organization === 'United Denominations').map(g => [g.name, { organization: g.organization, denominations: SAME_AS_GROUP.has(g.name) ? [g.name] : [...new Set(g.denominations.map(d => d.name).filter(Boolean).map(h => canonical(h, g.name)))] }]));
+const GROUP_ENTRIES = Object.fromEntries(official.groups.filter(g => g.organization === 'United Denominations').map(g => [g.name, { organization: g.organization, denominations: SAME_AS_GROUP.has(g.name) ? g.denominations.map(d => headingCountry(d.name) || titleCase(d.name)).filter(Boolean) : [...new Set(g.denominations.map(d => d.name).filter(Boolean).map(h => canonical(h, g.name)))] }]));
 // Pastors take their bishop's group; otherwise the group of their denomination.
 const bishopsNow = people.filter(p => p.role === 'bishop');
 const byNorm = new Map(bishopsNow.map(p => [normalName(p.name), p]));

@@ -139,19 +139,30 @@ export const pauseFor = (state, entrance) => { const s = signupOf(state); return
 // Groups sit between an organization and its denominations (UD Ghana, UD Africa,
 // United Islands…). A person's group is the one on their record, else the group
 // that lists their denomination.
-export const catalogOf = (state) =>
-  state?.catalog?.organizations?.length
-    ? { ...state.catalog, groups: state.catalog.groups || GROUPS }
-    : { organizations: ORGANIZATIONS, denominations: DENOMINATIONS, groups: GROUPS };
+export const catalogOf = (state) => {
+  if (!state?.catalog?.organizations?.length) return { organizations: ORGANIZATIONS, denominations: DENOMINATIONS, groups: GROUPS };
+  const groups = { ...(state.catalog.groups || GROUPS) };
+  // The office asked for the Eschatos card to list its countries while its people
+  // carry "Eschatos" as denomination; a saved card that only lists itself gets the countries back.
+  if (groups.Eschatos && GROUPS.Eschatos && groups.Eschatos.denominations?.every((d) => normalName(d) === "eschatos")) groups.Eschatos = { ...groups.Eschatos, denominations: GROUPS.Eschatos.denominations };
+  return { ...state.catalog, groups };
+};
 const denominationKey = (value) => normalName(value).replace(/^the /, "");
 // Does the person's denomination still exist in the office's lists for their
 // organization? People whose denomination was removed read as "No denomination".
 export function denominationListed(catalog, person) {
+  const lists = catalog?.denominations || {};
+  const org = person?.organization || "";
+  // An organization without a denomination list (FLOW, HJC) has nothing to check.
+  if (org && lists[org] && lists[org].length === 0) return true;
   const want = denominationKey(person?.denomination || "");
   if (!want) return false;
-  const lists = catalog?.denominations || {};
-  const pool = person?.organization && lists[person.organization] ? lists[person.organization] : Object.values(lists).flat();
-  return pool.some((d) => { const k = denominationKey(d); return k === want || want.startsWith(k) || k.startsWith(want); });
+  const groups = Object.entries(catalog?.groups || {}).filter(([, g]) => !org || !g.organization || g.organization === org);
+  const pool = [
+    ...(org && lists[org] ? lists[org] : Object.values(lists).flat()),
+    ...groups.flatMap(([name, g]) => [name, ...(g.denominations || [])]), // group entries and group names (Eschatos) count
+  ];
+  return pool.some((d) => { const k = denominationKey(d); return k && (k === want || want.startsWith(k) || k.startsWith(want)); });
 }
 export const NO_DENOMINATION = "__none__";
 export function groupOf(catalog, person) {
@@ -160,6 +171,7 @@ export function groupOf(catalog, person) {
   if (!want) return "";
   for (const [name, g] of Object.entries(catalog?.groups || {})) {
     if (g.organization && person.organization && g.organization !== person.organization) continue;
+    if (denominationKey(name) === want) return name; // Eschatos is a group and a denomination at once
     if ((g.denominations || []).some((d) => { const k = denominationKey(d); return k && (k === want || want.startsWith(k) || k.startsWith(want)); })) return name;
   }
   return "";
