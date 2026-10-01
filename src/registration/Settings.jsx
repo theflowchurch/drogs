@@ -29,7 +29,7 @@ function SignupControl({ state, perform }) {
   ];
   const [notes, setNotes] = useState({ general: all.notice, appointments: all.appointments.notice });
   useEffect(() => setNotes({ general: all.notice, appointments: all.appointments.notice }), [all.notice, all.appointments.notice]);
-  return <Category title="Registration" summary={`General sign-up ${all.closed ? 'paused' : 'open'} · Appointments ${all.appointments.closed ? 'paused' : 'open'}`}>
+  return <Category title="Registration" summary={`General registration: ${all.closed ? 'Paused' : 'Open'} · Appointments: ${all.appointments.closed ? 'Paused' : 'Open'}`}>
     {doors.map(d => <div key={d.scope} className="reg-door-control">
       <h3>{d.title} <small>{d.path} · {d.what}</small></h3>
       <p>Currently <b>{d.current.closed ? 'paused' : 'open'}</b>.</p>
@@ -42,18 +42,26 @@ function SignupControl({ state, perform }) {
     </div>)}
   </Category>;
 }
-function Structure({ state, perform, actor }) {
+function Structure({ state, perform, actor, show = ['groups', 'orgs', 'fees'] }) {
   const base = state ? catalogOf(state) : null;
   const [cat, setCat] = useState(null), [fees, setFees] = useState(null), [newOrg, setNewOrg] = useState(''), [newDen, setNewDen] = useState({}), [over, setOver] = useState(null);
   const [newGroup, setNewGroup] = useState({ name: '', organization: '' }), [overGroup, setOverGroup] = useState(null), [openGroups, setOpenGroups] = useState([]);
   const [renaming, setRenaming] = useState(null); // { kind: 'den'|'group', org, name, value }
   const [logoBusy, setLogoBusy] = useState('');
+  const [newDenLogo, setNewDenLogo] = useState({}); // org → File chosen for the denomination being added
   useEffect(() => { if (base && !cat) setCat(JSON.parse(JSON.stringify(base))); if (state && !fees) setFees({ ...feesOf(state) }); }, [state]);
   if (!cat || !fees) return null;
   const dirty = JSON.stringify(cat) !== JSON.stringify(base);
   const addOrg = () => { const o = newOrg.trim(); if (!o || cat.organizations.includes(o)) return; setCat({ ...cat, organizations: [...cat.organizations, o], denominations: { ...cat.denominations, [o]: [] } }); setNewOrg(''); };
   const removeOrg = (o) => { const d = { ...cat.denominations }; delete d[o]; setCat({ ...cat, organizations: cat.organizations.filter(x => x !== o), denominations: d, groups: Object.fromEntries(Object.entries(cat.groups || {}).filter(([, g]) => g.organization !== o)) }); };
-  const addDen = (o) => { const v = (newDen[o] || '').trim(); if (!v || (cat.denominations[o] || []).includes(v)) return; setCat({ ...cat, denominations: { ...cat.denominations, [o]: [...(cat.denominations[o] || []), v].sort((a, b) => a.localeCompare(b)) } }); setNewDen({ ...newDen, [o]: '' }); };
+  const addDen = (o) => {
+    const v = (newDen[o] || '').trim(); if (!v || (cat.denominations[o] || []).includes(v)) return;
+    const next = { ...cat, denominations: { ...cat.denominations, [o]: [...(cat.denominations[o] || []), v].sort((a, b) => a.localeCompare(b)) } };
+    const file = newDenLogo[o];
+    setCat(next); setNewDen({ ...newDen, [o]: '' }); setNewDenLogo({ ...newDenLogo, [o]: null });
+    // A logo picked alongside the name is uploaded and attached to the new denomination.
+    if (file && actor) { setLogoBusy(v); api.upload(actor, file, 'logo').then(key => setCat(c => ({ ...(c || next), logos: { ...((c || next).logos || {}), [v]: key } }))).catch(() => {}).finally(() => setLogoBusy('')); }
+  };
   const removeDen = (o, v) => setCat({ ...cat, denominations: { ...cat.denominations, [o]: cat.denominations[o].filter(x => x !== v) } });
   // Spelling fixes: a denomination is renamed everywhere it appears (its organization's list and every group card); a group keeps its contents under the new name.
   const renameDen = (o, from, to) => { const v = to.trim(); if (!v || v === from) return setRenaming(null); const fix = list => [...new Set(list.map(x => (x === from ? v : x)))]; setCat({ ...cat, logos: Object.fromEntries(Object.entries(cat.logos || {}).map(([k, x]) => [k === from ? v : k, x])), denominations: { ...cat.denominations, [o]: fix(cat.denominations[o] || []).sort((a, b) => a.localeCompare(b)) }, groups: Object.fromEntries(Object.entries(cat.groups || {}).map(([g, x]) => [g, x.organization === o ? { ...x, denominations: fix(x.denominations) } : x])) }); setRenaming(null); };
@@ -109,14 +117,14 @@ function Structure({ state, perform, actor }) {
   const groupCount = Object.keys(groups).length, denCount = Object.values(cat.denominations).reduce((n, d) => n + d.length, 0);
   const saveLists = (label = 'Save lists') => <div className="reg-form-actions reg-save-row"><small>{dirty ? 'Unsaved changes.' : 'Saved.'}</small><button type="button" className="reg-primary" disabled={!dirty} onClick={() => perform('setCatalog', { catalog: cat }, 'Organizations and denominations saved.')}>{label}</button></div>;
   return <>
-  <Category title="Groups" summary={`${groupCount} groups under UD – OLGC${dirty ? ' · unsaved changes' : ''}`}>
+  {show.includes('groups') && <Category title="Groups" summary={`${groupCount} groups${dirty ? ' · unsaved changes' : ''}`}>
     {cat.organizations.map(o => <div key={o} className="reg-group-org">
       <h3>{officeOrg(o)}</h3>
       {!Object.values(groups).some(g => g.organization === o) ? (
         <>
           <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => denChip(o, v, <button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button>))}</ul>
           {!(cat.denominations[o] || []).length && <p className="reg-small reg-catalog-empty">No denominations listed.</p>}
-          <div className="reg-admin-add"><input placeholder="New denomination" value={newDen[o] || ''} onChange={e => setNewDen({ ...newDen, [o]: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addDen(o); } }} /><button type="button" className="reg-secondary" onClick={() => addDen(o)}>Add denomination</button>{dirty && <button type="button" className="reg-primary" onClick={() => perform('setCatalog', { catalog: cat }, 'Groups saved.')}>Save</button>}</div>
+          <div className="reg-admin-add"><input placeholder="New denomination" value={newDen[o] || ''} onChange={e => setNewDen({ ...newDen, [o]: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addDen(o); } }} /><label className={`reg-secondary reg-file-button ${newDenLogo[o] ? 'has' : ''}`} title="Logo for the new denomination">{newDenLogo[o] ? `Logo: ${newDenLogo[o].name}` : 'Add logo'}<input type="file" accept="image/png,image/jpeg,image/webp" onChange={e => { const f = e.target.files?.[0]; e.target.value = ''; setNewDenLogo({ ...newDenLogo, [o]: f || null }); }} /></label><button type="button" className="reg-secondary" onClick={() => addDen(o)}>Add denomination</button>{dirty && <button type="button" className="reg-primary" onClick={() => perform('setCatalog', { catalog: cat }, 'Groups saved.')}>Save</button>}</div>
         </>
       ) : (
       <div className="reg-group-grid">
@@ -143,25 +151,25 @@ function Structure({ state, perform, actor }) {
       <button type="button" className="reg-secondary" onClick={addGroup}>Add group</button>
     </div>
     <div className="reg-form-actions"><small>{dirty ? 'Unsaved changes.' : 'Saved.'}</small><button type="button" className="reg-primary" disabled={!dirty} onClick={() => perform('setCatalog', { catalog: cat }, 'Groups saved.')}>Save groups</button></div>
-  </Category>
-  <Category title="Organizations and denominations" summary={`${cat.organizations.length} organizations · ${denCount} denominations${dirty ? ' · unsaved changes' : ''}`}>
+  </Category>}
+  {show.includes('orgs') && <Category title="Organizations and denominations" summary={`${cat.organizations.length} organizations · ${denCount} denominations${dirty ? ' · unsaved changes' : ''}`}>
     {saveLists()}
     {cat.organizations.map(o => <div key={o} className={`reg-catalog-org ${over === o ? 'over' : ''}`} {...dropProps(o)}>
       <div className="reg-catalog-head"><b>{officeOrg(o)}</b>{dirty && <button type="button" className="reg-secondary reg-inline-save" onClick={() => perform('setCatalog', { catalog: cat }, 'Organizations and denominations saved.')}>Save</button>}<button type="button" className="reg-text danger" onClick={() => removeOrg(o)}>Remove organization</button></div>
       <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => <li key={v} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ from: o, den: v })); }}>{logoControl(v)}{renaming?.kind === 'den' && renaming.org === o && renaming.name === v ? renameBox(val => renameDen(o, v, val)) : <span>{v}</span>}<button type="button" className="reg-text" aria-label={`Edit the spelling of ${v}`} title="Edit spelling" onClick={() => setRenaming({ kind: 'den', org: o, name: v, value: v })}>✎</button><button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button></li>)}</ul>
       {!(cat.denominations[o] || []).length && <p className="reg-small reg-catalog-empty">No denominations. Drop one here or add it below.</p>}
-      <div className="reg-admin-add"><input placeholder="New denomination" value={newDen[o] || ''} onChange={e => setNewDen({ ...newDen, [o]: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addDen(o); } }} /><button type="button" className="reg-secondary" onClick={() => addDen(o)}>Add denomination</button></div>
+      <div className="reg-admin-add"><input placeholder="New denomination" value={newDen[o] || ''} onChange={e => setNewDen({ ...newDen, [o]: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addDen(o); } }} /><label className={`reg-secondary reg-file-button ${newDenLogo[o] ? 'has' : ''}`} title="Logo for the new denomination">{newDenLogo[o] ? `Logo: ${newDenLogo[o].name}` : 'Add logo'}<input type="file" accept="image/png,image/jpeg,image/webp" onChange={e => { const f = e.target.files?.[0]; e.target.value = ''; setNewDenLogo({ ...newDenLogo, [o]: f || null }); }} /></label><button type="button" className="reg-secondary" onClick={() => addDen(o)}>Add denomination</button></div>
     </div>)}
     <div className="reg-admin-add"><input placeholder="New organization or grouping" value={newOrg} onChange={e => setNewOrg(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addOrg(); } }} /><button type="button" className="reg-secondary" onClick={addOrg}>Add organization</button></div>
     {saveLists()}
-  </Category>
-  <Category title="Fees" summary={`Bishop $${feesOf(state).bishop} · Pastor $${feesOf(state).pastor}`}>
+  </Category>}
+  {show.includes('fees') && <Category title="Fees" summary={`Bishop $${feesOf(state).bishop} · Pastor $${feesOf(state).pastor}`}>
     <div className="reg-fields">
       <label className="reg-field"><span>Bishop</span><input type="number" min="1" step="1" value={fees.bishop} onChange={e => setFees({ ...fees, bishop: Number(e.target.value) })} /></label>
       <label className="reg-field"><span>Pastor</span><input type="number" min="1" step="1" value={fees.pastor} onChange={e => setFees({ ...fees, pastor: Number(e.target.value) })} /></label>
     </div>
     <div className="reg-form-actions"><small>Current: ${feesOf(state).bishop} / ${feesOf(state).pastor}</small><button type="button" className="reg-primary" disabled={fees.bishop === feesOf(state).bishop && fees.pastor === feesOf(state).pastor} onClick={() => perform('setFees', fees, 'Fees saved.')}>Save fees</button></div>
-  </Category>
+  </Category>}
   </>;
 }
 export default function Settings({ run, state, perform, actor }) {
@@ -172,23 +180,23 @@ export default function Settings({ run, state, perform, actor }) {
   const origin = typeof window === 'undefined' ? 'https://kuriakecastle.org' : window.location.origin;
   const links = [['Public roll', '/directory/'], ['Sign in', '/signup/#signin'], ['Sign up as a bishop', '/signup/bishop/'], ['Sign up as a pastor', '/signup/pastor/'], ['Pastoral appointments', '/appointments/'], ['Office sign in', '/admin/'], ['API documentation', '/docs/']];
   const CATEGORIES = [
-    ['Email', 'Sign-in codes, broadcasts and issue reports', ['RESEND_API_KEY', 'SMTP_FROM', 'SUPPORT_EMAIL']],
-    ['Payments', 'Paystack card and mobile-money checkout', ['PAYSTACK_PUBLIC_KEY', 'PAYSTACK_SECRET_KEY']],
-    ['Telegram', 'A heads-up channel for issue reports', ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID']],
-    ['Photo storage', 'Cloudflare R2 for uploaded portraits and receipts', ['R2_ACCOUNT_ID', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY']],
-    ['Access and public page', 'Office access code and what the public directory shows', ['ADMIN_ACCESS_CODE', 'PUBLIC_DIRECTORY_SOURCE']],
+    ['Email', 'Sign-in emails, bulk emails and issue reports', ['RESEND_API_KEY', 'SMTP_FROM', 'SUPPORT_EMAIL']],
+    ['Payments', 'Paystack card and mobile money payments', ['PAYSTACK_PUBLIC_KEY', 'PAYSTACK_SECRET_KEY']],
+    ['Telegram', 'Receive system issue alerts on Telegram', ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID']],
+    ['Photo storage', 'Storage for uploaded photos and payment receipts', ['R2_ACCOUNT_ID', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY']],
+    ['Access and public page', 'Manage office access and what appears on the public directory', ['ADMIN_ACCESS_CODE', 'PUBLIC_DIRECTORY_SOURCE']],
   ];
   const field = s => <label className="reg-field" key={s.key}>
-    <span>{s.label} <small className={`reg-badge ${s.set ? 'verified' : 'unclaimed'}`}>{s.set ? 'Set' : 'Not set'}</small></span>
+    <span>{s.label} <small className={`reg-badge ${s.set ? 'verified' : 'unclaimed'}`}>{s.set ? 'Set up' : 'Not set up'}</small></span>
     <input aria-label={s.label} type={/KEY|SECRET|TOKEN|CODE/.test(s.key) ? 'password' : 'text'} autoComplete="off"
       value={values[s.key] ?? ''} placeholder={s.set ? '••••••••' : ''} onChange={e => setValues({ ...values, [s.key]: e.target.value })} />
     {s.hint && <small>{s.hint}</small>}
   </label>;
-  const setCount = keys => { const mine = settings.filter(s => keys.includes(s.key)); return mine.length ? `${mine.filter(s => s.set).length} of ${mine.length} set` : ''; };
+  const setCount = keys => { const mine = settings.filter(s => keys.includes(s.key)); if (!mine.length) return ''; const n = mine.filter(s => s.set).length; return n === 0 ? 'Not set up' : n === mine.length ? 'Set up' : 'Partly set up'; };
   return <div className="reg-settings-list">
   {state && perform && <SignupControl state={state} perform={perform} />}
-  {state && perform && <Structure state={state} perform={perform} actor={actor} />}
-  <Category title="Links to share" summary={`${links.length} links`}>
+  {state && perform && <Structure state={state} perform={perform} actor={actor} show={['fees']} />}
+  <Category title="Registration links" summary={`${links.length} links`}>
     <ul className="reg-admin-list">{links.map(([label, path]) => <li key={path}><span><b>{label}</b><br /><a href={origin + path}>{origin + path}</a></span><button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button></li>)}</ul>
   </Category>
   <form className="reg-settings-form" onSubmit={event => {

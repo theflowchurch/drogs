@@ -85,8 +85,8 @@ with sync_playwright() as p:
         page.get_by_role('button',name='Close',exact=True).click()
         page.get_by_role('button',name='Accounts',exact=True).click()
         page.get_by_label('Find an account',exact=True).fill('browser-member@example.com')
-        page.get_by_role('button',name='Search accounts',exact=True).click()
-        expect(page.get_by_text('1 matching accounts',exact=False)).to_be_visible()
+        page.get_by_role('button',name='Search',exact=True).click()
+        expect(page.get_by_text('1 matching account',exact=False)).to_be_visible()
         page.get_by_role('button',name='View logins (1)',exact=True).click()
         expect(page.get_by_role('region',name='Account login history')).to_contain_text('Signed in')
         page.set_viewport_size({'width':390,'height':844})
@@ -103,10 +103,10 @@ with sync_playwright() as p:
         page.reload();page.wait_for_load_state('networkidle')
         page.get_by_role('button',name='API keys',exact=True).click()
         expect(page.get_by_role('heading',name='Browser integration',exact=True)).to_be_visible()
-        page.get_by_role('button',name='Revoke Browser integration',exact=True).click()
+        page.get_by_role('button',name='Revoke access for Browser integration',exact=True).click()
         page.get_by_role('button',name='Confirm revoke',exact=True).click()
         expect(page.get_by_role('status')).to_contain_text('API key revoked.')
-        expect(page.get_by_role('button',name='Revoke Browser integration',exact=True)).not_to_be_visible()
+        expect(page.get_by_role('button',name='Revoke access for Browser integration',exact=True)).not_to_be_visible()
         assert errors == [], errors
         print('MySQL browser flow passed: emailed sign-in, R2 portrait, draft reload, submission, mobile layout and admin access to shared registration.')
     except Exception:

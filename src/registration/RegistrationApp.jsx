@@ -1,7 +1,7 @@
 "use client";
 import Accounts from './Accounts';
 import ApiKeys from './ApiKeys';
-import Settings from './Settings';
+import Settings, { Structure } from './Settings';
 import {
   createContext,
   useContext,
@@ -54,6 +54,7 @@ import {
 } from "./exchange.mjs";
 import { checkReceiptImage } from "./receipt-check.mjs";
 import { portraitStyle } from "../runtime/portrait-framing";
+import { shortDateTime } from "./format.mjs";
 import people from "./reference-people.json";
 // Everyone Kuriake Castle already knows. Bishops are the linkable approval references;
 // the whole roster backs the Directory and the member search.
@@ -236,9 +237,9 @@ function Communication({ state, run }) {
   return (
     <div className="reg-communication">
       <section className="reg-card">
-        <h2>Who receives it</h2>
+        <h2>Choose who will receive this email</h2>
         <div className="reg-audience" role="radiogroup" aria-label="Audience">
-          {[["all", "Everyone registered"], ["bishops", "Registered bishops"], ["pastors", "Registered pastors"], ["original-all", "Original data: everyone with an email"], ["original-bishops", "Original data: bishops"], ["original-pastors", "Original data: pastors"], ["selected", "Selected people"]].map(([value, label]) => (
+          {[["all", "Everyone registered"], ["bishops", "Registered bishops"], ["pastors", "Registered pastors"], ["original-all", "Everyone in existing records"], ["original-bishops", "Bishops in existing records"], ["original-pastors", "Pastors in existing records"], ["selected", "Selected people"]].map(([value, label]) => (
             <label key={value} className={audience === value ? "active" : ""}>
               <input type="radio" name="audience" value={value} checked={audience === value} onChange={() => setAudience(value)} />
               {label}
@@ -251,7 +252,7 @@ function Communication({ state, run }) {
             {matches.length > 0 && (
               <ul className="reg-recipient-matches">
                 {matches.map((p) => (
-                  <li key={p.id}><button type="button" className="reg-text" onClick={() => { setPicked([...picked, p.id]); setQ(""); }}>+ {p.name} <small>{p.role} · {p.email}{p.original ? " · original data" : ""}</small></button></li>
+                  <li key={p.id}><button type="button" className="reg-text" onClick={() => { setPicked([...picked, p.id]); setQ(""); }}>+ {p.name} <small>{p.role} · {p.email}{p.original ? " · existing records" : ""}</small></button></li>
                 ))}
               </ul>
             )}
@@ -264,25 +265,25 @@ function Communication({ state, run }) {
             )}
           </div>
         )}
-        <p className="reg-small">{targets.length.toLocaleString()} {targets.length === 1 ? "person" : "people"} will receive this email.{audience.startsWith("original") ? " Original-data addresses are the emails Kuriake Castle held before this year's registration; some may be out of date." : ""}</p>
+        <p className="reg-small">{targets.length.toLocaleString()} {targets.length === 1 ? "person" : "people"} will receive this email.{audience.startsWith("original") ? " Only people with an email address in the existing records are counted; some addresses may be out of date." : ""}</p>
       </section>
       <section className="reg-card">
         <h2>Message</h2>
         <div className="reg-fields">
           <Field label="Subject" wide><input value={subject} onChange={(e) => setSubject(e.target.value)} maxLength={200} /></Field>
-          <Field label="Message" wide hint="Each person is addressed by name. Plain text; line breaks are kept."><textarea rows={8} value={message} onChange={(e) => setMessage(e.target.value)} /></Field>
+          <Field label="Message" wide hint="Each email will be personalised with the recipient’s name."><textarea rows={8} value={message} onChange={(e) => setMessage(e.target.value)} /></Field>
         </div>
         {!api.communicationAvailable && <p className="reg-small">Sending works on the live site, where email is connected.</p>}
         {result && <p className="reg-small" role="status">{result.queued ? `Sending to ${result.queued.toLocaleString()} people in the background. It will take a few minutes; the result is recorded under History when it finishes.` : `Sent to ${result.sent.toLocaleString()} ${result.sent === 1 ? "person" : "people"}${result.failed?.length ? `; ${result.failed.length} could not be delivered (${result.failed.slice(0, 3).join(", ")}${result.failed.length > 3 ? "…" : ""})` : ""}.`}</p>}
         <div className="reg-form-actions">
           {confirming ? (
             <>
-              <span className="reg-small">Send “{subject.trim()}” to {targets.length.toLocaleString()} {targets.length === 1 ? "person" : "people"}?</span>
+              <span className="reg-small">Send this email to {targets.length.toLocaleString()} {targets.length === 1 ? "person" : "people"}?</span>
               <button type="button" className="reg-secondary" onClick={() => setConfirming(false)}>Cancel</button>
-              <button type="button" className="reg-primary" onClick={send}>Yes, send</button>
+              <button type="button" className="reg-primary" onClick={send}>Send email</button>
             </>
           ) : (
-            <button type="button" className="reg-primary" disabled={!ready || !api.communicationAvailable} onClick={() => setConfirming(true)}>Send →</button>
+            <button type="button" className="reg-primary" disabled={!ready || !api.communicationAvailable} onClick={() => setConfirming(true)}>Send email →</button>
           )}
         </div>
       </section>
@@ -479,8 +480,10 @@ export default function RegistrationApp({
       .currentActor(office)
       .then((current) => {
         setActor(current);
-        // A signed-in member does not pass the office or directory gate.
-        if (current && (!gated || (office && current.office))) setGate(true);
+        // A signed-in member does not pass the office gate, and neither does a
+        // remembered office session: the access code is typed once per browser
+        // session (the stamp below), whoever is signed in.
+        if (current && !gated) setGate(true);
       })
       // A failed session check (e.g. the server restarting after a deploy)
       // just means "not signed in"; visitors should not see a fetch error.
@@ -493,7 +496,7 @@ export default function RegistrationApp({
   }, []);
   useEffect(() => {
     if (actor) {
-      if (!gated || (office && actor.office)) setGate(true);
+      if (!gated) setGate(true); // the office gate only opens with the access code
       refresh().catch((e) => setError(e.message));
     }
   }, [actor, refresh, gated, office]);
@@ -587,13 +590,14 @@ export default function RegistrationApp({
   const nav = office
     ? [
         "Directory",
-        "Original data",
+        "Existing records",
         "Unclaimed",
         "Approvals",
         "Payments",
         "Pastor lists",
         "History",
         "Communication",
+        "Denominations",
         ...(api.apiKeysAvailable ? ["Accounts", "API keys"] : []),
         "Dashboard",
         ...(api.settingsAvailable ? ["Settings"] : []),
@@ -822,10 +826,10 @@ export default function RegistrationApp({
               </b>
               <p>
                 {office
-                  ? "Confirmed registrations enter the directory. Unclaimed pastors stay in their own review queue."
+                  ? "Once registration is confirmed, the bishop or pastor appears in the directory. Unclaimed pastors remain under review."
                   : actor.email}
               </p>
-              <small>{api.live ? "Secure account" : "Local account"}</small>
+              <small>{api.live ? "Secure access" : "Local account"}</small>
             </div>
           </aside>
           <main className={`reg-main ${tab === "Dashboard" ? "reg-main-flush" : ""}`} aria-busy={busy}>
@@ -854,39 +858,43 @@ export default function RegistrationApp({
                       <h1>
                         {tab === "Directory"
                           ? directoryHeading(directoryRole)
-                          : tab === "Original data"
-                            ? `Original data · ${directoryRole === "bishop" ? "Bishops" : "Pastors"}`
-                            : tab}
+                          : tab === "Existing records"
+                            ? `Existing ${directoryRole === "bishop" ? "Bishops" : "Pastors"} Records`
+                            : tab === "Unclaimed"
+                              ? "Unclaimed Pastors"
+                              : tab}
                       </h1>
                       <p>
                         {
                           {
                             Directory: office
-                              ? "Everyone registered this year, with their details. This is what the public roll counts."
+                              ? "Everyone who has completed their registration for this year appears here."
                               : "The same directory the public sees.",
-                            "Original data":
-                              "The information Kuriake Castle held before this year’s registration. Green: the bishop has registered, or the pastor has been claimed by their bishop. Red: not yet.",
+                            "Existing records":
+                              "These are the bishops and pastors already in our records before this year’s registration. Green means confirmed. Red means not yet registered or confirmed.",
                             Unclaimed:
-                              "Registrations waiting for a bishop to confirm their place.",
+                              "Pastors who have registered but are waiting for a bishop to confirm that they belong to their ministry.",
                             Approvals:
-                              "Bishops whose name matched the original data are approved on the spot. Everyone else waits here for the Archbishop before they can confirm pastors.",
+                              "Bishops who match our existing records are approved automatically. Those who do not match will appear here for the Archbishop’s approval.",
                             "My pastors":
                               "Submit and maintain the names of the pastors under your oversight.",
                             "Pastor lists":
-                              "Every bishop’s uploaded list of pastors — who was added, who was confirmed, who was removed — across all bishops. Each bishop sees only their own under My pastors.",
+                              "View the pastors submitted by each bishop and see who has been confirmed, unclaimed or removed. Bishops can only see their own pastors under “My pastors”.",
                             Payments:
-                              "Review payment screenshots and confirm received commitments.",
-                            History: "Previous cycles and what changed.",
-                            Communication: "Email everyone, all bishops, all pastors, or the people you pick.",
+                              "Review payment proof and confirm payments received.",
+                            History: "View previous registration years and activity.",
+                            Communication: "Send an email to everyone, all bishops, all pastors, or selected people.",
+                            Denominations: "Organisations, their denominations and logos, and the UD – OLGC groups.",
                             Accounts: "See who has created an account and when they last signed in.",
-                            "API keys": "Give connected applications controlled, read-only access to Kuriake Castle.",
-                            Settings: "Email delivery, payments, photo storage and access codes.",
+                            "API keys": "Create secure, read-only access for applications connected to Kuriake Castle.",
+                            Settings: "Manage registration, payments, email, access and other system settings.",
                           }[tab]
                         }
                       </p>
                     </div>
                   </div>
                   {tab === "Communication" && <Communication state={state} run={run} />}
+                  {tab === "Denominations" && <div className="reg-settings-list"><Structure state={state} perform={perform} actor={actor} show={["orgs", "groups"]} /></div>}
                   {tab === "Accounts" && <Accounts run={run} />}
                   {tab === "API keys" && <ApiKeys run={run} />}
                   {tab === "Settings" && <Settings run={run} state={state} perform={perform} actor={actor} />}
@@ -907,7 +915,7 @@ export default function RegistrationApp({
                         embedded
                       />
                     ))}
-                  {tab === "Original data" && (
+                  {tab === "Existing records" && (
                     <Directory
                       state={state}
                       year={Number(year)}
@@ -1223,7 +1231,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
             />
             <span className="reg-eyebrow">OFFICE ACCESS</span>
             <h1>{sent ? "Check your email." : "Sign in to the office."}</h1>
-            <p>Approved office emails only. A code is sent to your email each time.</p>
+            <p>Use your approved office email. We’ll send you a sign-in code.</p>
           </div>
           <AccountForm office={office} run={run} busy={busy} onActor={onActor} />
         </>
@@ -1322,7 +1330,7 @@ function MyActivity({ state, actor }) {
                 <b>{ACTION_LABELS[a.action] || a.action}{byOffice ? " (by the office)" : ""}</b>
                 {words && <small>{words}</small>}
               </div>
-              <time>{new Date(a.at).toLocaleString()}</time>
+              <time>{shortDateTime(a.at)}</time>
             </li>
           );
         })}
@@ -2405,7 +2413,7 @@ function Portrait({ person, className = "" }) {
 const statusWords = (p) =>
   p.role === "bishop"
     ? p.updated
-      ? "Registered this cycle"
+      ? "Registered this year"
       : "Not yet registered"
     : p.updated
       ? "Claimed by their bishop"
@@ -2601,7 +2609,7 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
   );
 }
 const directoryHeading = (role) =>
-  `Directory · ${role === "bishop" ? "Bishops" : "Pastors"} Roll of Good Standing`;
+  `${role === "bishop" ? "Bishops" : "Pastors"} Roll of Good Standing`;
 function Directory({ state, year, role, setRole, perform, actor, mode = "original" }) {
   const [filter, setFilter] = useState({
       q: "",
@@ -2662,12 +2670,12 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
       {perform && (
         <div className="reg-office-bar">
           <button className="reg-secondary" onClick={() => setAdding(true)}>
-            {mode === "registered" ? "+ Add a person to the roll" : "+ Add a record to the original data"}
+            {mode === "registered" ? "+ Add a person to the roll" : "+ Add a record"}
           </button>
         </div>
       )}
       {adding && (
-        <Dialog title={mode === "registered" ? "Add a person to the roll" : "Add a record to the original data"} onClose={() => setAdding(false)}>
+        <Dialog title={mode === "registered" ? "Add a person to the roll" : "Add a record"} onClose={() => setAdding(false)}>
           <AddPersonForm state={state} mode={mode} onDone={() => setAdding(false)} perform={perform} actor={actor} />
         </Dialog>
       )}
@@ -2677,7 +2685,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
           ["Pastors", scope.filter((p) => p.role === "pastor").length],
           ["Bishops and pastors", scope.length],
           [
-            role === "bishop" ? "Registered this cycle" : "Claimed by a bishop",
+            role === "bishop" ? "Registered this year" : "Claimed by a bishop",
             list.filter((p) => p.updated).length,
           ],
           [
@@ -2723,8 +2731,8 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
               onOpen={setSelected}
             />
           ) : (
-            <Empty title={`No ${role === "bishop" ? "bishops" : "pastors"} match these filters`}>
-              Change the search, organization or denomination.
+            <Empty title={`No ${role === "bishop" ? "bishops" : "pastors"} found`}>
+              Try changing your search or filters.
             </Empty>
           )}
       {selected && (
@@ -3487,8 +3495,9 @@ function ReviewQueue({ records, state, perform, actor, office, canEdit }) {
         ) : null,
       )}
       {!records.length && (
-        <Empty title="No Unclaimed registrations">
-          Registrations that do not match a bishop’s annual list appear here: yellow when the list nearly matches, red when nothing on it resembles them.
+        <Empty title="No unclaimed pastors">
+          Pastors who cannot be matched to a bishop’s list will appear here for review.
+          <br /><small>Yellow = Possible match · Red = No match found</small>
         </Empty>
       )}
       {records.length > 0 && !filtered(records, filter).length && (
@@ -3649,7 +3658,7 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
   return (
     <>
       <div className="reg-switch" role="group" aria-label="Approvals">
-        {[["awaiting", "Awaiting confirmation"], ["resubmit", "Needs resubmission"], ["denied", "Denied"], ["approved", "Approved"]].map(([value, label]) => (
+        {[["awaiting", "Awaiting approval"], ["resubmit", "Needs resubmission"], ["denied", "Denied"], ["approved", "Approved"]].map(([value, label]) => (
           <button key={value} aria-pressed={view === value} className={view === value ? "active" : ""} onClick={() => setView(value)}>
             {label} <strong>{records.filter((r) => bucket(r) === value).length}</strong>
           </button>
@@ -3692,10 +3701,10 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
           ))}
         </div>
       ) : (
-        <Empty title={term ? "Nobody matches that search" : view === "awaiting" ? "No bishop registrations awaiting confirmation" : view === "denied" ? "No denied registrations" : view === "approved" ? "Nobody has been approved yet" : "Nobody is waiting to resubmit"}>
+        <Empty title={term ? "Nobody matches that search" : view === "awaiting" ? "No bishops awaiting approval" : view === "denied" ? "No denied registrations" : view === "approved" ? "Nobody has been approved yet" : "Nobody is waiting to resubmit"}>
           {view === "approved"
             ? "Bishops appear here once the office confirms them; pastors once their bishop confirms them."
-            : "Bishops appear here as soon as they submit; they can add their pastors in the meantime."}
+            : "New bishop registrations that require approval will appear here."}
         </Empty>
       )}
       {selected && !reviewing && (
@@ -3836,11 +3845,11 @@ function Payments({ records, perform, canEdit }) {
       <Filters filter={filter} setFilter={setFilter} roles />
       <div className="reg-stats">
         <div>
-          <span>Awaiting verification</span>
+          <span>Payments to verify</span>
           <strong>{rows.length}</strong>
         </div>
         <div>
-          <span>Verified commitments · USD</span>
+          <span>Verified payments · USD</span>
           <strong>
             $
             {records
@@ -3872,8 +3881,8 @@ function Payments({ records, perform, canEdit }) {
           ))}
         </div>
       ) : (
-        <Empty title="No payments waiting">
-          Uploaded payment screenshots will appear here for verification.
+        <Empty title="No payments awaiting verification">
+          Uploaded proof of payment will appear here for verification.
         </Empty>
       )}
       {selected && (
@@ -4136,11 +4145,11 @@ function Roster({ state, year, actor, office, perform }) {
     <>
       <div className="reg-stats">
         <div>
-          <span>On the list</span>
+          <span>Total pastors</span>
           <strong>{rows.filter((r) => r.status === "active").length}</strong>
         </div>
         <div>
-          <span>Claimed</span>
+          <span>Confirmed</span>
           <strong>
             {rows.filter((r) => r.status === "active" && r.pastorId).length}
           </strong>
@@ -4152,7 +4161,7 @@ function Roster({ state, year, actor, office, perform }) {
           </strong>
         </div>
         <div>
-          <span>Removed this cycle</span>
+          <span>Removed this year</span>
           <strong>{rows.filter((r) => r.status === "removed").length}</strong>
         </div>
       </div>
@@ -4254,8 +4263,8 @@ function Roster({ state, year, actor, office, perform }) {
           </table>
         </div>
       ) : (
-        <Empty title="No pastors on this list yet">
-          {office ? "Bishops add their pastors during registration and under My pastors." : "Add your pastors below; they are recognised automatically when they register."}
+        <Empty title="No pastors added yet">
+          {office ? "Pastors added by bishops will appear here." : "Add your pastors below; they are recognised automatically when they register."}
         </Empty>
       )}
       {!office && year === state.year && (
@@ -4319,7 +4328,7 @@ function Roster({ state, year, actor, office, perform }) {
         <Dialog title={`Remove ${remove.name}`} onClose={() => setRemove(null)}>
           <p>
             This retains the record and its history. A linked pastor will no
-            longer appear in this cycle’s active directory.
+            longer appear in this year’s active directory.
           </p>
           <Field label="Reason">
             <select value={reason} onChange={(e) => setReason(e.target.value)}>
@@ -4430,7 +4439,7 @@ function History({ state, records, office, actor, year, perform }) {
             </table>
           </div>
         ) : (
-          <p>No registrations in this cycle.</p>
+          <p>No registrations were recorded for {year}.</p>
         )}
       </section>
       <section className="reg-card reg-audit">
@@ -4445,7 +4454,7 @@ function History({ state, records, office, actor, year, perform }) {
               <b>
                 {ACTION_LABELS[a.action] || a.action}
               </b>
-              <time>{new Date(a.at).toLocaleString()}</time>
+              <time>{shortDateTime(a.at)}</time>
             </div>
           ))}
         {!state.audit.some((a) => a.year === year) && (
@@ -4454,26 +4463,27 @@ function History({ state, records, office, actor, year, perform }) {
       </section>
       {office && (
         <section className="reg-card">
-          <h2>Next year</h2>
+          <h2>Start a new registration year</h2>
           <p>
-            Accounts and historical records persist. Opening a new cycle starts
-            fresh registration and payment counts.
+            Existing accounts and previous records will be kept. Starting a new
+            registration year will reset the registration and payment counts for the new year.
           </p>
           <button className="reg-secondary" onClick={() => setNext(true)}>
-            Open {state.year + 1} registration cycle
+            Start {state.year + 1} registration
           </button>
         </section>
       )}
       {next && (
         <Dialog
-          title={`Open ${state.year + 1} registration?`}
+          title={`Start ${state.year + 1} registration?`}
           onClose={() => setNext(false)}
         >
           <p>
-            This closes new submissions and changes for {state.year}. Everyone
-            stays viewable. Bishops must reconfirm their annual lists,
-            and everyone must register and pay for the new year.
+            This will open a new registration year. Existing accounts and previous
+            records will not be deleted. {state.year} closes to new submissions; bishops
+            reconfirm their pastor lists and everyone registers and pays for the new year.
           </p>
+          <button className="reg-secondary" onClick={() => setNext(false)}>Cancel</button>{" "}
           <button
             className="reg-primary"
             onClick={async () => {
@@ -4481,13 +4491,13 @@ function History({ state, records, office, actor, year, perform }) {
                 await perform(
                   "openYear",
                   { year: state.year + 1 },
-                  "New annual cycle opened.",
+                  "New registration year started.",
                 )
               )
                 setNext(false);
             }}
           >
-            Open new cycle
+            Start {state.year + 1} registration
           </button>
         </Dialog>
       )}

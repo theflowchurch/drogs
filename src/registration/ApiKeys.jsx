@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from 'react';
 import * as api from './client';
+import { shortDate, shortDateTime } from './format.mjs';
 const scopes = [
-  ['backend:read', 'Read all application data', 'All years, drafts, full registrations, profiles, accounts, pastor lists, payments, receipts, photos, history, settings and API-key metadata.'],
-  ['registrations:read', 'Read registrations', 'Submitted names, contact details, organizations and registration status.'],
-  ['rosters:read', 'Read annual pastor lists', 'Names and contact details in bishops’ annual lists.'],
-  ['photos:read', 'View portraits', 'Temporary links to submitted portraits. Payment receipts remain private.'],
+  ['backend:read', 'Read all data', 'Access all available Kuriake Castle data, including registrations, accounts, pastor lists, payments and photos.'],
+  ['registrations:read', 'Read registrations', 'View submitted names, contact details, organisations and registration status.'],
+  ['rosters:read', 'Read annual pastor lists', 'View names and contact details on bishops’ annual pastor lists.'],
+  ['photos:read', 'View portraits', 'View submitted profile photos. Payment receipts will remain private.'],
 ];
 export default function ApiKeys({ run }) {
   const [keys, setKeys] = useState([]), [name, setName] = useState(''), [days, setDays] = useState('90');
@@ -21,7 +22,7 @@ export default function ApiKeys({ run }) {
       });
     }}>
       <h2>Create an API key</h2>
-      <p>Give each connected app its own key. All permissions are read-only; keys cannot change or delete records or photos.</p>
+      <p>Create a separate key for each connected application. API keys can only read the information you allow — they cannot change or delete anything.</p>
       <label className="reg-field">Application name
         <input aria-label="Application name" required maxLength={80} value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Church directory" />
       </label>
@@ -42,7 +43,7 @@ export default function ApiKeys({ run }) {
     {issued && <section className="reg-card" aria-label="Created key details">
       <h2>Copy your key now</h2><p>This is the only time the full key is shown. Store it in the connected app’s server settings.</p>
       <label className="reg-field">API key<input aria-label="New API key" readOnly value={issued.token} autoComplete="off" spellCheck={false} /></label>
-      <p>Expires {new Date(issued.key.expiresAt).toLocaleDateString()}.</p>
+      <p>Expires: {shortDate(issued.key.expiresAt)}.</p>
       <button className="reg-primary" onClick={() => run(() => navigator.clipboard.writeText(issued.token), 'API key copied.')}>Copy key</button>{' '}
       <button className="reg-text" onClick={() => setIssued(null)}>I’ve saved this key</button>
     </section>}
@@ -51,12 +52,12 @@ export default function ApiKeys({ run }) {
         const inactive = key.revokedAt || key.expiresAt <= Date.now();
         return <article className="reg-api-key" key={key.id}>
           <div><h3>{key.name}</h3><code>{key.prefix}…</code>
-            <p>{key.scopes.join(' · ')}</p>
-            <small>{key.revokedAt ? 'Revoked' : key.expiresAt <= Date.now() ? 'Expired' : `Expires ${new Date(key.expiresAt).toLocaleDateString()}`}{key.lastUsedAt ? ` · Last used ${new Date(key.lastUsedAt).toLocaleString()}` : ' · Not used yet'}</small>
+            <details className="reg-api-scopes"><summary>View permissions</summary><p>{key.scopes.map(scope => scopes.find(([k]) => k === scope)?.[1] || scope).join(' · ')}<br /><code>{key.scopes.join(' · ')}</code></p></details>
+            <small>{key.revokedAt ? 'Revoked' : key.expiresAt <= Date.now() ? 'Expired' : `Expires: ${shortDate(key.expiresAt)}`}{key.lastUsedAt ? ` · Last used: ${shortDateTime(key.lastUsedAt)}` : ' · Not used yet'}</small>
           </div>
           {!inactive && (revoke === key.id ? <div><p>Disconnect {key.name} immediately?</p>
             <button className="reg-primary" onClick={() => run(async () => { await api.revokeKey(key.id); if (issued?.key.id === key.id) setIssued(null); setRevoke(null); await reload(); }, 'API key revoked.')}>Confirm revoke</button>{' '}
-            <button className="reg-text" onClick={() => setRevoke(null)}>Cancel</button></div> : <button className="reg-text" onClick={() => setRevoke(key.id)}>Revoke {key.name}</button>)}
+            <button className="reg-text" onClick={() => setRevoke(null)}>Cancel</button></div> : <button className="reg-text" aria-label={`Revoke access for ${key.name}`} onClick={() => setRevoke(key.id)}>Revoke access</button>)}
         </article>;
       })}
     </section>

@@ -96,7 +96,7 @@ with sync_playwright() as p:
   signout();page.set_viewport_size({'width':1440,'height':1050});open_account('office@example.com',True);page.get_by_role('button',name='Payments',exact=True).click()
   page.get_by_role('button',name='John Demo').click();page.get_by_role('button',name='Verify received payment').click();expect(page.get_by_text('No payments waiting',exact=True)).to_be_visible()
   page.get_by_role('button',name='Annual lists',exact=True).click();page.get_by_role('button',name='Remove',exact=True).click();page.get_by_label('Reason',exact=True).select_option('Dismissed');page.get_by_role('button',name='Confirm removal').click();expect(page.get_by_text('Dismissed',exact=True)).to_be_visible()
-  page.get_by_role('button',name='History',exact=True).click();page.get_by_role('button',name='Open 2028 registration cycle').click();page.get_by_role('button',name='Open new cycle',exact=True).click();expect(page.get_by_text('2028 annual registration',exact=True)).to_be_visible()
+  page.get_by_role('button',name='History',exact=True).click();page.get_by_role('button',name='Start 2028 registration',exact=True).click();page.get_by_role('dialog').get_by_role('button',name='Start 2028 registration',exact=True).click();expect(page.get_by_text('2028 annual registration',exact=True)).to_be_visible()
   page.get_by_role('button',name='Directory',exact=True).click();page.get_by_label('Annual cycle',exact=True).select_option('2028')
   assert page.locator('.reg-dot.updated').count()==0,'a new cycle starts with no updated records'
   state=page.evaluate("JSON.parse(localStorage.getItem('drogs-registration-v1'))")
