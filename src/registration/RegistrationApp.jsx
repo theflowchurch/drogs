@@ -1216,6 +1216,93 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
     </section>
   );
 }
+// Plain-English names for everything the audit trail records.
+const ACTION_LABELS = {
+                  save: "Draft saved",
+                  submit: "Registration submitted",
+                  approveBishop: "Bishop approved",
+                  addRoster: "Pastors added to list",
+                  claim: "Pastor confirmed",
+                  removeRoster: "Pastor removed from list",
+                  assignBishop: "Supervising bishop assigned",
+                  payment: "Payment proof submitted",
+                  reviewPayment: "Payment reviewed",
+                  openYear: "Next year opened",
+                  carryRoster: "Prior list reconfirmed",
+                  update: "Details updated",
+                  choosePhoto: "Photo choice set",
+                  recordPaystack: "Card or mobile-money payment received",
+                  reviewBishop: "Bishop registration reviewed",
+                  linkReference: "Linked to original record",
+                  editRoster: "List entry edited",
+                  restoreRoster: "Pastor restored to list",
+                  moveRoster: "Pastor moved to another bishop",
+                  officeEdit: "Record edited by the office",
+                  setStatus: "Status changed by the office",
+                  markPaid: "Payment marked by the office",
+                  setVisibility: "Public visibility changed",
+                  deleteRegistration: "Registration deleted",
+                  addPerson: "Person added by the office",
+                  addReference: "Original record added",
+                  editReference: "Original record corrected",
+                  hideReference: "Original record hidden or shown",
+                  deleteReference: "Original record deleted or restored",
+                  setCatalog: "Organizations and denominations changed",
+                  setFees: "Fees changed",
+                  setSignup: "Sign-up paused or reopened",
+                  broadcast: "Email sent to members",
+                  apiKeyCreated: "API key created",
+                  apiKeyRevoked: "API key revoked",
+};
+const FIELD_LABELS = { firstName: "First name", lastName: "Last name", name: "Name", gender: "Gender", organization: "Organization", denomination: "Denomination", country: "Country", city: "City", phone: "WhatsApp number", email: "Email", bishopId: "Bishop", photo: "Photo", amount: "Amount", currency: "Currency", status: "Status", subject: "Subject", recipients: "Recipients", audience: "Audience", autoApproved: "Matched original record", closed: "Paused", notice: "Message" };
+// What an audit entry changed, in words: "City: Kumasi · WhatsApp number: +233…".
+function detailWords(detail, state) {
+  if (!detail || typeof detail !== "object") return "";
+  return Object.entries(detail)
+    .filter(([, v]) => v !== null && v !== undefined && typeof v !== "object")
+    .map(([k, v]) => {
+      const label = FIELD_LABELS[k] || k;
+      if (k === "photo") return "Photo replaced";
+      if (k === "bishopId") return `${label}: ${(state?.bishops || []).find((b) => b.id === v)?.name || v}`;
+      if (k === "organization") return `${label}: ${orgLabel(v)}`;
+      if (k === "amount" && detail.currency) return `${label}: ${detail.currency} ${(Number(v) / 100).toLocaleString()}`;
+      if (k === "currency") return "";
+      if (typeof v === "boolean") return `${label}: ${v ? "yes" : "no"}`;
+      return `${label}: ${v}`;
+    })
+    .filter(Boolean)
+    .join(" · ");
+}
+// The member's own trail: what they changed, paid or were told, newest first.
+function MyActivity({ state, actor }) {
+  const mine = (state.audit || [])
+    .filter((a) => a.actor === actor.id || a.target === actor.id)
+    .filter((a) => !["save", "choosePhoto"].includes(a.action))
+    .slice()
+    .reverse()
+    .slice(0, 50);
+  if (!mine.length) return null;
+  return (
+    <div className="reg-my-activity">
+      <h3>Your activity</h3>
+      <ul>
+        {mine.map((a) => {
+          const words = detailWords(a.detail, state);
+          const byOffice = a.actor !== actor.id;
+          return (
+            <li key={a.id}>
+              <div>
+                <b>{ACTION_LABELS[a.action] || a.action}{byOffice ? " (by the office)" : ""}</b>
+                {words && <small>{words}</small>}
+              </div>
+              <time>{new Date(a.at).toLocaleString()}</time>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
 function Participant({
   fixedRole = "",
   actor,
@@ -1303,6 +1390,7 @@ function Participant({
               </div>
             )}
           </dl>
+          {(startedHere || current.status !== "confirmed" || current.resubmit) && (
           <div className={`reg-status-message ${current.status === "unclaimed" ? "pending" : current.status}`}>
             <h3>
               {current.status === "confirmed"
@@ -1329,6 +1417,7 @@ function Participant({
                       : `${current.payment === "verified" ? "Your payment has been received. " : ""}Your bishop and the office are confirming your registration; you will see the result here.`}
             </p>
           </div>
+          )}
           {current.resubmit ? (
             <button className="reg-secondary" onClick={() => setEditing(true)}>
               Update my registration
@@ -1343,6 +1432,7 @@ function Participant({
               <ProfileEditor current={current} state={state} actor={actor} perform={perform} onDone={() => setEditDetails(false)} />
             </Dialog>
           )}
+          <MyActivity state={state} actor={actor} />
         </section>
         <Payment
           current={current}
@@ -4303,43 +4393,7 @@ function History({ state, records, office, actor, year, perform }) {
           .map((a) => (
             <div key={a.id}>
               <b>
-                {{
-                  save: "Draft saved",
-                  submit: "Registration submitted",
-                  approveBishop: "Bishop approved",
-                  addRoster: "Pastors added to list",
-                  claim: "Pastor confirmed",
-                  removeRoster: "Pastor removed from list",
-                  assignBishop: "Supervising bishop assigned",
-                  payment: "Payment proof submitted",
-                  reviewPayment: "Payment reviewed",
-                  openYear: "Next year opened",
-                  carryRoster: "Prior list reconfirmed",
-                  update: "Details updated",
-                  choosePhoto: "Photo choice set",
-                  recordPaystack: "Card or mobile-money payment received",
-                  reviewBishop: "Bishop registration reviewed",
-                  linkReference: "Linked to original record",
-                  editRoster: "List entry edited",
-                  restoreRoster: "Pastor restored to list",
-                  moveRoster: "Pastor moved to another bishop",
-                  officeEdit: "Record edited by the office",
-                  setStatus: "Status changed by the office",
-                  markPaid: "Payment marked by the office",
-                  setVisibility: "Public visibility changed",
-                  deleteRegistration: "Registration deleted",
-                  addPerson: "Person added by the office",
-                  addReference: "Original record added",
-                  editReference: "Original record corrected",
-                  hideReference: "Original record hidden or shown",
-                  deleteReference: "Original record deleted or restored",
-                  setCatalog: "Organizations and denominations changed",
-                  setFees: "Fees changed",
-                  setSignup: "Sign-up paused or reopened",
-                  broadcast: "Email sent to members",
-                  apiKeyCreated: "API key created",
-                  apiKeyRevoked: "API key revoked",
-                }[a.action] || a.action}
+                {ACTION_LABELS[a.action] || a.action}
               </b>
               <time>{new Date(a.at).toLocaleString()}</time>
             </div>

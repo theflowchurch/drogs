@@ -3403,3 +3403,40 @@ input[type="date"] {
 .reg-paused p {
   margin: 0 0 8px;
 }
+
+/* Member profile: own activity */
+.reg-my-activity {
+  margin-top: 22px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+.reg-my-activity h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+.reg-my-activity ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.reg-my-activity li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.reg-my-activity li:last-child {
+  border-bottom: 0;
+}
+.reg-my-activity small {
+  display: block;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.reg-my-activity time {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}

@@ -828,6 +828,7 @@ export function applyAction(
     r.paystackReference = String(payload.reference);
     r.paystackAmount = Number(payload.amount);
     r.paystackCurrency = String(payload.currency || "");
+    detail = { amount: Number(payload.amount), currency: r.paystackCurrency };
     r.nonrefundableAt = now;
     r.paymentSubmittedAt = now;
     r.paymentReviewedAt = now;
