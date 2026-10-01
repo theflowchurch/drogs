@@ -84,27 +84,35 @@ function Structure({ state, perform, actor, show = ['groups', 'orgs', 'fees'] })
   const grouped = o => new Set(Object.values(groups).filter(g => g.organization === o).flatMap(g => g.denominations.map(normal)));
   const ungrouped = o => (cat.denominations[o] || []).filter(d => !grouped(o).has(normal(d)));
   const setGroupDens = (name, dens) => setCat({ ...cat, groups: { ...groups, [name]: { ...groups[name], denominations: dens } } });
-  const moveToGroup = (from, to, den) => {
-    if (!den || from === to) return;
-    let next = { ...groups };
-    if (from && next[from]) next = { ...next, [from]: { ...next[from], denominations: next[from].denominations.filter(x => normal(x) !== normal(den)) } };
+  // Drop onto a group card, a "Not in a group" card, or an organization with no
+  // groups. Crossing into another organization moves the denomination out of
+  // the old organization's list and every group it sat in.
+  const moveTo = ({ den, fromGroup = '', fromOrg = '' }, { toGroup = '', toOrg }) => {
+    if (!den) return;
+    if (fromGroup === toGroup && (!fromOrg || fromOrg === toOrg)) return;
+    let next = Object.fromEntries(Object.entries(groups).map(([g, x]) => [g, x.organization !== toOrg || g === fromGroup ? { ...x, denominations: x.denominations.filter(v => normal(v) !== normal(den)) } : x]));
     let dens = { ...cat.denominations };
-    if (to && next[to]) {
-      const o = next[to].organization;
-      if (!next[to].denominations.some(x => normal(x) === normal(den))) next = { ...next, [to]: { ...next[to], denominations: [...next[to].denominations, den] } };
-      if (!(dens[o] || []).some(x => normal(x) === normal(den))) dens = { ...dens, [o]: [...(dens[o] || []), den].sort((a, b) => a.localeCompare(b)) };
-    }
+    if (fromOrg && fromOrg !== toOrg) dens = { ...dens, [fromOrg]: (dens[fromOrg] || []).filter(v => normal(v) !== normal(den)) };
+    if (!(dens[toOrg] || []).some(v => normal(v) === normal(den))) dens = { ...dens, [toOrg]: [...(dens[toOrg] || []), den].sort((a, b) => a.localeCompare(b)) };
+    if (toGroup && next[toGroup] && !next[toGroup].denominations.some(v => normal(v) === normal(den))) next = { ...next, [toGroup]: { ...next[toGroup], denominations: [...next[toGroup].denominations, den] } };
     setCat({ ...cat, groups: next, denominations: dens });
   };
+  const moveToGroup = (from, to, den) => moveTo({ den, fromGroup: from, fromOrg: to ? groups[to]?.organization : (from ? groups[from]?.organization : '') }, { toGroup: to, toOrg: to ? groups[to]?.organization : (from ? groups[from]?.organization : '') });
   const addGroup = () => { const n = newGroup.name.trim(), o = newGroup.organization || cat.organizations[0]; if (!n || groups[n]) return; setCat({ ...cat, groups: { ...groups, [n]: { organization: o, denominations: [] } } }); setNewGroup({ name: '', organization: '' }); };
   const removeGroup = (n) => { const next = { ...groups }; delete next[n]; setCat({ ...cat, groups: next }); setOpenGroups(openGroups.filter(x => x !== n)); };
   const isOpen = n => openGroups.includes(n), toggle = n => setOpenGroups(isOpen(n) ? openGroups.filter(x => x !== n) : [...openGroups, n]);
   const groupDrop = (target) => ({
     onDragOver: e => { e.preventDefault(); if (overGroup !== target) setOverGroup(target); },
     onDragLeave: e => { if (!e.currentTarget.contains(e.relatedTarget)) setOverGroup(null); },
-    onDrop: e => { e.preventDefault(); setOverGroup(null); const { fromGroup, den } = JSON.parse(e.dataTransfer.getData('text/plain') || '{}'); if (den !== undefined) moveToGroup(fromGroup || '', target.startsWith('ungrouped:') ? '' : target, den); },
+    onDrop: e => { e.preventDefault(); setOverGroup(null); const { fromGroup, fromOrg, den } = JSON.parse(e.dataTransfer.getData('text/plain') || '{}'); if (den === undefined) return; const toGroup = target.startsWith('ungrouped:') ? '' : target; const toOrg = toGroup ? groups[toGroup]?.organization : target.slice('ungrouped:'.length); moveTo({ den, fromGroup: fromGroup || '', fromOrg: fromOrg || '' }, { toGroup, toOrg }); },
   });
-  const chip = (den, fromGroup, org) => <li key={den} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ fromGroup, den })); }}>{org ? logoControl(den) : null}{renaming?.kind === 'den' && renaming.org === org && renaming.name === den ? renameBox(val => renameDen(org, den, val)) : <span>{den}</span>}{org && <button type="button" className="reg-text" aria-label={`Edit the spelling of ${den}`} title="Edit spelling" onClick={() => setRenaming({ kind: 'den', org, name: den, value: den })}>✎</button>}{fromGroup && <button type="button" className="reg-text danger" aria-label={`Take ${den} out of ${fromGroup}`} onClick={() => moveToGroup(fromGroup, '', den)}>×</button>}</li>;
+  // An organization without groups: its whole block takes the drop.
+  const orgDrop = (o) => ({
+    onDragOver: e => { e.preventDefault(); if (overGroup !== `org:${o}`) setOverGroup(`org:${o}`); },
+    onDragLeave: e => { if (!e.currentTarget.contains(e.relatedTarget)) setOverGroup(null); },
+    onDrop: e => { e.preventDefault(); setOverGroup(null); const { fromGroup, fromOrg, den } = JSON.parse(e.dataTransfer.getData('text/plain') || '{}'); if (den !== undefined) moveTo({ den, fromGroup: fromGroup || '', fromOrg: fromOrg || '' }, { toGroup: '', toOrg: o }); },
+  });
+  const chip = (den, fromGroup, org) => <li key={den} draggable onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', JSON.stringify({ fromGroup, fromOrg: org, den })); }}>{org ? logoControl(den) : null}{renaming?.kind === 'den' && renaming.org === org && renaming.name === den ? renameBox(val => renameDen(org, den, val)) : <span>{den}</span>}{org && <button type="button" className="reg-text" aria-label={`Edit the spelling of ${den}`} title="Edit spelling" onClick={() => setRenaming({ kind: 'den', org, name: den, value: den })}>✎</button>}{fromGroup && <button type="button" className="reg-text danger" aria-label={`Take ${den} out of ${fromGroup}`} onClick={() => moveToGroup(fromGroup, '', den)}>×</button>}</li>;
   const OFFICE_ORG = { 'United Denominations': 'UD – OLGC' };
   const officeOrg = o => OFFICE_ORG[o] || orgLabel(o);
   // Drag a denomination chip onto another organization's card to move it.
@@ -118,11 +126,11 @@ function Structure({ state, perform, actor, show = ['groups', 'orgs', 'fees'] })
   const saveLists = (label = 'Save lists') => <div className="reg-form-actions reg-save-row"><small>{dirty ? 'Unsaved changes.' : 'Saved.'}</small><button type="button" className="reg-primary" disabled={!dirty} onClick={() => perform('setCatalog', { catalog: cat }, 'Organizations and denominations saved.')}>{label}</button></div>;
   return <>
   {show.includes('groups') && <Category title="Groups" summary={`${groupCount} groups${dirty ? ' · unsaved changes' : ''}`}>
-    {cat.organizations.map(o => <div key={o} className="reg-group-org">
+    {cat.organizations.map(o => <div key={o} className={`reg-group-org ${overGroup === `org:${o}` ? 'over' : ''}`} {...(!Object.values(groups).some(g => g.organization === o) ? orgDrop(o) : {})}>
       <h3>{officeOrg(o)}</h3>
       {!Object.values(groups).some(g => g.organization === o) ? (
         <>
-          <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => denChip(o, v, <button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button>))}</ul>
+          <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => chip(v, '', o))}</ul>
           {!(cat.denominations[o] || []).length && <p className="reg-small reg-catalog-empty">No denominations listed.</p>}
           <div className="reg-admin-add"><input placeholder="New denomination" value={newDen[o] || ''} onChange={e => setNewDen({ ...newDen, [o]: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addDen(o); } }} /><label className={`reg-secondary reg-file-button ${newDenLogo[o] ? 'has' : ''}`} title="Logo for the new denomination">{newDenLogo[o] ? `Logo: ${newDenLogo[o].name}` : 'Add logo'}<input type="file" accept="image/png,image/jpeg,image/webp" onChange={e => { const f = e.target.files?.[0]; e.target.value = ''; setNewDenLogo({ ...newDenLogo, [o]: f || null }); }} /></label><button type="button" className="reg-secondary" onClick={() => addDen(o)}>Add denomination</button>{dirty && <button type="button" className="reg-primary" onClick={() => perform('setCatalog', { catalog: cat }, 'Groups saved.')}>Save</button>}</div>
         </>
