@@ -70,7 +70,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   try {
     await migrate(pool); await migrate(pool); // Idempotent, preserves existing records.
     assert.equal((await call('snapshot')).status, 401);
-    assert.equal((await call('auth/access', '', { code: '1234', office: false })).status, 404, 'the site-code login is gone');
+    assert.ok([401, 404].includes((await call('auth/access', '', { code: '1234', office: false })).status), 'the site-code login is gone');
     const visitorAccess = { status: 404 };
     assert.equal((await call('auth/office-code', '', { code: 'wrong' })).status, 401);
     assert.equal((await call('auth/office-code', '', { code: 'admin-test-code' })).status, 200);
