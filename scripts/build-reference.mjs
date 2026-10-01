@@ -103,6 +103,19 @@ for (const b of flat) {
   if (SAME_AS_GROUP.has(rec.group)) { rec.denomination = rec.group; rec.denominationLogo = GROUP_DENOMINATION_LOGO[rec.group] || ''; }
   people.push(rec); added.push(rec);
 }
+// "United Cities" is no longer a denomination. Its people take their country as
+// denomination: African countries sit in UD Africa, Pacific ones in United Islands.
+const UC_AFRICA = new Set(['central african republic', 'cape verde', 'guinea', 'burkina faso', 'lesotho', 'niger', 'chad', 'mali', 'sao tome and principe', 'gambia', 'equatorial guinea']);
+const UC_PACIFIC = new Set(['australia', 'new zealand', 'solomon islands', 'papua new guinea', 'fiji', 'vanuatu', 'samoa', 'tonga']);
+const UC_COUNTRIES = { africa: new Set(), pacific: new Set() };
+for (const p of people) {
+  if (normalName(p.denomination) !== 'united cities') continue;
+  const c = normalName(p.country);
+  p.denomination = p.country ? titleCase(p.country) : '';
+  p.denominationLogo = '';
+  if (UC_AFRICA.has(c)) { p.group = 'UD Africa'; UC_COUNTRIES.africa.add(p.denomination); }
+  else if (UC_PACIFIC.has(c)) { p.group = 'United Islands'; UC_COUNTRIES.pacific.add(p.denomination); }
+}
 // Group catalog for the office, generated from the same document. Each entry is
 // spelled the way the sign-up list spells it: an exact or prefix match on the
 // list, else the denomination the bishops under that heading already carry (so
@@ -120,7 +133,9 @@ const canonical = (heading, group) => {
   if (byList.length) return byList.sort((a, b) => byList.filter(x => x === b).length - byList.filter(x => x === a).length)[0];
   return titleCase(heading);
 };
-const GROUP_ENTRIES = Object.fromEntries(official.groups.filter(g => g.organization === 'United Denominations').map(g => [g.name, { organization: g.organization, denominations: SAME_AS_GROUP.has(g.name) ? [g.name] : [...new Set(g.denominations.map(d => d.name).filter(Boolean).map(h => canonical(h, g.name)))] }]));
+const GROUP_ENTRIES = Object.fromEntries(official.groups.filter(g => g.organization === 'United Denominations').map(g => [g.name, { organization: g.organization, denominations: SAME_AS_GROUP.has(g.name) ? [g.name] : [...new Set(g.denominations.map(d => d.name).filter(Boolean).map(h => canonical(h, g.name)))].filter(d => normalName(d) !== 'united cities') }]));
+for (const d of UC_COUNTRIES.africa) if (!GROUP_ENTRIES['UD Africa'].denominations.includes(d)) GROUP_ENTRIES['UD Africa'].denominations.push(d);
+for (const d of UC_COUNTRIES.pacific) if (!GROUP_ENTRIES['United Islands'].denominations.includes(d)) GROUP_ENTRIES['United Islands'].denominations.push(d);
 // Pastors take their bishop's group; otherwise the group of their denomination.
 const bishopsNow = people.filter(p => p.role === 'bishop');
 const byNorm = new Map(bishopsNow.map(p => [normalName(p.name), p]));
@@ -128,6 +143,7 @@ const groupByDenomination = new Map(official.groups.filter(g => g.organization =
 for (const [g, v] of Object.entries(GROUP_ENTRIES)) for (const d of v.denominations) groupByDenomination.set(normalName(d), g);
 for (const p of people) {
   if (p.role !== 'pastor') continue;
+  if (UC_COUNTRIES.africa.has(p.denomination) || UC_COUNTRIES.pacific.has(p.denomination)) continue; // settled above by country
   const own = byNorm.get(normalName(p.bishop || '')) || (p.bishop ? bishopsNow.find(b => namesAlike(b.name, p.bishop)) : null);
   p.group = p.organization !== 'United Denominations' ? '' : own?.group || groupByDenomination.get(normalName(p.denomination)) || [...groupByDenomination].find(([k]) => k && normalName(p.denomination).startsWith(k))?.[1] || '';
   if (SAME_AS_GROUP.has(p.group)) { p.denomination = p.group; p.denominationLogo = GROUP_DENOMINATION_LOGO[p.group] || ''; }

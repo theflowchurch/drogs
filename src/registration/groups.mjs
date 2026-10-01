@@ -44,12 +44,21 @@ export const GROUPS = {
       "Others International Church",
       "Victoire Internationale",
       "Poimen Church Senegal-Gambia",
-      "Sagesse Internationale Guinea",
+      "Guinea",
       "Amour Internationale",
       "Precious Souls Namibia",
       "Precious Souls Swaziland",
-      "United Cities",
-      "Seychelles"
+      "Central African Republic",
+      "Gambia",
+      "Equatorial Guinea",
+      "Cape Verde",
+      "Lesotho",
+      "Burkina Faso",
+      "Seychelles",
+      "Mali",
+      "Niger",
+      "Chad",
+      "Sao Tome And Principe"
     ]
   },
   "UD Europe": {
@@ -75,8 +84,15 @@ export const GROUPS = {
   "United Islands": {
     "organization": "United Denominations",
     "denominations": [
-      "United Cities",
-      "Good Shepherd Church Guyana"
+      "Fiji",
+      "Solomon Islands",
+      "Papua New Guinea",
+      "New Zealand",
+      "Vanuatu",
+      "Good Shepherd Church Guyana",
+      "Australia",
+      "Tonga",
+      "Samoa"
     ]
   },
   "United Jesus": {
