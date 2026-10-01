@@ -1984,7 +1984,7 @@ function RegistrationForm({
                   title={slotsComplete(slots) ? undefined : "Finish or clear the highlighted rows first"}
                   onClick={() => { setRosterRows(uniqueRows(filledSlots(slots))); next(); }}
                 >
-                  {filledSlots(slots).length ? "Continue →" : "I’ll add my pastors later →"}
+                  Continue →
                 </button>
               </div>
             </div>
@@ -2100,7 +2100,7 @@ function RegistrationForm({
                   {rosterRows.length ? (
                     <RowsTable rows={rosterRows} />
                   ) : (
-                    <p className="reg-small">None added yet. You can add them later under My pastors.</p>
+                    <p className="reg-small">None added yet. You can add them under My pastors.</p>
                   )}
                   <button type="button" className="reg-text" onClick={() => setStep("pastors")}>Change</button>
                 </section>
