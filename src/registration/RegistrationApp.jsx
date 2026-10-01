@@ -1603,7 +1603,7 @@ function RegistrationForm({
       ? ["details", "pastors", "payment", "review"]
       : ["details", "payment", "review"];
   const review = step === "review";
-  const stepLabel = { details: "Your details", pastors: "Pastors under your ministry", payment: "Payment", review: "Review" };
+  const stepLabel = { details: "Your details", pastors: "Pastors Under Your Oversight", payment: "Payment", review: "Review" };
   const next = () => setStep(steps[Math.min(steps.indexOf(step) + 1, steps.length - 1)]);
   const back = () => setStep(steps[Math.max(steps.indexOf(step) - 1, 0)]);
   const currency = currencyFor(data.country);
@@ -1639,7 +1639,7 @@ function RegistrationForm({
             {step === "review"
               ? "Review your details."
               : step === "pastors"
-                ? "Pastors under your ministry."
+                ? "Pastors Under Your Oversight."
                 : step === "payment"
                   ? "Annual Good Standing Renewal Fee."
                   : editing
@@ -1945,7 +1945,7 @@ function RegistrationForm({
             <div>
               <div className="reg-section-head">
                 <div>
-                  <h2>Add your pastors</h2>
+                  <h2>Pastors Under Your Oversight</h2>
                   <p>
                     Type each pastor’s <b>full name</b> and <b>date of birth</b> on a row below. Empty rows are ignored. Each pastor adds their own photo when they register.
                   </p>
@@ -2096,7 +2096,7 @@ function RegistrationForm({
               <ProfileDetails record={{ data }} directory={state.directory} />
               {!editing && data.role === "bishop" && (
                 <section className="reg-review-block">
-                  <h3>Pastors under your ministry <b>{rosterRows.length}</b></h3>
+                  <h3>Pastors Under Your Oversight <b>{rosterRows.length}</b></h3>
                   {rosterRows.length ? (
                     <RowsTable rows={rosterRows} />
                   ) : (
@@ -4283,7 +4283,7 @@ function Roster({ state, year, actor, office, perform }) {
         </div>
       ) : (
         <Empty title="No pastors added yet">
-          {office ? "Pastors added by bishops will appear here." : "Add your pastors below; they are recognised automatically when they register."}
+          {office ? "Pastors added by bishops will appear here." : "Add the pastors under your oversight below; they are recognised automatically when they register."}
         </Empty>
       )}
       {!office && year === state.year && (
