@@ -92,7 +92,7 @@ function Field({ label, children, wide = false, hint }) {
       <label htmlFor={id}>{label}</label>
       {Children.map(children, (child) =>
         isValidElement(child) &&
-        ["input", "select", "textarea"].includes(child.type)
+        ["input", "select", "textarea", Choice].includes(child.type)
           ? cloneElement(child, {
               id,
               "aria-describedby": hint ? `${id}-hint` : undefined,
@@ -2599,7 +2599,7 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
           {(catalog.denominations[form.organization] || []).length > 0 && (
             <Field label="Denomination"><select value={form.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{catalog.denominations[form.organization].map((x) => <option key={x}>{x}</option>)}</select></Field>
           )}
-          <Field label="Country"><input value={form.country} onChange={(e) => set("country", e.target.value)} /></Field>
+          <Field label="Country"><Choice value={form.country} options={[...new Set(overlayReferences(people, state).map((x) => x.country).filter(Boolean))].sort()} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
           <Field label="City"><input value={form.city} onChange={(e) => set("city", e.target.value)} /></Field>
           {form.role === "pastor" && (
             <Field label="Bishop"><select value={form.bishopId} onChange={(e) => set("bishopId", e.target.value)}><option value="">None</option>{bishops.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></Field>
@@ -2614,11 +2614,32 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
   );
 }
 // Corrections to a record from the original data: fields, hide/show, delete/restore.
+// A select that always offers the record's current value, even when it is
+// not in the list, so opening the editor never silently changes a field.
+function Choice({ value, options, onChange, labelOf = (v) => v, blank = "", ...rest }) {
+  const all = value && !options.includes(value) ? [value, ...options] : options;
+  return (
+    <select {...rest} value={value} onChange={(e) => onChange(e.target.value)}>
+      {blank !== null && <option value="">{blank}</option>}
+      {all.map((o) => <option key={o} value={o}>{labelOf(o)}</option>)}
+    </select>
+  );
+}
+const TITLES = ["Bishop", "Pastor", "Reverend", "Dr", "Mother", "Episcopal Sister", "Lady Pastor"];
 function ReferenceEditor({ person: p, state, perform }) {
   const [open, setOpen] = useState(false),
     [form, setForm] = useState(null);
   const hidden = (state.hidden || []).includes(p.id), deleted = Boolean((state.overrides || {})[p.id]?.deleted);
   const begin = () => { setForm(Object.fromEntries(REFERENCE_FIELDS.map((f) => [f, p[f] || ""]))); setOpen(true); };
+  const set = (f) => (v) => setForm((x) => ({ ...x, [f]: v, ...(f === "organization" ? { denomination: "" } : {}) }));
+  // Choices: the office's organizations and denominations, plus whatever the
+  // original data already uses, so old spellings stay selectable.
+  const catalog = state.catalog || catalogOf(state);
+  const roster = overlayReferences(people, state);
+  const unique = (list) => [...new Set(list.filter(Boolean))].sort();
+  const denominations = form && unique([...(catalog.denominations[form.organization] || []), ...roster.filter((x) => x.organization === form.organization).map((x) => x.denomination)]);
+  const countries = unique(roster.map((x) => x.country));
+  const bishops = unique(roster.filter((x) => x.role === "bishop" && !x.deleted).map((x) => x.name));
   return (
     <section className="reg-office-editor">
       <h3>Office tools · original record</h3>
@@ -2629,11 +2650,16 @@ function ReferenceEditor({ person: p, state, perform }) {
       </div>
       {open && form && (
         <div className="reg-fields reg-office-form">
-          {REFERENCE_FIELDS.map((f) => (
-            <Field key={f} label={{ name: "Full name", title: "Title", organization: "Organization", denomination: "Denomination", city: "City", country: "Country", bishop: "Bishop (as written on their record)", branch: "Branch" }[f]}>
-              <input value={form[f]} onChange={(e) => setForm({ ...form, [f]: e.target.value })} />
-            </Field>
-          ))}
+          <Field label="Full name"><input value={form.name} onChange={(e) => set("name")(e.target.value)} /></Field>
+          <Field label="Title"><Choice value={form.title} options={TITLES} onChange={set("title")} blank={null} /></Field>
+          <Field label="Organization"><Choice value={form.organization} options={catalog.organizations} onChange={set("organization")} labelOf={orgLabel} blank="Choose…" /></Field>
+          <Field label="Denomination"><Choice value={form.denomination} options={denominations} onChange={set("denomination")} blank="None" /></Field>
+          <Field label="City"><input value={form.city} onChange={(e) => set("city")(e.target.value)} /></Field>
+          <Field label="Country"><Choice value={form.country} options={countries} onChange={set("country")} blank="Choose…" /></Field>
+          {p.role !== "bishop" && (
+            <Field label="Bishop"><Choice value={form.bishop} options={bishops} onChange={set("bishop")} blank="None listed" /></Field>
+          )}
+          <Field label="Branch"><input value={form.branch} onChange={(e) => set("branch")(e.target.value)} /></Field>
           <div className="reg-form-actions wide">
             <button type="button" className="reg-secondary" onClick={() => setOpen(false)}>Cancel</button>
             <button type="button" className="reg-primary" onClick={() => perform("editReference", { referenceId: p.id, fields: form }, "Record updated.").then((ok) => ok && setOpen(false))}>Save changes</button>
