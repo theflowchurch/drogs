@@ -92,8 +92,9 @@ function Structure({ state, perform }) {
       <h3>{officeOrg(o)}</h3>
       {!Object.values(groups).some(g => g.organization === o) ? (
         <>
-          <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(d => <li key={d}><span>{d}</span></li>)}</ul>
+          <ul className="reg-catalog-list">{(cat.denominations[o] || []).map(v => <li key={v}><span>{v}</span><button type="button" className="reg-text danger" aria-label={`Remove ${v}`} onClick={() => removeDen(o, v)}>×</button></li>)}</ul>
           {!(cat.denominations[o] || []).length && <p className="reg-small reg-catalog-empty">No denominations listed.</p>}
+          <div className="reg-admin-add"><input placeholder="New denomination" value={newDen[o] || ''} onChange={e => setNewDen({ ...newDen, [o]: e.target.value })} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addDen(o); } }} /><button type="button" className="reg-secondary" onClick={() => addDen(o)}>Add denomination</button>{dirty && <button type="button" className="reg-primary" onClick={() => perform('setCatalog', { catalog: cat }, 'Groups saved.')}>Save</button>}</div>
         </>
       ) : (
       <div className="reg-group-grid">

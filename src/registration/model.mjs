@@ -143,8 +143,11 @@ export const catalogOf = (state) => {
   if (!state?.catalog?.organizations?.length) return { organizations: ORGANIZATIONS, denominations: DENOMINATIONS, groups: GROUPS };
   const groups = { ...(state.catalog.groups || GROUPS) };
   // The office asked for the Eschatos card to list its countries while its people
-  // carry "Eschatos" as denomination; a saved card that only lists itself gets the countries back.
-  if (groups.Eschatos && GROUPS.Eschatos && groups.Eschatos.denominations?.every((d) => normalName(d) === "eschatos")) groups.Eschatos = { ...groups.Eschatos, denominations: GROUPS.Eschatos.denominations };
+  // carry "Eschatos" as denomination. A saved card with none of the countries gets
+  // them added after whatever the office already put there; nothing is removed.
+  const eschatos = groups.Eschatos, countries = GROUPS.Eschatos?.denominations || [];
+  if (eschatos && countries.length && !countries.some((c) => (eschatos.denominations || []).some((d) => normalName(d) === normalName(c))))
+    groups.Eschatos = { ...eschatos, denominations: [...new Set([...(eschatos.denominations || []), ...countries])] };
   return { ...state.catalog, groups };
 };
 const denominationKey = (value) => normalName(value).replace(/^the /, "");
