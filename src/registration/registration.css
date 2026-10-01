@@ -1847,8 +1847,8 @@ p {
   height: 26px;
   width: auto;
 }
-:root[data-theme="dark"] img[src$="castle-icon.png"] {
-  content: url("/assets/brand/castle-icon-white.png");
+:root[data-theme="dark"] img[src$="castle-blue.png"] {
+  content: url("/assets/brand/castle-white.png");
 }
 .reg-gate-inner > img {
   height: 96px;

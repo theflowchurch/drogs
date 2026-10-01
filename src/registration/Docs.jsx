@@ -52,7 +52,7 @@ export default function Docs({ markdown = docs.markdown, office = true }) {
     <div className="reg-app reg-docs-page">
       <header className="reg-header">
         <a className="reg-brand" href={`${base}/`}>
-          <span className="reg-brand-mark"><img src={`${base}/assets/brand/castle-icon.png`} alt="" /></span>
+          <span className="reg-brand-mark"><img src={`${base}/assets/brand/castle-blue.png`} alt="" /></span>
           <strong>Kuriake Castle</strong>
         </a>
         <div className="reg-header-right">{office ? <a className="reg-text" href={`${base}/admin/`}>Office ↗</a> : <a className="reg-text" href={`${base}/directory/`}>Directory ↗</a>}</div>

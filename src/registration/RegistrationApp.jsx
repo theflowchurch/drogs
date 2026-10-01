@@ -461,7 +461,7 @@ export default function RegistrationApp({
         )}
         <a className="reg-brand" href={`${base}/`}>
           <span className="reg-brand-mark">
-            <img src={`${base}/assets/brand/castle-icon.png`} alt="" />
+            <img src={`${base}/assets/brand/castle-blue.png`} alt="" />
           </span>
           <strong>Kuriake Castle</strong>
         </a>
@@ -532,7 +532,7 @@ export default function RegistrationApp({
             aria-hidden="true"
           />
           <h1 className="reg-hero-title">
-            <img src={`${base}/assets/brand/castle-icon-white.png`} alt="" />
+            <img src={`${base}/assets/brand/castle-white.png`} alt="" />
             Kuriake Castle
           </h1>
           <a className="reg-enter" href={`${base}/directory/`}>
@@ -851,7 +851,7 @@ function Gate({ office, onEnter }) {
     <section className="reg-gate">
       <div className="reg-gate-glow" />
       <div className="reg-gate-inner">
-        <img src={`${base}/assets/brand/castle-icon-white.png`} alt="" />
+        <img src={`${base}/assets/brand/castle-white.png`} alt="" />
         <h1>
           <em>Kuriake Castle</em>
         </h1>
@@ -994,7 +994,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
           <div>
             <img
               className="reg-account-mark"
-              src={`${base}/assets/brand/castle-icon-white.png`}
+              src={`${base}/assets/brand/castle-white.png`}
               alt=""
             />
             <span className="reg-eyebrow">OFFICE ACCESS</span>
@@ -1006,7 +1006,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
       ) : (
         <>
           <h1 className="reg-hero-title">
-            <img src={`${base}/assets/brand/castle-icon-white.png`} alt="" />
+            <img src={`${base}/assets/brand/castle-white.png`} alt="" />
             Kuriake Castle
           </h1>
           {open && (
