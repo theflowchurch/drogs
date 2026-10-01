@@ -32,6 +32,7 @@ import {
   catalogOf,
   overlayReferences,
   broadcastRecipients,
+  SIGNUP_PAUSED,
   attireExample,
   paymentReference,
   referenceIndex,
@@ -582,7 +583,6 @@ export default function RegistrationApp({
         ...(profile?.role === "bishop" && current && !["draft", "denied"].includes(current.status)
           ? ["My pastors", "Unclaimed"]
           : []),
-        "History",
       ];
   async function logout() {
     await run(async () => {
@@ -1066,9 +1066,25 @@ function Gate({ office, onEnter }) {
 }
 function AccountForm({ office, signup = false, mode = office ? "office" : signup ? "signup" : "signin", run, busy, onActor }) {
   const [remember, setRemember] = useState(false);
+  // New sign-ups check whether registration is paused; the notice replaces the form.
+  const [paused, setPaused] = useState(null);
+  useEffect(() => {
+    if (mode !== "signup") return;
+    let live = true;
+    api.publicDirectory().then((d) => live && d?.signup?.closed && setPaused(d.signup.notice || SIGNUP_PAUSED)).catch(() => {});
+    return () => { live = false; };
+  }, [mode]);
   const [email, setEmail] = useState(""),
     [sent, setSent] = useState(false),
     [token, setToken] = useState("");
+  if (paused)
+    return (
+      <div className="reg-paused" role="status">
+        <h3>Sign-up is paused</h3>
+        <p>{paused}</p>
+        <p className="reg-small">Already registered? Use Sign in instead.</p>
+      </div>
+    );
   return (
 <form
   className="reg-card"
@@ -4299,6 +4315,30 @@ function History({ state, records, office, actor, year, perform }) {
                   reviewPayment: "Payment reviewed",
                   openYear: "Next year opened",
                   carryRoster: "Prior list reconfirmed",
+                  update: "Details updated",
+                  choosePhoto: "Photo choice set",
+                  recordPaystack: "Card or mobile-money payment received",
+                  reviewBishop: "Bishop registration reviewed",
+                  linkReference: "Linked to original record",
+                  editRoster: "List entry edited",
+                  restoreRoster: "Pastor restored to list",
+                  moveRoster: "Pastor moved to another bishop",
+                  officeEdit: "Record edited by the office",
+                  setStatus: "Status changed by the office",
+                  markPaid: "Payment marked by the office",
+                  setVisibility: "Public visibility changed",
+                  deleteRegistration: "Registration deleted",
+                  addPerson: "Person added by the office",
+                  addReference: "Original record added",
+                  editReference: "Original record corrected",
+                  hideReference: "Original record hidden or shown",
+                  deleteReference: "Original record deleted or restored",
+                  setCatalog: "Organizations and denominations changed",
+                  setFees: "Fees changed",
+                  setSignup: "Sign-up paused or reopened",
+                  broadcast: "Email sent to members",
+                  apiKeyCreated: "API key created",
+                  apiKeyRevoked: "API key revoked",
                 }[a.action] || a.action}
               </b>
               <time>{new Date(a.at).toLocaleString()}</time>

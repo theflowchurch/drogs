@@ -3389,3 +3389,17 @@ input[type="date"] {
   cursor: pointer;
   font-size: 15px;
 }
+
+/* Sign-up paused notice in the account dialog */
+.reg-paused {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-soft);
+}
+.reg-paused h3 {
+  margin: 0 0 8px;
+}
+.reg-paused p {
+  margin: 0 0 8px;
+}

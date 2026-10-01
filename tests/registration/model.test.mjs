@@ -669,3 +669,15 @@ test("broadcast audiences: everyone, bishops, pastors or chosen people; placehol
   s = applyAction(s, office, "broadcast", { subject: "Convention dates", audience: "bishops", recipients: 1 });
   assert.deepEqual(s.audit.at(-1).detail, { subject: "Convention dates", audience: "bishops", recipients: 1 });
 });
+test("paused sign-up blocks new registrations but not existing members", () => {
+  let s = setup();
+  s = applyAction(s, office, "setSignup", { closed: true, notice: "Registration for 2027 has closed." });
+  assert.throws(() => applyAction(s, pastor, "save", profile(pastor)), /has closed/);
+  assert.throws(() => applyAction(s, pastor, "submit", profile(pastor)), /has closed/);
+  s = applyAction(s, bishop, "update", { city: "Tema", photoConfirmed: true });
+  assert.equal(s.registrations[0].data.city, "Tema", "a submitted member still edits");
+  assert.throws(() => applyAction(s, bishop, "setSignup", { closed: false }), /Office/);
+  s = applyAction(s, office, "setSignup", { closed: false });
+  s = applyAction(s, pastor, "submit", profile(pastor));
+  assert.equal(s.registrations.at(-1).data.name, "John Doe");
+});

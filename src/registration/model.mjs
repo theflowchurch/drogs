@@ -121,7 +121,10 @@ export const emptyState = () => ({
   fees: null, // { bishop, pastor } in USD or null for AMOUNTS
   overrides: {}, // reference id → corrected fields, or { deleted: true }
   extraReferences: [], // people added to the roster by hand
+  signup: { closed: false, notice: "" }, // pause new sign-ups; existing members carry on
 });
+export const SIGNUP_PAUSED = "Registration is paused at the moment. Please check back later.";
+export const signupOf = (state) => ({ closed: Boolean(state?.signup?.closed), notice: String(state?.signup?.notice || "").trim() });
 // The organizations and denominations in force: the office's edited catalog, else the built-in lists.
 export const catalogOf = (state) =>
   state?.catalog?.organizations?.length
@@ -135,6 +138,7 @@ export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination"
 const CONTACT_FIELDS = ["phone", "email"];
 const scrubContacts = (o) => Object.fromEntries(Object.entries(o || {}).filter(([k]) => !CONTACT_FIELDS.includes(k)));
 export const publicOverlay = (state) => ({
+  signup: signupOf(state),
   hidden: state.hidden || [],
   overrides: Object.fromEntries(Object.entries(state.overrides || {}).map(([k, v]) => [k, scrubContacts(v)])),
   extraReferences: (state.extraReferences || []).map(scrubContacts),
@@ -463,6 +467,10 @@ export function applyAction(
       (r) => r.userId === (payload.userId || actor.id) && r.year === state.year,
     );
   if (action === "save" || action === "submit") {
+    // While sign-up is paused, nobody new may start or finish a registration;
+    // people who already submitted keep full use of their account.
+    if (signupOf(state).closed && !state.registrations.some((x) => x.userId === actor.id && x.year === state.year && x.status !== "draft"))
+      throw Error(signupOf(state).notice || SIGNUP_PAUSED);
     const data = validateProfile(payload, actor.email, {
       draft: action === "save",
       catalog,
@@ -1013,6 +1021,10 @@ export function applyAction(
     if (!(bishop > 0 && pastor > 0 && Number.isInteger(bishop) && Number.isInteger(pastor))) throw Error("Enter whole-dollar amounts above zero.");
     detail = { fees: [feesOf(state), { bishop, pastor }] };
     state.fees = { bishop, pastor };
+  } else if (action === "setSignup") {
+    office();
+    state.signup = { closed: Boolean(payload.closed), notice: String(payload.notice || "").trim().slice(0, 500) };
+    detail = { ...state.signup };
   } else if (action === "broadcast") {
     // The message itself goes out by email; the audit trail keeps what was sent and to how many.
     office();
@@ -1130,6 +1142,7 @@ export function visibleState(state, actor, references, people = references) {
     bishops: registeredBishops(state),
     catalog: catalogOf(state),
     fees: feesOf(state),
+    signup: signupOf(state),
     hidden: state.hidden || [],
     overrides: actor.office ? state.overrides || {} : publicOverlay(state).overrides,
     extraReferences: actor.office ? state.extraReferences || [] : publicOverlay(state).extraReferences,

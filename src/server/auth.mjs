@@ -31,10 +31,19 @@ export async function rateLimit(pool, config, key, limit, period, now = Date.now
 export function createAuth({ pool, config, mailer }) {
   // Twelve hours by default; thirty days when the person asks to stay signed in on this device.
   const SESSION_MS = 43200000, REMEMBER_MS = 30 * 86400000;
-  const createSession = async (conn, user, remember = false) => {
+  // A session remembers which door it came through: only a sign-in made at
+  // /admin/ carries office powers, so an office email signed in as a member
+  // sees exactly what any member sees. The door travels as a cookie prefix.
+  const createSession = async (conn, user, remember = false, office = false) => {
     const token = randomBytes(32).toString('hex'), ttl = remember ? REMEMBER_MS : SESSION_MS;
     await conn.execute('INSERT INTO dr_sessions (token_hash,user_id,expires_at) VALUES (?,?,?)', [digest(config.secret, `session:${token}`), user.id, Date.now() + ttl]);
-    return { actor: { ...user, office: config.admins.includes(user.email) }, token, maxAge: Math.floor(ttl / 1000) };
+    const isOffice = office && config.admins.includes(user.email);
+    return { actor: { ...user, office: isOffice }, token: isOffice ? `o.${token}` : token, maxAge: Math.floor(ttl / 1000) };
+  };
+  const parseSession = (request) => {
+    const raw = sessionToken(request);
+    const office = raw.startsWith('o.'), token = office ? raw.slice(2) : raw;
+    return /^[a-f0-9]{64}$/.test(token) ? { token, office } : null;
   };
   // Signing in is only for people who already registered (a profile or a
   // registration, pending or approved). Nobody else is told anything more
@@ -124,19 +133,20 @@ export function createAuth({ pool, config, mailer }) {
         const now = Date.now();
         await conn.execute('INSERT INTO dr_account_activity (user_id,signed_up_at,last_login_at,login_count) VALUES (?,?,?,1) ON DUPLICATE KEY UPDATE last_login_at=VALUES(last_login_at),login_count=login_count+1', [user.id, created.affectedRows ? now : null, now]);
         await conn.execute('INSERT INTO dr_logins (user_id,logged_in_at) VALUES (?,?)', [user.id, now]);
-        return createSession(conn, user, remember === true);
+        return createSession(conn, user, remember === true, mode === 'office');
       });
       if (!result) throw new HttpError(401, 'That code is invalid or expired. Request a new code.');
       return result;
     },
     async actor(request) {
-      const token = sessionToken(request);
-      if (!/^[a-f0-9]{64}$/.test(token)) return null;
-      const [[user]] = await pool.execute('SELECT u.id,u.email FROM dr_sessions s JOIN dr_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>?', [digest(config.secret, `session:${token}`), Date.now()]);
-      return user ? { ...user, office: config.admins.includes(user.email) } : null;
+      const session = parseSession(request);
+      if (!session) return null;
+      const [[user]] = await pool.execute('SELECT u.id,u.email FROM dr_sessions s JOIN dr_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>?', [digest(config.secret, `session:${session.token}`), Date.now()]);
+      return user ? { ...user, office: session.office && config.admins.includes(user.email) } : null;
     },
     async signOut(request) {
-      await pool.execute('DELETE FROM dr_sessions WHERE token_hash=?', [digest(config.secret, `session:${sessionToken(request)}`)]);
+      const session = parseSession(request);
+      if (session) await pool.execute('DELETE FROM dr_sessions WHERE token_hash=?', [digest(config.secret, `session:${session.token}`)]);
     },
   };
 }

@@ -3,8 +3,25 @@ import { useEffect, useState } from 'react';
 import * as api from './client';
 // Office-managed integration settings. Saved values are never shown back; the
 // office sees only whether each one is set.
-import { catalogOf, feesOf, orgLabel } from './model.mjs';
+import { catalogOf, feesOf, orgLabel, signupOf, SIGNUP_PAUSED } from './model.mjs';
 // Organizations, their denominations and the fees: editable lists saved as one action each.
+// Pause or reopen sign-up. Paused: new people cannot request a code or submit;
+// everyone already registered keeps signing in, paying and editing.
+function SignupControl({ state, perform }) {
+  const current = signupOf(state);
+  const [notice, setNotice] = useState(current.notice);
+  useEffect(() => setNotice(current.notice), [current.notice]);
+  return <section className="reg-card reg-settings">
+    <h2>Registration</h2>
+    <p>Currently <b>{current.closed ? 'paused' : 'open'}</b>. {current.closed ? 'New people see the message below and cannot sign up; members who already registered are unaffected.' : 'Anyone can sign up. Pause it to stop new registrations, for example once the cycle has closed.'}</p>
+    <label className="reg-field wide"><span>Message shown while paused</span><textarea rows={3} value={notice} onChange={e => setNotice(e.target.value)} placeholder={SIGNUP_PAUSED} /></label>
+    <div className="reg-form-actions">
+      {current.closed
+        ? <><button type="button" className="reg-secondary" onClick={() => perform('setSignup', { closed: true, notice }, 'Message saved.')}>Save message</button><button type="button" className="reg-primary" onClick={() => perform('setSignup', { closed: false, notice }, 'Sign-up is open again.')}>Reopen sign-up</button></>
+        : <button type="button" className="reg-primary danger" onClick={() => perform('setSignup', { closed: true, notice }, 'Sign-up is paused.')}>Pause sign-up</button>}
+    </div>
+  </section>;
+}
 function Structure({ state, perform }) {
   const base = state ? catalogOf(state) : null;
   const [cat, setCat] = useState(null), [fees, setFees] = useState(null), [newOrg, setNewOrg] = useState(''), [newDen, setNewDen] = useState({}), [over, setOver] = useState(null);
@@ -54,6 +71,7 @@ export default function Settings({ run, state, perform }) {
   const origin = typeof window === 'undefined' ? 'https://kuriakecastle.org' : window.location.origin;
   const links = [['Public roll', '/directory/'], ['Sign in', '/signup/#signin'], ['Sign up as a bishop', '/signup/bishop/'], ['Sign up as a pastor', '/signup/pastor/'], ['Office sign in', '/admin/'], ['API documentation', '/docs/']];
   return <>
+  {state && perform && <SignupControl state={state} perform={perform} />}
   {state && perform && <Structure state={state} perform={perform} />}
   <section className="reg-card reg-settings">
     <h2>Links to share</h2>
@@ -82,4 +100,4 @@ export default function Settings({ run, state, perform }) {
   </form>
   </>;
 }
-export { Structure };
+export { Structure, SignupControl };

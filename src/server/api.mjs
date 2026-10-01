@@ -5,7 +5,7 @@ import { applySettings, bootstrapSettings, describeSettings, officeMembers, read
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
-import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, signupOf, SIGNUP_PAUSED } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, canReadMedia } from './storage.mjs';
@@ -71,7 +71,16 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       }
       if (path === '/api/registration/auth/request' && method === 'POST') {
         const { email, mode } = await jsonBody(request);
-        await auth.requestCode(emailAddress(email), url.origin, ['signin', 'office'].includes(mode) ? mode : 'signup');
+        const address = emailAddress(email);
+        if (!['signin', 'office'].includes(mode)) {
+          // Paused sign-up turns new people away at the first step; existing accounts still sign in.
+          const [[known]] = await pool.execute('SELECT 1 FROM dr_users WHERE email=?', [address]);
+          if (!known) {
+            const pause = signupOf(await transaction(pool, conn => readState(conn)));
+            if (pause.closed) throw new HttpError(403, pause.notice || SIGNUP_PAUSED);
+          }
+        }
+        await auth.requestCode(address, url.origin, ['signin', 'office'].includes(mode) ? mode : 'signup');
         return json({ ok: true, codeRequired: true });
       }
       if (path === '/api/registration/auth/access' && method === 'POST') {
@@ -195,6 +204,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           await persistState(conn, before, after);
           if (name === 'reviewBishop') reviewed = after.registrations.find(r => r.userId === payload.userId && r.year === after.year);
         });
+        publicCache.at = 0; // office edits and pauses show on the public page at once
         // The office's decision goes to the address the bishop registered with; a mail failure must not undo the decision.
         if (reviewed?.data?.email) {
           const resubmit = payload.decision === 'resubmit';

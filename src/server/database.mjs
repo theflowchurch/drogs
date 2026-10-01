@@ -29,7 +29,7 @@ export async function readState(conn, lock = false) {
   if (extra.length) Object.assign(state, Object.fromEntries(Object.entries(parse(extra[0])).filter(([k]) => OFFICE_FIELDS.includes(k))));
   return state;
 }
-const OFFICE_FIELDS = ['hidden', 'catalog', 'fees', 'overrides', 'extraReferences'];
+const OFFICE_FIELDS = ['hidden', 'catalog', 'fees', 'overrides', 'extraReferences', 'signup'];
 export async function persistState(conn, before, after) {
   if (before.year !== after.year) await conn.execute('UPDATE dr_settings SET current_year=? WHERE id=1', [after.year]);
   if (OFFICE_FIELDS.some(k => JSON.stringify(before[k] ?? null) !== JSON.stringify(after[k] ?? null)))
