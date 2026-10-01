@@ -2577,7 +2577,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true }) {
           )}
         </div>
       </div>
-      {p.role === "bishop" && p.pastors ? (
+      {pastors && p.role === "bishop" && p.pastors ? (
         p.pastors.length ? (
           <section className="reg-record-group">
             <h3>
@@ -2594,8 +2594,8 @@ function PublicRecord({ person: p, onOpen, from, pastors = true }) {
             </div>
           </section>
         ) : null
-      ) : p.role === "bishop" ? (
-        {pastors && <PastorsUnder bishop={p} onOpen={onOpen} from={from} />}
+      ) : pastors && p.role === "bishop" ? (
+        <PastorsUnder bishop={p} onOpen={onOpen} from={from} />
       ) : null}
     </>
   );
