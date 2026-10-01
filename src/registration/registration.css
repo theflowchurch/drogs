@@ -3010,12 +3010,24 @@ input[type="date"] {
   padding: 0;
 }
 .reg-roll-column li {
+  padding: 0;
+  border-bottom: 1px solid var(--line);
+}
+.reg-roll-row {
   display: grid;
   grid-template-columns: 60px 1fr;
   gap: 14px;
   align-items: center;
+  width: 100%;
   padding: 8px 0;
-  border-bottom: 1px solid var(--line);
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.reg-roll-row:hover {
+  background: color-mix(in srgb, var(--panel-soft) 70%, transparent);
 }
 .reg-roll-column li:last-child {
   border-bottom: 0;

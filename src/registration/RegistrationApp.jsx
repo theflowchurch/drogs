@@ -2547,7 +2547,7 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
     </section>
   );
 }
-function PublicRecord({ person: p, onOpen, from }) {
+function PublicRecord({ person: p, onOpen, from, pastors = true }) {
   return (
     <>
       <div className="reg-record-hero">
@@ -2595,7 +2595,7 @@ function PublicRecord({ person: p, onOpen, from }) {
           </section>
         ) : null
       ) : p.role === "bishop" ? (
-        <PastorsUnder bishop={p} onOpen={onOpen} from={from} />
+        {pastors && <PastorsUnder bishop={p} onOpen={onOpen} from={from} />}
       ) : null}
     </>
   );
@@ -2608,7 +2608,8 @@ function PublicRecord({ person: p, onOpen, from }) {
 // time. Rows are plain: no dialogs, no pastors-under-bishop.
 function PublicList({ list }) {
   const [q, setQ] = useState(""),
-    [role, setRole] = useState("bishop");
+    [role, setRole] = useState("bishop"),
+    [selected, setSelected] = useState(null);
   const term = normalName(q);
   const matches = (p) =>
     !term || normalName(`${p.name} ${p.city || ""} ${p.country || ""} ${p.denomination || ""}`).includes(term);
@@ -2642,11 +2643,13 @@ function PublicList({ list }) {
               <ol>
                 {people.map((p) => (
                   <li key={p.id}>
-                    <Portrait person={p} className="reg-roll-photo" />
-                    <div>
-                      <span className="reg-roll-name">{p.name}</span>
-                      <small>{[p.denomination, [p.city, p.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>
-                    </div>
+                    <button type="button" className="reg-roll-row" onClick={() => setSelected(p)}>
+                      <Portrait person={p} className="reg-roll-photo" />
+                      <div>
+                        <span className="reg-roll-name">{p.name}</span>
+                        <small>{[p.denomination, [p.city, p.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>
+                      </div>
+                    </button>
                   </li>
                 ))}
               </ol>
@@ -2656,6 +2659,11 @@ function PublicList({ list }) {
           </div>
         ))}
       </div>
+      {selected && (
+        <Dialog title={selected.name} onClose={() => setSelected(null)} {...stepper(column(selected.role), selected, setSelected)}>
+          <PublicRecord person={selected} pastors={false} />
+        </Dialog>
+      )}
     </section>
   );
 }
