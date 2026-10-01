@@ -16,7 +16,7 @@ export const orgLabel = (key) => ORGANIZATION_LABEL[key] || key || "";
 export function attireExample({ role, gender, organization } = {}) {
   // Women bishops, whichever organization: the office's reference portrait (red jacket and hat).
   if (gender === "female" && role === "bishop")
-    return { file: "assets/brand/female-bishop-example.jpg", caption: "Required: Official Attire for Women Bishops", alt: "Required attire example for women bishops" };
+    return { file: "assets/brand/female-bishop-example.jpg", caption: "Required: Official Attire for Female Bishops", alt: "Required attire example for female bishops" };
   if (gender === "female")
     return organization === "United Denominations"
       ? { file: "assets/brand/female-united-denominations-example.jpg", caption: "Required: Official United Denominations Attire", alt: "Required attire example for women in the United Denominations" }

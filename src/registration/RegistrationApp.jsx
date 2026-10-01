@@ -1947,13 +1947,13 @@ function RegistrationForm({
                 <div>
                   <h2>Add pastors under your oversight</h2>
                   <p>
-                    Type each pastor’s <b>full name</b> and <b>date of birth</b> on a row below. Empty rows are ignored. Each pastor adds their own photo when they register.
+                    Enter each pastor’s <b>full name</b> and <b>date of birth</b> below. Each pastor will add their own photo when they register.
                   </p>
                 </div>
               </div>
               <PastorSlots slots={slots} setSlots={setSlots} />
               <details className="reg-upload-alt">
-                <summary>Have a spreadsheet instead? Upload it here</summary>
+                <summary>Have a list of pastors in a spreadsheet? Upload it here</summary>
                 <Field label="Upload a spreadsheet" hint="Excel (.xlsx, .xls) or CSV: full name in the first column, date of birth (day/month/year) in the second. The rows above fill in from the file.">
                   <input
                     type="file"
@@ -1974,7 +1974,7 @@ function RegistrationForm({
                 </Field>
               </details>
               {rosterError && <p role="alert" className="reg-status-message unclaimed">{rosterError}</p>}
-              <p className="reg-small">{filledSlots(slots).length ? `${uniqueRows(filledSlots(slots)).length} pastor${uniqueRows(filledSlots(slots)).length === 1 ? "" : "s"} ready to submit. You will see them again on the review page before confirming.` : "No pastors entered yet."}</p>
+              <p className="reg-small">{filledSlots(slots).length ? `${uniqueRows(filledSlots(slots)).length} pastor${uniqueRows(filledSlots(slots)).length === 1 ? "" : "s"} ready to submit. You will see them again on the review page before confirming.` : "No pastors added yet."}</p>
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
                 <button
@@ -4292,7 +4292,7 @@ function Roster({ state, year, actor, office, perform }) {
             <div>
               <h2>Add more pastors</h2>
               <p>
-                Type each pastor’s <b>full name</b> and <b>date of birth</b>, then add them. Each pastor adds their own photo when they register.
+                Enter each pastor’s <b>full name</b> and <b>date of birth</b>, then add them. Each pastor will add their own photo when they register.
               </p>
             </div>
           </div>
@@ -4309,7 +4309,7 @@ function Roster({ state, year, actor, office, perform }) {
             </button>
           </div>
           <details className="reg-upload-alt">
-            <summary>Have a spreadsheet instead? Upload it here</summary>
+            <summary>Have a list of pastors in a spreadsheet? Upload it here</summary>
             <Field label="Upload a spreadsheet" hint="Excel (.xlsx, .xls) or CSV: full name in the first column, date of birth (day/month/year) in the second.">
               <input
                 type="file"
