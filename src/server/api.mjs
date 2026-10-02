@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
 import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
-import { HttpError, emailAddress, sessionCookie, rateLimit } from './auth.mjs';
+import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, canReadMedia } from './storage.mjs';
 // The roster the browser gets has no contact details; the server merges them back for its own use (office views, broadcasts, matching).
 const contacts = JSON.parse(await readFile(new URL('../../data/reference-contacts.json', import.meta.url), 'utf8'));
@@ -99,11 +99,11 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         const { email, token, mode, remember } = await jsonBody(request);
         const session = await auth.verifyCode(emailAddress(email), token, ['signin', 'office'].includes(mode) ? mode : 'signup', remember === true);
         await auth.signOut(request);
-        return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token, session.maxAge) });
+        return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token, session.maxAge, mode === 'office') });
       }
       if (path === '/api/registration/auth/signout' && method === 'POST') {
         await auth.signOut(request);
-        return json({ ok: true }, 200, { 'Set-Cookie': sessionCookie(config, '', 0) });
+        return json({ ok: true }, 200, { 'Set-Cookie': sessionCookie(config, '', 0, officeDoor(request)) });
       }
       if (path === '/api/registration/settings/bootstrap' && method === 'POST') {
         await bootstrapSettings(config, pool, await jsonBody(request));

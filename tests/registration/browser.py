@@ -91,7 +91,7 @@ with sync_playwright() as p:
   page.get_by_label('Search people').fill('')
   page.set_viewport_size({'width':390,'height':844});page.evaluate('() => Promise.all(Array.from(document.images).map(i => i.decode().catch(() => {})))');page.evaluate('() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))');assert page.locator('.reg-header').count()==1;page.screenshot(path=str(OUT/'mobile-directory.png'),full_page=True);context.storage_state(path=str(OUT/'browser-state.json'),indexed_db=True);assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
   signout();open_account('pastor@example.com');expect(page.get_by_text('Your registration is confirmed.')).to_be_visible()
-  page.get_by_role('button',name='Roll of Good Standing',exact=True).click()
+  page.get_by_role('button',name='Bishops’ Roll of Good Standing',exact=True).click()
   page.get_by_label('Search people').fill('Abednego');page.get_by_role('button',name='Abednego Nyarkoh-Mensah').click()
   expect(page.get_by_text('Cape Verde',exact=False).first).to_be_visible()
   assert 'abedsah' not in page.locator('.reg-dialog, dialog, body').first.inner_text().lower(),'members never see contact details'

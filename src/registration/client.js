@@ -13,11 +13,16 @@ const mysqlBackend = mode === "mysql";
 const url = mysqlBackend || mode === "demo" ? "" : process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = mysqlBackend || mode === "demo" ? "" : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 export const live = mysqlBackend || Boolean(url && key);
+// Which door this page is: member (/signup/) or office (/admin/). Sent with every
+// request so the server reads the matching session cookie.
+let door = "member";
+export const setDoor = (office) => { door = office ? "office" : "member"; };
 async function server(path, body, options = {}) {
   const response = await fetch(`/api/registration/${path}`, {
-    credentials: "same-origin", cache: "no-store",
-    ...(body === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
+    credentials: "same-origin", cache: "no-store", headers: { "X-Kc-Door": door, ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
+    ...(body === undefined ? {} : { method: "POST", body: JSON.stringify(body) }),
     ...options,
+    ...(options.headers ? { headers: { "X-Kc-Door": door, ...options.headers } } : {}),
   });
   let data;
   try { data = await response.json(); } catch { throw Error("The registration server is unavailable. Please try again shortly."); }
@@ -139,7 +144,7 @@ export async function signOut(office = false, forget = true) {
 }
 export async function snapshot(actor) {
   if (mysqlBackend) return server("snapshot");
-  if (!live) return visibleState(read(), actor, references, people);
+  if (!live) return { ...visibleState(read(), actor, references, people), publicPhotos: "confirmed" };
   const { data, error } = await supabase().rpc("registration_snapshot");
   check(error);
   return data;

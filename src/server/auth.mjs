@@ -3,12 +3,21 @@ import { createHmac, randomBytes, randomInt, randomUUID, timingSafeEqual } from 
 import { transaction } from './database.mjs';
 export class HttpError extends Error { constructor(status, message) { super(message); this.status = status; } }
 export const digest = (secret, text) => createHmac('sha256', secret).update(text).digest('hex');
-export const cookieName = 'drogs_session';
+// Member and office sessions live in separate cookies, so signing in at /admin/
+// never ends a member session open in the same browser (or the other way round).
+// The page says which door it is through the X-Kc-Door header; requests without
+// it (image tags) take whichever cookie is present, office first.
+export const cookieName = 'drogs_session', officeCookieName = 'kc_office';
+export const officeDoor = (request) => request.headers.get('x-kc-door') === 'office';
+const cookieValue = (request, name) => (request.headers.get('cookie') || '').split(';').map(s => s.trim()).find(s => s.startsWith(`${name}=`))?.slice(name.length + 1) || '';
 export function sessionToken(request) {
-  return (request.headers.get('cookie') || '').split(';').map(s => s.trim()).find(s => s.startsWith(`${cookieName}=`))?.slice(cookieName.length + 1) || '';
+  const door = request.headers.get('x-kc-door');
+  if (door === 'office') return cookieValue(request, officeCookieName);
+  if (door === 'member') return cookieValue(request, cookieName);
+  return cookieValue(request, officeCookieName) || cookieValue(request, cookieName);
 }
-export function sessionCookie(config, token, maxAge = 43200) {
-  return `${cookieName}=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${maxAge}${config.secure ? '; Secure' : ''}`;
+export function sessionCookie(config, token, maxAge = 43200, office = false) {
+  return `${office ? officeCookieName : cookieName}=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${maxAge}${config.secure ? '; Secure' : ''}`;
 }
 export function emailAddress(value) {
   if (typeof value !== 'string') throw new HttpError(400, 'Enter a valid email address.');

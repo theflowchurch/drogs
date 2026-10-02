@@ -443,12 +443,12 @@ export default function RegistrationApp({
   // directory sit behind an access code.
   const gated = office;
   const hero = !office && !browse && !signup;
+  api.setDoor(office); // the server reads the member or office session cookie accordingly
   const [theme, setTheme] = useState("light"),
     [pub, setPub] = useState(null),
     [sidebarHidden, setSidebarHidden] = useState(false),
     [signinOpen, setSigninOpen] = useState(false),
     [directoryRole, setDirectoryRole] = useState("bishop"),
-    [publicRole, setPublicRole] = useState(null), // which list a member has open in Directory
     [gate, setGate] = useState(!gated),
     [actor, setActor] = useState(null),
     [checking, setChecking] = useState(true),
@@ -621,7 +621,7 @@ export default function RegistrationApp({
       ]
     : [
         "Registration",
-        ...(current && current.status !== "draft" ? ["Directory"] : []),
+        ...(current && current.status !== "draft" ? ROLL_TABS : []),
         ...(profile?.role === "bishop" && current && !["draft", "denied"].includes(current.status)
           ? ["My pastors"]
           : []),
@@ -675,7 +675,7 @@ export default function RegistrationApp({
             </svg>
           </button>
         )}
-        <a className="reg-brand" href={`${base}/`}>
+        <a className="reg-brand" href={actor ? `${base}/${office ? "admin" : "signup"}/` : `${base}/`}>
           <span className="reg-brand-mark">
             <img src={`${base}/assets/brand/castle-blue.png`} alt="" />
           </span>
@@ -825,9 +825,7 @@ export default function RegistrationApp({
                   <span>
                     {n === "Registration" && current && current.status !== "draft"
                       ? "My profile"
-                      : n === "Directory" && !office
-                        ? "Roll of Good Standing"
-                        : n}
+                      : n}
                   </span>
                   {n === "Unclaimed" && (
                     <b>
@@ -876,7 +874,7 @@ export default function RegistrationApp({
                       </span>
                       <h1>
                         {tab === "Directory"
-                          ? directoryHeading(office ? directoryRole : publicRole)
+                          ? directoryHeading(directoryRole)
                           : tab === "Existing records"
                             ? `Existing ${directoryRole === "bishop" ? "Bishops" : "Pastors"} Records`
                             : tab === "Unclaimed"
@@ -886,9 +884,7 @@ export default function RegistrationApp({
                       <p>
                         {
                           {
-                            Directory: office
-                              ? "Everyone who has completed their registration for this year appears here."
-                              : "",
+                            Directory: "Everyone who has completed their registration for this year appears here",
                             "Existing records":
                               "These are the bishops and pastors already in our records before this year’s registration. Green means confirmed. Red means not yet registered or confirmed.",
                             Unclaimed:
@@ -928,13 +924,15 @@ export default function RegistrationApp({
                         actor={actor}
                         mode="registered"
                       />
-                    ) : (
-                      <PublicDirectory
-                        data={{ source: state.publicDirectory || "original", photos: state.publicPhotos, roll: state.roll || [], catalog: catalogOf(state), year: state.year }}
-                        embedded
-                        onRole={setPublicRole}
-                      />
-                    ))}
+                    ) : null)}
+                  {rollTabRole(tab) && (
+                    <PublicDirectory
+                      key={tab}
+                      data={{ source: state.publicDirectory || "original", photos: state.publicPhotos, roll: state.roll || [], catalog: catalogOf(state), year: state.year }}
+                      embedded
+                      role={rollTabRole(tab)}
+                    />
+                  )}
                   {tab === "Existing records" && (
                     <Directory
                       state={state}
@@ -2656,7 +2654,10 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
   );
 }
 const directoryHeading = (role) =>
-  role ? `${role === "bishop" ? "Bishops’" : "Pastors’"} Roll of Good Standing` : "Roll of Good Standing";
+  `${role === "bishop" ? "Bishops’" : "Pastors’"} Roll of Good Standing`;
+// Members open each roll from the sidebar; the tab name doubles as the heading.
+const ROLL_TABS = ["Bishops’ Roll of Good Standing", "Pastors’ Roll of Good Standing"];
+const rollTabRole = (tab) => (tab === ROLL_TABS[0] ? "bishop" : tab === ROLL_TABS[1] ? "pastor" : null);
 function Directory({ state, year, role, setRole, perform, actor, mode = "original" }) {
   const [filter, setFilter] = useState({
       q: "",
@@ -3169,7 +3170,7 @@ const bishopPastors = (bishop, from = publicPeople) => ({
   list: from.filter(
     (p) => p.role === "pastor" && p.bishop && namesAlike(p.bishop, bishop.name),
   ),
-  heading: "Pastors under this bishop",
+  heading: "Pastors under their oversight",
 });
 function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
   const [limit, setLimit] = useState(24);
@@ -3241,7 +3242,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null 
         p.pastors.length ? (
           <section className="reg-record-group">
             <h3>
-              Pastors under this bishop <b>{p.pastors.length.toLocaleString()}</b>
+              Pastors under their oversight <b>{p.pastors.length.toLocaleString()}</b>
             </h3>
             <div className="reg-thumb-grid">
               {p.pastors.map((q) => (
@@ -3330,12 +3331,11 @@ function PublicList({ list, year }) {
     </section>
   );
 }
-function PublicDirectory({ data, embedded = false, onRole }) {
+function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
   const base = data.source === "roll" ? data.roll : data.photos === "confirmed" ? withStanding(overlayReferences(publicPeople, data), data.roll || []) : overlayReferences(publicPeople, data);
   const list = data.catalog ? base.map((p) => ({ ...p, denominationListed: denominationListed(data.catalog, p) })) : base;
-  const [role, setRoleState] = useState(null),
+  const [role, setRole] = useState(fixedRole),
     [q, setQ] = useState("");
-  const setRole = (r) => { setRoleState(r); onRole?.(r); };
   if (!embedded) return <PublicList list={list} year={data.year} />;
   const counts = {
     bishop: list.filter((p) => p.role === "bishop").length,
@@ -3375,7 +3375,7 @@ function PublicDirectory({ data, embedded = false, onRole }) {
     <section className={embedded ? "" : "reg-public-list"}>
       {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
       <div className="reg-member-roll">
-        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} />
+        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} switcher={!fixedRole} />
       </div>
     </section>
   );
@@ -3409,7 +3409,7 @@ function SearchResults({ list, q }) {
     </div>
   );
 }
-function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
+function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher = true }) {
   const [filter, setFilter] = useState({
       q: initialQuery,
       org: "",
@@ -3435,7 +3435,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
   );
   return (
     <>
-      <div className="reg-toggle" role="group" aria-label="Bishops or pastors">
+      {switcher && <div className="reg-toggle" role="group" aria-label="Bishops or pastors">
         {[
           ["bishop", "Bishops"],
           ["pastor", "Pastors"],
@@ -3451,7 +3451,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "" }) {
             <b>{scope.filter((p) => p.role === value).length.toLocaleString()}</b>
           </button>
         ))}
-      </div>
+      </div>}
       <DirectoryFilters
         filter={filter}
         setFilter={setFilter}
