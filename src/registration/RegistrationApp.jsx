@@ -475,6 +475,7 @@ export default function RegistrationApp({
     [sidebarHidden, setSidebarHidden] = useState(false),
     [signinOpen, setSigninOpen] = useState(false),
     [directoryRole, setDirectoryRole] = useState("bishop"),
+    [facePref, setFacePref] = useState(() => (typeof localStorage !== "undefined" && localStorage.getItem("kc-faces")) || ""), // "" follows the site setting; "all" shows every photograph; "confirmed" darkens the unconfirmed
     [gate, setGate] = useState(!gated),
     [actor, setActor] = useState(null),
     [checking, setChecking] = useState(true),
@@ -888,6 +889,8 @@ export default function RegistrationApp({
               {tab === "Registration" && (
                 <Participant
                   fixedRole={typeof signup === "string" ? signup : ""}
+                  facePref={facePref}
+                  setFacePref={setFacePref}
                   actor={actor}
                   state={state}
                   current={current}
@@ -961,7 +964,7 @@ export default function RegistrationApp({
                   {rollTabRole(tab) && (
                     <PublicDirectory
                       key={tab}
-                      data={{ source: state.publicDirectory || "original", photos: state.publicPhotos, roll: state.roll || [], catalog: catalogOf(state), year: state.year }}
+                      data={{ source: state.publicDirectory || "original", photos: facePref || state.publicPhotos, roll: state.roll || [], catalog: catalogOf(state), year: state.year }}
                       embedded
                       role={rollTabRole(tab)}
                     />
@@ -1391,6 +1394,8 @@ function MyActivity({ state, actor }) {
 }
 function Participant({
   fixedRole = "",
+  facePref = "",
+  setFacePref = () => {},
   actor,
   state,
   current,
@@ -1456,6 +1461,16 @@ function Participant({
       <div className="reg-status-layout">
         <section className="reg-card">
           <div className="reg-profile-hero">
+            {current.data.role === "bishop" && (
+              <button
+                type="button"
+                role="switch"
+                className="reg-face-switch"
+                aria-checked={(facePref || state.publicPhotos) === "confirmed"}
+                aria-label="Show the rolls with dark faces until confirmed"
+                onClick={() => { const next = (facePref || state.publicPhotos) === "confirmed" ? "all" : "confirmed"; localStorage.setItem("kc-faces", next); setFacePref(next); }}
+              />
+            )}
             <Media
               path={current.data.photo}
               alt={current.data.name}
@@ -2724,7 +2739,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
     [all, filter],
   );
   const list = useMemo(
-    () => scope.filter((p) => p.role === role),
+    () => scope.filter((p) => p.role === role).sort(bySurname),
     [scope, role],
   );
   useEffect(() => setLimit(pageFor(role)), [filter, role]);
@@ -3215,7 +3230,7 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
   const [limit, setLimit] = useState(24);
   const named = bishopPastors(bishop, from);
   const seen = new Set(extra.map((q) => q.id));
-  const list = [...extra, ...named.list.filter((q) => !seen.has(q.id))];
+  const list = [...extra, ...named.list.filter((q) => !seen.has(q.id))].sort(bySurname);
   if (!list.length) return <section className="reg-record-group"><h3>No pastors under their oversight</h3></section>;
   return (
     <section className="reg-record-group">
@@ -4163,7 +4178,7 @@ function Roster({ state, year, actor, office, perform }) {
       r.year === year &&
       (!office || !bishopId || r.bishopId === bishopId) &&
       normalName(r.name).includes(normalName(q)),
-  );
+  ).sort(bySurname);
   const own = state.rosters.filter(
     (r) => r.year === year && r.bishopId === actor.id,
   );

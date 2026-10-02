@@ -33,6 +33,8 @@ export const ORGANIZATIONS = [
   "HJC",
 ];
 export const STORAGE_KEY = "drogs-registration-v1";
+export const splitName = (name) => { const parts = String(name || "").trim().split(/\s+/); return parts.length > 1 ? { given: parts.slice(0, -1).join(" "), surname: parts.at(-1) } : { given: "", surname: parts[0] || "" }; };
+export const bySurname = (a, b) => splitName(a.name).surname.localeCompare(splitName(b.name).surname) || a.name.localeCompare(b.name);
 export const AMOUNTS = { bishop: 100, pastor: 50 };
 // What a member types as the reference on their mobile-money transfer, so the
 // line on the office's statement points back to one registration.
@@ -194,8 +196,6 @@ const scrubContacts = (o) => Object.fromEntries(Object.entries(o || {}).filter((
 // Denominations are always written in capitals on the site.
 export const caps = (s) => String(s || "").toUpperCase();
 // Surname first for ordering: the last word of the name (hyphenated names stay whole).
-export const splitName = (name) => { const parts = String(name || "").trim().split(/\s+/); return parts.length > 1 ? { given: parts.slice(0, -1).join(" "), surname: parts.at(-1) } : { given: "", surname: parts[0] || "" }; };
-export const bySurname = (a, b) => splitName(a.name).surname.localeCompare(splitName(b.name).surname) || a.name.localeCompare(b.name);
 // When a record has no city, the country's capital stands in so every place reads "City, Country".
 export const CAPITALS = { ghana: "Accra", "united states": "Washington, D.C.", usa: "Washington, D.C.", "united kingdom": "London", uk: "London", "south africa": "Pretoria", kenya: "Nairobi", mozambique: "Maputo", botswana: "Gaborone", zambia: "Lusaka", nigeria: "Abuja", liberia: "Monrovia", togo: "Lomé", italy: "Rome", uganda: "Kampala", zimbabwe: "Harare", namibia: "Windhoek", "sierra leone": "Freetown", benin: "Porto-Novo", switzerland: "Bern", australia: "Canberra", canada: "Ottawa", cameroon: "Yaoundé", guyana: "Georgetown", rwanda: "Kigali", "cote d'ivoire": "Yamoussoukro", "cote d'ivoire (ivory coast)": "Yamoussoukro", "ivory coast": "Yamoussoukro", germany: "Berlin", tanzania: "Dodoma", jamaica: "Kingston", "guinea-bissau": "Bissau", guinea: "Conakry", eswatini: "Mbabane", "new zealand": "Wellington", brazil: "Brasília", france: "Paris", gabon: "Libreville", madagascar: "Antananarivo", gambia: "Banjul", "saint lucia": "Castries", "st lucia": "Castries", philippines: "Manila", congo: "Brazzaville", ethiopia: "Addis Ababa", "solomon islands": "Honiara", drc: "Kinshasa", "congo, democratic republic": "Kinshasa", burundi: "Gitega", "central african republic": "Bangui", angola: "Luanda", "papua new guinea": "Port Moresby", "burkina faso": "Ouagadougou", india: "New Delhi", malawi: "Lilongwe", seychelles: "Victoria", colombia: "Bogotá", senegal: "Dakar", barbados: "Bridgetown", fiji: "Suva", belgium: "Brussels", vanuatu: "Port Vila", "antigua and barbuda": "St. John's", antigua: "St. John's", netherlands: "Amsterdam", nicaragua: "Managua", mali: "Bamako", "trinidad and tobago": "Port of Spain", "trinidad & tobago": "Port of Spain", bangladesh: "Dhaka", hungary: "Budapest", "equatorial guinea": "Malabo", ireland: "Dublin", malaysia: "Kuala Lumpur", chile: "Santiago", china: "Beijing", belize: "Belmopan", spain: "Madrid", "saint kitts and nevis": "Basseterre", "st kitts & nevis": "Basseterre", "st. kitts & nevis": "Basseterre", portugal: "Lisbon", "south sudan": "Juba", martinique: "Fort-de-France", thailand: "Bangkok", dominica: "Roseau", sweden: "Stockholm", "cape verde": "Praia", vietnam: "Hanoi", lesotho: "Maseru", indonesia: "Jakarta", chad: "N'Djamena", haiti: "Port-au-Prince", "st vincent": "Kingstown", "saint vincent & the grenadines": "Kingstown", austria: "Vienna", "dominican republic": "Santo Domingo", samoa: "Apia", cuba: "Havana", guadeloupe: "Basse-Terre", tonga: "Nukuʻalofa", niger: "Niamey", tunisia: "Tunis", liechtenstein: "Vaduz", norway: "Oslo", cambodia: "Phnom Penh", "sao tome and principe": "São Tomé", romania: "Bucharest", luxembourg: "Luxembourg", suriname: "Paramaribo", morocco: "Rabat", turkey: "Ankara", qatar: "Doha", peru: "Lima", grenada: "St. George's", panama: "Panama City", "costa rica": "San José", taiwan: "Taipei", mauritius: "Port Louis", "american samoa": "Pago Pago", "middle east": "", bahamas: "Nassau", egypt: "Cairo", sudan: "Khartoum" };
 export const placeOf = (p) => { const country = String(p?.country || "").trim(); const city = String(p?.city || "").trim() || CAPITALS[country.toLowerCase()] || ""; return [city, country].filter(Boolean).join(", "); };
@@ -1189,7 +1189,7 @@ export function directoryFor(state, references) {
       organization: p.organization,
       accountId: p.id,
     });
-  return records.sort((a, b) => a.name.localeCompare(b.name));
+  return records.sort(bySurname);
 }
 // How a person is addressed: a female bishop is an Episcopal Sister in United
 // Denominations and a Mother in First Love; everyone else is Bishop or Pastor.
@@ -1215,7 +1215,7 @@ export function publicRoll(state, people, year = state.year) {
               const reg = x.pastorId && state.registrations.find((y) => y.userId === x.pastorId && y.year === year);
               return { id: `p:${x.id}`, role: "pastor", name: reg?.data.name || x.name, title: reg ? titleFor(reg.data) : "Pastor", photo: reg?.data.photo || "", city: reg?.data.city || "", country: reg?.data.country || "", registered: Boolean(reg) };
             })
-            .sort((a, b) => a.name.localeCompare(b.name))
+            .sort(bySurname)
         : undefined;
       return {
         pastors,
