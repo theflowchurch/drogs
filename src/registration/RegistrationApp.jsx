@@ -728,6 +728,17 @@ export default function RegistrationApp({
               <a className="reg-primary reg-signin-button" href={`${base}/signup/`}>Sign up</a>
             </>
           ) : null}
+          {!office && (
+            <button
+              type="button"
+              role="switch"
+              className="reg-face-switch"
+              aria-checked={(facePref || pub?.photos || state?.publicPhotos || "confirmed") === "confirmed"}
+              aria-label="Dark faces until confirmed"
+              title="Photographs or dark faces"
+              onClick={() => { const next = (facePref || pub?.photos || state?.publicPhotos || "confirmed") === "confirmed" ? "all" : "confirmed"; localStorage.setItem("kc-faces", next); setFacePref(next); }}
+            />
+          )}
           <button className="reg-theme-toggle" onClick={toggleTheme} aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} title={theme === "dark" ? "Light mode" : "Dark mode"}>
             {theme === "dark" ? "☀" : "☾"}
           </button>
@@ -808,7 +819,7 @@ export default function RegistrationApp({
         />
       ) : browse ? (
         pub ? (
-          <PublicDirectory data={pub} />
+          <PublicDirectory data={{ ...pub, photos: facePref || pub.photos }} />
         ) : (
           <div className="reg-loading" role="status">
             Opening the directory…
@@ -889,8 +900,6 @@ export default function RegistrationApp({
               {tab === "Registration" && (
                 <Participant
                   fixedRole={typeof signup === "string" ? signup : ""}
-                  facePref={facePref}
-                  setFacePref={setFacePref}
                   actor={actor}
                   state={state}
                   current={current}
@@ -1394,8 +1403,6 @@ function MyActivity({ state, actor }) {
 }
 function Participant({
   fixedRole = "",
-  facePref = "",
-  setFacePref = () => {},
   actor,
   state,
   current,
@@ -1461,16 +1468,6 @@ function Participant({
       <div className="reg-status-layout">
         <section className="reg-card">
           <div className="reg-profile-hero">
-            {current.data.role === "bishop" && (
-              <button
-                type="button"
-                role="switch"
-                className="reg-face-switch"
-                aria-checked={(facePref || state.publicPhotos) === "confirmed"}
-                aria-label="Show the rolls with dark faces until confirmed"
-                onClick={() => { const next = (facePref || state.publicPhotos) === "confirmed" ? "all" : "confirmed"; localStorage.setItem("kc-faces", next); setFacePref(next); }}
-              />
-            )}
             <Media
               path={current.data.photo}
               alt={current.data.name}

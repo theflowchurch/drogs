@@ -3413,11 +3413,11 @@ input[type="date"] {
   gap: 22px;
   margin-bottom: 18px;
 }
-/* A small unlabelled switch in the corner of a bishop's profile: photographs ↔ dark faces on the rolls. */
+/* A small unlabelled switch beside the theme toggle: photographs ↔ dark faces on the rolls. */
 .reg-face-switch {
-  position: absolute;
-  top: 0;
-  right: 0;
+  position: relative;
+  align-self: center;
+  margin-left: 10px;
   width: 30px;
   height: 16px;
   padding: 0;
