@@ -677,6 +677,22 @@ p {
 }
 /* On laptops both lists are visible, so the title names neither. */
 @media (min-width: 701px) { .reg-roll-title-role { display: none; } }
+/* Inside a member's directory list the Bishops/Pastors toggle is the main control: larger and centred. */
+.reg-member-roll .reg-toggle {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 24px;
+  padding: 6px;
+}
+.reg-member-roll .reg-toggle button {
+  font-size: 17px;
+  padding: 14px 36px;
+  gap: 10px;
+}
+.reg-member-roll .reg-toggle b {
+  font-size: 14px;
+}
 .reg-door-hint {
   display: block;
   margin-top: 10px;

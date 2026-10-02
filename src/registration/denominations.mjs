@@ -25,7 +25,6 @@ export const DENOMINATIONS = {
     "Eschatos",
     "Ethiopia",
     "Everything By Prayer Center",
-    "First Love Church Worldwide",
     "Fruitferos Internacional Guinea Bissau",
     "Go Church",
     "Good Shepherd Church Guyana",
