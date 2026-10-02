@@ -682,7 +682,7 @@ export default function RegistrationApp({
       {!hero && (
         <div
           className="reg-app-bg"
-          style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
+          style={{ backgroundImage: `url(${base}/assets/brand/castle-bg.webp)` }}
           aria-hidden="true"
         />
       )}
@@ -777,9 +777,15 @@ export default function RegistrationApp({
           <button className="reg-theme-toggle" onClick={toggleTheme} aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}>
             {theme === "dark" ? "☀" : "☾"}
           </button>
-          <div
-            className="reg-hero-image"
-            style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
+          <video
+            className="reg-hero-video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster={`${base}/assets/brand/castle-hero-poster.webp`}
+            src={`${base}/assets/brand/castle-hero-${typeof window !== "undefined" && window.innerWidth < 900 ? "1280" : "1920"}.mp4`}
             aria-hidden="true"
           />
           <h1 className="reg-hero-title">
@@ -787,7 +793,7 @@ export default function RegistrationApp({
             Kuriake Castle
           </h1>
           <a className="reg-enter" href={`${base}/directory/`}>
-            <span className="reg-shimmer">View the full Pastoral directory</span>
+            <span className="reg-shimmer">View all bishops and pastors in good standing</span>
             <span className="reg-enter-arrow" aria-hidden="true">→</span>
           </a>
         </section>
@@ -1266,7 +1272,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
     <section className={`reg-account ${office ? "signup" : "signin"}`}>
       <div
         className="reg-hero-image"
-        style={{ backgroundImage: `url(${base}/assets/brand/signup-hero.jpg)` }}
+        style={{ backgroundImage: `url(${base}/assets/brand/castle-bg.webp)` }}
         aria-hidden="true"
       />
       {office ? (
