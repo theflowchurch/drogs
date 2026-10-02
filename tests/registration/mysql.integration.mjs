@@ -86,11 +86,12 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     // One browser can hold a member session and an office session at once: each door has its own cookie.
     assert.match(office.cookie, /^kc_office=o\./); assert.match(bishop.cookie, /^drogs_session=/);
     const both = `${bishop.cookie}; ${office.cookie}`;
-    assert.equal((await call('auth/me', both, undefined, { headers: { 'x-kc-door': 'member' } })).data.email, 'bishop@example.com');
-    assert.equal((await call('auth/me', both, undefined, { headers: { 'x-kc-door': 'office' } })).data.office, true);
-    assert.equal((await call('auth/signout', both, {}, { headers: { 'x-kc-door': 'office' } })).status, 200);
-    assert.equal((await call('auth/me', both, undefined, { headers: { 'x-kc-door': 'member' } })).status, 200, 'signing out of the office leaves the member signed in');
-    assert.equal((await call('auth/me', both, undefined, { headers: { 'x-kc-door': 'office' } })).data, null);
+    const door = (d) => ({ headers: { origin: config.origin, cookie: both, 'content-type': 'application/json', 'x-kc-door': d } }); // options.headers replaces the helper's headers
+    assert.equal((await call('auth/me', both, undefined, door('member'))).data.email, 'bishop@example.com');
+    assert.equal((await call('auth/me', both, undefined, door('office'))).data.office, true);
+    assert.equal((await call('auth/signout', both, {}, door('office'))).status, 200);
+    assert.equal((await call('auth/me', both, undefined, door('member'))).data.email, 'bishop@example.com', 'signing out of the office leaves the member signed in');
+    assert.equal((await call('auth/me', both, undefined, door('office'))).data, null);
     await pool.query('DELETE FROM dr_rate_limits');
     const officeAgain = await (async () => { assert.equal((await call('auth/request', '', { email: 'office@example.com', mode: 'office' })).status, 200); const t = mails.at(-1).text.match(/code is (\d{6})/)[1]; return call('auth/verify', '', { email: 'office@example.com', token: t, mode: 'office' }); })();
     assert.equal(officeAgain.status, 200); office.cookie = officeAgain.cookie;
