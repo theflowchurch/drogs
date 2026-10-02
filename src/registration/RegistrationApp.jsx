@@ -825,7 +825,9 @@ export default function RegistrationApp({
                   <span>
                     {n === "Registration" && current && current.status !== "draft"
                       ? "My profile"
-                      : n}
+                      : n === "Directory" && !office
+                        ? "Roll of Good Standing"
+                        : n}
                   </span>
                   {n === "Unclaimed" && (
                     <b>
