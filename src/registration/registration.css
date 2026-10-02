@@ -706,8 +706,8 @@ p {
   min-width: 22px;
   padding: 2px 6px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.88);
-  color: var(--ink);
+  background: rgba(255, 255, 255, 0.9);
+  color: #13324c; /* fixed: the badge stays white with dark digits in dark mode too */
   font-size: 11px;
   font-weight: 700;
   text-align: center;
@@ -2619,7 +2619,7 @@ p {
 }
 .reg-public-list > .reg-doors-title {
   margin: 0 0 18px;
-  text-align: left;
+  text-align: center;
 }
 
 .reg-review-block {

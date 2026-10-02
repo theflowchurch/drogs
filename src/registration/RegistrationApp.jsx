@@ -774,9 +774,6 @@ export default function RegistrationApp({
               <AccountForm mode="signin" run={run} busy={busy} onActor={() => location.assign(`${base}/signup/`)} />
             </Dialog>
           )}
-          <button className="reg-theme-toggle" onClick={toggleTheme} aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}>
-            {theme === "dark" ? "☀" : "☾"}
-          </button>
           <video
             className="reg-hero-video"
             autoPlay
