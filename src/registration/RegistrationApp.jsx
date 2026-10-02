@@ -3325,7 +3325,7 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
           ].map(([value, label]) => (
             <button key={value} className="reg-door" onClick={() => setRole(value)}>
               <span>{label}</span>
-              <small className="reg-door-hint">Click here to see all in good standing</small>
+              <small className="reg-door-hint">Click here to see all {label.toLowerCase()} in good standing</small>
             </button>
           ))}
         </div>
