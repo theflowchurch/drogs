@@ -91,7 +91,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         await rateLimit(pool, config, `public-directory:${request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'all'}`, 120, 60000);
         if (!publicCache.value || Date.now() - publicCache.at > 30000) {
           const state = await transaction(pool, conn => readState(conn));
-          publicCache = { at: Date.now(), value: { source: config.publicDirectory, roll: publicRoll(state, people), ...publicOverlay(state) } };
+          publicCache = { at: Date.now(), value: { source: config.publicDirectory, photos: config.publicPhotos, roll: publicRoll(state, people), ...publicOverlay(state) } };
         }
         return json(publicCache.value, 200, { 'Cache-Control': 'public, max-age=30' });
       }
@@ -157,7 +157,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           // Payment evidence is available only to its owner and the office.
           view.registrations = view.registrations.map(r => r.userId === actor.id ? r : { ...r, proof: undefined });
         }
-        return json({ ...view, office: actor.office, payment: config.momo, paystackKey: config.paystackPublic, publicDirectory: config.publicDirectory });
+        return json({ ...view, office: actor.office, payment: config.momo, paystackKey: config.paystackPublic, publicDirectory: config.publicDirectory, publicPhotos: config.publicPhotos });
       }
       if (path === '/api/registration/communication/send' && method === 'POST') {
         // A broadcast from the office to everyone, all bishops, all pastors, or chosen people.

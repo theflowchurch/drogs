@@ -221,7 +221,7 @@ export const supportAvailable = mysqlBackend;
 export async function publicDirectory() {
   if (mysqlBackend) return server("public-directory");
   const v = visibleState(read(), { id: "public", email: "", office: false }, references, people);
-  return { source: "original", roll: v.roll, hidden: v.hidden, overrides: v.overrides, extraReferences: v.extraReferences, signup: v.signup, catalog: v.catalog };
+  return { source: "original", photos: "confirmed", year: v.year, roll: v.roll, hidden: v.hidden, overrides: v.overrides, extraReferences: v.extraReferences, signup: v.signup, catalog: v.catalog };
 }
 export const settingsAvailable = mysqlBackend;
 export const listSettings = () => server('settings');

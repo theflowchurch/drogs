@@ -23,6 +23,7 @@ import {
   nearMatches,
   namesAlike,
   titleFor,
+  withStanding,
 } from "../../src/registration/model.mjs";
 const bishop = { id: "b1", email: "bishop@example.com" },
   other = { id: "b2", email: "other@example.com" },
@@ -783,4 +784,31 @@ test("a confirmed member who replaces their photo is flagged for the office", ()
   let s = setup();
   s = applyAction(s, bishop, "update", { photo: "b1/portrait/new.webp", photoConfirmed: true });
   assert.ok(s.registrations[0].photoChangedAt, "photo change after approval is recorded");
+});
+
+test("public directory: photos only for people on this year's roll", () => {
+  const refs = [
+    { id: "B1", role: "bishop", name: "Paid Bishop", image: "assets/bishops/b1.webp" },
+    { id: "B2", role: "bishop", name: "Unpaid Bishop", image: "assets/bishops/b2.webp" },
+  ];
+  const roll = [
+    { id: "u:1", role: "bishop", name: "Paid Bishop", referenceId: "B1", photo: "media/p1.jpg", image: "" },
+    { id: "u:2", role: "bishop", name: "New Bishop", referenceId: "", photo: "media/p2.jpg", image: "" },
+  ];
+  const list = withStanding(refs, roll);
+  assert.deepEqual(list.map((p) => [p.name, p.standing, p.photo || p.image]), [
+    ["Paid Bishop", true, "media/p1.jpg"],
+    ["Unpaid Bishop", false, ""],
+    ["New Bishop", true, "media/p2.jpg"],
+  ]);
+  assert.equal(withStanding(refs, []).filter((p) => p.standing).length, 0, "nobody on the roll: everyone dark");
+});
+
+test("gender is fixed after submission like name and date of birth", () => {
+  let s = setup();
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), gender: "female" });
+  s = applyAction(s, pastor, "update", { gender: "male", city: "Kumasi", photoConfirmed: true });
+  const r = s.registrations.find((x) => x.userId === pastor.id);
+  assert.equal(r.data.gender, "female");
+  assert.equal(r.data.city, "Kumasi");
 });

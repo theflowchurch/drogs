@@ -666,6 +666,31 @@ p {
   place-items: center;
   color: #949baa;
 }
+/* Not yet confirmed for the year: a dark silhouette in place of the photograph. */
+.reg-placeholder.reg-unconfirmed {
+  background: #0d1017;
+}
+.reg-placeholder.reg-unconfirmed svg {
+  width: 62%;
+  height: 62%;
+  fill: #232935;
+}
+/* On laptops both lists are visible, so the title names neither. */
+@media (min-width: 701px) { .reg-roll-title-role { display: none; } }
+.reg-door-hint {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted, #6a7283);
+}
+.reg-roll-legend {
+  margin: -6px 0 14px;
+  font-size: 14px;
+  color: var(--muted, #6a7283);
+}
+.reg-standing.good { color: #1f7a4d; font-weight: 600; }
+.reg-standing.pending { color: #8a5a00; font-weight: 600; }
 .reg-status-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;

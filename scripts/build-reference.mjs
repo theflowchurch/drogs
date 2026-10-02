@@ -12,13 +12,19 @@ const OUTREACH_GROUP = { 'FLOW Office': 'FLOW', 'Healing Jesus Council': 'HJC', 
 // What the roll prints where a denomination would be, for groups that have none.
 const GROUP_NAME = { FLOW: 'FLOW', HJC: 'Healing Jesus Campaign', DHMM: 'DHMM' };
 // Spelling variants of one denomination.
-const DENOMINATION_ALIAS = { 'QODESH FAMILY CHURCH': 'QODESH FAMILY CHURCHES',
+const DENOMINATION_ALIAS = { 'QODESH FAMILY CHURCH': 'QODESH FAMILY CHURCHES', 'SAVIOR OF MEN INTERNATIONAL': 'SAVIOURS OF MEN INTERNATIONAL',
   // No longer exist as denominations; their people keep their organization.
   'MORNING STAR CITY CHURCHES': '', 'MIRACLE MATRIX CHURCH': '', 'ENLARGEMENT MATRIX CHURCH': '', 'REASONABLE SERVICE': '' };
 // One-off corrections to the source rows.
 const REHOME = { ETHIOPIA: { organization: 'First Love', denomination: 'FIRST LOVE CHURCH', denominationLogo: 'assets/denominations/first-love-church.png' },
+  'FIRST LOVE CHURCH WORLDWIDE': { organization: 'First Love', denomination: 'FIRST LOVE CHURCH', denominationLogo: 'assets/denominations/first-love-church.png' },
+  'FIRST LOVE CHURCH': { organization: 'First Love', denomination: 'FIRST LOVE CHURCH', denominationLogo: 'assets/denominations/first-love-church.png' },
   // La Belle Eglise (Côte d'Ivoire) belongs to First Love; La Belle Eglise Gabon stays with UD Africa.
   'LA BELLE EGLISE': { organization: 'First Love', denomination: 'La Belle Eglise', denominationLogo: '' } };
+// Pastors whose row has no denomination but whose branch says which church they serve.
+const BRANCH_REHOME = { 'belle eglise kwashieman': { organization: 'First Love', denomination: 'La Belle Eglise', denominationLogo: '' } };
+const COUNCIL_REHOME = { 'la belle eglise': { organization: 'First Love', denomination: 'La Belle Eglise', denominationLogo: '' } };
+const byBranch = p => ((DENOMINATION_ALIAS[keep(p.denomination)] ?? keep(p.denomination)) ? undefined : BRANCH_REHOME[clean(p.branch).toLowerCase()] || COUNCIL_REHOME[clean(p.council || '').toLowerCase()]);
 // FLOW has no supplied logo yet.
 const GROUP_LOGO = { HJC: 'assets/brand/hjc-logo.png', FLOW: 'assets/brand/flow-logo.png', DHMM: 'assets/brand/dhmm-logo-black.png' };
 // Some legacy names were saved as UTF-8 bytes read back as Mac Roman
@@ -44,9 +50,9 @@ const person = (role, p) => ({
   role,
   name: clean(p.name),
   title: p.title || (role === 'bishop' ? 'Bishop' : 'Pastor'),
-  organization: REHOME[keep(p.denomination)]?.organization || ORGANIZATION[p.organization] || OUTREACH_GROUP[clean(p.outreachGroup)] || '',
+  organization: REHOME[keep(p.denomination)]?.organization || byBranch(p)?.organization || ORGANIZATION[p.organization] || OUTREACH_GROUP[clean(p.outreachGroup)] || '',
   // Outreach rows show their group (FLOW / HJC) where a denomination would appear.
-  denomination: REHOME[keep(p.denomination)]?.denomination ?? (p.organization === 'OUTREACH' ? GROUP_NAME[OUTREACH_GROUP[clean(p.outreachGroup)]] || '' : (DENOMINATION_ALIAS[keep(p.denomination)] ?? keep(p.denomination))),
+  denomination: REHOME[keep(p.denomination)]?.denomination ?? byBranch(p)?.denomination ?? (p.organization === 'OUTREACH' ? GROUP_NAME[OUTREACH_GROUP[clean(p.outreachGroup)]] || '' : (DENOMINATION_ALIAS[keep(p.denomination)] ?? keep(p.denomination))),
   denominationLogo: REHOME[keep(p.denomination)]?.denominationLogo ?? (p.organization === 'OUTREACH' ? GROUP_LOGO[OUTREACH_GROUP[clean(p.outreachGroup)]] || '' : (DENOMINATION_ALIAS[keep(p.denomination)] === '' ? '' : p.denominationLogo || '')),
   city: keep(p.city),
   branch: keep(p.branch),
@@ -86,7 +92,9 @@ for (const b of flat) if (!linked.has(b.name)) { const hits = oldBishops.filter(
 const retired = oldBishops.filter(p => !taken.has(p.id));
 const retiredNames = new Set(retired.map(p => normalName(p.name)));
 people = people.filter(p => p.role !== 'bishop' || taken.has(p.id));
-const denominationFor = b => { if (!b.heading || isCountryHeading(b.heading)) return b.organization === 'First Love' ? 'First Love Church' : b.organization === 'FLOW' ? 'FLOW' : ''; const want = normalName(b.heading); const listed = (DENOMINATIONS[b.organization] || []).find(d => normalName(d) === want || normalName(d).startsWith(want) || want.startsWith(normalName(d))); return listed || titleCase(b.heading); };
+const ALIAS = { 'other international': 'Others International Church', 'loyalty house internatioanal': 'Loyalty House International', 'everything by prayer church': 'Everything By Prayer Center', 'the glorious mega church': 'The Glorious Church', 'makarios church': 'The Makarios Church', 'primero amor': 'Premiero Amor', 'precious souls church eswatini': 'Precious Souls Swaziland', 'precious souls church namibia': 'Precious Souls Namibia', 'fruitiferos internationale': 'Fruitferos Internacional Guinea Bissau', 'poimen church gambia': 'Poimen Church Senegal-Gambia', 'poimen church senegal': 'Poimen Church Senegal-Gambia' };
+const UNITED_CITIES_HEADING = h => isCountryHeading(h) || /^pacific islands missionary church/i.test(normalName(h));
+const denominationFor = b => { if (!b.heading || UNITED_CITIES_HEADING(b.heading)) return b.organization === 'First Love' ? 'First Love Church' : b.organization === 'FLOW' ? 'FLOW' : b.heading ? 'United Cities' : ''; if (ALIAS[normalName(b.heading)]) return ALIAS[normalName(b.heading)]; const want = normalName(b.heading); const listed = (DENOMINATIONS[b.organization] || []).find(d => normalName(d) === want || normalName(d).startsWith(want) || want.startsWith(normalName(d))); return listed || titleCase(b.heading); };
 const { DENOMINATIONS } = await import('../src/registration/denominations.mjs');
 const added = [];
 // Only UD – OLGC is organised in groups; First Love, FLOW and HJC list their denominations directly.
@@ -98,30 +106,32 @@ for (const b of flat) {
   const old = linked.get(b.name);
   if (old === null) continue; // duplicate line in the document
   // Only UD – OLGC is organised in groups; First Love, FLOW and HJC list their denominations directly.
-  if (old) { old.group = groupFor(b); old.listedPastors = b.pastors ?? null; if (b.title && old.title === 'Bishop') old.title = b.title; if (SAME_AS_GROUP.has(old.group)) { old.denomination = old.group; old.denominationLogo = GROUP_DENOMINATION_LOGO[old.group] || ''; } continue; }
+  if (old) { if (old.organization !== b.organization) { old.denomination = ''; old.denominationLogo = ''; } old.organization = b.organization; old.group = groupFor(b); old.listedPastors = b.pastors ?? null; if (b.title && old.title === 'Bishop') old.title = b.title; if (!old.denomination || normalName(old.denomination) === 'united cities') { old.denomination = denominationFor(b); old.denominationLogo = ''; } if (SAME_AS_GROUP.has(old.group)) { old.denomination = old.group; old.denominationLogo = GROUP_DENOMINATION_LOGO[old.group] || ''; } continue; }
   const rec = { id: `BO${b.n}`, role: 'bishop', name: titleCase(b.name.replace(/\s+/g, ' ')), title: b.title || 'Bishop', organization: b.organization, denomination: denominationFor(b), denominationLogo: '', city: '', branch: '', country: headingCountry(b.heading || ''), image: officialPhotos[b.name] || '', email: '', phone: '', group: groupFor(b), listedPastors: b.pastors ?? null };
   if (SAME_AS_GROUP.has(rec.group)) { rec.denomination = rec.group; rec.denominationLogo = GROUP_DENOMINATION_LOGO[rec.group] || ''; }
   people.push(rec); added.push(rec);
 }
-// "United Cities" is no longer a denomination. Its people take their country as
-// denomination: African countries sit in UD Africa, Pacific ones in United Islands.
+// "United Cities" stays the denomination of its pastors, as the office's lists
+// name it; a pastor whose bishop leads a country takes that country. African
+// rows sit in UD Africa, Pacific ones in United Islands.
 const UC_AFRICA = new Set(['central african republic', 'cape verde', 'guinea', 'burkina faso', 'lesotho', 'niger', 'chad', 'mali', 'sao tome and principe', 'gambia', 'equatorial guinea']);
 const UC_PACIFIC = new Set(['australia', 'new zealand', 'solomon islands', 'papua new guinea', 'fiji', 'vanuatu', 'samoa', 'tonga']);
-const UC_COUNTRIES = { africa: new Set(), pacific: new Set() };
+const UC_GROUPS = new Set(), ucSettled = new Set();
+const bishopsAfter = people.filter(p => p.role === 'bishop');
 for (const p of people) {
   if (normalName(p.denomination) !== 'united cities') continue;
   const c = normalName(p.country);
-  p.denomination = p.country ? titleCase(p.country) : '';
+  const own = p.bishop ? bishopsAfter.find(b => normalName(b.name) === normalName(p.bishop)) || bishopsAfter.find(b => namesAlike(b.name, p.bishop)) : null;
+  p.denomination = own?.denomination && normalName(own.denomination) !== 'united cities' ? own.denomination : 'United Cities';
   p.denominationLogo = '';
-  if (UC_AFRICA.has(c)) { p.group = 'UD Africa'; UC_COUNTRIES.africa.add(p.denomination); }
-  else if (UC_PACIFIC.has(c)) { p.group = 'United Islands'; UC_COUNTRIES.pacific.add(p.denomination); }
+  if (own?.group) p.group = own.group; else if (UC_AFRICA.has(c)) p.group = 'UD Africa'; else if (UC_PACIFIC.has(c)) p.group = 'United Islands';
+  if (p.group) { UC_GROUPS.add(p.group); ucSettled.add(p.id); }
 }
 // Group catalog for the office, generated from the same document. Each entry is
 // spelled the way the sign-up list spells it: an exact or prefix match on the
 // list, else the denomination the bishops under that heading already carry (so
 // a country heading like "Guinea Conakry" becomes that country's church), else
 // the heading itself.
-const ALIAS = { 'other international': 'Others International Church', 'loyalty house internatioanal': 'Loyalty House International', 'everything by prayer church': 'Everything By Prayer Center', 'the glorious mega church': 'The Glorious Church', 'makarios church': 'The Makarios Church', 'primero amor': 'Premiero Amor', 'precious souls church eswatini': 'Precious Souls Swaziland', 'precious souls church namibia': 'Precious Souls Namibia', 'fruitiferos internationale': 'Fruitferos Internacional Guinea Bissau' };
 const udList = DENOMINATIONS['United Denominations'] || [];
 const canonical = (heading, group) => {
   const want = normalName(heading);
@@ -134,8 +144,7 @@ const canonical = (heading, group) => {
   return titleCase(heading);
 };
 const GROUP_ENTRIES = Object.fromEntries(official.groups.filter(g => g.organization === 'United Denominations').map(g => [g.name, { organization: g.organization, denominations: SAME_AS_GROUP.has(g.name) ? [g.name] : [...new Set(g.denominations.map(d => d.name).filter(Boolean).map(h => canonical(h, g.name)))].filter(d => normalName(d) !== 'united cities') }]));
-for (const d of UC_COUNTRIES.africa) if (!GROUP_ENTRIES['UD Africa'].denominations.includes(d)) GROUP_ENTRIES['UD Africa'].denominations.push(d);
-for (const d of UC_COUNTRIES.pacific) if (!GROUP_ENTRIES['United Islands'].denominations.includes(d)) GROUP_ENTRIES['United Islands'].denominations.push(d);
+for (const g of UC_GROUPS) if (GROUP_ENTRIES[g] && !GROUP_ENTRIES[g].denominations.includes('United Cities')) GROUP_ENTRIES[g].denominations.push('United Cities');
 // Pastors take their bishop's group; otherwise the group of their denomination.
 const bishopsNow = people.filter(p => p.role === 'bishop');
 const byNorm = new Map(bishopsNow.map(p => [normalName(p.name), p]));
@@ -143,7 +152,7 @@ const groupByDenomination = new Map(official.groups.filter(g => g.organization =
 for (const [g, v] of Object.entries(GROUP_ENTRIES)) for (const d of v.denominations) groupByDenomination.set(normalName(d), g);
 for (const p of people) {
   if (p.role !== 'pastor') continue;
-  if (UC_COUNTRIES.africa.has(p.denomination) || UC_COUNTRIES.pacific.has(p.denomination)) continue; // settled above by country
+  if (ucSettled.has(p.id)) continue; // settled above
   const own = byNorm.get(normalName(p.bishop || '')) || (p.bishop ? bishopsNow.find(b => namesAlike(b.name, p.bishop)) : null);
   p.group = p.organization !== 'United Denominations' ? '' : own?.group || groupByDenomination.get(normalName(p.denomination)) || [...groupByDenomination].find(([k]) => k && normalName(p.denomination).startsWith(k))?.[1] || '';
   if (SAME_AS_GROUP.has(p.group)) { p.denomination = p.group; p.denominationLogo = GROUP_DENOMINATION_LOGO[p.group] || ''; }

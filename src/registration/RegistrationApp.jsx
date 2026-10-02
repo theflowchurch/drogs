@@ -32,6 +32,7 @@ import {
   dobClose,
   titleFor,
   PASTOR_TITLES,
+  withStanding,
   orgLabel,
   REFERENCE_FIELDS,
   catalogOf,
@@ -69,9 +70,9 @@ const statusLabel = {
   pending: "Awaiting office confirmation",
   denied: "Not approved",
   confirmed: "Confirmed",
-  removed: "Removed from annual list",
+  removed: "Removed from this year’s list",
   unpaid: "Not paid",
-  rejected: "Replacement proof needed",
+  rejected: "New payment proof needed",
   verified: "Payment verified",
 };
 const fieldLabel = {
@@ -181,9 +182,8 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
   const save = () => perform("update", { ...f, photoConfirmed: true }, "Your details were updated.").then((ok) => ok && onDone());
   return (
     <div className="reg-fields reg-office-form">
-      <p className="reg-field wide reg-small">Name: <b>{d.name}</b> · Date of birth: <b>{longDate(d.dob)}</b>. These cannot be changed here; contact the office if either is wrong.</p>
+      <p className="reg-field wide reg-small">Name: <b>{d.name}</b> · Date of birth: <b>{longDate(d.dob)}</b> · Gender: <b>{d.gender === "female" ? "Female" : "Male"}</b>. These were set when you registered. If any of them is incorrect, please let the office know.</p>
       {d.role === "pastor" && <Field label="Title"><select value={titleFor({ ...d, ...f })} onChange={(e) => set("title", e.target.value)}>{PASTOR_TITLES.filter((t) => t !== "Lady Rev." || f.gender === "female").map((t) => <option key={t}>{t}</option>)}</select></Field>}
-      <Field label="Gender"><select value={f.gender} onChange={(e) => set("gender", e.target.value)}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></Field>
       <Field label="WhatsApp number"><input value={f.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
       <Field label="Organization"><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{orgLabel(o)}</option>)}</select></Field>
       {denominations.length > 0 && (
@@ -328,7 +328,7 @@ function AttireNotice({ check, onChoose }) {
   if (check.verdict === "checking") return <p className="reg-small reg-attire-checking">Checking the photo…</p>;
   return (
     <div className="reg-attire-warning" role="alert">
-      <b>Please check this photo.</b> {check.note} You can choose another photo, or continue if you are sure this one is right; the office will take a look.
+      <b>Please take another look at this photo.</b> {check.note} You can choose a different photo, or continue if you are sure this one is right. The office will review it.
       <div><button type="button" className="reg-secondary" onClick={onChoose}>Choose another photo</button></div>
     </div>
   );
@@ -448,6 +448,7 @@ export default function RegistrationApp({
     [sidebarHidden, setSidebarHidden] = useState(false),
     [signinOpen, setSigninOpen] = useState(false),
     [directoryRole, setDirectoryRole] = useState("bishop"),
+    [publicRole, setPublicRole] = useState(null), // which list a member has open in Directory
     [gate, setGate] = useState(!gated),
     [actor, setActor] = useState(null),
     [checking, setChecking] = useState(true),
@@ -477,7 +478,7 @@ export default function RegistrationApp({
       return true;
     } catch (e) {
       // A session the server no longer knows: back to sign-in instead of a dead end of failed saves.
-      if (e.message === "Please sign in again.") { setActor(null); setState(null); setError("Your session ended. Please sign in again; nothing was saved."); return false; }
+      if (e.message === "Please sign in again.") { setActor(null); setState(null); setError("Your session has ended. Please sign in again. Nothing was saved."); return false; }
       setError(e.message);
       return false;
     } finally {
@@ -546,7 +547,7 @@ export default function RegistrationApp({
     if (!actor) return;
     // Background refreshes stay quiet when the network hiccups; the next tick tries again.
     // Background refreshes stay quiet, except when the session has ended: then show sign-in.
-    const update = () => refresh().catch((e) => { if (e.message === "Please sign in again.") { setActor(null); setState(null); setError("Your session ended. Please sign in again."); } });
+    const update = () => refresh().catch((e) => { if (e.message === "Please sign in again.") { setActor(null); setState(null); setError("Your session has ended. Please sign in again."); } });
     window.addEventListener("storage", update);
     window.addEventListener("registration-change", update);
     const timer = setInterval(update, 30000);
@@ -873,7 +874,7 @@ export default function RegistrationApp({
                       </span>
                       <h1>
                         {tab === "Directory"
-                          ? directoryHeading(directoryRole)
+                          ? directoryHeading(office ? directoryRole : publicRole)
                           : tab === "Existing records"
                             ? `Existing ${directoryRole === "bishop" ? "Bishops" : "Pastors"} Records`
                             : tab === "Unclaimed"
@@ -885,7 +886,7 @@ export default function RegistrationApp({
                           {
                             Directory: office
                               ? "Everyone who has completed their registration for this year appears here."
-                              : "The same directory the public sees.",
+                              : "",
                             "Existing records":
                               "These are the bishops and pastors already in our records before this year’s registration. Green means confirmed. Red means not yet registered or confirmed.",
                             Unclaimed:
@@ -927,8 +928,9 @@ export default function RegistrationApp({
                       />
                     ) : (
                       <PublicDirectory
-                        data={{ source: state.publicDirectory || "original", roll: state.roll || [], catalog: catalogOf(state) }}
+                        data={{ source: state.publicDirectory || "original", photos: state.publicPhotos, roll: state.roll || [], catalog: catalogOf(state), year: state.year }}
                         embedded
+                        onRole={setPublicRole}
                       />
                     ))}
                   {tab === "Existing records" && (
@@ -1400,7 +1402,7 @@ function Participant({
           <p>
             {current.status === "confirmed"
               ? `Your registration has been confirmed. You are in good standing for ${state.year}.`
-              : "Your registration has been submitted. The office is reviewing it; your status will show on your profile."}
+              : "Your registration has been submitted. The office is reviewing it, and your status will appear on your profile."}
             {current.payment === "verified" ? " Your payment has been received." : ""}
             {pastorCount ? ` ${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded.` : ""}
           </p>
@@ -1475,18 +1477,18 @@ function Participant({
                     : current.status === "pending"
                       ? "Thank you. Your registration has been submitted."
                       : current.status === "removed"
-                        ? "Your annual roster status has changed."
+                        ? "Your place on this year’s list has changed."
                         : "Thank you. Your registration has been submitted."}
             </h3>
             <p>
               {current.status === "confirmed"
                 ? "You can now pay your Annual Good Standing Renewal Fee."
                 : current.status === "denied" || current.resubmit
-                  ? current.bishopNote || "Please contact the office."
+                  ? current.bishopNote || "Please get in touch with the office for details."
                   : current.status === "pending"
                     ? `${current.payment === "verified" ? "Your payment has been received. " : ""}${pastorCount ? `${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded. ` : ""}The office is reviewing your registration. Once it has been approved, your status will appear here. You can add more pastors under “My pastors” at any time.`
                     : current.status === "removed"
-                      ? "Contact your bishop or the office to discuss this change. Your registration and payment history have been retained."
+                      ? "Please speak to your bishop or the office about this change. Your registration and payment history are kept on file."
                       : `${current.payment === "verified" ? "Your payment has been received. " : ""}Your bishop and the office are reviewing your registration. Once it has been confirmed, your status will appear here.`}
             </p>
           </div>
@@ -2440,6 +2442,12 @@ function Portrait({ person, className = "" }) {
         decoding="async"
       />
     );
+  if (person.standing === false)
+    return (
+      <div className={`reg-placeholder reg-unconfirmed ${className}`} role="img" aria-label={`${person.name} · not yet confirmed`}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7v1H4z" /></svg>
+      </div>
+    );
   return (
     <div className={`reg-placeholder ${className}`} aria-label={person.name}>
       {initials(person.name) || "◯"}
@@ -2646,7 +2654,7 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
   );
 }
 const directoryHeading = (role) =>
-  `${role === "bishop" ? "Bishops" : "Pastors"} Roll of Good Standing`;
+  role ? `${role === "bishop" ? "Bishops’" : "Pastors’"} Roll of Good Standing` : "Roll of Good Standing";
 function Directory({ state, year, role, setRole, perform, actor, mode = "original" }) {
   const [filter, setFilter] = useState({
       q: "",
@@ -3208,6 +3216,9 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null 
             {[p.city, p.country].filter(Boolean).join(", ") ||
               "Location not recorded"}
           </p>
+          {p.standing !== undefined && (
+            <p className={`reg-record-line reg-standing ${p.standing ? "good" : "pending"}`}>{p.standing ? "In Good Standing" : "Standing not yet confirmed"}</p>
+          )}
           {p.denomination && (
             <p className="reg-record-denomination">
               <DenominationLogo person={p} catalog={catalog || catalogOf(null)} />
@@ -3253,7 +3264,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null 
 // The open directory at /directory/: two alphabetical lists with small square
 // photos, bishops left and pastors right. On a phone a toggle shows one at a
 // time. Rows are plain: no dialogs, no pastors-under-bishop.
-function PublicList({ list }) {
+function PublicList({ list, year }) {
   const [q, setQ] = useState(""),
     [role, setRole] = useState("bishop"),
     [selected, setSelected] = useState(null);
@@ -3264,7 +3275,10 @@ function PublicList({ list }) {
   const columns = [["bishop", "Bishops"], ["pastor", "Pastors"]].map(([r, label]) => [r, label, column(r)]);
   return (
     <section className="reg-roll">
-      <h1 className="reg-doors-title">Roll of Good Standing</h1>
+      <h1 className="reg-doors-title"><span className="reg-roll-title-role">{role === "bishop" ? "Bishops’ " : "Pastors’ "}</span>Roll of Good Standing</h1>
+      {year && list.some((p) => p.standing !== undefined) && (
+        <p className="reg-roll-legend">A photograph appears once a minister’s standing for {year} has been confirmed.</p>
+      )}
       <input
         type="search"
         className="reg-doors-search"
@@ -3314,12 +3328,13 @@ function PublicList({ list }) {
     </section>
   );
 }
-function PublicDirectory({ data, embedded = false }) {
-  const base = data.source === "roll" ? data.roll : overlayReferences(publicPeople, data);
+function PublicDirectory({ data, embedded = false, onRole }) {
+  const base = data.source === "roll" ? data.roll : data.photos === "confirmed" ? withStanding(overlayReferences(publicPeople, data), data.roll || []) : overlayReferences(publicPeople, data);
   const list = data.catalog ? base.map((p) => ({ ...p, denominationListed: denominationListed(data.catalog, p) })) : base;
-  const [role, setRole] = useState(null),
+  const [role, setRoleState] = useState(null),
     [q, setQ] = useState("");
-  if (!embedded) return <PublicList list={list} />;
+  const setRole = (r) => { setRoleState(r); onRole?.(r); };
+  if (!embedded) return <PublicList list={list} year={data.year} />;
   const counts = {
     bishop: list.filter((p) => p.role === "bishop").length,
     pastor: list.filter((p) => p.role === "pastor").length,
@@ -3347,6 +3362,7 @@ function PublicDirectory({ data, embedded = false }) {
             <button key={value} className="reg-door" onClick={() => setRole(value)}>
               <span>{label}</span>
               <strong>{counts[value].toLocaleString()}</strong>
+              <small className="reg-door-hint">Click here to see all {label.toLowerCase()}</small>
             </button>
           ))}
         </div>

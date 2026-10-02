@@ -192,7 +192,7 @@ export default function Settings({ run, state, perform, actor }) {
     ['Payments', 'Paystack card and mobile money payments', ['PAYSTACK_PUBLIC_KEY', 'PAYSTACK_SECRET_KEY']],
     ['Telegram', 'Receive system issue alerts on Telegram', ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID']],
     ['Photo storage', 'Storage for uploaded photos and payment receipts', ['R2_ACCOUNT_ID', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY']],
-    ['Access and public page', 'Manage office access and what appears on the public directory', ['ADMIN_ACCESS_CODE', 'PUBLIC_DIRECTORY_SOURCE']],
+    ['Access and public page', 'Manage office access and what appears on the public directory', ['ADMIN_ACCESS_CODE', 'PUBLIC_DIRECTORY_SOURCE', 'PUBLIC_PHOTOS']],
   ];
   const field = s => <label className="reg-field" key={s.key}>
     <span>{s.label} <small className={`reg-badge ${s.set ? 'verified' : 'unclaimed'}`}>{s.set ? 'Set up' : 'Not set up'}</small></span>

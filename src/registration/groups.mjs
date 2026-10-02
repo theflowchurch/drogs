@@ -49,16 +49,12 @@ export const GROUPS = {
       "Precious Souls Namibia",
       "Precious Souls Swaziland",
       "Central African Republic",
-      "Gambia",
       "Equatorial Guinea",
       "Cape Verde",
       "Lesotho",
       "Burkina Faso",
       "Seychelles",
-      "Mali",
-      "Niger",
-      "Chad",
-      "Sao Tome And Principe"
+      "United Cities"
     ]
   },
   "UD Europe": {
@@ -84,15 +80,9 @@ export const GROUPS = {
   "United Islands": {
     "organization": "United Denominations",
     "denominations": [
-      "Fiji",
-      "Solomon Islands",
-      "Papua New Guinea",
-      "New Zealand",
-      "Vanuatu",
+      "Favourite Child Church",
       "Good Shepherd Church Guyana",
-      "Australia",
-      "Tonga",
-      "Samoa"
+      "United Cities"
     ]
   },
   "United Jesus": {

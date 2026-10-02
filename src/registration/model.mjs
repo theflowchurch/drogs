@@ -191,7 +191,23 @@ export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination"
 // corrected records without phone or email.
 const CONTACT_FIELDS = ["phone", "email"];
 const scrubContacts = (o) => Object.fromEntries(Object.entries(o || {}).filter(([k]) => !CONTACT_FIELDS.includes(k)));
+// The public directory lists everyone from the original data, but a photograph
+// appears only once the person is on this year's roll (registered, paid and
+// confirmed). Everyone else is shown as a dark silhouette. People on the roll
+// who were not in the original data are added with their photo.
+export function withStanding(references, roll) {
+  const onRoll = new Map((roll || []).filter((r) => r.referenceId).map((r) => [r.referenceId, r]));
+  const seen = new Set();
+  const out = references.map((p) => {
+    const r = onRoll.get(p.id);
+    if (r) seen.add(r.id);
+    return r ? { ...p, standing: true, photo: r.photo || "", image: r.photo ? "" : r.image || p.image || "" } : { ...p, standing: false, photo: "", image: "" };
+  });
+  for (const r of roll || []) if (!seen.has(r.id) && !(r.referenceId && onRoll.has(r.referenceId))) out.push({ ...r, standing: true });
+  return out;
+}
 export const publicOverlay = (state) => ({
+  year: state.year,
   signup: signupOf(state),
   catalog: catalogOf(state),
   hidden: state.hidden || [],
@@ -625,8 +641,8 @@ export function applyAction(
       (x) => x.userId === actor.id && x.year === state.year,
     );
     if (!r || r.status === "draft") throw Error("Submit your registration first.");
-    // Name and date of birth are fixed after submission (the office can correct them); a different bishop re-runs the match.
-    const data = validateProfile({ ...r.data, ...payload, role: r.data.role, dob: r.data.dob, firstName: r.data.firstName, lastName: r.data.lastName }, actor.email, { catalog });
+    // Name, date of birth and gender are fixed after submission (the office can correct them); a different bishop re-runs the match.
+    const data = validateProfile({ ...r.data, ...payload, role: r.data.role, dob: r.data.dob, gender: r.data.gender || payload.gender, firstName: r.data.firstName, lastName: r.data.lastName }, actor.email, { catalog });
     if (!data.photoConfirmed) throw Error("Confirm your photo before saving.");
     const newBishop = data.role === "pastor" && data.bishopId && data.bishopId !== r.data.bishopId;
     if (newBishop) {

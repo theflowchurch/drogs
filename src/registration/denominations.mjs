@@ -76,6 +76,7 @@ export const DENOMINATIONS = {
     "Victoire Internationale",
     "West End City Churches",
     "Australia",
+    "United Cities",
     "Burkina Faso",
     "Cape Verde",
     "Central African Republic",
