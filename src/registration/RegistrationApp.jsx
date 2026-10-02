@@ -2656,7 +2656,7 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
 const directoryHeading = (role) =>
   `${role === "bishop" ? "Bishops’" : "Pastors’"} Roll of Good Standing`;
 // Members open each roll from the sidebar; the tab name doubles as the heading.
-const ROLL_TABS = ["Bishops’ Roll of Good Standing", "Pastors’ Roll of Good Standing"];
+const ROLL_TABS = ["Bishops in Good Standing", "Pastors in Good Standing"];
 const rollTabRole = (tab) => (tab === ROLL_TABS[0] ? "bishop" : tab === ROLL_TABS[1] ? "pastor" : null);
 function Directory({ state, year, role, setRole, perform, actor, mode = "original" }) {
   const [filter, setFilter] = useState({
