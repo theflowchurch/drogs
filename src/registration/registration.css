@@ -670,6 +670,10 @@ p {
 .reg-placeholder.reg-unconfirmed {
   background: #0d1017;
 }
+.reg-person-card > .reg-person-portrait > .reg-placeholder.reg-unconfirmed {
+  display: grid;
+  place-items: center;
+}
 .reg-placeholder.reg-unconfirmed svg {
   width: 62%;
   height: 62%;
@@ -857,6 +861,10 @@ p {
 .reg-person-card {
   text-align: left;
   padding: 0;
+  /* A button centres its content; cards in a row must start at the top so portraits line up. */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   border: 1px solid #d2e2d9;
   background: var(--panel);
   border-radius: 14px;
