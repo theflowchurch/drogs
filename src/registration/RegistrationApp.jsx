@@ -64,6 +64,27 @@ import people from "./reference-people.json";
 const references = people.filter((p) => p.role === "bishop");
 const index = referenceIndex(people);
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
+// A self-contained preview for /directory-demo/. It deliberately never reads
+// or writes the registration store: ten bishops appear as paid/confirmed and
+// every other minister remains behind the dark public-directory silhouette.
+const directoryDemo = () => ({
+  source: "original",
+  photos: "confirmed",
+  year: 2027,
+  roll: references
+    .filter((person) => person.image)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .slice(0, 10)
+    .map((person) => ({
+      ...person,
+      id: `demo-${person.id}`,
+      referenceId: person.id,
+      paymentStatus: "verified",
+    })),
+  hidden: [],
+  overrides: {},
+  extraReferences: [],
+});
 const statusLabel = {
   draft: "Draft",
   unclaimed: "Unclaimed",
@@ -436,6 +457,7 @@ function Dialog({ title, onClose, onPrev, onNext, onBack, backLabel, children })
 export default function RegistrationApp({
   office = false,
   browse = false,
+  directoryDemo: showDirectoryDemo = false,
   signup = false,
   entrance = "general",
 }) {
@@ -445,7 +467,7 @@ export default function RegistrationApp({
   const hero = !office && !browse && !signup;
   api.setDoor(office); // the server reads the member or office session cookie accordingly
   const [theme, setTheme] = useState("light"),
-    [pub, setPub] = useState(null),
+    [pub, setPub] = useState(() => showDirectoryDemo ? directoryDemo() : null),
     [sidebarHidden, setSidebarHidden] = useState(false),
     [signinOpen, setSigninOpen] = useState(false),
     [directoryRole, setDirectoryRole] = useState("bishop"),
@@ -541,8 +563,8 @@ export default function RegistrationApp({
   };
   useEffect(() => {
     // The public directory needs no account at all.
-    if (browse) api.publicDirectory().then(setPub).catch((e) => setError(e.message));
-  }, [browse]);
+    if (browse && !showDirectoryDemo) api.publicDirectory().then(setPub).catch((e) => setError(e.message));
+  }, [browse, showDirectoryDemo]);
   useEffect(() => {
     if (!actor) return;
     // Background refreshes stay quiet when the network hiccups; the next tick tries again.
@@ -706,7 +728,11 @@ export default function RegistrationApp({
           </button>
         </div>
       </header>}
-      {!api.live && (
+      {showDirectoryDemo ? (
+        <div className="reg-demo reg-directory-demo">
+          <strong>Dummy preview</strong> · 10 bishops are marked paid; every other bishop and all pastors stay dark.
+        </div>
+      ) : !api.live && (
         <div className="reg-demo">
           Saved in this browser only · email delivery and shared accounts are
           not connected ·{" "}
