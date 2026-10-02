@@ -21,7 +21,6 @@ export const LOGOS = {
   "East Mountain Churches": "assets/denominations/east-mountain-church.png",
   "Eschatos": "assets/denominations/eschatos-church.png",
   "Everything By Prayer Center": "assets/denominations/everything-by-prayer-church.png",
-  "First Love Church Worldwide": "assets/denominations/first-love-church.png",
   "Fruitferos Internacional Guinea Bissau": "assets/denominations/frutiferos-internacional.png",
   "Good Shepherd Church Guyana": "assets/denominations/good-shepherd-church.webp",
   "Greater Love Church Ghana": "assets/denominations/greater-love-church.webp",
