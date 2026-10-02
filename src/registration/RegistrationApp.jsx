@@ -151,7 +151,7 @@ function Media({ path, alt, className = "" }) {
     };
   }, [path]);
   return url ? (
-    <img className={className} src={url} alt={alt} />
+    <img className={className} src={url} alt={alt} loading="lazy" decoding="async" />
   ) : (
     <div className={`reg-placeholder ${className}`} aria-label={alt}>
       ◯

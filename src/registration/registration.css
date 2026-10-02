@@ -342,7 +342,7 @@ p {
 }
 .reg-shell {
   display: grid;
-  grid-template-columns: 230px minmax(0, 1fr);
+  grid-template-columns: 280px minmax(0, 1fr);
   min-height: calc(100svh - 160px);
 }
 .reg-sidebar {

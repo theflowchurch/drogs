@@ -16,11 +16,12 @@ export function requestHandler({ origin, api, nextHandler }) {
       return res.end();
     }
     if (!path.startsWith('/api/registration/') && !path.startsWith('/api/v1/')) {
-      // Pages must not sit in the CDN for a year after a deploy; hashed /_next/static files may.
-      if (!path.startsWith('/_next/static/') && !path.startsWith('/assets/')) {
-        const setHeader = res.setHeader.bind(res);
-        res.setHeader = (name, value) => setHeader(name, String(name).toLowerCase() === 'cache-control' ? 'private, no-cache' : value);
-      }
+      // Pages must not sit in the CDN for a year after a deploy. Hashed /_next/static files and
+      // /assets/ images may be cached for a year (an image that changes gets a new file name).
+      const immutable = path.startsWith('/_next/static/') || path.startsWith('/assets/');
+      const setHeader = res.setHeader.bind(res);
+      res.setHeader = (name, value) => setHeader(name, String(name).toLowerCase() === 'cache-control' ? (immutable ? 'public, max-age=31536000, immutable' : 'private, no-cache') : value);
+      if (immutable) setHeader('Cache-Control', 'public, max-age=31536000, immutable');
       return nextHandler(req, res);
     }
     try {

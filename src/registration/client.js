@@ -193,6 +193,8 @@ export async function upload(actor, file, kind = "portrait") {
 }
 export async function mediaUrl(path) {
   if (!path) return "";
+  // Images kept in the database have a fixed address; no need to ask the server for it first.
+  if (mysqlBackend && path.startsWith("db/")) return `/api/registration/media/blob?path=${encodeURIComponent(path)}`;
   if (mysqlBackend) return (await server(`media?path=${encodeURIComponent(path)}`)).url;
   if (live) {
     const { data, error } = await supabase()

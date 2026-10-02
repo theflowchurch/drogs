@@ -83,7 +83,9 @@ export function createAuth({ pool, config, mailer }) {
       if (mode === 'office' && !config.admins.includes(email)) throw new HttpError(403, 'This email does not have access to this site.');
       mode = await effectiveMode(email, mode);
       if (mode === 'signin') await requireMember(email);
-      await rateLimit(pool, config, `otp-minute:${email}`, 1, 60000);
+      // One code a minute per address: the second click within a minute is told why, not "too many attempts".
+      try { await rateLimit(pool, config, `otp-minute:${email}`, 1, 60000); }
+      catch (e) { if (e.status === 429) throw new HttpError(429, 'A code was sent to this address less than a minute ago. Check your inbox and spam folder, then try again in a minute.'); throw e; }
       await rateLimit(pool, config, `otp-hour:${email}`, 5, 3600000);
       await rateLimit(pool, config, 'otp-global', 500, 3600000);
       const token = String(randomInt(0, 1000000)).padStart(6, '0');
@@ -95,6 +97,8 @@ export function createAuth({ pool, config, mailer }) {
           html: `<p style="margin:0 0 6px;color:#6a7283">Your sign-in code</p><p style="margin:0 0 18px;font:700 36px/1 -apple-system,Arial,sans-serif;letter-spacing:6px;color:#13324c">${token}</p><p style="margin:0 0 12px">It expires in 10 minutes. Use it at <a href="${origin}" style="color:#1e3a8a">${origin.replace(/^https?:\/\//, '')}</a>.</p><p style="margin:0;color:#6a7283;font-size:13px">If you did not request this code, you can ignore this email.</p>` }));
       } catch {
         await pool.execute('DELETE FROM dr_otp WHERE email=? AND code_hash=?', [email, hash]);
+        // Nothing was sent, so the one-a-minute allowance is given back for an immediate retry.
+        await pool.execute('DELETE FROM dr_rate_limits WHERE rate_key=?', [digest(config.secret, `rate:otp-minute:${email}`)]);
         throw new HttpError(503, 'Unable to send your code. Please try again shortly.');
       }
     },

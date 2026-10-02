@@ -273,7 +273,7 @@ ${others.length ? `<p><b>${photoIssue ? 'Other Updates' : 'Updates Needed'}</b><
         if (path.endsWith('/blob')) {
           const bytes = await storage.blob(key);
           if (!bytes) throw new HttpError(404, 'Image not found.');
-          return new Response(bytes, { status: 200, headers: { 'Content-Type': media.content_type, 'Cache-Control': 'private, max-age=300', 'X-Content-Type-Options': 'nosniff' } });
+          return new Response(bytes, { status: 200, headers: { 'Content-Type': media.content_type, 'Cache-Control': 'private, max-age=31536000, immutable', 'X-Content-Type-Options': 'nosniff' } }); // every upload has its own key
         }
         return json({ url: await storage.url(key) });
       }
