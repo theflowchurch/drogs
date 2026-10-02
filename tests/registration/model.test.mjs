@@ -24,6 +24,10 @@ import {
   namesAlike,
   titleFor,
   withStanding,
+  splitName,
+  bySurname,
+  placeOf,
+  caps,
 } from "../../src/registration/model.mjs";
 const bishop = { id: "b1", email: "bishop@example.com" },
   other = { id: "b2", email: "other@example.com" },
@@ -811,4 +815,15 @@ test("gender is fixed after submission like name and date of birth", () => {
   const r = s.registrations.find((x) => x.userId === pastor.id);
   assert.equal(r.data.gender, "female");
   assert.equal(r.data.city, "Kumasi");
+});
+
+test("public roll helpers: surname order, capital fallback, capitals", () => {
+  assert.deepEqual(splitName("Nii Nortey Quist Therson"), { given: "Nii Nortey Quist", surname: "Therson" });
+  assert.deepEqual(splitName("Adelaide Heward-Mills"), { given: "Adelaide", surname: "Heward-Mills" });
+  assert.deepEqual([{ name: "Zed Abena" }, { name: "Ann Zulu" }, { name: "Bob Abena" }].sort(bySurname).map((p) => p.name), ["Bob Abena", "Zed Abena", "Ann Zulu"]);
+  assert.equal(placeOf({ city: "", country: "Ghana" }), "Accra, Ghana");
+  assert.equal(placeOf({ city: "Esiama", country: "Ghana" }), "Esiama, Ghana");
+  assert.equal(placeOf({ city: "", country: "Cote D'ivoire (ivory Coast)" }), "Yamoussoukro, Cote D'ivoire (ivory Coast)");
+  assert.equal(placeOf({ city: "", country: "" }), "");
+  assert.equal(caps("First Love Church"), "FIRST LOVE CHURCH");
 });

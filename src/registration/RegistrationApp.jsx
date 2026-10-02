@@ -33,6 +33,10 @@ import {
   titleFor,
   PASTOR_TITLES,
   withStanding,
+  caps,
+  splitName,
+  bySurname,
+  placeOf,
   orgLabel,
   REFERENCE_FIELDS,
   catalogOf,
@@ -208,7 +212,7 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
       <Field label="WhatsApp number"><input value={f.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
       <Field label="Organization"><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{orgLabel(o)}</option>)}</select></Field>
       {denominations.length > 0 && (
-        <Field label="Denomination"><select value={f.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{denominations.map((x) => <option key={x}>{x}</option>)}</select></Field>
+        <Field label="Denomination"><select value={f.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{denominations.map((x) => <option key={x} value={x}>{caps(x)}</option>)}</select></Field>
       )}
       <Field label="Country where you currently serve"><Choice value={f.country} options={countries} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
       <Field label="City"><input value={f.city} onChange={(e) => set("city", e.target.value)} /></Field>
@@ -216,7 +220,7 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
         <Field label="Your bishop" wide hint="Only bishops who have registered appear here. Choosing a different bishop re-runs the match against their list.">
           <select value={f.bishopId} onChange={(e) => set("bishopId", e.target.value)}>
             <option value="">Choose your bishop…</option>
-            {bishops.map((b) => <option key={b.id} value={b.id}>{[b.name, b.denomination].filter(Boolean).join(" · ")}</option>)}
+            {bishops.map((b) => <option key={b.id} value={b.id}>{[b.name, caps(b.denomination)].filter(Boolean).join(" · ")}</option>)}
           </select>
         </Field>
       )}
@@ -1461,7 +1465,7 @@ function Participant({
                 Status: {current.status === "confirmed" ? "In Good Standing" : current.status === "denied" || current.resubmit ? "Action Required" : "Pending Review"}
               </span>
               <p>
-                {[orgLabel(current.data.organization), current.data.denomination || current.data.church]
+                {[orgLabel(current.data.organization), caps(current.data.denomination || current.data.church)]
                   .filter((v, i, a) => v && a.indexOf(v) === i)
                   .join(" · ")}
               </p>
@@ -1930,7 +1934,7 @@ function RegistrationForm({
                     >
                       <option value="">Select denomination</option>
                       {(catalog.denominations[data.organization] || []).map((d) => (
-                        <option key={d}>{d}</option>
+                        <option key={d} value={d}>{caps(d)}</option>
                       ))}
                     </select>
                   </Field>
@@ -1962,7 +1966,7 @@ function RegistrationForm({
                     >
                       <option value="">Choose your bishop…</option>
                       {registeredBishops.map((b) => (
-                        <option key={b.id} value={b.id}>{[b.name, b.denomination].filter(Boolean).join(" · ")}</option>
+                        <option key={b.id} value={b.id}>{[b.name, caps(b.denomination)].filter(Boolean).join(" · ")}</option>
                       ))}
                     </select>
                     {chosenBishop && (
@@ -1970,7 +1974,7 @@ function RegistrationForm({
                         <Portrait person={chosenBishop} />
                         <div>
                           <b>{chosenBishop.name}</b>
-                          <small>{[chosenBishop.denomination, chosenBishop.organization].filter(Boolean).join(" · ")}</small>
+                          <small>{[caps(chosenBishop.denomination), chosenBishop.organization].filter(Boolean).join(" · ")}</small>
                         </div>
                       </div>
                     )}
@@ -2371,7 +2375,7 @@ function ProfileDetails({ record, directory = [] }) {
           ["Email", p.email],
           ["Phone", p.phone],
           ["Date of birth", longDate(p.dob)],
-          ["Denomination", p.denomination || p.church || "Not applicable"],
+          ["Denomination", caps(p.denomination || p.church) || "Not applicable"],
           ["Country", p.country || "—"],
           ["City", p.city || "—"],
           ...(p.role === "pastor"
@@ -2555,7 +2559,7 @@ function DirectoryFilters({ filter, setFilter, options }) {
         <option value="">All denominations</option>
         {options.unlisted > 0 && <option value={NO_DENOMINATION}>No denomination · {options.unlisted.toLocaleString()}</option>}
         {options.denomination.map((d) => (
-          <option key={d}>{d}</option>
+          <option key={d} value={d}>{caps(d)}</option>
         ))}
       </select>
       {"country" in filter && (
@@ -2650,6 +2654,11 @@ function RowsTable({ rows, title, onRemove }) {
     </div>
   );
 }
+// Given names in normal weight, the surname bold: lists are ordered by surname.
+function PersonName({ name }) {
+  const { given, surname } = splitName(name);
+  return <>{given && <span className="reg-given">{given} </span>}{surname}</>;
+}
 function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
   return (
     <>
@@ -2661,12 +2670,13 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
             onClick={() => onOpen(p)}
           >
             <span className="reg-person-portrait">
+              {p.n && <span className="reg-person-n">{p.n}</span>}
               <Portrait person={p} />
             </span>
             <div className="reg-person-name">
-              <h3>{p.name}</h3>
+              <h3><PersonName name={p.name} /></h3>
               {dots && <Dot person={p} />}
-              {p.denominationListed === false && <small className="reg-no-denomination">No denomination{p.denomination ? ` · was ${p.denomination}` : ""}</small>}
+              {dots && p.denominationListed === false && <small className="reg-no-denomination">No denomination{p.denomination ? ` · was ${p.denomination}` : ""}</small>}
             </div>
           </button>
         ))}
@@ -2874,7 +2884,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
           {p.denomination && (
             <p className="reg-record-denomination">
               <DenominationLogo person={p} catalog={catalogOf(state)} />
-              <span>{p.denomination}</span>
+              <span>{caps(p.denomination)}</span>
             </p>
           )}
           {normalName(orgLabel(p.organization)) !== normalName(p.denomination || "") && normalName(p.organization) !== normalName(p.denomination || "") && (
@@ -2891,7 +2901,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
           ["Record", p.id],
           ["Title", p.title || "—"],
           ["Organization", p.organization || "—"],
-          ["Denomination", p.denomination || "—"],
+          ["Denomination", caps(p.denomination) || "—"],
           ["Branch", p.branch || "—"],
           ["City", p.city || "—"],
           ["Country", p.country || "—"],
@@ -3008,7 +3018,7 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
           <Field label="WhatsApp number"><input value={form.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
           <Field label="Date of birth"><input type="date" value={form.dob} onChange={(e) => set("dob", e.target.value)} /></Field>
           {(catalog.denominations[form.organization] || []).length > 0 && (
-            <Field label="Denomination"><select value={form.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{catalog.denominations[form.organization].map((x) => <option key={x}>{x}</option>)}</select></Field>
+            <Field label="Denomination"><select value={form.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{catalog.denominations[form.organization].map((x) => <option key={x} value={x}>{caps(x)}</option>)}</select></Field>
           )}
           <Field label="Country"><Choice value={form.country} options={[...new Set(overlayReferences(people, state).map((x) => x.country).filter(Boolean))].sort()} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
           <Field label="City"><input value={form.city} onChange={(e) => set("city", e.target.value)} /></Field>
@@ -3125,7 +3135,7 @@ function AddPersonForm({ state, mode, perform, onDone, actor }) {
       <Field label="Last name"><input value={f.lastName} onChange={(e) => set("lastName", e.target.value)} /></Field>
       {mode === "registered" && <Field label="Gender"><select value={f.gender} onChange={(e) => set("gender", e.target.value)}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></Field>}
       {(catalog.denominations[f.organization] || []).length > 0 && (
-        <Field label="Denomination"><select value={f.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{catalog.denominations[f.organization].map((x) => <option key={x}>{x}</option>)}</select></Field>
+        <Field label="Denomination"><select value={f.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{catalog.denominations[f.organization].map((x) => <option key={x} value={x}>{caps(x)}</option>)}</select></Field>
       )}
       <Field label="Country"><Choice value={f.country} options={countries} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
       <Field label="City"><input value={f.city} onChange={(e) => set("city", e.target.value)} /></Field>
@@ -3203,13 +3213,10 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
   const named = bishopPastors(bishop, from);
   const seen = new Set(extra.map((q) => q.id));
   const list = [...extra, ...named.list.filter((q) => !seen.has(q.id))];
-  const heading = named.heading;
-  if (!list.length) return null;
+  if (!list.length) return <section className="reg-record-group"><h3>No pastors under their oversight</h3></section>;
   return (
     <section className="reg-record-group">
-      <h3>
-        {heading} <b>{list.length.toLocaleString()}</b>
-      </h3>
+      <h3>{named.heading}</h3>
       <div className="reg-thumb-grid">
         {list.slice(0, limit).map((q) => (
           <button key={q.id} onClick={() => onOpen?.(q)} disabled={!onOpen}>
@@ -3218,7 +3225,7 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
               <b>{q.name}</b>
               {dots && <Dot person={q} />}
             </span>
-            <small>{[q.branch, q.country].filter(Boolean).join(" · ")}</small>
+            <small>{[q.branch, placeOf(q)].filter(Boolean).join(" · ")}</small>
           </button>
         ))}
       </div>
@@ -3242,8 +3249,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null 
           <span className="reg-eyebrow">{(p.title || p.role).toUpperCase()}</span>
           <h2>{p.name}</h2>
           <p className="reg-record-country">
-            {[p.city, p.country].filter(Boolean).join(", ") ||
-              "Location not recorded"}
+            {placeOf(p) || "Location not recorded"}
           </p>
           {p.standing !== undefined && (
             <p className={`reg-record-line reg-standing ${p.standing ? "good" : "pending"}`}>{p.standing ? "In Good Standing" : "Standing not yet confirmed"}</p>
@@ -3251,7 +3257,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null 
           {p.denomination && (
             <p className="reg-record-denomination">
               <DenominationLogo person={p} catalog={catalog || catalogOf(null)} />
-              <span>{p.denomination}</span>
+              <span>{caps(p.denomination)}</span>
             </p>
           )}
           {p.role === "pastor" && p.branch && (
@@ -3265,22 +3271,20 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null 
         </div>
       </div>
       {pastors && p.role === "bishop" && p.pastors ? (
-        p.pastors.length ? (
-          <section className="reg-record-group">
-            <h3>
-              Pastors under their oversight <b>{p.pastors.length.toLocaleString()}</b>
-            </h3>
+        <section className="reg-record-group">
+          <h3>{p.pastors.length ? "Pastors under their oversight" : "No pastors under their oversight"}</h3>
+          {p.pastors.length > 0 && (
             <div className="reg-thumb-grid">
               {p.pastors.map((q) => (
                 <button key={q.id} disabled>
                   <Portrait person={q} />
                   <span className="reg-thumb-name"><b>{q.name}</b></span>
-                  <small>{q.registered ? [q.city, q.country].filter(Boolean).join(" · ") || "Registered" : "Not yet registered"}</small>
+                  <small>{q.registered ? placeOf(q) || "Registered" : "Not yet registered"}</small>
                 </button>
               ))}
             </div>
-          </section>
-        ) : null
+          )}
+        </section>
       ) : pastors && p.role === "bishop" ? (
         <PastorsUnder bishop={p} onOpen={onOpen} from={from} />
       ) : null}
@@ -3290,87 +3294,19 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null 
 // The public directory: a search bar, then two doors — Bishops and Pastors with
 // their totals — before any faces are shown. Lists the existing roster until the
 // office switches the source to this year's roll.
-// The open directory at /directory/: two alphabetical lists with small square
-// photos, bishops left and pastors right. On a phone a toggle shows one at a
-// time. Rows are plain: no dialogs, no pastors-under-bishop.
-function PublicList({ list, year }) {
-  const [q, setQ] = useState(""),
-    [role, setRole] = useState("bishop"),
-    [selected, setSelected] = useState(null);
-  const term = normalName(q);
-  const matches = (p) =>
-    !term || normalName(`${p.name} ${p.city || ""} ${p.country || ""} ${p.denomination || ""}`).includes(term);
-  const column = (r) => list.filter((p) => p.role === r && matches(p)).sort((a, b) => a.name.localeCompare(b.name));
-  const columns = [["bishop", "Bishops"], ["pastor", "Pastors"]].map(([r, label]) => [r, label, column(r)]);
-  return (
-    <section className="reg-roll">
-      <h1 className="reg-doors-title"><span className="reg-roll-title-role">{role === "bishop" ? "Bishops’ " : "Pastors’ "}</span>Roll of Good Standing</h1>
-      {year && list.some((p) => p.standing !== undefined) && (
-        <p className="reg-roll-legend">A photograph appears once a minister’s standing for {year} has been confirmed.</p>
-      )}
-      <input
-        type="search"
-        className="reg-doors-search"
-        aria-label="Search people"
-        placeholder="Search by name, city or denomination"
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-      />
-      <div className="reg-switch reg-roll-switch" role="group" aria-label="Bishops or pastors">
-        {columns.map(([r, label, people]) => (
-          <button key={r} aria-pressed={role === r} className={role === r ? "active" : ""} onClick={() => setRole(r)}>
-            {label} <strong>{people.length.toLocaleString()}</strong>
-          </button>
-        ))}
-      </div>
-      <div className="reg-roll-columns">
-        {columns.map(([r, label, people]) => (
-          <div key={r} className={`reg-roll-column ${role === r ? "shown" : ""}`}>
-            <h2>
-              {label} <b>{people.length.toLocaleString()}</b>
-            </h2>
-            {people.length ? (
-              <ol>
-                {people.map((p) => (
-                  <li key={p.id}>
-                    <button type="button" className="reg-roll-row" onClick={() => setSelected(p)}>
-                      <Portrait person={p} className="reg-roll-photo" />
-                      <div>
-                        <span className="reg-roll-name">{p.name}</span>
-                        <small>{[p.denomination, [p.city, p.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>
-                      </div>
-                    </button>
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <p className="reg-small">{term ? "No one matches." : "Nobody listed yet."}</p>
-            )}
-          </div>
-        ))}
-      </div>
-      {selected && (
-        <Dialog title={selected.name} onClose={() => setSelected(null)} {...stepper(column(selected.role), selected, setSelected)}>
-          <PublicRecord person={selected} pastors={false} />
-        </Dialog>
-      )}
-    </section>
-  );
-}
 function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
   const base = data.source === "roll" ? data.roll : data.photos === "confirmed" ? withStanding(overlayReferences(publicPeople, data), data.roll || []) : overlayReferences(publicPeople, data);
-  const list = data.catalog ? base.map((p) => ({ ...p, denominationListed: denominationListed(data.catalog, p) })) : base;
+  const list = base.map((p) => ({ ...p, denomination: caps(p.denomination), ...(data.catalog ? { denominationListed: denominationListed(data.catalog, p) } : {}) }));
   const [role, setRole] = useState(fixedRole),
     [q, setQ] = useState("");
-  if (!embedded) return <PublicList list={list} year={data.year} />;
-  const counts = {
-    bishop: list.filter((p) => p.role === "bishop").length,
-    pastor: list.filter((p) => p.role === "pastor").length,
-  };
+  const legend = data.year && data.photos === "confirmed" && (
+    <p className="reg-roll-legend">A photograph appears once a minister’s standing for {data.year} has been confirmed.</p>
+  );
   if (!role)
     return (
       <section className={`reg-doors ${embedded ? "embedded" : ""} ${q ? "searching" : ""}`}>
         {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
+        {!embedded && legend}
         <input
           type="search"
           className="reg-doors-search"
@@ -3389,8 +3325,7 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
           ].map(([value, label]) => (
             <button key={value} className="reg-door" onClick={() => setRole(value)}>
               <span>{label}</span>
-              <strong>{counts[value].toLocaleString()}</strong>
-              <small className="reg-door-hint">Click here to see all {label.toLowerCase()}</small>
+              <small className="reg-door-hint">Click here to see all in good standing</small>
             </button>
           ))}
         </div>
@@ -3400,8 +3335,9 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
   return (
     <section className={embedded ? "" : "reg-public-list"}>
       {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
+      {!embedded && legend}
       <div className="reg-member-roll">
-        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} switcher={!fixedRole} />
+        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} switcher={!fixedRole} counts={embedded} />
       </div>
     </section>
   );
@@ -3435,7 +3371,9 @@ function SearchResults({ list, q }) {
     </div>
   );
 }
-function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher = true }) {
+// Bishops are pastors too, so the pastors' list carries everyone; the bishops' list only bishops.
+const inRole = (p, role) => role === "pastor" || p.role === role;
+function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher = true, counts = true }) {
   const [filter, setFilter] = useState({
       q: initialQuery,
       org: "",
@@ -3446,13 +3384,14 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
     [limit, setLimit] = useState(PAGE),
     [selected, setSelected] = useState(null);
   const trail = useTrail(selected, setSelected);
-  const scope = useMemo(
-    () => roll.filter((p) => personMatches(p, filter)),
-    [roll, filter],
+  // Surname order, numbered once for the whole list so a search keeps each person's number.
+  const numbered = useMemo(
+    () => [...roll.filter((p) => inRole(p, role))].sort(bySurname).map((p, i) => ({ ...p, n: i + 1 })),
+    [roll, role],
   );
   const list = useMemo(
-    () => scope.filter((p) => p.role === role),
-    [scope, role],
+    () => numbered.filter((p) => personMatches(p, filter)),
+    [numbered, filter],
   );
   useEffect(() => setLimit(pageFor(role)), [filter, role]);
   const options = useMemo(
@@ -3474,7 +3413,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
             onClick={() => setRole(value)}
           >
             {label}
-            <b>{scope.filter((p) => p.role === value).length.toLocaleString()}</b>
+            {counts && <b>{roll.filter((p) => inRole(p, value)).length.toLocaleString()}</b>}
           </button>
         ))}
       </div>}
@@ -3832,7 +3771,7 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
                         <Portrait person={b} />
                         <div>
                           <b>{b.name}</b>
-                          <small>{[b.title, b.denomination, b.city, b.country].filter(Boolean).join(" · ")}</small>
+                          <small>{[b.title, caps(b.denomination), b.city, b.country].filter(Boolean).join(" · ")}</small>
                           <button type="button" className="reg-secondary" onClick={() => setRef(ref === b.id ? "" : b.id)}>
                             {ref === b.id ? "Selected" : "This is them"}
                           </button>
@@ -4117,7 +4056,7 @@ function ReferenceReview({ rows, perform, canEdit }) {
               <p>
                 {reference.title} · {orgLabel(reference.organization)}
               </p>
-              <small>{reference.denomination}</small>
+              <small>{caps(reference.denomination)}</small>
             </div>
           </div>
           {entry.matches.length > 1 && (

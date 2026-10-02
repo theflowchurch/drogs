@@ -11,3 +11,4 @@ supabase/.temp/
 out/
 public/assets/
 .tmp-checks/
+.vercel

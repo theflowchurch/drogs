@@ -43,7 +43,7 @@ export function configuration(env = process.env) {
     paystackPublic: (env.PAYSTACK_PUBLIC_KEY || env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '').trim(),
     // What the public directory lists until the office flips it to this year's roll.
     publicDirectory: env.PUBLIC_DIRECTORY_SOURCE === 'roll' ? 'roll' : 'original',
-    publicPhotos: env.PUBLIC_PHOTOS === 'confirmed' ? 'confirmed' : 'all',
+    publicPhotos: env.PUBLIC_PHOTOS === 'all' ? 'all' : 'confirmed',
     telegram: env.TELEGRAM_BOT_TOKEN?.trim() && env.TELEGRAM_CHAT_ID?.trim()
       ? { token: env.TELEGRAM_BOT_TOKEN.trim(), chat: env.TELEGRAM_CHAT_ID.trim() } : null,
     r2: { account: env.R2_ACCOUNT_ID, bucket: env.R2_BUCKET, accessKeyId: env.R2_ACCESS_KEY_ID, secretAccessKey: env.R2_SECRET_ACCESS_KEY, sessionToken: env.R2_SESSION_TOKEN || undefined },

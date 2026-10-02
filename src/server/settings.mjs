@@ -16,7 +16,7 @@ export const SETTINGS = [
   ['R2_ACCESS_KEY_ID', 'R2 access key ID', ''],
   ['R2_SECRET_ACCESS_KEY', 'R2 secret access key', ''],
   ['PUBLIC_DIRECTORY_SOURCE', 'Public directory shows', '"original" (the existing roster, for now) or "roll" (only people confirmed this year).'],
-  ['PUBLIC_PHOTOS', 'Public directory photographs', '"all" (every photograph shows) or "confirmed" (a photograph appears only once the person is confirmed for this year; everyone else is a dark silhouette).'],
+  ['PUBLIC_PHOTOS', 'Public directory photographs', '"confirmed" (a photograph appears only once the person is confirmed for this year; everyone else is a dark silhouette — the default) or "all" (every photograph shows).'],
   ['ADMIN_ACCESS_CODE', 'Office access code', 'The code typed at /admin/ before the email.'],
   ['ADMIN_EMAILS', 'Office emails', 'Comma-separated. Only these addresses can sign in to /admin/; each sign-in is confirmed by an emailed code.'],
 ];

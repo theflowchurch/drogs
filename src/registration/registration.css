@@ -697,6 +697,29 @@ p {
 .reg-member-roll .reg-toggle b {
   font-size: 14px;
 }
+/* Small running number on the left of each portrait in the rolls. */
+.reg-person-n {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+  min-width: 22px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.5;
+}
+.reg-given {
+  font-weight: 400;
+}
+/* Denominations read in capitals everywhere, including the office lists. */
+.reg-catalog-list li, .reg-group-list li, .reg-denomination h3, .reg-record-denomination span, .reg-no-denomination {
+  text-transform: uppercase;
+}
 .reg-door-hint {
   display: block;
   margin-top: 10px;
@@ -704,8 +727,12 @@ p {
   font-weight: 500;
   color: var(--muted, #6a7283);
 }
+.reg-public-list .reg-doors-title {
+  text-align: center;
+}
 .reg-roll-legend {
-  margin: -6px 0 14px;
+  text-align: center;
+  margin: -6px auto 14px;
   font-size: 14px;
   color: var(--muted, #6a7283);
 }
