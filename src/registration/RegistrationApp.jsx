@@ -728,15 +728,15 @@ export default function RegistrationApp({
               <a className="reg-primary reg-signin-button" href={`${base}/signup/`}>Sign up</a>
             </>
           ) : null}
-          {!office && (
+          {!office && actor && profile?.role === "bishop" && (
             <button
               type="button"
               role="switch"
               className="reg-face-switch"
-              aria-checked={(facePref || pub?.photos || state?.publicPhotos || "confirmed") === "confirmed"}
+              aria-checked={(facePref || state?.publicPhotos || "confirmed") === "confirmed"}
               aria-label="Dark faces until confirmed"
               title="Photographs or dark faces"
-              onClick={() => { const next = (facePref || pub?.photos || state?.publicPhotos || "confirmed") === "confirmed" ? "all" : "confirmed"; localStorage.setItem("kc-faces", next); setFacePref(next); }}
+              onClick={() => { const next = (facePref || state?.publicPhotos || "confirmed") === "confirmed" ? "all" : "confirmed"; localStorage.setItem("kc-faces", next); setFacePref(next); }}
             />
           )}
           <button className="reg-theme-toggle" onClick={toggleTheme} aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} title={theme === "dark" ? "Light mode" : "Dark mode"}>
@@ -819,7 +819,7 @@ export default function RegistrationApp({
         />
       ) : browse ? (
         pub ? (
-          <PublicDirectory data={{ ...pub, photos: facePref || pub.photos }} />
+          <PublicDirectory data={pub} />
         ) : (
           <div className="reg-loading" role="status">
             Opening the directory…
