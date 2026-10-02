@@ -77,7 +77,7 @@ with sync_playwright() as p:
         expect(page.get_by_text('Status: Pending Review',exact=True)).to_be_visible()
         assert page.evaluate("localStorage.getItem('drogs-registration-v1')") is None
         page.get_by_role('button',name='Sign out',exact=True).click()
-        page.get_by_role('link', name='View all bishops and pastors in good standing').wait_for()  # members land on the front page
+        page.get_by_role('link', name='View All Bishops and Pastors in Good Standing').wait_for()  # members land on the front page
         assert page.url.rstrip('/') == BASE.rstrip('/'), page.url
         page.set_viewport_size({'width':1440,'height':1050})
         login(True)

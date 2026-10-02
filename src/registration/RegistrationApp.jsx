@@ -793,7 +793,7 @@ export default function RegistrationApp({
             Kuriake Castle
           </h1>
           <a className="reg-enter" href={`${base}/directory/`}>
-            <span className="reg-shimmer">View all bishops and pastors in good standing</span>
+            <span className="reg-shimmer">View All Bishops and Pastors in Good Standing</span>
             <span className="reg-enter-arrow" aria-hidden="true">→</span>
           </a>
         </section>
@@ -3305,14 +3305,13 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
   const list = base.map((p) => ({ ...p, denomination: caps(p.denomination), ...(data.catalog ? { denominationListed: denominationListed(data.catalog, p) } : {}) }));
   const [role, setRole] = useState(fixedRole),
     [q, setQ] = useState("");
-  const legend = data.year && data.photos === "confirmed" && (
-    <p className="reg-roll-legend">A photograph appears once a minister’s standing for {data.year} has been confirmed.</p>
+  const legend = data.photos === "confirmed" && (
+    <p className="reg-roll-legend">A photograph appears once a bishop or pastor is in good standing.</p>
   );
   if (!role)
     return (
       <section className={`reg-doors ${embedded ? "embedded" : ""} ${q ? "searching" : ""}`}>
         {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
-        {!embedded && legend}
         <input
           type="search"
           className="reg-doors-search"

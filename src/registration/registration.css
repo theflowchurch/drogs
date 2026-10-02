@@ -1991,6 +1991,12 @@ p {
   opacity: 0.45;
 }
 /* The front page plays a short drone shot behind the title; the poster frame shows until it loads. */
+.reg-hero-title {
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+.reg-hero-title img {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.45));
+}
 .reg-hero-video {
   position: absolute;
   inset: 0;
