@@ -73,7 +73,7 @@ const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 // every other minister remains behind the dark public-directory silhouette.
 const directoryDemo = () => {
   const pastorsOf = (b) => people.filter((q) => q.role === "pastor" && q.bishop && namesAlike(q.bishop, b.name));
-  const chosen = references.filter((b) => b.image && pastorsOf(b).length).sort(bySurname).slice(0, 10);
+  const chosen = references.filter((b) => b.image && pastorsOf(b).length).sort(bySurname);
   const confirmed = [...chosen, ...chosen.flatMap((b) => pastorsOf(b).filter((q) => q.image).slice(0, 12))];
   return {
     source: "original",
@@ -742,7 +742,7 @@ export default function RegistrationApp({
       </header>}
       {showDirectoryDemo ? (
         <div className="reg-demo reg-directory-demo">
-          <strong>Preview</strong> · ten bishops and their photographed pastors are marked confirmed; everyone else stays dark.
+          <strong>Preview</strong> · every bishop with pastors, and their photographed pastors, are marked confirmed; everyone else stays dark.
         </div>
       ) : !api.live && (
         <div className="reg-demo">
@@ -3480,12 +3480,6 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
               {ps.length > 0 && <PeopleGrid list={ps} limit={ps.length} onOpen={setSelected} dots={false} />}
             </section>
           ))}
-          {grouped.rest.length > 0 && (
-            <section className="reg-bishop-block plain">
-              <h3 className="reg-group-heading">Pastors</h3>
-              <PeopleGrid list={grouped.rest} limit={limit} onMore={() => setLimit((n) => n + 300)} onOpen={setSelected} dots={false} />
-            </section>
-          )}
           {grouped.alone.length > 0 && (
             <section className="reg-bishop-block plain">
               <h3 className="reg-group-heading">Bishops</h3>
@@ -3498,6 +3492,12 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
                   </button>
                 ))}
               </div>
+            </section>
+          )}
+          {grouped.rest.length > 0 && (
+            <section className="reg-bishop-block plain">
+              <h3 className="reg-group-heading">Pastors</h3>
+              <PeopleGrid list={grouped.rest} limit={limit} onMore={() => setLimit((n) => n + 300)} onOpen={setSelected} dots={false} />
             </section>
           )}
         </div>
