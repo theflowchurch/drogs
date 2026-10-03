@@ -71,6 +71,8 @@ const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 // A self-contained preview for /directory-demo/. It deliberately never reads
 // or writes the registration store: ten bishops appear as paid/confirmed and
 // every other minister remains behind the dark public-directory silhouette.
+// A temporary preview build: the front page opens the preview roll and plays the drone shot in black and white.
+const PREVIEW = process.env.NEXT_PUBLIC_PREVIEW === "1";
 const directoryDemo = () => {
   const pastorsOf = (b) => people.filter((q) => q.role === "pastor" && q.bishop && namesAlike(q.bishop, b.name));
   const chosen = references.filter((b) => b.image && pastorsOf(b).length).sort(bySurname);
@@ -789,15 +791,15 @@ export default function RegistrationApp({
             loop
             playsInline
             preload="auto"
-            poster={`${base}/assets/brand/castle-hero-poster.webp`}
-            src={`${base}/assets/brand/castle-hero-${typeof window !== "undefined" && window.innerWidth < 900 ? "1280" : "1920"}.mp4`}
+            poster={`${base}/assets/brand/castle-hero-poster${PREVIEW ? "-bw" : ""}.webp`}
+            src={`${base}/assets/brand/castle-hero-${typeof window !== "undefined" && window.innerWidth < 900 ? "1280" : "1920"}${PREVIEW ? "-bw" : ""}.mp4`}
             aria-hidden="true"
           />
           <h1 className="reg-hero-title">
             <img src={`${base}/assets/brand/castle-white.png`} alt="" />
             Kuriake Castle
           </h1>
-          <a className="reg-enter" href={`${base}/directory/`}>
+          <a className="reg-enter" href={`${base}/${PREVIEW ? "directory-demo" : "directory"}/`}>
             <span className="reg-shimmer">View All Bishops and Pastors in Good Standing</span>
             <span className="reg-enter-arrow" aria-hidden="true">→</span>
           </a>
