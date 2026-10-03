@@ -3432,8 +3432,9 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
     }
     let k = 0;
     const number = (q) => ({ ...q, n: ++k });
-    const withPastors = blocks.filter((x) => x.pastors.length).map((x) => ({ ...x, pastors: x.bishop.standing === false ? [] : x.pastors.map(number) }));
-    const alone = blocks.filter((x) => !x.pastors.length).map((x) => x.bishop);
+    // Approved bishops with pastors lead; every other bishop (not yet approved, or without pastors) sits at the very bottom as a circle.
+    const withPastors = blocks.filter((x) => x.pastors.length && x.bishop.standing !== false).map((x) => ({ ...x, pastors: x.pastors.map(number) }));
+    const alone = blocks.filter((x) => !x.pastors.length || x.bishop.standing === false).map((x) => x.bishop);
     const rest = roll.filter((q) => q.role === "pastor" && !taken.has(q.id)).sort(bySurname).map(number);
     return { withPastors, alone, rest };
   }, [roll, role, filtering]);
@@ -3479,9 +3480,15 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
               {ps.length > 0 && <PeopleGrid list={ps} limit={ps.length} onOpen={setSelected} dots={false} />}
             </section>
           ))}
+          {grouped.rest.length > 0 && (
+            <section className="reg-bishop-block plain">
+              <h3 className="reg-group-heading">Pastors</h3>
+              <PeopleGrid list={grouped.rest} limit={limit} onMore={() => setLimit((n) => n + 300)} onOpen={setSelected} dots={false} />
+            </section>
+          )}
           {grouped.alone.length > 0 && (
             <section className="reg-bishop-block plain">
-              <h3 className="reg-group-heading">Bishops · pastors not yet listed</h3>
+              <h3 className="reg-group-heading">Bishops</h3>
               <div className="reg-circles">
                 {grouped.alone.map((b) => (
                   <button key={b.id} type="button" className="reg-circle-item" onClick={() => setSelected(b)}>
@@ -3491,12 +3498,6 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
                   </button>
                 ))}
               </div>
-            </section>
-          )}
-          {grouped.rest.length > 0 && (
-            <section className="reg-bishop-block plain">
-              <h3 className="reg-group-heading">Pastors</h3>
-              <PeopleGrid list={grouped.rest} limit={limit} onMore={() => setLimit((n) => n + 300)} onOpen={setSelected} dots={false} />
             </section>
           )}
         </div>
