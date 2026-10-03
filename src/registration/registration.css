@@ -729,8 +729,8 @@ p {
 .reg-bishop-who small { font-size: 11px; color: var(--muted); letter-spacing: 0.02em; }
 .reg-group-heading { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 8px 0 14px; }
 .reg-circles { display: flex; flex-wrap: wrap; gap: 14px; }
-.reg-circle-item { position: relative; width: 96px; padding: 0; border: 0; background: transparent; color: inherit; font-size: 11px; line-height: 1.2; text-align: center; display: grid; justify-items: center; gap: 6px; }
-.reg-circle-item .reg-circle { width: 72px; height: 72px; }
+.reg-circle-item { position: relative; width: 112px; padding: 0; border: 0; background: transparent; color: inherit; font-size: 11px; line-height: 1.2; text-align: center; display: grid; justify-items: center; gap: 6px; }
+.reg-circle-item .reg-circle { width: 96px; height: 96px; }
 .reg-circle-item .reg-person-n { top: 0; left: 0; }
 .reg-circle-item small .reg-given { font-weight: 400; }
 /* A card for someone not yet approved: the dark face and the number, nothing else. */
