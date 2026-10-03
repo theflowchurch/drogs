@@ -697,6 +697,45 @@ p {
 .reg-member-roll .reg-toggle b {
   font-size: 14px;
 }
+/* Pastors grouped under their bishop (Idea D). */
+.reg-grouped { display: grid; gap: 22px; }
+.reg-bishop-block {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 18px;
+  padding: 16px 18px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+:root[data-theme="dark"] .reg-bishop-block { background: rgba(20, 24, 34, 0.55); border-color: rgba(255, 255, 255, 0.08); }
+.reg-bishop-block.plain { background: transparent; border: 0; padding: 0; backdrop-filter: none; }
+.reg-bishop-block .reg-people-grid { grid-template-columns: repeat(auto-fill, 104px); gap: 10px; }
+.reg-bishop-block .reg-person-card > .reg-person-portrait > img,
+.reg-bishop-block .reg-person-card > .reg-person-portrait > .reg-placeholder { aspect-ratio: 1; }
+.reg-bishop-block .reg-person-card > .reg-person-name { padding: 8px 9px; }
+.reg-bishop-block .reg-person-name h3 { font-size: 11.5px; line-height: 1.25; }
+.reg-bishop-head {
+  display: flex; align-items: center; gap: 16px; position: relative;
+  margin: 0 0 14px; padding: 0; border: 0; background: transparent; text-align: left; color: inherit;
+}
+.reg-bishop-head .reg-person-n { position: static; align-self: flex-start; }
+.reg-circle {
+  width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: center 25%;
+  flex: none; border: 3px solid #fff; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18); display: grid; place-items: center;
+}
+.reg-placeholder.reg-unconfirmed.reg-circle svg { width: 50%; height: 50%; }
+.reg-bishop-who { display: grid; gap: 4px; font-size: 20px; }
+.reg-bishop-who b { font-weight: 650; } .reg-bishop-who .reg-given { font-weight: 400; }
+.reg-bishop-who small { font-size: 11px; color: var(--muted); letter-spacing: 0.02em; }
+.reg-group-heading { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 8px 0 14px; }
+.reg-circles { display: flex; flex-wrap: wrap; gap: 14px; }
+.reg-circle-item { position: relative; width: 96px; padding: 0; border: 0; background: transparent; color: inherit; font-size: 11px; line-height: 1.2; text-align: center; display: grid; justify-items: center; gap: 6px; }
+.reg-circle-item .reg-circle { width: 72px; height: 72px; }
+.reg-circle-item .reg-person-n { top: 0; left: 0; }
+.reg-circle-item small .reg-given { font-weight: 400; }
+/* A card for someone not yet approved: the dark face and the number, nothing else. */
+.reg-person-card.reg-dark { background: #0d1017; border-color: #0d1017; }
+.reg-unapproved { margin: 6px 0 12px; font-size: 16px; color: var(--muted); }
 /* Small running number on the left of each portrait in the rolls. */
 .reg-person-n {
   position: absolute;

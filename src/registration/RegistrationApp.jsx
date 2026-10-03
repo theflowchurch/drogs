@@ -71,24 +71,20 @@ const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 // A self-contained preview for /directory-demo/. It deliberately never reads
 // or writes the registration store: ten bishops appear as paid/confirmed and
 // every other minister remains behind the dark public-directory silhouette.
-const directoryDemo = () => ({
-  source: "original",
-  photos: "confirmed",
-  year: 2027,
-  roll: references
-    .filter((person) => person.image)
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .slice(0, 10)
-    .map((person) => ({
-      ...person,
-      id: `demo-${person.id}`,
-      referenceId: person.id,
-      paymentStatus: "verified",
-    })),
-  hidden: [],
-  overrides: {},
-  extraReferences: [],
-});
+const directoryDemo = () => {
+  const pastorsOf = (b) => people.filter((q) => q.role === "pastor" && q.bishop && namesAlike(q.bishop, b.name));
+  const chosen = references.filter((b) => b.image && pastorsOf(b).length).sort(bySurname).slice(0, 10);
+  const confirmed = [...chosen, ...chosen.flatMap((b) => pastorsOf(b).filter((q) => q.image).slice(0, 12))];
+  return {
+    source: "original",
+    photos: "confirmed",
+    year: 2027,
+    roll: confirmed.map((person) => ({ ...person, id: `preview-${person.id}`, referenceId: person.id, paymentStatus: "verified" })),
+    hidden: [],
+    overrides: {},
+    extraReferences: [],
+  };
+};
 const statusLabel = {
   draft: "Draft",
   unclaimed: "Unclaimed",
@@ -746,7 +742,7 @@ export default function RegistrationApp({
       </header>}
       {showDirectoryDemo ? (
         <div className="reg-demo reg-directory-demo">
-          <strong>Dummy preview</strong> · 10 bishops are marked paid; every other bishop and all pastors stay dark.
+          <strong>Preview</strong> · ten bishops and their photographed pastors are marked confirmed; everyone else stays dark.
         </div>
       ) : !api.live && (
         <div className="reg-demo">
@@ -2678,7 +2674,14 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
   return (
     <>
       <div className="reg-people-grid">
-        {list.slice(0, limit).map((p) => (
+        {list.slice(0, limit).map((p) => p.standing === false ? (
+          <button className="reg-person-card reg-dark" key={p.id} onClick={() => onOpen(p)} aria-label={`${p.role === "bishop" ? "Bishop" : "Pastor"} ${p.n || ""} · not yet approved`}>
+            <span className="reg-person-portrait">
+              {p.n && <span className="reg-person-n">{p.n}</span>}
+              <Portrait person={p} />
+            </span>
+          </button>
+        ) : (
           <button
             className="reg-person-card"
             key={p.id}
@@ -3412,6 +3415,29 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
     () => filterOptions(roll, filter.org, filter.group),
     [roll, filter.org, filter.group],
   );
+  // The pastors' side groups pastors under their bishop while no search or filter is active.
+  const filtering = Boolean(filter.q || filter.org || filter.group || filter.denomination || filter.country);
+  const grouped = useMemo(() => {
+    if (role !== "pastor" || filtering) return null;
+    const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(bySurname).map((p, i) => ({ ...p, n: i + 1 }));
+    const byName = new Map();
+    for (const q of roll) if (q.role === "pastor" && q.bishop) { const k = normalName(q.bishop); if (!byName.has(k)) byName.set(k, []); byName.get(k).push(q); }
+    const taken = new Set(), blocks = [];
+    for (const b of bishopsSorted) {
+      let list = byName.get(normalName(b.name)) || [];
+      if (!list.length) for (const [k, qs] of byName) if (!taken.has(k) && namesAlike(k, b.name)) { list = qs; break; }
+      list = list.filter((q) => !taken.has(q.id)).sort(bySurname);
+      list.forEach((q) => taken.add(q.id));
+      blocks.push({ bishop: b, pastors: list });
+    }
+    let k = 0;
+    const number = (q) => ({ ...q, n: ++k });
+    const withPastors = blocks.filter((x) => x.pastors.length).map((x) => ({ ...x, pastors: x.bishop.standing === false ? [] : x.pastors.map(number) }));
+    const alone = blocks.filter((x) => !x.pastors.length).map((x) => x.bishop);
+    const rest = roll.filter((q) => q.role === "pastor" && !taken.has(q.id)).sort(bySurname).map(number);
+    return { withPastors, alone, rest };
+  }, [roll, role, filtering]);
+  const unapproved = selected?.standing === false;
   return (
     <>
       {switcher && <div className="reg-toggle" role="group" aria-label="Bishops or pastors">
@@ -3436,7 +3462,45 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
         setFilter={setFilter}
         options={options}
       />
-      {list.length ? (
+      {grouped ? (
+        <div className="reg-grouped">
+          {grouped.withPastors.map(({ bishop: b, pastors: ps }) => (
+            <section key={b.id} className={`reg-bishop-block ${b.standing === false ? "dark" : ""}`}>
+              <button type="button" className="reg-bishop-head" onClick={() => setSelected(b)}>
+                <span className="reg-person-n">{b.n}</span>
+                <Portrait person={b} className="reg-circle" />
+                {b.standing !== false && (
+                  <span className="reg-bishop-who">
+                    <b><PersonName name={b.name} /></b>
+                    <small>{[caps(b.denomination), placeOf(b)].filter(Boolean).join(" · ")}</small>
+                  </span>
+                )}
+              </button>
+              {ps.length > 0 && <PeopleGrid list={ps} limit={ps.length} onOpen={setSelected} dots={false} />}
+            </section>
+          ))}
+          {grouped.alone.length > 0 && (
+            <section className="reg-bishop-block plain">
+              <h3 className="reg-group-heading">Bishops · pastors not yet listed</h3>
+              <div className="reg-circles">
+                {grouped.alone.map((b) => (
+                  <button key={b.id} type="button" className="reg-circle-item" onClick={() => setSelected(b)}>
+                    <span className="reg-person-n">{b.n}</span>
+                    <Portrait person={b} className="reg-circle" />
+                    {b.standing !== false && <small><PersonName name={b.name} /></small>}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+          {grouped.rest.length > 0 && (
+            <section className="reg-bishop-block plain">
+              <h3 className="reg-group-heading">Pastors</h3>
+              <PeopleGrid list={grouped.rest} limit={limit} onMore={() => setLimit((n) => n + 300)} onOpen={setSelected} dots={false} />
+            </section>
+          )}
+        </div>
+      ) : list.length ? (
         <PeopleGrid
           list={list}
           limit={limit}
@@ -3451,7 +3515,12 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
             : "Bishops and pastors appear here as they register this year."}
         </Empty>
       )}
-      {selected && (
+      {selected && unapproved && (
+        <Dialog title={`${selected.role === "bishop" ? "Bishop" : "Pastor"}${selected.n ? ` · No. ${selected.n}` : ""}`} onClose={trail.close}>
+          <p className="reg-unapproved">This {selected.role === "bishop" ? "bishop" : "pastor"} has not yet been approved.</p>
+        </Dialog>
+      )}
+      {selected && !unapproved && (
         <Dialog title={selected.name} onClose={trail.close} onBack={trail.back} backLabel={trail.backLabel} {...stepper(list, selected, trail.step)}>
           <PublicRecord person={selected} onOpen={trail.open} from={roll} />
         </Dialog>
