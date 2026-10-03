@@ -71,6 +71,25 @@ const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 // A self-contained preview for /directory-demo/. It deliberately never reads
 // or writes the registration store: ten bishops appear as paid/confirmed and
 // every other minister remains behind the dark public-directory silhouette.
+// The front-page drone shot. React does not write the muted attribute into the page, and Safari
+// refuses to autoplay a video it does not see as muted, so the element is muted from script and
+// played explicitly; if the browser still refuses (Low Power Mode), the first touch starts it.
+function HeroVideo({ src, poster }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = true; v.defaultMuted = true; v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("webkit-playsinline", "");
+    const start = () => v.play().catch(() => {});
+    start();
+    const onVisible = () => { if (!document.hidden) start(); };
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("pointerdown", start, { once: true });
+    window.addEventListener("touchstart", start, { once: true, passive: true });
+    return () => { document.removeEventListener("visibilitychange", onVisible); window.removeEventListener("pointerdown", start); window.removeEventListener("touchstart", start); };
+  }, [src]);
+  return <video ref={ref} className="reg-hero-video" autoPlay muted loop playsInline disablePictureInPicture disableRemotePlayback preload="auto" poster={poster} src={src} aria-hidden="true" />;
+}
 const directoryDemo = () => ({
   source: "original",
   photos: "confirmed",
@@ -786,16 +805,9 @@ export default function RegistrationApp({
               <AccountForm mode="signin" run={run} busy={busy} onActor={() => location.assign(`${base}/signup/`)} />
             </Dialog>
           )}
-          <video
-            className="reg-hero-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
+          <HeroVideo
             poster={`${base}/assets/brand/castle-hero-poster.webp`}
             src={`${base}/assets/brand/castle-hero-${typeof window !== "undefined" && window.innerWidth < 900 ? "1280" : "1920"}.mp4`}
-            aria-hidden="true"
           />
           <h1 className="reg-hero-title">
             <img src={`${base}/assets/brand/castle-white.png`} alt="" />

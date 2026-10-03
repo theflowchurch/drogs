@@ -2008,6 +2008,10 @@ p {
   opacity: 0.6;
   pointer-events: none;
 }
+/* No native play overlay or controls over the drone shot. */
+.reg-hero-video::-webkit-media-controls,
+.reg-hero-video::-webkit-media-controls-start-playback-button,
+.reg-hero-video::-webkit-media-controls-panel { display: none !important; -webkit-appearance: none; }
 @media (prefers-reduced-motion: reduce) {
   .reg-hero-video { display: none; }
 }
