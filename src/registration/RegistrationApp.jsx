@@ -76,6 +76,10 @@ const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 // played explicitly; if the browser still refuses (Low Power Mode), the first touch starts it.
 function HeroVideo({ src, poster }) {
   const ref = useRef(null);
+  // Phones get the 720p file; the width is only known in the browser, so pick it there.
+  const [size, setSize] = useState("1920");
+  useEffect(() => { setSize(window.innerWidth < 900 ? "1280" : "1920"); }, []);
+  src = src.replace("{size}", size);
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
@@ -807,7 +811,7 @@ export default function RegistrationApp({
           )}
           <HeroVideo
             poster={`${base}/assets/brand/castle-hero-poster.webp`}
-            src={`${base}/assets/brand/castle-hero-${typeof window !== "undefined" && window.innerWidth < 900 ? "1280" : "1920"}.mp4`}
+            src={`${base}/assets/brand/castle-hero-{size}.mp4`}
           />
           <h1 className="reg-hero-title">
             <img src={`${base}/assets/brand/castle-white.png`} alt="" />
