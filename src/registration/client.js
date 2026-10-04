@@ -144,7 +144,7 @@ export async function signOut(office = false, forget = true) {
 }
 export async function snapshot(actor) {
   if (mysqlBackend) return server("snapshot");
-  if (!live) return { ...visibleState(read(), actor, references, people), publicPhotos: "confirmed" };
+  if (!live) { const v = visibleState(read(), actor, references, people); return { ...v, publicPhotos: "confirmed", ...(process.env.NEXT_PUBLIC_PREVIEW === "1" && !read().fees ? { fees: { bishop: 100, pastor: 20 } } : {}) }; }
   const { data, error } = await supabase().rpc("registration_snapshot");
   check(error);
   return data;

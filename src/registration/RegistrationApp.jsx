@@ -2700,7 +2700,7 @@ function PersonName({ name }) {
   const { given, surname } = splitName(name);
   return <>{given && <span className="reg-given">{given} </span>}{surname}</>;
 }
-function PeopleGrid({ list, limit, onMore, onOpen, dots = true, compact = false }) {
+function PeopleGrid({ list, limit, onMore, onOpen, dots = true, compact = false, counts = null }) {
   return (
     <>
       <div className={`reg-people-grid ${compact ? "compact" : ""}`}>
@@ -2723,6 +2723,7 @@ function PeopleGrid({ list, limit, onMore, onOpen, dots = true, compact = false 
             </span>
             <div className="reg-person-name">
               <h3><PersonName name={p.name} /></h3>
+              {p.role === "bishop" && counts?.get(p.id) > 0 && <span className="reg-count-pill">{overseeing(counts.get(p.id))}</span>}
               {dots && <Dot person={p} />}
               {dots && p.denominationListed === false && <small className="reg-no-denomination">No denomination{p.denomination ? ` · was ${p.denomination}` : ""}</small>}
             </div>
@@ -3289,7 +3290,7 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
     </section>
   );
 }
-function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null }) {
+function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null, count = 0 }) {
   return (
     <>
       <div className="reg-record-hero">
@@ -3303,6 +3304,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null 
           {p.standing !== undefined && (
             <p className={`reg-record-line reg-standing ${p.standing ? "good" : "pending"}`}>{p.standing ? "In Good Standing" : "Standing not yet confirmed"}</p>
           )}
+          {p.role === "bishop" && count > 0 && <p className="reg-record-line"><span className="reg-count-pill">{overseeing(count)}</span></p>}
           {p.denomination && (
             <p className="reg-record-denomination">
               <DenominationLogo person={p} catalog={catalog || catalogOf(null)} />
@@ -3428,6 +3430,12 @@ function SearchResults({ list, q }) {
 }
 // Bishops are pastors too, so the pastors' list carries everyone; the bishops' list only bishops.
 const inRole = (p, role) => role === "pastor" || p.role === role;
+// The pastors shown under a bishop: the list they uploaded this year (lit once registered with a photo), then pastors whose record names them.
+const pastorsUnder = (b, roll) => {
+  const uploaded = (b.pastors || []).map((q) => ({ id: q.id, role: "pastor", name: q.name, photo: q.photo || "", image: "", city: q.city || "", country: q.country || "", standing: Boolean(q.registered && q.photo), bishop: b.name }));
+  return [...uploaded, ...pastorsOf(b, roll).filter((q) => !uploaded.some((u) => namesAlike(u.name, q.name)))];
+};
+const overseeing = (n) => (n ? `Overseeing ${n} pastor${n === 1 ? "" : "s"}` : "");
 function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher = true, counts = true }) {
   const [filter, setFilter] = useState({
       q: initialQuery,
@@ -3460,10 +3468,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
     const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(bySurname).map((p, i) => ({ ...p, n: i + 1 }));
     const taken = new Set(), blocks = [];
     for (const b of bishopsSorted) {
-      const named = pastorsOf(b, roll).filter((q) => !taken.has(q.id));
-      // The list a confirmed bishop uploaded this year: each entry is a square, lit once that pastor has registered with a photo.
-      const uploaded = (b.pastors || []).map((q) => ({ id: q.id, role: "pastor", name: q.name, photo: q.photo || "", image: "", city: q.city || "", country: q.country || "", standing: Boolean(q.registered && q.photo), bishop: b.name }));
-      const list = [...uploaded, ...named.filter((q) => !uploaded.some((u) => namesAlike(u.name, q.name)))].sort(bySurname);
+      const list = pastorsUnder(b, roll).filter((q) => !taken.has(q.id)).sort(bySurname);
       list.forEach((q) => taken.add(q.id));
       blocks.push({ bishop: b, pastors: list });
     }
@@ -3477,6 +3482,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
     const order = [...withPastors.flatMap((x) => [x.bishop, ...x.pastors]), ...alone, ...rest];
     return { withPastors, alone, rest, order };
   }, [roll, role, filtering]);
+  const pastorCount = useMemo(() => new Map(roll.filter((p) => p.role === "bishop").map((b) => [b.id, pastorsUnder(b, roll).length])), [roll]);
   const unapproved = selected?.standing === false;
   // Which sequence the dialog arrows step through: the grid as shown, or one bishop's pastors.
   const [stepList, setStepList] = useState(null);
@@ -3518,6 +3524,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
                   <span className="reg-bishop-who">
                     <b><PersonName name={b.name} /></b>
                     <small>{[caps(b.denomination), placeOf(b)].filter(Boolean).join(" · ")}</small>
+                    <span className="reg-count-pill">{overseeing(ps.length)}</span>
                   </span>
                 )}
               </button>
@@ -3552,6 +3559,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
           onMore={() => setLimit((n) => n + 300)}
           onOpen={pick(null)}
           dots={false}
+          counts={pastorCount}
         />
       ) : (
         <Empty title={roll.length ? "No one matches this search" : "The roll is filling up"}>
@@ -3567,7 +3575,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
       )}
       {selected && !unapproved && (
         <Dialog title={selected.name} onClose={trail.close} onBack={trail.back} backLabel={trail.backLabel} {...stepper(steps, selected, trail.step)}>
-          <PublicRecord person={selected} onOpen={selected.role === "bishop" ? openUnder(selected) : trail.open} from={roll} />
+          <PublicRecord person={selected} onOpen={selected.role === "bishop" ? openUnder(selected) : trail.open} from={roll} count={selected.role === "bishop" ? pastorCount.get(selected.id) : 0} />
         </Dialog>
       )}
     </>
