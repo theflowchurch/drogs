@@ -117,11 +117,6 @@ for (const row of sheet) { let r = row;
 // Hand corrections the office confirmed (data/pastor-fixes.json: name → fields).
 const fixes = JSON.parse(await readFile(new URL('../data/pastor-fixes.json', import.meta.url), 'utf8').catch(() => '{}'));
 for (const [who, f] of Object.entries(fixes)) for (const p of people) if (p.role === 'pastor' && normalName(p.name) === normalName(who)) Object.assign(p, Object.fromEntries(Object.entries(f).filter(([k]) => k !== 'note')));
-// Duplicate records (scripts/find-duplicates.mjs → data/duplicate-removals.json): the kept record inherits anything it lacks.
-const dupes = JSON.parse(await readFile(new URL('../data/duplicate-removals.json', import.meta.url), 'utf8').catch(() => '{"removals":[]}')).removals;
-const dropIds = new Set();
-for (const d of dupes) { const drop = people.find(p => p.id === d.id), keep = people.find(p => p.id === d.keep); if (!drop || !keep) continue; for (const k of ['image', 'city', 'country', 'yearAppointed', 'yearOrdained', 'bishop', 'branch', 'gender']) if (!keep[k] && drop[k] && !(k === 'bishop' && keep.role === 'bishop')) keep[k] = drop[k]; dropIds.add(d.id); }
-people = people.filter(p => !dropIds.has(p.id));
 // The original data's "supervising bishop" text goes through the same spelling fixes.
 for (const p of people) if (p.role === 'pastor' && p.bishop) p.bishop = resolveBishop(p.bishop) || p.bishop;
 console.log(`2026 sheet: ${sheet.length} rows · ${sheetStats.matched} matched existing pastors · ${sheetStats.added} new pastors added · ${sheetStats.bishopsSkipped} bishop rows left to the official list · ${sheetStats.ambiguous} ambiguous names skipped`);
@@ -231,6 +226,11 @@ if (broken.length) throw Error(`Garbled names remain: ${broken.map(p => p.name).
 // without them; the server merges them back from data/reference-contacts.json.
 const contacts = Object.fromEntries(people.filter(p => p.email || p.phone).map(p => [p.id, { email: p.email || '', phone: p.phone || '' }]));
 await writeFile(new URL('../data/reference-contacts.json', import.meta.url), JSON.stringify(contacts) + '\n');
+// Duplicate records, applied once every record (official-list bishops included) exists (scripts/find-duplicates.mjs → data/duplicate-removals.json): the kept record inherits anything it lacks.
+const dupes = JSON.parse(await readFile(new URL('../data/duplicate-removals.json', import.meta.url), 'utf8').catch(() => '{"removals":[]}')).removals;
+const dropIds = new Set();
+for (const d of dupes) { const drop = people.find(p => p.id === d.id), keep = people.find(p => p.id === d.keep); if (!drop || !keep) continue; for (const k of ['image', 'city', 'country', 'yearAppointed', 'yearOrdained', 'bishop', 'branch', 'gender']) if (!keep[k] && drop[k] && !(k === 'bishop' && keep.role === 'bishop')) keep[k] = drop[k]; dropIds.add(d.id); }
+people = people.filter(p => !dropIds.has(p.id));
 // Portraits imported from the office's photo folders (scripts/import-photos.mjs writes data/photo-assignments.json).
 const assigned = JSON.parse(await readFile(new URL('../data/photo-assignments.json', import.meta.url), 'utf8').catch(() => '{}'));
 for (const p of people) if (assigned[p.id] && (p.role === 'pastor' || !p.image)) p.image = assigned[p.id];

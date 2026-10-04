@@ -12,14 +12,154 @@
    "reason": "same person as Bishop Harold Befu- Addo (hand-confirmed spelling)"
   },
   {
+   "id": "P5093",
+   "keep": "B78",
+   "reason": "same person as Bishop Henri Fogwe (hand-confirmed spelling)"
+  },
+  {
+   "id": "P4547",
+   "keep": "B196",
+   "reason": "same person as Bishop Edwin Morgan Ogoe Jr (hand-confirmed spelling)"
+  },
+  {
+   "id": "P4556",
+   "keep": "B59",
+   "reason": "same person as Bishop Erica-Luka Aryee (hand-confirmed spelling)"
+  },
+  {
+   "id": "P4589",
+   "keep": "B127",
+   "reason": "same person as Bishop Louisa-Timothea Mills-Odoi (hand-confirmed spelling)"
+  },
+  {
+   "id": "P4628",
+   "keep": "B187",
+   "reason": "same person as Bishop Vivaldi-Joy Aboagye (hand-confirmed spelling)"
+  },
+  {
+   "id": "P4708",
+   "keep": "B240",
+   "reason": "same person as Bishop Solomon Tay (hand-confirmed spelling)"
+  },
+  {
    "id": "P4026",
    "keep": "BO265",
    "reason": "same person as Bishop Serena Ariana Ababio (office confirmed)"
   },
   {
+   "id": "P198",
+   "keep": "BO215",
+   "reason": "same person as Bishop Alice Renatta Obaka (office confirmed)"
+  },
+  {
+   "id": "P1466",
+   "keep": "BO15",
+   "reason": "same person as Bishop Esther-Richie Okyere (office confirmed)"
+  },
+  {
+   "id": "P4593",
+   "keep": "BO250",
+   "reason": "same person as Bishop Mary Rea Bandoh (office confirmed)"
+  },
+  {
+   "id": "P3465",
+   "keep": "BO221",
+   "reason": "same person as Bishop Paula Chela Mills Thompson (office confirmed)"
+  },
+  {
+   "id": "P4610",
+   "keep": "BO264",
+   "reason": "same person as Bishop Ruthie Appiah Denkyira (office confirmed)"
+  },
+  {
+   "id": "P4530",
+   "keep": "B35",
+   "reason": "same name as Bishop David Yalleh"
+  },
+  {
+   "id": "P4553",
+   "keep": "B55",
+   "reason": "same name as Bishop Emmanuel Tetteh"
+  },
+  {
    "id": "P3269",
    "keep": "BO128",
    "reason": "same name as Bishop Nee Nunoo"
+  },
+  {
+   "id": "P87",
+   "keep": "P4688",
+   "reason": "same name as Stephany Adzo Sedjroh (word order)"
+  },
+  {
+   "id": "P933",
+   "keep": "P4710",
+   "reason": "same name as Anthony Oduro-Denkyirah (word order)"
+  },
+  {
+   "id": "P3027",
+   "keep": "P1249",
+   "reason": "same name as Emmanuel Andoh Mensah (word order)"
+  },
+  {
+   "id": "P5097",
+   "keep": "P3171",
+   "reason": "same name as Moussounda Moussounda Quesnel (word order)"
+  },
+  {
+   "id": "P244",
+   "keep": "P246",
+   "reason": "shorter form of Andrew Shemen Luguterah Jn under the same bishop"
+  },
+  {
+   "id": "P4002",
+   "keep": "P1487",
+   "reason": "shorter form of Eugenia Dode-Seidu under the same bishop"
+  },
+  {
+   "id": "P1380",
+   "keep": "P1381",
+   "reason": "shorter form of Eric Asamoah Aseidu under the same bishop"
+  },
+  {
+   "id": "P4770",
+   "keep": "P1448",
+   "reason": "shorter form of Estel Vasty Akua Atteh under the same bishop"
+  },
+  {
+   "id": "P4786",
+   "keep": "P2003",
+   "reason": "shorter form of Hinnako Donatien Oulai under the same bishop"
+  },
+  {
+   "id": "P3386",
+   "keep": "P1964",
+   "reason": "shorter form of Helena Owuraku Asamoah under the same bishop"
+  },
+  {
+   "id": "P936",
+   "keep": "P5096",
+   "reason": "shorter form of Anto Yaw Dennis under the same bishop"
+  },
+  {
+   "id": "P539",
+   "keep": "P5099",
+   "reason": "shorter form of Peyla Marla Moussirou Bouanga under the same bishop"
+  },
+  {
+   "id": "P847",
+   "keep": "P5098",
+   "reason": "shorter form of Danielle Cynthia Djodjoum Gnahoua under the same bishop"
+  },
+  {
+   "id": "P2480",
+   "keep": "P5092",
+   "reason": "shorter form of Juliana Boupana Biyoghe under the same bishop"
+  },
+  {
+   "id": "P5029",
+   "keep": "P2515",
+   "reason": "shorter form of Kahssay Biniam Gebremariam under the same bishop"
   }
  ]
 }
