@@ -2,7 +2,7 @@ import {mkdir,cp,writeFile,rm} from 'node:fs/promises';
 // Explicit public-asset allowlist: the reconciled portrait library, denomination
 // marks and branding back the directory. Never export .private, source
 // workbooks, API keys, local audit reports, or the repository itself.
-const published=['brand','bishops','pastors','denominations','outreach','payment-apps', 'people'];
+const published=['brand','bishops','pastors','denominations','outreach','payment-apps', 'portraits'];
 await mkdir('public/assets',{recursive:true});
 await rm('public/assets',{recursive:true,force:true});
 await mkdir('public/assets',{recursive:true});

@@ -1,5 +1,5 @@
 // Assigns portraits from the office's photo folders (indexed by scripts/index-photos.mjs) to the
-// people in reference-people.json, converts them to small WebP files under assets/people/, and
+// people in reference-people.json, converts them to small WebP files under assets/portraits/, and
 // writes data/photo-assignments.json for scripts/build-reference.mjs to pick up.
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -26,11 +26,11 @@ for (const e of index) {
   const prev = chosen.get(p.id); if (!prev || score > prev.score) chosen.set(p.id, { path: e.path, score });
 }
 stats.assigned = chosen.size;
-mkdirSync(new URL('../assets/people/', import.meta.url), { recursive: true });
+mkdirSync(new URL('../assets/portraits/', import.meta.url), { recursive: true });
 const out = JSON.parse(existsSync(new URL('../data/photo-assignments.json', import.meta.url)) ? readFileSync(new URL('../data/photo-assignments.json', import.meta.url), 'utf8') : '{}');
 let converted = 0, failed = 0;
 for (const [id, { path }] of chosen) {
-  const dest = new URL(`../assets/people/${id}.webp`, import.meta.url);
+  const dest = new URL(`../assets/portraits/${id}.webp`, import.meta.url);
   if (!existsSync(dest)) {
     try {
       let src = path;
@@ -39,7 +39,7 @@ for (const [id, { path }] of chosen) {
       converted++;
     } catch { failed++; continue; }
   }
-  out[id] = `assets/people/${id}.webp`;
+  out[id] = `assets/portraits/${id}.webp`;
 }
 writeFileSync(new URL('../data/photo-assignments.json', import.meta.url), JSON.stringify(out, null, 0) + '\n');
 console.log(JSON.stringify({ ...stats, converted, failed, total: Object.keys(out).length }));
