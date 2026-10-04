@@ -589,7 +589,6 @@ export default function RegistrationApp({
   useEffect(() => {
     setSidebarHidden(localStorage.getItem("kc-sidebar-hidden") === "yes");
     if (signup && location.hash === "#signin") setSigninOpen("signin");
-    else if (signup && location.hash === "#signup") setSigninOpen("signup");
     // The bishop / pastor links open straight onto the email box: email first,
     // then the code, then the form with that email locked in.
     else if (typeof signup === "string") setSigninOpen("signup");
@@ -750,12 +749,15 @@ export default function RegistrationApp({
             </button>
           ) : signup ? (
             <>
-              <button className="reg-text" onClick={() => setSigninOpen("signin")}>
+              <button className={typeof signup === "string" ? "reg-text" : "reg-primary reg-signin-button"} onClick={() => setSigninOpen("signin")}>
                 Sign in
               </button>
-              <button className="reg-primary reg-signin-button" onClick={() => setSigninOpen("signup")}>
-                Sign up
-              </button>
+              {typeof signup === "string" && (
+                // Sign-up exists only on the bishop and pastor pages the office shares; the plain page is for signing in.
+                <button className="reg-primary reg-signin-button" onClick={() => setSigninOpen("signup")}>
+                  Sign up
+                </button>
+              )}
             </>
           ) : browse ? (
             <>
@@ -1332,16 +1334,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
           </h1>
           {open && (
             <Dialog title={open === "signin" ? "Sign in" : "Sign up"} onClose={onClose}>
-              {open === "signup" && typeof signup !== "string" ? (
-                // Sign-up always starts from a role: the links below are the only way in.
-                <div className="reg-signup-choice">
-                  <p>Are you registering as a bishop or as a pastor?</p>
-                  <a className="reg-primary" href={`${base}/signup/bishop/`}>I am a Bishop →</a>
-                  <a className="reg-primary" href={`${base}/signup/pastor/`}>I am a Pastor →</a>
-                </div>
-              ) : (
-                <AccountForm office={office} signup={open === "signup"} mode={open} run={run} busy={busy} onActor={onActor} />
-              )}
+              <AccountForm office={office} signup={open === "signup"} mode={open} run={run} busy={busy} onActor={onActor} />
             </Dialog>
           )}
         </>

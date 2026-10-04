@@ -20,7 +20,7 @@ with sync_playwright() as p:
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
     def login(admin=False):
-        page.goto(BASE + ('/admin' if admin else '/signup/'))
+        page.goto(BASE + ('/admin' if admin else '/signup/bishop/'))  # sign-up lives only on the role pages
         page.wait_for_load_state('networkidle')
         expect(page.get_by_text('Demo ·', exact=False)).not_to_be_visible()
         if admin:
@@ -33,8 +33,7 @@ with sync_playwright() as p:
             page.get_by_label('One-time email code').fill(code)
             page.get_by_role('button', name='Verify and sign in').click()
         else:
-            page.get_by_role('button', name='Sign up', exact=True).click()
-            page.get_by_role('link', name='I am a Bishop →').click()  # sign-up always starts from a role
+            if not page.get_by_label('Email address', exact=True).is_visible(): page.get_by_role('button', name='Sign up', exact=True).click()
             page.get_by_label('Email address', exact=True).fill('browser-member@example.com')
             page.get_by_role('button', name='Send code').click()
             page.get_by_label('One-time email code').wait_for()

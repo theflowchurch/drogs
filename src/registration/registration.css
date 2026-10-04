@@ -2182,9 +2182,7 @@ p {
 .reg-account.signin .reg-hero-video {
   opacity: 0.35;
 }
-.reg-signup-choice { display: grid; gap: 12px; }
-.reg-signup-choice p { margin: 0 0 4px; }
-.reg-signup-choice a { text-align: center; text-decoration: none; }
+
 .reg-account.signin h1 {
   font-size: clamp(40px, 5vw, 64px);
   letter-spacing: -2px;
