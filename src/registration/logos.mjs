@@ -15,7 +15,6 @@ export const LOGOS = {
   "Bema International Church": "assets/denominations/bema-international-church.png",
   "Candle In The Dark Church": "assets/denominations/candle-in-the-dark-church.png",
   "Castle City Church": "assets/denominations/castle-city-church.png",
-  "Catch The Anointing Centre": "assets/denominations/catch-the-anointing.webp",
   "Double Mega Missionary Church": "assets/denominations/double-mega-missionary-church.png",
   "East End City Churches": "assets/denominations/east-end-city-church.png",
   "East Mountain Churches": "assets/denominations/east-mountain-church.png",

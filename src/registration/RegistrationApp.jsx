@@ -584,6 +584,7 @@ export default function RegistrationApp({
   useEffect(() => {
     setSidebarHidden(localStorage.getItem("kc-sidebar-hidden") === "yes");
     if (signup && location.hash === "#signin") setSigninOpen("signin");
+    else if (signup && location.hash === "#signup") setSigninOpen("signup");
     // The bishop / pastor links open straight onto the email box: email first,
     // then the code, then the form with that email locked in.
     else if (typeof signup === "string") setSigninOpen("signup");
@@ -593,9 +594,11 @@ export default function RegistrationApp({
     setSidebarHidden(next);
     localStorage.setItem("kc-sidebar-hidden", next ? "yes" : "no");
   };
+  const [pubError, setPubError] = useState("");
+  const loadPublic = () => { setPubError(""); api.publicDirectory().then(setPub).catch((e) => setPubError(e.message)); };
   useEffect(() => {
     // The public directory needs no account at all.
-    if (browse && !showDirectoryDemo) api.publicDirectory().then(setPub).catch((e) => setError(e.message));
+    if (browse && !showDirectoryDemo) loadPublic();
   }, [browse, showDirectoryDemo]);
   useEffect(() => {
     if (!actor) return;
@@ -752,7 +755,7 @@ export default function RegistrationApp({
           ) : browse ? (
             <>
               <a className="reg-text" href={`${base}/signup/#signin`}>Sign in</a>
-              <a className="reg-primary reg-signin-button" href={`${base}/signup/`}>Sign up</a>
+              <a className="reg-primary reg-signin-button" href={`${base}/signup/#signup`}>Sign up</a>
             </>
           ) : null}
           {!office && (browse || profile?.role === "bishop") && (
@@ -840,6 +843,11 @@ export default function RegistrationApp({
       ) : browse ? (
         pub ? (
           <PublicDirectory data={{ ...pub, photos: facePref || pub.photos }} />
+        ) : pubError ? (
+          <div className="reg-loading" role="alert">
+            <p>The directory could not be opened. {pubError}</p>
+            <button type="button" className="reg-primary" onClick={loadPublic}>Try again</button>
+          </div>
         ) : (
           <div className="reg-loading" role="status">
             Opening the directory…
@@ -1299,10 +1307,9 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
   const [sent] = useState(false);
   return (
     <section className={`reg-account ${office ? "signup" : "signin"}`}>
-      <div
-        className="reg-hero-image"
-        style={{ backgroundImage: `url(${base}/assets/brand/castle-night.webp)` }}
-        aria-hidden="true"
+      <HeroVideo
+        poster={`${base}/assets/brand/castle-hero-night-poster.webp`}
+        src={`${base}/assets/brand/castle-hero-night-{size}.mp4`}
       />
       {office ? (
         <>
@@ -1326,7 +1333,16 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
           </h1>
           {open && (
             <Dialog title={open === "signin" ? "Sign in" : "Sign up"} onClose={onClose}>
-              <AccountForm office={office} signup={open === "signup"} mode={open} run={run} busy={busy} onActor={onActor} />
+              {open === "signup" && typeof signup !== "string" ? (
+                // Sign-up always starts from a role: the links below are the only way in.
+                <div className="reg-signup-choice">
+                  <p>Are you registering as a bishop or as a pastor?</p>
+                  <a className="reg-primary" href={`${base}/signup/bishop/`}>I am a Bishop →</a>
+                  <a className="reg-primary" href={`${base}/signup/pastor/`}>I am a Pastor →</a>
+                </div>
+              ) : (
+                <AccountForm office={office} signup={open === "signup"} mode={open} run={run} busy={busy} onActor={onActor} />
+              )}
             </Dialog>
           )}
         </>

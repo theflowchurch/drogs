@@ -234,5 +234,14 @@ people = people.filter(p => !dropIds.has(p.id));
 // Portraits imported from the office's photo folders (scripts/import-photos.mjs writes data/photo-assignments.json).
 const assigned = JSON.parse(await readFile(new URL('../data/photo-assignments.json', import.meta.url), 'utf8').catch(() => '{}'));
 for (const p of people) if (assigned[p.id] && (p.role === 'pastor' || !p.image)) p.image = assigned[p.id];
+// There is no "Catch The Anointing Centre" (Joshua, 4 Oct 2026): anyone filed under it
+// takes their bishop's denomination (Yalleh → Jesus Is The Rock, Asamoah → Anagkazo).
+const GONE_DENOMINATIONS = new Set(['catch the anointing centre']);
+const bishopDenomination = new Map(people.filter(p => p.role === 'bishop' && !GONE_DENOMINATIONS.has(normalName(p.denomination))).map(b => [normalName(b.name), b.denomination]));
+const commonest = (list) => [...list.reduce((m, d) => m.set(d, (m.get(d) || 0) + 1), new Map())].sort((a, b) => b[1] - a[1])[0]?.[0] || '';
+for (const p of people) if (GONE_DENOMINATIONS.has(normalName(p.denomination)))
+  p.denomination = p.role === 'pastor'
+    ? bishopDenomination.get(normalName(p.bishop || '')) || ''
+    : commonest(people.filter(q => q.role === 'pastor' && normalName(q.bishop || '') === normalName(p.name) && q.denomination && !GONE_DENOMINATIONS.has(normalName(q.denomination))).map(q => q.denomination)); // a bishop takes what their pastors are filed under
 await writeFile(new URL('../src/registration/reference-people.json', import.meta.url), JSON.stringify(people.map(({ email, phone, ...rest }) => rest)) + '\n');
 console.log(`${people.length} reference records (${people.filter(p => p.role === 'bishop').length} bishops, ${people.filter(p => p.role === 'pastor').length} pastors).`);

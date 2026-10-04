@@ -17,7 +17,6 @@ export const DENOMINATIONS = {
     "Bema International Church",
     "Candle In The Dark Church",
     "Castle City Church",
-    "Catch The Anointing Centre",
     "Double Mega Missionary Church",
     "East End City Churches",
     "East Mountain Churches",

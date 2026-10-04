@@ -17,15 +17,25 @@ export const live = mysqlBackend || Boolean(url && key);
 // request so the server reads the matching session cookie.
 let door = "member";
 export const setDoor = (office) => { door = office ? "office" : "member"; };
-async function server(path, body, options = {}) {
-  const response = await fetch(`/api/registration/${path}`, {
-    credentials: "same-origin", cache: "no-store", headers: { "X-Kc-Door": door, ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
-    ...(body === undefined ? {} : { method: "POST", body: JSON.stringify(body) }),
-    ...options,
-    ...(options.headers ? { headers: { "X-Kc-Door": door, ...options.headers } } : {}),
-  });
+async function server(path, body, options = {}, attempt = 0) {
+  let response;
+  try {
+    response = await fetch(`/api/registration/${path}`, {
+      credentials: "same-origin", cache: "no-store", headers: { "X-Kc-Door": door, ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
+      ...(body === undefined ? {} : { method: "POST", body: JSON.stringify(body) }),
+      ...options,
+      ...(options.headers ? { headers: { "X-Kc-Door": door, ...options.headers } } : {}),
+    });
+  } catch (e) { response = null; }
   let data;
-  try { data = await response.json(); } catch { throw Error("The registration server is unavailable. Please try again shortly."); }
+  try { data = await response.json(); } catch { data = undefined; }
+  // The host's CDN sometimes answers the first request after a page load with its
+  // bot-check page instead of JSON (seen on Safari especially). Reads are safe to
+  // repeat, so try again a few times before giving up.
+  if (data === undefined) {
+    if (body === undefined && attempt < 3) { await new Promise((r) => setTimeout(r, 700 * (attempt + 1))); return server(path, body, options, attempt + 1); }
+    throw Error("The registration server is unavailable. Please try again shortly.");
+  }
   if (!response.ok) throw Error(data.error || "Unable to complete the request.");
   return data;
 }
