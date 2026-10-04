@@ -23,7 +23,8 @@ const BISHOP_POOL = /BISHOPS PHOTOS|OTHER BISHOPS|RED JACKET|CONVENERS|\/UD BISH
 const chosen = new Map(); // person id -> { path, score }
 const stats = { files: index.length, own: 0, assigned: 0, ambiguous: 0, unmatched: 0, bishopsFilled: 0 };
 for (const e of index) {
-  if (e.own && e.bishopId) { const b = people.find((p) => p.id === e.bishopId); if (b && !b.image && !chosen.has(b.id)) { chosen.set(b.id, { path: e.path, score: 3 }); stats.bishopsFilled++; } stats.own++; continue; }
+  // A bishop's own portrait fills in when the bishop has no official photograph (imported ones are rebuilt every run).
+  if (e.own && e.bishopId) { const b = people.find((p) => p.id === e.bishopId); const official = b?.image && !b.image.startsWith('assets/portraits/'); if (b && !official && !chosen.has(b.id)) { chosen.set(b.id, { path: e.path, score: 3 }); stats.bishopsFilled++; } stats.own++; continue; }
   if (e.name.split(' ').length < 2) { stats.unmatched++; continue; }
   let c = candidates(e.name);
   const folderBishop = e.bishopId ? bishopName.get(e.bishopId) : '';
