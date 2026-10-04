@@ -370,20 +370,20 @@ function DashboardFrame() {
   );
 }
 // The on-device attire check's verdict, shown to the member under their upload.
-// A photo without the official attire, or without a face, cannot go forward; more than one face is only flagged.
-const attireBlocked = (check) => ["colour", "no-face", "checking"].includes(check?.verdict);
+// A photo without the official attire, without a plain white background, or without a face cannot go forward; more than one face is only flagged.
+const attireBlocked = (check) => ["colour", "background", "no-face", "checking"].includes(check?.verdict);
 function AttireNotice({ check, onChoose }) {
   if (!check || check.verdict === "ok" || check.verdict === "skipped") return null;
   if (check.verdict === "checking") return <p className="reg-small reg-attire-checking">Checking the photo…</p>;
   const hard = check.verdict === "colour" || check.verdict === "no-face";
   return (
     <div className="reg-attire-warning" role="alert">
-      <b>{hard ? "This photo cannot be used." : "Please take another look at this photo."}</b> {check.note} {hard ? "Please upload a photo of yourself in your official attire, facing the camera." : "You can choose a different photo, or continue if you are sure this one is right. The office will review it."}
+      <b>{hard ? "This photo cannot be used." : "Please take another look at this photo."}</b> {check.note} {hard ? "Please upload a photo of yourself in your official attire, facing the camera, in front of a plain white background." : "You can choose a different photo, or continue if you are sure this one is right. The office will review it."}
       <div><button type="button" className="reg-secondary" onClick={onChoose}>Choose another photo</button></div>
     </div>
   );
 }
-const attireWords = (check) => !check ? "" : check.verdict === "ok" ? "Attire check: passed" : check.verdict === "no-face" ? "Attire check: no face detected" : check.verdict === "many-faces" ? "Attire check: more than one person" : check.verdict === "colour" ? "Attire check: expected attire colour not seen" : "";
+const attireWords = (check) => !check ? "" : check.verdict === "ok" ? "Attire check: passed" : check.verdict === "no-face" ? "Attire check: no face detected" : check.verdict === "many-faces" ? "Attire check: more than one person" : check.verdict === "colour" ? (check.note?.includes("Background:") ? "Attire check: expected attire colour not seen; background not plain white" : "Attire check: expected attire colour not seen") : check.verdict === "background" ? "Attire check: background not plain white" : "";
 // A denomination's logo: the record's own artwork, else the catalog's (asset path or uploaded key).
 function DenominationLogo({ person, catalog }) {
   const src = person.denominationLogo || logoFor(catalog, person.denomination);
@@ -1806,7 +1806,7 @@ function RegistrationForm({
               <img src={`${base}/${attireExample(data).file}`} alt={attireExample(data).alt} />
               <figcaption>
                 <b>{attireExample(data).caption}</b>
-                Face the camera against a plain background, with your face fully visible. You must be wearing {expectedAttire(data).words}.
+                Face the camera against a plain white background, with your face fully visible. You must be wearing {expectedAttire(data).words}.
                 {data.gender === "female" ? " Selfies and casual clothing will not be accepted." : " Selfies, casual clothing or photos showing only the collar will not be accepted."}
               </figcaption>
             </figure>
@@ -2144,7 +2144,7 @@ function RegistrationForm({
               >
                 <h2>Confirm your photo</h2>
                 <p>
-                  Your photo must show you wearing {expectedAttire(data).words}. Your face must be fully visible, facing the camera, against a plain background.{" "}
+                  Your photo must show you wearing {expectedAttire(data).words}. Your face must be fully visible, facing the camera, against a plain white background.{" "}
                   {data.gender === "female" ? "Selfies and casual clothing will not be accepted." : "Photos showing only the collar, selfies or casual clothing will not be accepted."}
                 </p>
                 <div className="reg-photo-comparison">
@@ -2178,8 +2178,8 @@ function RegistrationForm({
                     }
                   />
                   {data.role === "bishop"
-                    ? "I confirm this is me wearing my official red jacket, with my face fully visible against a plain background."
-                    : "I confirm this is me in official pastoral attire, with my face fully visible against a plain background."}
+                    ? "I confirm this is me wearing my official red jacket, with my face fully visible against a plain white background."
+                    : "I confirm this is me in official pastoral attire, with my face fully visible against a plain white background."}
                 </label>
                 <button
                   className="reg-secondary"
@@ -3397,7 +3397,7 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
       {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
       {!embedded && legend}
       <div className="reg-member-roll">
-        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} switcher={!fixedRole} counts={embedded} />
+        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} switcher={!fixedRole} counts={embedded} notice={!embedded} />
       </div>
     </section>
   );
@@ -3439,7 +3439,35 @@ const pastorsUnder = (b, roll) => {
   return [...uploaded, ...pastorsOf(b, roll).filter((q) => !uploaded.some((u) => namesAlike(u.name, q.name)))];
 };
 const overseeing = (n) => (n ? <>Overseeing <b>{n}</b> pastor{n === 1 ? "" : "s"}</> : "");
-function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher = true, counts = true }) {
+// The Roll of Good Standing notice shown under the search on the public list, worded for the list being viewed.
+function GoodStandingNotice({ role }) {
+  const one = role === "pastor" ? "pastor" : "bishop", many = `${one}s`;
+  return (
+    <section className="reg-standing-notice" aria-label="Roll of Good Standing">
+      <h2>Roll of Good Standing</h2>
+      <h3>What it means to be in good standing</h3>
+      <p>A Bishop or pastor is of good standing when he or she fulfills the requirements, expectations, and responsibilities of the office as determined. Such a Bishop or minister is entitled to exercise all rights, privileges, titles, and functions attached to that ministerial office.</p>
+      <h3>What it means to not be in good standing</h3>
+      <p>A Bishop or pastor who is not in good standing is not entitled to exercise the rights, privileges, titles, or functions attached to that ministerial office for the period in which they remain not in good standing.</p>
+      <p>While a Bishop or pastor is not in good standing in their office, the following restrictions apply:</p>
+      <ul>
+        <li>You may not use the title or designation of the office in which you are not in good standing.</li>
+        <li>You may not present or describe yourself as holding the office of a {one} whether privately, publicly, professionally, online, or in official correspondence.</li>
+        <li>You may not attend meetings, councils, conferences, or other forums specifically reserved for {many} of good standing.</li>
+        <li>You may not wear or use official garments, insignia, identification, jewellery, or other items specifically assigned to {many}.</li>
+        <li>You may not exercise privileges or receive courtesies that are specifically attached to {many}.</li>
+        <li>You may not perform functions or services that are reserved for {many}.</li>
+        <li>You may be required to withdraw from official communication channels, including WhatsApp groups, mailing lists, directories, and other forums reserved for {many}.</li>
+        <li>Your name will not appear on the Roll of {many} in Good Standing.</li>
+      </ul>
+      <h3>Restoration to good standing</h3>
+      <p>Being not in good standing does not necessarily mean permanent removal from ministry or permanent loss of office.</p>
+      <p>A Bishop or minister may be restored to good standing when the requirements and expectations of the office have been satisfied.</p>
+      <p>Upon restoration, the minister's name may be returned to the Roll of ministers in Good Standing, together with the rights, functions, recognition, and privileges applicable to that office.</p>
+    </section>
+  );
+}
+function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher = true, counts = true, notice = false }) {
   const [filter, setFilter] = useState({
       q: initialQuery,
       org: "",
@@ -3516,6 +3544,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
         setFilter={setFilter}
         options={options}
       />
+      {notice && <GoodStandingNotice role={role} />}
       {grouped ? (
         <div className="reg-grouped">
           {grouped.withPastors.map(({ bishop: b, pastors: ps }) => (
@@ -3782,7 +3811,7 @@ const bishopSuggestionsFor = (r) =>
     .sort((a, b) => Number(b.id === r.data.referenceId) - Number(a.id === r.data.referenceId))
     .slice(0, 4);
 const REVIEW_REASONS = [
-  "Your photo does not meet the official attire requirement (red jacket for bishops, face fully visible, plain background).",
+  "Your photo does not meet the official attire requirement (red jacket for bishops, face fully visible, plain white background).",
   "Some of your details are incorrect or incomplete.",
   "Your organization or denomination is not right.",
   "Your date of birth or phone number looks wrong.",

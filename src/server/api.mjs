@@ -216,7 +216,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           const reasons = String(payload.note).split('\n').map(l => l.replace(/^•\s*/, '').trim()).filter(Boolean);
           const photoIssue = reasons.some(r => /photo/i.test(r));
           const others = reasons.filter(r => !/photo/i.test(r));
-          const requirements = [reviewed.data.gender === 'female' ? `Official attire as shown (${reviewed.data.organization === 'United Denominations' ? 'United Denominations' : 'First Love'})` : role === 'Bishop' ? 'Red jacket' : 'Official pastoral attire (clerical collar, or dark suit and tie)', 'Face fully visible', 'Plain background'];
+          const requirements = [reviewed.data.gender === 'female' ? `Official attire as shown (${reviewed.data.organization === 'United Denominations' ? 'United Denominations' : 'First Love'})` : role === 'Bishop' ? 'Red jacket' : 'Official pastoral attire (clerical collar, or dark suit and tie)', 'Face fully visible', 'Plain white background'];
           // Their photo beside the required standard, embedded so it shows on any phone.
           const attachments = [];
           let comparison = '';

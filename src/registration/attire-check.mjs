@@ -1,9 +1,11 @@
 // A free, on-device check that an uploaded portrait is a single person in the
-// expected attire colour. Face detection runs in the browser with MediaPipe's
-// BlazeFace model (about 230 KB, fetched once); the colour of the area below the
-// face is then compared with the rule for the person's role, gender and
-// organization. It judges colour, not cut, so it is a first filter: the sign-up
-// warns and the office sees the result, nobody is blocked by it.
+// expected attire colour in front of a plain white background. Face detection
+// runs in the browser with MediaPipe's BlazeFace model (about 230 KB, fetched
+// once); the colour of the area below the face is compared with the rule for the
+// person's role, gender and organization, and the strips either side of the face
+// must be plain and light. It judges colour, not cut: a photo that fails is
+// refused with the reason (attire, background, or both) and the office sees the
+// result on the record.
 const VISION = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 const MODEL = "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite";
 let detectorPromise = null;
@@ -48,8 +50,31 @@ export function judge(shares, colour) {
   const need = colour === "dark" ? 0.3 : 0.22;
   return share >= need;
 }
+// Share of plain, light pixels (white or pale grey wall) in a region: bright,
+// with little colour between the channels (HSL saturation misleads near white).
+export function plainShare(ctx, x, y, w, h) {
+  if (w < 4 || h < 4) return null; // the face fills the frame to that side: nothing to judge
+  const { data } = ctx.getImageData(Math.max(0, x), Math.max(0, y), Math.max(1, w), Math.max(1, h));
+  let plain = 0, n = 0;
+  for (let i = 0; i < data.length; i += 16) {
+    const max = Math.max(data[i], data[i + 1], data[i + 2]), min = Math.min(data[i], data[i + 1], data[i + 2]); n++;
+    if ((max + min) / 510 > 0.68 && max - min < 36) plain++;
+  }
+  return n ? plain / n : null;
+}
+// The background is judged on the strips left and right of the face, from the
+// top of the head to the chin; a strip that falls outside the picture is skipped.
+export function backgroundShare(ctx, box, width) {
+  const left = plainShare(ctx, Math.max(0, box.originX - box.width * 1.3), box.originY, Math.min(box.width * 0.8, box.originX - box.width * 0.5), box.height);
+  const rx = box.originX + box.width * 1.5, right = plainShare(ctx, rx, box.originY, Math.min(box.width * 0.8, width - rx), box.height);
+  const seen = [left, right].filter((v) => v !== null);
+  return seen.length ? Math.max(...seen) : null; // one clear side is enough: a shadow on the other is not a cluttered room
+}
+// ponytail: half the strip beside the face must be plain wall; hair and hats eat into the strips, a room or garden scores near zero.
+export const PLAIN_NEED = 0.5;
 const load = (file) => new Promise((resolve, reject) => { const img = new Image(); img.onload = () => resolve(img); img.onerror = reject; img.src = URL.createObjectURL(file); });
-// Returns { verdict: "ok" | "no-face" | "many-faces" | "colour" | "skipped", note }.
+// Returns { verdict: "ok" | "no-face" | "many-faces" | "colour" | "background" | "skipped", note }.
+// `colour` also covers a photo that fails on both attire and background: the note names both.
 export async function checkAttire(file, person, { timeoutMs = 15000 } = {}) {
   const expected = expectedAttire(person);
   try {
@@ -68,8 +93,12 @@ export async function checkAttire(file, person, { timeoutMs = 15000 } = {}) {
     // The torso: just below the face, a little wider than it.
     const x = box.originX - box.width * 0.4, y = box.originY + box.height * 1.15, w = box.width * 1.8, h = Math.min(canvas.height - y, box.height * 1.3);
     const shares = colourShares(ctx, x, y, w, h);
-    if (!judge(shares, expected.colour)) return { verdict: "colour", note: `We could not see ${expected.words} in this photo.`, shares };
-    return { verdict: "ok", note: "", shares };
+    const background = backgroundShare(ctx, box, canvas.width);
+    const reasons = [];
+    if (!judge(shares, expected.colour)) reasons.push(["colour", `Attire: we could not see ${expected.words}.`]);
+    if (background !== null && background < PLAIN_NEED) reasons.push(["background", "Background: it should be a plain white wall with nothing else behind you."]);
+    if (reasons.length) return { verdict: reasons[0][0], note: reasons.map((r) => r[1]).join(" "), shares, background };
+    return { verdict: "ok", note: "", shares, background };
   } catch (error) {
     return { verdict: "skipped", note: "" }; // no network for the model, or an unreadable image: never block on it
   }
