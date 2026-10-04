@@ -370,12 +370,15 @@ function DashboardFrame() {
   );
 }
 // The on-device attire check's verdict, shown to the member under their upload.
+// A photo without the official attire, or without a face, cannot go forward; more than one face is only flagged.
+const attireBlocked = (check) => ["colour", "no-face", "checking"].includes(check?.verdict);
 function AttireNotice({ check, onChoose }) {
   if (!check || check.verdict === "ok" || check.verdict === "skipped") return null;
   if (check.verdict === "checking") return <p className="reg-small reg-attire-checking">Checking the photo…</p>;
+  const hard = check.verdict === "colour" || check.verdict === "no-face";
   return (
     <div className="reg-attire-warning" role="alert">
-      <b>Please take another look at this photo.</b> {check.note} You can choose a different photo, or continue if you are sure this one is right. The office will review it.
+      <b>{hard ? "This photo cannot be used." : "Please take another look at this photo."}</b> {check.note} {hard ? "Please upload a photo of yourself in your official attire, facing the camera." : "You can choose a different photo, or continue if you are sure this one is right. The office will review it."}
       <div><button type="button" className="reg-secondary" onClick={onChoose}>Choose another photo</button></div>
     </div>
   );
@@ -2026,7 +2029,7 @@ function RegistrationForm({
                 >
                   Save draft
                 </button>
-                <button className="reg-primary" disabled={busy || fileBusy}>
+                <button className="reg-primary" disabled={busy || fileBusy || attireBlocked(data.photoCheck)} title={attireBlocked(data.photoCheck) ? "Upload a photo in your official attire to continue" : undefined}>
                   {editing ? "Review changes →" : "Continue →"}
                 </button>
               </div>
