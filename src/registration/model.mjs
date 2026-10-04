@@ -1202,9 +1202,11 @@ export function directoryFor(state, references) {
 // How a person is addressed: a female bishop is an Episcopal Sister in United
 // Denominations and a Mother in First Love; everyone else is Bishop or Pastor.
 export const PASTOR_TITLES = ["Pastor", "Rev.", "Lady Rev."];
+// A woman bishop chooses her own title; the organization only supplies the default.
+export const BISHOP_TITLES_FEMALE = ["Mother", "Episcopal Sister"];
 export function titleFor({ role, gender, organization, title }) {
   if (role !== "bishop") return title === "Rev." || (title === "Lady Rev." && gender === "female") ? title : "Pastor";
-  if (gender === "female") return organization === "United Denominations" ? "Episcopal Sister" : organization === "First Love" ? "Mother" : "Bishop";
+  if (gender === "female") return BISHOP_TITLES_FEMALE.includes(title) ? title : organization === "United Denominations" ? "Episcopal Sister" : organization === "First Love" ? "Mother" : "Bishop";
   return "Bishop";
 }
 export function publicRoll(state, people, year = state.year) {

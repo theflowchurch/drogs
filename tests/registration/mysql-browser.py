@@ -43,7 +43,7 @@ with sync_playwright() as p:
         page.locator('main').wait_for()
     try:
         login()
-        page.get_by_label('Ministerial title').select_option('bishop')
+        page.get_by_label('Ministerial title').select_option('Bishop')
         for label, value in [('First name','Browser'),('Last name','Bishop'),('WhatsApp number','+233201234567'),('Date of birth','1990-02-01'),('Country where you currently serve','Ghana'),('City','Accra')]:
             page.get_by_label(label, exact=True).fill(value)
         page.get_by_label('Gender',exact=True).select_option('male')

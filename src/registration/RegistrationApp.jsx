@@ -31,6 +31,7 @@ import {
   nearMatches,
   dobClose,
   titleFor,
+  BISHOP_TITLES_FEMALE,
   PASTOR_TITLES,
   withStanding,
   pastorsOf,
@@ -1807,7 +1808,7 @@ function RegistrationForm({
               <figcaption>
                 <b>{attireExample(data).caption}</b>
                 Face the camera against a plain white background, with your face fully visible. You must be wearing {expectedAttire(data).words}.
-                {data.gender === "female" ? " Selfies and casual clothing will not be accepted." : " Selfies, casual clothing or photos showing only the collar will not be accepted."}
+                {data.gender === "female" || data.role === "bishop" ? " Selfies and casual clothing will not be accepted." : " Selfies, casual clothing or photos showing only the collar will not be accepted."}
               </figcaption>
             </figure>
           </div>
@@ -1846,12 +1847,12 @@ function RegistrationForm({
                   label="Ministerial title"
                 >
                   <select
-                    value={data.role === "bishop" ? "bishop" : `pastor|${titleFor(data)}`}
+                    value={`${data.role === "bishop" ? "bishop" : "pastor"}|${titleFor(data)}`}
                     onChange={(e) => { const [role, title] = e.target.value.split("|"); setData((d) => ({ ...d, role, title: title || "", photoConfirmed: false })); }}
-                    disabled={(profile?.role || fixedRole) === "bishop"}
+                    disabled={(profile?.role || fixedRole) === "bishop" && data.gender !== "female"}
                   >
                     {(profile?.role || fixedRole) !== "bishop" && PASTOR_TITLES.filter((t) => t !== "Lady Rev." || data.gender === "female").map((t) => <option key={t} value={`pastor|${t}`}>{t}</option>)}
-                    {(profile?.role || fixedRole) !== "pastor" && <option value="bishop">Bishop</option>}
+                    {(profile?.role || fixedRole) !== "pastor" && (data.gender === "female" ? BISHOP_TITLES_FEMALE : ["Bishop"]).map((t) => <option key={t} value={`bishop|${t}`}>{t}</option>)}
                   </select>
                 </Field>
                 <Field label="Organization">
@@ -2145,7 +2146,7 @@ function RegistrationForm({
                 <h2>Confirm your photo</h2>
                 <p>
                   Your photo must show you wearing {expectedAttire(data).words}. Your face must be fully visible, facing the camera, against a plain white background.{" "}
-                  {data.gender === "female" ? "Selfies and casual clothing will not be accepted." : "Photos showing only the collar, selfies or casual clothing will not be accepted."}
+                  {data.gender === "female" || data.role === "bishop" ? "Selfies and casual clothing will not be accepted." : "Photos showing only the collar, selfies or casual clothing will not be accepted."}
                 </p>
                 <div className="reg-photo-comparison">
                   <figure>
