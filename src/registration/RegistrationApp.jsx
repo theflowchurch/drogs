@@ -808,8 +808,8 @@ export default function RegistrationApp({
             </Dialog>
           )}
           <HeroVideo
-            poster={`${base}/assets/brand/castle-hero-poster${PREVIEW ? "-bw" : ""}.webp`}
-            src={`${base}/assets/brand/castle-hero-{size}${PREVIEW ? "-bw" : ""}.mp4`}
+            poster={`${base}/assets/brand/castle-hero-poster-bw.webp`}
+            src={`${base}/assets/brand/castle-hero-{size}-bw.mp4`}
           />
           <h1 className="reg-hero-title">
             <img src={`${base}/assets/brand/castle-white.png`} alt="" />
