@@ -193,6 +193,14 @@ export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination"
 // corrected records without phone or email.
 const CONTACT_FIELDS = ["phone", "email"];
 const scrubContacts = (o) => Object.fromEntries(Object.entries(o || {}).filter(([k]) => !CONTACT_FIELDS.includes(k)));
+// The pastors under a bishop: those whose record names this bishop exactly, plus those whose
+// bishop text is an alike spelling that matches no bishop on the list (so two bishops with
+// similar names never share one pastor).
+export function pastorsOf(bishop, people) {
+  const listed = new Set(people.filter((p) => p.role === "bishop").map((b) => normalName(b.name)));
+  const want = normalName(bishop.name);
+  return people.filter((q) => q.role === "pastor" && q.bishop && (normalName(q.bishop) === want || (!listed.has(normalName(q.bishop)) && namesAlike(q.bishop, bishop.name))));
+}
 // Denominations are always written in capitals on the site.
 export const caps = (s) => String(s || "").toUpperCase();
 // Surname first for ordering: the last word of the name (hyphenated names stay whole).

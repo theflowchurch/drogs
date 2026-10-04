@@ -33,6 +33,7 @@ import {
   titleFor,
   PASTOR_TITLES,
   withStanding,
+  pastorsOf,
   caps,
   splitName,
   bySurname,
@@ -3240,9 +3241,7 @@ const publicPeople = people.map(({ email, phone, ...rest }) => rest);
 // Pastors whose record names this bishop as overseer (typo-tolerant). A bishop
 // nobody named has no pastors listed; a pastor who named nobody sits under no one.
 const bishopPastors = (bishop, from = publicPeople) => ({
-  list: from.filter(
-    (p) => p.role === "pastor" && p.bishop && namesAlike(p.bishop, bishop.name),
-  ),
+  list: pastorsOf(bishop, from),
   heading: "Pastors under their oversight",
 });
 function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
@@ -3448,13 +3447,9 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
   const grouped = useMemo(() => {
     if (role !== "pastor" || filtering) return null;
     const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(bySurname).map((p, i) => ({ ...p, n: i + 1 }));
-    const byName = new Map();
-    for (const q of roll) if (q.role === "pastor" && q.bishop) { const k = normalName(q.bishop); if (!byName.has(k)) byName.set(k, []); byName.get(k).push(q); }
     const taken = new Set(), blocks = [];
     for (const b of bishopsSorted) {
-      let list = byName.get(normalName(b.name)) || [];
-      if (!list.length) for (const [k, qs] of byName) if (!taken.has(k) && namesAlike(k, b.name)) { list = qs; break; }
-      list = list.filter((q) => !taken.has(q.id)).sort(bySurname);
+      const list = pastorsOf(b, roll).filter((q) => !taken.has(q.id)).sort(bySurname);
       list.forEach((q) => taken.add(q.id));
       blocks.push({ bishop: b, pastors: list });
     }
@@ -3464,9 +3459,16 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
     const withPastors = blocks.filter((x) => x.pastors.length && x.bishop.standing !== false).map((x) => ({ ...x, pastors: x.pastors.map(number) }));
     const alone = blocks.filter((x) => !x.pastors.length || x.bishop.standing === false).map((x) => x.bishop);
     const rest = roll.filter((q) => q.role === "pastor" && !taken.has(q.id)).sort(bySurname).map(number);
-    return { withPastors, alone, rest };
+    // The order people appear on screen, so the dialog's arrows move to the neighbour.
+    const order = [...withPastors.flatMap((x) => [x.bishop, ...x.pastors]), ...alone, ...rest];
+    return { withPastors, alone, rest, order };
   }, [roll, role, filtering]);
   const unapproved = selected?.standing === false;
+  // Which sequence the dialog arrows step through: the grid as shown, or one bishop's pastors.
+  const [stepList, setStepList] = useState(null);
+  const pick = (seq) => (p) => { setStepList(seq); setSelected(p); };
+  const openUnder = (bishop) => (q) => { setStepList(pastorsOf(bishop, roll).sort(bySurname)); trail.open(q); };
+  const steps = stepList || (grouped ? grouped.order : list);
   return (
     <>
       {switcher && <div className="reg-toggle" role="group" aria-label="Bishops or pastors">
@@ -3495,7 +3497,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
         <div className="reg-grouped">
           {grouped.withPastors.map(({ bishop: b, pastors: ps }) => (
             <section key={b.id} className={`reg-bishop-block ${b.standing === false ? "dark" : ""}`}>
-              <button type="button" className="reg-bishop-head" onClick={() => setSelected(b)}>
+              <button type="button" className="reg-bishop-head" onClick={() => pick(grouped.order)(b)}>
                 <span className="reg-person-n">{b.n}</span>
                 <Portrait person={b} className="reg-circle" />
                 {b.standing !== false && (
@@ -3505,7 +3507,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
                   </span>
                 )}
               </button>
-              {ps.length > 0 && <PeopleGrid list={ps} limit={ps.length} onOpen={setSelected} dots={false} />}
+              {ps.length > 0 && <PeopleGrid list={ps} limit={ps.length} onOpen={pick(grouped.order)} dots={false} />}
             </section>
           ))}
           {grouped.alone.length > 0 && (
@@ -3513,7 +3515,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
               <h3 className="reg-group-heading">Bishops</h3>
               <div className="reg-circles">
                 {grouped.alone.map((b) => (
-                  <button key={b.id} type="button" className="reg-circle-item" onClick={() => setSelected(b)}>
+                  <button key={b.id} type="button" className="reg-circle-item" onClick={() => pick(grouped.order)(b)}>
                     <span className="reg-person-n">{b.n}</span>
                     <Portrait person={b} className="reg-circle" />
                     {b.standing !== false && <small><PersonName name={b.name} /></small>}
@@ -3525,7 +3527,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
           {grouped.rest.length > 0 && (
             <section className="reg-bishop-block plain">
               <h3 className="reg-group-heading">Pastors</h3>
-              <PeopleGrid list={grouped.rest} limit={limit} onMore={() => setLimit((n) => n + 300)} onOpen={setSelected} dots={false} />
+              <PeopleGrid list={grouped.rest} limit={limit} onMore={() => setLimit((n) => n + 300)} onOpen={pick(grouped.order)} dots={false} />
             </section>
           )}
         </div>
@@ -3534,7 +3536,7 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
           list={list}
           limit={limit}
           onMore={() => setLimit((n) => n + 300)}
-          onOpen={setSelected}
+          onOpen={pick(null)}
           dots={false}
         />
       ) : (
@@ -3550,8 +3552,8 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
         </Dialog>
       )}
       {selected && !unapproved && (
-        <Dialog title={selected.name} onClose={trail.close} onBack={trail.back} backLabel={trail.backLabel} {...stepper(list, selected, trail.step)}>
-          <PublicRecord person={selected} onOpen={trail.open} from={roll} />
+        <Dialog title={selected.name} onClose={trail.close} onBack={trail.back} backLabel={trail.backLabel} {...stepper(steps, selected, trail.step)}>
+          <PublicRecord person={selected} onOpen={selected.role === "bishop" ? openUnder(selected) : trail.open} from={roll} />
         </Dialog>
       )}
     </>

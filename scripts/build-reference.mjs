@@ -101,6 +101,11 @@ for (const row of sheet) { let r = row;
   let hit = (pastorsByName.get(normalName(name)) || [])[0];
   if (!hit) { const alike = allPastors.filter(p => namesAlike(p.name, name) && (!r.country || !p.country || normalName(p.country) === normalName(r.country))); if (alike.length === 1) hit = alike[0]; else if (alike.length > 1) sheetStats.ambiguous++; }
   const fields = { bishop: resolveBishop(r.bishopInCharge), city: r.city && !/^n\/?a$/i.test(r.city) ? titleCase(fixEncoding(r.city)) : '', country: r.country ? titleCase(r.country) : '', yearAppointed: r.yearAppointed, yearOrdained: r.yearOrdained, title: sheetTitle(r), gender: r.gender.toLowerCase(), branch: r.branch && !/^n\/?a$/i.test(r.branch) ? titleCase(fixEncoding(r.branch)) : '' };
+  if (!hit) {
+    const tokens = (n) => normalName(n).split(' ').filter(Boolean).sort().join(' ');
+    const asBishop = people.find(p => p.role === 'bishop' && tokens(p.name) === tokens(name) && (!p.country || !r.country || normalName(p.country) === normalName(r.country)));
+    if (asBishop) { sheetStats.bishopsSkipped++; if (!asBishop.yearAppointed) asBishop.yearAppointed = r.yearAppointed; if (!asBishop.yearOrdained) asBishop.yearOrdained = r.yearOrdained; if (!asBishop.city && fields.city) asBishop.city = fields.city; if (!asBishop.country && fields.country) asBishop.country = fields.country; if (!asBishop.gender && fields.gender) asBishop.gender = fields.gender; continue; }
+  }
   if (hit) { sheetStats.matched++; if (fields.bishop) hit.bishop = fields.bishop; if (fields.city) hit.city = fields.city; if (fields.country) hit.country = fields.country; if (fields.branch) hit.branch = fields.branch; if (fields.yearAppointed) hit.yearAppointed = fields.yearAppointed; if (fields.yearOrdained) hit.yearOrdained = fields.yearOrdained; if (fields.gender) hit.gender = fields.gender; hit.title = fields.title; continue; }
   // New to us: a pastor record from what the sheet knows (no contact details).
   if (/^first love church( worldwide)?$/i.test(r.denomination)) r = { ...r, denomination: 'First Love Church' };
@@ -109,6 +114,14 @@ for (const row of sheet) { let r = row;
   const rec = { id: `PS${newId++}`, role: 'pastor', name, title: fields.title, organization, denomination: den, denominationLogo: '', city: fields.city, branch: fields.branch, country: fields.country, image: '', gender: fields.gender, yearAppointed: fields.yearAppointed, yearOrdained: fields.yearOrdained, yearConsecrated: '', email: '', phone: '', ...(fields.bishop ? { bishop: fields.bishop } : {}) };
   people.push(rec); allPastors.push(rec); pastorsByName.set(normalName(name), [rec]); sheetStats.added++;
 }
+// Hand corrections the office confirmed (data/pastor-fixes.json: name → fields).
+const fixes = JSON.parse(await readFile(new URL('../data/pastor-fixes.json', import.meta.url), 'utf8').catch(() => '{}'));
+for (const [who, f] of Object.entries(fixes)) for (const p of people) if (p.role === 'pastor' && normalName(p.name) === normalName(who)) Object.assign(p, Object.fromEntries(Object.entries(f).filter(([k]) => k !== 'note')));
+// Duplicate records (scripts/find-duplicates.mjs → data/duplicate-removals.json): the kept record inherits anything it lacks.
+const dupes = JSON.parse(await readFile(new URL('../data/duplicate-removals.json', import.meta.url), 'utf8').catch(() => '{"removals":[]}')).removals;
+const dropIds = new Set();
+for (const d of dupes) { const drop = people.find(p => p.id === d.id), keep = people.find(p => p.id === d.keep); if (!drop || !keep) continue; for (const k of ['image', 'city', 'country', 'yearAppointed', 'yearOrdained', 'bishop', 'branch', 'gender']) if (!keep[k] && drop[k] && !(k === 'bishop' && keep.role === 'bishop')) keep[k] = drop[k]; dropIds.add(d.id); }
+people = people.filter(p => !dropIds.has(p.id));
 // The original data's "supervising bishop" text goes through the same spelling fixes.
 for (const p of people) if (p.role === 'pastor' && p.bishop) p.bishop = resolveBishop(p.bishop) || p.bishop;
 console.log(`2026 sheet: ${sheet.length} rows · ${sheetStats.matched} matched existing pastors · ${sheetStats.added} new pastors added · ${sheetStats.bishopsSkipped} bishop rows left to the official list · ${sheetStats.ambiguous} ambiguous names skipped`);
