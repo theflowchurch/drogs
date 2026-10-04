@@ -979,6 +979,9 @@ p {
 .reg-person-card {
   text-align: left;
   padding: 0;
+  /* Cards below the fold are not laid out or painted until scrolled near: hundreds of portraits cost nothing until seen. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 240px auto 290px;
   /* A button centres its content; cards in a row must start at the top so portraits line up. */
   display: flex;
   flex-direction: column;

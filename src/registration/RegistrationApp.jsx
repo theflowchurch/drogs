@@ -814,8 +814,8 @@ export default function RegistrationApp({
             </Dialog>
           )}
           <HeroVideo
-            poster={`${base}/assets/brand/castle-hero-poster-bw.webp`}
-            src={`${base}/assets/brand/castle-hero-{size}-bw.mp4`}
+            poster={`${base}/assets/brand/castle-hero-night-poster.webp`}
+            src={`${base}/assets/brand/castle-hero-night-{size}.mp4`}
           />
           <h1 className="reg-hero-title">
             <img src={`${base}/assets/brand/castle-white.png`} alt="" />
@@ -2497,22 +2497,27 @@ const initials = (name) =>
     .toUpperCase();
 // A registration photo is private and fetched through a signed URL; an existing
 // record's portrait is a published asset.
-function Portrait({ person, className = "" }) {
+// Grids load a 240px thumbnail (a tenth of the weight of the 640px portrait); dialogs ask for the full file with `full`.
+const thumbOf = (image) => image.replace(/^(assets\/(?:portraits|bishops|pastors))\/([^/]+)\.[^.]+$/, "$1/thumbs/$2.webp");
+function Portrait({ person, className = "", full = false }) {
   if (person.photo)
     return (
       <Media path={person.photo} alt={person.name} className={className} />
     );
-  if (person.image)
+  if (person.image) {
+    const src = `${base}/${full ? person.image : thumbOf(person.image)}`;
     return (
       <img
         className={className}
         style={{ cssText: portraitStyle(person.image) }}
-        src={`${base}/${person.image}`}
+        src={src}
+        onError={(e) => { if (!full && e.currentTarget.src.includes("/thumbs/")) e.currentTarget.src = `${base}/${person.image}`; }}
         alt={person.name}
         loading="lazy"
         decoding="async"
       />
     );
+  }
   if (person.standing === false)
     return (
       <div className={`reg-placeholder reg-unconfirmed ${className}`} role="img" aria-label={`${person.name} · not yet confirmed`}>
@@ -2893,7 +2898,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
   return (
     <>
       <div className="reg-record-hero centred">
-        <Portrait person={p} className="reg-record-photo large" />
+        <Portrait person={p} className="reg-record-photo large" full />
         {r?.photoChangedAt && <p className="reg-attire-flag warn">Photo changed after approval · {shortDateTime(r.photoChangedAt)}</p>}
         {r?.data?.photoCheck && attireWords(r.data.photoCheck) && (
           <p className={`reg-attire-flag ${r.data.photoCheck.verdict === "ok" ? "ok" : "warn"}`}>{attireWords(r.data.photoCheck)}</p>
@@ -3294,7 +3299,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
   return (
     <>
       <div className="reg-record-hero">
-        <Portrait person={p} className="reg-record-photo" />
+        <Portrait person={p} className="reg-record-photo" full />
         <div>
           <span className="reg-eyebrow">{(p.title || p.role).toUpperCase()}</span>
           <h2>{p.name}</h2>
