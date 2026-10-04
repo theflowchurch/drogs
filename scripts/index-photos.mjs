@@ -4,7 +4,8 @@
 import { readdirSync, statSync, writeFileSync, readFileSync } from 'node:fs';
 import { join, extname, basename } from 'node:path';
 import { namesAlike, normalName } from '../src/registration/model.mjs';
-const ROOTS = [process.env.PICS_ROOT || `${process.env.HOME}/Downloads/BISHOPS AND PASTORS UNDER THEM IN PICTURES`, '/tmp/pics-zips'];
+// The office's folders, newest first; earlier photo deliveries are searched too so nothing sent before is lost.
+const ROOTS = [process.env.PICS_ROOT || `${process.env.HOME}/Downloads/BISHOPS AND PASTORS UNDER THEM IN PICTURES`, `${process.env.HOME}/Downloads/Bishop's project/BISHOPS PICTURES`, `${process.env.HOME}/Downloads/Bishop's project/MASTER PORTRAITS`, `${process.env.HOME}/Downloads/Bishop's project/MASTER PORTRAITS IMPORT`];
 const IMG = new Set(['.jpg', '.jpeg', '.png', '.heic', '.webp']);
 const GROUP = { 'UD GHANA': 'UD Ghana', 'UD AF': 'UD Africa', 'UD EU': 'UD Europe', 'UD NA': 'UD North America', 'UJ': 'United Jesus', 'FIRST LOVE': 'First Love', 'REASONABLE SERVICE': 'Reasonable Service', 'ESCHATOS INT': 'Eschatos', 'UNITED ISLANDS': 'United Islands' };
 const groupOf = (dir) => GROUP[dir.toUpperCase().replace(/\s*\d+$/, '').trim()] || dir;
@@ -33,7 +34,8 @@ const bishops = people.filter((p) => p.role === 'bishop');
 const walk = (dir, out = []) => { for (const e of readdirSync(dir)) { if (e === '.DS_Store' || e.startsWith('._')) continue; const p = join(dir, e); const st = statSync(p); if (st.isDirectory()) walk(p, out); else if (IMG.has(extname(e).toLowerCase())) out.push(p); } return out; };
 const index = [];
 for (const root of ROOTS) {
-  for (const g of readdirSync(root)) {
+  let entries = []; try { entries = readdirSync(root); } catch { continue; }
+  for (const g of entries) {
     const gp = join(root, g); if (!statSync(gp).isDirectory()) continue;
     // A group folder holds bishop folders; a denomination folder inside it holds bishop folders one level down.
     const bishopDirs = [];

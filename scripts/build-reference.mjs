@@ -112,9 +112,6 @@ for (const row of sheet) { let r = row;
 // The original data's "supervising bishop" text goes through the same spelling fixes.
 for (const p of people) if (p.role === 'pastor' && p.bishop) p.bishop = resolveBishop(p.bishop) || p.bishop;
 console.log(`2026 sheet: ${sheet.length} rows · ${sheetStats.matched} matched existing pastors · ${sheetStats.added} new pastors added · ${sheetStats.bishopsSkipped} bishop rows left to the official list · ${sheetStats.ambiguous} ambiguous names skipped`);
-// Portraits imported from the office's photo folders (scripts/import-photos.mjs writes data/photo-assignments.json).
-const assigned = JSON.parse(await readFile(new URL('../data/photo-assignments.json', import.meta.url), 'utf8').catch(() => '{}'));
-for (const p of people) if (assigned[p.id] && (p.role === 'pastor' || !p.image)) p.image = assigned[p.id];
 // ---- The official DHMM bishops list (data/official-bishops.json, from the office's
 // document) is the truth about who is a bishop. Every bishop on it is matched to
 // the old roster by name (exact, then alike, then the hand-resolved map); bishops
@@ -221,5 +218,8 @@ if (broken.length) throw Error(`Garbled names remain: ${broken.map(p => p.name).
 // without them; the server merges them back from data/reference-contacts.json.
 const contacts = Object.fromEntries(people.filter(p => p.email || p.phone).map(p => [p.id, { email: p.email || '', phone: p.phone || '' }]));
 await writeFile(new URL('../data/reference-contacts.json', import.meta.url), JSON.stringify(contacts) + '\n');
+// Portraits imported from the office's photo folders (scripts/import-photos.mjs writes data/photo-assignments.json).
+const assigned = JSON.parse(await readFile(new URL('../data/photo-assignments.json', import.meta.url), 'utf8').catch(() => '{}'));
+for (const p of people) if (assigned[p.id] && (p.role === 'pastor' || !p.image)) p.image = assigned[p.id];
 await writeFile(new URL('../src/registration/reference-people.json', import.meta.url), JSON.stringify(people.map(({ email, phone, ...rest }) => rest)) + '\n');
 console.log(`${people.length} reference records (${people.filter(p => p.role === 'bishop').length} bishops, ${people.filter(p => p.role === 'pastor').length} pastors).`);
