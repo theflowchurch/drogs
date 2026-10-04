@@ -3438,7 +3438,7 @@ const pastorsUnder = (b, roll) => {
   const uploaded = (b.pastors || []).map((q) => ({ id: q.id, role: "pastor", name: q.name, photo: q.photo || "", image: "", city: q.city || "", country: q.country || "", standing: Boolean(q.registered && q.photo), bishop: b.name }));
   return [...uploaded, ...pastorsOf(b, roll).filter((q) => !uploaded.some((u) => namesAlike(u.name, q.name)))];
 };
-const overseeing = (n) => (n ? `Overseeing ${n} pastor${n === 1 ? "" : "s"}` : "");
+const overseeing = (n) => (n ? <>Overseeing <b>{n}</b> pastor{n === 1 ? "" : "s"}</> : "");
 function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher = true, counts = true }) {
   const [filter, setFilter] = useState({
       q: initialQuery,

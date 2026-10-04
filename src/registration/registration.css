@@ -749,21 +749,21 @@ p {
 /* A list entry who has not registered yet: dark face in the bishop's table too. */
 .reg-avatar.small.reg-unconfirmed { display: grid; place-items: center; }
 .reg-avatar.small.reg-unconfirmed svg { width: 60%; height: 60%; fill: #232935; }
-/* "Overseeing N pastors": a bold outlined pill under a bishop's name. */
+/* "Overseeing N pastors": a soft blue pill under a bishop's name, number enlarged. */
 .reg-count-pill {
   display: inline-block;
   margin-top: 6px;
-  padding: 3px 10px;
-  border: 1.5px solid #13324c;
+  padding: 3px 11px;
   border-radius: 999px;
   font-size: 11.5px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.02em;
   color: #13324c;
-  background: #fff;
+  background: rgba(37, 99, 235, 0.1);
   white-space: nowrap;
 }
-:root[data-theme="dark"] .reg-count-pill { border-color: #dfe6f3; color: #dfe6f3; background: transparent; }
+.reg-count-pill b { font-size: 1.3em; font-weight: 800; }
+:root[data-theme="dark"] .reg-count-pill { color: #dfe6f3; background: rgba(96, 165, 250, 0.18); }
 .reg-bishop-who .reg-count-pill { justify-self: start; }
 /* Small running number on the left of each portrait in the rolls. */
 .reg-person-n {
