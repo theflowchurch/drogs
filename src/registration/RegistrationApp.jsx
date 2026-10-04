@@ -3255,14 +3255,16 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
     <section className="reg-record-group">
       <h3>{named.heading}</h3>
       <div className="reg-thumb-grid">
-        {list.slice(0, limit).map((q) => (
+        {list.slice(0, limit).map((q) => q.standing === false ? (
+          <button key={q.id} type="button" className="reg-thumb-dark" onClick={() => onOpen?.(q)} disabled={!onOpen} aria-label="Pastor · not yet approved"><Portrait person={q} /></button>
+        ) : (
           <button key={q.id} onClick={() => onOpen?.(q)} disabled={!onOpen}>
             <Portrait person={q} />
             <span className="reg-thumb-name">
               <b>{q.name}</b>
               {dots && <Dot person={q} />}
             </span>
-            <small>{[q.branch, placeOf(q)].filter(Boolean).join(" · ")}</small>
+            <small>{[q.branch && normalName(q.branch) !== normalName(q.city || "") ? q.branch : "", placeOf(q)].filter(Boolean).join(" · ")}</small>
           </button>
         ))}
       </div>
@@ -3317,7 +3319,9 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null 
           <h3>{p.pastors.length ? "Pastors under their oversight" : "No pastors under their oversight"}</h3>
           {p.pastors.length > 0 && (
             <div className="reg-thumb-grid">
-              {p.pastors.map((q) => (
+              {p.pastors.map((q) => q.standing === false || (!q.registered && !q.photo) ? (
+                <button key={q.id} type="button" className="reg-thumb-dark" onClick={() => onOpen?.({ ...q, standing: false })} disabled={!onOpen} aria-label="Pastor · not yet approved"><Portrait person={{ ...q, standing: false }} /></button>
+              ) : (
                 <button key={q.id} disabled>
                   <Portrait person={q} />
                   <span className="reg-thumb-name"><b>{q.name}</b></span>

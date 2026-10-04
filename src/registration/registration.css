@@ -740,6 +740,9 @@ p {
 .reg-circle-item .reg-circle { width: 96px; height: 96px; }
 .reg-circle-item .reg-person-n { top: 0; left: 0; }
 .reg-circle-item small .reg-given { font-weight: 400; }
+/* A pastor thumbnail for someone not yet approved: the dark face, nothing else. */
+.reg-thumb-grid .reg-thumb-dark { background: #0d1017; border-color: #0d1017; }
+.reg-thumb-grid .reg-thumb-dark .reg-placeholder { height: 100%; }
 /* A card for someone not yet approved: the dark face and the number, nothing else. */
 .reg-person-card.reg-dark { background: #0d1017; border-color: #0d1017; }
 .reg-unapproved { margin: 6px 0 12px; font-size: 16px; color: var(--muted); }
