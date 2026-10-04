@@ -1776,7 +1776,7 @@ function RegistrationForm({
                         const key = await api.upload(actor, file);
                         setData((d) => ({ ...d, photo: key, photoCheck: { verdict: "checking", note: "" }, photoConfirmed: false }));
                         // The attire check runs after the upload and never blocks it.
-                        checkAttire(file, { role: data.role, gender: data.gender, organization: data.organization }).then((result) => setData((d) => (d.photo === key ? { ...d, photoCheck: result } : d)));
+                        checkAttire(file, { role: data.role, gender: data.gender, organization: data.organization, title: titleFor(data) }).then((result) => setData((d) => (d.photo === key ? { ...d, photoCheck: result } : d)));
                       } finally {
                         setFileBusy(false);
                       }
@@ -1808,7 +1808,7 @@ function RegistrationForm({
               <figcaption>
                 <b>{attireExample(data).caption}</b>
                 Face the camera against a plain white background, with your face fully visible. You must be wearing {expectedAttire(data).words}.
-                {data.gender === "female" || data.role === "bishop" ? " Selfies and casual clothing will not be accepted." : " Selfies, casual clothing or photos showing only the collar will not be accepted."}
+                {titleFor(data) === "Rev." ? " Selfies, casual clothing or photos showing only the collar will not be accepted." : " Selfies and casual clothing will not be accepted."}
               </figcaption>
             </figure>
           </div>
@@ -2146,7 +2146,7 @@ function RegistrationForm({
                 <h2>Confirm your photo</h2>
                 <p>
                   Your photo must show you wearing {expectedAttire(data).words}. Your face must be fully visible, facing the camera, against a plain white background.{" "}
-                  {data.gender === "female" || data.role === "bishop" ? "Selfies and casual clothing will not be accepted." : "Photos showing only the collar, selfies or casual clothing will not be accepted."}
+                  {titleFor(data) === "Rev." ? "Photos showing only the collar, selfies or casual clothing will not be accepted." : "Selfies and casual clothing will not be accepted."}
                 </p>
                 <div className="reg-photo-comparison">
                   <figure>
@@ -2160,12 +2160,6 @@ function RegistrationForm({
                     <img src={`${base}/${attireExample(data).file}`} alt={attireExample(data).alt} />
                     <figcaption>{attireExample(data).caption}</figcaption>
                   </figure>
-                  {attireExample(data).alternative && (
-                    <figure>
-                      <img src={`${base}/${attireExample(data).alternative.file}`} alt={attireExample(data).alternative.alt} />
-                      <figcaption>{attireExample(data).alternative.caption}</figcaption>
-                    </figure>
-                  )}
                 </div>
                 <label className="reg-check">
                   <input
@@ -2183,7 +2177,8 @@ function RegistrationForm({
                     : "I confirm this is me in official pastoral attire, with my face fully visible against a plain white background."}
                 </label>
                 <button
-                  className="reg-secondary"
+                  type="button"
+                  className="reg-text reg-choose-other"
                   onClick={() => {
                     set("photoConfirmed", false);
                     setStep("details");

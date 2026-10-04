@@ -19,11 +19,11 @@ async function detector() {
   return detectorPromise;
 }
 // What colour the garment should be.
-export function expectedAttire({ role, gender, organization } = {}) {
+export function expectedAttire({ role, gender, organization, title } = {}) {
   if (role === "bishop" && gender === "female") return { colour: "red", words: "the official attire for Episcopal Sisters/Mothers" };
   if (role === "bishop") return { colour: "red", words: "the official attire for Bishops" };
   if (gender === "female") return organization === "United Denominations" ? { colour: "yellow", words: "the official yellow attire" } : { colour: "red", words: "the official red attire" };
-  return { colour: "dark", words: "a dark jacket or suit with a clerical collar" };
+  return { colour: "dark", words: title === "Rev." ? "a dark jacket or suit with a clerical collar" : "a dark suit and tie" };
 }
 const hsl = (r, g, b) => {
   r /= 255; g /= 255; b /= 255;

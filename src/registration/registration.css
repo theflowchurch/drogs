@@ -1505,10 +1505,11 @@ p {
   margin: 0;
   min-width: 0;
 }
+.reg-photo-comparison { max-width: 520px; }
 .reg-photo-comparison img,
 .reg-photo-comparison .reg-placeholder {
   width: 100%;
-  height: 260px;
+  height: 190px;
   object-fit: contain;
   background: #e6ece9;
   border-radius: 10px;
@@ -1519,6 +1520,9 @@ p {
   margin-top: 10px;
   line-height: 1.5;
 }
+/* "Choose a different photo": a quiet red text link, so the Continue button stays the obvious action. */
+.reg-attire-review .reg-choose-other { display: inline-block; margin-top: 8px; padding: 0; color: #b42318; font-weight: 600; font-size: 13px; }
+:root[data-theme="dark"] .reg-attire-review .reg-choose-other { color: #f08a80; }
 .reg-field select:disabled {
   background: #edeef1;
   color: #858a94;

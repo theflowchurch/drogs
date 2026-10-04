@@ -12,8 +12,8 @@ export const ORGANIZATION_LABEL = {
 export const orgLabel = (key) => ORGANIZATION_LABEL[key] || key || "";
 // The official-attire example that applies: women by organization (First Love
 // red, United Denominations yellow), men by role (bishop red jacket, pastor
-// clerical collar; a dark suit and tie is the accepted alternative).
-export function attireExample({ role, gender, organization } = {}) {
+// clerical collar for a Rev.; a dark suit and tie for a Pastor).
+export function attireExample({ role, gender, organization, title } = {}) {
   // Women bishops, whichever organization: the office's reference portrait (red jacket and hat).
   if (gender === "female" && role === "bishop")
     return { file: "assets/brand/female-bishop-example.jpg", caption: "Required: Official Attire for Female Bishops", alt: "Required attire example for female bishops" };
@@ -23,7 +23,10 @@ export function attireExample({ role, gender, organization } = {}) {
       : { file: "assets/brand/female-first-love-example.jpg", caption: "Required: Official First Love Attire", alt: "Required attire example for women in First Love" };
   if (role === "bishop")
     return { file: "assets/brand/bishop-example-2.jpg", caption: "Required: official red jacket", alt: "Required bishop red-jacket example" };
-  return { file: "assets/brand/pastor-example.jpg", caption: "Required: official pastoral attire", alt: "Required pastoral attire example", alternative: { file: "assets/brand/pastor-suit-example.jpg", caption: "Also accepted: dark suit and tie", alt: "Accepted alternative: dark suit and tie" } };
+  // A Rev. wears the clerical collar; a Pastor wears a dark suit and tie.
+  if (title === "Rev.")
+    return { file: "assets/brand/pastor-example.jpg", caption: "Required: dark jacket or suit with a clerical collar", alt: "Required attire example for a Rev.: clerical collar" };
+  return { file: "assets/brand/pastor-suit-example.jpg", caption: "Required: dark suit and tie", alt: "Required attire example for a Pastor: dark suit and tie" };
 }
 export const ORGANIZATIONS = [
   "First Love",
