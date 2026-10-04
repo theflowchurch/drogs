@@ -58,6 +58,8 @@ const person = (role, p) => ({
   branch: keep(p.branch),
   country: keep(p.region),
   image: p.image || '',
+  gender: keep(p.gender).toLowerCase(),
+  yearAppointed: keep(p.yearAppointed), yearOrdained: keep(p.yearOrdained), yearConsecrated: role === 'bishop' ? keep(p.yearConsecrated) : '',
   email: keep(p.email).toLowerCase(),
   phone: keep(p.mobile || p.whatsapp),
   ...(role === 'pastor' && keep(p.supervisingBishop) ? { bishop: keep(p.supervisingBishop) } : {}),
@@ -68,19 +70,61 @@ const MOVE_TO_FLOW = new Set(['natalie welds']);
 const flow = p => (MOVE_TO_FLOW.has(p.name.toLowerCase()) || p.organization === 'FLOW')
   ? { ...p, organization: 'FLOW', denomination: 'FLOW', denominationLogo: GROUP_LOGO.FLOW, city: 'Online', country: 'Ghana', branch: '' }
   : p;
+const titleCase = t => t.replace(/[\p{L}'’]+/gu, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
+const { DENOMINATIONS } = await import('../src/registration/denominations.mjs');
+const { namesAlike, normalName } = await import('../src/registration/model.mjs');
 let people = [...BISHOPS.map(p => person('bishop', p)), ...PASTORS.map(p => person('pastor', p))].map(flow);
+// ---- The office's 2026 pastors export (data/pastors-sheet-2026.json): who oversees whom, current
+// city and country, years appointed and ordained, and the title (Rev., Lady Rev.). Existing pastors
+// are matched by name; rows the original data never had become new pastor records (PS…).
+const sheet = JSON.parse(await readFile(new URL('../data/pastors-sheet-2026.json', import.meta.url), 'utf8')).rows;
+const stripTitle = t => String(t || '').replace(/^\s*(bishop|reverend|revd|rev|apostle|episcopal sister|sister|pastor|mother|dr|bs)\.?\s+/i, '').replace(/^\s*(bishop|reverend|rev|apostle|sister|pastor|dr)\.?\s+/i, '').trim();
+const bishopNames = people.filter(p => p.role === 'bishop').map(p => p.name);
+// Spellings in the sheet that differ from the official list.
+const BISHOP_ALIAS = { 'kwabena asamoa': 'Kwabena Asare Asamoa', 'nii nortey quist therson': 'James Quist-Therson', 'mawusi adagbe': 'Mawusi Adabge', 'alex gottlieb kofi opata': 'Alexander Gottlieb Kofi-Opata', 'phillippa marka coker': 'Phillippa-Marka Coker', 'akwele ivanna kiruja': 'Akwele Ivanna Kiruja', 'rebecca joana addae': 'Rebecca-Joana Addae', 'leonora jamie hyde': 'Leonora Hyde', 'albert toss mills odoi': 'Toss Mills Odoi', 'olivia kofi opata': 'Olivia-anna Kofi-opata', 'joy phillipe bruce': 'Joy Bruce', 'michael amoh': 'Michael Amoh', 'romeo sossou': 'Romeo Sosu' };
+const resolveBishop = raw => { const want = titleCase(stripTitle(raw)); if (!want) return ''; const al = BISHOP_ALIAS[normalName(want.replace(/-/g, ' '))]; if (al) return bishopNames.find(n => normalName(n) === normalName(al)) || al; const exact = bishopNames.find(n => normalName(n) === normalName(want)); if (exact) return exact; const alike = bishopNames.filter(n => namesAlike(n, want)); return alike.length === 1 ? alike[0] : want; };
+const sheetTitle = r => r.statusRank === 'REVEREND' ? (r.gender === 'FEMALE' ? 'Lady Rev.' : 'Rev.') : r.statusRank === 'APOSTLE' ? 'Apostle' : 'Pastor';
+const pastorsByName = new Map(); for (const p of people) if (p.role === 'pastor') { const k = normalName(p.name); if (!pastorsByName.has(k)) pastorsByName.set(k, []); pastorsByName.get(k).push(p); }
+const allPastors = people.filter(p => p.role === 'pastor');
+const sheetStats = { matched: 0, added: 0, bishopsSkipped: 0, ambiguous: 0 };
+let newId = 1;
+for (const row of sheet) { let r = row;
+  if (/BISHOP|EPISCOPAL/.test(r.statusRank)) {
+    // Bishops come from the official list; the sheet fills in years and a missing city or country.
+    sheetStats.bishopsSkipped++;
+    const bn = titleCase(fixEncoding(r.fullName).replace(/\s+/g, ' '));
+    const b = people.find(p => p.role === 'bishop' && normalName(p.name) === normalName(bn)) || (() => { const a = people.filter(p => p.role === 'bishop' && namesAlike(p.name, bn)); return a.length === 1 ? a[0] : null; })();
+    if (b) { if (!b.yearAppointed) b.yearAppointed = r.yearAppointed; if (!b.yearOrdained) b.yearOrdained = r.yearOrdained; if (!b.yearConsecrated) b.yearConsecrated = r.yearConsecrated; if (!b.city && r.city && !/^n\/?a$/i.test(r.city)) b.city = titleCase(fixEncoding(r.city)); if (!b.country && r.country) b.country = titleCase(r.country); if (!b.gender) b.gender = r.gender.toLowerCase(); }
+    continue;
+  }
+  const name = titleCase(fixEncoding(r.fullName).replace(/\s+/g, ' ').replace(/(?<=[A-Za-z])0|0(?=[A-Za-z])/g, 'O'));
+  let hit = (pastorsByName.get(normalName(name)) || [])[0];
+  if (!hit) { const alike = allPastors.filter(p => namesAlike(p.name, name) && (!r.country || !p.country || normalName(p.country) === normalName(r.country))); if (alike.length === 1) hit = alike[0]; else if (alike.length > 1) sheetStats.ambiguous++; }
+  const fields = { bishop: resolveBishop(r.bishopInCharge), city: r.city && !/^n\/?a$/i.test(r.city) ? titleCase(fixEncoding(r.city)) : '', country: r.country ? titleCase(r.country) : '', yearAppointed: r.yearAppointed, yearOrdained: r.yearOrdained, title: sheetTitle(r), gender: r.gender.toLowerCase(), branch: r.branch && !/^n\/?a$/i.test(r.branch) ? titleCase(fixEncoding(r.branch)) : '' };
+  if (hit) { sheetStats.matched++; if (fields.bishop) hit.bishop = fields.bishop; if (fields.city) hit.city = fields.city; if (fields.country) hit.country = fields.country; if (fields.branch) hit.branch = fields.branch; if (fields.yearAppointed) hit.yearAppointed = fields.yearAppointed; if (fields.yearOrdained) hit.yearOrdained = fields.yearOrdained; if (fields.gender) hit.gender = fields.gender; hit.title = fields.title; continue; }
+  // New to us: a pastor record from what the sheet knows (no contact details).
+  if (/^first love church( worldwide)?$/i.test(r.denomination)) r = { ...r, denomination: 'First Love Church' };
+  const den = r.denomination ? (DENOMINATIONS['First Love'].find(d => normalName(d) === normalName(r.denomination)) || (DENOMINATIONS['United Denominations'] || []).find(d => normalName(d) === normalName(r.denomination)) || titleCase(r.denomination)) : '';
+  const organization = DENOMINATIONS['First Love'].some(d => normalName(d) === normalName(den)) || /first love/i.test(r.denomination) ? 'First Love' : 'United Denominations';
+  const rec = { id: `PS${newId++}`, role: 'pastor', name, title: fields.title, organization, denomination: den, denominationLogo: '', city: fields.city, branch: fields.branch, country: fields.country, image: '', gender: fields.gender, yearAppointed: fields.yearAppointed, yearOrdained: fields.yearOrdained, yearConsecrated: '', email: '', phone: '', ...(fields.bishop ? { bishop: fields.bishop } : {}) };
+  people.push(rec); allPastors.push(rec); pastorsByName.set(normalName(name), [rec]); sheetStats.added++;
+}
+// The original data's "supervising bishop" text goes through the same spelling fixes.
+for (const p of people) if (p.role === 'pastor' && p.bishop) p.bishop = resolveBishop(p.bishop) || p.bishop;
+console.log(`2026 sheet: ${sheet.length} rows · ${sheetStats.matched} matched existing pastors · ${sheetStats.added} new pastors added · ${sheetStats.bishopsSkipped} bishop rows left to the official list · ${sheetStats.ambiguous} ambiguous names skipped`);
+// Portraits imported from the office's photo folders (scripts/import-photos.mjs writes data/photo-assignments.json).
+const assigned = JSON.parse(await readFile(new URL('../data/photo-assignments.json', import.meta.url), 'utf8').catch(() => '{}'));
+for (const p of people) if (assigned[p.id] && (p.role === 'pastor' || !p.image)) p.image = assigned[p.id];
 // ---- The official DHMM bishops list (data/official-bishops.json, from the office's
 // document) is the truth about who is a bishop. Every bishop on it is matched to
 // the old roster by name (exact, then alike, then the hand-resolved map); bishops
 // on the old roster who are not on the list are retired from the original data;
 // bishops on the list with no old record are added. Everyone gets a group.
-const { namesAlike, normalName } = await import('../src/registration/model.mjs');
 const official = JSON.parse(await readFile(new URL('../data/official-bishops.json', import.meta.url), 'utf8'));
 const manual = JSON.parse(await readFile(new URL('../data/official-matches.json', import.meta.url), 'utf8')).matches;
 const officialPhotos = JSON.parse(await readFile(new URL('../data/official-photos.json', import.meta.url), 'utf8')).photos;
 const { COUNTRY_CURRENCY, countryKey } = await import('../src/registration/exchange.mjs');
 const COUNTRY_FIX = { columbia: 'Colombia', 'guinea conakry': 'Guinea', 'papau new guinea': 'Papua New Guinea', 'congo brazaville': 'Congo', 'equatorial guinea malabo': 'Equatorial Guinea', 'equatorial guinea bata': 'Equatorial Guinea', 'gabon libreville': 'Gabon', 'gabon port gentil': 'Gabon', 'precious souls church namibia': 'Namibia', 'precious souls church eswatini': 'Eswatini', 'poimen church senegal': 'Senegal', 'poimen church gambia': 'Gambia', 'pacific islands missionary church fiji': 'Fiji', 'pacific islands missionary church solomon islands': 'Solomon Islands', 'pacific islands missionary church vanuatu': 'Vanuatu', 'cape verde': 'Cape Verde' };
-const titleCase = t => t.replace(/[\p{L}'’]+/gu, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
 const headingCountry = h => { const k = normalName(h).replace(/\s+/g, ' '); if (COUNTRY_FIX[k]) return COUNTRY_FIX[k]; return COUNTRY_CURRENCY[countryKey(h)] ? titleCase(h) : ''; };
 const isCountryHeading = h => Boolean(headingCountry(h)) && !/church|chapel|assembl|international|ministr|mission/i.test(h);
 const flat = official.groups.flatMap(g => g.denominations.flatMap(d => d.bishops.map(b => ({ ...b, group: g.name, organization: g.organization, heading: d.name }))));
@@ -95,7 +139,6 @@ people = people.filter(p => p.role !== 'bishop' || taken.has(p.id));
 const ALIAS = { 'other international': 'Others International Church', 'loyalty house internatioanal': 'Loyalty House International', 'everything by prayer church': 'Everything By Prayer Center', 'the glorious mega church': 'The Glorious Church', 'makarios church': 'The Makarios Church', 'primero amor': 'Premiero Amor', 'precious souls church eswatini': 'Precious Souls Swaziland', 'precious souls church namibia': 'Precious Souls Namibia', 'fruitiferos internationale': 'Fruitferos Internacional Guinea Bissau', 'poimen church gambia': 'Poimen Church Senegal-Gambia', 'poimen church senegal': 'Poimen Church Senegal-Gambia' };
 const UNITED_CITIES_HEADING = h => isCountryHeading(h) || /^pacific islands missionary church/i.test(normalName(h));
 const denominationFor = b => { if (!b.heading || UNITED_CITIES_HEADING(b.heading)) return b.organization === 'First Love' ? 'First Love Church' : b.organization === 'FLOW' ? 'FLOW' : b.heading ? 'United Cities' : ''; if (ALIAS[normalName(b.heading)]) return ALIAS[normalName(b.heading)]; const want = normalName(b.heading); const listed = (DENOMINATIONS[b.organization] || []).find(d => normalName(d) === want || normalName(d).startsWith(want) || want.startsWith(normalName(d))); return listed || titleCase(b.heading); };
-const { DENOMINATIONS } = await import('../src/registration/denominations.mjs');
 const added = [];
 // Only UD – OLGC is organised in groups; First Love, FLOW and HJC list their denominations directly.
 const groupFor = x => (x.organization === 'United Denominations' ? x.group : '');

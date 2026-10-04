@@ -40,7 +40,6 @@ export const LOGOS = {
   "Onction Internationale Benin": "assets/denominations/onction-internationale.png",
   "Others International Church": "assets/denominations/others-international-church.png",
   "Pleasant Surprise": "assets/denominations/pleasant-surprise-church-international.png",
-  "Poimano Internacional Nicaragua": "assets/denominations/poimano-internacional.webp",
   "Poimen Church Senegal-Gambia": "assets/denominations/poimen-church.png",
   "Precious Souls Namibia": "assets/denominations/precious-souls-church.png",
   "Precious Souls Swaziland": "assets/denominations/precious-souls-church.png",
