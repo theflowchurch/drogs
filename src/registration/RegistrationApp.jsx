@@ -2688,10 +2688,10 @@ function PersonName({ name }) {
   const { given, surname } = splitName(name);
   return <>{given && <span className="reg-given">{given} </span>}{surname}</>;
 }
-function PeopleGrid({ list, limit, onMore, onOpen, dots = true }) {
+function PeopleGrid({ list, limit, onMore, onOpen, dots = true, compact = false }) {
   return (
     <>
-      <div className="reg-people-grid">
+      <div className={`reg-people-grid ${compact ? "compact" : ""}`}>
         {list.slice(0, limit).map((p) => p.standing === false ? (
           <button className="reg-person-card reg-dark" key={p.id} onClick={() => onOpen(p)} aria-label={`${p.role === "bishop" ? "Bishop" : "Pastor"} ${p.n || ""} · not yet approved`}>
             <span className="reg-person-portrait">
@@ -2845,6 +2845,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
           </div>
           {list.length ? (
             <PeopleGrid
+          compact={role === "pastor"}
               list={list}
               limit={limit}
               onMore={() => setLimit((n) => n + 300)}
@@ -3298,6 +3299,11 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null 
           )}
           {p.role === "pastor" && p.branch && (
             <p className="reg-record-line">Branch · {p.branch}</p>
+          )}
+          {(p.yearAppointed || p.yearOrdained || (p.role === "bishop" && p.yearConsecrated)) && (
+            <p className="reg-record-line reg-record-years">
+              {[p.yearAppointed && `Appointed ${p.yearAppointed}`, p.yearOrdained && `Ordained ${p.yearOrdained}`, p.role === "bishop" && p.yearConsecrated && `Consecrated ${p.yearConsecrated}`].filter(Boolean).join(" · ")}
+            </p>
           )}
           {p.role === "pastor" && (
             <p className="reg-record-line">

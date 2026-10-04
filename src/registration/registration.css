@@ -697,6 +697,13 @@ p {
 .reg-member-roll .reg-toggle b {
   font-size: 14px;
 }
+/* The office's pastors grid: half-size cards, there are thousands of them. */
+.reg-people-grid.compact { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+.reg-people-grid.compact .reg-person-card > .reg-person-portrait > img,
+.reg-people-grid.compact .reg-person-card > .reg-person-portrait > .reg-placeholder { aspect-ratio: 1; }
+.reg-people-grid.compact .reg-person-card > .reg-person-name { padding: 8px 9px; }
+.reg-people-grid.compact .reg-person-name h3 { font-size: 11.5px; line-height: 1.25; }
+.reg-record-years { color: var(--muted); }
 /* Pastors grouped under their bishop (Idea D). */
 .reg-grouped { display: grid; gap: 22px; }
 .reg-bishop-block {
