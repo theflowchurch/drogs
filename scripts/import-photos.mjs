@@ -1,7 +1,7 @@
 // Assigns portraits from the office's photo folders (indexed by scripts/index-photos.mjs) to the
 // people in reference-people.json, converts them to small WebP files under assets/portraits/, and
 // writes data/photo-assignments.json for scripts/build-reference.mjs to pick up.
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync, unlinkSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { extname } from 'node:path';
 import { namesAlike, normalName } from '../src/registration/model.mjs';
@@ -69,8 +69,9 @@ for (const [id, { path }] of chosen) {
       let src = path;
       if (extname(path).toLowerCase() === '.heic') { src = `/tmp/heic-${id}.jpg`; execFileSync('sips', ['-s', 'format', 'jpeg', path, '--out', src], { stdio: 'ignore' }); }
       execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', src, '-vf', `${ROTATE[rotKey] ? ROTATE[rotKey] + ',' : ''}scale='min(640,iw)':-2`, '-c:v', 'libwebp', '-quality', '75', dest.pathname], { stdio: 'ignore' });
+      if (!statSync(dest.pathname).size) throw Error('empty output'); // a corrupt source leaves a zero-byte file behind
       converted++; if (ROTATE[rotKey]) rotated.add(id);
-    } catch { failed++; continue; }
+    } catch { try { unlinkSync(dest.pathname); } catch {} failed++; continue; }
   }
   if (!out[id]) out[id] = `assets/portraits/${id}.webp`;
 }
