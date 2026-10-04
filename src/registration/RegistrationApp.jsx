@@ -79,12 +79,12 @@ const PREVIEW = process.env.NEXT_PUBLIC_PREVIEW === "1";
 // The front-page drone shot. React does not write the muted attribute into the page, and Safari
 // refuses to autoplay a video it does not see as muted, so the element is muted from script and
 // played explicitly; if the browser still refuses (Low Power Mode), the first touch starts it.
-function HeroVideo({ src, poster }) {
+// The drone shot starts the moment the page loads: both files are named in the HTML
+// itself with a media query, so the browser picks the 720p file on phones and the
+// 1080p file on larger screens and begins downloading before any script runs. No
+// poster: the first frame appears as soon as it is decoded.
+function HeroVideo({ src }) {
   const ref = useRef(null);
-  // Phones get the 720p file; the width is only known in the browser, so pick it there.
-  const [size, setSize] = useState("1920");
-  useEffect(() => { setSize(window.innerWidth < 900 ? "1280" : "1920"); }, []);
-  src = src.replace("{size}", size);
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
@@ -96,8 +96,13 @@ function HeroVideo({ src, poster }) {
     window.addEventListener("pointerdown", start, { once: true });
     window.addEventListener("touchstart", start, { once: true, passive: true });
     return () => { document.removeEventListener("visibilitychange", onVisible); window.removeEventListener("pointerdown", start); window.removeEventListener("touchstart", start); };
-  }, [src]);
-  return <video ref={ref} className="reg-hero-video" autoPlay muted loop playsInline disablePictureInPicture disableRemotePlayback preload="auto" poster={poster} src={src} aria-hidden="true" />;
+  }, []);
+  return (
+    <video ref={ref} className="reg-hero-video" autoPlay muted loop playsInline disablePictureInPicture disableRemotePlayback preload="auto" aria-hidden="true">
+      <source src={src.replace("{size}", "1920")} media="(min-width: 900px)" type="video/mp4" />
+      <source src={src.replace("{size}", "1280")} type="video/mp4" />
+    </video>
+  );
 }
 const directoryDemo = () => {
   const pastorsOf = (b) => people.filter((q) => q.role === "pastor" && q.bishop && namesAlike(q.bishop, b.name));
@@ -754,8 +759,8 @@ export default function RegistrationApp({
             </>
           ) : browse ? (
             <>
-              <a className="reg-text" href={`${base}/signup/#signin`}>Sign in</a>
-              <a className="reg-primary reg-signin-button" href={`${base}/signup/#signup`}>Sign up</a>
+              {/* The public roll only offers sign-in; sign-up is reached from the bishop and pastor links the office shares. */}
+              <a className="reg-primary reg-signin-button" href={`${base}/signup/#signin`}>Sign in</a>
             </>
           ) : null}
           {!office && (browse || profile?.role === "bishop") && (
@@ -816,10 +821,7 @@ export default function RegistrationApp({
               <AccountForm mode="signin" run={run} busy={busy} onActor={() => location.assign(`${base}/signup/`)} />
             </Dialog>
           )}
-          <HeroVideo
-            poster={`${base}/assets/brand/castle-hero-night-poster.webp`}
-            src={`${base}/assets/brand/castle-hero-night-{size}.mp4`}
-          />
+          <HeroVideo src={`${base}/assets/brand/castle-hero-night-{size}.mp4`} />
           <h1 className="reg-hero-title">
             <img src={`${base}/assets/brand/castle-white.png`} alt="" />
             Kuriake Castle
@@ -1307,10 +1309,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
   const [sent] = useState(false);
   return (
     <section className={`reg-account ${office ? "signup" : "signin"}`}>
-      <HeroVideo
-        poster={`${base}/assets/brand/castle-hero-night-poster.webp`}
-        src={`${base}/assets/brand/castle-hero-night-{size}.mp4`}
-      />
+      <HeroVideo src={`${base}/assets/brand/castle-hero-night-{size}.mp4`} />
       {office ? (
         <>
           <div>
