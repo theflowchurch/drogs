@@ -217,7 +217,7 @@ export function withStanding(references, roll) {
   const out = references.map((p) => {
     const r = onRoll.get(p.id);
     if (r) seen.add(r.id);
-    return r ? { ...p, standing: true, photo: r.photo || "", image: r.photo ? "" : r.image || p.image || "" } : { ...p, standing: false, photo: "", image: "" };
+    return r ? { ...p, standing: true, photo: r.photo || "", image: r.photo ? "" : r.image || p.image || "", ...(r.pastors ? { pastors: r.pastors } : {}) } : { ...p, standing: false, photo: "", image: "" };
   });
   for (const r of roll || []) if (!seen.has(r.id) && !(r.referenceId && onRoll.has(r.referenceId))) out.push({ ...r, standing: true });
   return out;

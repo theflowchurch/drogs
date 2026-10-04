@@ -505,7 +505,7 @@ export default function RegistrationApp({
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
-    [tab, setTab] = useState(office ? "Directory" : "Registration"),
+    [tab, setTab] = useState(() => { const wanted = typeof sessionStorage !== "undefined" && sessionStorage.getItem("kc-open-tab"); if (wanted) sessionStorage.removeItem("kc-open-tab"); return wanted || (office ? "Directory" : "Registration"); }),
     [year, setYear] = useState(null);
   const refresh = useCallback(
     async (a = actor) => {
@@ -816,7 +816,7 @@ export default function RegistrationApp({
             <img src={`${base}/assets/brand/castle-white.png`} alt="" />
             Kuriake Castle
           </h1>
-          <a className="reg-enter" href={`${base}/${PREVIEW ? "directory-demo" : "directory"}/`}>
+          <a className="reg-enter" href={`${base}/directory/`}>
             <span className="reg-shimmer">View All Bishops and Pastors in Good Standing</span>
             <span className="reg-enter-arrow" aria-hidden="true">→</span>
           </a>
@@ -1467,6 +1467,12 @@ function Participant({
             {pastorCount ? ` ${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded.` : ""}
           </p>
           <button className="reg-primary" onClick={() => setViewedProfile(true)}>View my profile →</button>
+          {PREVIEW && current.data.role === "bishop" && (
+            <button className="reg-secondary" style={{ marginLeft: 10 }} onClick={() => Promise.resolve(api.signOut(false, true)).finally(() => location.assign(`${base}/signup/pastor/`))}>Sign up as one of your pastors →</button>
+          )}
+          {PREVIEW && current.data.role === "pastor" && bishop && (
+            <button className="reg-secondary" style={{ marginLeft: 10 }} onClick={() => { const all = [...(state.profiles || []), ...((JSON.parse(localStorage.getItem("drogs-registration-v1") || "{}").profiles) || [])]; const b = all.find((x) => x.id === bishop.accountId || x.referenceId === bishop.id || x.id === bishop.id); if (!b?.email) return; sessionStorage.setItem("kc-open-tab", "My pastors"); api.demoSignIn(b.email, false, "signin"); location.assign(`${base}/signup/`); }}>Open your bishop’s account →</button>
+          )}
         </div>
       </div>
     );
@@ -1888,8 +1894,8 @@ function RegistrationForm({
                   <div className="reg-is-this-you reg-field wide">
                     {data.referenceId ? (
                       <p>
-                        Linked to your existing record. Check the details below are still
-                        correct.{" "}
+                        Thank you for confirming. Your existing record will be updated with the
+                        details you give here. Check them below.{" "}
                         <button type="button" className="reg-text" onClick={() => set("referenceId", "")}>
                           Not me
                         </button>
@@ -2107,6 +2113,11 @@ function RegistrationForm({
                     beforePay={() => api.action(actor, "save", data)}
                   />
                 </>
+              ) : PREVIEW ? (
+                <div className="reg-payment-instructions">
+                  <p>Pay securely by card or mobile money (MTN, Telecel, AT). This walkthrough simulates the payment.</p>
+                  <button type="button" className="reg-primary reg-paystack" disabled={busy} onClick={() => run(async () => { await api.action(actor, "save", data); await api.action(actor, "recordPaystack", { reference: `SIM-${Date.now()}`, amount: fees[data.role] * 100, expectedMinor: fees[data.role] * 100, currency: "USD" }); await refresh(); }, "Payment received. Thank you.")}>Pay ${fees[data.role]} by card →</button>
+                </div>
               ) : (
                 <p className="reg-payment-instructions">Card and mobile-money payment is not switched on yet. Continue for now; the office will let you know when to pay.</p>
               )}
@@ -3449,7 +3460,10 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
     const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(bySurname).map((p, i) => ({ ...p, n: i + 1 }));
     const taken = new Set(), blocks = [];
     for (const b of bishopsSorted) {
-      const list = pastorsOf(b, roll).filter((q) => !taken.has(q.id)).sort(bySurname);
+      const named = pastorsOf(b, roll).filter((q) => !taken.has(q.id));
+      // The list a confirmed bishop uploaded this year: each entry is a square, lit once that pastor has registered with a photo.
+      const uploaded = (b.pastors || []).map((q) => ({ id: q.id, role: "pastor", name: q.name, photo: q.photo || "", image: "", city: q.city || "", country: q.country || "", standing: Boolean(q.registered && q.photo), bishop: b.name }));
+      const list = [...uploaded, ...named.filter((q) => !uploaded.some((u) => namesAlike(u.name, q.name)))].sort(bySurname);
       list.forEach((q) => taken.add(q.id));
       blocks.push({ bishop: b, pastors: list });
     }
@@ -4287,13 +4301,13 @@ function Roster({ state, year, actor, office, perform }) {
           <strong>{rows.filter((r) => r.status === "active").length}</strong>
         </div>
         <div>
-          <span>Confirmed</span>
+          <span>Registered</span>
           <strong>
             {rows.filter((r) => r.status === "active" && r.pastorId).length}
           </strong>
         </div>
         <div>
-          <span>Unclaimed</span>
+          <span>Not yet registered</span>
           <strong>
             {rows.filter((r) => r.status === "active" && !r.pastorId).length}
           </strong>
@@ -4352,7 +4366,7 @@ function Roster({ state, year, actor, office, perform }) {
                 <tr key={r.id} className={r.status !== "active" ? "removed" : claimed ? "claimed" : "unclaimed"}>
                   <td>
                     <div className="reg-roster-person">
-                      {reg?.data?.photo ? <Media path={reg.data.photo} alt="" className="reg-avatar small" /> : <span className="reg-avatar small reg-placeholder" aria-hidden="true">◯</span>}
+                      {reg?.data?.photo ? <Media path={reg.data.photo} alt="" className="reg-avatar small" /> : <span className="reg-avatar small reg-placeholder reg-unconfirmed" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7v1H4z" /></svg></span>}
                       <b>{r.name}</b>
                     </div>
                   </td>
@@ -4368,9 +4382,9 @@ function Roster({ state, year, actor, office, perform }) {
                     {r.status !== "active" ? (
                       <Badge status="removed">Removed · {r.reason}</Badge>
                     ) : claimed ? (
-                      <Badge status="confirmed">Claimed</Badge>
+                      <Badge status="confirmed">Registered</Badge>
                     ) : (
-                      <Badge status="unclaimed">Unclaimed</Badge>
+                      <Badge status="unclaimed">Not yet registered</Badge>
                     )}
                     {r.note && <small>{r.note}</small>}
                   </td>

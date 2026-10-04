@@ -746,6 +746,9 @@ p {
 /* A card for someone not yet approved: the dark face and the number, nothing else. */
 .reg-person-card.reg-dark { background: #0d1017; border-color: #0d1017; }
 .reg-unapproved { margin: 6px 0 12px; font-size: 16px; color: var(--muted); }
+/* A list entry who has not registered yet: dark face in the bishop's table too. */
+.reg-avatar.small.reg-unconfirmed { display: grid; place-items: center; }
+.reg-avatar.small.reg-unconfirmed svg { width: 60%; height: 60%; fill: #232935; }
 /* Small running number on the left of each portrait in the rolls. */
 .reg-person-n {
   position: absolute;
