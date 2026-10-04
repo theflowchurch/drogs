@@ -35,6 +35,7 @@ import {
   PASTOR_TITLES,
   withStanding,
   pastorsOf,
+  pastorsByBishop,
   caps,
   splitName,
   bySurname,
@@ -3352,8 +3353,14 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
 // their totals — before any faces are shown. Lists the existing roster until the
 // office switches the source to this year's roll.
 function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
-  const base = data.source === "roll" ? data.roll : data.photos === "confirmed" ? withStanding(overlayReferences(publicPeople, data), data.roll || []) : overlayReferences(publicPeople, data);
-  const list = base.map((p) => ({ ...p, denomination: caps(p.denomination), ...(data.catalog ? { denominationListed: denominationListed(data.catalog, p) } : {}) }));
+  // Built once per data load, not per render: the people, then the bishop → pastor index (the
+  // expensive matching), then the lit/dark flags which are the only part the face switch changes.
+  const people = useMemo(() => (data.source === "roll" ? data.roll : overlayReferences(publicPeople, data)), [data.source, data.roll, data.catalog, data.year, data.hidden, data.overrides]);
+  const index = useMemo(() => new Map([...pastorsByBishop(people)].map(([id, qs]) => [id, qs.map((q) => q.id)])), [people]);
+  const list = useMemo(() => {
+    const base = data.source !== "roll" && data.photos === "confirmed" ? withStanding(people, data.roll || []) : people;
+    return base.map((p) => ({ ...p, denomination: caps(p.denomination), ...(data.catalog ? { denominationListed: denominationListed(data.catalog, p) } : {}) }));
+  }, [people, data.source, data.photos, data.roll, data.catalog]);
   const [role, setRole] = useState(fixedRole),
     [q, setQ] = useState("");
   const legend = data.photos === "confirmed" && (
@@ -3394,7 +3401,7 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
       {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
       {!embedded && legend}
       <div className="reg-member-roll">
-        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} switcher={!fixedRole} counts={embedded} />
+        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} index={index} initialQuery={q} switcher={!fixedRole} counts={embedded} />
       </div>
     </section>
   );
@@ -3431,9 +3438,9 @@ function SearchResults({ list, q }) {
 // Bishops are pastors too, so the pastors' list carries everyone; the bishops' list only bishops.
 const inRole = (p, role) => role === "pastor" || p.role === role;
 // The pastors shown under a bishop: the list they uploaded this year (lit once registered with a photo), then pastors whose record names them.
-const pastorsUnder = (b, roll) => {
+const pastorsUnder = (b, byBishop) => {
   const uploaded = (b.pastors || []).map((q) => ({ id: q.id, role: "pastor", name: q.name, photo: q.photo || "", image: "", city: q.city || "", country: q.country || "", standing: Boolean(q.registered && q.photo), bishop: b.name }));
-  return [...uploaded, ...pastorsOf(b, roll).filter((q) => !uploaded.some((u) => namesAlike(u.name, q.name)))];
+  return [...uploaded, ...(byBishop.get(b.id) || []).filter((q) => !uploaded.some((u) => namesAlike(u.name, q.name)))];
 };
 const overseeing = (n) => (n ? <>Overseeing <b>{n}</b> pastor{n === 1 ? "" : "s"}</> : "");
 // The Roll of Good Standing notice under the two doors on the public page: the
@@ -3469,7 +3476,7 @@ function GoodStandingNotice() {
     </section>
   );
 }
-function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher = true, counts = true }) {
+function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery = "", switcher = true, counts = true }) {
   const [filter, setFilter] = useState({
       q: initialQuery,
       org: "",
@@ -3496,12 +3503,18 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
   );
   // The pastors' side groups pastors under their bishop while no search or filter is active.
   const filtering = Boolean(filter.q || filter.org || filter.group || filter.denomination || filter.country);
+  // Bishop → pastors as roll entries. The public page hands in the id index so it survives the face switch; elsewhere it is built here.
+  const byBishop = useMemo(() => {
+    const byId = new Map(roll.map((p) => [p.id, p]));
+    const ids = index || new Map([...pastorsByBishop(roll)].map(([id, qs]) => [id, qs.map((q) => q.id)]));
+    return new Map([...ids].map(([id, list]) => [id, list.map((i) => byId.get(i)).filter(Boolean)]));
+  }, [roll, index]);
   const grouped = useMemo(() => {
     if (role !== "pastor" || filtering) return null;
     const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(bySurname).map((p, i) => ({ ...p, n: i + 1 }));
     const taken = new Set(), blocks = [];
     for (const b of bishopsSorted) {
-      const list = pastorsUnder(b, roll).filter((q) => !taken.has(q.id)).sort(bySurname);
+      const list = pastorsUnder(b, byBishop).filter((q) => !taken.has(q.id)).sort(bySurname);
       list.forEach((q) => taken.add(q.id));
       blocks.push({ bishop: b, pastors: list });
     }
@@ -3514,8 +3527,8 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
     // The order people appear on screen, so the dialog's arrows move to the neighbour.
     const order = [...withPastors.flatMap((x) => [x.bishop, ...x.pastors]), ...alone, ...rest];
     return { withPastors, alone, rest, order };
-  }, [roll, role, filtering]);
-  const pastorCount = useMemo(() => new Map(roll.filter((p) => p.role === "bishop").map((b) => [b.id, pastorsUnder(b, roll).length])), [roll]);
+  }, [roll, role, filtering, byBishop]);
+  const pastorCount = useMemo(() => new Map(roll.filter((p) => p.role === "bishop").map((b) => [b.id, pastorsUnder(b, byBishop).length])), [roll, byBishop]);
   const unapproved = selected?.standing === false;
   // Which sequence the dialog arrows step through: the grid as shown, or one bishop's pastors.
   const [stepList, setStepList] = useState(null);

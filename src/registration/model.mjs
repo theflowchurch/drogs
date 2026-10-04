@@ -204,6 +204,21 @@ export function pastorsOf(bishop, people) {
   const want = normalName(bishop.name);
   return people.filter((q) => q.role === "pastor" && q.bishop && (normalName(q.bishop) === want || (!listed.has(normalName(q.bishop)) && namesAlike(q.bishop, bishop.name))));
 }
+// The same matching for every bishop at once: one pass over the pastors instead of
+// one scan of everyone per bishop (281 × 5,000 fuzzy comparisons on every click).
+export function pastorsByBishop(people) {
+  const bishops = people.filter((p) => p.role === "bishop");
+  const byName = new Map();
+  for (const b of bishops) byName.set(normalName(b.name), [...(byName.get(normalName(b.name)) || []), b]);
+  const out = new Map(bishops.map((b) => [b.id, []]));
+  for (const q of people) {
+    if (q.role !== "pastor" || !q.bishop) continue;
+    const exact = byName.get(normalName(q.bishop));
+    if (exact) { for (const b of exact) out.get(b.id).push(q); continue; }
+    for (const b of bishops) if (namesAlike(q.bishop, b.name)) out.get(b.id).push(q);
+  }
+  return out;
+}
 // Denominations are always written in capitals on the site.
 export const caps = (s) => String(s || "").toUpperCase();
 // Surname first for ordering: the last word of the name (hyphenated names stay whole).
