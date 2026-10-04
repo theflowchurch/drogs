@@ -34,6 +34,7 @@ with sync_playwright() as p:
             page.get_by_role('button', name='Verify and sign in').click()
         else:
             page.get_by_role('button', name='Sign up', exact=True).click()
+            page.get_by_role('link', name='I am a Bishop →').click()  # sign-up always starts from a role
             page.get_by_label('Email address', exact=True).fill('browser-member@example.com')
             page.get_by_role('button', name='Send code').click()
             page.get_by_label('One-time email code').wait_for()
@@ -43,7 +44,7 @@ with sync_playwright() as p:
         page.locator('main').wait_for()
     try:
         login()
-        page.get_by_label('Ministerial title').select_option('Bishop')
+        assert page.get_by_label('Ministerial title').input_value() == 'bishop|Bishop', 'the bishop door fixes the title'
         for label, value in [('First name','Browser'),('Last name','Bishop'),('WhatsApp number','+233201234567'),('Date of birth','1990-02-01'),('Country where you currently serve','Ghana'),('City','Accra')]:
             page.get_by_label(label, exact=True).fill(value)
         page.get_by_label('Gender',exact=True).select_option('male')

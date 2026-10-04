@@ -15,14 +15,16 @@ with sync_playwright() as p:
   page.goto(BASE+('/admin/' if office else '/signup/'));page.wait_for_load_state('networkidle')
   if page.get_by_label('Access code').is_visible():
    page.get_by_label('Access code').fill('1234');page.get_by_role('button',name='Enter →').click()
-  if page.get_by_role('button',name='Sign up',exact=True).is_visible():page.get_by_role('button',name='Sign up',exact=True).click()
+  if page.get_by_role('button',name='Sign up',exact=True).is_visible():
+   page.get_by_role('button',name='Sign up',exact=True).click()
+   page.get_by_role('link',name='I am a Bishop →' if 'bishop' in email else 'I am a Pastor →').click();page.wait_for_load_state('networkidle')  # sign-up always starts from a role
   page.get_by_label('Email address',exact=True).fill(email)
   page.get_by_role('button',name='Continue →').click()
   page.locator('main').wait_for()
  def signout():
   page.get_by_role('button',name='Sign out',exact=True).click();page.get_by_role('link',name='View All Bishops and Pastors in Good Standing').wait_for()
  def register(name,role='pastor',bishop='B1'):
-  page.get_by_label('Ministerial title').select_option(label=role.title())
+  if page.get_by_label('Ministerial title').is_enabled():page.get_by_label('Ministerial title').select_option(label=role.title())  # the bishop door fixes the title
   page.get_by_label('Organization',exact=True).select_option('First Love')
   page.get_by_label('First name',exact=True).fill(name.split(' ')[0]);page.get_by_label('Last name',exact=True).fill(' '.join(name.split(' ')[1:]))
   page.get_by_label('Gender',exact=True).select_option('male')
