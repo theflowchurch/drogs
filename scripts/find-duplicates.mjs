@@ -15,6 +15,9 @@ const richness = (p) => (p.image ? 4 : 0) + (p.yearAppointed ? 1 : 0) + (p.bisho
 const removals = [];
 const MANUAL = { P366: 'BO181', P1944: 'BO180', P5093: 'B78', P4547: 'B196', P4556: 'B59', P4589: 'B127', P4628: 'B187', P4708: 'B240' };
 for (const [id, keep] of Object.entries(MANUAL)) { const p = pastors.find((x) => x.id === id), b = bishops.find((x) => x.id === keep); if (p && b) removals.push({ id, keep, reason: `same person as Bishop ${b.name} (hand-confirmed spelling)` }); }
+// Pairs the office confirmed by name (the shorter record goes, the bishop stays).
+const MANUAL_BY_NAME = { 'Serena Ababio': 'Serena Ariana Ababio' };
+for (const [shortName, fullName] of Object.entries(MANUAL_BY_NAME)) { const b = bishops.find((x) => normalName(x.name) === normalName(fullName)); for (const p of pastors) if (b && normalName(p.name) === normalName(shortName)) removals.push({ id: p.id, keep: b.id, reason: `same person as Bishop ${b.name} (office confirmed)` }); }
 for (const p of pastors) {
   if (removals.some((r) => r.id === p.id)) continue;
   // Same words, same country, and either the same organization or a bare roster line (no city) — a common name in another organization stays.
