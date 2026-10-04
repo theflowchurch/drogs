@@ -821,7 +821,7 @@ export default function RegistrationApp({
               <AccountForm mode="signin" run={run} busy={busy} onActor={() => location.assign(`${base}/signup/`)} />
             </Dialog>
           )}
-          <HeroVideo src={`${base}/assets/brand/castle-hero-night-{size}.mp4`} />
+          <HeroVideo src={`${base}/assets/brand/castle-hero-night-b-{size}.mp4`} />
           <h1 className="reg-hero-title">
             <img src={`${base}/assets/brand/castle-white.png`} alt="" />
             Kuriake Castle
@@ -1309,7 +1309,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
   const [sent] = useState(false);
   return (
     <section className={`reg-account ${office ? "signup" : "signin"}`}>
-      <HeroVideo src={`${base}/assets/brand/castle-hero-night-{size}.mp4`} />
+      <HeroVideo src={`${base}/assets/brand/castle-hero-night-b-{size}.mp4`} />
       {office ? (
         <>
           <div>
