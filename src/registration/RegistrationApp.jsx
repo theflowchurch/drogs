@@ -708,7 +708,7 @@ export default function RegistrationApp({
       {!hero && (
         <div
           className="reg-app-bg"
-          style={{ backgroundImage: `url(${base}/assets/brand/castle-bg.webp)` }}
+          style={{ backgroundImage: `url(${base}/assets/brand/castle-night.webp)` }}
           aria-hidden="true"
         />
       )}
@@ -1299,7 +1299,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
     <section className={`reg-account ${office ? "signup" : "signin"}`}>
       <div
         className="reg-hero-image"
-        style={{ backgroundImage: `url(${base}/assets/brand/castle-bg.webp)` }}
+        style={{ backgroundImage: `url(${base}/assets/brand/castle-night.webp)` }}
         aria-hidden="true"
       />
       {office ? (
@@ -3390,6 +3390,7 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
           ))}
         </div>
         )}
+        {!embedded && !q && <GoodStandingNotice />}
       </section>
     );
   return (
@@ -3397,7 +3398,7 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
       {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
       {!embedded && legend}
       <div className="reg-member-roll">
-        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} switcher={!fixedRole} counts={embedded} notice={!embedded} />
+        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} initialQuery={q} switcher={!fixedRole} counts={embedded} />
       </div>
     </section>
   );
@@ -3439,14 +3440,17 @@ const pastorsUnder = (b, roll) => {
   return [...uploaded, ...pastorsOf(b, roll).filter((q) => !uploaded.some((u) => namesAlike(u.name, q.name)))];
 };
 const overseeing = (n) => (n ? <>Overseeing <b>{n}</b> pastor{n === 1 ? "" : "s"}</> : "");
-// The Roll of Good Standing notice shown under the search on the public list, worded for the list being viewed.
-function GoodStandingNotice({ role }) {
-  const one = role === "pastor" ? "pastor" : "bishop", many = `${one}s`;
+// The Roll of Good Standing notice under the two doors on the public page: the
+// opening lines show, the rest unfolds behind "Read more".
+function GoodStandingNotice() {
+  const [open, setOpen] = useState(false);
+  const one = "bishop or pastor", many = "bishops and pastors";
   return (
-    <section className="reg-standing-notice" aria-label="Roll of Good Standing">
+    <section className={`reg-standing-notice ${open ? "open" : ""}`} aria-label="Roll of Good Standing">
       <h2>Roll of Good Standing</h2>
       <h3>What it means to be in good standing</h3>
       <p>A Bishop or pastor is of good standing when he or she fulfills the requirements, expectations, and responsibilities of the office as determined. Such a Bishop or minister is entitled to exercise all rights, privileges, titles, and functions attached to that ministerial office.</p>
+      {open && (<>
       <h3>What it means to not be in good standing</h3>
       <p>A Bishop or pastor who is not in good standing is not entitled to exercise the rights, privileges, titles, or functions attached to that ministerial office for the period in which they remain not in good standing.</p>
       <p>While a Bishop or pastor is not in good standing in their office, the following restrictions apply:</p>
@@ -3464,10 +3468,12 @@ function GoodStandingNotice({ role }) {
       <p>Being not in good standing does not necessarily mean permanent removal from ministry or permanent loss of office.</p>
       <p>A Bishop or minister may be restored to good standing when the requirements and expectations of the office have been satisfied.</p>
       <p>Upon restoration, the minister's name may be returned to the Roll of ministers in Good Standing, together with the rights, functions, recognition, and privileges applicable to that office.</p>
+      </>)}
+      <button type="button" className="reg-text reg-read-more" aria-expanded={open} onClick={() => setOpen(!open)}>{open ? "Show less" : "Read more"}</button>
     </section>
   );
 }
-function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher = true, counts = true, notice = false }) {
+function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher = true, counts = true }) {
   const [filter, setFilter] = useState({
       q: initialQuery,
       org: "",
@@ -3544,7 +3550,6 @@ function MemberDirectory({ role, setRole, roll = [], initialQuery = "", switcher
         setFilter={setFilter}
         options={options}
       />
-      {notice && <GoodStandingNotice role={role} />}
       {grouped ? (
         <div className="reg-grouped">
           {grouped.withPastors.map(({ bishop: b, pastors: ps }) => (
