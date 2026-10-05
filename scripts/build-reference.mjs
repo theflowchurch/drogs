@@ -234,6 +234,20 @@ if (broken.length) throw Error(`Garbled names remain: ${broken.map(p => p.name).
 // without them; the server merges them back from data/reference-contacts.json.
 const contacts = Object.fromEntries(people.filter(p => p.email || p.phone).map(p => [p.id, { email: p.email || '', phone: p.phone || '' }]));
 await writeFile(new URL('../data/reference-contacts.json', import.meta.url), JSON.stringify(contacts) + '\n');
+// Pastors who exist only as a photo in a bishop's office folder (data/folder-new-pastors.json,
+// written by scripts/audit-bishops.mjs): added under that bishop with the bishop's organization,
+// denomination, group and country. Title and gender come from the file prefix (Rev / LP).
+// Their photos are picked up by scripts/import-photos.mjs by name on the next run.
+const folderNew = JSON.parse(await readFile(new URL('../data/folder-new-pastors.json', import.meta.url), 'utf8').catch(() => '[]'));
+const bishopById = new Map(people.filter(p => p.role === 'bishop').map(b => [b.id, b]));
+let addedFromFolders = 0;
+folderNew.forEach((n, i) => {
+  const b = bishopById.get(n.bishopId);
+  if (!b || people.some(p => p.role === 'pastor' && namesAlike(p.name, n.name))) return;
+  people.push({ id: `PF${i + 1}`, role: 'pastor', name: n.name, title: n.title || 'Pastor', organization: b.organization, denomination: b.denomination, denominationLogo: b.denominationLogo || '', city: '', branch: '', country: b.country || '', image: '', gender: n.gender || '', yearAppointed: '', yearOrdained: '', yearConsecrated: '', bishop: b.name, group: b.group || '', source: 'photo folder' });
+  addedFromFolders++;
+});
+console.log(`Photo folders: ${addedFromFolders} pastors added who were only in a bishop's folder`);
 // Duplicate records, applied once every record (official-list bishops included) exists (scripts/find-duplicates.mjs → data/duplicate-removals.json): the kept record inherits anything it lacks.
 const dupes = JSON.parse(await readFile(new URL('../data/duplicate-removals.json', import.meta.url), 'utf8').catch(() => '{"removals":[]}')).removals;
 const dropIds = new Set();
