@@ -18,7 +18,11 @@ const problems = (p) => {
   if (q.width && q.width < 300) r.push(`very small photo (${q.width}px)`); if (q.blur !== undefined && q.blur < 100) r.push('blurry');
   return r;
 };
-const thumb = (p) => { if (!p.image) return ''; const t = p.image.replace(/^(assets\/(?:portraits|bishops|pastors))\/([^/]+)\.[^.]+$/, '$1/thumbs/$2.webp'); return `http://localhost:4301/${existsSync(`${root}${t}`) ? t : p.image}`; };
+// Small JPEG copies for the PDF: Chrome embeds WebP as uncompressed bitmaps, which made a 180 MB file.
+import sharp from 'sharp'; import { mkdirSync } from 'node:fs';
+mkdirSync(`${root}.tmp-checks/pdfthumbs`, { recursive: true });
+const thumb = (p) => { if (!p.image) return ''; const t = p.image.replace(/^(assets\/(?:portraits|bishops|pastors))\/([^/]+)\.[^.]+$/, '$1/thumbs/$2.webp'); const src = `${root}${existsSync(`${root}${t}`) ? t : p.image}`; const out = `.tmp-checks/pdfthumbs/${p.id}.jpg`; pending.push(existsSync(`${root}${out}`) ? null : sharp(src).resize({ width: 180, withoutEnlargement: true }).jpeg({ quality: 72 }).toFile(`${root}${out}`).catch(() => {})); return `http://localhost:4301/${out}`; };
+const pending = [];
 const esc = (s) => String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 const groupOf = (p) => p.group || orgLabel(p.organization) || 'Other';
 const yr = (v) => v ? `<span class="ok">${esc(v)}</span>` : '<span class="miss">missing</span>';
@@ -33,7 +37,7 @@ const css = `@page { size: A4; margin: 14mm 12mm; } body { font-family: -apple-s
   table.b img, table.b .nophoto { width: 46px; height: 58px; object-fit: cover; border-radius: 5px; background: #e6ece9; display: block; } .nophoto { display: flex; align-items: center; justify-content: center; font-size: 8px; color: #8a94a6; text-align: center; }
   .miss { color: #b42318; font-weight: 700; } .ok { color: #1f7a4d; } .issue { color: #b42318; } .fine { color: #1f7a4d; } .muted { color: #6a7283; }
   .cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; } .card { page-break-inside: avoid; border: 1px solid #e7ecf5; border-radius: 8px; padding: 6px; } .card img { width: 100%; height: 118px; object-fit: cover; border-radius: 5px; background: #e6ece9; display: block; } .card b { display: block; margin-top: 5px; font-size: 10px; } .card small { display: block; color: #6a7283; font-size: 9px; } .card .issue { font-size: 9px; display: block; margin-top: 3px; }`;
-const render = async (html, out) => { const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' }); const page = await browser.newPage(); await page.setContent(html, { waitUntil: 'networkidle', timeout: 180000 }); await page.emulateMedia({ media: 'print' }); await page.pdf({ path: out, format: 'A4', printBackground: true, displayHeaderFooter: true, headerTemplate: '<span></span>', footerTemplate: `<div style="width:100%;text-align:center;font-size:9px;color:#8a94a6;font-family:Arial">${esc(out.split('/').pop().replace('.pdf', ''))} · page <span class="pageNumber"></span> of <span class="totalPages"></span></div>`, margin: { top: '14mm', bottom: '16mm', left: '12mm', right: '12mm' } }); await browser.close(); console.log('written', out); };
+const render = async (html, out) => { await Promise.all(pending.filter(Boolean)); pending.length = 0; const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' }); const page = await browser.newPage(); await page.setContent(html, { waitUntil: 'networkidle', timeout: 180000 }); await page.emulateMedia({ media: 'print' }); await page.pdf({ path: out, format: 'A4', printBackground: true, displayHeaderFooter: true, headerTemplate: '<span></span>', footerTemplate: `<div style="width:100%;text-align:center;font-size:9px;color:#8a94a6;font-family:Arial">${esc(out.split('/').pop().replace('.pdf', ''))} · page <span class="pageNumber"></span> of <span class="totalPages"></span></div>`, margin: { top: '14mm', bottom: '16mm', left: '12mm', right: '12mm' } }); await browser.close(); console.log('written', out); };
 const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 const dir = `${process.env.HOME}/Downloads/kuriake-data-quality`;
 // ---- 1. Bishops
