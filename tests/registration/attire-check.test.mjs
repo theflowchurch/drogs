@@ -20,9 +20,9 @@ test('one clear side is enough, and a face against the edge is not judged', () =
   assert.equal(backgroundShare(solid([250, 250, 250]), { originX: 40, originY: 0, width: 100, height: 100 }, 190), null);
 });
 
-test('attire colour thresholds', () => {
-  assert.ok(judge({ red: 0.3 }, 'red'));
-  assert.ok(!judge({ red: 0.1 }, 'red'));
-  assert.ok(judge({ dark: 0.35 }, 'dark'));
-  assert.ok(!judge({ dark: 0.2 }, 'dark'));
+test('any official look passes; only clearly casual colours fail', () => {
+  assert.ok(judge({ red: 0.3 }));
+  assert.ok(judge({ dark: 0.35 })); // a suit
+  assert.ok(judge({ dark: 0.1, magenta: 0.08 })); // the magenta clerical shirt
+  assert.ok(!judge({ red: 0.1, dark: 0.2, magenta: 0.02, yellow: 0.05 }));
 });

@@ -33,22 +33,28 @@ const hsl = (r, g, b) => {
   const h = max === r ? ((g - b) / d + (g < b ? 6 : 0)) : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
   return [h * 60, s, l];
 };
-// Shares of red / yellow / dark pixels in a region of the canvas.
+// Shares of red / yellow / magenta / dark pixels in a region of the canvas. "Dark" is a
+// suit as it photographs: black, charcoal or navy come out as low-saturation greys
+// around 30–40 % lightness, so the cut is well above pure black. Magenta is the
+// clerical shirt worn under a dark jacket.
 export function colourShares(ctx, x, y, w, h) {
   const { data } = ctx.getImageData(Math.max(0, x), Math.max(0, y), Math.max(1, w), Math.max(1, h));
-  let red = 0, yellow = 0, dark = 0, n = 0;
+  let red = 0, yellow = 0, magenta = 0, dark = 0, n = 0;
   for (let i = 0; i < data.length; i += 16) { // every 4th pixel is plenty
     const [hue, s, l] = hsl(data[i], data[i + 1], data[i + 2]); n++;
-    if (l < 0.22) dark++;
+    if (l < 0.42 && s < 0.4) dark++;
     else if (s > 0.35 && l > 0.18 && l < 0.75 && (hue >= 335 || hue <= 18)) red++;
+    else if (s > 0.3 && l > 0.2 && l < 0.8 && hue >= 285 && hue < 335) magenta++;
     else if (s > 0.4 && l > 0.3 && hue >= 38 && hue <= 68) yellow++;
   }
-  return n ? { red: red / n, yellow: yellow / n, dark: dark / n } : { red: 0, yellow: 0, dark: 0 };
+  return n ? { red: red / n, yellow: yellow / n, magenta: magenta / n, dark: dark / n } : { red: 0, yellow: 0, magenta: 0, dark: 0 };
 }
-export function judge(shares, colour) {
-  const share = shares[colour] || 0;
-  const need = colour === "dark" ? 0.3 : 0.22;
-  return share >= need;
+// A photo passes when any official look is there: the red jacket or red/yellow attire,
+// a dark suit, or the magenta clerical shirt. Only clearly casual colours fail
+// (Joshua, 5 Oct 2026: "collar and all that is fine; casual clothes are what we root out").
+export const NEED = { red: 0.22, yellow: 0.22, dark: 0.3, magenta: 0.05 };
+export function judge(shares) {
+  return Object.entries(NEED).some(([c, need]) => (shares[c] || 0) >= need);
 }
 // Share of plain, light pixels (white or pale grey wall) in a region: bright,
 // with little colour between the channels (HSL saturation misleads near white).
@@ -95,7 +101,7 @@ export async function checkAttire(file, person, { timeoutMs = 15000 } = {}) {
     const shares = colourShares(ctx, x, y, w, h);
     const background = backgroundShare(ctx, box, canvas.width);
     const reasons = [];
-    if (!judge(shares, expected.colour)) reasons.push(["colour", `Attire: we could not see ${expected.words}.`]);
+    if (!judge(shares)) reasons.push(["colour", `Attire: we could not see ${expected.words}.`]);
     if (background !== null && background < PLAIN_NEED) reasons.push(["background", "Background: it should be a plain white wall with nothing else behind you."]);
     if (reasons.length) return { verdict: reasons[0][0], note: reasons.map((r) => r[1]).join(" "), shares, background };
     return { verdict: "ok", note: "", shares, background };
