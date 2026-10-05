@@ -20,7 +20,8 @@ export const GROUPS = {
       "Anagkazo Assemblies",
       "East Mountain Churches",
       "West End City Churches",
-      "Qodesh City Churches"
+      "Qodesh City Churches",
+      "United Cities"
     ]
   },
   "UD Africa": {
@@ -90,7 +91,8 @@ export const GROUPS = {
     "denominations": [
       "Jesus Is The Answer Church",
       "Jesus Is The Door",
-      "Castle City Church"
+      "Castle City Church",
+      "United Cities"
     ]
   },
   "Eschatos": {

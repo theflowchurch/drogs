@@ -119,6 +119,14 @@ const fixes = JSON.parse(await readFile(new URL('../data/pastor-fixes.json', imp
 for (const [who, f] of Object.entries(fixes)) for (const p of people) if (p.role === 'pastor' && normalName(p.name) === normalName(who)) Object.assign(p, Object.fromEntries(Object.entries(f).filter(([k]) => k !== 'note')));
 // The original data's "supervising bishop" text goes through the same spelling fixes.
 for (const p of people) if (p.role === 'pastor' && p.bishop) p.bishop = resolveBishop(p.bishop) || p.bishop;
+// The office's photo folders (one folder per bishop) are the current word on who is
+// under whom; the old roster and the export named the previous bishop for a thousand
+// pastors (e.g. Kenneth Agyei for Dennis Agyei-Gyan's). data/folder-bishops.json is
+// written by scripts/audit-bishops.mjs from /tmp/photo-index.json.
+const folderBishops = JSON.parse(await readFile(new URL('../data/folder-bishops.json', import.meta.url), 'utf8').catch(() => '{}'));
+let moved = 0;
+for (const p of people) if (p.role === 'pastor' && folderBishops[p.id] && normalName(p.bishop || '') !== normalName(folderBishops[p.id])) { p.bishop = folderBishops[p.id]; moved++; }
+console.log(`Photo folders: ${moved} pastors placed under the bishop whose folder holds their photo`);
 console.log(`2026 sheet: ${sheet.length} rows · ${sheetStats.matched} matched existing pastors · ${sheetStats.added} new pastors added · ${sheetStats.bishopsSkipped} bishop rows left to the official list · ${sheetStats.ambiguous} ambiguous names skipped`);
 // ---- The official DHMM bishops list (data/official-bishops.json, from the office's
 // document) is the truth about who is a bishop. Every bishop on it is matched to
