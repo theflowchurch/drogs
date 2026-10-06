@@ -27,7 +27,9 @@ const clean = (n) => {
   let s = String(n).replace(/\.(jpe?g|png|heic|webp)$/i, '').replace(/\bjpg\b/ig, '');
   s = s.replace(/\s*[-–,(]\s*(qodesh|[A-Z][A-Za-z]+,?\s*ITALY|ITALY|GHANA|UK|USA|copy|\d+).*$/i, '');
   s = s.replace(/^(bishop|rev\.?|lady rev\.?|lp\.?|ps\.?|pastor|pasotr|pst\.?|mother|sis\.?|bro\.?)\s+/i, '').replace(/^(bishop|rev\.?|lady rev\.?|lp\.?|ps\.?|pastor|pasotr)\s+/i, '');
+  s = s.replace(/\s*-?\s*\b\w+ Mission$/i, '').replace(/\s+\w+ Branch( Italy)?$/i, '').replace(/\s+Assisting .*$/i, '').replace(/\s*-?\s*\b\w+ Cathedral$/i, ''); // place suffixes after the name
   s = s.replace(/[_]+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+  if (/\b(cathedral|church|chapel|assembl|campus|council|ministr)\b/i.test(s)) return ''; // a building or a church, not a person
   return s.split(' ').filter(w => !/^\d+$/.test(w)).join(' ');
 };
 const tc = s => s.replace(/[^\s-]+/g, w => w.length > 2 ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w.toUpperCase());

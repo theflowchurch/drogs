@@ -243,7 +243,7 @@ const bishopById = new Map(people.filter(p => p.role === 'bishop').map(b => [b.i
 let addedFromFolders = 0;
 folderNew.forEach((n, i) => {
   const b = bishopById.get(n.bishopId);
-  if (!b || people.some(p => p.role === 'pastor' && namesAlike(p.name, n.name))) return;
+  if (n.drop || !b || people.some(p => p.role === 'pastor' && namesAlike(p.name, n.name))) return; // `drop`: not a person (e.g. a church building's photo)
   people.push({ id: `PF${i + 1}`, role: 'pastor', name: n.name, title: n.title || 'Pastor', organization: b.organization, denomination: b.denomination, denominationLogo: b.denominationLogo || '', city: '', branch: '', country: b.country || '', image: '', gender: n.gender || '', yearAppointed: '', yearOrdained: '', yearConsecrated: '', bishop: b.name, group: b.group || '', source: 'photo folder' });
   addedFromFolders++;
 });
