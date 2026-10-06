@@ -6,47 +6,47 @@ import { directoryPeople, titleFor, placeOf, orgLabel, caps, bySurname } from ".
 // Everything the office has asked for by hand so far (bishops missing years, pastors
 // without a photo, everyone under a bishop, contact lists) is a few clicks here.
 const COLUMNS = [
-  ["name", "Full name", (p) => p.name],
+  ["name", "Full Name", (p) => p.name],
   ["title", "Title", (p) => titleFor(p)],
-  ["role", "Bishop or pastor", (p) => (p.role === "bishop" ? "Bishop" : "Pastor")],
+  ["role", "Role", (p) => (p.role === "bishop" ? "Bishop" : "Pastor")],
   ["gender", "Gender", (p) => (p.gender === "female" ? "Female" : p.gender === "male" ? "Male" : "")],
-  ["bishop", "Bishop in charge", (p) => (p.role === "pastor" ? p.bishop || "" : "")],
+  ["bishop", "Bishop in Charge", (p) => (p.role === "pastor" ? p.bishop || "" : "")],
   ["group", "Group", (p) => p.group || orgLabel(p.organization) || ""],
   ["organization", "Organization", (p) => orgLabel(p.organization) || ""],
   ["denomination", "Denomination", (p) => caps(p.denomination)],
   ["branch", "Branch", (p) => p.branch || ""],
   ["city", "City", (p) => p.city || ""],
   ["country", "Country", (p) => p.country || ""],
-  ["place", "Place (city, country)", (p) => placeOf(p)],
-  ["phone", "WhatsApp / phone", (p) => p.phone || ""],
+  ["place", "Place", (p) => placeOf(p)],
+  ["phone", "WhatsApp Number", (p) => p.phone || ""],
   ["email", "Email", (p) => p.email || ""],
-  ["yearAppointed", "Year appointed", (p) => p.yearAppointed || ""],
-  ["yearOrdained", "Year ordained", (p) => p.yearOrdained || ""],
-  ["yearConsecrated", "Year consecrated", (p) => (p.role === "bishop" ? p.yearConsecrated || "" : "")],
-  ["photo", "Photo on file", (p) => (p.image || p.registration?.data?.photo ? "Yes" : "No")],
-  ["photoUrl", "Photo link", (p) => (p.image ? `${location.origin}/${p.image}` : "")],
-  ["registered", `Registered this year`, (p) => (p.registration ? "Yes" : "No")],
-  ["status", "Registration status", (p) => p.registration?.status || ""],
-  ["id", "Record", (p) => p.id],
+  ["yearAppointed", "Year Appointed", (p) => p.yearAppointed || ""],
+  ["yearOrdained", "Year Ordained", (p) => p.yearOrdained || ""],
+  ["yearConsecrated", "Year Consecrated", (p) => (p.role === "bishop" ? p.yearConsecrated || "" : "")],
+  ["photo", "Photo on File", (p) => (p.image || p.registration?.data?.photo ? "Yes" : "No")],
+  ["photoUrl", "Photo Link", (p) => (p.image ? `${location.origin}/${p.image}` : "")],
+  ["registered", "Registered This Year", (p) => (p.registration ? "Yes" : "No")],
+  ["status", "Registration Status", (p) => p.registration?.status || ""],
+  ["id", "Record ID", (p) => p.id],
 ];
 const DEFAULT_COLUMNS = ["name", "title", "role", "gender", "bishop", "group", "denomination", "city", "country", "phone", "yearAppointed", "yearOrdained", "yearConsecrated", "photo"];
 // Ready-made picks: one click sets who, the narrowing and the columns.
 const PRESETS = [
-  { label: "All bishops", who: "bishop", only: [], columns: ["name", "title", "gender", "group", "denomination", "city", "country", "phone", "email", "yearAppointed", "yearOrdained", "yearConsecrated", "photo"] },
-  { label: "All pastors with their bishop", who: "pastor", only: [], columns: ["name", "title", "gender", "bishop", "group", "denomination", "city", "country", "phone", "yearAppointed", "photo"] },
-  { label: "Bishops missing a year", who: "bishop", only: ["missingYears"], columns: ["name", "title", "group", "denomination", "place", "yearAppointed", "yearOrdained", "yearConsecrated"] },
-  { label: "Pastors missing a year", who: "pastor", only: ["missingYears"], columns: ["name", "title", "bishop", "group", "denomination", "place", "yearAppointed", "yearOrdained"] },
-  { label: "Pastors without a photo", who: "pastor", only: ["noPhoto"], columns: ["name", "title", "bishop", "group", "denomination", "place", "phone"] },
-  { label: "Bishops without a photo", who: "bishop", only: ["noPhoto"], columns: ["name", "title", "group", "denomination", "place", "phone", "email"] },
-  { label: "Not yet registered this year", who: "both", only: ["notRegistered"], columns: ["name", "title", "role", "bishop", "group", "denomination", "place", "phone", "email"] },
-  { label: "Contact list", who: "both", only: [], columns: ["name", "title", "role", "bishop", "group", "phone", "email"] },
+  { label: "All Bishops", who: "bishop", only: [], columns: ["name", "title", "gender", "group", "denomination", "city", "country", "phone", "email", "yearAppointed", "yearOrdained", "yearConsecrated", "photo"] },
+  { label: "All Pastors with Their Bishop", who: "pastor", only: [], columns: ["name", "title", "gender", "bishop", "group", "denomination", "city", "country", "phone", "yearAppointed", "photo"] },
+  { label: "Bishops Missing a Year", who: "bishop", only: ["missingYears"], columns: ["name", "title", "group", "denomination", "place", "yearAppointed", "yearOrdained", "yearConsecrated"] },
+  { label: "Pastors Missing a Year", who: "pastor", only: ["missingYears"], columns: ["name", "title", "bishop", "group", "denomination", "place", "yearAppointed", "yearOrdained"] },
+  { label: "Pastors Without a Photo", who: "pastor", only: ["noPhoto"], columns: ["name", "title", "bishop", "group", "denomination", "place", "phone"] },
+  { label: "Bishops Without a Photo", who: "bishop", only: ["noPhoto"], columns: ["name", "title", "group", "denomination", "place", "phone", "email"] },
+  { label: "Not Yet Registered This Year", who: "both", only: ["notRegistered"], columns: ["name", "title", "role", "bishop", "group", "denomination", "place", "phone", "email"] },
+  { label: "Contact List", who: "both", only: [], columns: ["name", "title", "role", "bishop", "group", "phone", "email"] },
 ];
 const ONLY = [
-  ["missingYears", "Missing a year (appointed, ordained, or consecrated for a bishop)", (p) => !p.yearAppointed || (p.role === "bishop" ? !p.yearOrdained || !p.yearConsecrated : p.title === "Rev." && !p.yearOrdained)],
-  ["noPhoto", "No photo on file", (p) => !p.image && !p.registration?.data?.photo],
-  ["notRegistered", "Not yet registered this year", (p) => !p.registration],
-  ["registered", "Registered this year", (p) => Boolean(p.registration)],
-  ["noPastors", "Bishops with no pastors under them", (p, all) => p.role === "bishop" && !all.some((q) => q.role === "pastor" && q.bishop === p.name)],
+  ["missingYears", "Missing a Year Appointed, Ordained or Consecrated", (p) => !p.yearAppointed || (p.role === "bishop" ? !p.yearOrdained || !p.yearConsecrated : p.title === "Rev." && !p.yearOrdained)],
+  ["noPhoto", "No Photo on File", (p) => !p.image && !p.registration?.data?.photo],
+  ["notRegistered", "Not Yet Registered This Year", (p) => !p.registration],
+  ["registered", "Registered This Year", (p) => Boolean(p.registration)],
+  ["noPastors", "Bishops with No Pastors", (p, all) => p.role === "bishop" && !all.some((q) => q.role === "pastor" && q.bishop === p.name)],
 ];
 const csvCell = (v) => { const s = String(v ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
 const download = (name, blob) => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
@@ -89,39 +89,39 @@ export default function DataExport({ state, people, year }) {
   const toggle = (list, set) => (key) => set(list.includes(key) ? list.filter((k) => k !== key) : [...list, key]);
   return (
     <section className="reg-data-export">
-      <div className="reg-section-head"><h2>Data</h2><span>Export any slice of the records as a spreadsheet.</span></div>
-      <h3>Quick exports</h3>
+      <p className="reg-small reg-data-intro">Export any selection of bishops and pastors as an Excel or CSV file. Choose a quick export, or build your own below.</p>
+      <h3>Quick Exports</h3>
       <div className="reg-preset-row">{PRESETS.map((preset) => <button key={preset.label} type="button" className="reg-secondary" onClick={() => applyPreset(preset)}>{preset.label}</button>)}</div>
-      <h3>Or build your own</h3>
+      <h3>Custom Export</h3>
       <div className="reg-export-grid">
-        <fieldset><legend>Who</legend>
-          {[["bishop", "Bishops"], ["pastor", "Pastors"], ["both", "Bishops and pastors"]].map(([v, l]) => <label key={v} className="reg-check"><input type="radio" name="who" checked={who === v} onChange={() => setWho(v)} /> {l}</label>)}
+        <fieldset><legend>People</legend>
+          {[["bishop", "Bishops"], ["pastor", "Pastors"], ["both", "Bishops and Pastors"]].map(([v, l]) => <label key={v} className="reg-check"><input type="radio" name="who" checked={who === v} onChange={() => setWho(v)} /> {l}</label>)}
         </fieldset>
-        <fieldset><legend>Narrow down</legend>
-          {[["group", "Group", options.group], ["denomination", "Denomination", options.denomination], ["country", "Country", options.country], ["bishop", "Under bishop", options.bishop]].map(([key, label, opts]) => (
+        <fieldset><legend>Filter</legend>
+          {[["group", "Group", options.group], ["denomination", "Denomination", options.denomination], ["country", "Country", options.country], ["bishop", "Bishop in Charge", options.bishop]].map(([key, label, opts]) => (
             <label key={key} className="reg-field"><span>{label}</span><select value={narrow[key]} onChange={(e) => setNarrow({ ...narrow, [key]: e.target.value })}><option value="">All</option>{opts.map((o) => <option key={o} value={o}>{o}</option>)}</select></label>
           ))}
         </fieldset>
-        <fieldset><legend>Only those who are…</legend>
+        <fieldset><legend>Conditions</legend>
           {ONLY.map(([key, label]) => <label key={key} className="reg-check"><input type="checkbox" checked={only.includes(key)} onChange={() => toggle(only, setOnly)(key)} /> {label}</label>)}
         </fieldset>
         <fieldset><legend>Columns</legend>
           <div className="reg-column-picks">{COLUMNS.map(([key, label]) => <label key={key} className="reg-check"><input type="checkbox" checked={columns.includes(key)} onChange={() => toggle(columns, setColumns)(key)} /> {label}</label>)}</div>
-          <button type="button" className="reg-text" onClick={() => setColumns(columns.length === COLUMNS.length ? DEFAULT_COLUMNS : COLUMNS.map(([k]) => k))}>{columns.length === COLUMNS.length ? "Back to the usual columns" : "Select every column"}</button>
+          <button type="button" className="reg-text" onClick={() => setColumns(columns.length === COLUMNS.length ? DEFAULT_COLUMNS : COLUMNS.map(([k]) => k))}>{columns.length === COLUMNS.length ? "Default Columns" : "Select All Columns"}</button>
         </fieldset>
       </div>
       <div className="reg-export-actions">
-        <div className="reg-switch" role="group" aria-label="File format">
+        <div className="reg-switch" role="group" aria-label="File Format">
           {[["xlsx", "Excel"], ["csv", "CSV"]].map(([v, l]) => <button key={v} type="button" aria-pressed={format === v} className={format === v ? "active" : ""} onClick={() => setFormat(v)}>{l}</button>)}
         </div>
-        <p className="reg-small" role="status"><b>{rows.length.toLocaleString()}</b> {rows.length === 1 ? "person" : "people"} match · {chosen.length} columns</p>
+        <p className="reg-small" role="status"><b>{rows.length.toLocaleString()}</b> {rows.length === 1 ? "Record" : "Records"} · {chosen.length} {chosen.length === 1 ? "Column" : "Columns"}</p>
         <button type="button" className="reg-primary" disabled={!rows.length || !chosen.length} onClick={exportNow}>Download {format === "csv" ? "CSV" : "Excel"} →</button>
       </div>
       {rows.length > 0 && (
         <table className="reg-table reg-export-preview"><thead><tr>{chosen.slice(0, 6).map(([key, label]) => <th key={key}>{label}</th>)}</tr></thead>
           <tbody>{rows.slice(0, 8).map((p) => <tr key={p.id}>{chosen.slice(0, 6).map(([key, , get]) => <td key={key}>{get(p)}</td>)}</tr>)}</tbody></table>
       )}
-      {rows.length > 8 && <p className="reg-small">Showing the first 8 of {rows.length.toLocaleString()} rows; the file has them all.</p>}
+      {rows.length > 8 && <p className="reg-small">Preview of the first 8 of {rows.length.toLocaleString()} records. The file includes all of them.</p>}
     </section>
   );
 }

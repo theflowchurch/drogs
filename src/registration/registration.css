@@ -3972,6 +3972,7 @@ input[type="date"] {
 
 /* Office → Data: export builder. */
 .reg-data-export h3 { margin: 18px 0 8px; font-size: 14px; }
+.reg-data-intro { margin: 0 0 6px; }
 .reg-preset-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .reg-export-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
 .reg-export-grid fieldset { border: 1px solid #dfe6f3; border-radius: 12px; padding: 10px 14px 12px; min-width: 0; }
