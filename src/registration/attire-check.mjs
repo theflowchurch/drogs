@@ -39,22 +39,27 @@ const hsl = (r, g, b) => {
 // clerical shirt worn under a dark jacket.
 export function colourShares(ctx, x, y, w, h) {
   const { data } = ctx.getImageData(Math.max(0, x), Math.max(0, y), Math.max(1, w), Math.max(1, h));
-  let red = 0, yellow = 0, magenta = 0, dark = 0, n = 0;
+  let red = 0, yellow = 0, magenta = 0, blue = 0, dark = 0, n = 0;
   for (let i = 0; i < data.length; i += 16) { // every 4th pixel is plenty
     const [hue, s, l] = hsl(data[i], data[i + 1], data[i + 2]); n++;
-    if (l < 0.42 && s < 0.4) dark++;
+    if ((l < 0.42 && s < 0.4) || (l < 0.56 && s < 0.2)) dark++; // black, charcoal, navy or grey suit
     else if (s > 0.35 && l > 0.18 && l < 0.75 && (hue >= 335 || hue <= 18)) red++;
     else if (s > 0.3 && l > 0.2 && l < 0.8 && hue >= 285 && hue < 335) magenta++;
-    else if (s > 0.4 && l > 0.3 && hue >= 38 && hue <= 68) yellow++;
+    else if (s > 0.3 && l > 0.12 && l < 0.65 && hue >= 200 && hue < 260) blue++; // a blue suit or blue dress is official too (Joshua, 6 Oct 2026)
+    else if (s > 0.4 && l > 0.3 && hue >= 35 && hue <= 85) yellow++; // yellow through yellow-green dresses
   }
-  return n ? { red: red / n, yellow: yellow / n, magenta: magenta / n, dark: dark / n } : { red: 0, yellow: 0, magenta: 0, dark: 0 };
+  return n ? { red: red / n, yellow: yellow / n, magenta: magenta / n, blue: blue / n, dark: dark / n } : { red: 0, yellow: 0, magenta: 0, blue: 0, dark: 0 };
 }
-// A photo passes when any official look is there: the red jacket or red/yellow attire,
-// a dark suit, or the magenta clerical shirt. Only clearly casual colours fail
+// A photo passes when any official look is there: the red jacket or red/yellow/blue attire,
+// a dark or blue suit, or the magenta clerical shirt. Only clearly casual colours fail
 // (Joshua, 5 Oct 2026: "collar and all that is fine; casual clothes are what we root out").
-export const NEED = { red: 0.22, yellow: 0.22, dark: 0.3, magenta: 0.05 };
-export function judge(shares) {
-  return Object.entries(NEED).some(([c, need]) => (shares[c] || 0) >= need);
+export const NEED = { red: 0.22, yellow: 0.22, blue: 0.22, dark: 0.3, magenta: 0.05 };
+// Either one official colour fills its share, or the official colours together fill
+// the torso (a grey suit with a red tie: neither alone, both together). A floral
+// print or a bright casual shirt reaches neither.
+export const TOGETHER = 0.38;
+export function judge(shares = {}) {
+  return Object.entries(NEED).some(([c, need]) => (shares[c] || 0) >= need) || Object.keys(NEED).reduce((sum, c) => sum + (shares[c] || 0), 0) >= TOGETHER;
 }
 // Share of plain, light pixels (white or pale grey wall) in a region: bright,
 // with little colour between the channels (HSL saturation misleads near white).
@@ -101,10 +106,12 @@ export async function checkAttire(file, person, { timeoutMs = 15000 } = {}) {
     const shares = colourShares(ctx, x, y, w, h);
     const background = backgroundShare(ctx, box, canvas.width);
     const reasons = [];
-    if (!judge(shares)) reasons.push(["colour", `Attire: we could not see ${expected.words}.`]);
+    // A head-and-shoulders crop leaves too little below the face to judge the clothes: pass rather than guess.
+    const tooTight = h < box.height * 0.45;
+    if (!tooTight && !judge(shares)) reasons.push(["colour", `Attire: we could not see ${expected.words}.`]);
     if (background !== null && background < PLAIN_NEED) reasons.push(["background", "Background: it should be a plain white wall with nothing else behind you."]);
-    if (reasons.length) return { verdict: reasons[0][0], note: reasons.map((r) => r[1]).join(" "), shares, background };
-    return { verdict: "ok", note: "", shares, background };
+    if (reasons.length) return { verdict: reasons[0][0], note: reasons.map((r) => r[1]).join(" "), shares, background, tooTight };
+    return { verdict: "ok", note: "", shares, background, tooTight };
   } catch (error) {
     return { verdict: "skipped", note: "" }; // no network for the model, or an unreadable image: never block on it
   }

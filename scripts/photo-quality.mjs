@@ -24,7 +24,7 @@ for (const p of todo) {
   try {
     const r = await page.evaluate(([u, person]) => window.run(u, person), [`http://localhost:4301/${p.image}`, { role: p.role, gender: p.gender, organization: p.organization, title: p.title }]);
     const { blur, width } = await blurOf(file);
-    prev[p.id] = { verdict: r.verdict, note: r.note || '', shares: r.shares || null, background: r.background ?? null, blur, width };
+    prev[p.id] = { verdict: r.verdict, note: r.note || '', shares: r.shares || null, background: r.background ?? null, tooTight: Boolean(r.tooTight), blur, width };
   } catch (e) { prev[p.id] = { error: String(e.message).slice(0, 80) }; }
   if (++done % 200 === 0) { writeFileSync(new URL('../data/photo-quality.json', import.meta.url), JSON.stringify(prev)); console.log('checked', done); }
 }

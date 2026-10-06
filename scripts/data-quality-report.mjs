@@ -3,6 +3,7 @@
 import { readFileSync, mkdirSync } from 'node:fs';
 import * as XLSX from 'xlsx'; import fs from 'node:fs'; XLSX.set_fs(fs);
 import { placeOf, titleFor } from '../src/registration/model.mjs';
+import { judge } from '../src/registration/attire-check.mjs';
 const people = JSON.parse(readFileSync(new URL('../src/registration/reference-people.json', import.meta.url), 'utf8'));
 const quality = JSON.parse(readFileSync(new URL('../data/photo-quality.json', import.meta.url), 'utf8'));
 const sources = JSON.parse(readFileSync(new URL('../data/photo-sources.json', import.meta.url), 'utf8'));
@@ -14,7 +15,8 @@ const yearsB = bishops.filter(b => !b.yearAppointed || !b.yearOrdained || !b.yea
 const yearsP = pastors.filter(p => !p.yearAppointed || (p.title === 'Rev.' && !p.yearOrdained)).map(p => ({ ...who(p), 'Year appointed': p.yearAppointed || 'MISSING', 'Year ordained': p.title === 'Rev.' ? (p.yearOrdained || 'MISSING') : (p.yearOrdained || '') }));
 const noPhoto = people.filter(p => !p.image).map(p => ({ Role: p.role === 'bishop' ? 'Bishop' : 'Pastor', ...who(p) }));
 // Photo problems. Attire: for people whose gender is unknown, any of the three official colours is accepted.
-const need = { red: 0.22, yellow: 0.22, dark: 0.3, magenta: 0.05 };
+// Photos the office confirmed by eye as official attire (data/photo-approved.json: id → note); never listed for replacement on attire grounds.
+const approved = JSON.parse(readFileSync(new URL('../data/photo-approved.json', import.meta.url), 'utf8'));
 const problems = [];
 for (const p of people) {
   const q = quality[p.id]; if (!q || !p.image) continue;
@@ -23,8 +25,8 @@ for (const p of people) {
   else if (q.verdict === 'many-faces') reasons.push('more than one person');
   else if (q.shares) {
     const s = q.shares;
-    if (!Object.entries(need).some(([c, n]) => (s[c] || 0) >= n)) reasons.push('no official attire seen: no red jacket, dark suit, clerical shirt or official dress (casual clothes)');
-    if (q.background !== null && q.background < 0.5) reasons.push('background not a plain white wall');
+    if (!approved[p.id] && !q.tooTight && !judge(s)) reasons.push('no official attire seen: no red jacket, dark or blue suit, clerical shirt or official dress (casual clothes)');
+    // Backgrounds are not held against existing photos for now (Joshua, 6 Oct 2026); the sign-up check still requires a plain wall.
   }
   if (q.width && q.width < 300) reasons.push(`very small photo (${q.width}px wide)`);
   if (q.blur !== undefined && q.blur < 100) reasons.push('blurry or very soft');
