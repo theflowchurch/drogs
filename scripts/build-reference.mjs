@@ -268,6 +268,7 @@ for (const v of verified) {
   const isRev = /Rev/.test(hit.title);
   const rankDiffers = (wantRole === 'bishop') !== (hit.role === 'bishop') || (v.rank === 'reverend') !== isRev;
   if (rankDiffers) vreport.rankDiffers.push({ ...v, record: hit.name, recordTitle: hit.title, recordRole: hit.role });
+  if (rankDiffers && hit.role === 'pastor' && wantRole === 'pastor') hit.title = hit.gender === 'female' ? 'Lady Rev.' : 'Rev.'; // Pastor on one side, Reverend on the other: Reverend for now (Joshua, 6 Oct 2026)
   for (const k of ['yearAppointed', 'yearOrdained', 'yearConsecrated']) {
     if (!v[k] || (k === 'yearConsecrated' && hit.role !== 'bishop')) continue;
     if (hit[k] && hit[k] !== v[k]) { if (rankDiffers) { vreport.kept.push({ name: hit.name, field: k, record: hit[k], form: v[k], formRank: v.rank, recordTitle: hit.title }); continue; } vreport.changed.push({ name: hit.name, field: k, was: hit[k], now: v[k] }); } // a different rank and a different year is likely a namesake
