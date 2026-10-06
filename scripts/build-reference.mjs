@@ -260,8 +260,8 @@ const vreport = { matched: 0, unmatched: [], rankDiffers: [], changed: [], kept:
 const sameCountry = (p, c) => !c || !p.country || normalName(p.country) === normalName(c) || normalName(c).startsWith(normalName(p.country));
 for (const v of verified) {
   const wantRole = v.rank === 'bishop' || v.rank === 'mother' ? 'bishop' : 'pastor';
-  const n = titleCase(stripTitle(v.name));
-  const pick = (list) => list.find(p => normalName(p.name) === normalName(n)) || (() => { let a = list.filter(p => namesAlike(p.name, n)); if (a.length > 1) a = a.filter(p => sameCountry(p, v.country)); return a.length === 1 ? a[0] : null; })();
+  const n = titleCase(stripTitle(v.name)), ap = (t) => t.replace(/[’'`]/g, ''); // Ng’uni and Nguni are one name
+  const pick = (list) => list.find(p => normalName(ap(p.name)) === normalName(ap(n))) || (() => { let a = list.filter(p => namesAlike(ap(p.name), ap(n))); if (a.length > 1) a = a.filter(p => sameCountry(p, v.country)); if (a.length > 1) { const same = (t) => normalName(ap(t)).split(' ').sort().join(' '); const exact = a.filter(p => same(p.name) === same(n)); if (exact.length === 1) a = exact; } return a.length === 1 ? a[0] : null; })();
   const hit = pick(people.filter(p => p.role === wantRole)) || pick(people.filter(p => p.role !== wantRole));
   if (!hit) { vreport.unmatched.push(v); continue; }
   vreport.matched++;
