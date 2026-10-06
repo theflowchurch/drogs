@@ -65,6 +65,7 @@ import { checkReceiptImage } from "./receipt-check.mjs";
 import { portraitStyle } from "../runtime/portrait-framing";
 import { shortDateTime, longDate } from "./format.mjs";
 import { checkAttire, expectedAttire } from "./attire-check.mjs";
+import DataExport from "./DataExport.jsx";
 import people from "./reference-people.json";
 // Everyone Kuriake Castle already knows. Bishops are the linkable approval references;
 // the whole roster backs the Directory and the member search.
@@ -668,6 +669,7 @@ export default function RegistrationApp({
   const nav = office
     ? [
         "Directory",
+        "Data",
         "Existing records",
         "Unclaimed",
         "Approvals",
@@ -987,6 +989,7 @@ export default function RegistrationApp({
                   </div>
                   {tab === "Communication" && <Communication state={state} run={run} />}
                   {tab === "Denominations" && <div className="reg-settings-list"><Structure state={state} perform={perform} actor={actor} show={["orgs", "groups"]} /></div>}
+                  {tab === "Data" && <DataExport state={state} people={publicPeople} year={Number(year)} />}
                   {tab === "Accounts" && <Accounts run={run} />}
                   {tab === "API keys" && <ApiKeys run={run} />}
                   {tab === "Settings" && <Settings run={run} state={state} perform={perform} actor={actor} />}

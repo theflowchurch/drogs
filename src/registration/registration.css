@@ -3969,3 +3969,18 @@ input[type="date"] {
   outline-offset: 6px;
   border-radius: 12px;
 }
+
+/* Office → Data: export builder. */
+.reg-data-export h3 { margin: 18px 0 8px; font-size: 14px; }
+.reg-preset-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.reg-export-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.reg-export-grid fieldset { border: 1px solid #dfe6f3; border-radius: 12px; padding: 10px 14px 12px; min-width: 0; }
+.reg-export-grid legend { font-weight: 650; font-size: 13px; padding: 0 6px; }
+.reg-export-grid .reg-check { display: flex; gap: 8px; align-items: flex-start; margin: 6px 0; font-size: 13px; }
+.reg-export-grid .reg-field { display: block; margin: 6px 0; }
+.reg-export-grid .reg-field span { display: block; font-size: 12px; color: var(--muted, #6a7283); margin-bottom: 2px; }
+.reg-export-grid select { width: 100%; }
+.reg-column-picks { columns: 2; column-gap: 12px; }
+.reg-export-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin: 18px 0 10px; }
+.reg-export-preview td, .reg-export-preview th { font-size: 12px; white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+:root[data-theme="dark"] .reg-export-grid fieldset { border-color: #2a3a55; }
