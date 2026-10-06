@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { judge } from '../../src/registration/attire-check.mjs';
 const root = new URL('../..', import.meta.url).pathname;
 const read = (f, fallback) => { try { return JSON.parse(readFileSync(`${root}${f}`, 'utf8')); } catch { return fallback; } };
-export const quality = read('data/photo-quality.json', {}), manual = read('data/photo-manual-flags.json', {}), approved = read('data/photo-approved.json', {});
+export const quality = read('data/photo-quality.json', {}), manual = read('data/photo-manual-flags.json', {}), approved = read('data/photo-approved.json', {}), backdrops = read('data/bishop-backdrops.json', {});
 export function photoProblems(p) {
   if (!p.image) return ['no photo'];
   const q = quality[p.id]; if (!q) return [];
@@ -16,7 +16,11 @@ export function photoProblems(p) {
   else if (q.shares && !manual[p.id] && !approved[p.id] && !q.tooTight && !judge(q.shares, p.role))
     r.push(p.role === 'bishop' ? 'not in the red jacket' : 'no official attire seen (casual clothes)');
   // Bishops must be photographed on a white wall; a black or busy backdrop needs a new photo. For pastors the background is not held against them for now.
-  if (p.role === 'bishop' && q.background !== null && q.background !== undefined && q.background < 0.5) r.push('dark or busy background: bishops must be on a plain white wall');
+  if (p.role === 'bishop') {
+    const bd = backdrops[p.id]; // the band above the head (scripts/bishop-backdrops.mjs), plus the strips beside the face from the scan
+    if ((bd && bd.light < 0.35) || (q.background !== null && q.background !== undefined && q.background < 0.5 && bd && bd.light < 0.6)) r.push('dark background: bishops must be on a plain white wall');
+    else if (bd && bd.spread > 0.22) r.push('busy background: bishops must be on a plain white wall');
+  }
   // Small or soft files are accepted for now (Joshua, 6 Oct 2026).
   return r;
 }
