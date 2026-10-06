@@ -61,7 +61,7 @@ with sync_playwright() as p:
   signout();open_account('office@example.com',True)
   expect(page.get_by_text('Existing records',exact=True)).to_be_visible()
   assert page.locator('.reg-dot.stale').count()>0 and page.locator('.reg-dot.updated').count()==0
-  page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Review')).click();page.get_by_role('button',name='Approvals',exact=True).click();page.get_by_role('button',name='Demo Bishop').click()
+  page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Review')).click();page.locator('.reg-subnav').get_by_role('button',name=re.compile(r'^Approvals')).click();page.get_by_role('button',name='Demo Bishop').click()
   page.get_by_label('Match to existing bishop reference').select_option('B1');page.get_by_label('I have verified this person').check();page.get_by_role('button',name='Confirm bishop').click()
   expect(page.get_by_text('No bishop registrations awaiting confirmation')).to_be_visible()
   signout();open_account('bishop@example.com');page.get_by_role('button',name='My pastors',exact=True).click()
@@ -80,7 +80,7 @@ with sync_playwright() as p:
   page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Directory')).click();page.get_by_role('button',name='Roll of Good Standing',exact=True).click()
   page.get_by_label('Search people').fill('John Demo');expect(page.get_by_role('button',name='John Demo')).not_to_be_visible()
   page.get_by_label('Search people').fill('')
-  page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Review')).click();page.get_by_role('button',name='Unclaimed').click();page.screenshot(path=str(OUT/'unclaimed-office.png'),full_page=True)
+  page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Review')).click();page.locator('.reg-subnav').get_by_role('button',name=re.compile(r'^Unclaimed')).click();page.screenshot(path=str(OUT/'unclaimed-office.png'),full_page=True)
   page.get_by_role('button',name='John Demo').click();page.screenshot(path=str(OUT/'unclaimed-review.png'),full_page=True)
   opts=page.get_by_label('Link to annual list').locator('option').all_text_contents();assert any('Jon Demo' in o for o in opts)
   page.get_by_label('Link to annual list').select_option(index=1);page.get_by_role('button',name='Confirm pastor · unlock payment').click()

@@ -36,6 +36,7 @@ import {
   withStanding,
   pastorsOf,
   pastorsByBishop,
+  structureConflicts,
   caps,
   splitName,
   bySurname,
@@ -669,7 +670,7 @@ export default function RegistrationApp({
   // Office navigation: seven tabs. People, Review and Settings hold a switch for their pages.
   const SUBS = {
     Directory: ["Directory", "Existing records", "Pastor lists"],
-    Review: ["Approvals", "Unclaimed", "Payments"],
+    Review: ["Approvals", "Unclaimed", "Payments", "Conflicts"],
     Settings: [...(api.settingsAvailable ? ["Settings"] : []), ...(api.apiKeysAvailable ? ["Accounts", "API keys"] : [])],
   };
   const SUB_LABEL = { Directory: "Roll of Good Standing", "Existing records": "Existing Records", "Pastor lists": "Pastor Lists", "API keys": "API Keys" };
@@ -684,6 +685,8 @@ export default function RegistrationApp({
           : []),
       ];
   const view = SUBS[tab] ? sub[tab] || SUBS[tab][0] : tab;
+  // Records that contradict the office's group and denomination structure (Denominations tab).
+  const conflicts = useMemo(() => (office && state ? structureConflicts(catalogOf(state), directoryPeople(state, publicPeople, Number(year))) : []), [office, state, year]);
   async function logout() {
     await run(async () => {
       await api.signOut(office);
@@ -901,9 +904,9 @@ export default function RegistrationApp({
                       ? "My profile"
                       : n}
                   </span>
-                  {n === "Review" && scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length > 0 && (
+                  {n === "Review" && scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length + conflicts.length > 0 && (
                     <b>
-                      {scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length}
+                      {scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length + conflicts.length}
                     </b>
                   )}
                 </button>
@@ -927,6 +930,12 @@ export default function RegistrationApp({
             <fieldset className="reg-workspace-fieldset" disabled={busy}>
               {tab === "Dashboard" && (
                 <>
+                  {conflicts.length > 0 && (
+                    <div className="reg-alert error reg-conflict-banner" role="alert">
+                      <b>{conflicts.length.toLocaleString()} {conflicts.length === 1 ? "record contradicts" : "records contradict"} the group and denomination structure.</b>
+                      <button type="button" className="reg-text" onClick={() => { setTab("Review"); setSub({ ...sub, Review: "Conflicts" }); }}>Review the conflicts →</button>
+                    </div>
+                  )}
                   <DashboardFrame />
                   <section className="reg-dashboard-activity">
                     <History state={state} records={scoped} office={office} actor={actor} year={Number(year)} perform={perform} />
@@ -978,6 +987,8 @@ export default function RegistrationApp({
                               "View the pastors submitted by each bishop and see who has been confirmed, unclaimed or removed. Bishops can only see their own pastors under “My pastors”.",
                             Payments:
                               "Review payment proof and confirm payments received.",
+                            Conflicts:
+                              "Records that contradict the group and denomination structure kept under Denominations. The structure is the authority; correct the record or the structure.",
                             History: "View previous registration years and activity.",
                             Communication: "Send an email to everyone, all bishops, all pastors, or selected people.",
                             Denominations: "Organisations, their denominations and logos, and the UD – OLGC groups.",
@@ -994,6 +1005,7 @@ export default function RegistrationApp({
                               {SUB_LABEL[v] || v}
                               {v === "Unclaimed" && scoped.filter((r) => r.status === "unclaimed").length > 0 && <b>{scoped.filter((r) => r.status === "unclaimed").length}</b>}
                               {v === "Approvals" && scoped.filter((r) => r.status === "pending").length > 0 && <b>{scoped.filter((r) => r.status === "pending").length}</b>}
+                              {v === "Conflicts" && conflicts.length > 0 && <b>{conflicts.length}</b>}
                             </button>
                           ))}
                         </div>
@@ -1064,6 +1076,7 @@ export default function RegistrationApp({
                       canEdit={Number(year) === state.year}
                     />
                   )}
+                  {view === "Conflicts" && <StructureConflicts conflicts={conflicts} />}
                   {(view === "My pastors" || view === "Pastor lists") && (
                     <Roster
                       state={state}
@@ -4623,6 +4636,23 @@ function Roster({ state, year, actor, office, perform }) {
         </Dialog>
       )}
     </>
+  );
+}
+// Review → Conflicts: what the structure says against what the record says, person by person.
+function StructureConflicts({ conflicts }) {
+  const [q, setQ] = useState("");
+  const rows = conflicts.filter((c) => !q || `${c.name} ${c.message}`.toLowerCase().includes(q.toLowerCase()));
+  if (!conflicts.length) return <Empty title="No conflicts">Every record agrees with the group and denomination structure.</Empty>;
+  return (
+    <section>
+      <div className="reg-alert error reg-conflict-banner" role="alert"><b>{conflicts.length.toLocaleString()} {conflicts.length === 1 ? "record contradicts" : "records contradict"} the structure.</b> The structure under Denominations is the authority: correct the record, or correct the structure if it is the structure that is wrong.</div>
+      <div className="reg-filters"><input type="search" aria-label="Search conflicts" placeholder="Search by name or issue" value={q} onChange={(e) => setQ(e.target.value)} /></div>
+      <table className="reg-table reg-conflicts">
+        <thead><tr><th>Person</th><th>The Structure Says</th><th>The Record Says</th><th>Issue</th></tr></thead>
+        <tbody>{rows.slice(0, 500).map((c) => <tr key={`${c.id}-${c.kind}`}><td><b>{c.name}</b><br /><small>{c.role === "bishop" ? "Bishop" : "Pastor"} · {c.id}</small></td><td>{c.structure}</td><td className="reg-conflict-record">{c.record}</td><td>{c.message}</td></tr>)}</tbody>
+      </table>
+      {rows.length > 500 && <p className="reg-small">Showing the first 500 of {rows.length.toLocaleString()}. Narrow the search to see the rest.</p>}
+    </section>
   );
 }
 function History({ state, records, office, actor, year, perform }) {

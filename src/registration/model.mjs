@@ -189,6 +189,30 @@ export function groupOf(catalog, person) {
   }
   return "";
 }
+// The office's structure (organizations → groups → denominations, kept in the Denominations
+// tab) is the authority. Records that contradict it are listed for the office in red:
+//  - a pastor whose denomination sits in a different group from their bishop's;
+//  - a bishop whose record carries a group other than the one the structure gives their denomination;
+//  - a denomination that is not in the structure at all.
+export function structureConflicts(catalog, people) {
+  const bishops = new Map(people.filter((p) => p.role === "bishop").map((b) => [normalName(b.name), b]));
+  const out = [];
+  for (const p of people) {
+    const group = groupOf(catalog, { ...p, group: "" }); // what the structure says, ignoring the record's own group
+    if (p.denomination && !denominationListed(catalog, p))
+      out.push({ id: p.id, name: p.name, role: p.role, kind: "unknown-denomination", structure: "not in the structure", record: `${p.denomination}${p.organization ? ` (${p.organization})` : ""}`, message: `The denomination “${p.denomination}” is not in the structure.` });
+    else if (p.role === "bishop" && p.group && group && p.group !== group)
+      out.push({ id: p.id, name: p.name, role: p.role, kind: "bishop-group", structure: `${p.denomination} is under ${group}`, record: `group ${p.group}`, message: `The record places this bishop in ${p.group}, but the structure puts ${p.denomination} under ${group}.` });
+    if (p.role === "pastor" && p.bishop) {
+      const b = bishops.get(normalName(p.bishop));
+      if (!b) continue;
+      const pastorGroup = group || p.group, bishopGroup = groupOf(catalog, { ...b, group: "" }) || b.group;
+      if (pastorGroup && bishopGroup && pastorGroup !== bishopGroup)
+        out.push({ id: p.id, name: p.name, role: p.role, kind: "pastor-bishop-group", structure: `${p.denomination || "their denomination"} is under ${pastorGroup}`, record: `under Bishop ${b.name} (${bishopGroup})`, message: `This pastor's denomination belongs to ${pastorGroup}, but they are placed under Bishop ${b.name}, who is in ${bishopGroup}.` });
+    }
+  }
+  return out;
+}
 export const feesOf = (state) => state?.fees?.bishop ? state.fees : AMOUNTS;
 // Fields of an old roster record the office may correct.
 export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination", "group", "city", "country", "bishop", "branch", "photo", "phone", "email"];

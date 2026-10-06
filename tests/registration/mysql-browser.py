@@ -82,7 +82,7 @@ with sync_playwright() as p:
         page.set_viewport_size({'width':1440,'height':1050})
         login(True)
         assert page.url.endswith('/admin/')
-        page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Review')).click(); page.get_by_role('button',name='Approvals',exact=True).click()
+        page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Review')).click(); page.locator('.reg-subnav').get_by_role('button',name=re.compile(r'^Approvals')).click()
         page.get_by_role('button',name='Browser Bishop').click()
         expect(page.get_by_text('Browser Bishop',exact=True).first).to_be_visible()
         # Close the registration dialog before managing integration keys.
