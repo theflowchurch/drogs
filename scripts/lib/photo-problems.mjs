@@ -15,7 +15,8 @@ export function photoProblems(p) {
   else if (q.verdict === 'many-faces') r.push('more than one person');
   else if (q.shares && !manual[p.id] && !approved[p.id] && !q.tooTight && !judge(q.shares, p.role))
     r.push(p.role === 'bishop' ? 'not in the red jacket' : 'no official attire seen (casual clothes)');
-  if (q.width && q.width < 300) r.push(`very small photo (${q.width}px wide)`);
-  if (q.blur !== undefined && q.blur < 100) r.push('blurry or very soft');
+  // Bishops must be photographed on a white wall; a black or busy backdrop needs a new photo. For pastors the background is not held against them for now.
+  if (p.role === 'bishop' && q.background !== null && q.background !== undefined && q.background < 0.5) r.push('dark or busy background: bishops must be on a plain white wall');
+  // Small or soft files are accepted for now (Joshua, 6 Oct 2026).
   return r;
 }
