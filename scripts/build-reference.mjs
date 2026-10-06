@@ -253,6 +253,29 @@ const dupes = JSON.parse(await readFile(new URL('../data/duplicate-removals.json
 const dropIds = new Set();
 for (const d of dupes) { const drop = people.find(p => p.id === d.id), keep = people.find(p => p.id === d.keep); if (!drop || !keep) continue; for (const k of ['image', 'city', 'country', 'yearAppointed', 'yearOrdained', 'bishop', 'branch', 'gender']) if (!keep[k] && drop[k] && !(k === 'bishop' && keep.role === 'bishop')) keep[k] = drop[k]; dropIds.add(d.id); }
 people = people.filter(p => !dropIds.has(p.id));
+// Years the office verified through its Google Form (scripts/verified-years.mjs → data/verified-years.json)
+// overwrite whatever the old roster and export said; what did not match is reported for the office.
+const verified = JSON.parse(await readFile(new URL('../data/verified-years.json', import.meta.url), 'utf8').catch(() => '[]'));
+const vreport = { matched: 0, unmatched: [], rankDiffers: [], changed: [], kept: [] };
+const sameCountry = (p, c) => !c || !p.country || normalName(p.country) === normalName(c) || normalName(c).startsWith(normalName(p.country));
+for (const v of verified) {
+  const wantRole = v.rank === 'bishop' || v.rank === 'mother' ? 'bishop' : 'pastor';
+  const n = titleCase(stripTitle(v.name));
+  const pick = (list) => list.find(p => normalName(p.name) === normalName(n)) || (() => { let a = list.filter(p => namesAlike(p.name, n)); if (a.length > 1) a = a.filter(p => sameCountry(p, v.country)); return a.length === 1 ? a[0] : null; })();
+  const hit = pick(people.filter(p => p.role === wantRole)) || pick(people.filter(p => p.role !== wantRole));
+  if (!hit) { vreport.unmatched.push(v); continue; }
+  vreport.matched++;
+  const isRev = /Rev/.test(hit.title);
+  const rankDiffers = (wantRole === 'bishop') !== (hit.role === 'bishop') || (v.rank === 'reverend') !== isRev;
+  if (rankDiffers) vreport.rankDiffers.push({ ...v, record: hit.name, recordTitle: hit.title, recordRole: hit.role });
+  for (const k of ['yearAppointed', 'yearOrdained', 'yearConsecrated']) {
+    if (!v[k] || (k === 'yearConsecrated' && hit.role !== 'bishop')) continue;
+    if (hit[k] && hit[k] !== v[k]) { if (rankDiffers) { vreport.kept.push({ name: hit.name, field: k, record: hit[k], form: v[k], formRank: v.rank, recordTitle: hit.title }); continue; } vreport.changed.push({ name: hit.name, field: k, was: hit[k], now: v[k] }); } // a different rank and a different year is likely a namesake
+    hit[k] = v[k];
+  }
+}
+await writeFile(new URL('../data/reports/verified-years.json', import.meta.url), JSON.stringify(vreport, null, 1) + '\n');
+console.log(`Verified years: ${vreport.matched} of ${verified.length} matched · ${vreport.changed.length} years corrected · ${vreport.unmatched.length} names not found · ${vreport.rankDiffers.length} ranks differ from our record · ${vreport.kept.length} conflicting years kept for the office to settle`);
 // Portraits imported from the office's photo folders (scripts/import-photos.mjs writes data/photo-assignments.json).
 const assigned = JSON.parse(await readFile(new URL('../data/photo-assignments.json', import.meta.url), 'utf8').catch(() => '{}'));
 for (const p of people) if (assigned[p.id] && (p.role === 'pastor' || !p.image)) p.image = assigned[p.id];
