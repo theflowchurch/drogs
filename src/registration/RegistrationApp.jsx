@@ -931,7 +931,7 @@ export default function RegistrationApp({
               {tab === "Dashboard" && (
                 <>
                   {conflicts.length > 0 && (
-                    <div className="reg-alert error reg-conflict-banner" role="alert">
+                    <div className="reg-conflict-banner" role="alert">
                       <b>{conflicts.length.toLocaleString()} {conflicts.length === 1 ? "record contradicts" : "records contradict"} the group and denomination structure.</b>
                       <button type="button" className="reg-text" onClick={() => { setTab("Review"); setSub({ ...sub, Review: "Conflicts" }); }}>Review the conflicts →</button>
                     </div>
@@ -4645,7 +4645,7 @@ function StructureConflicts({ conflicts }) {
   if (!conflicts.length) return <Empty title="No conflicts">Every record agrees with the group and denomination structure.</Empty>;
   return (
     <section>
-      <div className="reg-alert error reg-conflict-banner" role="alert"><b>{conflicts.length.toLocaleString()} {conflicts.length === 1 ? "record contradicts" : "records contradict"} the structure.</b> The structure under Denominations is the authority: correct the record, or correct the structure if it is the structure that is wrong.</div>
+      <div className="reg-conflict-banner" role="alert"><b>{conflicts.length.toLocaleString()} {conflicts.length === 1 ? "record contradicts" : "records contradict"} the structure.</b> The structure under Denominations is the authority: correct the record, or correct the structure if it is the structure that is wrong.</div>
       <div className="reg-filters"><input type="search" aria-label="Search conflicts" placeholder="Search by name or issue" value={q} onChange={(e) => setQ(e.target.value)} /></div>
       <table className="reg-table reg-conflicts">
         <thead><tr><th>Person</th><th>The Structure Says</th><th>The Record Says</th><th>Issue</th></tr></thead>

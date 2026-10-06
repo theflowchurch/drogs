@@ -3993,7 +3993,9 @@ input[type="date"] {
 .reg-settings-search { width: 100%; max-width: 420px; margin: 0 0 14px; }
 
 /* Review → Conflicts and the Dashboard alert. */
-.reg-conflict-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 16px; }
-.reg-dashboard-activity .reg-conflict-banner, .reg-main-flush > .reg-conflict-banner { margin: 16px max(24px, 4vw) 0; }
+.reg-conflict-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 16px; padding: 12px 16px; border-radius: 12px; background: #fdecec; border: 1px solid #f1b9b4; color: #7a1f16; font-size: 14px; }
+.reg-conflict-banner .reg-text { color: #b42318; font-weight: 650; }
+.reg-main-flush > .reg-conflict-banner { margin: 16px max(24px, 4vw) 0; }
+:root[data-theme="dark"] .reg-conflict-banner { background: rgba(180, 35, 24, 0.18); border-color: rgba(241, 185, 180, 0.35); color: #f3c9c5; }
 .reg-conflicts td, .reg-conflicts th { font-size: 13px; vertical-align: top; }
 .reg-conflict-record { color: #b42318; font-weight: 600; }
