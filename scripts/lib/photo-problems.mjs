@@ -18,8 +18,8 @@ export function photoProblems(p) {
   // Bishops must be photographed on a white wall; a black or busy backdrop needs a new photo. For pastors the background is not held against them for now.
   if (p.role === 'bishop') {
     const bd = backdrops[p.id]; // the band above the head (scripts/bishop-backdrops.mjs), plus the strips beside the face from the scan
+    // ponytail: the band above the head catches hats and hair, so only its darkness is trusted; a busy but bright backdrop is flagged by eye in photo-manual-flags.json.
     if ((bd && bd.light < 0.35) || (q.background !== null && q.background !== undefined && q.background < 0.5 && bd && bd.light < 0.6)) r.push('dark background: bishops must be on a plain white wall');
-    else if (bd && bd.spread > 0.22) r.push('busy background: bishops must be on a plain white wall');
   }
   // Small or soft files are accepted for now (Joshua, 6 Oct 2026).
   return r;
