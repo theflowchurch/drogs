@@ -3,36 +3,17 @@
 import { readFileSync, mkdirSync } from 'node:fs';
 import * as XLSX from 'xlsx'; import fs from 'node:fs'; XLSX.set_fs(fs);
 import { placeOf, titleFor } from '../src/registration/model.mjs';
-import { judge } from '../src/registration/attire-check.mjs';
 const people = JSON.parse(readFileSync(new URL('../src/registration/reference-people.json', import.meta.url), 'utf8'));
-const quality = JSON.parse(readFileSync(new URL('../data/photo-quality.json', import.meta.url), 'utf8'));
+import { photoProblems, quality } from './lib/photo-problems.mjs';
 const sources = JSON.parse(readFileSync(new URL('../data/photo-sources.json', import.meta.url), 'utf8'));
-// Photos the office pointed out by eye; colour alone cannot tell a grey polo from a grey suit.
-const manual = JSON.parse(readFileSync(new URL('../data/photo-manual-flags.json', import.meta.url), 'utf8'));
 const bishops = people.filter(p => p.role === 'bishop'), pastors = people.filter(p => p.role === 'pastor');
 const who = (p) => ({ Name: p.name, Title: titleFor(p), Group: p.group || p.organization, Denomination: p.denomination || '', Place: placeOf(p), ...(p.role === 'pastor' ? { Bishop: p.bishop || '' } : {}) });
 const yearsB = bishops.filter(b => !b.yearAppointed || !b.yearOrdained || !b.yearConsecrated).map(b => ({ ...who(b), 'Year appointed': b.yearAppointed || 'MISSING', 'Year ordained': b.yearOrdained || 'MISSING', 'Year consecrated': b.yearConsecrated || 'MISSING' }));
 const yearsP = pastors.filter(p => !p.yearAppointed || (p.title === 'Rev.' && !p.yearOrdained)).map(p => ({ ...who(p), 'Year appointed': p.yearAppointed || 'MISSING', 'Year ordained': p.title === 'Rev.' ? (p.yearOrdained || 'MISSING') : (p.yearOrdained || '') }));
 const noPhoto = people.filter(p => !p.image).map(p => ({ Role: p.role === 'bishop' ? 'Bishop' : 'Pastor', ...who(p) }));
-// Photo problems. Attire: for people whose gender is unknown, any of the three official colours is accepted.
-// Photos the office confirmed by eye as official attire (data/photo-approved.json: id → note); never listed for replacement on attire grounds.
-const approved = JSON.parse(readFileSync(new URL('../data/photo-approved.json', import.meta.url), 'utf8'));
+// Photo problems, from the shared rules.
 const problems = [];
-for (const p of people) {
-  const q = quality[p.id]; if (!q || !p.image) continue;
-  const reasons = [];
-  if (q.verdict === 'no-face') reasons.push('no face found (not a portrait, or face hidden)');
-  else if (q.verdict === 'many-faces') reasons.push('more than one person');
-  else if (q.shares) {
-    const s = q.shares;
-    if (!approved[p.id] && !q.tooTight && !judge(s)) reasons.push('no official attire seen: no red jacket, dark or blue suit, clerical shirt or official dress (casual clothes)');
-    // Backgrounds are not held against existing photos for now (Joshua, 6 Oct 2026); the sign-up check still requires a plain wall.
-  }
-  if (q.width && q.width < 300) reasons.push(`very small photo (${q.width}px wide)`);
-  if (q.blur !== undefined && q.blur < 100) reasons.push('blurry or very soft');
-  if (manual[p.id]) reasons.unshift(manual[p.id]);
-  if (reasons.length) problems.push({ Role: p.role === 'bishop' ? 'Bishop' : 'Pastor', ...who(p), 'What is wrong': reasons.join('; '), 'Photo file': sources[p.id] || p.image });
-}
+for (const p of people) { if (!p.image) continue; const reasons = photoProblems(p); if (reasons.length) problems.push({ Role: p.role === 'bishop' ? 'Bishop' : 'Pastor', ...who(p), 'What is wrong': reasons.join('; '), 'Photo file': sources[p.id] || p.image }); }
 const sev = (r) => (/no face|more than one/.test(r['What is wrong']) ? 0 : /attire|jacket|suit/.test(r['What is wrong']) ? 1 : 2);
 problems.sort((a, b) => (a.Role === 'Bishop' ? 0 : 1) - (b.Role === 'Bishop' ? 0 : 1) || sev(a) - sev(b) || a.Name.localeCompare(b.Name));
 const wb = XLSX.utils.book_new();

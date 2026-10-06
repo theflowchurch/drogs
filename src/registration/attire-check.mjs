@@ -58,7 +58,9 @@ export const NEED = { red: 0.22, yellow: 0.22, blue: 0.22, dark: 0.3, magenta: 0
 // the torso (a grey suit with a red tie: neither alone, both together). A floral
 // print or a bright casual shirt reaches neither.
 export const TOGETHER = 0.38;
-export function judge(shares = {}) {
+export function judge(shares = {}, role = "pastor") {
+  // Bishops are photographed in the red jacket, nothing else (Joshua, 6 Oct 2026): a collar and suit is not it.
+  if (role === "bishop") return (shares.red || 0) >= NEED.red;
   return Object.entries(NEED).some(([c, need]) => (shares[c] || 0) >= need) || Object.keys(NEED).reduce((sum, c) => sum + (shares[c] || 0), 0) >= TOGETHER;
 }
 // Share of plain, light pixels (white or pale grey wall) in a region: bright,
@@ -87,7 +89,7 @@ const load = (file) => new Promise((resolve, reject) => { const img = new Image(
 // Returns { verdict: "ok" | "no-face" | "many-faces" | "colour" | "background" | "skipped", note }.
 // `colour` also covers a photo that fails on both attire and background: the note names both.
 export async function checkAttire(file, person, { timeoutMs = 15000 } = {}) {
-  const expected = expectedAttire(person);
+  const expected = expectedAttire(person), role = person?.role;
   try {
     const img = await load(file);
     const scale = Math.min(1, 640 / Math.max(img.naturalWidth, img.naturalHeight));
@@ -108,7 +110,7 @@ export async function checkAttire(file, person, { timeoutMs = 15000 } = {}) {
     const reasons = [];
     // A head-and-shoulders crop leaves too little below the face to judge the clothes: pass rather than guess.
     const tooTight = h < box.height * 0.45;
-    if (!tooTight && !judge(shares)) reasons.push(["colour", `Attire: we could not see ${expected.words}.`]);
+    if (!tooTight && !judge(shares, role)) reasons.push(["colour", `Attire: we could not see ${expected.words}.`]);
     if (background !== null && background < PLAIN_NEED) reasons.push(["background", "Background: it should be a plain white wall with nothing else behind you."]);
     if (reasons.length) return { verdict: reasons[0][0], note: reasons.map((r) => r[1]).join(" "), shares, background, tooTight };
     return { verdict: "ok", note: "", shares, background, tooTight };

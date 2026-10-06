@@ -4,21 +4,9 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { chromium } from 'playwright';
 import { orgLabel, placeOf, titleFor, pastorsOf, bySurname } from '../src/registration/model.mjs';
-import { judge } from '../src/registration/attire-check.mjs';
 const root = new URL('..', import.meta.url).pathname;
 const people = JSON.parse(readFileSync(`${root}src/registration/reference-people.json`, 'utf8'));
-const quality = JSON.parse(readFileSync(`${root}data/photo-quality.json`, 'utf8'));
-const manual = JSON.parse(readFileSync(`${root}data/photo-manual-flags.json`, 'utf8'));
-const approved = JSON.parse(readFileSync(`${root}data/photo-approved.json`, 'utf8'));
-const problems = (p) => {
-  const q = quality[p.id]; if (!p.image) return ['no photo']; if (!q) return [];
-  const r = [];
-  if (manual[p.id]) r.push(manual[p.id].replace(/\s*\(.*\)/, ''));
-  if (q.verdict === 'no-face') r.push('no face found'); else if (q.verdict === 'many-faces') r.push('more than one person');
-  else if (q.shares) { if (!approved[p.id] && !manual[p.id] && !q.tooTight && !judge(q.shares)) r.push('no official attire seen (casual clothes)'); }
-  if (q.width && q.width < 300) r.push(`very small photo (${q.width}px)`); if (q.blur !== undefined && q.blur < 100) r.push('blurry');
-  return r;
-};
+import { photoProblems as problems } from './lib/photo-problems.mjs';
 // Small JPEG copies for the PDF: Chrome embeds WebP as uncompressed bitmaps, which made a 180 MB file.
 import sharp from 'sharp'; import { mkdirSync } from 'node:fs';
 mkdirSync(`${root}.tmp-checks/pdfthumbs`, { recursive: true });
@@ -48,10 +36,12 @@ const bRow = (b) => { const pr = problems(b); const n = pastorsOf(b, people).len
 const bSummary = groups.map((g) => { const list = bishops.filter((b) => groupOf(b) === g); return `<tr><td>${esc(g)}</td><td>${list.length} bishops · ${list.filter((b) => !b.yearAppointed || !b.yearOrdained || !b.yearConsecrated).length} missing a year · ${list.filter((b) => problems(b).length).length} photo to fix</td></tr>`; }).join('');
 const bBody = groups.map((g) => { const list = bishops.filter((b) => groupOf(b) === g).sort(bySurname); return `<section class="group"><h1>${esc(g.toUpperCase())}</h1><p class="count">${list.length} bishops</p><table class="b"><thead><tr><th>Photo</th><th>Bishop</th><th>Appointed</th><th>Ordained</th><th>Consecrated</th><th>Photo check</th></tr></thead><tbody>${list.map(bRow).join('')}</tbody></table></section>`; }).join('');
 await render(`<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body><div class="cover"><h1><small>KURIAKE CASTLE</small>BISHOPS<br>WHAT IS MISSING</h1><p>Every bishop on the roll, in their group, with the photo on file, the three years and what the photo check found. ${date}.</p><table>${bSummary}</table><div class="legend"><b>How to read it.</b> A year in red says <b>missing</b>: the office data has no year appointed, ordained or consecrated for that bishop. <b>Photo check</b> in red names the problem: no face, casual clothes, a very small or blurry photo. Backgrounds are not held against existing photos for now. <b>No pastors</b> in red means no pastor on the roll, in the office photo folders or in the office spreadsheet names this bishop.</div></div>${bBody}</body></html>`, `${dir}/Kuriake Castle - Bishops - what is missing.pdf`);
-// ---- 2. Pastors photos to replace
+// ---- 2. Photos to replace: bishops first (red jacket standard), then pastors by group and bishop
+const badBishops = bishops.filter((b) => b.image && problems(b).length).sort((a, b) => (/jacket|polo/.test(problems(a).join()) ? 0 : 1) - (/jacket|polo/.test(problems(b).join()) ? 0 : 1) || bySurname(a, b));
+const bishopCards = `<section class="group"><h1>BISHOPS</h1><p class="count">${badBishops.length} bishops whose photo must be replaced. The standard for a bishop is the red jacket; a collar and suit does not count.</p><div class="cards">${badBishops.map((b) => `<div class="card"><img src="${thumb(b)}"><b>${esc(titleFor(b))} ${esc(b.name)}</b><small>${esc(b.denomination || b.group || '')} · ${esc(placeOf(b) || '')}</small><span class="issue">${esc(problems(b).join('; '))}</span></div>`).join('')}</div></section>`;
 const pastors = people.filter((p) => p.role === 'pastor' && p.image && problems(p).length);
 const pGroups = [...new Set(pastors.map(groupOf))].sort((a, b) => pastors.filter((x) => groupOf(x) === b).length - pastors.filter((x) => groupOf(x) === a).length);
-const pSummary = pGroups.map((g) => `<tr><td>${esc(g)}</td><td>${pastors.filter((x) => groupOf(x) === g).length}</td></tr>`).join('') + `<tr><td><b>Total</b></td><td>${pastors.length}</td></tr>`;
+const pSummary = `<tr><td><b>Bishops</b></td><td>${badBishops.length}</td></tr>` + pGroups.map((g) => `<tr><td>Pastors · ${esc(g)}</td><td>${pastors.filter((x) => groupOf(x) === g).length}</td></tr>`).join('') + `<tr><td><b>Total</b></td><td>${badBishops.length + pastors.length}</td></tr>`;
 const pBody = pGroups.map((g) => { const list = pastors.filter((x) => groupOf(x) === g); const byB = new Map(); for (const p of list) (byB.get(p.bishop || 'No bishop recorded') || byB.set(p.bishop || 'No bishop recorded', []).get(p.bishop || 'No bishop recorded')).push(p);
   return `<section class="group"><h1>${esc(g.toUpperCase())}</h1><p class="count">${list.length} photos to replace</p>` + [...byB].sort((a, b) => a[0].localeCompare(b[0])).map(([b, ps]) => `<h2>${b === 'No bishop recorded' ? b : 'Bishop ' + esc(b)} <span class="muted">· ${ps.length}</span></h2><div class="cards">${ps.sort(bySurname).map((p) => `<div class="card"><img src="${thumb(p)}"><b>${esc(titleFor(p) !== 'Pastor' ? titleFor(p) + ' ' : '')}${esc(p.name)}</b><small>${esc(placeOf(p) || '')}</small><span class="issue">${esc(problems(p).join('; '))}</span></div>`).join('')}</div>`).join('') + '</section>'; }).join('');
-await render(`<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body><div class="cover"><h1><small>KURIAKE CASTLE</small>PASTORS<br>PHOTOS TO REPLACE</h1><p>${pastors.length} pastors whose photo on file needs a new one, grouped by group and by the bishop they are under, with the reason under each picture. ${date}.</p><table>${pSummary}</table><div class="legend"><b>Reasons.</b> <b>No official attire seen</b>: the clothes in the photo are not the red jacket, a dark suit, the clerical shirt or the official dress, so most likely casual clothes. <b>Very small</b> or <b>blurry</b>: the file is too small or too soft to print. <b>No face found</b>: not a portrait. <b>More than one person</b>: a group picture.</div></div>${pBody}</body></html>`, `${dir}/Kuriake Castle - Pastors - photos to replace.pdf`);
+await render(`<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body><div class="cover"><h1><small>KURIAKE CASTLE</small>PHOTOS<br>TO REPLACE</h1><p>${badBishops.length} bishops and ${pastors.length} pastors whose photo on file needs a new one, bishops first, then pastors by group and by the bishop they are under, with the reason under each picture. ${date}.</p><table>${pSummary}</table><div class="legend"><b>Reasons.</b> <b>Not in the red jacket</b>: every bishop is photographed in the red jacket; a collar and suit does not count. <b>No official attire seen</b>: a pastor whose clothes are not a dark or blue suit, the clerical shirt or the official dress, so most likely casual clothes. <b>Very small</b> or <b>blurry</b>: the file is too small or too soft to print. <b>No face found</b>: not a portrait. <b>More than one person</b>: a group picture. Backgrounds are not held against existing photos for now.</div></div>${bishopCards}${pBody}</body></html>`, `${dir}/Kuriake Castle - Photos to replace.pdf`);
