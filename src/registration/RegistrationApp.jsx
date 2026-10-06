@@ -516,7 +516,7 @@ export default function RegistrationApp({
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
-    [tab, setTab] = useState(() => { const wanted = typeof sessionStorage !== "undefined" && sessionStorage.getItem("kc-open-tab"); if (wanted) sessionStorage.removeItem("kc-open-tab"); return wanted || (office ? "Directory" : "Registration"); }),
+    [tab, setTab] = useState(() => { const wanted = typeof sessionStorage !== "undefined" && sessionStorage.getItem("kc-open-tab"); if (wanted) sessionStorage.removeItem("kc-open-tab"); return wanted || (office ? "People" : "Registration"); }),
     [year, setYear] = useState(null);
   const refresh = useCallback(
     async (a = actor) => {
@@ -666,22 +666,16 @@ export default function RegistrationApp({
   const scoped = (state?.registrations || []).filter(
     (r) => r.year === Number(year),
   );
+  // Office navigation: seven tabs. People, Review and Settings hold a switch for their pages.
+  const SUBS = {
+    People: ["Directory", "Existing records", "Pastor lists"],
+    Review: ["Approvals", "Unclaimed", "Payments"],
+    Settings: [...(api.settingsAvailable ? ["Settings"] : []), ...(api.apiKeysAvailable ? ["Accounts", "API keys"] : [])],
+  };
+  const SUB_LABEL = { "Existing records": "Existing Records", "Pastor lists": "Pastor Lists", "API keys": "API Keys" };
+  const [sub, setSub] = useState({}); // which page is open inside People, Review and Settings
   const nav = office
-    ? [
-        "Directory",
-        "Data",
-        "Existing records",
-        "Unclaimed",
-        "Approvals",
-        "Payments",
-        "Pastor lists",
-        "History",
-        "Communication",
-        "Denominations",
-        ...(api.apiKeysAvailable ? ["Accounts", "API keys"] : []),
-        "Dashboard",
-        ...(api.settingsAvailable ? ["Settings"] : []),
-      ]
+    ? ["Dashboard", "People", "Review", "Data", "Communication", "Denominations", ...(SUBS.Settings.length ? ["Settings"] : [])]
     : [
         "Registration",
         ...(current && current.status !== "draft" ? ROLL_TABS : []),
@@ -689,6 +683,7 @@ export default function RegistrationApp({
           ? ["My pastors"]
           : []),
       ];
+  const view = SUBS[tab] ? sub[tab] || SUBS[tab][0] : tab;
   async function logout() {
     await run(async () => {
       await api.signOut(office);
@@ -906,9 +901,9 @@ export default function RegistrationApp({
                       ? "My profile"
                       : n}
                   </span>
-                  {n === "Unclaimed" && (
+                  {n === "Review" && scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length > 0 && (
                     <b>
-                      {scoped.filter((r) => r.status === "unclaimed").length}
+                      {scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length}
                     </b>
                   )}
                 </button>
@@ -930,7 +925,14 @@ export default function RegistrationApp({
           </aside>
           <main className={`reg-main ${tab === "Dashboard" ? "reg-main-flush" : ""}`} aria-busy={busy}>
             <fieldset className="reg-workspace-fieldset" disabled={busy}>
-              {tab === "Dashboard" && <DashboardFrame />}
+              {tab === "Dashboard" && (
+                <>
+                  <DashboardFrame />
+                  <section className="reg-dashboard-activity">
+                    <History state={state} records={scoped} office={office} actor={actor} year={Number(year)} perform={perform} />
+                  </section>
+                </>
+              )}
               {tab === "Registration" && (
                 <Participant
                   fixedRole={typeof signup === "string" ? signup : ""}
@@ -952,13 +954,13 @@ export default function RegistrationApp({
                         {office ? "KURIAKE CASTLE / OFFICE" : "KURIAKE CASTLE / YOUR MINISTRY"}
                       </span>
                       <h1>
-                        {tab === "Directory"
+                        {view === "Directory"
                           ? directoryHeading(directoryRole)
-                          : tab === "Existing records"
+                          : view === "Existing records"
                             ? `Existing ${directoryRole === "bishop" ? "Bishops" : "Pastors"} Records`
-                            : tab === "Unclaimed"
+                            : view === "Unclaimed"
                               ? "Unclaimed Pastors"
-                              : tab}
+                              : view === "Pastor lists" ? "Pastor Lists" : view === "API keys" ? "API Keys" : view}
                       </h1>
                       <p>
                         {
@@ -982,18 +984,29 @@ export default function RegistrationApp({
                             Accounts: "See who has created an account and when they last signed in.",
                             "API keys": "Create secure, read-only access for applications connected to Kuriake Castle.",
                             Settings: "Manage registration, payments, email, access and other system settings.",
-                          }[tab]
+                          }[view]
                         }
                       </p>
+                      {SUBS[tab] && SUBS[tab].length > 1 && (
+                        <div className="reg-switch reg-subnav" role="group" aria-label={`${tab} pages`}>
+                          {SUBS[tab].map((v) => (
+                            <button key={v} type="button" aria-pressed={view === v} className={view === v ? "active" : ""} onClick={() => setSub({ ...sub, [tab]: v })}>
+                              {SUB_LABEL[v] || v}
+                              {v === "Unclaimed" && scoped.filter((r) => r.status === "unclaimed").length > 0 && <b>{scoped.filter((r) => r.status === "unclaimed").length}</b>}
+                              {v === "Approvals" && scoped.filter((r) => r.status === "pending").length > 0 && <b>{scoped.filter((r) => r.status === "pending").length}</b>}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                   {tab === "Communication" && <Communication state={state} run={run} />}
                   {tab === "Denominations" && <div className="reg-settings-list"><Structure state={state} perform={perform} actor={actor} show={["orgs", "groups"]} /></div>}
                   {tab === "Data" && <DataExport state={state} people={publicPeople} year={Number(year)} />}
-                  {tab === "Accounts" && <Accounts run={run} />}
-                  {tab === "API keys" && <ApiKeys run={run} />}
-                  {tab === "Settings" && <Settings run={run} state={state} perform={perform} actor={actor} />}
-                  {tab === "Directory" &&
+                  {view === "Accounts" && <Accounts run={run} />}
+                  {view === "API keys" && <ApiKeys run={run} />}
+                  {view === "Settings" && <Settings run={run} state={state} perform={perform} actor={actor} />}
+                  {view === "Directory" &&
                     (office ? (
                       <Directory
                         state={state}
@@ -1013,7 +1026,7 @@ export default function RegistrationApp({
                       role={rollTabRole(tab)}
                     />
                   )}
-                  {tab === "Existing records" && (
+                  {view === "Existing records" && (
                     <Directory
                       state={state}
                       year={Number(year)}
@@ -1024,7 +1037,7 @@ export default function RegistrationApp({
                       mode="original"
                     />
                   )}
-                  {tab === "Unclaimed" && (
+                  {view === "Unclaimed" && (
                     <ReviewQueue
                       records={scoped.filter((r) => r.status === "unclaimed")}
                       state={state}
@@ -1034,7 +1047,7 @@ export default function RegistrationApp({
                       canEdit={Number(year) === state.year}
                     />
                   )}
-                  {tab === "Approvals" && (
+                  {view === "Approvals" && (
                     <BishopApprovals
                       records={scoped}
                       directory={state.directory || []}
@@ -1044,14 +1057,14 @@ export default function RegistrationApp({
                       canEdit={Number(year) === state.year}
                     />
                   )}
-                  {tab === "Payments" && (
+                  {view === "Payments" && (
                     <Payments
                       records={scoped}
                       perform={perform}
                       canEdit={Number(year) === state.year}
                     />
                   )}
-                  {(tab === "My pastors" || tab === "Pastor lists") && (
+                  {(view === "My pastors" || view === "Pastor lists") && (
                     <Roster
                       state={state}
                       year={Number(year)}
@@ -1060,16 +1073,7 @@ export default function RegistrationApp({
                       perform={perform}
                     />
                   )}
-                  {tab === "History" && (
-                    <History
-                      state={state}
-                      records={scoped}
-                      office={office}
-                      actor={actor}
-                      year={Number(year)}
-                      perform={perform}
-                    />
-                  )}
+
                 </>
               )}
             </fieldset>

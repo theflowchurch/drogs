@@ -181,7 +181,9 @@ function Structure({ state, perform, actor, show = ['groups', 'orgs', 'fees'] })
   </>;
 }
 export default function Settings({ run, state, perform, actor }) {
-  const [settings, setSettings] = useState([]), [values, setValues] = useState({}), [saved, setSaved] = useState(false), [copied, setCopied] = useState(''), [telegramResult, setTelegramResult] = useState('');
+  const [settings, setSettings] = useState([]), [values, setValues] = useState({}), [saved, setSaved] = useState(false), [copied, setCopied] = useState(''), [telegramResult, setTelegramResult] = useState(''), [query, setQuery] = useState('');
+  // Search: a section stays visible when its title, description or any of its field labels contains the words typed.
+  const matches = (...texts) => { const q = query.trim().toLowerCase(); return !q || texts.join(' ').toLowerCase().includes(q); };
   const reload = async () => setSettings((await api.listSettings()).settings);
   useEffect(() => { run(reload); }, []);
   const changed = Object.entries(values).filter(([, v]) => v !== undefined);
@@ -201,12 +203,15 @@ export default function Settings({ run, state, perform, actor }) {
     {s.hint && <small>{s.hint}</small>}
   </label>;
   const setCount = keys => { const mine = settings.filter(s => keys.includes(s.key)); if (!mine.length) return ''; const n = mine.filter(s => s.set).length; return n === 0 ? 'Not set up' : n === mine.length ? 'Set up' : 'Partly set up'; };
+  const sections = [['signup', 'registration sign-up signup pause open close notice'], ['fees', 'fees fee amount price payment bishop pastor'], ['links', 'registration links share copy ' + links.map(([l]) => l).join(' ')], ...CATEGORIES.map(([title, blurb, keys]) => [title, `${title} ${blurb} ${settings.filter(s => keys.includes(s.key)).map(s => `${s.label} ${s.hint || ''}`).join(' ')}`])];
+  const visible = (id) => matches(sections.find(([k]) => k === id)[1]);
   return <div className="reg-settings-list">
-  {state && perform && <SignupControl state={state} perform={perform} />}
-  {state && perform && <Structure state={state} perform={perform} actor={actor} show={['fees']} />}
-  <Category title="Registration links" summary={`${links.length} links`}>
+  <input type="search" className="reg-settings-search" aria-label="Search Settings" placeholder="Search Settings" value={query} onChange={e => setQuery(e.target.value)} />
+  {state && perform && visible('signup') && <SignupControl state={state} perform={perform} />}
+  {state && perform && visible('fees') && <Structure state={state} perform={perform} actor={actor} show={['fees']} />}
+  {visible('links') && <Category title="Registration links" summary={`${links.length} links`} open={Boolean(query.trim())}>
     <ul className="reg-admin-list">{links.map(([label, path]) => <li key={path}><span><b>{label}</b><br /><a href={origin + path}>{origin + path}</a></span><button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button></li>)}</ul>
-  </Category>
+  </Category>}
   <form className="reg-settings-form" onSubmit={event => {
     event.preventDefault();
     run(async () => {
@@ -214,7 +219,7 @@ export default function Settings({ run, state, perform, actor }) {
       setValues({}); setSaved(true);
     }, 'Settings saved and in effect.');
   }}>
-    {CATEGORIES.map(([title, blurb, keys]) => <Category key={title} title={title} summary={`${blurb}${setCount(keys) ? ` · ${setCount(keys)}` : ''}`}>
+    {CATEGORIES.filter(([title]) => visible(title)).map(([title, blurb, keys]) => <Category key={title} title={title} summary={`${blurb}${setCount(keys) ? ` · ${setCount(keys)}` : ''}`} open={Boolean(query.trim())}>
       {settings.filter(s => keys.includes(s.key)).map(field)}
       {title === 'Telegram' && <>
         <button type="button" className="reg-secondary" disabled={!settings.find(s => s.key === 'TELEGRAM_CHAT_ID')?.set} onClick={() => run(async () => { const r = await api.telegramTest(); setTelegramResult(`Test message posted to “${r.chat}”.`); }, 'Telegram is connected.')}>Send a Telegram test message</button>
@@ -223,6 +228,7 @@ export default function Settings({ run, state, perform, actor }) {
       <div className="reg-form-actions"><small>{changed.length ? `${changed.length} change${changed.length === 1 ? '' : 's'} to save` : saved ? 'Saved.' : ''}</small><button className="reg-primary" disabled={!changed.length}>Save settings</button></div>
     </Category>)}
   </form>
+  {query.trim() && !sections.some(([id]) => visible(id)) && <p className="reg-small">No settings match “{query}”.</p>}
   </div>;
 }
 export { Structure, SignupControl };
