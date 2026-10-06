@@ -15,5 +15,5 @@ add(bishops, 'Bishops missing years', [30, 16, 18, 34, 26, 14, 14, 16]);
 add(pastors, 'Pastors missing years', [30, 10, 18, 34, 28, 26, 14, 14]);
 const summary = [...new Set(people.map((p) => p.group || p.organization))].sort().map((g) => ({ Group: g, 'Bishops missing a year': bishops.filter((b) => b.Group === g).length, 'Pastors missing a year': pastors.filter((p) => p.Group === g).length }));
 add([...summary, { Group: 'TOTAL', 'Bishops missing a year': bishops.length, 'Pastors missing a year': pastors.length }], 'Summary', [24, 22, 22]);
-XLSX.writeFile(wb, `${process.env.HOME}/Downloads/Kuriake Castle - missing years.xlsx`);
-console.log(`bishops ${bishops.length} · pastors ${pastors.length} → ~/Downloads/Kuriake Castle - missing years.xlsx`);
+XLSX.writeFile(wb, `${process.env.HOME}/Downloads/Kuriake Castle Project/02 Deliverables for the office/Kuriake Castle - missing years.xlsx`);
+console.log(`bishops ${bishops.length} · pastors ${pastors.length} → Kuriake Castle Project/02 Deliverables for the office`);

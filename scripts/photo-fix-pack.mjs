@@ -16,10 +16,10 @@ const add = (rows, name, widths) => { const ws = XLSX.utils.json_to_sheet(rows.l
 add(bishops, 'Bishops - update photo', [30, 16, 18, 32, 26, 50]);
 add(pastors, 'Pastors - update photo', [30, 10, 18, 32, 26, 28, 60]);
 add(none, 'Pastors - no photo', [30, 10, 18, 32, 26, 28]);
-const dir = `${process.env.HOME}/Downloads/kuriake-photo-fix`; rmSync(dir, { recursive: true, force: true }); mkdirSync(dir, { recursive: true });
+const base = `${process.env.HOME}/Downloads/Kuriake Castle Project/02 Deliverables for the office`; const dir = `${base}/kuriake-photo-fix`; rmSync(dir, { recursive: true, force: true }); mkdirSync(dir, { recursive: true });
 XLSX.writeFile(wb, `${dir}/Kuriake Castle - photos to fix.xlsx`);
-const q = `${process.env.HOME}/Downloads/kuriake-data-quality`;
+const q = `${base}/kuriake-data-quality`;
 copyFileSync(`${q}/Kuriake Castle - Photos to replace.pdf`, `${dir}/Kuriake Castle - Photos to replace (with pictures).pdf`);
 copyFileSync(`${q}/Kuriake Castle - Pastors - no photo.pdf`, `${dir}/Kuriake Castle - Pastors with no photo.pdf`);
-execFileSync('zip', ['-qrj', `${process.env.HOME}/Downloads/Kuriake Castle - photos to fix.zip`, dir]);
-console.log(JSON.stringify({ bishopsToUpdate: bishops.length, pastorsToUpdate: pastors.length, pastorsNoPhoto: none.length }), '→ ~/Downloads/Kuriake Castle - photos to fix.zip');
+execFileSync('zip', ['-qrj', `${base}/Kuriake Castle - photos to fix.zip`, dir]);
+console.log(JSON.stringify({ bishopsToUpdate: bishops.length, pastorsToUpdate: pastors.length, pastorsNoPhoto: none.length }), '→ Kuriake Castle Project/02 Deliverables for the office');

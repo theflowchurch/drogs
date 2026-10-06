@@ -15,7 +15,7 @@ const row = (p) => ({
   'Full Name': v(p.name), 'Gender': gender(p), 'Rank': v(titleFor(p)), 'Number': v(contacts[p.id]?.phone), 'Date of Birth': M, 'Age (office sheet)': v(ageOf.get(normalName(p.name))),
   'Denomination': v(p.denomination), 'Branch': v(p.branch), 'City': v(p.city), 'Country': v(p.country), 'Year appointed': v(p.yearAppointed), 'Year ordained': v(p.yearOrdained), ...(p.role === 'bishop' ? { 'Year consecrated': v(p.yearConsecrated) } : {}), 'Photo on file': p.image ? 'Yes' : 'No', 'Email': v(contacts[p.id]?.email),
 });
-const dir = `${process.env.HOME}/Downloads/kuriake-bishop-sheets`; rmSync(dir, { recursive: true, force: true }); mkdirSync(`${dir}/Bishops and their pastors`, { recursive: true });
+const dir = `${process.env.HOME}/Downloads/Kuriake Castle Project/02 Deliverables for the office/kuriake-bishop-sheets`; rmSync(dir, { recursive: true, force: true }); mkdirSync(`${dir}/Bishops and their pastors`, { recursive: true });
 const safe = (s) => s.replace(/[\/\\:*?"<>|]/g, '-');
 const bishops = people.filter((p) => p.role === 'bishop').sort(bySurname);
 let withNone = 0;
@@ -33,5 +33,5 @@ for (const b of bishops) {
 // Index workbook: every bishop with their count and file name.
 const idx = bishops.map((b) => ({ 'Bishop': `${titleFor(b)} ${b.name}`, 'Group': b.group || b.organization, 'Denomination': v(b.denomination), 'Country': v(b.country), 'Pastors': pastorsOf(b, people).length, 'File': `${safe(`${titleFor(b)} ${b.name}`)}.xlsx` }));
 const iw = XLSX.utils.book_new(); const iws = XLSX.utils.json_to_sheet(idx); iws['!cols'] = [40, 20, 36, 18, 9, 48].map((w) => ({ wch: w })); XLSX.utils.book_append_sheet(iw, iws, 'Index'); XLSX.writeFile(iw, `${dir}/INDEX - all bishops.xlsx`);
-execFileSync('zip', ['-qr', `${process.env.HOME}/Downloads/Kuriake Castle - bishops and their pastors.zip`, '.'], { cwd: dir });
-console.log(`${bishops.length} bishop files (${withNone} with no pastors) → ~/Downloads/Kuriake Castle - bishops and their pastors.zip`);
+execFileSync('zip', ['-qr', `${process.env.HOME}/Downloads/Kuriake Castle Project/02 Deliverables for the office/Kuriake Castle - bishops and their pastors.zip`, '.'], { cwd: dir });
+console.log(`${bishops.length} bishop files (${withNone} with no pastors) → Kuriake Castle Project/02 Deliverables for the office`);

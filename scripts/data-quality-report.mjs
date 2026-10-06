@@ -22,7 +22,7 @@ add(yearsB, 'Bishops missing years', [30, 16, 18, 32, 26, 14, 14, 16]);
 add(yearsP, 'Pastors missing years', [30, 10, 18, 32, 26, 28, 14, 14]);
 add(noPhoto, 'No photo', [8, 30, 10, 18, 32, 26, 28]);
 add(problems, 'Photos to replace', [8, 30, 16, 18, 32, 26, 28, 60, 80]);
-const dir = `${process.env.HOME}/Downloads/kuriake-data-quality`; mkdirSync(dir, { recursive: true });
+const dir = `${process.env.HOME}/Downloads/Kuriake Castle Project/02 Deliverables for the office/kuriake-data-quality`; mkdirSync(dir, { recursive: true });
 XLSX.writeFile(wb, `${dir}/Kuriake Castle - data to correct.xlsx`);
 console.log(JSON.stringify({ bishopsMissingYears: yearsB.length, pastorsMissingYears: yearsP.length, noPhoto: noPhoto.length, photosToReplace: problems.length, bishopsToReplace: problems.filter(r => r.Role === 'Bishop').length, checked: Object.keys(quality).length }));
 console.log('bishops to replace:', problems.filter(r => r.Role === 'Bishop').map(r => `${r.Name}: ${r['What is wrong']}`).join('\n  '));
