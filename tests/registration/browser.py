@@ -77,7 +77,7 @@ with sync_playwright() as p:
   expect(page.get_by_text('Thank you. Your registration is being processed.')).to_be_visible()
   page.screenshot(path=str(OUT/'mobile-unclaimed-status.png'),full_page=True)
   signout();page.set_viewport_size({'width':1440,'height':1050});open_account('office@example.com',True)
-  page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^People')).click();page.get_by_role('button',name='Directory',exact=True).click()
+  page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Directory')).click();page.get_by_role('button',name='Roll of Good Standing',exact=True).click()
   page.get_by_label('Search people').fill('John Demo');expect(page.get_by_role('button',name='John Demo')).not_to_be_visible()
   page.get_by_label('Search people').fill('')
   page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Review')).click();page.get_by_role('button',name='Unclaimed').click();page.screenshot(path=str(OUT/'unclaimed-office.png'),full_page=True)
@@ -85,7 +85,7 @@ with sync_playwright() as p:
   opts=page.get_by_label('Link to annual list').locator('option').all_text_contents();assert any('Jon Demo' in o for o in opts)
   page.get_by_label('Link to annual list').select_option(index=1);page.get_by_role('button',name='Confirm pastor · unlock payment').click()
   expect(page.get_by_text('No Unclaimed registrations',exact=True)).to_be_visible()
-  page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^People')).click();page.get_by_role('button',name='Directory',exact=True).click()
+  page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Directory')).click();page.get_by_role('button',name='Roll of Good Standing',exact=True).click()
   page.get_by_role('button',name='Pastors',exact=True).click();page.get_by_label('Search people').fill('John Demo')
   expect(page.get_by_role('button',name='John Demo')).to_be_visible();page.screenshot(path=str(OUT/'directory.png'),full_page=True)
   page.get_by_label('Search people').fill('')
@@ -102,7 +102,7 @@ with sync_playwright() as p:
   page.get_by_role('button',name='John Demo').click();page.get_by_role('button',name='Verify received payment').click();expect(page.get_by_text('No payments waiting',exact=True)).to_be_visible()
   page.get_by_role('button',name='Annual lists',exact=True).click();page.get_by_role('button',name='Remove',exact=True).click();page.get_by_label('Reason',exact=True).select_option('Dismissed');page.get_by_role('button',name='Confirm removal').click();expect(page.get_by_text('Dismissed',exact=True)).to_be_visible()
   page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Dashboard')).click();page.get_by_role('button',name='Start 2028 registration',exact=True).click();page.get_by_role('dialog').get_by_role('button',name='Start 2028 registration',exact=True).click();expect(page.get_by_text('2028 annual registration',exact=True)).to_be_visible()
-  page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^People')).click();page.get_by_role('button',name='Directory',exact=True).click();page.get_by_label('Annual cycle',exact=True).select_option('2028')
+  page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Directory')).click();page.get_by_role('button',name='Roll of Good Standing',exact=True).click();page.get_by_label('Annual cycle',exact=True).select_option('2028')
   assert page.locator('.reg-dot.updated').count()==0,'a new cycle starts with no updated records'
   state=page.evaluate("JSON.parse(localStorage.getItem('drogs-registration-v1'))")
   assert state['year']==2028

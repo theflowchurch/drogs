@@ -516,7 +516,7 @@ export default function RegistrationApp({
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
-    [tab, setTab] = useState(() => { const wanted = typeof sessionStorage !== "undefined" && sessionStorage.getItem("kc-open-tab"); if (wanted) sessionStorage.removeItem("kc-open-tab"); return wanted || (office ? "People" : "Registration"); }),
+    [tab, setTab] = useState(() => { const wanted = typeof sessionStorage !== "undefined" && sessionStorage.getItem("kc-open-tab"); if (wanted) sessionStorage.removeItem("kc-open-tab"); return wanted || (office ? "Directory" : "Registration"); }),
     [year, setYear] = useState(null);
   const refresh = useCallback(
     async (a = actor) => {
@@ -668,14 +668,14 @@ export default function RegistrationApp({
   );
   // Office navigation: seven tabs. People, Review and Settings hold a switch for their pages.
   const SUBS = {
-    People: ["Directory", "Existing records", "Pastor lists"],
+    Directory: ["Directory", "Existing records", "Pastor lists"],
     Review: ["Approvals", "Unclaimed", "Payments"],
     Settings: [...(api.settingsAvailable ? ["Settings"] : []), ...(api.apiKeysAvailable ? ["Accounts", "API keys"] : [])],
   };
-  const SUB_LABEL = { "Existing records": "Existing Records", "Pastor lists": "Pastor Lists", "API keys": "API Keys" };
+  const SUB_LABEL = { Directory: "Roll of Good Standing", "Existing records": "Existing Records", "Pastor lists": "Pastor Lists", "API keys": "API Keys" };
   const [sub, setSub] = useState({}); // which page is open inside People, Review and Settings
   const nav = office
-    ? ["Dashboard", "People", "Review", "Data", "Communication", "Denominations", ...(SUBS.Settings.length ? ["Settings"] : [])]
+    ? ["Dashboard", "Directory", "Review", "Data", "Communication", "Denominations", ...(SUBS.Settings.length ? ["Settings"] : [])]
     : [
         "Registration",
         ...(current && current.status !== "draft" ? ROLL_TABS : []),
