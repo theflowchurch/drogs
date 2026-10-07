@@ -62,7 +62,7 @@ for (const group of byTok.values()) {
 }
 //  6. the very same picture on two records (perceptual hash) with a name word in common → one person; a bishop record, else the richer one, stays.
 import { existsSync } from 'node:fs';
-import { dhash, hamming } from './lib/photo-hash.mjs';
+import { dhash, hamming, SAME_PICTURE } from './lib/photo-hash.mjs';
 const thumbOf = (p) => { const t = p.image.replace(/^(assets\/(?:portraits|bishops|pastors))\/([^/]+)\.[^.]+$/, '$1/thumbs/$2.webp'); return existsSync(new URL(`../${t}`, import.meta.url)) ? t : p.image; };
 const pictured = people.filter((p) => p.image && existsSync(new URL(`../${p.image}`, import.meta.url)));
 const hashes = [];
@@ -71,7 +71,7 @@ const shareWord = (a, b) => { const B = new Set(words(b.name)); return words(a.n
 const shareSurname = (a, b) => { const A = words(a.name), B = words(b.name); return B.some((w) => close(w, A.at(-1))) || A.some((w) => close(w, B.at(-1))); }; // a near-identical picture plus the surname: not two Emmanuels who look alike
 for (let i = 0; i < hashes.length; i++) for (let j = i + 1; j < hashes.length; j++) {
   const [a, ha] = hashes[i], [b, hb] = hashes[j]; const d = hamming(ha, hb);
-  if (d > 2 || (d > 0 && !shareSurname(a, b)) || (d === 0 && !shareWord(a, b) && a.role !== 'bishop' && b.role !== 'bishop' && normalName(a.bishop || '') !== normalName(b.bishop || ''))) continue;
+  if (d > SAME_PICTURE || !(shareWord(a, b) || shareSurname(a, b) || (a.role === 'pastor' && b.role === 'pastor' && normalName(a.bishop || '') === normalName(b.bishop || '')))) continue; // the same picture, and a name word or bishop in common
   if (a.role === 'bishop' && b.role === 'bishop') continue; // two bishops with one photo is for the office, not a merge
   const [keep, drop] = a.role === 'bishop' ? [a, b] : b.role === 'bishop' ? [b, a] : richness(a) >= richness(b) ? [a, b] : [b, a];
   if (!removals.some((r) => r.id === drop.id || r.id === keep.id)) removals.push({ id: drop.id, keep: keep.id, reason: `same photo as ${keep.role === 'bishop' ? 'Bishop ' : ''}${keep.name}` });

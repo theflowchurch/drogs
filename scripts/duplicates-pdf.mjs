@@ -7,7 +7,7 @@ import { chromium } from 'playwright';
 import sharp from 'sharp';
 import { normalName, namesAlike, placeOf, titleFor, bySurname } from '../src/registration/model.mjs';
 import { birthOf, birthText } from './lib/office-dob.mjs';
-import { dhash, hamming } from './lib/photo-hash.mjs';
+import { dhash, hamming, SAME_PICTURE } from './lib/photo-hash.mjs';
 import { words } from './lib/names.mjs';
 const root = new URL('..', import.meta.url).pathname;
 const people = JSON.parse(readFileSync(`${root}src/registration/reference-people.json`, 'utf8'));
@@ -29,7 +29,7 @@ const blank = byCountry.get('') || [];
 for (const [k, list] of byCountry) { const pool = k ? [...list, ...blank] : list; for (let i = 0; i < list.length; i++) for (let j = 0; j < pool.length; j++) { const a = list[i], b = pool[j]; if (a.id >= b.id && pool === list) continue; if (a.id === b.id || sorted(a.name) === sorted(b.name)) continue; if (namesAlike(a.name, b.name)) link(a, b, words(a.name).length !== words(b.name).length ? 'fuller or shorter form of the name' : 'spelling differs'); } }
 const pictured = people.filter((p) => p.image && existsSync(`${root}${p.image}`));
 const hashes = []; for (let i = 0; i < pictured.length; i += 50) await Promise.all(pictured.slice(i, i + 50).map(async (p) => { try { hashes.push([p, await dhash(`${root}${thumbPath(p)}`)]); } catch {} }));
-for (let i = 0; i < hashes.length; i++) for (let j = i + 1; j < hashes.length; j++) { const d = hamming(hashes[i][1], hashes[j][1]); const [a, b] = [hashes[i][0], hashes[j][0]]; const B = new Set(words(b.name)); const shared = words(a.name).some((w) => w.length > 2 && B.has(w)); if (d === 0 || (d <= 3 && shared)) link(a, b, d === 0 ? 'same picture' : 'same picture, name in common'); }
+for (let i = 0; i < hashes.length; i++) for (let j = i + 1; j < hashes.length; j++) { const d = hamming(hashes[i][1], hashes[j][1]); const [a, b] = [hashes[i][0], hashes[j][0]]; const B = new Set(words(b.name)); const shared = words(a.name).some((w) => w.length > 2 && B.has(w)); if (d <= SAME_PICTURE) link(a, b, shared ? 'same picture, name in common' : 'same picture'); }
 // ---- groups
 const groups = new Map(); for (const p of people) { const r = find(p.id); if (!groups.has(r)) groups.set(r, []); groups.get(r).push(p); }
 const dupes = [...groups.values()].filter((g) => g.length > 1).map((g) => {

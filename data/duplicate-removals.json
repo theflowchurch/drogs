@@ -2,6 +2,16 @@
  "generated": "2026-10-07",
  "removals": [
   {
+   "id": "PF749",
+   "keep": "P2171",
+   "reason": "same photo as James Nii Noi Nortey"
+  },
+  {
+   "id": "PF964",
+   "keep": "P2359",
+   "reason": "same photo as Jonathan Sampanny Mensah Junior"
+  },
+  {
    "id": "P4508",
    "keep": "BO251",
    "reason": "same person as Bishop Maya Aida Asiedu (office confirmed)"
