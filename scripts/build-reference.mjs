@@ -338,5 +338,13 @@ for (const p of people) if (GONE_DENOMINATIONS.has(normalName(p.denomination)))
   p.denomination = p.role === 'pastor'
     ? bishopDenomination.get(normalName(p.bishop || '')) || ''
     : commonest(people.filter(q => q.role === 'pastor' && normalName(q.bishop || '') === normalName(p.name) && q.denomination && !GONE_DENOMINATIONS.has(normalName(q.denomination))).map(q => q.denomination)); // a bishop takes what their pastors are filed under
+// The office's own list of Minister Shepherds, Shepherds and Elders (data/not-pastors.json, 7 Oct 2026): anyone with
+// exactly one of these names leaves, whatever source brought them in — bishops' sheets and photo folders included.
+const notPastors = JSON.parse(await readFile(new URL('../data/not-pastors.json', import.meta.url), 'utf8').catch(() => '[]'));
+const sortedWords = (n) => normalName(ap(n)).split(' ').filter(Boolean).sort().join(' ');
+const notPastorKeys = new Set(notPastors.map(n => sortedWords(n.name)));
+const outByList = people.filter(p => p.role === 'pastor' && notPastorKeys.has(sortedWords(p.name)));
+people = people.filter(p => !outByList.includes(p));
+console.log(`Office shepherd list: ${notPastors.length} names · ${outByList.length} still on the roll removed${outByList.length ? ` (${outByList.map(p => `${p.name}${p.bishop ? ` – listed by Bishop ${p.bishop}` : ''}`).join('; ')})` : ''}`);
 await writeFile(new URL('../src/registration/reference-people.json', import.meta.url), JSON.stringify(people.map(({ email, phone, ...rest }) => rest)) + '\n');
 console.log(`${people.length} reference records (${people.filter(p => p.role === 'bishop').length} bishops, ${people.filter(p => p.role === 'pastor').length} pastors).`);
