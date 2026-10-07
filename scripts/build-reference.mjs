@@ -213,13 +213,13 @@ for (const g of UC_GROUPS) if (GROUP_ENTRIES[g] && !GROUP_ENTRIES[g].denominatio
 // Pastors take their bishop's group; otherwise the group of their denomination.
 const bishopsNow = people.filter(p => p.role === 'bishop');
 const byNorm = new Map(bishopsNow.map(p => [normalName(p.name), p]));
-const groupByDenomination = new Map(official.groups.filter(g => g.organization === 'United Denominations').flatMap(g => g.denominations.map(d => [normalName(d.name), g.name])));
+const groupByDenomination = new Map(official.groups.filter(g => g.organization === 'United Denominations').flatMap(g => g.denominations.filter(d => normalName(d.name)).map(d => [normalName(d.name), g.name]))); // an unnamed heading in the official list once sent every blank denomination to United Islands
 for (const [g, v] of Object.entries(GROUP_ENTRIES)) for (const d of v.denominations) groupByDenomination.set(normalName(d), g);
 for (const p of people) {
   if (p.role !== 'pastor') continue;
   if (ucSettled.has(p.id)) continue; // settled above
   const own = byNorm.get(normalName(p.bishop || '')) || (p.bishop ? bishopsNow.find(b => namesAlike(b.name, p.bishop)) : null);
-  p.group = p.organization !== 'United Denominations' ? '' : own?.group || groupByDenomination.get(normalName(p.denomination)) || [...groupByDenomination].find(([k]) => k && normalName(p.denomination).startsWith(k))?.[1] || '';
+  p.group = p.organization !== 'United Denominations' ? '' : own?.group || (normalName(p.denomination) && groupByDenomination.get(normalName(p.denomination))) || [...groupByDenomination].find(([k]) => k && normalName(p.denomination).startsWith(k))?.[1] || '';
   if (SAME_AS_GROUP.has(p.group)) { p.denomination = p.group; p.denominationLogo = GROUP_DENOMINATION_LOGO[p.group] || ''; }
 }
 await writeFile(new URL('../data/reports/official-list-reconciliation.json', import.meta.url), JSON.stringify({
@@ -306,6 +306,11 @@ console.log(`Deleted: ${deleted.length} pastors filed under ${DELETE_UNDER.join(
 // The office says these bishops have nobody under them (Bishop Emmanuel Sakyi, 7 Oct 2026): whoever we had there floats.
 const NO_PASTORS = ['Kenneth Agyei'];
 for (const p of people) if (p.role === 'pastor' && NO_PASTORS.some(n => normalName(n) === normalName(p.bishop || ''))) { p.unclaimed = `Bishop ${p.bishop} has no pastors under him`; p.bishop = ''; }
+// A "bishop in charge" who is not on the bishops list (retired, or a Reverend the export called Bishop, e.g. Louis Josiah)
+// leaves the pastor floating: Unclaimed, with the name they typed kept in the reason.
+const bishopNorm = new Set(people.filter(p => p.role === 'bishop').map(b => normalName(b.name)));
+const bishopList = people.filter(p => p.role === 'bishop');
+for (const p of people) if (p.role === 'pastor' && p.bishop && !bishopNorm.has(normalName(p.bishop)) && !bishopList.some(b => namesAlike(b.name, p.bishop))) { p.unclaimed = `${p.bishop} is not on the bishops list`; p.bishop = ''; }
 // A pastor under no bishop is unclaimed: kept for the office (Review → Unclaimed), off the public roll until a bishop lists them.
 for (const p of people) if (p.role === 'pastor' && !p.bishop) p.unclaimed = p.unclaimed || 'No bishop recorded';
 console.log(`Unclaimed: ${people.filter(p => p.unclaimed).length} pastors under no bishop`);
@@ -345,6 +350,18 @@ for (const p of people) if (GONE_DENOMINATIONS.has(normalName(p.denomination)))
   p.denomination = p.role === 'pastor'
     ? bishopDenomination.get(normalName(p.bishop || '')) || ''
     : commonest(people.filter(q => q.role === 'pastor' && normalName(q.bishop || '') === normalName(p.name) && q.denomination && !GONE_DENOMINATIONS.has(normalName(q.denomination))).map(q => q.denomination)); // a bishop takes what their pastors are filed under
+// Joshua's decisions on the potential-duplicates PDF (data/duplicate-decisions.json): the kept record takes every
+// field the dropped one has that it lacks, then Joshua's chosen values; the dropped record goes.
+const decisions = JSON.parse(await readFile(new URL('../data/duplicate-decisions.json', import.meta.url), 'utf8').catch(() => '{"merges":[]}'));
+let decided = 0;
+for (const m of decisions.merges) {
+  const keep = people.find(p => p.id === m.keep), drop = people.find(p => p.id === m.drop);
+  if (!keep || !drop) continue;
+  for (const [k, v] of Object.entries(drop)) if (v && !keep[k] && !['id', 'role', 'source', 'unclaimed', 'listedPastors'].includes(k) && !(k === 'bishop' && keep.role === 'bishop')) keep[k] = v;
+  Object.assign(keep, m.set || {});
+  people = people.filter(p => p !== drop); decided++;
+}
+console.log(`Joshua's merges: ${decided} of ${decisions.merges.length} applied`);
 // The office's own list of Minister Shepherds, Shepherds and Elders (data/not-pastors.json, 7 Oct 2026): anyone with
 // exactly one of these names leaves, whatever source brought them in — bishops' sheets and photo folders included.
 const notPastors = JSON.parse(await readFile(new URL('../data/not-pastors.json', import.meta.url), 'utf8').catch(() => '[]'));

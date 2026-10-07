@@ -19,7 +19,9 @@ const thumb = (p) => { if (!p.image) return ''; const out = `.tmp-checks/pdfthum
 const esc = (s) => String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 // ---- links
 const parent = new Map(people.map((p) => [p.id, p.id])); const find = (x) => (parent.get(x) === x ? x : (parent.set(x, find(parent.get(x))), parent.get(x)));
-const why = new Map(); const link = (a, b, reason) => { parent.set(find(a.id), find(b.id)); why.set([a.id, b.id].sort().join('+'), reason); };
+const decisions = JSON.parse(readFileSync(`${root}data/duplicate-decisions.json`, 'utf8'));
+const distinct = new Set(decisions.distinct.map((pair) => pair.slice().sort().join('+'))); // Joshua: two different people
+const why = new Map(); const link = (a, b, reason) => { if (distinct.has([a.id, b.id].sort().join('+'))) return; parent.set(find(a.id), find(b.id)); why.set([a.id, b.id].sort().join('+'), reason); };
 const sorted = (n) => words(n).sort().join(' ');
 const bySorted = new Map(); for (const p of people) { const k = sorted(p.name); if (!bySorted.has(k)) bySorted.set(k, []); bySorted.get(k).push(p); }
 for (const g of bySorted.values()) for (let i = 1; i < g.length; i++) link(g[0], g[i], 'same name');
@@ -42,6 +44,7 @@ const dupes = [...groups.values()].filter((g) => g.length > 1).map((g) => {
   return { g, reasons: [...reasons], sameDob, samePlace, verdict };
 });
 dupes.sort((a, b) => (a.verdict === 'likely' ? 0 : 1) - (b.verdict === 'likely' ? 0 : 1) || bySurname(a.g[0], b.g[0]));
+if (process.env.DUMP) { const { writeFileSync } = await import('node:fs'); writeFileSync(process.env.DUMP, JSON.stringify(dupes.map((d) => ({ verdict: d.verdict, reasons: d.reasons, people: d.g.map((p) => ({ id: p.id, name: p.name, role: p.role, title: p.title, bishop: p.bishop || '', denomination: p.denomination, organization: p.organization, group: p.group || '', place: placeOf(p), born: dobOf(p), photo: Boolean(p.image), source: p.source || '', unclaimed: p.unclaimed || '' })) })), null, 1)); console.log('dumped', dupes.length); process.exit(0); }
 const img = (p) => p.image ? `<img src="${thumb(p)}">` : '<div class="nophoto">no photo</div>';
 const card = (p) => `<div class="card">${img(p)}<b>${esc(p.name)}</b><span>${esc(titleFor(p))}${p.role === 'pastor' && p.bishop ? ` · under Bishop ${esc(p.bishop)}` : ''}${p.unclaimed ? ' · <i>unclaimed</i>' : ''}</span><span>${esc(p.denomination || p.group || '')}</span><span>${esc(placeOf(p) || 'place unknown')}</span><span class="dob">Born ${esc(dobOf(p) || 'unknown')}</span><span class="id">${esc(p.id)}</span></div>`;
 const block = (d) => `<section class="dup ${d.verdict}"><div class="tag">${d.verdict === 'likely' ? 'LIKELY THE SAME PERSON' : 'CHECK'} · ${esc(d.reasons.join(' · '))}${d.sameDob ? ' · same birthday and age' : ''}${d.samePlace ? ' · same place' : ''}</div><div class="cards">${d.g.map(card).join('')}</div></section>`;

@@ -1,0 +1,23 @@
+{
+ "note": "Joshua's decisions from the potential-duplicates PDF, 7 Oct 2026. merges: the kept record takes every field the dropped one has that it lacks (photo included); set: fields Joshua chose. distinct: pairs that are two different people. review: still on the PDF for Joshua to decide.",
+ "merges": [
+  { "keep": "P2477", "drop": "P4772", "note": "Julia Afua Amponsah Bosrotsi — same birthday; keep her photo" },
+  { "keep": "P3648", "drop": "P3651", "note": "Ransford Darko — same birthday" },
+  { "keep": "B251", "drop": "PB3", "note": "Michael Asare — one person; stays First Love" },
+  { "keep": "P4696", "drop": "P2334", "note": "Gregoire Johnson — stays First Love" },
+  { "keep": "B124", "drop": "PB20", "set": { "denomination": "ROSE OF SHARON", "city": "Milton Keynes", "country": "United Kingdom" }, "note": "Leonora-Jamie Hyde — Rose of Sharon, Milton Keynes" },
+  { "keep": "P5019", "drop": "PS1", "note": "Raquel O'Daniel, Port of Spain — First Love" },
+  { "keep": "P4802", "drop": "P4356", "note": "Vergie Dalwatan — First Love" },
+  { "keep": "P5015", "drop": "P2251", "note": "Jessica Makinde — First Love" },
+  { "keep": "P4668", "drop": "P316", "note": "Archibald Nubour — First Love" },
+  { "keep": "P3146", "drop": "P5091", "note": "Morris Otchere-Forbih — stays Jesus Gefunden" },
+  { "keep": "P5007", "drop": "P836", "set": { "name": "Daniel Priest Powell" }, "note": "Daniel Priest Powell — First Love, keep the name Daniel" },
+  { "keep": "P4685", "drop": "P3758", "note": "Richard Sadaya — under Isaac Koranteng" },
+  { "keep": "P4564", "drop": "P1732", "note": "Gabriel Twum — First Love" },
+  { "keep": "P4680", "drop": "P3037", "note": "Mercy Vanderpuije — First Love" }
+ ],
+ "distinct": [
+  ["P134", "P148"]
+ ],
+ "review": ["P898", "PB23", "P4675", "P2418", "P2058", "P2065", "P4229", "P4847", "P399", "P4683", "P1464", "PB17", "PF452", "P3600", "P4715", "P4270", "P4274", "P4636", "P2587"]
+}
