@@ -1,0 +1,1832 @@
+[
+ {
+  "id": "P32",
+  "name": "Abigail Olympio-Peku",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P50",
+  "name": "Abraham Paa Kwesi Quaye",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Freetown",
+  "country": "Sierra Leone",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P72",
+  "name": "Adeshola Motunrayo",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Yopougon",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P104",
+  "name": "Aida Grace Asiedu-Owusu",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P145",
+  "name": "Albert Martey Laryea",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Divo",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P208",
+  "name": "Ama Ansongkyei",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P219",
+  "name": "Amivi Josee Epse Amemasor",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Abidjan",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P225",
+  "name": "Amos Dodzi Amemasor",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Abidjan",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P294",
+  "name": "Ansah Kwaku Owusu",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Divo",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P304",
+  "name": "Anthony Satishkumar Christian",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nanded",
+  "country": "India",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P312",
+  "name": "Antonio Muigai",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nairobi",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P315",
+  "name": "Appiah Kwasi Ofori",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P319",
+  "name": "Aristote Orega Gnagbototy",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Gonzag",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P321",
+  "name": "Arlette Uwera Rwamulinda",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nairobi",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P331",
+  "name": "Asamoah Ama Obeng",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lubumbashi",
+  "country": "Congo, Democratic Republic",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P373",
+  "name": "Ayub Otieno Aketch",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nairobi",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P375",
+  "name": "Azbeta Angatia Aywa",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nairobi",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P391",
+  "name": "Barima Ofori-Takyi",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "",
+  "country": "Seychelles",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P413",
+  "name": "Benedict Kentshitswe",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Gaborone",
+  "country": "Botswana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P448",
+  "name": "Benjamin Nana Kwaku Osei Asare",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Bouake",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P526",
+  "name": "Blessing Kodjoe",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P529",
+  "name": "Blossom Nanaabokuma Sampson",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P538",
+  "name": "Bouadou Yannick-Martial Kouadio",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Abidjan",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P543",
+  "name": "Brian Abwanzo Omondi",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nakuru",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P542",
+  "name": "Brian Onyango",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nairobi",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P547",
+  "name": "Brian Thubelo",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Pretoria",
+  "country": "South Africa",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P553",
+  "name": "Bright Ciaquo Kyeremanu",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Gaborone",
+  "country": "Botswana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P564",
+  "name": "Bright Yaw Mensah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P582",
+  "name": "Carine Neomi Amito Hlomador",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Abidjan",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P600",
+  "name": "Catherine Johnson",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P629",
+  "name": "Charlene Afua Tonugble",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P676",
+  "name": "Christian Niiayikwei Okai",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P686",
+  "name": "Christine Kasule",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Gaborone",
+  "country": "Botswana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P703",
+  "name": "Clara Aggrey",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P705",
+  "name": "Clarke Ambia",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nairobi",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P717",
+  "name": "Clement Gomez Lahenor",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P725",
+  "name": "Clive Boahene Dompreh",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P739",
+  "name": "Comfort Dzifa Miheso",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P784",
+  "name": "Daniel Adagbe",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P794",
+  "name": "Daniel Ayittah",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P808",
+  "name": "Daniel Koffi Agbana",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Abidjan",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P811",
+  "name": "Daniel Koranteng",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P859",
+  "name": "David Abusah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Kinshasa",
+  "country": "Congo, Democratic Republic",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P886",
+  "name": "David Masona",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P902",
+  "name": "David Roger Adobi",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Abidjan",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P909",
+  "name": "Davidson Aflo",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P912",
+  "name": "Davis Munene Ndwiga",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Ongata Rongai",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P953",
+  "name": "Derick Dickson Ouma",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Kakamega",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P990",
+  "name": "Dissirama Olivier Kpanoga",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Attoban",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1001",
+  "name": "Doku Annarhoda Amoako",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Kumasi",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1009",
+  "name": "Donlad Reynes Penney",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Makeni",
+  "country": "Sierra Leone",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1026",
+  "name": "Dorothy Akuffo Addo",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1027",
+  "name": "Dorothy Allotey",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1035",
+  "name": "Douglas Nyarko Amagyei",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Worcester",
+  "country": "United States",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P1039",
+  "name": "Dubon Bitian",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1098",
+  "name": "Edmund Amartey",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Ambohibao",
+  "country": "Madagascar",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1142",
+  "name": "Ehinomen Esekhile Ehizokhale",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Gaborone",
+  "country": "Botswana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1148",
+  "name": "Elaine Agbeyengah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1235",
+  "name": "Emmanuel Adjei Koduah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P1237",
+  "name": "Emmanuel Agbenyoh",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1281",
+  "name": "Emmanuel Keminhisson Yochette",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Yopougon",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1395",
+  "name": "Eric Kwamivi Anador",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Abengourou",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1399",
+  "name": "Eric Muzunga Nguni",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1411",
+  "name": "Eric Yao Mawugbe",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Kinshasa Aparche",
+  "country": "Congo, Democratic Republic",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P1412",
+  "name": "Erica Lamptey",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1467",
+  "name": "Esther Riche",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1498",
+  "name": "Eunice Kongani",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lubumbashi",
+  "country": "Congo, Democratic Republic",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1561",
+  "name": "Felix Agyekum Boateng",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1599",
+  "name": "Fortunata Quaigraine",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1714",
+  "name": "Frederick Yates",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": ".",
+  "country": "Madagascar",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1721",
+  "name": "Fritz Egbert Plange Jnr",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1749",
+  "name": "Gaolatlhe Godirwang",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Gaborone",
+  "country": "Botswana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1785",
+  "name": "George Niiarmah Aryeetey",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Bangladesh",
+  "country": "Bangladesh",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1795",
+  "name": "George Zulu",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1845",
+  "name": "Gifty-Iris Asiamah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1892",
+  "name": "Godwin France",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1897",
+  "name": "Gonaya Basutli",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Gaborone",
+  "country": "Botswana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1905",
+  "name": "Grace Ann Ababio",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1921",
+  "name": "Gyebi Owusu-Ansah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Adenta",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P1931",
+  "name": "Hannah Akrong",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P1998",
+  "name": "Hilbrah Wilmot Quagraine",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2024",
+  "name": "Innocent Mogale Mojela",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Santo Domingo/Distrito Nacional",
+  "country": "Dominican Republic",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2032",
+  "name": "Irene Amankwah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P2093",
+  "name": "Isaac Ofori Agyemang",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P2120",
+  "name": "Issah Quarmson",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Guangzhou",
+  "country": "China",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P2130",
+  "name": "Ivy Audrey Deh",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2133",
+  "name": "Ivy Yeboah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2164",
+  "name": "James Cantamantu-Koomson",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2178",
+  "name": "James Yartey",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2213",
+  "name": "Jecinter Anyango Omusula",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nakuru",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2263",
+  "name": "Joanne Badza",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2327",
+  "name": "John Yamikani Masona",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2355",
+  "name": "Jonathan Longdon",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2455",
+  "name": "Joyce Djabatey",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2461",
+  "name": "Joyce Wilson",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2473",
+  "name": "Jude Yamoah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Kenema",
+  "country": "Sierra Leone",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2510",
+  "name": "Justus Kalama Nguma",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nairobi",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P2514",
+  "name": "Kafwatula Mandanji",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2534",
+  "name": "Kate Rupsy",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": ".",
+  "country": "Cameroon",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2557",
+  "name": "Kelvin Nana Yaw Amagyei",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Worcester",
+  "country": "United States",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2600",
+  "name": "Kingsley Agyekum",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2625",
+  "name": "Kofi Nti",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2631",
+  "name": "Kojo Sarbeng",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "London",
+  "country": "United Kingdom",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2644",
+  "name": "Kumah Agyemang",
+  "title": "Pastor",
+  "denomination": "EAST MOUNTAIN CHURCHES",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2661",
+  "name": "Kwadwo Bonsu",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P2670",
+  "name": "Kwakyewaa Cantamantu-Koomson",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2687",
+  "name": "Kwame Opoku",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2693",
+  "name": "Kwasi Godwin Deh",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2743",
+  "name": "Leano Phetogo",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Gaborone",
+  "country": "Botswana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2777",
+  "name": "Linda Naa Ahimah Sakyi",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2786",
+  "name": "Lisa Osafo-Addo",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "London",
+  "country": "United Kingdom",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2791",
+  "name": "Lois Abiba Mills-Odoi",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "London",
+  "country": "United Kingdom",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2795",
+  "name": "Lorato Moalosi",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Francistown",
+  "country": "Botswana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2800",
+  "name": "Lordina Oppong",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2803",
+  "name": "Lorraine Paul",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Pune",
+  "country": "India",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2847",
+  "name": "Mabel Emefa Laryea",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Abidjan",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2878",
+  "name": "Marcella Mclean",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "London",
+  "country": "United Kingdom",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2902",
+  "name": "Marius Kadoussou",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Bouake",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2905",
+  "name": "Mark Bwalya",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2920",
+  "name": "Martha Ankrah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2947",
+  "name": "Mary Mahlatji",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P2955",
+  "name": "Mary-Chloe Bandoh",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P2987",
+  "name": "Mavis Acheampong",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Kumasi",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3021",
+  "name": "Melody Asare",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3066",
+  "name": "Michael B. Gaizer",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Monrovia",
+  "country": "Liberia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3104",
+  "name": "Michaela Sowah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P3118",
+  "name": "Millicent Ayorkor Boison",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3135",
+  "name": "Modupe Amofa-Sekyi",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3166",
+  "name": "Moses Mutale",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Kitwe",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3170",
+  "name": "Mourice Ochieng Onura",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nakuru",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P3190",
+  "name": "Naabea Enin",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3204",
+  "name": "Nana Amaning",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "London",
+  "country": "United Kingdom",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3248",
+  "name": "Natalie Welds",
+  "title": "Pastor",
+  "denomination": "FLOW",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P3252",
+  "name": "Nathan Kudowor",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3270",
+  "name": "Neema Wanjiru Kibuchi",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nakuru",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P3307",
+  "name": "Noel Nyarko",
+  "title": "Pastor",
+  "denomination": "STRAIT GATE CHURCH LIBERIA",
+  "city": "Monrovia",
+  "country": "Liberia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3340",
+  "name": "Obeng Emmanuel Asare",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P3360",
+  "name": "Olivia Esinam Kushitor",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Kumasi",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3412",
+  "name": "Patricia Atsupii Quist-Therson",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "New York",
+  "country": "United States",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3451",
+  "name": "Paul Dwimoh",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Legon",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3506",
+  "name": "Peter Nsowah",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Pretoria",
+  "country": "South Africa",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3558",
+  "name": "Pokua Abigail Adu",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3573",
+  "name": "Prince Danso",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Queens",
+  "country": "United States",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P3580",
+  "name": "Prince Kwadwo Amoah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Raleigh",
+  "country": "United States",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3591",
+  "name": "Prince Paul",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Pune",
+  "country": "India",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P3599",
+  "name": "Princess Kadellah Asamoah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3612",
+  "name": "Priscilla Attoh",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3613",
+  "name": "Priscilla Danquah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3615",
+  "name": "Priscilla Heward-Mills",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3617",
+  "name": "Priscilla Naa Aklerh Plange",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P3633",
+  "name": "Quainoo Adonis Ninssin",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3634",
+  "name": "Quainoo Alphius Ninssin",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Yamoussoukro",
+  "country": "Cote D'ivoire (Ivory Coast)",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3653",
+  "name": "Ransom Anang",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P3693",
+  "name": "Reginald Randolph",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3802",
+  "name": "Robert Cann",
+  "title": "Rev.",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "London",
+  "country": "United Kingdom",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3812",
+  "name": "Robert Sekyi",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Kinshasa",
+  "country": "Congo, Democratic Republic",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P3844",
+  "name": "Rosemary Ampofo",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3864",
+  "name": "Ruth Appiah-Denkyira",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P3927",
+  "name": "Samuel Danquah",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nairobi",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P3928",
+  "name": "Samuel Eko",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4013",
+  "name": "Selina Machima",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4014",
+  "name": "Selinkie Popo",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Gaborone",
+  "country": "Botswana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4103",
+  "name": "Sitsofe Banini",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4129",
+  "name": "Sonia Tagbor",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4138",
+  "name": "Sosu Syster Theresa",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4142",
+  "name": "Sromawuda Appoh Faith",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Freetown",
+  "country": "Sierra Leone",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4147",
+  "name": "Stanley Boafo Osei-Bonsu",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Roseau",
+  "country": "Dominica",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4155",
+  "name": "Stella Ochola",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Pretoria",
+  "country": "South Africa",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4196",
+  "name": "Stephenie Wanjiru Muigai",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Nairobi",
+  "country": "Kenya",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4209",
+  "name": "Sylvanus Jouneh",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Yaounde",
+  "country": "Cameroon",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4226",
+  "name": "Talisai Njovu",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lusaka",
+  "country": "Zambia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4230",
+  "name": "Tambo Anniesarah Benson",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4264",
+  "name": "Theophilus Amwoma Kong'ani",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lubumbashi",
+  "country": "Congo, Democratic Republic",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4279",
+  "name": "Theresa Gorman",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4286",
+  "name": "Thierry Mutamba Mudimbi",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lubumbashi",
+  "country": "Congo, Democratic Republic",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4353",
+  "name": "Vanessa Oparebea Akkufo",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4397",
+  "name": "Vivian Gaizer",
+  "title": "Pastor",
+  "denomination": "STRAIT GATE CHURCH LIBERIA",
+  "city": "Monrovia",
+  "country": "Liberia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4409",
+  "name": "Wakuma Belete",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Addis Ababa",
+  "country": "Ethiopia",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4419",
+  "name": "Wilhemina Tweneboa",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": true
+ },
+ {
+  "id": "P4435",
+  "name": "William Tandoh",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4451",
+  "name": "Winnie Botchway",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Accra",
+  "country": "Ghana",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4483",
+  "name": "Yayra Ahedor",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Antananarivo",
+  "country": "Madagascar",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ },
+ {
+  "id": "P4490",
+  "name": "Yves Bile Epampia",
+  "title": "Pastor",
+  "denomination": "FIRST LOVE CHURCH",
+  "city": "Lubumbashi",
+  "country": "Congo, Democratic Republic",
+  "bishop": "Dag Heward-Mills",
+  "hadPhoto": false
+ }
+]

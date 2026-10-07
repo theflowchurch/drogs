@@ -18,7 +18,8 @@ for (const [id, keep] of Object.entries(MANUAL)) { const p = pastors.find((x) =>
 // Pairs the office confirmed by name (the shorter record goes, the bishop stays).
 const MANUAL_BY_NAME = { 'Serena Ababio': 'Serena Ariana Ababio', 'Alice Obaka': 'Alice Renatta Obaka', 'Esther Okyere': 'Esther-Richie Okyere', 'Mary Bandoh': 'Mary Rea Bandoh', 'Paula Mills-Thompson': 'Paula Chela Mills Thompson', 'Ruthie Denkyira': 'Ruthie Appiah Denkyira',
   // Bishop Emmanuel Sakyi, 7 Oct 2026: the pastor under Kenneth Agyei and the bishop at Leeds/Nottingham are the same men as these bishops.
-  'Charles Kwame Bonsu': 'Charles Bonsu', 'Nana Kwame Adu Gyamfi': 'Kwame Adu Gyamfi' };
+  'Charles Kwame Bonsu': 'Charles Bonsu', 'Nana Kwame Adu Gyamfi': 'Kwame Adu Gyamfi',
+  'Aida Asiedu-Owusu': 'Maya Aida Asiedu' /* same photo; Joshua: keep Maya (7 Oct 2026) */ };
 for (const [shortName, fullName] of Object.entries(MANUAL_BY_NAME)) { const b = bishops.find((x) => normalName(x.name) === normalName(fullName)); for (const p of pastors) if (b && normalName(p.name) === normalName(shortName)) removals.push({ id: p.id, keep: b.id, reason: `same person as Bishop ${b.name} (office confirmed)` }); }
 for (const p of pastors) {
   if (removals.some((r) => r.id === p.id)) continue;
@@ -46,7 +47,7 @@ for (const list of byBishop.values()) for (let i = 0; i < list.length; i++) for 
 }
 //  4. a pastor known only from a photo folder whose first and last names are a misspelling, transposition or initials
 //     of a roster pastor under the same bishop ("Kwaku Aseidu Badu" ~ "Kwaku Asiedu-Badu", "Isaac N K Kwarteng" ~ "Isaac Nana Kwabena Kwarteng") → the roster record is the person.
-import { sameSoul } from './lib/names.mjs';
+import { sameSoul, close } from './lib/names.mjs';
 for (const list of byBishop.values()) for (const a of list.filter((p) => p.source === 'photo folder')) for (const b of list.filter((p) => p.source !== 'photo folder')) {
   if (removals.some((r) => r.id === a.id || r.id === b.id)) continue;
   if (sameSoul(a.name, b.name)) removals.push({ id: a.id, keep: b.id, reason: `photo-folder spelling of ${b.name} under the same bishop` });
@@ -58,6 +59,22 @@ for (const group of byTok.values()) {
   const b = birthRows(live[0].name); if (b.length < 2 || new Set(b.map((x) => `${x.born}|${x.age}`)).size !== 1) continue;
   const [keep, ...rest] = [...live].sort((a, b) => richness(b) + (b.bishop ? 3 : 0) - richness(a) - (a.bishop ? 3 : 0));
   for (const d of rest) removals.push({ id: d.id, keep: keep.id, reason: `same name and birthday as ${keep.name} (${b[0].born}, age ${b[0].age}) in the office's export` });
+}
+//  6. the very same picture on two records (perceptual hash) with a name word in common → one person; a bishop record, else the richer one, stays.
+import { existsSync } from 'node:fs';
+import { dhash, hamming } from './lib/photo-hash.mjs';
+const thumbOf = (p) => { const t = p.image.replace(/^(assets\/(?:portraits|bishops|pastors))\/([^/]+)\.[^.]+$/, '$1/thumbs/$2.webp'); return existsSync(new URL(`../${t}`, import.meta.url)) ? t : p.image; };
+const pictured = people.filter((p) => p.image && existsSync(new URL(`../${p.image}`, import.meta.url)));
+const hashes = [];
+for (let i = 0; i < pictured.length; i += 50) await Promise.all(pictured.slice(i, i + 50).map(async (p) => { try { hashes.push([p, await dhash(new URL(`../${thumbOf(p)}`, import.meta.url).pathname)]); } catch {} }));
+const shareWord = (a, b) => { const B = new Set(words(b.name)); return words(a.name).some((w) => w.length > 2 && B.has(w)); };
+const shareSurname = (a, b) => { const A = words(a.name), B = words(b.name); return B.some((w) => close(w, A.at(-1))) || A.some((w) => close(w, B.at(-1))); }; // a near-identical picture plus the surname: not two Emmanuels who look alike
+for (let i = 0; i < hashes.length; i++) for (let j = i + 1; j < hashes.length; j++) {
+  const [a, ha] = hashes[i], [b, hb] = hashes[j]; const d = hamming(ha, hb);
+  if (d > 2 || (d > 0 && !shareSurname(a, b)) || (d === 0 && !shareWord(a, b) && a.role !== 'bishop' && b.role !== 'bishop' && normalName(a.bishop || '') !== normalName(b.bishop || ''))) continue;
+  if (a.role === 'bishop' && b.role === 'bishop') continue; // two bishops with one photo is for the office, not a merge
+  const [keep, drop] = a.role === 'bishop' ? [a, b] : b.role === 'bishop' ? [b, a] : richness(a) >= richness(b) ? [a, b] : [b, a];
+  if (!removals.some((r) => r.id === drop.id || r.id === keep.id)) removals.push({ id: drop.id, keep: keep.id, reason: `same photo as ${keep.role === 'bishop' ? 'Bishop ' : ''}${keep.name}` });
 }
 const file = new URL('../data/duplicate-removals.json', import.meta.url);
 let previous = []; try { previous = JSON.parse(readFileSync(file, 'utf8')).removals || []; } catch {}

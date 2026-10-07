@@ -11,6 +11,8 @@ const row = (p) => ({ Name: p.name, Title: titleFor(p), Group: p.group || p.orga
 const unclaimed = people.filter((p) => p.unclaimed).sort((a, b) => a.unclaimed.localeCompare(b.unclaimed) || bySurname(a, b));
 add(unclaimed.map((p) => ({ ...row(p), 'Why Unclaimed': p.unclaimed })), 'Unclaimed Pastors', [30, 12, 18, 34, 26, 48]);
 add(people.filter((p) => p.source === 'bishop sheet').sort(bySurname).map((p) => ({ ...row(p), Bishop: p.bishop || '' })), 'Added From Sheets', [30, 12, 18, 34, 26, 28]);
+const gone = JSON.parse(readFileSync(new URL('../data/reports/deleted-under.json', import.meta.url), 'utf8'));
+add(gone.map((g) => ({ Name: g.name, Title: g.title, Denomination: g.denomination, Place: [g.city, g.country].filter(Boolean).join(', '), 'Was Under': g.bishop, 'Had Photo': g.hadPhoto ? 'Yes' : 'No', Record: g.id })), 'Deleted Under Dag Heward-Mills', [30, 12, 26, 28, 20, 10, 8]);
 const byId = new Map(people.map((p) => [p.id, p]));
 add(dupes.map((d) => ({ 'Removed Record': d.id, 'Kept As': byId.get(d.keep)?.name || d.keep, Reason: d.reason })), 'Duplicates Removed', [16, 30, 60]);
 // Looser look-alikes the rules did not remove: two name words in common under the same bishop. For the office to judge.

@@ -296,6 +296,13 @@ for (const s of submissions) {
 }
 if (sheetStat.movedList) console.log('  moved: ' + sheetStat.movedList.join(' · '));
 console.log(`Bishop sheets: ${sheetStat.bishops} bishops · ${sheetStat.kept} pastors confirmed · ${sheetStat.moved} moved under the sheet's bishop · ${sheetStat.added} new · ${sheetStat.released} released to Unclaimed${sheetStat.noBishop.length ? ` · bishops added from their sheet: ${sheetStat.noBishop.join(', ')}` : ''}`);
+// Nobody's bishop in charge is Dag Heward-Mills (Joshua, 7 Oct 2026): those old-roster records are deleted outright
+// (most duplicate a pastor now under a real First Love bishop); the list goes to data/reports/deleted-under.json.
+const DELETE_UNDER = ['Dag Heward-Mills'];
+const deleted = people.filter(p => p.role === 'pastor' && DELETE_UNDER.some(n => normalName(n) === normalName(p.bishop || '')));
+people = people.filter(p => !deleted.includes(p));
+await writeFile(new URL('../data/reports/deleted-under.json', import.meta.url), JSON.stringify(deleted.map(({ id, name, title, denomination, city, country, bishop, image }) => ({ id, name, title, denomination, city, country, bishop, hadPhoto: Boolean(image) })), null, 1) + '\n');
+console.log(`Deleted: ${deleted.length} pastors filed under ${DELETE_UNDER.join(', ')}`);
 // The office says these bishops have nobody under them (Bishop Emmanuel Sakyi, 7 Oct 2026): whoever we had there floats.
 const NO_PASTORS = ['Kenneth Agyei'];
 for (const p of people) if (p.role === 'pastor' && NO_PASTORS.some(n => normalName(n) === normalName(p.bishop || ''))) { p.unclaimed = `Bishop ${p.bishop} has no pastors under him`; p.bishop = ''; }

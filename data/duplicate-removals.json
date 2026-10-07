@@ -2,6 +2,121 @@
  "generated": "2026-10-07",
  "removals": [
   {
+   "id": "P4508",
+   "keep": "BO251",
+   "reason": "same person as Bishop Maya Aida Asiedu (office confirmed)"
+  },
+  {
+   "id": "PF411",
+   "keep": "B253",
+   "reason": "same photo as Bishop Daniel Marcus"
+  },
+  {
+   "id": "P1287",
+   "keep": "B52",
+   "reason": "same photo as Bishop Emmanuel Kofi-Yeboah"
+  },
+  {
+   "id": "P4630",
+   "keep": "B193",
+   "reason": "same photo as Bishop Zoe-Andria Asamoah"
+  },
+  {
+   "id": "PF199",
+   "keep": "P91",
+   "reason": "same photo as Afolabi John Makinde"
+  },
+  {
+   "id": "PF872",
+   "keep": "P132",
+   "reason": "same photo as Albert Addai"
+  },
+  {
+   "id": "PF502",
+   "keep": "P171",
+   "reason": "same photo as Alexander Adjetey Aryeh"
+  },
+  {
+   "id": "PF349",
+   "keep": "P411",
+   "reason": "same photo as Bendag Kibirige Sebatta"
+  },
+  {
+   "id": "PF527",
+   "keep": "P466",
+   "reason": "same photo as Bernadette Bawuah"
+  },
+  {
+   "id": "PF433",
+   "keep": "P569",
+   "reason": "same photo as Bruno Yao Agbevan"
+  },
+  {
+   "id": "P1328",
+   "keep": "P1231",
+   "reason": "same photo as Emmanuel Oppong Asamoah"
+  },
+  {
+   "id": "PF499",
+   "keep": "P1521",
+   "reason": "same photo as Evelyn Ehimwenma Enagbare"
+  },
+  {
+   "id": "PF511",
+   "keep": "P1937",
+   "reason": "same photo as Hannah Tulip Shekinah"
+  },
+  {
+   "id": "PF336",
+   "keep": "P2447",
+   "reason": "same photo as Jovia Miremba"
+  },
+  {
+   "id": "P2541",
+   "keep": "BO179",
+   "reason": "same photo as Bishop Kay Francis Kwao"
+  },
+  {
+   "id": "PF671",
+   "keep": "P3079",
+   "reason": "same photo as Michael Kwabena Minau"
+  },
+  {
+   "id": "P5069",
+   "keep": "PF157",
+   "reason": "same photo as Moreblessings Daka"
+  },
+  {
+   "id": "P5014",
+   "keep": "P3159",
+   "reason": "same photo as Moses Ansu-Diabour"
+  },
+  {
+   "id": "PF505",
+   "keep": "P3657",
+   "reason": "same photo as Raphael A Phael Adamtey"
+  },
+  {
+   "id": "PF597",
+   "keep": "P3707",
+   "reason": "same photo as Rhodaline Ruby Aboagye"
+  },
+  {
+   "id": "P5018",
+   "keep": "P4130",
+   "reason": "same photo as Sonika Henry Sotonia"
+  },
+  {
+   "id": "PF501",
+   "keep": "P4375",
+   "reason": "same photo as Victoria Boagyewaa Opoku"
+  },
+  {
+   "id": "PF632",
+   "keep": "PF838",
+   "reason": "same photo as Stephen Gyimah Yeji Prang"
+  },
+  {
    "id": "P4403",
    "keep": "P4397",
    "reason": "same name and birthday as Vivian Gaizer (26 August, age 39) in the office's export"

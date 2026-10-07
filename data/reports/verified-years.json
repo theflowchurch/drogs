@@ -1,6 +1,15 @@
 {
- "matched": 647,
+ "matched": 621,
  "unmatched": [
+  {
+   "name": "Robert Sekyi",
+   "country": "DRC - Kinshasa",
+   "rank": "reverend",
+   "yearAppointed": "2017",
+   "yearOrdained": "2024",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 21:23:21"
+  },
   {
    "name": "Freddie Serwadda",
    "country": "United Kingdom",
@@ -18,6 +27,15 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/4/2026 20:42:34"
+  },
+  {
+   "name": "Neema Wanjiru",
+   "country": "Kenya",
+   "rank": "pastor",
+   "yearAppointed": "2024",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 20:47:30"
   },
   {
    "name": "Nathan",
@@ -65,6 +83,24 @@
    "submitted": "10/4/2026 20:58:13"
   },
   {
+   "name": "David Abusah",
+   "country": "DRC - Kinshasa",
+   "rank": "pastor",
+   "yearAppointed": "2016",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 20:58:23"
+  },
+  {
+   "name": "Amos Dodzi AMEMASOR",
+   "country": "Côte d'Ivoire",
+   "rank": "reverend",
+   "yearAppointed": "2011",
+   "yearOrdained": "2012",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 21:05:14"
+  },
+  {
    "name": "KIPRE EMMA DESIREE",
    "country": "Côte d'Ivoire",
    "rank": "pastor",
@@ -81,6 +117,15 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/4/2026 21:05:43"
+  },
+  {
+   "name": "Kwaku Owusu Ansah",
+   "country": "Côte d'Ivoire",
+   "rank": "pastor",
+   "yearAppointed": "2017",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 21:07:56"
   },
   {
    "name": "Vasty Estel Abena Atteh",
@@ -146,6 +191,15 @@
    "submitted": "10/4/2026 21:21:52"
   },
   {
+   "name": "Aristote GNAGBOTOTY",
+   "country": "Côte d'Ivoire",
+   "rank": "pastor",
+   "yearAppointed": "2018",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 21:31:44"
+  },
+  {
    "name": "ARNOLD Mopata",
    "country": "DRC - Kinshasa",
    "rank": "pastor",
@@ -153,6 +207,15 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/4/2026 21:32:09"
+  },
+  {
+   "name": "Justus Kalama",
+   "country": "Kenya",
+   "rank": "pastor",
+   "yearAppointed": "2024",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 21:34:41"
   },
   {
    "name": "PHILIP AMOAH LANTEY",
@@ -254,13 +317,22 @@
    "submitted": "10/4/2026 22:06:02"
   },
   {
-   "name": "Derick Ouma",
+   "name": "ANTONIO MUIGAI",
    "country": "Kenya",
    "rank": "pastor",
-   "yearAppointed": "2024",
+   "yearAppointed": "2022",
    "yearOrdained": "",
    "yearConsecrated": "",
-   "submitted": "10/4/2026 22:42:15"
+   "submitted": "10/4/2026 22:22:13"
+  },
+  {
+   "name": "Eric Yao Mawugbe",
+   "country": "DRC - Kinshasa",
+   "rank": "reverend",
+   "yearAppointed": "2011",
+   "yearOrdained": "2012",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 22:37:16"
   },
   {
    "name": "David Lamptey",
@@ -299,6 +371,24 @@
    "submitted": "10/4/2026 23:29:47"
   },
   {
+   "name": "Arlette Uwera Rwamulinda",
+   "country": "Kenya",
+   "rank": "pastor",
+   "yearAppointed": "2023",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 23:36:26"
+  },
+  {
+   "name": "Clarke Ambia",
+   "country": "Kenya",
+   "rank": "pastor",
+   "yearAppointed": "2023",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 23:48:29"
+  },
+  {
    "name": "Michelle Wangechi Waititu",
    "country": "Kenya",
    "rank": "pastor",
@@ -317,6 +407,24 @@
    "submitted": "10/4/2026 23:57:35"
   },
   {
+   "name": "Brian Onyango",
+   "country": "Kenya",
+   "rank": "pastor",
+   "yearAppointed": "2025",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 0:31:11"
+  },
+  {
+   "name": "Davidson Aflo",
+   "country": "Ghana",
+   "rank": "reverend",
+   "yearAppointed": "2016",
+   "yearOrdained": "2021",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 0:39:32"
+  },
+  {
    "name": "Tintswalo SendyPaul Shibambo",
    "country": "South Africa",
    "rank": "pastor",
@@ -324,6 +432,15 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/5/2026 0:50:02"
+  },
+  {
+   "name": "Davis Ndwiga",
+   "country": "Kenya",
+   "rank": "pastor",
+   "yearAppointed": "2023",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 2:37:40"
   },
   {
    "name": "Claudia Ohemaa Forkuoh",
@@ -342,6 +459,24 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/5/2026 3:28:35"
+  },
+  {
+   "name": "David Masona",
+   "country": "Zambia",
+   "rank": "pastor",
+   "yearAppointed": "2020",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 4:01:50"
+  },
+  {
+   "name": "MOURICE ONURA",
+   "country": "Kenya",
+   "rank": "pastor",
+   "yearAppointed": "2024",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 4:05:01"
   },
   {
    "name": "Ongolo Menanga Aimé",
@@ -398,6 +533,24 @@
    "submitted": "10/5/2026 5:11:26"
   },
   {
+   "name": "Stella Ochola",
+   "country": "South Africa",
+   "rank": "pastor",
+   "yearAppointed": "2017",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 5:18:28"
+  },
+  {
+   "name": "Brian Omondi",
+   "country": "Kenya",
+   "rank": "pastor",
+   "yearAppointed": "2023",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 5:20:42"
+  },
+  {
    "name": "Wilhelmina Okley-Anum Naa Kai",
    "country": "Ghana",
    "rank": "pastor",
@@ -452,6 +605,15 @@
    "submitted": "10/5/2026 6:26:45"
   },
   {
+   "name": "Michaela Sowah",
+   "country": "Ghana",
+   "rank": "pastor",
+   "yearAppointed": "2013",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 6:31:18"
+  },
+  {
    "name": "Vutivi Meyer",
    "country": "South Africa",
    "rank": "pastor",
@@ -468,6 +630,15 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/5/2026 7:30:00"
+  },
+  {
+   "name": "Theophilus Kong'ani",
+   "country": "DRC - Katanga",
+   "rank": "reverend",
+   "yearAppointed": "2013",
+   "yearOrdained": "2024",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 7:31:23"
   },
   {
    "name": "Abdah Bangura",
@@ -504,6 +675,15 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/5/2026 8:47:48"
+  },
+  {
+   "name": "Issah Quarmson",
+   "country": "China",
+   "rank": "reverend",
+   "yearAppointed": "2016",
+   "yearOrdained": "2021",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 8:57:54"
   },
   {
    "name": "Kula Jumai Mbawah",
@@ -749,15 +929,6 @@
    "submitted": "10/5/2026 10:09:16"
   },
   {
-   "name": "Emmanu Asare Obeng",
-   "country": "Ghana",
-   "rank": "reverend",
-   "yearAppointed": "1999",
-   "yearOrdained": "2011",
-   "yearConsecrated": "",
-   "submitted": "10/5/2026 10:12:53"
-  },
-  {
    "name": "Christopher Ekwuruke",
    "country": "Germany",
    "rank": "pastor",
@@ -893,6 +1064,15 @@
    "submitted": "10/5/2026 13:09:12"
   },
   {
+   "name": "Bright Yaw Mensah",
+   "country": "Ghana",
+   "rank": "pastor",
+   "yearAppointed": "2022",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 14:01:51"
+  },
+  {
    "name": "Samuel Dag Kudjo Atiemoh",
    "country": "Ghana",
    "rank": "pastor",
@@ -909,6 +1089,15 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/5/2026 14:08:46"
+  },
+  {
+   "name": "Vanessa Oparebea Akkufo",
+   "country": "Ghana",
+   "rank": "pastor",
+   "yearAppointed": "2025",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 14:16:03"
   },
   {
    "name": "Esther-Natasha Godwyll",
@@ -1100,6 +1289,15 @@
    "submitted": "10/5/2026 21:13:38"
   },
   {
+   "name": "Jonathan Longdon",
+   "country": "Ghana",
+   "rank": "reverend",
+   "yearAppointed": "2016",
+   "yearOrdained": "2019",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 21:15:57"
+  },
+  {
    "name": "John Adade Morris-Mead",
    "country": "Ghana",
    "rank": "pastor",
@@ -1116,6 +1314,24 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/5/2026 21:40:23"
+  },
+  {
+   "name": "Paul Dwimoh",
+   "country": "Ghana",
+   "rank": "reverend",
+   "yearAppointed": "2013",
+   "yearOrdained": "2021",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 21:45:20"
+  },
+  {
+   "name": "Nathan Nunya Kudowor",
+   "country": "Ghana",
+   "rank": "reverend",
+   "yearAppointed": "2016",
+   "yearOrdained": "2019",
+   "yearConsecrated": "",
+   "submitted": "10/6/2026 2:38:57"
   },
   {
    "name": "Constant Agbadzi",
@@ -1172,6 +1388,15 @@
    "submitted": "10/6/2026 7:53:38"
   },
   {
+   "name": "James Nii Ofoliquaye Yartey",
+   "country": "Ghana",
+   "rank": "reverend",
+   "yearAppointed": "2016",
+   "yearOrdained": "2019",
+   "yearConsecrated": "",
+   "submitted": "10/6/2026 7:54:52"
+  },
+  {
    "name": "Raphael Selasi Akligo",
    "country": "Ghana",
    "rank": "pastor",
@@ -1179,6 +1404,15 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/6/2026 7:56:20"
+  },
+  {
+   "name": "Ransom Anang",
+   "country": "Ghana",
+   "rank": "pastor",
+   "yearAppointed": "2015",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/6/2026 7:57:21"
   },
   {
    "name": "Cyrus Opuni-Antwi",
@@ -1219,18 +1453,6 @@
  ],
  "rankDiffers": [
   {
-   "name": "Robert Sekyi",
-   "country": "DRC - Kinshasa",
-   "rank": "reverend",
-   "yearAppointed": "2017",
-   "yearOrdained": "2024",
-   "yearConsecrated": "",
-   "submitted": "10/4/2026 21:23:21",
-   "record": "Robert Sekyi",
-   "recordTitle": "Pastor",
-   "recordRole": "pastor"
-  },
-  {
    "name": "Stephen Macauley",
    "country": "Zambia",
    "rank": "reverend",
@@ -1251,6 +1473,18 @@
    "yearConsecrated": "",
    "submitted": "10/4/2026 21:06:03",
    "record": "Gabriel Amponsah",
+   "recordTitle": "Pastor",
+   "recordRole": "pastor"
+  },
+  {
+   "name": "Albert Martey Laryea",
+   "country": "Côte d'Ivoire",
+   "rank": "reverend",
+   "yearAppointed": "2011",
+   "yearOrdained": "2012",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 21:06:10",
+   "record": "Albert Laryea",
    "recordTitle": "Pastor",
    "recordRole": "pastor"
   },
@@ -1279,30 +1513,6 @@
    "recordRole": "pastor"
   },
   {
-   "name": "ANTONIO MUIGAI",
-   "country": "Kenya",
-   "rank": "pastor",
-   "yearAppointed": "2022",
-   "yearOrdained": "",
-   "yearConsecrated": "",
-   "submitted": "10/4/2026 22:22:13",
-   "record": "Antonio Muigai",
-   "recordTitle": "Rev.",
-   "recordRole": "pastor"
-  },
-  {
-   "name": "Davidson Aflo",
-   "country": "Ghana",
-   "rank": "reverend",
-   "yearAppointed": "2016",
-   "yearOrdained": "2021",
-   "yearConsecrated": "",
-   "submitted": "10/5/2026 0:39:32",
-   "record": "Davidson Aflo",
-   "recordTitle": "Pastor",
-   "recordRole": "pastor"
-  },
-  {
    "name": "Hope Gakpo",
    "country": "Madagascar",
    "rank": "reverend",
@@ -1315,18 +1525,6 @@
    "recordRole": "pastor"
   },
   {
-   "name": "Theophilus Kong'ani",
-   "country": "DRC - Katanga",
-   "rank": "reverend",
-   "yearAppointed": "2013",
-   "yearOrdained": "2024",
-   "yearConsecrated": "",
-   "submitted": "10/5/2026 7:31:23",
-   "record": "Theophilus Amwoma Kong'ani",
-   "recordTitle": "Pastor",
-   "recordRole": "pastor"
-  },
-  {
    "name": "Gideon Quartey",
    "country": "Philippines",
    "rank": "reverend",
@@ -1335,18 +1533,6 @@
    "yearConsecrated": "",
    "submitted": "10/5/2026 8:55:16",
    "record": "Gideon Quartey",
-   "recordTitle": "Pastor",
-   "recordRole": "pastor"
-  },
-  {
-   "name": "Issah Quarmson",
-   "country": "China",
-   "rank": "reverend",
-   "yearAppointed": "2016",
-   "yearOrdained": "2021",
-   "yearConsecrated": "",
-   "submitted": "10/5/2026 8:57:54",
-   "record": "Issah Quarmson",
    "recordTitle": "Pastor",
    "recordRole": "pastor"
   },
@@ -1383,6 +1569,18 @@
    "yearConsecrated": "",
    "submitted": "10/5/2026 10:02:06",
    "record": "Kabo Ramonaka",
+   "recordTitle": "Pastor",
+   "recordRole": "pastor"
+  },
+  {
+   "name": "Emmanu Asare Obeng",
+   "country": "Ghana",
+   "rank": "reverend",
+   "yearAppointed": "1999",
+   "yearOrdained": "2011",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 10:12:53",
+   "record": "Emmanuel Asare",
    "recordTitle": "Pastor",
    "recordRole": "pastor"
   },
@@ -1555,6 +1753,18 @@
    "recordRole": "pastor"
   },
   {
+   "name": "Prince Danso",
+   "country": "USA",
+   "rank": "reverend",
+   "yearAppointed": "2016",
+   "yearOrdained": "2022",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 15:21:20",
+   "record": "Price Danso",
+   "recordTitle": "Pastor",
+   "recordRole": "pastor"
+  },
+  {
    "name": "Jeremy Baiden",
    "country": "USA",
    "rank": "reverend",
@@ -1586,7 +1796,7 @@
    "yearOrdained": "2023",
    "yearConsecrated": "",
    "submitted": "10/5/2026 17:05:08",
-   "record": "Clement Gomez Lahenor",
+   "record": "Clement Lahenor",
    "recordTitle": "Pastor",
    "recordRole": "pastor"
   },
@@ -1599,66 +1809,6 @@
    "yearConsecrated": "",
    "submitted": "10/5/2026 18:27:28",
    "record": "Jacob Louis Josiah",
-   "recordTitle": "Pastor",
-   "recordRole": "pastor"
-  },
-  {
-   "name": "Jonathan Longdon",
-   "country": "Ghana",
-   "rank": "reverend",
-   "yearAppointed": "2016",
-   "yearOrdained": "2019",
-   "yearConsecrated": "",
-   "submitted": "10/5/2026 21:15:57",
-   "record": "Jonathan Longdon",
-   "recordTitle": "Pastor",
-   "recordRole": "pastor"
-  },
-  {
-   "name": "Paul Dwimoh",
-   "country": "Ghana",
-   "rank": "reverend",
-   "yearAppointed": "2013",
-   "yearOrdained": "2021",
-   "yearConsecrated": "",
-   "submitted": "10/5/2026 21:45:20",
-   "record": "Paul Dwimoh",
-   "recordTitle": "Pastor",
-   "recordRole": "pastor"
-  },
-  {
-   "name": "Nathan Nunya Kudowor",
-   "country": "Ghana",
-   "rank": "reverend",
-   "yearAppointed": "2016",
-   "yearOrdained": "2019",
-   "yearConsecrated": "",
-   "submitted": "10/6/2026 2:38:57",
-   "record": "Nathan Kudowor",
-   "recordTitle": "Pastor",
-   "recordRole": "pastor"
-  },
-  {
-   "name": "James Nii Ofoliquaye Yartey",
-   "country": "Ghana",
-   "rank": "reverend",
-   "yearAppointed": "2016",
-   "yearOrdained": "2019",
-   "yearConsecrated": "",
-   "submitted": "10/6/2026 7:54:52",
-   "record": "James Yartey",
-   "recordTitle": "Pastor",
-   "recordRole": "pastor"
-  },
-  {
-   "name": "Kwadwo Bonsu",
-   "country": "Ghana",
-   "rank": "reverend",
-   "yearAppointed": "2016",
-   "yearOrdained": "2019",
-   "yearConsecrated": "",
-   "submitted": "10/6/2026 8:35:53",
-   "record": "Kwadwo Bonsu",
    "recordTitle": "Pastor",
    "recordRole": "pastor"
   }
@@ -1689,12 +1839,6 @@
    "now": "2016"
   },
   {
-   "name": "Ansah Kwaku Owusu",
-   "field": "yearAppointed",
-   "was": "2013",
-   "now": "2017"
-  },
-  {
    "name": "Cherish Abena Frempomaa Tengabo",
    "field": "yearAppointed",
    "was": "2016",
@@ -1705,12 +1849,6 @@
    "field": "yearAppointed",
    "was": "2016",
    "now": "2018"
-  },
-  {
-   "name": "Eric Yao Mawugbe",
-   "field": "yearOrdained",
-   "was": "2013",
-   "now": "2012"
   },
   {
    "name": "Rosemond Ninssin Quainoo",
@@ -1887,10 +2025,10 @@
    "now": "2026"
   },
   {
-   "name": "Ransom Anang",
-   "field": "yearAppointed",
-   "was": "2016",
-   "now": "2015"
+   "name": "Kwadwo Kumi Bonsu",
+   "field": "yearOrdained",
+   "was": "2022",
+   "now": "2019"
   },
   {
    "name": "Emmanuel Quartey",
@@ -1906,6 +2044,14 @@
    "record": "1997",
    "form": "2024",
    "formRank": "pastor",
+   "recordTitle": "Rev."
+  },
+  {
+   "name": "Emmanuel Asare",
+   "field": "yearAppointed",
+   "record": "2019",
+   "form": "1999",
+   "formRank": "reverend",
    "recordTitle": "Rev."
   },
   {
