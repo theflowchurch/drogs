@@ -341,6 +341,9 @@ console.log(`Verified years: ${vreport.matched} of ${verified.length} matched ·
 // Portraits imported from the office's photo folders (scripts/import-photos.mjs writes data/photo-assignments.json).
 const assigned = JSON.parse(await readFile(new URL('../data/photo-assignments.json', import.meta.url), 'utf8').catch(() => '{}'));
 for (const p of people) if (assigned[p.id] && (p.role === 'pastor' || !p.image)) p.image = assigned[p.id];
+// Official portraits the office shared on Drive (scripts/bishop-photos-from-drive.mjs → data/bishop-photo-overrides.json) win over any other picture.
+const photoOverrides = JSON.parse(await readFile(new URL('../data/bishop-photo-overrides.json', import.meta.url), 'utf8').catch(() => '{}'));
+for (const p of people) if (photoOverrides[p.id]) p.image = photoOverrides[p.id];
 // There is no "Catch The Anointing Centre" (Joshua, 4 Oct 2026): anyone filed under it
 // takes their bishop's denomination (Yalleh → Jesus Is The Rock, Asamoah → Anagkazo).
 const GONE_DENOMINATIONS = new Set(['catch the anointing centre']);
