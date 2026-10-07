@@ -78,6 +78,41 @@
    "keep": "P4680",
    "drop": "P3037",
    "note": "Mercy Vanderpuije — First Love"
+  },
+  {
+   "keep": "P4675",
+   "drop": "P2418",
+   "note": "Josephine Danquah — First Love Church (Bishop Sakyi, 7 Oct)"
+  },
+  {
+   "keep": "P4847",
+   "drop": "P4229",
+   "note": "Tamba Komba — First Love Church (Bishop Sakyi)"
+  },
+  {
+   "keep": "P4715",
+   "drop": "P3600",
+   "note": "Princess Ologo — First Love Church (Bishop Sakyi)"
+  },
+  {
+   "keep": "PB17",
+   "drop": "P1464",
+   "note": "Esther Simon — under Moro Martin-Luther Okoh (Bishop Sakyi)"
+  },
+  {
+   "keep": "PB17",
+   "drop": "PF452",
+   "note": "Esther Simon — under Moro Martin-Luther Okoh (Bishop Sakyi)"
+  },
+  {
+   "keep": "P4683",
+   "drop": "P399",
+   "note": "Beatrice Ofosua — First Love Church (Bishop Sakyi)"
+  },
+  {
+   "keep": "P898",
+   "drop": "PB23",
+   "note": "David Okine — South Africa under Daniel Harlley (Bishop Jake Godwyll)"
   }
  ],
  "distinct": [
@@ -484,27 +519,19 @@
   [
    "P1444",
    "P4694"
+  ],
+  [
+   "P2058",
+   "P2065"
+  ],
+  [
+   "P4270",
+   "P4274"
+  ],
+  [
+   "P2587",
+   "P4636"
   ]
  ],
- "review": [
-  "P898",
-  "PB23",
-  "P4675",
-  "P2418",
-  "P2058",
-  "P2065",
-  "P4229",
-  "P4847",
-  "P399",
-  "P4683",
-  "P1464",
-  "PB17",
-  "PF452",
-  "P3600",
-  "P4715",
-  "P4270",
-  "P4274",
-  "P4636",
-  "P2587"
- ]
+ "review": []
 }
