@@ -73,7 +73,14 @@ const flow = p => (MOVE_TO_FLOW.has(p.name.toLowerCase()) || p.organization === 
 const titleCase = t => t.replace(/[\p{L}'’]+/gu, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
 const { DENOMINATIONS } = await import('../src/registration/denominations.mjs');
 const { namesAlike, normalName } = await import('../src/registration/model.mjs');
-let people = [...BISHOPS.map(p => person('bishop', p)), ...PASTORS.map(p => person('pastor', p))].map(flow);
+// Minister Shepherds, Shepherds and Elders are not pastors (Joshua, 7 Oct 2026): they leave the roll, and the
+// 2026 export and the photo folders may not bring them back under another spelling.
+const SHEPHERD_RANKS = /^(MINISTER SHEPHERD|SHEPHERD|ELDER)$/;
+const shepherds = PASTORS.filter(p => SHEPHERD_RANKS.test(String(p.statusRank || '').trim().toUpperCase()));
+const shepherdNames = new Set(shepherds.map(p => normalName(fixEncoding(p.name))));
+const isShepherd = (name) => shepherdNames.has(normalName(name)) || [...shepherdNames].some(n => namesAlike(n, name));
+let people = [...BISHOPS.map(p => person('bishop', p)), ...PASTORS.filter(p => !shepherds.includes(p)).map(p => person('pastor', p))].map(flow);
+console.log(`Not pastors: ${shepherds.length} removed from the roster (${Object.entries(shepherds.reduce((m, p) => (m[p.statusRank] = (m[p.statusRank] || 0) + 1, m), {})).map(([k, v]) => `${v} ${k.toLowerCase()}`).join(', ')})`);
 // ---- The office's 2026 pastors export (data/pastors-sheet-2026.json): who oversees whom, current
 // city and country, years appointed and ordained, and the title (Rev., Lady Rev.). Existing pastors
 // are matched by name; rows the original data never had become new pastor records (PS…).
@@ -89,6 +96,7 @@ const allPastors = people.filter(p => p.role === 'pastor');
 const sheetStats = { matched: 0, added: 0, bishopsSkipped: 0, ambiguous: 0 };
 let newId = 1;
 for (const row of sheet) { let r = row;
+  if (SHEPHERD_RANKS.test(String(r.statusRank || '').trim().toUpperCase())) { shepherdNames.add(normalName(fixEncoding(r.fullName))); sheetStats.shepherds = (sheetStats.shepherds || 0) + 1; continue; }
   if (/BISHOP|EPISCOPAL/.test(r.statusRank)) {
     // Bishops come from the official list; the sheet fills in years and a missing city or country.
     sheetStats.bishopsSkipped++;
@@ -127,7 +135,7 @@ const folderBishops = JSON.parse(await readFile(new URL('../data/folder-bishops.
 let moved = 0;
 for (const p of people) if (p.role === 'pastor' && folderBishops[p.id] && normalName(p.bishop || '') !== normalName(folderBishops[p.id])) { p.bishop = folderBishops[p.id]; moved++; }
 console.log(`Photo folders: ${moved} pastors placed under the bishop whose folder holds their photo`);
-console.log(`2026 sheet: ${sheet.length} rows · ${sheetStats.matched} matched existing pastors · ${sheetStats.added} new pastors added · ${sheetStats.bishopsSkipped} bishop rows left to the official list · ${sheetStats.ambiguous} ambiguous names skipped`);
+console.log(`2026 sheet: ${sheet.length} rows · ${sheetStats.matched} matched existing pastors · ${sheetStats.added} new pastors added · ${sheetStats.bishopsSkipped} bishop rows left to the official list · ${sheetStats.ambiguous} ambiguous names skipped · ${sheetStats.shepherds || 0} shepherd/elder rows left out`);
 // ---- The official DHMM bishops list (data/official-bishops.json, from the office's
 // document) is the truth about who is a bishop. Every bishop on it is matched to
 // the old roster by name (exact, then alike, then the hand-resolved map); bishops
@@ -243,7 +251,7 @@ const bishopById = new Map(people.filter(p => p.role === 'bishop').map(b => [b.i
 let addedFromFolders = 0;
 folderNew.forEach((n, i) => {
   const b = bishopById.get(n.bishopId);
-  if (n.drop || !b || people.some(p => p.role === 'pastor' && namesAlike(p.name, n.name))) return; // `drop`: not a person (e.g. a church building's photo)
+  if (n.drop || !b || isShepherd(n.name) || people.some(p => p.role === 'pastor' && namesAlike(p.name, n.name))) return; // `drop`: not a person (e.g. a church building's photo); shepherds are not pastors
   people.push({ id: `PF${i + 1}`, role: 'pastor', name: n.name, title: n.title || 'Pastor', organization: b.organization, denomination: b.denomination, denominationLogo: b.denominationLogo || '', city: '', branch: '', country: b.country || '', image: '', gender: n.gender || '', yearAppointed: '', yearOrdained: '', yearConsecrated: '', bishop: b.name, group: b.group || '', source: 'photo folder' });
   addedFromFolders++;
 });

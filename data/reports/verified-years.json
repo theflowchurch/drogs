@@ -1,5 +1,5 @@
 {
- "matched": 657,
+ "matched": 647,
  "unmatched": [
   {
    "name": "Freddie Serwadda",
@@ -155,6 +155,15 @@
    "submitted": "10/4/2026 21:32:09"
   },
   {
+   "name": "PHILIP AMOAH LANTEY",
+   "country": "Ghana",
+   "rank": "pastor",
+   "yearAppointed": "2026",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 21:44:11"
+  },
+  {
    "name": "B",
    "country": "Botswana",
    "rank": "pastor",
@@ -227,6 +236,15 @@
    "submitted": "10/4/2026 22:02:48"
   },
   {
+   "name": "MWENDA MACHIMA",
+   "country": "Zambia",
+   "rank": "pastor",
+   "yearAppointed": "2020",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 22:03:47"
+  },
+  {
    "name": "Bwalya",
    "country": "Zambia",
    "rank": "pastor",
@@ -261,6 +279,15 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/4/2026 23:00:03"
+  },
+  {
+   "name": "Isaac Joseph Williams",
+   "country": "Sierra Leonne",
+   "rank": "pastor",
+   "yearAppointed": "2026",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/4/2026 23:14:35"
   },
   {
    "name": "Isaac Moore Woode",
@@ -326,6 +353,15 @@
    "submitted": "10/5/2026 4:25:06"
   },
   {
+   "name": "AYIETLANU TRACEY TANYI",
+   "country": "Cameroon",
+   "rank": "pastor",
+   "yearAppointed": "2021",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 4:28:47"
+  },
+  {
    "name": "David Aji",
    "country": "United Kingdom",
    "rank": "pastor",
@@ -387,6 +423,15 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/5/2026 6:11:25"
+  },
+  {
+   "name": "Elizabeth Esi Mensah",
+   "country": "Cameroon",
+   "rank": "pastor",
+   "yearAppointed": "2021",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 6:15:52"
   },
   {
    "name": "Ama",
@@ -578,6 +623,15 @@
    "submitted": "10/5/2026 9:28:04"
   },
   {
+   "name": "Thomas Mabotja",
+   "country": "Botswana",
+   "rank": "pastor",
+   "yearAppointed": "2021",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 9:31:20"
+  },
+  {
    "name": "Senzesihle Ndlozi",
    "country": "South Africa",
    "rank": "pastor",
@@ -704,6 +758,24 @@
    "submitted": "10/5/2026 10:12:53"
   },
   {
+   "name": "Christopher Ekwuruke",
+   "country": "Germany",
+   "rank": "pastor",
+   "yearAppointed": "2026",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 10:17:55"
+  },
+  {
+   "name": "Jennifer Antwi-Ekwuruke",
+   "country": "Germany",
+   "rank": "pastor",
+   "yearAppointed": "2026",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 10:18:30"
+  },
+  {
    "name": "Alfred Mccarthy",
    "country": "Ghana",
    "rank": "pastor",
@@ -785,6 +857,15 @@
    "submitted": "10/5/2026 12:09:12"
   },
   {
+   "name": "Deborah Best",
+   "country": "Barbados",
+   "rank": "pastor",
+   "yearAppointed": "2024",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 12:25:02"
+  },
+  {
    "name": "Chikombe Basiami",
    "country": "Botswana",
    "rank": "pastor",
@@ -819,6 +900,15 @@
    "yearOrdained": "",
    "yearConsecrated": "",
    "submitted": "10/5/2026 14:03:13"
+  },
+  {
+   "name": "John Amponsah",
+   "country": "Ghana",
+   "rank": "pastor",
+   "yearAppointed": "2022",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 14:08:46"
   },
   {
    "name": "Esther-Natasha Godwyll",

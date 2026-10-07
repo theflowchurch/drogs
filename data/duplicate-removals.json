@@ -2,6 +2,161 @@
  "generated": "2026-10-07",
  "removals": [
   {
+   "id": "P4403",
+   "keep": "P4397",
+   "reason": "same name and birthday as Vivian Gaizer (26 August, age 39) in the office's export"
+  },
+  {
+   "id": "PF544",
+   "keep": "P2087",
+   "reason": "photo-folder spelling of Isaac Nana Kwabena Kwarteng under the same bishop"
+  },
+  {
+   "id": "PF630",
+   "keep": "P2666",
+   "reason": "photo-folder spelling of Kwaku Asiedu-Badu under the same bishop"
+  },
+  {
+   "id": "PF427",
+   "keep": "P854",
+   "reason": "photo-folder spelling of Dave Toe Brown under the same bishop"
+  },
+  {
+   "id": "PF935",
+   "keep": "P14",
+   "reason": "photo-folder spelling of Abel Driyar Nbiem under the same bishop"
+  },
+  {
+   "id": "PF861",
+   "keep": "P2695",
+   "reason": "photo-folder spelling of Kwasi Owusu Afriyie under the same bishop"
+  },
+  {
+   "id": "PF866",
+   "keep": "P3751",
+   "reason": "photo-folder spelling of Richard Ofoe Ametepey under the same bishop"
+  },
+  {
+   "id": "PF743",
+   "keep": "P2192",
+   "reason": "photo-folder spelling of Jasmin Asiedu under the same bishop"
+  },
+  {
+   "id": "PF747",
+   "keep": "P1365",
+   "reason": "photo-folder spelling of Ephraim Nene Kabu Kanor under the same bishop"
+  },
+  {
+   "id": "PF751",
+   "keep": "P4410",
+   "reason": "photo-folder spelling of Walter Mawufemor Awalime under the same bishop"
+  },
+  {
+   "id": "PF828",
+   "keep": "P3200",
+   "reason": "photo-folder spelling of Nana Agyeman Aseidu under the same bishop"
+  },
+  {
+   "id": "PF659",
+   "keep": "P994",
+   "reason": "photo-folder spelling of Divine D-Young Amegadzie under the same bishop"
+  },
+  {
+   "id": "PF660",
+   "keep": "P1512",
+   "reason": "photo-folder spelling of Evans Kofi Essoun under the same bishop"
+  },
+  {
+   "id": "PF563",
+   "keep": "P3331",
+   "reason": "photo-folder spelling of Obed Aseidu Acheampong under the same bishop"
+  },
+  {
+   "id": "PF565",
+   "keep": "P3950",
+   "reason": "photo-folder spelling of Samuel Odoi Aseidu under the same bishop"
+  },
+  {
+   "id": "PF672",
+   "keep": "P245",
+   "reason": "photo-folder spelling of Andrew Nsiah under the same bishop"
+  },
+  {
+   "id": "PF930",
+   "keep": "P1505",
+   "reason": "photo-folder spelling of Evangeline Afua Goodman under the same bishop"
+  },
+  {
+   "id": "PF931",
+   "keep": "P3435",
+   "reason": "photo-folder spelling of Patrick Tawiah Teye under the same bishop"
+  },
+  {
+   "id": "PF763",
+   "keep": "P4071",
+   "reason": "photo-folder spelling of Shirley Aseidu-Addo under the same bishop"
+  },
+  {
+   "id": "PF464",
+   "keep": "P1580",
+   "reason": "photo-folder spelling of Felizardo Abrîo António under the same bishop"
+  },
+  {
+   "id": "PF345",
+   "keep": "P163",
+   "reason": "photo-folder spelling of Alex Eyram Azasoo under the same bishop"
+  },
+  {
+   "id": "PF362",
+   "keep": "P2793",
+   "reason": "photo-folder spelling of Loius Peter Omara under the same bishop"
+  },
+  {
+   "id": "PF142",
+   "keep": "P5053",
+   "reason": "photo-folder spelling of Zyoli Ngandu under the same bishop"
+  },
+  {
+   "id": "PF963",
+   "keep": "P248",
+   "reason": "photo-folder spelling of Andrew Tarumuri Arenadi under the same bishop"
+  },
+  {
+   "id": "PF455",
+   "keep": "P3563",
+   "reason": "photo-folder spelling of Precious Trised Antwi under the same bishop"
+  },
+  {
+   "id": "PF596",
+   "keep": "P2580",
+   "reason": "photo-folder spelling of Kenneth Yanzu under the same bishop"
+  },
+  {
+   "id": "PF695",
+   "keep": "P2969",
+   "reason": "photo-folder spelling of Matilda Korkor Ndzibah under the same bishop"
+  },
+  {
+   "id": "PF696",
+   "keep": "P788",
+   "reason": "photo-folder spelling of Daniel Adusah Appiah under the same bishop"
+  },
+  {
+   "id": "PF697",
+   "keep": "P1475",
+   "reason": "photo-folder spelling of Eugene Anyanume Nartey under the same bishop"
+  },
+  {
+   "id": "PF378",
+   "keep": "P877",
+   "reason": "photo-folder spelling of David Fisayo Oluboye under the same bishop"
+  },
+  {
+   "id": "PF381",
+   "keep": "P2993",
+   "reason": "photo-folder spelling of Mawlie Midzrato under the same bishop"
+  },
+  {
    "id": "P640",
    "keep": "BO38",
    "reason": "same person as Bishop Charles Bonsu (office confirmed)"

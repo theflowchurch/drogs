@@ -44,6 +44,24 @@ for (const list of byBishop.values()) for (let i = 0; i < list.length; i++) for 
   const A = new Set(words(a.name)), B = new Set(words(b.name)); const shared = [...A].filter((w) => B.has(w)).length;
   if (shared >= 2 && (shared === A.size || shared === B.size)) { const [keep, drop] = A.size >= B.size ? [a, b] : [b, a]; if (!removals.some((r) => r.id === drop.id || r.id === keep.id)) removals.push({ id: drop.id, keep: keep.id, reason: `shorter form of ${keep.name} under the same bishop` }); }
 }
+//  4. a pastor known only from a photo folder whose first and last names are a misspelling, transposition or initials
+//     of a roster pastor under the same bishop ("Kwaku Aseidu Badu" ~ "Kwaku Asiedu-Badu", "Isaac N K Kwarteng" ~ "Isaac Nana Kwabena Kwarteng") → the roster record is the person.
+const osa = (a, b) => { const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]); for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) { d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1); } return d[a.length][b.length]; };
+const close = (a, b) => a === b || (a.length <= 2 && b.startsWith(a)) || (b.length <= 2 && a.startsWith(b)) || (Math.min(a.length, b.length) >= 3 && osa(a, b) <= (Math.max(a.length, b.length) >= 5 ? 2 : 1));
+const sameSoul = (a, b) => { const A = words(a), B = words(b); if (A.length < 2 || B.length < 2) return false; if (!close(A[0], B[0]) || !close(A.at(-1), B.at(-1))) return false; const [s, l] = A.length <= B.length ? [A.slice(1, -1), B.slice(1, -1)] : [B.slice(1, -1), A.slice(1, -1)]; const pool = [...l]; return s.every((w) => { const i = pool.findIndex((v) => close(w, v)); if (i < 0) return false; pool.splice(i, 1); return true; }); };
+for (const list of byBishop.values()) for (const a of list.filter((p) => p.source === 'photo folder')) for (const b of list.filter((p) => p.source !== 'photo folder')) {
+  if (removals.some((r) => r.id === a.id || r.id === b.id)) continue;
+  if (sameSoul(a.name, b.name)) removals.push({ id: a.id, keep: b.id, reason: `photo-folder spelling of ${b.name} under the same bishop` });
+}
+//  5. two pastors with exactly the same name whom the office's own export lists twice with the same birthday and age → one person; the richer record stays.
+import { birthRows } from './lib/office-dob.mjs';
+for (const group of byTok.values()) {
+  const live = group.filter((p) => !removals.some((r) => r.id === p.id)); if (live.length < 2) continue;
+  const b = birthRows(live[0].name); if (b.length < 2 || new Set(b.map((x) => `${x.born}|${x.age}`)).size !== 1) continue;
+  const [keep, ...rest] = [...live].sort((a, b) => richness(b) + (b.bishop ? 3 : 0) - richness(a) - (a.bishop ? 3 : 0));
+  for (const d of rest) removals.push({ id: d.id, keep: keep.id, reason: `same name and birthday as ${keep.name} (${b[0].born}, age ${b[0].age}) in the office's export` });
+}
 const file = new URL('../data/duplicate-removals.json', import.meta.url);
 let previous = []; try { previous = JSON.parse(readFileSync(file, 'utf8')).removals || []; } catch {}
 for (const r of previous) if (!removals.some((x) => x.id === r.id)) removals.push(r);
