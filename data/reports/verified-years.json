@@ -344,6 +344,15 @@
    "submitted": "10/5/2026 4:44:47"
   },
   {
+   "name": "Nana Kwaku Bonsu",
+   "country": "Ghana",
+   "rank": "pastor",
+   "yearAppointed": "2021",
+   "yearOrdained": "",
+   "yearConsecrated": "",
+   "submitted": "10/5/2026 5:11:01"
+  },
+  {
    "name": "Biniam",
    "country": "Ethiopia",
    "rank": "reverend",
@@ -1082,15 +1091,6 @@
    "submitted": "10/6/2026 7:56:20"
   },
   {
-   "name": "Emmanuel Nartey Tetteh",
-   "country": "Ghana",
-   "rank": "pastor",
-   "yearAppointed": "2018",
-   "yearOrdained": "",
-   "yearConsecrated": "",
-   "submitted": "10/6/2026 8:36:42"
-  },
-  {
    "name": "Cyrus Opuni-Antwi",
    "country": "Ghana",
    "rank": "pastor",
@@ -1801,6 +1801,12 @@
    "field": "yearAppointed",
    "was": "2016",
    "now": "2015"
+  },
+  {
+   "name": "Emmanuel Quartey",
+   "field": "yearAppointed",
+   "was": "2022",
+   "now": "2018"
   }
  ],
  "kept": [

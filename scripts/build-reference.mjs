@@ -253,6 +253,47 @@ const dupes = JSON.parse(await readFile(new URL('../data/duplicate-removals.json
 const dropIds = new Set();
 for (const d of dupes) { const drop = people.find(p => p.id === d.id), keep = people.find(p => p.id === d.keep); if (!drop || !keep) continue; for (const k of ['image', 'city', 'country', 'yearAppointed', 'yearOrdained', 'bishop', 'branch', 'gender']) if (!keep[k] && drop[k] && !(k === 'bishop' && keep.role === 'bishop')) keep[k] = drop[k]; dropIds.add(d.id); }
 people = people.filter(p => !dropIds.has(p.id));
+// Sheets the bishops filled in and sent back (scripts/import-bishop-sheets.mjs → data/bishop-submissions.json).
+// A submitted sheet is the whole truth for that bishop (Joshua, 7 Oct 2026): the people on it are
+// under them, where the sheet says they are; anyone else we had under them is released to Unclaimed.
+const submissions = JSON.parse(await readFile(new URL('../data/bishop-submissions.json', import.meta.url), 'utf8').catch(() => '[]'));
+const sheetStat = { bishops: 0, kept: 0, moved: 0, added: 0, released: 0, noBishop: [] };
+const ap = (t) => String(t || '').replace(/[’'`]/g, '');
+const alikeOne = (list, name, country) => { if (country) list = list.filter(p => !p.country || normalName(p.country) === normalName(country)); return list.find(p => normalName(ap(p.name)) === normalName(ap(name))) || (() => { const a = list.filter(p => namesAlike(ap(p.name), ap(name))); return a.length === 1 ? a[0] : null; })(); };
+const SHEET_BISHOP_ALIAS = { 'kay francis kwao': 'Kay Francis Quao' }; // the official list's spelling; the sheet's own spelling wins below
+let pbId = 1;
+for (const s of submissions) {
+  const bishopsNow = people.filter(p => p.role === 'bishop');
+  let b = alikeOne(bishopsNow, SHEET_BISHOP_ALIAS[normalName(s.bishop)] || s.bishop);
+  if (b && s.bishopRow && normalName(ap(b.name)) !== normalName(ap(s.bishopRow.name))) { for (const p of people) if (p.role === 'pastor' && normalName(p.bishop || '') === normalName(b.name)) p.bishop = s.bishopRow.name; b.name = s.bishopRow.name; } // the bishop's own spelling
+  if (!b && s.bishopRow) { // a bishop we did not have (e.g. Kay Francis Kwao, Dhaka): the sheet brings him in
+    const org = /^UD /.test(s.group) || /United Denominations/i.test(s.group) ? 'United Denominations' : s.group || 'United Denominations';
+    b = { id: `BS${sheetStat.noBishop.length + 1}`, role: 'bishop', name: s.bishop, title: s.bishopRow.title || 'Bishop', organization: org, denomination: s.denomination || '', denominationLogo: '', city: '', branch: '', country: '', image: '', gender: '', yearAppointed: '', yearOrdained: '', yearConsecrated: '', group: s.group || '', listedPastors: null, source: 'bishop sheet' };
+    people.push(b); sheetStat.noBishop.push(s.bishop);
+  }
+  if (!b) { sheetStat.noBishop.push(s.bishop); continue; }
+  sheetStat.bishops++;
+  if (s.bishopRow) for (const k of ['city', 'country', 'branch', 'gender', 'denomination', 'yearAppointed', 'yearOrdained', 'yearConsecrated']) if (s.bishopRow[k]) b[k] = s.bishopRow[k];
+  const under = () => people.filter(p => p.role === 'pastor' && normalName(p.bishop || '') === normalName(b.name));
+  const onSheet = new Set();
+  for (const r of s.pastors) {
+    let hit = alikeOne(under().filter(p => !onSheet.has(p.id)), r.name) || alikeOne(people.filter(p => p.role === 'pastor' && !onSheet.has(p.id)), r.name, r.country || b.country);
+    if (!hit) { hit = { id: `PB${pbId++}`, role: 'pastor', name: r.name, title: 'Pastor', organization: b.organization, denomination: '', denominationLogo: b.denominationLogo || '', city: '', branch: '', country: '', image: '', gender: '', yearAppointed: '', yearOrdained: '', yearConsecrated: '', bishop: b.name, group: b.group || '', source: 'bishop sheet' }; people.push(hit); sheetStat.added++; }
+    else if (normalName(hit.bishop || '') === normalName(b.name)) sheetStat.kept++; else { sheetStat.moved++; sheetStat.movedList = [...(sheetStat.movedList || []), `${hit.name}: ${hit.bishop || 'no bishop'} → ${b.name}`]; }
+    for (const k of ['title', 'gender', 'denomination', 'branch', 'city', 'country', 'yearAppointed', 'yearOrdained']) if (r[k]) hit[k] = r[k];
+    hit.bishop = b.name; if (b.group) hit.group = b.group; if (!hit.country) hit.country = b.country || ''; if (!hit.denomination) hit.denomination = b.denomination || '';
+    delete hit.unclaimed; onSheet.add(hit.id);
+  }
+  for (const p of under()) if (!onSheet.has(p.id)) { p.bishop = ''; p.unclaimed = `Not on the list Bishop ${b.name} submitted`; sheetStat.released++; }
+}
+if (sheetStat.movedList) console.log('  moved: ' + sheetStat.movedList.join(' · '));
+console.log(`Bishop sheets: ${sheetStat.bishops} bishops · ${sheetStat.kept} pastors confirmed · ${sheetStat.moved} moved under the sheet's bishop · ${sheetStat.added} new · ${sheetStat.released} released to Unclaimed${sheetStat.noBishop.length ? ` · bishops added from their sheet: ${sheetStat.noBishop.join(', ')}` : ''}`);
+// The office says these bishops have nobody under them (Bishop Emmanuel Sakyi, 7 Oct 2026): whoever we had there floats.
+const NO_PASTORS = ['Kenneth Agyei'];
+for (const p of people) if (p.role === 'pastor' && NO_PASTORS.some(n => normalName(n) === normalName(p.bishop || ''))) { p.unclaimed = `Bishop ${p.bishop} has no pastors under him`; p.bishop = ''; }
+// A pastor under no bishop is unclaimed: kept for the office (Review → Unclaimed), off the public roll until a bishop lists them.
+for (const p of people) if (p.role === 'pastor' && !p.bishop) p.unclaimed = p.unclaimed || 'No bishop recorded';
+console.log(`Unclaimed: ${people.filter(p => p.unclaimed).length} pastors under no bishop`);
 // Years the office verified through its Google Form (scripts/verified-years.mjs → data/verified-years.json)
 // overwrite whatever the old roster and export said; what did not match is reported for the office.
 const verified = JSON.parse(await readFile(new URL('../data/verified-years.json', import.meta.url), 'utf8').catch(() => '[]'));

@@ -11,6 +11,7 @@ const COLUMNS = [
   ["role", "Role", (p) => (p.role === "bishop" ? "Bishop" : "Pastor")],
   ["gender", "Gender", (p) => (p.gender === "female" ? "Female" : p.gender === "male" ? "Male" : "")],
   ["bishop", "Bishop in Charge", (p) => (p.role === "pastor" ? p.bishop || "" : "")],
+  ["unclaimed", "Why Unclaimed", (p) => p.unclaimed || ""],
   ["group", "Group", (p) => p.group || orgLabel(p.organization) || ""],
   ["organization", "Organization", (p) => orgLabel(p.organization) || ""],
   ["denomination", "Denomination", (p) => caps(p.denomination)],
@@ -40,12 +41,14 @@ const PRESETS = [
   { label: "Bishops Without a Photo", who: "bishop", only: ["noPhoto"], columns: ["name", "title", "group", "denomination", "place", "phone", "email"] },
   { label: "Not Yet Registered This Year", who: "both", only: ["notRegistered"], columns: ["name", "title", "role", "bishop", "group", "denomination", "place", "phone", "email"] },
   { label: "Contact List", who: "both", only: [], columns: ["name", "title", "role", "bishop", "group", "phone", "email"] },
+  { label: "Unclaimed Pastors (No Bishop)", who: "pastor", only: ["unclaimed"], columns: ["name", "title", "gender", "group", "denomination", "place", "phone", "unclaimed"] },
 ];
 const ONLY = [
   ["missingYears", "Missing a Year Appointed, Ordained or Consecrated", (p) => !p.yearAppointed || (p.role === "bishop" ? !p.yearOrdained || !p.yearConsecrated : p.title === "Rev." && !p.yearOrdained)],
   ["noPhoto", "No Photo on File", (p) => !p.image && !p.registration?.data?.photo],
   ["notRegistered", "Not Yet Registered This Year", (p) => !p.registration],
   ["registered", "Registered This Year", (p) => Boolean(p.registration)],
+  ["unclaimed", "Unclaimed (Under No Bishop)", (p) => Boolean(p.unclaimed)],
   ["noPastors", "Bishops with No Pastors", (p, all) => p.role === "bishop" && !all.some((q) => q.role === "pastor" && q.bishop === p.name)],
 ];
 const csvCell = (v) => { const s = String(v ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };

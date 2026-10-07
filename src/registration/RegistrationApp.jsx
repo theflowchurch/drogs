@@ -904,9 +904,9 @@ export default function RegistrationApp({
                       ? "My profile"
                       : n}
                   </span>
-                  {n === "Review" && scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length + conflicts.length > 0 && (
+                  {n === "Review" && scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length + conflicts.length + unclaimedPeople.length > 0 && (
                     <b>
-                      {scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length + conflicts.length}
+                      {scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length + conflicts.length + unclaimedPeople.length}
                     </b>
                   )}
                 </button>
@@ -1003,7 +1003,7 @@ export default function RegistrationApp({
                           {SUBS[tab].map((v) => (
                             <button key={v} type="button" aria-pressed={view === v} className={view === v ? "active" : ""} onClick={() => setSub({ ...sub, [tab]: v })}>
                               {SUB_LABEL[v] || v}
-                              {v === "Unclaimed" && scoped.filter((r) => r.status === "unclaimed").length > 0 && <b>{scoped.filter((r) => r.status === "unclaimed").length}</b>}
+                              {v === "Unclaimed" && scoped.filter((r) => r.status === "unclaimed").length + unclaimedPeople.length > 0 && <b>{scoped.filter((r) => r.status === "unclaimed").length + unclaimedPeople.length}</b>}
                               {v === "Approvals" && scoped.filter((r) => r.status === "pending").length > 0 && <b>{scoped.filter((r) => r.status === "pending").length}</b>}
                               {v === "Conflicts" && conflicts.length > 0 && <b>{conflicts.length}</b>}
                             </button>
@@ -1014,7 +1014,7 @@ export default function RegistrationApp({
                   </div>
                   {tab === "Communication" && <Communication state={state} run={run} />}
                   {tab === "Denominations" && <div className="reg-settings-list"><Structure state={state} perform={perform} actor={actor} show={["orgs", "groups"]} /></div>}
-                  {tab === "Data" && <DataExport state={state} people={publicPeople} year={Number(year)} />}
+                  {tab === "Data" && <DataExport state={state} people={everyone} year={Number(year)} />}
                   {view === "Accounts" && <Accounts run={run} />}
                   {view === "API keys" && <ApiKeys run={run} />}
                   {view === "Settings" && <Settings run={run} state={state} perform={perform} actor={actor} />}
@@ -1052,6 +1052,7 @@ export default function RegistrationApp({
                   {view === "Unclaimed" && (
                     <ReviewQueue
                       records={scoped.filter((r) => r.status === "unclaimed")}
+                      floating={unclaimedPeople}
                       state={state}
                       perform={perform}
                       actor={actor}
@@ -3282,7 +3283,10 @@ function RosterRowEditor({ row, state, office, perform, onDone }) {
 // Members search the published roster: portrait, name, title, country,
 // denomination, branch and who oversees whom. Contact details and dates of
 // birth are removed before the roster reaches the browser.
-const publicPeople = people.map(({ email, phone, ...rest }) => rest);
+const everyone = people.map(({ email, phone, ...rest }) => rest);
+// Pastors under no bishop (not on any bishop's submitted list) stay off the roll until a bishop names them; the office sees them under Review → Unclaimed.
+const publicPeople = everyone.filter((p) => !p.unclaimed);
+const unclaimedPeople = everyone.filter((p) => p.unclaimed);
 // Pastors whose record names this bishop as overseer (typo-tolerant). A bishop
 // nobody named has no pastors listed; a pastor who named nobody sits under no one.
 const bishopPastors = (bishop, from = publicPeople) => ({
@@ -3660,7 +3664,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
     </>
   );
 }
-function ReviewQueue({ records, state, perform, actor, office, canEdit }) {
+function ReviewQueue({ records, floating = [], state, perform, actor, office, canEdit }) {
   const [filter, setFilter] = useState({ q: "", org: "" }),
     [selectedId, setSelectedId] = useState(null),
     [bishopId, setBishopId] = useState(""),
@@ -3688,9 +3692,34 @@ function ReviewQueue({ records, state, perform, actor, office, canEdit }) {
     ["No match on the list", "unclaimed", shown.filter((r) => !hintsFor(r).length), "Nothing on the bishop’s list resembles these registrations."],
   ];
   const selectedHints = selected ? hintsFor(selected) : [];
+  const q = normalName(filter.q);
+  const floatingShown = floating.filter((p) => (!filter.org || p.organization === filter.org) && (!q || normalName(`${p.name} ${p.denomination} ${p.unclaimed}`).includes(q))).sort(bySurname);
   return (
     <>
       <Filters filter={filter} setFilter={setFilter} />
+      {floatingShown.length > 0 && (
+        <section className="reg-queue-group unclaimed">
+          <h3>
+            Pastors Without A Bishop <b>{floatingShown.length}</b>
+          </h3>
+          <p className="reg-small">On the roll but on no bishop’s list. They stay out of the public directory until a bishop names them on a submitted sheet.</p>
+          <div className="reg-queue">
+            {floatingShown.map((p) => (
+              <div key={p.id} className="reg-queue-row unclaimed">
+                <Portrait person={p} className="reg-avatar small" />
+                <div>
+                  <h3>{p.name}</h3>
+                  <p>
+                    {titleFor(p)} · {p.denomination || orgLabel(p.organization)}{placeOf(p) ? ` · ${placeOf(p)}` : ""}
+                  </p>
+                  <small>{p.unclaimed}</small>
+                </div>
+                <Badge status="unclaimed">No Bishop</Badge>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
       {groups.map(([label, tone, list, help]) =>
         list.length ? (
           <section key={label} className={`reg-queue-group ${tone}`}>
@@ -3733,13 +3762,13 @@ function ReviewQueue({ records, state, perform, actor, office, canEdit }) {
           </section>
         ) : null,
       )}
-      {!records.length && (
+      {!records.length && !floating.length && (
         <Empty title="No unclaimed pastors">
           Pastors who cannot be matched to a bishop’s list will appear here for review.
           <br /><small>Yellow = Possible match · Red = No match found</small>
         </Empty>
       )}
-      {records.length > 0 && !filtered(records, filter).length && (
+      {records.length > 0 && !filtered(records, filter).length && !floatingShown.length && (
         <Empty title="No matching results">
           Try another name or organization.
         </Empty>

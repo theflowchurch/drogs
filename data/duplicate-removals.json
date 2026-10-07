@@ -1,6 +1,71 @@
 {
- "generated": "2026-10-04",
+ "generated": "2026-10-07",
  "removals": [
+  {
+   "id": "P640",
+   "keep": "BO38",
+   "reason": "same person as Bishop Charles Bonsu (office confirmed)"
+  },
+  {
+   "id": "P3214",
+   "keep": "B119",
+   "reason": "same person as Bishop Kwame Adu Gyamfi (office confirmed)"
+  },
+  {
+   "id": "P4713",
+   "keep": "P4120",
+   "reason": "shorter form of Solomon Kwao Mensah under the same bishop"
+  },
+  {
+   "id": "P4938",
+   "keep": "P1960",
+   "reason": "shorter form of Hector Benjamin Hlophe under the same bishop"
+  },
+  {
+   "id": "P4584",
+   "keep": "P2668",
+   "reason": "shorter form of Kwaku Osei Bonsu under the same bishop"
+  },
+  {
+   "id": "P1323",
+   "keep": "P1294",
+   "reason": "shorter form of Emmanuel Kwaku Quansah under the same bishop"
+  },
+  {
+   "id": "P1303",
+   "keep": "P1292",
+   "reason": "shorter form of Emmanuel Kwabena Nartey under the same bishop"
+  },
+  {
+   "id": "P1769",
+   "keep": "P1770",
+   "reason": "shorter form of George Danquah-Damptey under the same bishop"
+  },
+  {
+   "id": "P804",
+   "keep": "P4677",
+   "reason": "shorter form of Daniel Annor Kaku under the same bishop"
+  },
+  {
+   "id": "P2810",
+   "keep": "P4678",
+   "reason": "shorter form of Jacob Louis Josiah under the same bishop"
+  },
+  {
+   "id": "P4122",
+   "keep": "P5082",
+   "reason": "shorter form of Solomon William Moussa under the same bishop"
+  },
+  {
+   "id": "P3139",
+   "keep": "P463",
+   "reason": "shorter form of Bentil E Mohammed under the same bishop"
+  },
+  {
+   "id": "P709",
+   "keep": "P4815",
+   "reason": "shorter form of Claudia Opoku-Sarkodie under the same bishop"
+  },
   {
    "id": "P366",
    "keep": "BO181",
