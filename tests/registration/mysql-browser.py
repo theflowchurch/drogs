@@ -88,9 +88,10 @@ with sync_playwright() as p:
         # Close the registration dialog before managing integration keys.
         page.get_by_role('button',name='Close',exact=True).click()
         page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Settings')).click(); page.get_by_role('button',name='Accounts',exact=True).click()
+        expect(page.get_by_text(re.compile(r'\d+ accounts? · Most recent login first'))).to_be_visible(timeout=15000)  # the first page has loaded before we search
         page.get_by_label('Find an account',exact=True).fill('browser-member@example.com')
         page.get_by_role('button',name='Search',exact=True).click()
-        expect(page.get_by_text('1 matching account',exact=False)).to_be_visible()
+        expect(page.get_by_text('1 matching account',exact=False)).to_be_visible(timeout=15000)
         page.get_by_role('button',name='View logins (1)',exact=True).click()
         expect(page.get_by_role('region',name='Account login history')).to_contain_text('Signed in')
         page.set_viewport_size({'width':390,'height':844})
