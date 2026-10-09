@@ -53,7 +53,7 @@ const latestByBishop = new Map(); const nonList = [];
 const fromFile = (f) => tc(f.replace(/\.xlsx$/, '').replace(/[-_ ]*(\d+|updated|completed|filled|copy|data)\b.*$/i, '').replace(/[-_]/g, ' ').replace(/^(bishop|episcopal sister|espiscopal sister|mother|rev)\s+/i, '').replace(/,.*$/, '').replace(/\(.*?\)/g, '').replace(/\s+(flc|first love|pastors?|jesus is the master|rpi|lsk|tamale north).*$/i, ''));
 for (const s of subs) { const b = findBishop(fromFile(s.file)) || findBishop(s.bishop) || findBishop(s.titleRow || ''); if (!b) { nonList.push(s); continue; } s.bishopRef = b; if (s.bishopRow && findBishop(s.bishopRow.name) && findBishop(s.bishopRow.name) !== b) s.rowBelongsToAnother = s.bishopRow.name; latestByBishop.set(b.listName, s); } // the office named each file after its bishop; a bishop row that names someone else (Lokko's sheet carries Wisdom Ahiagah's row) is not used for details // folders are ordered oldest → newest, so the last wins
 // ---------- 5. Bishops
-const KEEP_OLD_PASTORS = ['Kent Njeru', 'Toss Mills-Odoi']; // not yet submitted: their current lists stay
+const KEEP_OLD_PASTORS = ['Toss Mills-Odoi']; // not yet submitted: his current list stays (Kent Njeru's sheet arrived 9 Oct)
 let newBishopN = 1; const bishops = [];
 for (const b of listBishops) {
   const s = latestByBishop.get(b.listName); const row = s && !s.rowBelongsToAnother ? s.bishopRow : null; const o = b.old;

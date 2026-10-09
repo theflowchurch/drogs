@@ -1,13 +1,13 @@
 {
- "generated": "2026-10-09T16:11:38.164Z",
+ "generated": "2026-10-09T19:05:51.885Z",
  "totals": {
   "bishops": 283,
-  "pastors": 4856,
-  "assigned": 4618,
+  "pastors": 4863,
+  "assigned": 4625,
   "unclaimed": 238,
-  "withPhoto": 4121,
-  "sheets": 270,
-  "bishopsWithSheet": 263,
+  "withPhoto": 4124,
+  "sheets": 272,
+  "bishopsWithSheet": 265,
   "noPastorsSheets": 64
  },
  "noSheet": [
@@ -54,15 +54,6 @@
    "group": "UD Africa",
    "denomination": "Burkina Faso",
    "branch": "Ouagadougou",
-   "hadPastorsBefore": 0
-  },
-  {
-   "id": "BO180",
-   "name": "Harold Befu- Addo",
-   "listName": "Harold Befu- Addo",
-   "group": "Eschatos International",
-   "denomination": "Chile",
-   "branch": "Santiago",
    "hadPastorsBefore": 0
   },
   {
@@ -4858,6 +4849,30 @@
    "place": "Gulu, Uganda"
   },
   {
+   "id": "Se5bd0c1f",
+   "name": "Kristen Bedu-Addo",
+   "bishop": "Harold Befu- Addo",
+   "group": "Eschatos",
+   "denomination": "Eschatos",
+   "place": "Santiago, Chile"
+  },
+  {
+   "id": "S59d278ae",
+   "name": "Catherine Nettey Tamakloe",
+   "bishop": "Harold Befu- Addo",
+   "group": "Eschatos",
+   "denomination": "Eschatos",
+   "place": "Lima, Peru"
+  },
+  {
+   "id": "Sd203b7ea",
+   "name": "Dorothy Nettey Addo",
+   "bishop": "Harold Befu- Addo",
+   "group": "Eschatos",
+   "denomination": "Eschatos",
+   "place": "Lima, Peru"
+  },
+  {
    "id": "Sb5717873",
    "name": "Jason Joseph",
    "bishop": "Henry Asare-Duah",
@@ -5856,6 +5871,134 @@
    "group": "Eschatos",
    "denomination": "Eschatos",
    "place": "Sao Paulo, Brazil"
+  },
+  {
+   "id": "P4727",
+   "name": "Aggie Botchey",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "S60d7924b",
+   "name": "Andrew Kojo Sarbeng",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "P4730",
+   "name": "Azenoza Osazae",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Coventry, United Kingdom"
+  },
+  {
+   "id": "P4735",
+   "name": "Christiana Idowu",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "Sb3843009",
+   "name": "Clive Hart",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "P4737",
+   "name": "David Ajigbolamu",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Oxford, United Kingdom"
+  },
+  {
+   "id": "P4740",
+   "name": "Emmanuel Ofori-Attah",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Northampton, United Kingdom"
+  },
+  {
+   "id": "S7dbedfd6",
+   "name": "Frederick Serwadda",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Birmingham, United Kingdom"
+  },
+  {
+   "id": "P4745",
+   "name": "Jennifer Burland",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "P4749",
+   "name": "Kayla Aryee",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "P4753",
+   "name": "Michael Olatunji",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "P4758",
+   "name": "Prosper Chapu-Napor",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "S3cd8eae7",
+   "name": "Robert Cann",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "P4759",
+   "name": "Rochelle Nissin Quainoo",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "P4761",
+   "name": "Trishan Burland",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "P4766",
+   "name": "Verity Adusei",
+   "bishop": "Kent Njeru",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "London, United Kingdom"
   },
   {
    "id": "P1518",
@@ -8450,126 +8593,6 @@
    "place": ""
   },
   {
-   "id": "P4727",
-   "name": "Aggie Botchey",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4730",
-   "name": "Azenoza Osazae",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4735",
-   "name": "Christiana Idowu",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4737",
-   "name": "David Ajigbolamu",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4738",
-   "name": "Elizabeth Tialobi",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4740",
-   "name": "Emmanuel Ofori-Attah",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4745",
-   "name": "Jennifer Burland",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4749",
-   "name": "Kayla Aryee",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4763",
-   "name": "Lois Mills-Odoi",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4753",
-   "name": "Michael Olatunji",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4756",
-   "name": "Oreoluwa Adeyemi",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4758",
-   "name": "Prosper Chapu-Napor",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4759",
-   "name": "Rochelle Nissin Quainoo",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4761",
-   "name": "Trishan Burland",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
-   "id": "P4766",
-   "name": "Verity Adusei",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love",
-   "place": "Uk"
-  },
-  {
    "id": "P881",
    "name": "David Kyeremeh Okrah",
    "bishop": "Toss Mills-Odoi",
@@ -8604,6 +8627,6 @@
  ],
  "photos": {
   "fromFolders": 109,
-  "converted": 2
+  "converted": 0
  }
 }
