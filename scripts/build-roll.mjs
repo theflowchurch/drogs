@@ -122,7 +122,9 @@ const commonest = (list) => [...list.reduce((m, x) => m.set(x, (m.get(x) || 0) +
 const layPresidents = [];
 for (const s of nonList.filter((x) => layNames.some((n) => key(n) === key(x.bishop) || namesAlike(n, x.bishop)))) {
   const own = s.pastors.find((r) => key(r.name) === key(s.bishop)); const rows = s.pastors.filter((r) => r !== own);
-  const den = s.denomination || commonest(rows.map((r) => r.denomination).filter(Boolean)); const group = s.group || groupByDen.get(denKey(den)) || '';
+  const den = s.denomination || commonest(rows.map((r) => r.denomination).filter(Boolean)); const country = commonest(rows.map((r) => r.country).filter(Boolean));
+  const REGION = { 'united states': 'UD North America', canada: 'UD North America', switzerland: 'UD Europe', germany: 'UD Europe', 'united kingdom': 'UD Europe', italy: 'UD Europe', spain: 'UD Europe', france: 'UD Europe', belgium: 'UD Europe', netherlands: 'UD Europe', ghana: 'UD Ghana' };
+  const group = s.group || groupByDen.get(denKey(den)) || REGION[key(country)] || '';
   const o = oldPastorsByKey.get(key(s.bishop))?.[0];
   const lp = { id: o?.id || `LP${layPresidents.length + 1}`, role: 'bishop', title: 'Lay President', lay: true, name: s.bishop, organization: orgOfGroup(group || 'UD Ghana', {}), denomination: canonDen(group, den) || den, denominationLogo: '', city: own?.city || commonest(rows.map((r) => r.city).filter(Boolean)), branch: own?.branch || '', country: own?.country || commonest(rows.map((r) => r.country).filter(Boolean)), image: o?.image || '', gender: own?.gender || 'male', yearAppointed: own?.yearAppointed || '', yearOrdained: own?.yearOrdained || '', yearConsecrated: '', group, sheet: { file: s.file, folder: s.folder, noPastors: false, rows: rows.length } };
   bishops.push(lp); layPresidents.push(lp); s.lay = lp;
