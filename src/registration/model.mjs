@@ -148,6 +148,38 @@ export const pauseFor = (state, entrance) => { const s = signupOf(state); return
 // Groups sit between an organization and its denominations (UD Ghana, UD Africa,
 // United Islands…). A person's group is the one on their record, else the group
 // that lists their denomination.
+// After a new roll is built, the office's saved structure and record corrections are brought in line with it
+// (run once per roll by the server at start-up): every denomination the roll uses is in the structure, each
+// United Denominations group lists what its bishops and pastors use, corrections to fields that the sheets now
+// decide are dropped (uploaded photos and deletions stay), and hidden ids that no longer exist are forgotten.
+export function syncRoll(state, people, version) {
+  if (state.rollSync === version) return null;
+  const saved = state.catalog?.organizations?.length ? state.catalog : null;
+  const organizations = [...new Set([...ORGANIZATIONS, ...(saved?.organizations || [])])];
+  const denominations = {};
+  for (const o of organizations) denominations[o] = new Set([...(DENOMINATIONS[o] || []), ...((saved?.denominations || {})[o] || [])]);
+  const groups = {};
+  for (const [name, g] of Object.entries({ ...(saved?.groups || {}), ...GROUPS })) groups[name] = { organization: g.organization, denominations: new Set([...((saved?.groups || {})[name]?.denominations || []), ...(GROUPS[name]?.denominations || [])]) };
+  for (const p of people) {
+    if (!p.denomination || !p.organization) continue;
+    if (!denominations[p.organization]) { organizations.push(p.organization); denominations[p.organization] = new Set(); }
+    if (p.organization !== "FLOW" && p.organization !== "HJC") denominations[p.organization].add(p.denomination);
+    if (p.group && groups[p.group]) groups[p.group].denominations.add(p.denomination);
+  }
+  const ids = new Set(people.map((p) => p.id));
+  const overrides = {};
+  for (const [id, o] of Object.entries(state.overrides || {})) { if (!ids.has(id)) continue; const keep = Object.fromEntries(Object.entries(o).filter(([k]) => k === "photo" || k === "deleted")); if (Object.keys(keep).length) overrides[id] = keep; }
+  const next = {
+    ...state,
+    catalog: { organizations, denominations: Object.fromEntries(Object.entries(denominations).map(([o, d]) => [o, [...d].sort((a, b) => a.localeCompare(b))])), groups: Object.fromEntries(Object.entries(groups).map(([n, g]) => [n, { organization: g.organization, denominations: [...g.denominations].sort((a, b) => a.localeCompare(b)) }])), logos: { ...LOGOS, ...(saved?.logos || {}) } },
+    overrides,
+    hidden: (state.hidden || []).filter((id) => ids.has(id)),
+    rollSync: version,
+  };
+  const dropped = Object.keys(state.overrides || {}).length - Object.keys(overrides).length + Object.values(state.overrides || {}).filter((o, i) => overrides[Object.keys(state.overrides || {})[i]] && Object.keys(o).length !== Object.keys(overrides[Object.keys(state.overrides || {})[i]]).length).length;
+  next.audit = [...state.audit, { id: crypto.randomUUID(), actor: "system", at: new Date().toISOString(), action: "rollSync", detail: { version, corrections: dropped, denominations: Object.values(next.catalog.denominations).reduce((n, d) => n + d.length, 0) } }];
+  return next;
+}
 export const catalogOf = (state) => {
   if (!state?.catalog?.organizations?.length) return { organizations: ORGANIZATIONS, denominations: DENOMINATIONS, groups: GROUPS, logos: LOGOS };
   // The office's saved groups are the truth; nothing is added or repaired behind their back.
@@ -1247,7 +1279,8 @@ export const PASTOR_TITLES = ["Pastor", "Rev.", "Lady Rev."];
 export const BISHOP_TITLES_FEMALE = ["Mother", "Episcopal Sister"];
 // Lay Presidents (office, 9 Oct 2026): not bishops, but they have pastors under them, so they sit with the bishops — last.
 export const isLay = (p) => p?.title === "Lay President";
-export const byRank = (a, b) => (isLay(a) ? 1 : 0) - (isLay(b) ? 1 : 0) || bySurname(a, b);
+export const byRank = (a, b) => (isLay(a) ? 1 : 0) - (isLay(b) ? 1 : 0) || bySurname(a, b); // bishops first, lay presidents last
+export const byOversight = (a, b) => (isLay(b) ? 1 : 0) - (isLay(a) ? 1 : 0) || bySurname(a, b); // lay presidents first: they oversee pastors too
 export function titleFor({ role, gender, organization, title }) {
   if (title === "Lay President") return title;
   if (role !== "bishop") return title === "Rev." || (title === "Lady Rev." && gender === "female") ? title : "Pastor";

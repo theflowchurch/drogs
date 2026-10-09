@@ -22,6 +22,15 @@ if (!dev) {
 const config = configuration();
 const pool = createPool(config);
 await migrate(pool); // idempotent: creates any missing dr_ tables
+// A new roll (src/registration/reference-people.json) brings the office's saved structure and corrections in line with it, once.
+{
+  const { createHash } = await import('node:crypto'); const { readFile } = await import('node:fs/promises');
+  const { syncRoll } = await import('../src/registration/model.mjs'); const { transaction, readState, persistState } = await import('../src/server/database.mjs');
+  const raw = await readFile(new URL('../src/registration/reference-people.json', import.meta.url), 'utf8');
+  const version = createHash('sha1').update(raw).digest('hex').slice(0, 12);
+  try { await transaction(pool, async (conn) => { const before = await readState(conn, true); const after = syncRoll(before, JSON.parse(raw), version); if (after) { await persistState(conn, before, after); console.log(`Roll ${version}: structure and corrections aligned with the new roll`); } }); }
+  catch (error) { console.error('Roll sync failed', error.message); }
+}
 await pool.query('SELECT current_year FROM dr_settings WHERE id=1');
 await applySettings(config, pool); // saved settings (office emails included) apply before anything acts on them
 if (await launchReset(pool, config)) console.log('Launch reset applied: member accounts and records cleared; original data, structure and settings kept.');

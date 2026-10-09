@@ -29,6 +29,7 @@ import {
   normalName,
   isLay,
   byRank,
+  byOversight,
   namesAlike,
   nearMatches,
   dobClose,
@@ -1397,6 +1398,7 @@ const ACTION_LABELS = {
                   hideReference: "Original record hidden or shown",
                   deleteReference: "Original record deleted or restored",
                   setCatalog: "Organizations and denominations changed",
+                  rollSync: "Structure and records aligned with the new roll",
                   setFees: "Fees changed",
                   setSignup: "Sign-up paused or reopened",
                   broadcast: "Email sent to members",
@@ -2877,7 +2879,6 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
           <div className="reg-switch" role="group" aria-label="Role">
             {[
               ["bishop", "Bishops"],
-            ["lay", "Lay Presidents"],
               ["pastor", "Pastors"],
             ].map(([value, label]) => (
               <button
@@ -3425,7 +3426,6 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
         <div className="reg-doors-grid">
           {[
             ["bishop", "Bishops"],
-            ["lay", "Lay Presidents"],
             ["pastor", "Pastors"],
           ].map(([value, label]) => (
             <button key={value} className="reg-door" onClick={() => setRole(value)}>
@@ -3554,7 +3554,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
   }, [roll, index]);
   const grouped = useMemo(() => {
     if (role !== "pastor" || filtering) return null;
-    const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(byRank).map((p, i) => ({ ...p, n: i + 1 }));
+    const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(byOversight).map((p, i) => ({ ...p, n: i + 1 })); // lay presidents first (they oversee), then the bishops
     const taken = new Set(), blocks = [];
     for (const b of bishopsSorted) {
       const list = pastorsUnder(b, byBishop).filter((q) => !taken.has(q.id)).sort(bySurname);
@@ -3583,7 +3583,6 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
       {switcher && <div className="reg-toggle" role="group" aria-label="Bishops or pastors">
         {[
           ["bishop", "Bishops"],
-            ["lay", "Lay Presidents"],
           ["pastor", "Pastors"],
         ].map(([value, label]) => (
           <button
