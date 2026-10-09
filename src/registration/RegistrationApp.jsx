@@ -3479,7 +3479,7 @@ function SearchResults({ list, q }) {
 }
 // Bishops are pastors too, so the pastors' list carries everyone; the bishops' list only bishops.
 const inRole = (p, role) => (role === "lay" ? isLay(p) : role === "pastor" || p.role === role);
-const countRole = (list, role) => list.filter((p) => inRole(p, role) && !(role === "bishop" && isLay(p))).length; // lay presidents are not counted among the bishops
+const countRole = (list, role) => list.filter((p) => (role === "lay" ? isLay(p) : p.role === role && !isLay(p))).length; // lay presidents are counted on their own, never among the bishops
 // The pastors shown under a bishop: the list they uploaded this year (lit once registered with a photo), then pastors whose record names them.
 const pastorsUnder = (b, byBishop) => {
   const uploaded = (b.pastors || []).map((q) => ({ id: q.id, role: "pastor", name: q.name, photo: q.photo || "", image: "", city: q.city || "", country: q.country || "", standing: Boolean(q.registered && q.photo), bishop: b.name }));

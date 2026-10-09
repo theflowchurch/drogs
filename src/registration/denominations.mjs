@@ -8,6 +8,7 @@ export const DENOMINATIONS = {
     "Bénédiction Totale",
     "Mustard Seed Chapel International",
     "Qodesh Family Church",
+    "Qodesh City Church",
   ],
   "United Denominations": [
     "1000 Micro Church Network International",

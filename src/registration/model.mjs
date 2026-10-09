@@ -182,11 +182,10 @@ export function groupOf(catalog, person) {
   if (person?.group) return person.group;
   const want = denominationKey(person?.denomination || "");
   if (!want) return "";
-  for (const [name, g] of Object.entries(catalog?.groups || {})) {
-    if (g.organization && person.organization && g.organization !== person.organization) continue;
-    if (denominationKey(name) === want) return name; // Eschatos is a group and a denomination at once
-    if ((g.denominations || []).some((d) => { const k = denominationKey(d); return k && (k === want || want.startsWith(k) || k.startsWith(want)); })) return name;
-  }
+  const groups = Object.entries(catalog?.groups || {}).filter(([, g]) => !(g.organization && person.organization && g.organization !== person.organization));
+  // An exact name anywhere wins before any prefix match: "The Mega Church – Grace Chapel" is its own denomination, not The Mega Church.
+  for (const [name, g] of groups) if (denominationKey(name) === want || (g.denominations || []).some((d) => denominationKey(d) === want)) return name;
+  for (const [name, g] of groups) if ((g.denominations || []).some((d) => { const k = denominationKey(d); return k && (want.startsWith(k + " ") || k.startsWith(want + " ")); })) return name;
   return "";
 }
 // The office's structure (organizations → groups → denominations, kept in the Denominations

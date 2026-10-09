@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-09T20:21:24.014Z",
+ "generated": "2026-10-09T21:30:17.881Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
@@ -2069,7 +2069,7 @@
    "claims": [
     {
      "bishop": "Glen Kwame Opoku",
-     "group": "UD Ghana",
+     "group": "First Love",
      "file": "Bishop Glen Kwame Opoku.xlsx",
      "folder": "Bishop submitted sheets (9 Oct 2026)",
      "row": 97,
@@ -2118,7 +2118,7 @@
    "claims": [
     {
      "bishop": "Glen Kwame Opoku",
-     "group": "UD Ghana",
+     "group": "First Love",
      "file": "Bishop Glen Kwame Opoku.xlsx",
      "folder": "Bishop submitted sheets (9 Oct 2026)",
      "row": 153,
@@ -2143,7 +2143,7 @@
     },
     {
      "bishop": "Joojo Stephens",
-     "group": "UD Ghana",
+     "group": "First Love",
      "file": "Bishop Jojo Stephens Ofori-Addo.xlsx",
      "folder": "Bishop submitted sheets (9 Oct 2026)",
      "row": 9,
@@ -2174,7 +2174,7 @@
    "claims": [
     {
      "bishop": "Glen Kwame Opoku",
-     "group": "UD Ghana",
+     "group": "First Love",
      "file": "Bishop Glen Kwame Opoku.xlsx",
      "folder": "Bishop submitted sheets (9 Oct 2026)",
      "row": 154,
@@ -2199,7 +2199,7 @@
     },
     {
      "bishop": "Joojo Stephens",
-     "group": "UD Ghana",
+     "group": "First Love",
      "file": "Bishop Jojo Stephens Ofori-Addo.xlsx",
      "folder": "Bishop submitted sheets (9 Oct 2026)",
      "row": 8,
@@ -2280,7 +2280,7 @@
    "claims": [
     {
      "bishop": "Glen Kwame Opoku",
-     "group": "UD Ghana",
+     "group": "First Love",
      "file": "Bishop Glen Kwame Opoku.xlsx",
      "folder": "Bishop submitted sheets (9 Oct 2026)",
      "row": 160,
@@ -2305,7 +2305,7 @@
     },
     {
      "bishop": "Joojo Stephens",
-     "group": "UD Ghana",
+     "group": "First Love",
      "file": "Bishop Jojo Stephens Ofori-Addo.xlsx",
      "folder": "Bishop submitted sheets (9 Oct 2026)",
      "row": 7,
@@ -2524,7 +2524,7 @@
    "name": "Bennedict Kinsman",
    "bishop": "Jude Orraca-Tetteh",
    "group": "UD Ghana",
-   "denomination": "The Glorious Church",
+   "denomination": "The Glorious Mega Church",
    "place": "Accra, Ghana"
   },
   {
@@ -2931,7 +2931,7 @@
    "id": "P4698",
    "name": "Albert Paa Kwesi Mensah",
    "bishop": "Benjamin Fiadonu",
-   "group": "first love",
+   "group": "First Love",
    "denomination": "First Love Church",
    "place": "Accra, Ghana"
   },
@@ -2939,8 +2939,8 @@
    "id": "Scc751a83",
    "name": "Caroline Afua Fabin",
    "bishop": "Benjamin Fiadonu",
-   "group": "first love",
-   "denomination": "First Love",
+   "group": "First Love",
+   "denomination": "First Love Church",
    "place": "Accra, Ghana"
   },
   {
@@ -3812,7 +3812,7 @@
    "name": "Joseph Amponsah",
    "bishop": "Eric Kobina Asare",
    "group": "UD Ghana",
-   "denomination": "The Glorious Church",
+   "denomination": "The Glorious Mega Church",
    "place": "Accra, Ghana"
   },
   {
@@ -3820,7 +3820,7 @@
    "name": "Dede Asare",
    "bishop": "Eric Kobina Asare",
    "group": "UD Ghana",
-   "denomination": "The Glorious Church",
+   "denomination": "The Glorious Mega Church",
    "place": "Accra, Ghana"
   },
   {
@@ -3828,7 +3828,7 @@
    "name": "Prince Ebo Yamoah",
    "bishop": "Eric Kobina Asare",
    "group": "UD Ghana",
-   "denomination": "The Glorious Church",
+   "denomination": "The Glorious Mega Church",
    "place": "Accra, Ghana"
   },
   {
@@ -3836,7 +3836,7 @@
    "name": "Richard Adams Adubofour",
    "bishop": "Eric Kobina Asare",
    "group": "UD Ghana",
-   "denomination": "The Glorious Church",
+   "denomination": "The Glorious Mega Church",
    "place": "Accra, Ghana"
   },
   {
@@ -4323,152 +4323,152 @@
    "id": "P3519",
    "name": "Phebemary Makafui Adodo-Samani",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P19",
    "name": "Abena Okyerebea Adu-Labi",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P2695",
    "name": "Kwasi Owusu Afriyie",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P3751",
    "name": "Richard Ofoe Ametepey",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P1109",
    "name": "Edward Adama Armah",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P3820",
    "name": "Rogatta Antwi Baadu",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P511",
    "name": "Bismark Nartey Blebo",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P3744",
    "name": "Richard Kweku Boamah",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P64",
    "name": "Adelaide Crenstil",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P1980",
    "name": "Henry Nii Ofei Dodoo",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P2585",
    "name": "Kevin Ataa Nii Sowah Mensah",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P2678",
    "name": "Kwame Ansah Boadi Nwanwah",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P872",
    "name": "David Dag Kweku Osei-Sarfo",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P1140",
    "name": "Efua Bedua Sompa-Osei",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "P1405",
    "name": "Eric Ofori Yeboah",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "Sf916d742",
    "name": "Isaac Nii Bonney Mensah",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "Sacc75339",
    "name": "Benjamin Djaafo Lartey",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "Sc8a92604",
    "name": "Samuel Crabbe",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
    "id": "S840a472d",
    "name": "David Ofosu",
    "bishop": "Glen Kwame Opoku",
-   "group": "UD Ghana",
-   "denomination": "Qodesh City Churches",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
@@ -4668,7 +4668,7 @@
    "name": "Elliott Mawuko Sallah",
    "bishop": "Joy Bruce",
    "group": "First Love",
-   "denomination": "Firstlove",
+   "denomination": "First Love Church",
    "place": "Kumasi, Ghana"
   },
   {
@@ -5052,7 +5052,7 @@
    "name": "Rita Haha",
    "bishop": "John Boffah",
    "group": "United Islands",
-   "denomination": "United Cities",
+   "denomination": "United Islands",
    "place": "Lae, Morobe Province, Papua New Guinea"
   },
   {
@@ -5060,7 +5060,7 @@
    "name": "Emmanuel Moli",
    "bishop": "John Boffah",
    "group": "United Islands",
-   "denomination": "United Cities",
+   "denomination": "United Islands",
    "place": "Jiwaka Province, Papua New Guinea"
   },
   {
@@ -5068,7 +5068,7 @@
    "name": "Kila Sarea",
    "bishop": "John Boffah",
    "group": "United Islands",
-   "denomination": "United Cities",
+   "denomination": "United Islands",
    "place": "Jiwaka Province, Papua New Guinea"
   },
   {
@@ -6340,7 +6340,7 @@
    "name": "Barbara Naadu Mensah",
    "bishop": "Nassib Hage",
    "group": "Reasonable Service",
-   "denomination": "The Mega Church",
+   "denomination": "The Mega Church – Nachal Cathedral",
    "place": "Kumasi, Ghana"
   },
   {
@@ -6452,7 +6452,7 @@
    "name": "William Mawunyo Agbo",
    "bishop": "Patrick Bruce",
    "group": "Reasonable Service",
-   "denomination": "Reasonable Service Churches",
+   "denomination": "The Mega Church – Grace Chapel",
    "place": "Kumasi, Ghana"
   },
   {
@@ -6460,7 +6460,7 @@
    "name": "Akwasi Appau Sakyi",
    "bishop": "Patrick Bruce",
    "group": "Reasonable Service",
-   "denomination": "Reasonable Service Churches",
+   "denomination": "The Mega Church – Grace Chapel",
    "place": "Kumasi, Ghana"
   },
   {
@@ -6468,7 +6468,7 @@
    "name": "Adwoa Pokua Boakye-Yiadom",
    "bishop": "Patrick Bruce",
    "group": "Reasonable Service",
-   "denomination": "Reasonable Service Churches",
+   "denomination": "The Mega Church – Grace Chapel",
    "place": "Kumasi, Ghana"
   },
   {
@@ -6476,7 +6476,7 @@
    "name": "Charity Cordelia Akweley Agbo",
    "bishop": "Patrick Bruce",
    "group": "Reasonable Service",
-   "denomination": "Reasonable Service Churches",
+   "denomination": "The Mega Church – Grace Chapel",
    "place": "Kumasi, Ghana"
   },
   {
@@ -7084,7 +7084,7 @@
    "name": "Stella Wiselyn Dogoe",
    "bishop": "Selasy Mcsaint",
    "group": "UD Ghana",
-   "denomination": "The Makarios Church",
+   "denomination": "Makarios City Churh",
    "place": "Tema, Ghana"
   },
   {
@@ -7100,14 +7100,14 @@
    "name": "Jonathan Ogbarmey",
    "bishop": "Selasy Mcsaint",
    "group": "UD Ghana",
-   "denomination": "The Makarios Church",
+   "denomination": "Makarios City Churh",
    "place": "Accra, Ghana"
   },
   {
    "id": "P1369",
    "name": "Eric Asante",
    "bishop": "Sena Agyepong",
-   "group": "UD Europe",
+   "group": "First Love",
    "denomination": "First Love Church",
    "place": "Basingstoke, United Kingdom"
   },
@@ -7115,7 +7115,7 @@
    "id": "S750d5694",
    "name": "Nana Bompeh Asare",
    "bishop": "Sena Agyepong",
-   "group": "UD Europe",
+   "group": "First Love",
    "denomination": "First Love Church",
    "place": "Bournemouth, United Kingdom"
   },
@@ -7123,7 +7123,7 @@
    "id": "S051673ca",
    "name": "George Nimfour",
    "bishop": "Sena Agyepong",
-   "group": "UD Europe",
+   "group": "First Love",
    "denomination": "First Love Church",
    "place": "High Wycombe, United Kingdom"
   },
@@ -7131,7 +7131,7 @@
    "id": "P4321",
    "name": "Tina Brako-Asamoah",
    "bishop": "Sena Agyepong",
-   "group": "UD Europe",
+   "group": "First Love",
    "denomination": "First Love Church",
    "place": "Portsmouth, United Kingdom"
   },
@@ -7139,7 +7139,7 @@
    "id": "P364",
    "name": "Augustus Brako-Asamoah",
    "bishop": "Sena Agyepong",
-   "group": "UD Europe",
+   "group": "First Love",
    "denomination": "First Love Church",
    "place": "Southampton, United Kingdom"
   },
@@ -7147,7 +7147,7 @@
    "id": "S5acc7307",
    "name": "George Sam Brew",
    "bishop": "Sena Agyepong",
-   "group": "UD Europe",
+   "group": "First Love",
    "denomination": "First Love Church",
    "place": "Southampton, United Kingdom"
   },
@@ -7155,7 +7155,7 @@
    "id": "S962a2629",
    "name": "Gina Spencer",
    "bishop": "Sena Agyepong",
-   "group": "UD Europe",
+   "group": "First Love",
    "denomination": "First Love Church",
    "place": "Southampton, United Kingdom"
   },
@@ -7163,7 +7163,7 @@
    "id": "P3810",
    "name": "Robert Quansah",
    "bishop": "Sena Agyepong",
-   "group": "UD Europe",
+   "group": "First Love",
    "denomination": "First Love Church",
    "place": "Tidworth, United Kingdom"
   },
@@ -7171,7 +7171,7 @@
    "id": "S82018e8a",
    "name": "Vivan Quansah",
    "bishop": "Sena Agyepong",
-   "group": "UD Europe",
+   "group": "First Love",
    "denomination": "First Love Church",
    "place": "Tidworth, United Kingdom"
   },
@@ -7348,7 +7348,7 @@
    "name": "Joshua Mark Harry",
    "bishop": "Victor Collins Asabere",
    "group": "United Islands",
-   "denomination": "United Cities",
+   "denomination": "United Islands",
    "place": "Paramaribo, Suriname"
   },
   {
@@ -7356,7 +7356,7 @@
    "name": "Godfrey Michael Richmond",
    "bishop": "Victor Collins Asabere",
    "group": "United Islands",
-   "denomination": "United Cities",
+   "denomination": "United Islands",
    "place": "Paramaribo, Suriname"
   },
   {
@@ -7364,7 +7364,7 @@
    "name": "Nalisa Violet Richmond",
    "bishop": "Victor Collins Asabere",
    "group": "United Islands",
-   "denomination": "United Cities",
+   "denomination": "United Islands",
    "place": "Paramaribo, Suriname"
   },
   {
@@ -7372,7 +7372,7 @@
    "name": "Akeema Tondica Harry",
    "bishop": "Victor Collins Asabere",
    "group": "United Islands",
-   "denomination": "United Cities",
+   "denomination": "United Islands",
    "place": "Paramaribo, Suriname"
   },
   {
@@ -7524,7 +7524,7 @@
    "name": "Nana Osei Poku",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Amanfrom, Ghana"
   },
   {
@@ -7532,7 +7532,7 @@
    "name": "Randy Benjamin Oppong",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Tuba, Ghana"
   },
   {
@@ -7540,7 +7540,7 @@
    "name": "Archibald Ayerteye Nubuor",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Kasoa Cp, Ghana"
   },
   {
@@ -7548,7 +7548,7 @@
    "name": "Curtis Dela Kumi",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Achiaman, Amasaman, Ghana"
   },
   {
@@ -7556,7 +7556,7 @@
    "name": "Diana Adaboh",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Broadcasting Last Stop, Ghana"
   },
   {
@@ -7564,7 +7564,7 @@
    "name": "Ernesto Quaye",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Kokrobite - Langma, Ghana"
   },
   {
@@ -7572,7 +7572,7 @@
    "name": "Sammy Danquah",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Bortianor, Ghana"
   },
   {
@@ -7580,7 +7580,7 @@
    "name": "Henry Nettey",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Block Factory, Ghana"
   },
   {
@@ -7588,7 +7588,7 @@
    "name": "Mary Sarpei",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Congo Villa, Ghana"
   },
   {
@@ -7596,7 +7596,7 @@
    "name": "Ralph Hadjah",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Broadcasting- Sackey Area, Ghana"
   },
   {
@@ -7604,7 +7604,7 @@
    "name": "Josephine Nana Serwah Asare Danquah",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Bortianor, Ghana"
   },
   {
@@ -7612,7 +7612,7 @@
    "name": "Priscilla Oppong",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Tuba, Ghana"
   },
   {
@@ -7620,7 +7620,7 @@
    "name": "Sophia Armaa Blay",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Kasoa Cp, Ghana"
   },
   {
@@ -7628,7 +7628,7 @@
    "name": "Samuel Sarpei",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Kasoa Congo Villa, Ghana"
   },
   {
@@ -7636,7 +7636,7 @@
    "name": "Jospeh Damali",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Broadcasting Junction, Ghana"
   },
   {
@@ -7644,7 +7644,7 @@
    "name": "Augustina Aryee",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Kasoa Cp, Ghana"
   },
   {
@@ -7652,7 +7652,7 @@
    "name": "Paul Ayi",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "17,swamp Groove Avenue, Ghana"
   },
   {
@@ -7660,7 +7660,7 @@
    "name": "Richard Sadaya",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Nsawam, Ghana"
   },
   {
@@ -7668,7 +7668,7 @@
    "name": "Richard Ato Kwamena Biney",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Ablekuma, Ghana"
   },
   {
@@ -7676,7 +7676,7 @@
    "name": "Patrick Aryeetey",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Kasoa Akweley Hno Bt535/10, Ghana"
   },
   {
@@ -7684,7 +7684,7 @@
    "name": "Alfred Ofoe Mccarthy",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Tuba, Ghana"
   },
   {
@@ -7692,7 +7692,7 @@
    "name": "Enoch Ansah Ardey",
    "bishop": "Isaac Koranteng",
    "group": "First Love",
-   "denomination": "First Love",
+   "denomination": "First Love Church",
    "place": "Old Bortianor, Ghana"
   },
   {
@@ -7952,7 +7952,7 @@
    "place": "Takoradi, Ghana"
   },
   {
-   "id": "Scf04bc98",
+   "id": "Scf04bc98-c685",
    "name": "Rosemary Sinta",
    "bishop": "Geraldo Amoa",
    "group": "First Love",
@@ -7960,7 +7960,7 @@
    "place": "Lusaka, Zambia"
   },
   {
-   "id": "S893cce89",
+   "id": "S893cce89-1c64",
    "name": "Jayson Quarshie",
    "bishop": "Joshua Heward-Mills",
    "group": "First Love",
@@ -7968,11 +7968,11 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "PN919a6ce63625",
+   "id": "Sc06bce1f",
    "name": "Emmanuel Narteh Ayiku",
    "bishop": "Joy Bruce",
    "group": "First Love",
-   "denomination": "Firstlove Church",
+   "denomination": "First Love Church",
    "place": "Kumasi, Ghana"
   },
   {
@@ -8266,6 +8266,6 @@
  ],
  "photos": {
   "fromFolders": 109,
-  "converted": 0
+  "converted": 4
  }
 }
