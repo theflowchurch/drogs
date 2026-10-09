@@ -218,6 +218,30 @@
    "winner": "Steve Asare",
    "losers": [],
    "source": "Fabin 14:55 'Winifred is with Bishop Steve' (which Winifred to be confirmed when the sheets are read)"
+  },
+  {
+   "name": "David Okine",
+   "winner": "Daniel Harlley",
+   "losers": [
+    "Jude Orraca-Tetteh"
+   ],
+   "source": "Bishop Jake Godwyll 13:10: David Okine is in South Africa under Daniel Harley"
+  },
+  {
+   "name": "Philip Asare",
+   "winner": "Steve Asare",
+   "losers": [
+    "Richard Afenyo Tsaku"
+   ],
+   "source": "Sakyi 14:21: Philp Asare - Bishop Steve"
+  },
+  {
+   "name": "Darius Phiri",
+   "winner": "Nely Nina Masuku",
+   "losers": [
+    "Benjamin Fiadonu"
+   ],
+   "source": "Joshua 9 Oct: Darius is supposed to be under Mother Nina"
   }
  ],
  "remove": [

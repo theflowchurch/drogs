@@ -11,7 +11,7 @@ const DIR = process.argv[2] || `${process.env.HOME}/Downloads/Kuriake Castle Pro
 const people = JSON.parse(readFileSync(`${root}src/registration/reference-people.json`, 'utf8'));
 const bishops = people.filter((p) => p.role === 'bishop');
 // File names that differ from the roll's spelling.
-const ALIAS = { 'kay francis quao': 'Kay Francis Kwao', 'aundrae wood': 'Andrae George Woode', 'kweku sompa osei': 'Sompa Osei', 'michael tingabo': 'Michael Vengkomwine Tengabo', 'sam sawyer': 'Sam Sawyerr' };
+const ALIAS = { 'jake godwyll': 'Jacob Etrue Godwyll', 'kay francis quao': 'Kay Francis Kwao', 'aundrae wood': 'Andrae George Woode', 'kweku sompa osei': 'Sompa Osei', 'michael tingabo': 'Michael Vengkomwine Tengabo', 'sam sawyer': 'Sam Sawyerr' };
 const SKIP = /^(Isaac Commey 2|Sister Phillippa-Marker Coker 02.*)$/i; // second copies of a bishop already covered
 const file = new URL('../data/bishop-photo-overrides.json', import.meta.url);
 const overrides = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};

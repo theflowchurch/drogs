@@ -1,11 +1,11 @@
 {
- "generated": "2026-10-09T20:02:23.646Z",
+ "generated": "2026-10-09T20:21:24.014Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
   "pastors": 4860,
-  "assigned": 4831,
-  "unclaimed": 29,
+  "assigned": 4834,
+  "unclaimed": 26,
   "withPhoto": 4121,
   "sheets": 272,
   "bishopsWithSheet": 265,
@@ -346,6 +346,22 @@
   }
  ],
  "resolved": [
+  {
+   "name": "David Okine",
+   "winner": "Daniel Harlley",
+   "losers": [
+    "Jude Orraca-Tetteh"
+   ],
+   "by": "Bishop Jake Godwyll 13:10: David Okine is in South Africa under Daniel Harley"
+  },
+  {
+   "name": "Darius Phiri",
+   "winner": "Nely Nina Masuku",
+   "losers": [
+    "Benjamin Fiadonu"
+   ],
+   "by": "Joshua 9 Oct: Darius is supposed to be under Mother Nina"
+  },
   {
    "name": "Maxwell Nayan",
    "winner": "Joshua Heward-Mills",
@@ -873,6 +889,14 @@
     "Paul Baidoo"
    ],
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
+  },
+  {
+   "name": "Philip Otikwa Asare",
+   "winner": "Steve Asare",
+   "losers": [
+    "Richard Afenyo Tsaku"
+   ],
+   "by": "Sakyi 14:21: Philp Asare - Bishop Steve"
   }
  ],
  "conflicts": [
@@ -922,102 +946,6 @@
      "city": "Accra",
      "country": "",
      "title": "Rev."
-    }
-   ]
-  },
-  {
-   "name": "David Okine",
-   "claims": [
-    {
-     "bishop": "Jude Orraca-Tetteh",
-     "group": "UD Ghana",
-     "file": "JUDE ORRACA TETTEH.xlsx",
-     "folder": "Bishop submitted sheets",
-     "row": 25,
-     "cells": [
-      "24",
-      "DAVID OKINE",
-      "…",
-      "PASTOR",
-      "MALE",
-      "CHANTAN ALHAJI",
-      "ACCRA"
-     ],
-     "city": "Accra",
-     "country": "",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Daniel Harlley",
-     "group": "UD Africa",
-     "file": "Bishop Daniel Harlley.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 15,
-     "cells": [
-      "David Okine",
-      "Male",
-      "Rev.",
-      "…",
-      "9/15/84",
-      "42",
-      "SERIOUS CHRISTIAN CHURCH",
-      "Musgrave, Durban",
-      "Durban",
-      "South Africa",
-      "2011",
-      "2012",
-      "Yes",
-      "…"
-     ],
-     "city": "Durban",
-     "country": "South Africa",
-     "title": "Rev."
-    }
-   ]
-  },
-  {
-   "name": "Darius Phiri",
-   "claims": [
-    {
-     "bishop": "Nely Nina Masuku",
-     "group": "FLOW",
-     "file": "Bishop_Nely_Nina_Masuku_Completed.xlsx",
-     "folder": "Bishop sheets - no pastors (9 Oct 2026)",
-     "row": 13,
-     "cells": [
-      "Darius Phiri",
-      "…",
-      "31"
-     ],
-     "city": "",
-     "country": "",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Benjamin Fiadonu",
-     "group": "first love",
-     "file": "Bishop Benjamin Fiadonu Updated Data (1).xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 11,
-     "cells": [
-      "darius phiri",
-      "male ",
-      "pastor",
-      "…",
-      "12.05.95",
-      "31",
-      "first love church",
-      "unity campus",
-      "accra ",
-      "ghana",
-      "2023",
-      "n/a",
-      "no",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
     }
    ]
   },
@@ -2348,65 +2276,6 @@
    ]
   },
   {
-   "name": "Philip Asare",
-   "claims": [
-    {
-     "bishop": "Richard Afenyo Tsaku",
-     "group": "UD Ghana",
-     "file": "Bishop Richard Afenyo Tsaku - filled.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 38,
-     "cells": [
-      "32",
-      "33",
-      "Philip Asare",
-      "Male",
-      "Pastor",
-      "…",
-      "…",
-      "29",
-      "WEST END CITY CHURCHES",
-      "Westend City Church Hq",
-      "Ofaakor",
-      "Ghana",
-      "2024",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Ofaakor",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Steve Asare",
-     "group": "Reasonable Service",
-     "file": "Bishop Steve Asare.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 31,
-     "cells": [
-      "PHILIP OTIKWA ASARE",
-      "M",
-      "Pastor",
-      "…",
-      "34524",
-      "32",
-      "Allos Mega Church",
-      "Allos Mega Church",
-      "Accra",
-      "Ghana",
-      "2019",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
    "name": "Eric Koomson",
    "claims": [
     {
@@ -2471,9 +2340,9 @@
    "source": "screenshot 14:15"
   },
   {
-   "name": "Philip Otikwa Asare",
+   "name": "Philip Asare",
    "ruledTo": "Steve Asare",
-   "source": "Sakyi 14:21"
+   "source": "Sakyi 14:21: Philp Asare - Bishop Steve"
   }
  ],
  "newBishops": [
