@@ -1,0 +1,235 @@
+{
+ "note": "Rulings from the KURIAKE C group on 9 Oct 2026 (Bishop Emmanuel Sakyi, Archbishop Eddie Fabin, Mother Nina) for pastors named on more than one bishop's submitted sheet. Applied after the sheets are read: the pastor stays under the ruled bishop and is removed from the other sheets' lists. 'rules' are general; 'people' are named individuals. Mother Nina's sheet (9 Oct) lists Eniola Ajiga, Joshua Korsi Gbafa and Joel Cobina Obuobisa as her pastors: they stay, with the pictures already on file (Joshua, 9 Oct: consolidate, keep the picture).",
+ "rules": [
+  {
+   "when": "A First Love pastor in Kumasi is claimed by Isaac Agyeman and Joy Bruce",
+   "winner": "Joy Bruce",
+   "source": "Sakyi 14:11 and 14:15 screenshot (10 names)"
+  },
+  {
+   "when": "Any clash between Joshua Heward-Mills, Isaac Agyeman and Paul Baidoo",
+   "winner": "Joshua Heward-Mills",
+   "source": "Sakyi 14:17"
+  },
+  {
+   "when": "Any clash between Frank Opoku and Joshua Heward-Mills",
+   "winner": "Joshua Heward-Mills",
+   "source": "Sakyi 14:19"
+  }
+ ],
+ "people": [
+  {
+   "name": "Augustine Kwabena Asubonteng",
+   "winner": "Joy Bruce",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "source": "screenshot 14:15"
+  },
+  {
+   "name": "Yvonne Dove",
+   "winner": "Joy Bruce",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "source": "screenshot 14:15"
+  },
+  {
+   "name": "Isaac Enyemadze",
+   "winner": "Joy Bruce",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "source": "screenshot 14:15"
+  },
+  {
+   "name": "Dennis Darko Mensah",
+   "winner": "Joy Bruce",
+   "losers": [
+    "Eat Sackey",
+    "Isaac Agyeman"
+   ],
+   "source": "screenshot 14:15"
+  },
+  {
+   "name": "Humaima Nunoo",
+   "winner": "Joy Bruce",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "source": "screenshot 14:15"
+  },
+  {
+   "name": "Akweley Okutu",
+   "winner": "Joy Bruce",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "source": "screenshot 14:15"
+  },
+  {
+   "name": "Ebenezer Kwasi Opoku",
+   "winner": "Joy Bruce",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "source": "screenshot 14:15"
+  },
+  {
+   "name": "Albert Teye Quarmyne",
+   "winner": "Joy Bruce",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "source": "screenshot 14:15"
+  },
+  {
+   "name": "Philip Otikwa Asare",
+   "winner": "Steve Asare",
+   "losers": [
+    "Richard Afenyo Tsaku"
+   ],
+   "source": "Sakyi 14:21"
+  },
+  {
+   "name": "Abdul-Rashid Fusheini",
+   "winner": "Sompa Osei",
+   "losers": [
+    "Eat Sackey"
+   ],
+   "source": "Sakyi 14:21"
+  },
+  {
+   "name": "Michael Sarpong",
+   "winner": "Patrick Bruce",
+   "losers": [
+    "Isaac Agyeman",
+    "Joshua Heward-Mills"
+   ],
+   "source": "Sakyi 14:21"
+  },
+  {
+   "name": "Stephen Bondzie",
+   "winner": "Francis Nii Aryee Hammond",
+   "losers": [
+    "Emmanuel Nterful"
+   ],
+   "source": "Sakyi 14:22 'Bishop Francis Hammond'"
+  },
+  {
+   "name": "Ransford Darko",
+   "winner": "Kofi Hene Asare",
+   "losers": [
+    "Joe Owusu-Adjei"
+   ],
+   "source": "Archbishop Fabin 14:50 ('Ransford is with Bishop Kofi Hene') overrides Sakyi 14:23 (Joe Adjei)"
+  },
+  {
+   "name": "Joseph Adjei",
+   "winner": "Fred Ansah Quartey",
+   "losers": [
+    "Sam Sawyerr"
+   ],
+   "source": "Sakyi 14:24"
+  },
+  {
+   "name": "Francis Nkrumah",
+   "winner": "Emmanuel Samuel Baidoo",
+   "losers": [
+    "Emmanuel Bekoe Saforo Sakyi"
+   ],
+   "source": "Sakyi 14:26: not on his list (he has Francis Kumah); Makarios Church with Bishop Samuel Baidoo"
+  },
+  {
+   "name": "Joseph Anim",
+   "winner": "Jamel Amponsah-Baa",
+   "losers": [
+    "Richard Afenyo Tsaku"
+   ],
+   "source": "Sakyi 14:27 'Jamel Amponsah Baa'"
+  },
+  {
+   "name": "Danielle Tetteh",
+   "winner": "Emmanuel Tetteh",
+   "losers": [
+    "Ishmael Sam"
+   ],
+   "source": "Sakyi 14:27 'Emmanuel Tetteh'"
+  },
+  {
+   "name": "Prince Kusi Appiah",
+   "winner": "Benjamin Kwapong Lokko",
+   "losers": [
+    "Norman Kwadwo Darkwa",
+    "Kudzo Jonathan Sewornuku Bekui"
+   ],
+   "source": "Sakyi 14:28 'Benjamin Lokko'"
+  },
+  {
+   "name": "Edward Owusu Nyarko",
+   "winner": "Kwabena Asare Asamoa",
+   "losers": [
+    "Gustav Offei-Manu"
+   ],
+   "source": "Sakyi 14:29 'Kwabena Asare Asamoa'; Fabin asks whether he is still in Ghana"
+  },
+  {
+   "name": "Emmanuel Frank Asare",
+   "winner": "Samuel Obeng",
+   "losers": [
+    "Eric Kobina Asare"
+   ],
+   "source": "Sakyi 14:29 'Samuel Obeng'"
+  },
+  {
+   "name": "Emmanuel Acheampong",
+   "winner": "Esther-Carina Riche Okyere",
+   "losers": [
+    "Frank Opoku"
+   ],
+   "source": "Sakyi 14:30 'Esther Richie Okyere'"
+  },
+  {
+   "name": "Sandra Sheila Acquah",
+   "winner": "Luke Akwasi Frimpong Mensah",
+   "losers": [
+    "Eat Sackey"
+   ],
+   "source": "Sakyi 14:32"
+  },
+  {
+   "name": "Leticia Mensah-Fio",
+   "winner": "Kodwo K Orleans-Lindsay",
+   "losers": [
+    "Emmanuel Nterful"
+   ],
+   "source": "Sakyi 14:32"
+  },
+  {
+   "name": "Alexander Annor Yeboah",
+   "winner": "Kodwo K Orleans-Lindsay",
+   "losers": [
+    "Emmanuel Bekoe Saforo Sakyi"
+   ],
+   "source": "Sakyi 14:32; he is not on Sakyi's list at all"
+  },
+  {
+   "name": "Winifred Ashong",
+   "winner": "Steve Asare",
+   "losers": [],
+   "source": "Fabin 14:55 'Winifred is with Bishop Steve' (which Winifred to be confirmed when the sheets are read)"
+  }
+ ],
+ "remove": [
+  {
+   "name": "Walter Wolle",
+   "why": "Mother Nina 14:42: not a pastor"
+  }
+ ],
+ "pending": [
+  "Bishop Glen Kwame Opoku's new sheet (sent in the group 15:12, not in the export) — about 150 Qodesh City Church pastors",
+  "Bishops List.xlsx (sent in the group 15:17, not in the export)",
+  "Sheets from Bishop Kent Njeru and Bishop Toss Mills-Odoi",
+  "Five more bishops with no pastors still to confirm (Sakyi 13:59)"
+ ]
+}

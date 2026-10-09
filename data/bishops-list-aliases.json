@@ -1,0 +1,199 @@
+{
+ "note": "Spellings that mean the same bishop. Key: the name on the office's Bishops List (9 Oct 2026). Values: how the same person is written on sheet titles, sheet header rows, the official bishops list and our records. Matching strips titles, punctuation and case first; this file covers what that cannot.",
+ "aliases": {
+  "Alex Kofi-opata": [
+   "Alex Kofi Opata",
+   "Alexander Gottlieb Kofi-Opata",
+   "Alexander Kofi-Opata"
+  ],
+  "Dayo Adeniji": [
+   "Adedayo Adeyemi Adeniji"
+  ],
+  "Bishop Andy Jumah": [
+   "Andy Agyemang Jumah"
+  ],
+  "Christian Aduopo": [
+   "Christian Assi Adoupo"
+  ],
+  "Bishop Edward Cofie": [
+   "Eddy Cofie"
+  ],
+  "Bishop Edwin Tutu": [
+   "Edwin Adu-Tutu"
+  ],
+  "Bishop Emmanuel Yeboah": [
+   "Emmanuel Kofi Yeboah",
+   "Emmanuel Kofi-Yeboah"
+  ],
+  "Joseph Owusu Adjei": [
+   "Joe Owusu-Adjei"
+  ],
+  "Bishop Joe Aryee": [
+   "Joseph Aryee"
+  ],
+  "Joe Amable": [
+   "Joseph Kofi Amable"
+  ],
+  "Joseph Wachirah Kabiro": [
+   "Joseph Papa Wachirah",
+   "Joseph Papa Wachirah Kabiro",
+   "Papa Joe Wachirah Kabiro"
+  ],
+  "Bishop Kenneth Awutey": [
+   "Kenneth Oswald Awutey"
+  ],
+  "Mawusi Adabge": [
+   "Mawusi Adagbe"
+  ],
+  "Kate Allotey": [
+   "Kathleen-Sarah Parker-Allotey"
+  ],
+  "Fred Nortey": [
+   "Frederick Nortey"
+  ],
+  "Tomi Njoku": [
+   "John Thomas",
+   "(Tomi Njoku) John Thomas"
+  ],
+  "Bishop George Obeng": [
+   "George Aferi Obeng"
+  ],
+  "Kwabena Asamoa Jnr": [
+   "Kwabena Asamoah Jnr",
+   "Kwabena Junior Asamoah"
+  ],
+  "Leonora Hyde": [
+   "Leonora Jamie Hyde",
+   "Leonora-Jamie Hyde"
+  ],
+  "Lucca Aryee": [
+   "Erica-Luka Aryee"
+  ],
+  "Zoe Freda Asamoah": [
+   "Zoe-Freda Andria Asamoah",
+   "Zoe-Andria Asamoah"
+  ],
+  "Kay Francis Quao": [
+   "Kay Francis Kwao"
+  ],
+  "Yoku Amonoo-neizer": [
+   "Kweku Amonoo-Neizer"
+  ],
+  "Kwabena Amoako-doku": [
+   "Kwabena Oware Amoako-Doku"
+  ],
+  "Abraham Aryee": [
+   "Abraham Nii Ayi Aryee"
+  ],
+  "Edwin Ogoe Jnr": [
+   "Edwin Morgan Ogoe Jr"
+  ],
+  "Foster Baodi": [
+   "Foster Boadi"
+  ],
+  "Roger Hiltbruner": [
+   "Roger Hiltbrunner"
+  ],
+  "Vivaldi Aboagye": [
+   "Vivaldi-Joy Aboagye"
+  ],
+  "Jake Godwyll": [
+   "Jacob Etrue Godwyll",
+   "Jake Etrue Godwyll"
+  ],
+  "Dayanara Hart": [
+   "Daniella Hart"
+  ],
+  "Maya Aida Asiedu-Owusu": [
+   "Aida Maya Asiedu Owusu",
+   "Maya Aida Asiedu"
+  ],
+  "Toss Mills Odoi": [
+   "Toss Mills-Odoi"
+  ],
+  "Eat Sackey": [
+   "E.A.T Sackey",
+   "E A T Sackey"
+  ],
+  "Isaac Koranteng": [
+   "ISaac Korangten"
+  ],
+  "Nelly Nina Masuku": [
+   "Nely Nina Masuku"
+  ],
+  "Richard Aryee (jnr)": [
+   "Richard Nii Okai Aryee"
+  ],
+  "Samuel Gaspar": [
+   "Samuel Kwame Gasper"
+  ],
+  "Harold Befu- Addo": [
+   "Harold Befu-Addo"
+  ],
+  "Kwabena Asamoah": [
+   "Kwabena Asare Asamoa"
+  ],
+  "Nii Nortey Quist Therson": [
+   "James Quist-Therson",
+   "Nii Nortey Quist-Therson"
+  ],
+  "Pius Akator": [
+   "Pius Worlano",
+   "Pius Worlanyo Kwame Akator"
+  ],
+  "Pree Heward Mills": [
+   "Kiki Heward-Mills"
+  ],
+  "Perpsie Claire Ackuaku": [
+   "Perpetua Ackuaku"
+  ],
+  "Bishop Paschal Erasmus Mensah": [
+   "Erasmus Pascal Mensah"
+  ],
+  "Iris Carlah Krofuah": [
+   "Gifty Iris Calah Krofuah"
+  ],
+  "Es Phillippa-marka Coker": [
+   "Phillippa-Marka Coker"
+  ],
+  "Es Linda Abana Aryee": [
+   "Linda Aryee",
+   "Linda Abana Aryee"
+  ],
+  "Ato Dickson": [
+   "John Ato Dickson"
+  ],
+  "Joshua Heward-mills": [
+   "BJosh",
+   "Bjosh"
+  ],
+  "Rodino Nhanbanga": [
+   "Rodino Daniel Nhabanga"
+  ],
+  "Norman Darkwu": [
+   "Norman Kwadwo Darkwa"
+  ],
+  "Dennis Djagblatey": [
+   "Dennis Djagbletey"
+  ],
+  "Andrae George Woode": [
+   "Aundrae George Wood",
+   "Aundrae Wood"
+  ],
+  "Paul Akuaku": [
+   "Paul Ackuaku"
+  ],
+  "Rutendo Mantaziba": [
+   "Rutendo Mantiziba"
+  ],
+  "Sena Agyapong": [
+   "Sena Agyepong"
+  ]
+ },
+ "unsure": {
+  "Pree Heward Mills": "Matched to Mother Kiki Heward-Mills (her no-pastors sheet) — CONFIRM, it is a guess.",
+  "Thaddeus Boadi": "A no-pastors sheet exists for this name; not on the Bishops List under any spelling.",
+  "Pius Worlano": "A no-pastors sheet exists for this name; not on the Bishops List (Pius Akator is).",
+  "Rev Ebenezer Johnson / Rev Justice Hagan / Rev Kobina Quansah": "Sheets with pastors, but these are Reverends, not on the Bishops List."
+ }
+}
