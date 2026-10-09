@@ -27,6 +27,8 @@ import {
   parseRoster,
   validateProfile,
   normalName,
+  isLay,
+  byRank,
   namesAlike,
   nearMatches,
   dobClose,
@@ -966,7 +968,7 @@ export default function RegistrationApp({
                         {view === "Directory"
                           ? directoryHeading(directoryRole)
                           : view === "Existing records"
-                            ? `Existing ${directoryRole === "bishop" ? "Bishops" : "Pastors"} Records`
+                            ? `Existing ${directoryRole === "bishop" ? "Bishops" : directoryRole === "lay" ? "Lay Presidents" : "Pastors"} Records`
                             : view === "Unclaimed"
                               ? "Unclaimed Pastors"
                               : view === "Pastor lists" ? "Pastor Lists" : view === "API keys" ? "API Keys" : view}
@@ -2804,7 +2806,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
     [all, filter],
   );
   const list = useMemo(
-    () => scope.filter((p) => p.role === role).sort(bySurname),
+    () => scope.filter((p) => inRole(p, role)).sort(byRank),
     [scope, role],
   );
   useEffect(() => setLimit(pageFor(role)), [filter, role]);
@@ -2848,7 +2850,8 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
       )}
       <div className="reg-stats">
         {[
-          ["Bishops", scope.filter((p) => p.role === "bishop").length],
+          ["Bishops", scope.filter((p) => p.role === "bishop" && !isLay(p)).length],
+          ["Lay Presidents", scope.filter(isLay).length],
           ["Pastors", scope.filter((p) => p.role === "pastor").length],
           ["Bishops and pastors", scope.length],
           [
@@ -2874,6 +2877,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
           <div className="reg-switch" role="group" aria-label="Role">
             {[
               ["bishop", "Bishops"],
+            ["lay", "Lay Presidents"],
               ["pastor", "Pastors"],
             ].map(([value, label]) => (
               <button
@@ -2885,7 +2889,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
               >
                 {label}{" "}
                 <strong>
-                  {scope.filter((p) => p.role === value).length.toLocaleString()}
+                  {countRole(scope, value).toLocaleString()}
                 </strong>
               </button>
             ))}
@@ -3421,6 +3425,7 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
         <div className="reg-doors-grid">
           {[
             ["bishop", "Bishops"],
+            ["lay", "Lay Presidents"],
             ["pastor", "Pastors"],
           ].map(([value, label]) => (
             <button key={value} className="reg-door" onClick={() => setRole(value)}>
@@ -3473,7 +3478,8 @@ function SearchResults({ list, q }) {
   );
 }
 // Bishops are pastors too, so the pastors' list carries everyone; the bishops' list only bishops.
-const inRole = (p, role) => role === "pastor" || p.role === role;
+const inRole = (p, role) => (role === "lay" ? isLay(p) : role === "pastor" || p.role === role);
+const countRole = (list, role) => list.filter((p) => inRole(p, role) && !(role === "bishop" && isLay(p))).length; // lay presidents are not counted among the bishops
 // The pastors shown under a bishop: the list they uploaded this year (lit once registered with a photo), then pastors whose record names them.
 const pastorsUnder = (b, byBishop) => {
   const uploaded = (b.pastors || []).map((q) => ({ id: q.id, role: "pastor", name: q.name, photo: q.photo || "", image: "", city: q.city || "", country: q.country || "", standing: Boolean(q.registered && q.photo), bishop: b.name }));
@@ -3526,7 +3532,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
   const trail = useTrail(selected, setSelected);
   // Surname order, numbered once for the whole list so a search keeps each person's number.
   const numbered = useMemo(
-    () => [...roll.filter((p) => inRole(p, role))].sort(bySurname).map((p, i) => ({ ...p, n: i + 1 })),
+    () => [...roll.filter((p) => inRole(p, role))].sort(byRank).map((p, i) => ({ ...p, n: i + 1 })),
     [roll, role],
   );
   const list = useMemo(
@@ -3548,7 +3554,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
   }, [roll, index]);
   const grouped = useMemo(() => {
     if (role !== "pastor" || filtering) return null;
-    const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(bySurname).map((p, i) => ({ ...p, n: i + 1 }));
+    const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(byRank).map((p, i) => ({ ...p, n: i + 1 }));
     const taken = new Set(), blocks = [];
     for (const b of bishopsSorted) {
       const list = pastorsUnder(b, byBishop).filter((q) => !taken.has(q.id)).sort(bySurname);
@@ -3577,6 +3583,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
       {switcher && <div className="reg-toggle" role="group" aria-label="Bishops or pastors">
         {[
           ["bishop", "Bishops"],
+            ["lay", "Lay Presidents"],
           ["pastor", "Pastors"],
         ].map(([value, label]) => (
           <button
@@ -3587,7 +3594,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
             onClick={() => setRole(value)}
           >
             {label}
-            {counts && <b>{roll.filter((p) => inRole(p, value)).length.toLocaleString()}</b>}
+            {counts && <b>{countRole(roll, value).toLocaleString()}</b>}
           </button>
         ))}
       </div>}

@@ -1246,7 +1246,11 @@ export function directoryFor(state, references) {
 export const PASTOR_TITLES = ["Pastor", "Rev.", "Lady Rev."];
 // A woman bishop chooses her own title; the organization only supplies the default.
 export const BISHOP_TITLES_FEMALE = ["Mother", "Episcopal Sister"];
+// Lay Presidents (office, 9 Oct 2026): not bishops, but they have pastors under them, so they sit with the bishops — last.
+export const isLay = (p) => p?.title === "Lay President";
+export const byRank = (a, b) => (isLay(a) ? 1 : 0) - (isLay(b) ? 1 : 0) || bySurname(a, b);
 export function titleFor({ role, gender, organization, title }) {
+  if (title === "Lay President") return title;
   if (role !== "bishop") return title === "Rev." || (title === "Lady Rev." && gender === "female") ? title : "Pastor";
   if (gender === "female") return BISHOP_TITLES_FEMALE.includes(title) ? title : organization === "United Denominations" ? "Episcopal Sister" : organization === "First Love" ? "Mother" : "Bishop";
   return "Bishop";

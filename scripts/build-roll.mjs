@@ -115,9 +115,22 @@ for (const [k, list] of claims) {
   pastors.push(make(first, { bishop: '', unclaimed: `Claimed by ${list.map((c) => `Bishop ${c.bishop.name}`).join(' and ')} — the office must decide` }));
   conflicts.push({ name: first.row.name, claims: list.map((c) => ({ bishop: c.bishop.name, group: c.bishop.group, file: c.sub.file, folder: c.sub.folder, row: c.row.row, cells: c.row.cells, city: c.row.city, country: c.row.country, title: c.row.title })) });
 }
-// Sheets from people who are not on the Bishops List: their pastors are unclaimed, with the name kept.
+// Lay Presidents (data/lay-presidents.json): not on the Bishops List, not counted as bishops, but their sheets claim pastors.
+const layNames = read('data/lay-presidents.json', { names: [] }).names;
+const groupByDen = new Map(Object.entries(GROUPS).flatMap(([g, v]) => v.denominations.map((d) => [denKey(d), g])));
+const commonest = (list) => [...list.reduce((m, x) => m.set(x, (m.get(x) || 0) + 1), new Map())].sort((a, b) => b[1] - a[1])[0]?.[0] || '';
+const layPresidents = [];
+for (const s of nonList.filter((x) => layNames.some((n) => key(n) === key(x.bishop) || namesAlike(n, x.bishop)))) {
+  const own = s.pastors.find((r) => key(r.name) === key(s.bishop)); const rows = s.pastors.filter((r) => r !== own);
+  const den = s.denomination || commonest(rows.map((r) => r.denomination).filter(Boolean)); const group = s.group || groupByDen.get(denKey(den)) || '';
+  const o = oldPastorsByKey.get(key(s.bishop))?.[0];
+  const lp = { id: o?.id || `LP${layPresidents.length + 1}`, role: 'bishop', title: 'Lay President', lay: true, name: s.bishop, organization: orgOfGroup(group || 'UD Ghana', {}), denomination: canonDen(group, den) || den, denominationLogo: '', city: own?.city || commonest(rows.map((r) => r.city).filter(Boolean)), branch: own?.branch || '', country: own?.country || commonest(rows.map((r) => r.country).filter(Boolean)), image: o?.image || '', gender: own?.gender || 'male', yearAppointed: own?.yearAppointed || '', yearOrdained: own?.yearOrdained || '', yearConsecrated: '', group, sheet: { file: s.file, folder: s.folder, noPastors: false, rows: rows.length } };
+  bishops.push(lp); layPresidents.push(lp); s.lay = lp;
+  for (const r of rows) { const k = key(r.name); if (!k || removeKeys.has(k) || bishopKeys.has(k)) continue; if (pastors.some((p) => key(p.name) === k)) continue; pastors.push(make({ bishop: lp, row: r, sub: s })); }
+}
+// Sheets from other people who are not on the Bishops List: their pastors are unclaimed, with the name kept.
 const nonListPastors = [];
-for (const s of nonList) for (const r of s.pastors) { const k = key(r.name); if (!k || removeKeys.has(k) || bishopKeys.has(k)) continue; if (pastors.some((p) => key(p.name) === k)) continue; const fake = { name: s.bishop, group: '', organization: 'United Denominations', denomination: '', country: '' }; pastors.push({ ...make({ bishop: fake, row: r, sub: s }), bishop: '', group: '', unclaimed: `Listed by ${s.bishop}, who is not on the Bishops List` }); nonListPastors.push(r.name); }
+for (const s of nonList.filter((x) => !x.lay)) for (const r of s.pastors) { const k = key(r.name); if (!k || removeKeys.has(k) || bishopKeys.has(k)) continue; if (pastors.some((p) => key(p.name) === k)) continue; const fake = { name: s.bishop, group: '', organization: 'United Denominations', denomination: '', country: '' }; pastors.push({ ...make({ bishop: fake, row: r, sub: s }), bishop: '', group: '', unclaimed: `Listed by ${s.bishop}, who is not on the Bishops List` }); nonListPastors.push(r.name); }
 // Kent and Toss have not sent sheets: their current pastors stay as they were.
 for (const n of KEEP_OLD_PASTORS) { const b = bishops.find((x) => key(x.name) === key(n)); if (!b) continue; for (const o of cont.pastors.filter((p) => key(p.bishop || '') === key(n))) if (!pastors.some((p) => p.id === o.id || key(p.name) === key(o.name))) pastors.push({ id: o.id, role: 'pastor', name: o.name, title: o.title || 'Pastor', organization: b.organization, denomination: b.denomination, denominationLogo: '', city: o.city || '', branch: '', country: o.country || b.country || '', image: o.image || '', gender: o.gender || '', yearAppointed: o.yearAppointed || '', yearOrdained: o.yearOrdained || '', yearConsecrated: '', bishop: b.name, group: b.group, source: { file: 'kept until the sheet arrives', row: 0 } }); }
 // ---------- 7. Pictures from the photo folders for anyone still without one
@@ -137,14 +150,14 @@ for (const p of pastors) {
 }
 for (const b of bishops) if (!b.image) { const hits = (indexByKey.get(key(b.name)) || []).filter((h) => h.own) ; if (hits.length) { const rel = `assets/portraits/${b.id}.webp`; try { if (!existsSync(`${root}${rel}`)) { const buf = readFileSync(hits[0].path); await sharp(buf).rotate().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 78 }).toFile(`${root}${rel}`); await sharp(buf).rotate().resize({ width: 400, withoutEnlargement: true }).webp({ quality: 80 }).toFile(`${root}assets/portraits/thumbs/${b.id}.webp`); } b.image = rel; } catch {} } }
 // ---------- 8. Write
-const people = [...bishops, ...pastors];
+const people = [...bishops.filter((b) => !b.lay), ...layPresidents, ...pastors]; // lay presidents after the bishops
 writeFileSync(`${root}src/registration/reference-people.json`, JSON.stringify(people.map(({ sheet, source, ...rest }) => rest)) + '\n');
 const noSheet = listBishops.filter((b) => !latestByBishop.has(b.listName) && !KEEP_OLD_PASTORS.some((n) => key(n) === key(b.name) || aliasesOf(b).some((a) => key(a) === key(n))));
 const report = {
   generated: new Date().toISOString(),
-  totals: { bishops: bishops.length, pastors: pastors.length, assigned: pastors.filter((p) => !p.unclaimed).length, unclaimed: pastors.filter((p) => p.unclaimed).length, withPhoto: pastors.filter((p) => p.image).length, sheets: subs.length, bishopsWithSheet: latestByBishop.size, noPastorsSheets: [...latestByBishop.values()].filter((s) => s.noPastors).length },
+  totals: { bishops: bishops.length - layPresidents.length, layPresidents: layPresidents.length, pastors: pastors.length, assigned: pastors.filter((p) => !p.unclaimed).length, unclaimed: pastors.filter((p) => p.unclaimed).length, withPhoto: pastors.filter((p) => p.image).length, sheets: subs.length, bishopsWithSheet: latestByBishop.size, noPastorsSheets: [...latestByBishop.values()].filter((s) => s.noPastors).length },
   noSheet: noSheet.map((b) => ({ id: bishopByList.get(b.listName)?.id, name: bishopByList.get(b.listName)?.name || b.name, listName: b.listName, group: b.listGroup, denomination: b.listDenomination, branch: b.branch, hadPastorsBefore: cont.pastors.filter((p) => key(p.bishop || '') === key(b.old?.name || b.name)).length })),
-  sheetsNotOnList: nonList.map((s) => ({ bishop: s.bishop, file: s.file, folder: s.folder, pastors: s.pastors.length, noPastors: s.noPastors })),
+  sheetsNotOnList: nonList.filter((s) => !s.lay).map((s) => ({ bishop: s.bishop, file: s.file, folder: s.folder, pastors: s.pastors.length, noPastors: s.noPastors })),
   rowBelongsToAnother: [...latestByBishop.values()].filter((s) => s.rowBelongsToAnother).map((s) => ({ file: s.file, bishopRowNames: s.rowBelongsToAnother })),
   bishopRankRows, skippedSelf, resolved, conflicts, nonListPastors, rulingNotOnSheet,
   rulingsNotFound: rulings.people.filter((r) => !pastors.some((p) => key(p.name) === key(r.name) || words(key(p.name)).sort().join(' ') === words(key(r.name)).sort().join(' '))).map((r) => ({ name: r.name, ruledTo: r.winner, source: r.source })),
@@ -155,6 +168,6 @@ const report = {
 };
 mkdirSync(`${root}data/reports`, { recursive: true });
 writeFileSync(`${root}data/reports/roll-build.json`, JSON.stringify(report, null, 1) + '\n');
-console.log(`Roll: ${bishops.length} bishops (${report.newBishops.length} new from the list, ${report.oldBishopsNotOnList.length} dropped) · ${pastors.length} pastors (${report.totals.assigned} under a bishop, ${report.totals.unclaimed} unclaimed) · ${report.totals.withPhoto} with a picture (${photoFromFolder} from folders, ${converted} newly converted)`);
+console.log(`Roll: ${bishops.length - layPresidents.length} bishops + ${layPresidents.length} lay presidents (${report.newBishops.length} new from the list, ${report.oldBishopsNotOnList.length} dropped) · ${pastors.length} pastors (${report.totals.assigned} under a bishop, ${report.totals.unclaimed} unclaimed) · ${report.totals.withPhoto} with a picture (${photoFromFolder} from folders, ${converted} newly converted)`);
 console.log(`Sheets: ${subs.length} read · ${latestByBishop.size} bishops covered · ${report.totals.noPastorsSheets} say no pastors · ${nonList.length} from people not on the list · ${noSheet.length} list bishops with no sheet (besides Kent and Toss)`);
 console.log(`Conflicts: ${resolved.length} settled by the chat rulings · ${conflicts.length} left for the office · ${bishopRankRows.length} bishop-rank rows skipped · ${skippedSelf.length} self rows skipped`);

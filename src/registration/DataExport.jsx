@@ -8,7 +8,7 @@ import { directoryPeople, titleFor, placeOf, orgLabel, caps, bySurname } from ".
 const COLUMNS = [
   ["name", "Full Name", (p) => p.name],
   ["title", "Title", (p) => titleFor(p)],
-  ["role", "Role", (p) => (p.role === "bishop" ? "Bishop" : "Pastor")],
+  ["role", "Role", (p) => (p.title === "Lay President" ? "Lay President" : p.role === "bishop" ? "Bishop" : "Pastor")],
   ["gender", "Gender", (p) => (p.gender === "female" ? "Female" : p.gender === "male" ? "Male" : "")],
   ["bishop", "Bishop in Charge", (p) => (p.role === "pastor" ? p.bishop || "" : "")],
   ["unclaimed", "Why Unclaimed", (p) => p.unclaimed || ""],

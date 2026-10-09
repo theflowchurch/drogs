@@ -5,12 +5,18 @@ import { readFileSync } from 'node:fs';
 // The roll is built from the Bishops List and the bishops' own sheets only (scripts/build-roll.mjs).
 const people = JSON.parse(readFileSync(new URL('../../src/registration/reference-people.json', import.meta.url), 'utf8'));
 const report = JSON.parse(readFileSync(new URL('../../data/reports/roll-build.json', import.meta.url), 'utf8'));
-const bishops = people.filter((p) => p.role === 'bishop'), pastors = people.filter((p) => p.role === 'pastor');
+const lay = people.filter((p) => p.title === 'Lay President');
+const bishops = people.filter((p) => p.role === 'bishop' && p.title !== 'Lay President'), pastors = people.filter((p) => p.role === 'pastor');
 const under = (name) => pastors.filter((p) => p.bishop === name);
 
 test('every bishop on the Bishops List is on the roll, and nobody else is a bishop', () => {
   assert.equal(bishops.length, 283);
   assert.ok(bishops.every((b) => b.group && b.organization), 'each bishop has a group');
+});
+test('the three Lay Presidents claim their pastors and are not counted as bishops', () => {
+  assert.equal(lay.length, 3);
+  for (const l of lay) assert.ok(under(l.name).length > 10, l.name);
+  assert.ok(people.indexOf(lay[0]) > people.findLastIndex((p) => p.role === 'bishop' && p.title !== 'Lay President'), 'lay presidents come after the bishops');
 });
 test("a bishop's pastors are exactly the people on their sheet", () => {
   assert.ok(under('Benjamin Kwapong Lokko').length >= 75); // his file carries another bishop's details row, but the pastors are his
