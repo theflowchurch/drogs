@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-09T21:30:17.881Z",
+ "generated": "2026-10-09T21:40:45.579Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
@@ -6340,7 +6340,7 @@
    "name": "Barbara Naadu Mensah",
    "bishop": "Nassib Hage",
    "group": "Reasonable Service",
-   "denomination": "The Mega Church – Nachal Cathedral",
+   "denomination": "The Mega Church – Grace Chapel",
    "place": "Kumasi, Ghana"
   },
   {
@@ -6901,7 +6901,7 @@
    "bishop": "Richard Nii Okai Aryee",
    "group": "UD Europe",
    "denomination": "It Is A Great Thing To Serve The Lord",
-   "place": "Belfast, Northern Ireland"
+   "place": "Belfast, United Kingdom"
   },
   {
    "id": "P545",
@@ -6989,7 +6989,7 @@
    "bishop": "Rudy Vaye",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Kinshasa, D.r.congo"
+   "place": "Kinshasa, Congo, Democratic Republic"
   },
   {
    "id": "PN382838f7d6b3",
@@ -6997,7 +6997,7 @@
    "bishop": "Rudy Vaye",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Kinshasa, D.r.congo"
+   "place": "Kinshasa, Congo, Democratic Republic"
   },
   {
    "id": "PN5e5372bda9a9",
@@ -7005,7 +7005,7 @@
    "bishop": "Rudy Vaye",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Kinshasa, D.r.congo"
+   "place": "Kinshasa, Congo, Democratic Republic"
   },
   {
    "id": "PNbd188882cffe",
@@ -8266,6 +8266,6 @@
  ],
  "photos": {
   "fromFolders": 109,
-  "converted": 4
+  "converted": 0
  }
 }
