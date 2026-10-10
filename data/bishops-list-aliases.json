@@ -89,7 +89,9 @@
    "Edwin Morgan Ogoe Jr"
   ],
   "Foster Baodi": [
-   "Foster Boadi"
+   "Foster Boadi",
+   "Thaddeus Boadi",
+   "Thaddeus Gyabaah Boadi"
   ],
   "Roger Hiltbruner": [
    "Roger Hiltbrunner"
@@ -125,7 +127,8 @@
    "Richard Nii Okai Aryee"
   ],
   "Samuel Gaspar": [
-   "Samuel Kwame Gasper"
+   "Samuel Kwame Gasper",
+   "Samuel Kwame Gaspar"
   ],
   "Harold Befu- Addo": [
    "Harold Befu-Addo",
@@ -190,11 +193,13 @@
   ],
   "Sena Agyapong": [
    "Sena Agyepong"
+  ],
+  "Ebo Ankrah": [
+   "Schwarts Kobina Ankrah"
   ]
  },
  "unsure": {
   "Pree Heward Mills": "Matched to Mother Kiki Heward-Mills (her no-pastors sheet) — CONFIRM, it is a guess.",
-  "Thaddeus Boadi": "A no-pastors sheet exists for this name; not on the Bishops List under any spelling.",
   "Pius Worlano": "A no-pastors sheet exists for this name; not on the Bishops List (Pius Akator is).",
   "Rev Ebenezer Johnson / Rev Justice Hagan / Rev Kobina Quansah": "Sheets with pastors, but these are Reverends, not on the Bishops List."
  }

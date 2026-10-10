@@ -15,6 +15,11 @@
    "when": "Any clash between Frank Opoku and Joshua Heward-Mills",
    "winner": "Joshua Heward-Mills",
    "source": "Sakyi 14:19"
+  },
+  {
+   "when": "A Lusaka pastor is claimed by Clement Asante and Geraldo Amoa",
+   "winner": "Geraldo Amoa",
+   "source": "Bishop Yoku Amonoo-Neizer 10 Oct 10:31: Lusaka city pastors are all directly under Bs Geraldo and not under Bs Clement"
   }
  ],
  "people": [
@@ -242,6 +247,78 @@
     "Benjamin Fiadonu"
    ],
    "source": "Joshua 9 Oct: Darius is supposed to be under Mother Nina"
+  },
+  {
+   "name": "Chiebuka Itanyi",
+   "winner": "Olivia Kofi-Opata",
+   "losers": [
+    "Alexander Gottlieb Kofi-Opata"
+   ],
+   "source": "Bishop Jake Godwyll 10 Oct 10:10: Chiebuka Itanyi should be ES Olivia Opata"
+  },
+  {
+   "name": "Adrienne Nordine Wakam Nziamen",
+   "winner": "Daniel Amofah",
+   "losers": [
+    "Enoch Tettey-Angmor"
+   ],
+   "source": "Bishop Yoku Amonoo-Neizer 10 Oct 10:24: Adrienne, Maureen, Kelvin, Ray Charles, Clinton are all under Bs Daniel Amofa"
+  },
+  {
+   "name": "Maureen Amofah",
+   "winner": "Daniel Amofah",
+   "losers": [
+    "Enoch Tettey-Angmor"
+   ],
+   "source": "Bishop Yoku Amonoo-Neizer 10 Oct 10:24: Adrienne, Maureen, Kelvin, Ray Charles, Clinton are all under Bs Daniel Amofa"
+  },
+  {
+   "name": "Kelvin Acquah",
+   "winner": "Daniel Amofah",
+   "losers": [
+    "Enoch Tettey-Angmor"
+   ],
+   "source": "Bishop Yoku Amonoo-Neizer 10 Oct 10:24: Adrienne, Maureen, Kelvin, Ray Charles, Clinton are all under Bs Daniel Amofa"
+  },
+  {
+   "name": "Ray Charles Mawu Nyega Agbekey",
+   "winner": "Daniel Amofah",
+   "losers": [
+    "Enoch Tettey-Angmor"
+   ],
+   "source": "Bishop Yoku Amonoo-Neizer 10 Oct 10:24: Adrienne, Maureen, Kelvin, Ray Charles, Clinton are all under Bs Daniel Amofa"
+  },
+  {
+   "name": "Clinton Ehuba Epey Lord",
+   "winner": "Daniel Amofah",
+   "losers": [
+    "Enoch Tettey-Angmor"
+   ],
+   "source": "Bishop Yoku Amonoo-Neizer 10 Oct 10:24: Adrienne, Maureen, Kelvin, Ray Charles, Clinton are all under Bs Daniel Amofa"
+  },
+  {
+   "name": "Eric Koomson",
+   "winner": "Joojo Stephens",
+   "losers": [
+    "Glen Kwame Opoku"
+   ],
+   "source": "Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens"
+  },
+  {
+   "name": "Priscilla April Yeboah",
+   "winner": "Joojo Stephens",
+   "losers": [
+    "Glen Kwame Opoku"
+   ],
+   "source": "Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens"
+  },
+  {
+   "name": "Helena Dadzie-Yorke",
+   "winner": "Joojo Stephens",
+   "losers": [
+    "Glen Kwame Opoku"
+   ],
+   "source": "Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens"
   }
  ],
  "remove": [

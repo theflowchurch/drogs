@@ -6,7 +6,7 @@
 import * as XLSX from 'xlsx'; import fs from 'node:fs'; XLSX.set_fs(fs);
 import { readdirSync, writeFileSync } from 'node:fs';
 const BASE = `${process.env.HOME}/Downloads/Kuriake Castle Project/01 Office source data`;
-const DIRS = process.argv.length > 2 ? process.argv.slice(2) : [`${BASE}/Bishop submitted sheets`, `${BASE}/Bishop sheets - no pastors (9 Oct 2026)`, `${BASE}/Bishop submitted sheets (9 Oct 2026)`];
+const DIRS = process.argv.length > 2 ? process.argv.slice(2) : [`${BASE}/Bishop submitted sheets`, `${BASE}/Bishop sheets - no pastors (9 Oct 2026)`, `${BASE}/Bishop submitted sheets (9 Oct 2026)`, `${BASE}/Bishop submitted sheets (10 Oct 2026)`];
 const blank = (v) => !v || /^(missing|n\/?a|nil|none|not applicable|-+|\.)$/i.test(String(v).trim());
 const clean = (v) => (blank(v) ? '' : String(v).replace(/\s+/g, ' ').trim());
 const tc = (t) => clean(t).toLowerCase().replace(/(^|[\s'’(-])\p{L}/gu, (c) => c.toUpperCase());
@@ -30,9 +30,11 @@ const mapHeader = (r) => { const map = {}; r.forEach((h, i) => { for (const [k, 
 const out = [];
 for (const DIR of DIRS) for (const file of readdirSync(DIR).filter((f) => f.endsWith('.xlsx')).sort()) {
   let wb; try { wb = XLSX.readFile(`${DIR}/${file}`); } catch { console.log(`unreadable: ${file}`); continue; }
-  const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false, defval: '' }).map((r) => r.map((c) => String(c))).filter((r) => r.some((c) => c.trim()));
+  // Every sheet of the workbook in order; a sheet called "Pastors removed" lists people the bishop took off their list.
+  const removed = wb.SheetNames.filter((n) => /remov/i.test(n)).flatMap((n) => XLSX.utils.sheet_to_json(wb.Sheets[n], { header: 1, raw: false, defval: '' })).map((r) => String(r[0] || '').trim()).filter((v) => v && !/full name/i.test(v));
+  const rows = wb.SheetNames.filter((n) => !/remov/i.test(n)).flatMap((n) => XLSX.utils.sheet_to_json(wb.Sheets[n], { header: 1, raw: false, defval: '' })).map((r) => r.map((c) => String(c))).filter((r) => r.some((c) => c.trim()));
   const fromFile = tc(file.replace(/\.xlsx$/, '').replace(/[-_ ]*(\d+|updated|completed|filled|copy|data)\b.*$/i, '').replace(/[-_]/g, ' ').replace(/^(bishop|episcopal sister|espiscopal sister|mother|rev)\s+/i, '').replace(/,.*$/, '').replace(/\(.*?\)/g, ''));
-  const sub = { file, folder: DIR.split('/').pop(), bishop: fromFile, titleRow: '', group: '', denomination: '', bishopRow: null, noPastors: false, pastors: [] };
+  const sub = { file, folder: DIR.split('/').pop(), bishop: fromFile, titleRow: '', group: '', denomination: '', bishopRow: null, noPastors: false, pastors: [], removed };
   let map = null, section = 'bishop';
   rows.forEach((r, rowIndex) => {
     const text = r.join(' ').trim(), low = text.toLowerCase();
