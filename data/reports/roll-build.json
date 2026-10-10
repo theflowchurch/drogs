@@ -1,12 +1,12 @@
 {
- "generated": "2026-10-10T21:05:04.316Z",
+ "generated": "2026-10-10T21:48:30.622Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 4954,
-  "assigned": 4918,
-  "unclaimed": 36,
-  "withPhoto": 4176,
+  "pastors": 4900,
+  "assigned": 4847,
+  "unclaimed": 53,
+  "withPhoto": 4053,
   "sheets": 287,
   "bishopsWithSheet": 279,
   "noPastorsSheets": 72
@@ -256,12 +256,20 @@
    "sheet": "Bishop Francis Hammond.xlsx"
   },
   {
+   "name": "Ishmael Nathaniel Jojo Sam",
+   "sheet": "Bishop Ishmael Sam.xlsx"
+  },
+  {
    "name": "Luke Akwasi Frimpong Mensah",
    "sheet": "Bishop Luke Akwasi Frimpong Mensah.xlsx"
   },
   {
    "name": "Michael Amoh",
    "sheet": "Bishop Michael Amoh.xlsx"
+  },
+  {
+   "name": "Eunice Morrison-Addo",
+   "sheet": "Bishop Morrison Addo.xlsx"
   }
  ],
  "resolved": [
@@ -290,6 +298,23 @@
    "by": "Bishop Jake Godwyll 10 Oct 10:10: Chiebuka Itanyi should be ES Olivia Opata"
   },
   {
+   "name": "Prince Kusi Appiah",
+   "winner": "Benjamin Kwapong Lokko",
+   "losers": [
+    "Kudzo Jonathan Sewornuku Bekui",
+    "Norman Kwadwo Darkwa"
+   ],
+   "by": "Sakyi 14:28 'Benjamin Lokko'"
+  },
+  {
+   "name": "Paula Amoa",
+   "winner": "Geraldo Amoa",
+   "losers": [
+    "Clement Asante"
+   ],
+   "by": "Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa"
+  },
+  {
    "name": "Ian Chiweshe",
    "winner": "Geraldo Amoa",
    "losers": [
@@ -299,6 +324,14 @@
   },
   {
    "name": "Violet Musonda",
+   "winner": "Geraldo Amoa",
+   "losers": [
+    "Clement Asante"
+   ],
+   "by": "Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa"
+  },
+  {
+   "name": "Rosemary Sinta",
    "winner": "Geraldo Amoa",
    "losers": [
     "Clement Asante"
@@ -322,12 +355,30 @@
    "by": "Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa"
   },
   {
+   "name": "Angela Mpundu",
+   "winner": "Geraldo Amoa",
+   "losers": [
+    "Clement Asante"
+   ],
+   "by": "Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa"
+  },
+  {
    "name": "Moreblessings Daka",
    "winner": "Geraldo Amoa",
    "losers": [
     "Clement Asante"
    ],
    "by": "Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa"
+  },
+  {
+   "name": "Eric Koomson",
+   "winner": "Joojo Stephens",
+   "losers": [
+    "Courage Ahedor",
+    "Glen Kwame Opoku",
+    "Toss Mills-Odoi"
+   ],
+   "by": "Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens"
   },
   {
    "name": "Maureen Amofah",
@@ -362,6 +413,23 @@
    "by": "Bishop Yoku Amonoo-Neizer 10 Oct 10:24: Adrienne, Maureen, Kelvin, Ray Charles, Clinton are all under Bs Daniel Amofa"
   },
   {
+   "name": "Dennis Darko Mensah",
+   "winner": "Joy Bruce",
+   "losers": [
+    "Eat Sackey",
+    "Isaac Agyeman"
+   ],
+   "by": "Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce"
+  },
+  {
+   "name": "Emmanuel Frank Asare",
+   "winner": "Samuel Obeng",
+   "losers": [
+    "Eric Kobina Asare"
+   ],
+   "by": "Sakyi 14:29 'Samuel Obeng'"
+  },
+  {
    "name": "Maxwell Nayan",
    "winner": "Joshua Heward-Mills",
    "losers": [
@@ -386,6 +454,14 @@
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
   },
   {
+   "name": "Joseph Adjei",
+   "winner": "Fred Ansah Quartey",
+   "losers": [
+    "Sam Sawyerr"
+   ],
+   "by": "Sakyi 14:24"
+  },
+  {
    "name": "Helena Dadzie Yorke",
    "winner": "Joojo Stephens",
    "losers": [
@@ -400,6 +476,14 @@
     "Glen Kwame Opoku"
    ],
    "by": "Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens"
+  },
+  {
+   "name": "Edward Owusu Nyarko",
+   "winner": "Kwabena Asare Asamoa",
+   "losers": [
+    "Gustav Offei-Manu"
+   ],
+   "by": "Sakyi 14:29 'Kwabena Asare Asamoa'; Fabin asks whether he is still in Ghana"
   },
   {
    "name": "Abednego Abbey",
@@ -419,6 +503,14 @@
   },
   {
    "name": "Richmond Annan",
+   "winner": "Joshua Heward-Mills",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
+  },
+  {
+   "name": "Zenas Adarkwah Yiadom",
    "winner": "Joshua Heward-Mills",
    "losers": [
     "Isaac Agyeman"
@@ -538,6 +630,14 @@
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
   },
   {
+   "name": "Jayson Quarshie",
+   "winner": "Joshua Heward-Mills",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
+  },
+  {
    "name": "Michael Sarpong",
    "winner": "Joshua Heward-Mills",
    "losers": [
@@ -562,7 +662,7 @@
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
   },
   {
-   "name": "Hannah Emefa Vanderpuije",
+   "name": "Sylvester Cudjoe",
    "winner": "Joy Bruce",
    "losers": [
     "Isaac Agyeman"
@@ -570,12 +670,12 @@
    "by": "Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce"
   },
   {
-   "name": "Dennis Darko Mensah",
+   "name": "Hannah Emefa Vanderpuije",
    "winner": "Joy Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
-   "by": "screenshot 14:15"
+   "by": "Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce"
   },
   {
    "name": "Elliott Mawuko Sallah",
@@ -640,6 +740,14 @@
     "Isaac Agyeman"
    ],
    "by": "screenshot 14:15"
+  },
+  {
+   "name": "Emmanuel Narteh Ayiku",
+   "winner": "Joy Bruce",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "by": "Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce"
   },
   {
    "name": "Osei Baffour Ansah",
@@ -810,6 +918,14 @@
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
   },
   {
+   "name": "Joseph Kiipo",
+   "winner": "Joshua Heward-Mills",
+   "losers": [
+    "Paul Baidoo"
+   ],
+   "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
+  },
+  {
    "name": "Clement Lahenor",
    "winner": "Joshua Heward-Mills",
    "losers": [
@@ -845,7 +961,8 @@
    "name": "Gabriel Twum",
    "winner": "Joshua Heward-Mills",
    "losers": [
-    "Paul Baidoo"
+    "Paul Baidoo",
+    "Patrick Bruce"
    ],
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
   },
@@ -875,6 +992,14 @@
   },
   {
    "name": "Irene Alipoh",
+   "winner": "Joshua Heward-Mills",
+   "losers": [
+    "Paul Baidoo"
+   ],
+   "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
+  },
+  {
+   "name": "Oliver Zigah",
    "winner": "Joshua Heward-Mills",
    "losers": [
     "Paul Baidoo"
@@ -914,15 +1039,191 @@
    "by": "Sakyi 14:21: Philp Asare - Bishop Steve"
   },
   {
-   "name": "Eric Koomson",
-   "winner": "Joojo Stephens",
+   "name": "Michael Kofi Sarpong",
+   "winner": "Patrick Bruce",
    "losers": [
-    "Glen Kwame Opoku"
+    "Joshua Heward-Mills"
    ],
-   "by": "Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens"
+   "by": "Sakyi 14:21 (same picture)"
+  },
+  {
+   "name": "Ransford Darko",
+   "winner": "Kofi Hene Asare",
+   "losers": [
+    "Joe Owusu-Adjei"
+   ],
+   "by": "Archbishop Fabin 14:50 ('Ransford is with Bishop Kofi Hene') overrides Sakyi 14:23 (Joe Adjei) (same picture)"
   }
  ],
  "conflicts": [
+  {
+   "name": "Esther Nyamekye Okokon",
+   "claims": [
+    {
+     "bishop": "Abednego Nyarkoh-Mensah",
+     "group": "UD Africa",
+     "file": "Bishop Abednego Nyarkoh-Mensah-1.xlsx",
+     "folder": "Bishop submitted sheets",
+     "row": 9,
+     "cells": [
+      "Esther Nyamekye Okokon",
+      "Female",
+      "Pastor",
+      "…",
+      "2/12/95",
+      "Praia City State Church",
+      "Cape Verde",
+      "Praia",
+      "Cape Verde"
+     ],
+     "city": "Praia",
+     "country": "Cape Verde",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Edwin Morgan Ogoe",
+     "group": "Reasonable Service",
+     "file": "Bishop Edwin Morgan Ogoe.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 20,
+     "cells": [
+      "14",
+      "ESTHER OKOKON",
+      "FEMALE",
+      "LADY PASTOR",
+      "…",
+      "2ND DECEMBER,1995",
+      "40",
+      "ANOINTED PEOPLE INTERNATIONAL",
+      "FOSTER HOME",
+      "ACCRA",
+      "GHANA",
+      "2025",
+      "NA",
+      "NA",
+      "YES",
+      "…"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
+   "name": "James Yeboah",
+   "claims": [
+    {
+     "bishop": "David Adjah Ashong",
+     "group": "UD Ghana",
+     "file": "Bishop David Adjah Ashong_034906.xlsx",
+     "folder": "Bishop submitted sheets",
+     "row": 19,
+     "cells": [
+      "James Yeboah",
+      "Male",
+      "Pastor",
+      "…",
+      "8/11/77",
+      "49",
+      "JESUS SAVIOUR OF THE WORLD CHURCH INTERN",
+      "Adom No. 1",
+      "Berekum",
+      "Ghana",
+      "2023",
+      "MISSING",
+      "Yes",
+      "…"
+     ],
+     "city": "Berekum",
+     "country": "Ghana",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Sam Sawyerr",
+     "group": "Reasonable Service",
+     "file": "Bishop Sam Sawyerr.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 14,
+     "cells": [
+      "8.",
+      "James Yeboah ",
+      "Male ",
+      "Pastor ",
+      "…",
+      "10th September 1998",
+      "28",
+      "Anointed People International",
+      "24Hills Cathedral, Santeo",
+      "Accra",
+      "Ghana",
+      "2022",
+      "N/A",
+      "Yes",
+      "…"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
+   "name": "Francis Asare",
+   "claims": [
+    {
+     "bishop": "Kweku Amponsah",
+     "group": "UD Europe",
+     "file": "Bishop Kweku Amponsah.xlsx",
+     "folder": "Bishop submitted sheets",
+     "row": 13,
+     "cells": [
+      "Francis Asare",
+      "Male",
+      "Pastor",
+      "…",
+      "29th May, 1969",
+      "57",
+      "CANDLE IN THE DARK CHURCH",
+      "Vienna",
+      "Vienna",
+      "Austria",
+      "2025",
+      "N/A",
+      "Yes",
+      "…"
+     ],
+     "city": "Vienna",
+     "country": "Austria",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Frank Opoku",
+     "group": "First Love",
+     "file": "Bishop Frank Opoku.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 9,
+     "cells": [
+      "Francis Asare",
+      "Male",
+      "Pastor",
+      "2.33242E+11",
+      "…",
+      "38",
+      "FIRST LOVE CHURCH",
+      "First Love Centre",
+      "Accra",
+      "Ghana",
+      "2026",
+      "N/A",
+      "…"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor"
+    }
+   ]
+  },
   {
    "name": "Daniel Acheampong",
    "claims": [
@@ -1126,6 +1427,63 @@
       "Kintampo",
       "Ghana",
       "2019",
+      "MISSING",
+      "Yes",
+      "…"
+     ],
+     "city": "Kintampo",
+     "country": "Ghana",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
+   "name": "Wisdom Dery",
+   "claims": [
+    {
+     "bishop": "Charles Bonsu",
+     "group": "UD Ghana",
+     "file": "Bishop Charles Bonsu.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 40,
+     "cells": [
+      "Wisdom Dery",
+      "Male",
+      "Pastor",
+      "…",
+      "6th March, 1991",
+      "35",
+      "JESUS SAVIOUR OF THE WORLD CHURCH INTERN",
+      "Ampoma",
+      "Kintampo",
+      "Ghana",
+      "2024",
+      "Not ordained",
+      "Yes",
+      "…"
+     ],
+     "city": "Kintampo",
+     "country": "Ghana",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "David Afreh",
+     "group": "UD Ghana",
+     "file": "Bishop David Afreh.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 11,
+     "cells": [
+      "Wisdom Dery ",
+      "Male",
+      "Pastor",
+      "…",
+      "…",
+      "35",
+      "JESUS SAVIOUR OF THE WORLD CHURCH INTERN",
+      "MISSING",
+      "Kintampo",
+      "Ghana",
+      "2024",
       "MISSING",
       "Yes",
       "…"
@@ -1359,63 +1717,6 @@
       "…"
      ],
      "city": "Mankessim",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Eric Koomson",
-   "claims": [
-    {
-     "bishop": "Courage Ahedor",
-     "group": "United Jesus",
-     "file": "Bishop Courage Ahedor.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 11,
-     "cells": [
-      "Eric Koomson",
-      "Male",
-      "Pastor",
-      "…",
-      "19th June 1983",
-      "43",
-      "JESUS IS THE MASTER",
-      "Enyan Denkyira",
-      "Enyan Denkyira",
-      "Ghana",
-      "2018",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Enyan Denkyira",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 99,
-     "cells": [
-      "Eric Koomson",
-      "Male",
-      "Pastor",
-      "…",
-      "19th June 1983",
-      "43",
-      "JESUS IS THE MASTER CHURCH",
-      "Enyan Denkyira",
-      "Enyan Denkyira",
-      "Ghana",
-      "2018",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Enyan Denkyira",
      "country": "Ghana",
      "title": "Pastor"
     }
@@ -1878,6 +2179,176 @@
    ]
   },
   {
+   "name": "Sandra Acquah",
+   "claims": [
+    {
+     "bishop": "Eat Sackey",
+     "group": "Reasonable Service",
+     "file": "Bishop E.A.T Sackey.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 33,
+     "cells": [
+      "Sandra Acquah",
+      "FEMALE",
+      "PASTOR",
+      "…",
+      "9/6/73",
+      "53",
+      "GLORY HOPE LIFE CENTER",
+      "SAKAMAN",
+      "ACCRA",
+      "GHANA",
+      "2023",
+      "…"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Luke Akwasi Frimpong Mensah",
+     "group": "UD North America",
+     "file": "Bishop Luke Akwasi Frimpong Mensah.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 62,
+     "cells": [
+      "Sandra Sheila Acquah",
+      "Female",
+      "Pastor",
+      "…",
+      "…",
+      "53",
+      "AMERICAN MISSIONARY CHURCH",
+      "Edmonton",
+      "Edmonton",
+      "Canada",
+      "2023",
+      "MISSING",
+      "Yes",
+      "…"
+     ],
+     "city": "Edmonton",
+     "country": "Canada",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
+   "name": "Leticia Mensah",
+   "claims": [
+    {
+     "bishop": "Emmanuel Nterful",
+     "group": "Reasonable Service",
+     "file": "Bishop Emmanuel Nterful.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 35,
+     "cells": [
+      "Leticia Mensah",
+      "Female",
+      "Pastor",
+      "…",
+      "9/13/60",
+      "66",
+      "Keep My Word Chapel International",
+      "Gbawe",
+      "Accra",
+      "Ghana",
+      "2005",
+      "N/A",
+      "Yes",
+      "…"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Kodwo K Orleans-Lindsay",
+     "group": "UD North America",
+     "file": "Bishop Kodwo K Orleans-Lindsay.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 69,
+     "cells": [
+      "Leticia Mensah-Fio",
+      "Female",
+      "Pastor",
+      "…",
+      "4/21/80",
+      "46",
+      "REVIVAL INTERNATIONAL",
+      "Columbia Laurel Ccl",
+      "Columbia",
+      "United States",
+      "2023",
+      "na",
+      "na",
+      "Yes",
+      "…"
+     ],
+     "city": "Columbia",
+     "country": "United States",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
+   "name": "Stephen Fiifi Bondzie",
+   "claims": [
+    {
+     "bishop": "Emmanuel Nterful",
+     "group": "Reasonable Service",
+     "file": "Bishop Emmanuel Nterful.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 39,
+     "cells": [
+      "Stephen Fiifi Bondzie",
+      "Male",
+      "Rev.",
+      "…",
+      "…",
+      "50",
+      "Keep My Word Chapel International",
+      "Gbawe",
+      "Accra",
+      "Ghana",
+      "2011",
+      "2012",
+      "Yes",
+      "…"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Rev."
+    },
+    {
+     "bishop": "Francis Nii Aryee Hammond",
+     "group": "UD Ghana",
+     "file": "Bishop Francis Hammond.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 15,
+     "cells": [
+      "Stephen Bondzie",
+      "Male",
+      "Pastor",
+      "…",
+      "…",
+      "41",
+      "ANAGKAZO ASSEMBLIES",
+      "Ngyeresi",
+      "Ngyeresi",
+      "Ghana",
+      "2019",
+      "MISSING",
+      "Yes",
+      "…"
+     ],
+     "city": "Ngyeresi",
+     "country": "Ghana",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
    "name": "David Mensah",
    "claims": [
     {
@@ -1980,6 +2451,62 @@
      "city": "Takoradi",
      "country": "",
      "title": "Rev."
+    }
+   ]
+  },
+  {
+   "name": "Emmanuel Kofi Acheampong",
+   "claims": [
+    {
+     "bishop": "Frank Opoku",
+     "group": "First Love",
+     "file": "Bishop Frank Opoku.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 8,
+     "cells": [
+      "Emmanuel Kofi Acheampong",
+      "Male",
+      "Pastor",
+      "2.33243E+11",
+      "…",
+      "33",
+      "FIRST LOVE CHURCH",
+      "First Love Centre",
+      "Accra",
+      "Ghana",
+      "2026",
+      "N/A",
+      "…"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Esther-Richie Okyere",
+     "group": "UD Ghana",
+     "file": "Episcopal Sister Esther-Carina Riche Okyere.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 7,
+     "cells": [
+      "Emmanuel Acheampong",
+      "Male",
+      "Pastor",
+      "…",
+      "10/8/93",
+      "33",
+      "THE MEGA CHURCH",
+      "Tikrom",
+      "Kumasi",
+      "Ghana",
+      "2023",
+      "N/A",
+      "Yes",
+      "…"
+     ],
+     "city": "Kumasi",
+     "country": "Ghana",
+     "title": "Pastor"
     }
    ]
   },
@@ -2144,7 +2671,177 @@
    ]
   },
   {
-   "name": "Lp Grace Boateng",
+   "name": "Emmanuel Opuni",
+   "claims": [
+    {
+     "bishop": "Glen Kwame Opoku",
+     "group": "First Love",
+     "file": "Bishop Glen Kwame Opoku.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 112,
+     "cells": [
+      "Emmanuel Opuni",
+      "Male",
+      "Pastor",
+      "…",
+      "2/14/81",
+      "45",
+      "QODESH CITY CHURCHES",
+      "Qodesh",
+      "Accra",
+      "Ghana",
+      "2021",
+      "Yes",
+      "…"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Norman Kwadwo Darkwa",
+     "group": "UD North America",
+     "file": "Bishop Norman Kwadwo Darkwa.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 36,
+     "cells": [
+      "Emmanuel Opuni",
+      "Male",
+      "Pastor",
+      "…",
+      "…",
+      "56",
+      "REJOICE GREATLY",
+      "Jacksonville",
+      "Jacksonville",
+      "United States",
+      "2021",
+      "NA",
+      "Yes",
+      "…"
+     ],
+     "city": "Jacksonville",
+     "country": "United States",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
+   "name": "Isaac Nii Bonney Mensah",
+   "claims": [
+    {
+     "bishop": "Glen Kwame Opoku",
+     "group": "First Love",
+     "file": "Bishop Glen Kwame Opoku.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 147,
+     "cells": [
+      "Isaac Nii Bonney Mensah",
+      "Male",
+      "Pastor",
+      "…",
+      "7/11/84",
+      "42",
+      "QODESH CITY CHURCHES",
+      "Bubuashie",
+      "Accra",
+      "Ghana",
+      "2020",
+      "Yes",
+      "…"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Richard Afenyo Tsaku",
+     "group": "UD Ghana",
+     "file": "Bishop Richard Afenyo Tsaku - filled.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 71,
+     "cells": [
+      "65",
+      "66",
+      "Isaac Mensah",
+      "Male",
+      "Pastor",
+      "…",
+      "8/14/82",
+      "44",
+      "WEST END CITY CHURCHES",
+      "Swedru Cathedral",
+      "Swedru",
+      "Ghana",
+      "2013",
+      "N/A",
+      "Yes",
+      "…"
+     ],
+     "city": "Swedru",
+     "country": "Ghana",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
+   "name": "Daniel Boateng",
+   "claims": [
+    {
+     "bishop": "Glen Kwame Opoku",
+     "group": "First Love",
+     "file": "Bishop Glen Kwame Opoku.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 148,
+     "cells": [
+      "Daniel Boateng",
+      "Male",
+      "Pastor",
+      "…",
+      "6/12/90",
+      "36",
+      "QODESH CITY CHURCHES",
+      "Odorkor Main",
+      "Accra",
+      "Ghana",
+      "2018",
+      "Yes",
+      "…"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Romeo Sosu",
+     "group": "United Jesus",
+     "file": "Romeo Sosu 4.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 13,
+     "cells": [
+      "Daniel Kharis Boateng",
+      "Male",
+      "Rev.",
+      "…",
+      "4/10/86",
+      "40",
+      "JESUS IS THE DOOR",
+      "Kpandai",
+      "Kpandai",
+      "Ghana",
+      "2013",
+      "2020",
+      "Yes",
+      "…"
+     ],
+     "city": "Kpandai",
+     "country": "Ghana",
+     "title": "Rev."
+    }
+   ]
+  },
+  {
+   "name": "Grace Boateng",
    "claims": [
     {
      "bishop": "Glen Kwame Opoku",
@@ -2195,6 +2892,119 @@
      ],
      "city": "Accra",
      "country": "Ghana",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
+   "name": "Kwaku Osei Bonsu",
+   "claims": [
+    {
+     "bishop": "Henry Oti-Frimpong",
+     "group": "UD Ghana",
+     "file": "Bishop Henry Oti-Frimpong.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 45,
+     "cells": [
+      "Kwaku Osei Bonsu",
+      "Male",
+      "Rev.",
+      "…",
+      "2/13/72",
+      "54",
+      "THE MEGA CHURCH",
+      "Suame",
+      "Kumasi",
+      "Ghana",
+      "2005",
+      "2012",
+      "No",
+      "…"
+     ],
+     "city": "Kumasi",
+     "country": "Ghana",
+     "title": "Rev."
+    },
+    {
+     "bishop": "Joshua Heward-Mills",
+     "group": "First Love",
+     "file": "Bishop Joshua Heward-Mills.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 130,
+     "cells": [
+      "Kwaku Bonsu",
+      "Male",
+      "Pastor",
+      "…",
+      "11/6/85",
+      "40",
+      "FIRST LOVE CHURCH",
+      "First Love Center",
+      "Accra",
+      "Ghana",
+      "MISSING",
+      "MISSING",
+      "MISSING",
+      "MISSING"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
+   "name": "Erick Maundu Nzuki",
+   "claims": [
+    {
+     "bishop": "Joseph Papa Wachirah Kabiro",
+     "group": "First Love",
+     "file": "Bishop Joseph Papa Wachirah.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 22,
+     "cells": [
+      "Erick Maundu Nzuki",
+      "Male",
+      "Pastor",
+      "2.54799E+11",
+      "…",
+      "29",
+      "FIRST LOVE CHURCH",
+      "Nakuru",
+      "Nakuru",
+      "Kenya",
+      "2023",
+      "No",
+      "…"
+     ],
+     "city": "Nakuru",
+     "country": "Kenya",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Prince Samuel Osei",
+     "group": "First Love",
+     "file": "Bishop Prince Samuel Osei.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 11,
+     "cells": [
+      "Erick Nzuki Maundu",
+      "Male",
+      "Pastor",
+      "…",
+      "7-Aug-98",
+      "28",
+      "FIRST LOVE CHURCH",
+      "Weji",
+      "Addis Ababa",
+      "Ethiopia",
+      "2023",
+      "MISSING",
+      "Yes",
+      "…"
+     ],
+     "city": "Addis Ababa",
+     "country": "Ethiopia",
      "title": "Pastor"
     }
    ]
@@ -2253,6 +3063,89 @@
      "city": "Amasaman",
      "country": "Ghana",
      "title": "Pastor"
+    },
+    {
+     "bishop": "Morrison Addo",
+     "group": "UD Ghana",
+     "file": "Bishop Morrison Addo.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 29,
+     "cells": [
+      "23. Richard Nii Tettey Tetteh ",
+      "Male",
+      "Rev.",
+      "2.33242E+11",
+      "…",
+      "46",
+      "LIGHTHOUSE CHAPEL INTERNATIONAL",
+      "Asamankese ",
+      "Juapong",
+      "Ghana",
+      "2014",
+      "2016",
+      "Yes",
+      "…"
+     ],
+     "city": "Juapong",
+     "country": "Ghana",
+     "title": "Rev."
+    }
+   ]
+  },
+  {
+   "name": "Jude Baiden",
+   "claims": [
+    {
+     "bishop": "Kent Njeru",
+     "group": "First Love",
+     "file": "Bishop Kent Njeru.xlsx",
+     "folder": "Bishop submitted sheets (10 Oct 2026)",
+     "row": 39,
+     "cells": [
+      "Jude Baiden",
+      "MALE",
+      "Pastor",
+      "…",
+      "…",
+      "27",
+      "FIRST LOVE CHURCH",
+      "First Love - London",
+      "London",
+      "United Kingdom",
+      "2024",
+      "N/A",
+      "Yes",
+      "…"
+     ],
+     "city": "London",
+     "country": "United Kingdom",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Stephen Poku",
+     "group": "UD Europe",
+     "file": "Bishop Stephen Poku.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 20,
+     "cells": [
+      "Jude Baiden",
+      "Male",
+      "Rev.",
+      "…",
+      "…",
+      "62",
+      "PLEASANT SURPRISE",
+      "Peterborough",
+      "Peterborough",
+      "United Kingdom",
+      "1997",
+      "2004",
+      "Yes",
+      "…"
+     ],
+     "city": "Peterborough",
+     "country": "United Kingdom",
+     "title": "Rev."
     }
    ]
   },
@@ -2471,6 +3364,63 @@
      ],
      "city": "Accra",
      "country": "Ghana",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
+   "name": "Ama Blankson-Anaman",
+   "claims": [
+    {
+     "bishop": "Norman Kwadwo Darkwa",
+     "group": "UD North America",
+     "file": "Bishop Norman Kwadwo Darkwa.xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 37,
+     "cells": [
+      "Ama Blankson-Anaman",
+      "Female",
+      "Pastor",
+      "…",
+      "…",
+      "45",
+      "REJOICE GREATLY",
+      "Jacksonville",
+      "Jacksonville",
+      "United States",
+      "2021",
+      "NA",
+      "Yes",
+      "…"
+     ],
+     "city": "Jacksonville",
+     "country": "United States",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Patrick Inkoom",
+     "group": "First Love",
+     "file": "Bishop Patrick Inkoom ..xlsx",
+     "folder": "Bishop submitted sheets (9 Oct 2026)",
+     "row": 8,
+     "cells": [
+      "Ama Blankson",
+      "FEMALE",
+      "Pastor ",
+      "…",
+      "…",
+      "29",
+      "FIRST LOVE CHURCH",
+      "Premier ",
+      "Pretoria ",
+      "South Africa",
+      "2023",
+      "N/A",
+      "Yes ",
+      "…"
+     ],
+     "city": "Pretoria",
+     "country": "South Africa",
      "title": "Pastor"
     }
    ]
@@ -2930,6 +3880,123 @@
      "title": "Pastor"
     }
    ]
+  },
+  {
+   "name": "Kwabena Addo",
+   "claims": [
+    {
+     "bishop": "Kodwo K Orleans-Lindsay",
+     "group": "UD North America",
+     "file": "Bishop Kodwo K Orleans-Lindsay.xlsx",
+     "folder": "",
+     "row": 66,
+     "cells": [
+      "Kwabena Addo",
+      "Rev.",
+      "Frederick",
+      "United States",
+      "same picture on both sheets"
+     ],
+     "city": "Frederick",
+     "country": "United States",
+     "title": "Rev."
+    },
+    {
+     "bishop": "Kobina Quansah",
+     "group": "UD Ghana",
+     "file": "Rev Kobina Quansah.xlsx",
+     "folder": "",
+     "row": 56,
+     "cells": [
+      "Enoch Kwabena Addo Yalley",
+      "Pastor",
+      "Tema",
+      "Ghana",
+      "same picture on both sheets"
+     ],
+     "city": "Tema",
+     "country": "Ghana",
+     "title": "Pastor"
+    }
+   ]
+  },
+  {
+   "name": "Emmanuel Kwaku Quansah",
+   "claims": [
+    {
+     "bishop": "Selasy Mcsaint",
+     "group": "UD Ghana",
+     "file": "Bishop Selasy Mcsaint.xlsx",
+     "folder": "",
+     "row": 45,
+     "cells": [
+      "Emmanuel Kwaku Quansah",
+      "Pastor",
+      "Accra",
+      "Ghana",
+      "same picture on both sheets"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor"
+    },
+    {
+     "bishop": "Ebenezer Johnson",
+     "group": "UD Europe",
+     "file": "Rev Ebenezer Johnson.xlsx",
+     "folder": "",
+     "row": 31,
+     "cells": [
+      "Emmanuel Quansah",
+      "Rev.",
+      "Geneva",
+      "Switzerland",
+      "same picture on both sheets"
+     ],
+     "city": "Geneva",
+     "country": "Switzerland",
+     "title": "Rev."
+    }
+   ]
+  },
+  {
+   "name": "Joseph Buabin",
+   "claims": [
+    {
+     "bishop": "Toss Mills-Odoi",
+     "group": "United Jesus",
+     "file": "Bishop Toss Mills-Odoi.xlsx",
+     "folder": "",
+     "row": 24,
+     "cells": [
+      "Joseph Buabin",
+      "Rev.",
+      "Accra",
+      "Ghana",
+      "same picture on both sheets"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Rev."
+    },
+    {
+     "bishop": "Kobina Quansah",
+     "group": "UD Ghana",
+     "file": "Rev Kobina Quansah.xlsx",
+     "folder": "",
+     "row": 78,
+     "cells": [
+      "Joseph Buabin-Nkansah",
+      "Pastor",
+      "",
+      "Ghana",
+      "same picture on both sheets"
+     ],
+     "city": "",
+     "country": "Ghana",
+     "title": "Pastor"
+    }
+   ]
   }
  ],
  "nonListPastors": [],
@@ -2939,6 +4006,31 @@
    "name": "Ebenezer Kwasi Opoku",
    "ruledTo": "Joy Bruce",
    "source": "screenshot 14:15"
+  },
+  {
+   "name": "Michael Sarpong",
+   "ruledTo": "Patrick Bruce",
+   "source": "Sakyi 14:21"
+  },
+  {
+   "name": "Stephen Bondzie",
+   "ruledTo": "Francis Nii Aryee Hammond",
+   "source": "Sakyi 14:22 'Bishop Francis Hammond'"
+  },
+  {
+   "name": "Emmanuel Acheampong",
+   "ruledTo": "Esther-Carina Riche Okyere",
+   "source": "Sakyi 14:30 'Esther Richie Okyere'"
+  },
+  {
+   "name": "Sandra Sheila Acquah",
+   "ruledTo": "Luke Akwasi Frimpong Mensah",
+   "source": "Sakyi 14:32"
+  },
+  {
+   "name": "Leticia Mensah-Fio",
+   "ruledTo": "Kodwo K Orleans-Lindsay",
+   "source": "Sakyi 14:32"
   },
   {
    "name": "Philip Asare",
@@ -3020,14 +4112,6 @@
    "group": "UD Europe",
    "denomination": "Candle In The Dark Church",
    "place": "Napoli, Italy"
-  },
-  {
-   "id": "S4229c3a8",
-   "name": "Raphael Adamtey",
-   "bishop": "Immanuel Obeng",
-   "group": "UD Europe",
-   "denomination": "Candle In The Dark Church",
-   "place": "Modena, Italy"
   },
   {
    "id": "S2a37d2c6",
@@ -3174,6 +4258,14 @@
    "place": "Lagos, Nigeria"
   },
   {
+   "id": "S887a9b01",
+   "name": "John Dag Micheal",
+   "bishop": "Alexander Gottlieb Kofi-Opata",
+   "group": "UD Africa",
+   "denomination": "Everything By Prayer Center",
+   "place": "Lagos, Nigeria"
+  },
+  {
    "id": "P729",
    "name": "Collins Bah",
    "bishop": "Alexander Gottlieb Kofi-Opata",
@@ -3254,12 +4346,52 @@
    "place": "Mombasa, Kenya"
   },
   {
+   "id": "Sff56d3fd",
+   "name": "Liane Akese",
+   "bishop": "Emmanuel Kofi-Yeboah",
+   "group": "UD Africa",
+   "denomination": "Libreville City State",
+   "place": "Libreville, Gabon"
+  },
+  {
    "id": "PN3a65c3739e5b",
    "name": "Marjorie Aicha Gaelle Wora Spouse Bouengui",
    "bishop": "Emmanuel Kofi-Yeboah",
    "group": "UD Africa",
    "denomination": "Libreville City State",
    "place": "Libreville, Gabon"
+  },
+  {
+   "id": "S6416531c",
+   "name": "Sylvain Hans Boumah Ogowet",
+   "bishop": "Emmanuel Kofi-Yeboah",
+   "group": "UD Africa",
+   "denomination": "Libreville City State",
+   "place": "Librevile, Gabon"
+  },
+  {
+   "id": "S897eadc2",
+   "name": "Nzigou Nzigou Fernand Edgar",
+   "bishop": "Emmanuel Kofi-Yeboah",
+   "group": "UD Africa",
+   "denomination": "Libreville City State",
+   "place": "Libreville, Gabon"
+  },
+  {
+   "id": "S2137fa1e",
+   "name": "Gwenaelle Frederique Biyoghe Mve Spouse Antchouwet",
+   "bishop": "Emmanuel Kofi-Yeboah",
+   "group": "UD Africa",
+   "denomination": "Libreville City State",
+   "place": "Libreville, Gabon"
+  },
+  {
+   "id": "S685b8b85",
+   "name": "Jasly Mamboundou Mamboundou",
+   "bishop": "Emmanuel Kofi-Yeboah",
+   "group": "UD Africa",
+   "denomination": "Libreville City State",
+   "place": "Librevile, Gabon"
   },
   {
    "id": "PNd686d83002de",
@@ -3284,6 +4416,14 @@
    "group": "UD Africa",
    "denomination": "Libreville City State",
    "place": "Libreville, Gabon"
+  },
+  {
+   "id": "S6a780c84",
+   "name": "Emmanuel Appenteng Sakyi",
+   "bishop": "Solomon Boateng",
+   "group": "UD Ghana",
+   "denomination": "The Machaneh Church International",
+   "place": "Accra, Ghana"
   },
   {
    "id": "PN53934ce0d996",
@@ -3332,6 +4472,22 @@
    "group": "United Islands",
    "denomination": "Pacific Islands Missionary Church",
    "place": "Suva, Fiji"
+  },
+  {
+   "id": "Sbd1dda2e",
+   "name": "Theresa Reece",
+   "bishop": "Andrew Kwaku Osei",
+   "group": "United Islands",
+   "denomination": "Pacific Islands Missionary Church",
+   "place": "Suva, Fiji"
+  },
+  {
+   "id": "S8107385d",
+   "name": "Pace Zuriel Wumbe",
+   "bishop": "Andrews Osei",
+   "group": "United Jesus",
+   "denomination": "Jesus Is The Door",
+   "place": "Tamale, Ghana"
   },
   {
    "id": "PNb6853d8395e1",
@@ -3534,6 +4690,14 @@
    "place": "Nairobi, Kenya"
   },
   {
+   "id": "S3a3b727e",
+   "name": "Ryan Lando Nelson",
+   "bishop": "Andrae George Woode",
+   "group": "Eschatos",
+   "denomination": "Eschatos",
+   "place": "Kingston, Jamaica"
+  },
+  {
    "id": "P4698",
    "name": "Albert Paa Kwesi Mensah",
    "bishop": "Benjamin Fiadonu",
@@ -3566,14 +4730,6 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "S5a478022",
-   "name": "1994",
-   "bishop": "Benjamin Kwapong Lokko",
-   "group": "UD Ghana",
-   "denomination": "Lighthouse City Churches",
-   "place": "Ghana"
-  },
-  {
    "id": "P2317",
    "name": "John Nditungma",
    "bishop": "Charles Bonsu",
@@ -3582,12 +4738,12 @@
    "place": "Nkenkanso, Ghana"
   },
   {
-   "id": "S8630445d",
-   "name": "Richard Mensa",
+   "id": "S2d4dfa39",
+   "name": "Comfort Wassen",
    "bishop": "Charles Bonsu",
    "group": "UD Ghana",
    "denomination": "The Mega Church",
-   "place": "Offinso, Ghana"
+   "place": "Techiman, Ghana"
   },
   {
    "id": "PN92d2909402b8",
@@ -3620,6 +4776,22 @@
    "group": "UD Ghana",
    "denomination": "The Mega Church",
    "place": "Kumasi, Ghana"
+  },
+  {
+   "id": "Sb433b027",
+   "name": "Micheal Marshal Futukpor",
+   "bishop": "Charles Bonsu",
+   "group": "UD Ghana",
+   "denomination": "Jesus Saviour Of The World Church International",
+   "place": "Techiman, Ghana"
+  },
+  {
+   "id": "S80e16d50",
+   "name": "Nakoja Enock Oja",
+   "bishop": "Charles Bonsu",
+   "group": "UD Ghana",
+   "denomination": "Jesus Saviour Of The World Church International",
+   "place": "Nkoranza, Ghana"
   },
   {
    "id": "PN1704699301ab",
@@ -3718,6 +4890,14 @@
    "place": "Chingola, Zambia"
   },
   {
+   "id": "S8452f4f5",
+   "name": "Daniel Kapira",
+   "bishop": "Clement Asante",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Luyansha, Zambia"
+  },
+  {
    "id": "S7128fcc4",
    "name": "Shelly Amoa",
    "bishop": "Clement Asante",
@@ -3752,7 +4932,7 @@
   {
    "id": "Scf04bc98",
    "name": "Rosemary Sinta",
-   "bishop": "Clement Asante",
+   "bishop": "Geraldo Amoa",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Lusaka, Zambia"
@@ -3814,12 +4994,28 @@
    "place": "Tema, Ghana"
   },
   {
+   "id": "S26435dbf",
+   "name": "Clinton Ehuba Epey Lord",
+   "bishop": "Daniel Amofah",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Douala, Cameroon"
+  },
+  {
    "id": "PNa3089f37e785",
    "name": "Kgabo Francessca Mashamaite",
    "bishop": "Daniel Darku",
    "group": "Eschatos",
    "denomination": "Eschatos",
    "place": "Panama City, Panama"
+  },
+  {
+   "id": "Sbac9afd7",
+   "name": "Abiye Sobere",
+   "bishop": "Daniel Fiifi Gyamerah",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Geneva, Switzerland"
   },
   {
    "id": "P2634",
@@ -4030,6 +5226,14 @@
    "place": "Accra, Ghana"
   },
   {
+   "id": "Sb380af87",
+   "name": "Joana Anuwe Ajadewo",
+   "bishop": "Eddy Addy",
+   "group": "Reasonable Service",
+   "denomination": "Anointed Word Chapel Int",
+   "place": "Accra, Ghana"
+  },
+  {
    "id": "PN8a1dec1fd9c4",
    "name": "Maame Dufie Lutterodt",
    "bishop": "Eddy Addy",
@@ -4040,6 +5244,22 @@
   {
    "id": "PNe74b42cec614",
    "name": "Maurice Tetteh Macauley",
+   "bishop": "Eddy Addy",
+   "group": "Reasonable Service",
+   "denomination": "Anointed Word Chapel Int",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S459d2c31",
+   "name": "Rosalyn Tettey",
+   "bishop": "Eddy Addy",
+   "group": "Reasonable Service",
+   "denomination": "Anointed Word Chapel Int",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "Sfca2deae",
+   "name": "Sampson Abee Ayamga",
    "bishop": "Eddy Addy",
    "group": "Reasonable Service",
    "denomination": "Anointed Word Chapel Int",
@@ -4126,6 +5346,14 @@
    "place": "Essau, Gambia"
   },
   {
+   "id": "S58ec18b6",
+   "name": "Laurene Baoteng",
+   "bishop": "Edwin Morgan Ogoe",
+   "group": "Reasonable Service",
+   "denomination": "Anointed People International",
+   "place": "Accra, Ghana"
+  },
+  {
    "id": "PN668cdecde36b",
    "name": "Emmanuel Ahlijah",
    "bishop": "Edwin Morgan Ogoe",
@@ -4158,16 +5386,48 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "S8105510b",
-   "name": "Emmanuel Ashitei",
+   "id": "S432363ba",
+   "name": "Martha Annor Korlrtey",
    "bishop": "Edwin Morgan Ogoe",
    "group": "Reasonable Service",
    "denomination": "Anointed People International",
    "place": "Accra, Ghana"
   },
   {
-   "id": "Sdbddf964",
-   "name": "Dr Kumah Agyeman",
+   "id": "Sab97a34d",
+   "name": "Denis Atta Peters",
+   "bishop": "Edwin Morgan Ogoe",
+   "group": "Reasonable Service",
+   "denomination": "Anointed People International",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "Sed50e4ca",
+   "name": "Fanny Atta Peters",
+   "bishop": "Edwin Morgan Ogoe",
+   "group": "Reasonable Service",
+   "denomination": "Anointed People International",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "Sa60ea7f9",
+   "name": "Lord William Abanga",
+   "bishop": "Emmanuel Ankrah",
+   "group": "UD Ghana",
+   "denomination": "Jesus Saviour Of The World Church International",
+   "place": "Kwame Danso, Ghana"
+  },
+  {
+   "id": "S33080632",
+   "name": "Kumah Agyeman",
+   "bishop": "Emmanuel Bekoe Saforo Sakyi",
+   "group": "UD Ghana",
+   "denomination": "East Mountain Churches",
+   "place": "Gyankama, Ghana"
+  },
+  {
+   "id": "S1b9a0e51",
+   "name": "Francis Lebene Kumah",
    "bishop": "Emmanuel Bekoe Saforo Sakyi",
    "group": "UD Ghana",
    "denomination": "East Mountain Churches",
@@ -4208,6 +5468,14 @@
   {
    "id": "PNc1ccc9711133",
    "name": "Deborah Ayiglo",
+   "bishop": "Emmanuel Nterful",
+   "group": "Reasonable Service",
+   "denomination": "Keep My Word Chapel International",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S73871aa2",
+   "name": "Pearl Antwi-Boasiako",
    "bishop": "Emmanuel Nterful",
    "group": "Reasonable Service",
    "denomination": "Keep My Word Chapel International",
@@ -4348,14 +5616,6 @@
    "group": "Reasonable Service",
    "denomination": "Keep My Word Chapel International",
    "place": "Accra, Ghana"
-  },
-  {
-   "id": "S4550a9f9",
-   "name": "Bishop Emmanuel Nterful",
-   "bishop": "Emmanuel Nterful",
-   "group": "Reasonable Service",
-   "denomination": "Keep My Word Chapel International",
-   "place": "Ghana"
   },
   {
    "id": "Se83d157c",
@@ -4558,20 +5818,20 @@
    "place": "Apam, Ghana"
   },
   {
-   "id": "S5509ebda",
-   "name": "Bishop Francis Nii Aryee Hammond",
-   "bishop": "Francis Nii Aryee Hammond",
-   "group": "UD Ghana",
-   "denomination": "Anagkazo Assemblies",
-   "place": "Ghana"
-  },
-  {
    "id": "Sce1ded69",
    "name": "Ud Ghana · Anagkazo Assemblies",
    "bishop": "Francis Nii Aryee Hammond",
    "group": "UD Ghana",
    "denomination": "Anagkazo Assemblies",
    "place": "Ghana"
+  },
+  {
+   "id": "S04986af3",
+   "name": "Gideon Oko Nii Armah Okai",
+   "bishop": "Francis Philip Asamoah",
+   "group": "UD Ghana",
+   "denomination": "Anagkazo Assemblies",
+   "place": "Kasoa, Ghana"
   },
   {
    "id": "PNcd2462d57ddf",
@@ -4646,6 +5906,14 @@
    "place": "Lome, Togo"
   },
   {
+   "id": "Sdcff442c",
+   "name": "Ebenezer Kokou Noumatsi",
+   "bishop": "Francis Tsikata-Akatto",
+   "group": "UD Africa",
+   "denomination": "Rencontre Prophetique Internationale",
+   "place": "Lome, Togo"
+  },
+  {
    "id": "P2238",
    "name": "Jeremie Konde-Abalo Pakpanadon",
    "bishop": "Francis Tsikata-Akatto",
@@ -4680,6 +5948,14 @@
   {
    "id": "P524",
    "name": "Blessed Tei Apenahier",
+   "bishop": "Frank Ofori Adjei",
+   "group": "UD Africa",
+   "denomination": "Strait Gate Church Liberia",
+   "place": "Monrovia, Liberia"
+  },
+  {
+   "id": "S71f335fd",
+   "name": "Joy Apenahier",
    "bishop": "Frank Ofori Adjei",
    "group": "UD Africa",
    "denomination": "Strait Gate Church Liberia",
@@ -4934,6 +6210,14 @@
    "place": "Denu, Ghana"
   },
   {
+   "id": "S5c95396b",
+   "name": "Charles Gablah",
+   "bishop": "Fred Ansah Quartey",
+   "group": "UD Ghana",
+   "denomination": "East End City Churches",
+   "place": "Dzodze, Ghana"
+  },
+  {
    "id": "P3999",
    "name": "Sebastian Gadzanaki",
    "bishop": "Fred Ansah Quartey",
@@ -4964,6 +6248,14 @@
    "group": "UD Ghana",
    "denomination": "East End City Churches",
    "place": "Aflao, Ghana"
+  },
+  {
+   "id": "S284dc07f",
+   "name": "Langelihle Mmgomezulu",
+   "bishop": "Geraldo Amoa",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Lusaka, Zambia"
   },
   {
    "id": "P3519",
@@ -5000,6 +6292,14 @@
   {
    "id": "P1109",
    "name": "Edward Adama Armah",
+   "bishop": "Glen Kwame Opoku",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S3c2d559a",
+   "name": "Eyram Festus Kwashie Ashigbie",
    "bishop": "Glen Kwame Opoku",
    "group": "First Love",
    "denomination": "Qodesh City Church",
@@ -5070,6 +6370,14 @@
    "place": "Accra, Ghana"
   },
   {
+   "id": "S388a3be0",
+   "name": "Emmanuel Sampah",
+   "bishop": "Glen Kwame Opoku",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
+   "place": "Accra, Ghana"
+  },
+  {
    "id": "P1140",
    "name": "Efua Bedua Sompa-Osei",
    "bishop": "Glen Kwame Opoku",
@@ -5086,16 +6394,16 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "Sf916d742",
-   "name": "Isaac Nii Bonney Mensah",
+   "id": "S4695267c",
+   "name": "Lorreta Mintah-Aboagye",
    "bishop": "Glen Kwame Opoku",
    "group": "First Love",
    "denomination": "Qodesh City Church",
    "place": "Accra, Ghana"
   },
   {
-   "id": "Sacc75339",
-   "name": "Benjamin Djaafo Lartey",
+   "id": "Sac771a32",
+   "name": "Benjamin Sagoe",
    "bishop": "Glen Kwame Opoku",
    "group": "First Love",
    "denomination": "Qodesh City Church",
@@ -5120,6 +6428,22 @@
   {
    "id": "PN7e4d5c2c518d",
    "name": "Priscilla Etornam Azasoo",
+   "bishop": "Gustav Offei-Manu",
+   "group": "UD Africa",
+   "denomination": "1000 Micro Church Network International",
+   "place": "Kampala, Uganda"
+  },
+  {
+   "id": "S6d126499",
+   "name": "Anne Nabacwa",
+   "bishop": "Gustav Offei-Manu",
+   "group": "UD Africa",
+   "denomination": "1000 Micro Church Network International",
+   "place": "Kampala, Uganda"
+  },
+  {
+   "id": "Sf02a5a83",
+   "name": "Jovia Mirembe Ngobi",
    "bishop": "Gustav Offei-Manu",
    "group": "UD Africa",
    "denomination": "1000 Micro Church Network International",
@@ -5240,7 +6564,7 @@
   {
    "id": "S893cce89",
    "name": "Jayson Quarshie",
-   "bishop": "Isaac Agyeman",
+   "bishop": "Joshua Heward-Mills",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Accra, Ghana"
@@ -5278,12 +6602,28 @@
    "place": "Sunyani, Ghana"
   },
   {
+   "id": "S5e0ca1ec",
+   "name": "Clinton Sekyere Frempong",
+   "bishop": "Isaac Agyeman",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Ho, Ghana"
+  },
+  {
    "id": "P4639",
    "name": "William Longdon",
    "bishop": "Isaac Agyeman",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Cape Coast, Ghana"
+  },
+  {
+   "id": "S1d73b57f",
+   "name": "Matthias Okine",
+   "bishop": "Isaac Agyeman",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Sunyani, Ghana"
   },
   {
    "id": "P4637",
@@ -5318,9 +6658,17 @@
    "place": "Kumasi, Ghana"
   },
   {
+   "id": "S10325a07",
+   "name": "Paulina Ama Ansah",
+   "bishop": "Joy Bruce",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Kumasi, Ghana"
+  },
+  {
    "id": "PN919a6ce63625",
    "name": "Emmanuel Narteh Ayiku",
-   "bishop": "Isaac Agyeman",
+   "bishop": "Joy Bruce",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Kumasi, Ghana"
@@ -5374,6 +6722,14 @@
    "place": "Tema, Ghana"
   },
   {
+   "id": "S42a37125",
+   "name": "Benjamin Kwame Buabeng-Acheampong",
+   "bishop": "Ishmael Sam",
+   "group": "Reasonable Service",
+   "denomination": "True Son Chapel International",
+   "place": "Tema, Ghana"
+  },
+  {
    "id": "PN760ae7e511e5",
    "name": "Brian Paapa Paintsil",
    "bishop": "Ishmael Sam",
@@ -5408,14 +6764,6 @@
   {
    "id": "PN1f85e833da02",
    "name": "Foli Ashiagbor",
-   "bishop": "Ishmael Sam",
-   "group": "Reasonable Service",
-   "denomination": "True Son Chapel International",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "PNe1c7b5447ff3",
-   "name": "Ishmael Nathaniel Jojo Sam",
    "bishop": "Ishmael Sam",
    "group": "Reasonable Service",
    "denomination": "True Son Chapel International",
@@ -5544,6 +6892,14 @@
   {
    "id": "P3740",
    "name": "Richard Kojo Antwi",
+   "bishop": "Jeffrey Kwame Ocran",
+   "group": "UD Africa",
+   "denomination": "Fruitferos Internacional Guinea Bissau",
+   "place": "Bissau, Guinea-Bissau"
+  },
+  {
+   "id": "S9b641c38",
+   "name": "Jonio Jorge Gomes Có",
    "bishop": "Jeffrey Kwame Ocran",
    "group": "UD Africa",
    "denomination": "Fruitferos Internacional Guinea Bissau",
@@ -5718,6 +7074,14 @@
    "place": "Jiwaka Province, Papua New Guinea"
   },
   {
+   "id": "S02706f69",
+   "name": "Kelvin Oppong Peprah",
+   "bishop": "John Yaw Frimpong",
+   "group": "United Islands",
+   "denomination": "Favourite Child Church",
+   "place": "Henderson, New Zealand"
+  },
+  {
    "id": "P2209",
    "name": "Jeanelie Mercurio Yniego",
    "bishop": "John Yaw Frimpong",
@@ -5728,6 +7092,14 @@
   {
    "id": "PN21c0fc39e4b3",
    "name": "Loussemo Agbevan",
+   "bishop": "Joseph Aboagye",
+   "group": "UD Africa",
+   "denomination": "Victoire Internationale",
+   "place": "Pointe Noire, Congo"
+  },
+  {
+   "id": "S0dc0920d",
+   "name": "Héritier Mayoulou Mounkare",
    "bishop": "Joseph Aboagye",
    "group": "UD Africa",
    "denomination": "Victoire Internationale",
@@ -6334,8 +7706,24 @@
    "place": "Accra, Ghana"
   },
   {
+   "id": "S73e16c1a",
+   "name": "Obed Wiredu Ampadu",
+   "bishop": "Kofi Hene Asare",
+   "group": "UD Ghana",
+   "denomination": "Qodesh Family Churches",
+   "place": "Accra, Ghana"
+  },
+  {
    "id": "S1a3474d2",
    "name": "Ernest Yaw Amponsah",
+   "bishop": "Kofi Hene Asare",
+   "group": "UD Ghana",
+   "denomination": "Qodesh Family Churches",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "Sdfc497e4",
+   "name": "Kakra Ankobiah",
    "bishop": "Kofi Hene Asare",
    "group": "UD Ghana",
    "denomination": "Qodesh Family Churches",
@@ -6352,6 +7740,14 @@
   {
    "id": "P1819",
    "name": "Gideon Aziele",
+   "bishop": "Kofi Hene Asare",
+   "group": "UD Ghana",
+   "denomination": "Qodesh Family Churches",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S7c78bb07",
+   "name": "Ishmeal Bonnah",
    "bishop": "Kofi Hene Asare",
    "group": "UD Ghana",
    "denomination": "Qodesh Family Churches",
@@ -6409,14 +7805,6 @@
    "id": "P3568",
    "name": "Prince Acheamfuor Osei",
    "bishop": "Kofi Hene Asare",
-   "group": "UD Ghana",
-   "denomination": "Qodesh Family Churches",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "S3784531b",
-   "name": "Joseph Amoah",
-   "bishop": "",
    "group": "UD Ghana",
    "denomination": "Qodesh Family Churches",
    "place": "Accra, Ghana"
@@ -6614,12 +8002,36 @@
    "place": "Accra, Ghana"
   },
   {
+   "id": "Scf11f4c8",
+   "name": "Raphael Nanevi",
+   "bishop": "Kudzo Jonathan Sewornuku Bekui",
+   "group": "UD Ghana",
+   "denomination": "Jesus Is The Rock Church",
+   "place": "Kpando, Ghana"
+  },
+  {
    "id": "P3883",
    "name": "Samorah Kudzo Klomatse",
    "bishop": "Kudzo Jonathan Sewornuku Bekui",
    "group": "UD Ghana",
    "denomination": "Jesus Is The Rock Church",
    "place": "Dziegbe, Ghana"
+  },
+  {
+   "id": "S5db04bd9",
+   "name": "Selase Sabah",
+   "bishop": "Kwabena Appiah Denkyira",
+   "group": "UD Ghana",
+   "denomination": "East Mountain Churches",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "Sc3bc6b27",
+   "name": "Mcdonald Raynes Penney",
+   "bishop": "Kwabena Appiah Denkyira",
+   "group": "UD Ghana",
+   "denomination": "East Mountain Churches",
+   "place": "Akuapim Mampong, Ghana"
   },
   {
    "id": "P2192",
@@ -6670,12 +8082,60 @@
    "place": "Cambridge, United Kingdom"
   },
   {
+   "id": "Sd23f007f",
+   "name": "Chantal Sholarin",
+   "bishop": "Kwame Adu Gyamfi",
+   "group": "UD Europe",
+   "denomination": "Mustard Seed Chapel International",
+   "place": "Manchester, United Kingdom"
+  },
+  {
+   "id": "S5fa29c1a",
+   "name": "Christine Asare Bosumpem",
+   "bishop": "Kwame Adu Gyamfi",
+   "group": "UD Europe",
+   "denomination": "Mustard Seed Chapel International",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "S66fd84b5",
+   "name": "Ebenezer Anum Sowah",
+   "bishop": "Kwame Adu Gyamfi",
+   "group": "UD Europe",
+   "denomination": "Mustard Seed Chapel International",
+   "place": "London, United Kingdom"
+  },
+  {
    "id": "P1119",
    "name": "Edward Kwame Deti",
    "bishop": "Kwame Adu Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
+  },
+  {
+   "id": "S8bf70b99",
+   "name": "Elisabeth Olufunmilyo Osagie",
+   "bishop": "Kwame Adu Gyamfi",
+   "group": "UD Europe",
+   "denomination": "Mustard Seed Chapel International",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "Sadbbeedd",
+   "name": "Emmanuel Kesse",
+   "bishop": "Kwame Adu Gyamfi",
+   "group": "UD Europe",
+   "denomination": "Mustard Seed Chapel International",
+   "place": "Staffordshire, United Kingdom"
+  },
+  {
+   "id": "S0a8664c3",
+   "name": "Emmnauel Owiredu-Yeboah",
+   "bishop": "Kwame Adu Gyamfi",
+   "group": "UD Europe",
+   "denomination": "Mustard Seed Chapel International",
+   "place": "Reading, United Kingdom"
   },
   {
    "id": "P1765",
@@ -6766,8 +8226,24 @@
    "place": "Walsall, United Kingdom"
   },
   {
+   "id": "Sae2e459d",
+   "name": "Kwame Ofori Asumadu",
+   "bishop": "Kwame Adu Gyamfi",
+   "group": "UD Europe",
+   "denomination": "Mustard Seed Chapel International",
+   "place": "London, United Kingdom"
+  },
+  {
    "id": "P2696",
    "name": "Kwasi Owusu Asamoah",
+   "bishop": "Kwame Adu Gyamfi",
+   "group": "UD Europe",
+   "denomination": "Mustard Seed Chapel International",
+   "place": "London, United Kingdom"
+  },
+  {
+   "id": "Sb35cc827",
+   "name": "Laureeen Allotey",
    "bishop": "Kwame Adu Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
@@ -6780,6 +8256,14 @@
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Wolverhampton, United Kingdom"
+  },
+  {
+   "id": "S542b5ba1",
+   "name": "Leonard Danvessell",
+   "bishop": "Kwame Adu Gyamfi",
+   "group": "UD Europe",
+   "denomination": "Mustard Seed Chapel International",
+   "place": "Northampton, United Kingdom"
   },
   {
    "id": "P3230",
@@ -6838,6 +8322,14 @@
    "place": "Blantyre, Malawi"
   },
   {
+   "id": "S66271199",
+   "name": "Alfred Kofi Mensah",
+   "bishop": "Kwesi Woode",
+   "group": "UD Africa",
+   "denomination": "First Love Church",
+   "place": "Lilongwe, Malawi"
+  },
+  {
    "id": "PN8525f78537d4",
    "name": "Laurent Kutengule",
    "bishop": "Kwesi Woode",
@@ -6892,14 +8384,6 @@
    "group": "UD North America",
    "denomination": "American Missionary Church",
    "place": "Aurora, United States"
-  },
-  {
-   "id": "S589a309d",
-   "name": "Bishop Luke Akwasi Frimpong Mensah",
-   "bishop": "Luke Akwasi Frimpong Mensah",
-   "group": "UD North America",
-   "denomination": "American Missionary Church",
-   "place": "United States"
   },
   {
    "id": "Sfd42d70f",
@@ -6966,6 +8450,14 @@
    "place": "Johannesburg, South Africa"
   },
   {
+   "id": "S392fc6ca",
+   "name": "Jphannes Makolle Nkholi",
+   "bishop": "Mcivin Afetseng Mafora",
+   "group": "UD Africa",
+   "denomination": "Strong Christian Church",
+   "place": "Polokwane, South Africa"
+  },
+  {
    "id": "P453",
    "name": "Benjamin Ntim Gyeni",
    "bishop": "Michael Amoh",
@@ -6990,6 +8482,14 @@
    "place": "Tatale, Ghana"
   },
   {
+   "id": "S47ade4da",
+   "name": "Timothy Nanjah Maninyiya",
+   "bishop": "Michael Dotsey-Dzokoto",
+   "group": "United Jesus",
+   "denomination": "Jesus Is The Door",
+   "place": "Ghana"
+  },
+  {
    "id": "P1880",
    "name": "Godfred Yaajieme Machambe",
    "bishop": "Michael Dotsey-Dzokoto",
@@ -7006,40 +8506,24 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "S84c10ced",
-   "name": "1 Albert Addia",
-   "bishop": "Morrison Addo",
-   "group": "UD Ghana",
-   "denomination": "Lighthouse Chapel International",
-   "place": "Teacher Mante, Ghana"
-  },
-  {
-   "id": "S8816ddd4",
-   "name": "5 David Asare Afram",
+   "id": "P857",
+   "name": "David Asare Afram",
    "bishop": "Morrison Addo",
    "group": "UD Ghana",
    "denomination": "Lighthouse Chapel International",
    "place": "Suhum, Ghana"
   },
   {
-   "id": "S301bfe42",
-   "name": "11 William Ansah-Twum",
+   "id": "P2292",
+   "name": "John Ayibontey",
    "bishop": "Morrison Addo",
    "group": "UD Ghana",
    "denomination": "Lighthouse Chapel International",
    "place": "Kade, Ghana"
   },
   {
-   "id": "S318decf3",
-   "name": "14 John Ayibontey",
-   "bishop": "Morrison Addo",
-   "group": "UD Ghana",
-   "denomination": "Lighthouse Chapel International",
-   "place": "Kade, Ghana"
-  },
-  {
-   "id": "S19352a6e",
-   "name": "21 John Dela Quashiegah",
+   "id": "Sa167e49f",
+   "name": "John Dela Quashiegah",
    "bishop": "Morrison Addo",
    "group": "UD Ghana",
    "denomination": "Lighthouse Chapel International",
@@ -7128,6 +8612,14 @@
   {
    "id": "PNa62bf1aa76e3",
    "name": "Laurent Nourrice",
+   "bishop": "Nee Nunoo",
+   "group": "UD Africa",
+   "denomination": "United Cities",
+   "place": "Seychelles, Seychelles"
+  },
+  {
+   "id": "S0f64f83c",
+   "name": "Jeanne Fred",
    "bishop": "Nee Nunoo",
    "group": "UD Africa",
    "denomination": "United Cities",
@@ -7246,14 +8738,6 @@
    "place": "Kumasi, Ghana"
   },
   {
-   "id": "S1eb7c9a8",
-   "name": "Charity Cordelia Akweley Agbo",
-   "bishop": "Patrick Bruce",
-   "group": "Reasonable Service",
-   "denomination": "The Mega Church – Grace Chapel",
-   "place": "Kumasi, Ghana"
-  },
-  {
    "id": "P4930",
    "name": "Orienther Banyini",
    "bishop": "Patrick Inkoom",
@@ -7312,6 +8796,14 @@
   {
    "id": "PN2b47594db34b",
    "name": "Reneilwe Koma",
+   "bishop": "Patrick Inkoom",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Gaborone, Botswana"
+  },
+  {
+   "id": "S04beb1b1",
+   "name": "Shanganani Manasseh Denest",
    "bishop": "Patrick Inkoom",
    "group": "First Love",
    "denomination": "First Love Church",
@@ -7446,14 +8938,6 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "S93227e90",
-   "name": "Ama Sakoa Annor",
-   "bishop": "Peter Mokganya",
-   "group": "UD Africa",
-   "denomination": "Strong Christian Church",
-   "place": "Pretoria, South Africa"
-  },
-  {
    "id": "PNd28305f8fddf",
    "name": "Matome Mathipa",
    "bishop": "Peter Mokganya",
@@ -7468,6 +8952,14 @@
    "group": "UD Africa",
    "denomination": "Strong Christian Church",
    "place": "Pretoria, South Africa"
+  },
+  {
+   "id": "S21cd579f",
+   "name": "Gift Magafahlele Mokganyetsi",
+   "bishop": "Peter Mokganya",
+   "group": "UD Africa",
+   "denomination": "Strong Christian Church",
+   "place": "Mbombela, South Africa"
   },
   {
    "id": "P2260",
@@ -7508,6 +9000,14 @@
    "group": "UD Africa",
    "denomination": "Strong Christian Church",
    "place": "Johannesburg, South Africa"
+  },
+  {
+   "id": "S0e8f74b7",
+   "name": "Masego Valentia Mokganyesti",
+   "bishop": "Peter Mokganya",
+   "group": "UD Africa",
+   "denomination": "Strong Christian Church",
+   "place": "Nelspruit, South Africa"
   },
   {
    "id": "PN315f86720183",
@@ -7624,6 +9124,30 @@
   {
    "id": "P3770",
    "name": "Richmond Arkoh",
+   "bishop": "Richard Afenyo Tsaku",
+   "group": "UD Ghana",
+   "denomination": "West End City Churches",
+   "place": "Ofaakor, Ghana"
+  },
+  {
+   "id": "Sa8627dce",
+   "name": "Essenam Tsaku",
+   "bishop": "Richard Afenyo Tsaku",
+   "group": "UD Ghana",
+   "denomination": "West End City Churches",
+   "place": "Ofaakor, Ghana"
+  },
+  {
+   "id": "S118b670c",
+   "name": "Joseph Anum Tettey",
+   "bishop": "Richard Afenyo Tsaku",
+   "group": "UD Ghana",
+   "denomination": "West End City Churches",
+   "place": "Ofaakor, Ghana"
+  },
+  {
+   "id": "S028b7e1b",
+   "name": "Lordina Baffoe",
    "bishop": "Richard Afenyo Tsaku",
    "group": "UD Ghana",
    "denomination": "West End City Churches",
@@ -7790,12 +9314,28 @@
    "place": "Nassau, Bahamas"
   },
   {
+   "id": "Scd283ea9",
+   "name": "Myron Andre",
+   "bishop": "Rutendo Mantiziba",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Roseau, Dominica"
+  },
+  {
    "id": "S41caa281",
    "name": "Chioma Chigbu",
    "bishop": "Rutendo Mantiziba",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Basseterre, Saint Kitts And Nevis"
+  },
+  {
+   "id": "Sb1c47927",
+   "name": "Maliaka Dotting",
+   "bishop": "Rutendo Mantiziba",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Santo Domingo, Dominican Republic"
   },
   {
    "id": "P2741",
@@ -7832,6 +9372,14 @@
   {
    "id": "PN9593868adb98",
    "name": "Anthony Aklika",
+   "bishop": "Sam Sawyerr",
+   "group": "Reasonable Service",
+   "denomination": "Anointed People International",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "Sad113953",
+   "name": "Patsy Fofo Sawyerr",
    "bishop": "Sam Sawyerr",
    "group": "Reasonable Service",
    "denomination": "Anointed People International",
@@ -8014,6 +9562,14 @@
    "place": "Accra, Ghana"
   },
   {
+   "id": "Se6aad034",
+   "name": "Enoch Asare Wiafe",
+   "bishop": "Sompa Osei",
+   "group": "UD Ghana",
+   "denomination": "Makarios City Church",
+   "place": "Accra, Ghana"
+  },
+  {
    "id": "S2e0cdab5",
    "name": "Michael Kwabena Boye Addo",
    "bishop": "Sompa Osei",
@@ -8027,6 +9583,14 @@
    "bishop": "Sompa Osei",
    "group": "UD Ghana",
    "denomination": "The Machaneh Church International",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S7046d7d2",
+   "name": "Samson Appiah",
+   "bishop": "Sompa Osei",
+   "group": "UD Ghana",
+   "denomination": "Makarios City Church",
    "place": "Accra, Ghana"
   },
   {
@@ -8094,12 +9658,44 @@
    "place": "Rochester, United Kingdom"
   },
   {
+   "id": "Sc51eefd4",
+   "name": "Denzil Boateng Sam-Orhin",
+   "bishop": "Stephen Poku",
+   "group": "UD Europe",
+   "denomination": "Pleasant Surprise",
+   "place": "Surrey Quays, United Kingdom"
+  },
+  {
    "id": "PN331e090b04dd",
    "name": "Michael Asumadu-Dua",
    "bishop": "Stephen Poku",
    "group": "UD Europe",
    "denomination": "Pleasant Surprise",
    "place": "Dudley, United Kingdom"
+  },
+  {
+   "id": "S2ef90f0b",
+   "name": "Oluwatosin Damilola Adeniregun",
+   "bishop": "Stephen Poku",
+   "group": "UD Europe",
+   "denomination": "Pleasant Surprise",
+   "place": "Stevenage, United Kingdom"
+  },
+  {
+   "id": "S6518f13e",
+   "name": "Vincent Kwame Boafor",
+   "bishop": "Steve Asare",
+   "group": "Reasonable Service",
+   "denomination": "Allos Mega Church",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S7eb407e2",
+   "name": "Godfred Etsei-Williams",
+   "bishop": "Steve Asare",
+   "group": "Reasonable Service",
+   "denomination": "Allos Mega Church",
+   "place": "Accra, Ghana"
   },
   {
    "id": "PN958921c3a18c",
@@ -8238,12 +9834,28 @@
    "place": "Daboase, Ghana"
   },
   {
+   "id": "Sb9d00ddf",
+   "name": "Phillemon Chabalala",
+   "bishop": "Elaine Klufio",
+   "group": "UD Africa",
+   "denomination": "Strong Christian Church",
+   "place": "Pretoria, South Africa"
+  },
+  {
    "id": "PNc8291f562615",
    "name": "Goodness Sindiswa Tsobo",
    "bishop": "Elaine Klufio",
    "group": "UD Africa",
    "denomination": "Strong Christian Church",
    "place": "Pretoria, South Africa"
+  },
+  {
+   "id": "S8c83f8aa",
+   "name": "Jemima Agyemang",
+   "bishop": "Kathleen-Sarah Parker-Allotey",
+   "group": "UD Ghana",
+   "denomination": "The Glorious Mega Church",
+   "place": "Accra, Ghana"
   },
   {
    "id": "PNf2026d3ce730",
@@ -8302,6 +9914,14 @@
    "place": "Bolgatanga, Ghana"
   },
   {
+   "id": "S691d9a68",
+   "name": "Alexander Lexes Amaning",
+   "bishop": "Harry Kwesi Dodd",
+   "group": "UD Ghana",
+   "denomination": "Makarios Western North",
+   "place": "Sefwi Akontombra, Ghana"
+  },
+  {
    "id": "P3224",
    "name": "Nana Osei Poku",
    "bishop": "Isaac Koranteng",
@@ -8316,6 +9936,14 @@
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Tuba, Ghana"
+  },
+  {
+   "id": "Sc13f7b33",
+   "name": "Ruth Nana Ama Owiredu Amakye",
+   "bishop": "Isaac Koranteng",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Sampa Valley. Titop, Ghana"
   },
   {
    "id": "PNb4979e641b6a",
@@ -8422,6 +10050,14 @@
    "place": "Broadcasting Junction, Ghana"
   },
   {
+   "id": "S803c02ab",
+   "name": "Beatrice Ofusua",
+   "bishop": "Isaac Koranteng",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Ghana"
+  },
+  {
    "id": "P353",
    "name": "Augustina Aryee",
    "bishop": "Isaac Koranteng",
@@ -8510,6 +10146,14 @@
    "place": "United States"
   },
   {
+   "id": "S685b8aac",
+   "name": "Prince Danso",
+   "bishop": "James Quist-Therson",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "New York, United States"
+  },
+  {
    "id": "S5608904c",
    "name": "Abeku Eshun (Cyrus Abeku Eshun)",
    "bishop": "James Quist-Therson",
@@ -8526,6 +10170,14 @@
    "place": "Greensboro, United States"
   },
   {
+   "id": "S18822960",
+   "name": "Patrick Ikekhua",
+   "bishop": "James Quist-Therson",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "New York, United States"
+  },
+  {
    "id": "P4869",
    "name": "Chibueze Meremetoh",
    "bishop": "James Quist-Therson",
@@ -8540,6 +10192,14 @@
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Los Angeles, United States"
+  },
+  {
+   "id": "S5ef5a967",
+   "name": "Papa Amoo",
+   "bishop": "James Quist-Therson",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Orlando, United States"
   },
   {
    "id": "P4872",
@@ -8886,44 +10546,12 @@
    "place": "Ndjamena, Tchad"
   },
   {
-   "id": "S15b327e7",
-   "name": "Edwin Davis",
-   "bishop": "Toss Mills-Odoi",
-   "group": "United Jesus",
-   "denomination": "Jesus Is The Master",
-   "place": "Tema, Ghana"
-  },
-  {
    "id": "Sefc334fd",
    "name": "Bimark Nketia-Mensah",
    "bishop": "Toss Mills-Odoi",
    "group": "United Jesus",
    "denomination": "Jesus Is The Master",
    "place": "Accra, Ghana"
-  },
-  {
-   "id": "Scf04bc98-c685",
-   "name": "Rosemary Sinta",
-   "bishop": "Geraldo Amoa",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Lusaka, Zambia"
-  },
-  {
-   "id": "S893cce89-1c64",
-   "name": "Jayson Quarshie",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "Sc06bce1f",
-   "name": "Emmanuel Narteh Ayiku",
-   "bishop": "Joy Bruce",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Kumasi, Ghana"
   },
   {
    "id": "PN50d46a149f2a",
@@ -8964,14 +10592,6 @@
    "group": "UD Europe",
    "denomination": "Living Waters International",
    "place": "Fribourg, Switzerland"
-  },
-  {
-   "id": "S9a8e603a",
-   "name": "Charles Nii Coppoe Aidoo",
-   "bishop": "Ebenezer Johnson",
-   "group": "UD Europe",
-   "denomination": "Living Waters International",
-   "place": "Luzern, Switzerland"
   },
   {
    "id": "P118",
@@ -9070,12 +10690,28 @@
    "place": "Tema, Ghana"
   },
   {
+   "id": "Sea85c020",
+   "name": "Ernest Quanain",
+   "bishop": "Kobina Quansah",
+   "group": "UD Ghana",
+   "denomination": "Saviours Of Men International",
+   "place": "Tema Community 22, Ghana"
+  },
+  {
    "id": "PN29e689125b5b",
    "name": "Bismark Larweh Ocansey",
    "bishop": "Kobina Quansah",
    "group": "UD Ghana",
    "denomination": "Saviours Of Men International",
    "place": "Ashaiman, Ghana"
+  },
+  {
+   "id": "S8d027cdf",
+   "name": "Leon Mawuli Zakli",
+   "bishop": "Kobina Quansah",
+   "group": "UD Ghana",
+   "denomination": "Saviours Of Men International",
+   "place": "Tema Community 22, Ghana"
   },
   {
    "id": "S11d812de",
@@ -9086,8 +10722,24 @@
    "place": "Accra, Ghana"
   },
   {
+   "id": "S93ccab05",
+   "name": "Francis Otu Sorgbojor",
+   "bishop": "Kobina Quansah",
+   "group": "UD Ghana",
+   "denomination": "Saviours Of Men International",
+   "place": "Tema Community 22, Ghana"
+  },
+  {
    "id": "PN33878091063b",
    "name": "Adolf Kofi Nkrumah",
+   "bishop": "Kobina Quansah",
+   "group": "UD Ghana",
+   "denomination": "Saviours Of Men International",
+   "place": "Ashaiman, Ghana"
+  },
+  {
+   "id": "S0f791582",
+   "name": "Enoch Kakanu",
    "bishop": "Kobina Quansah",
    "group": "UD Ghana",
    "denomination": "Saviours Of Men International",
@@ -9142,14 +10794,6 @@
    "place": "Ashaiman, Ghana"
   },
   {
-   "id": "PN1b9242de0fc4",
-   "name": "Names Which Have Been Taken Out",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Ghana"
-  },
-  {
    "id": "P1436",
    "name": "Ernest Kwesi Assan",
    "bishop": "Kobina Quansah",
@@ -9183,7 +10827,7 @@
   }
  ],
  "photos": {
-  "fromFolders": 115,
+  "fromFolders": 138,
   "converted": 0
  }
 }

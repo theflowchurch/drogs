@@ -21,6 +21,7 @@ const COLS = {
 // all yield the key 11-8-77 (day-month-2-digit-year) — both day/month orders are kept because sheets mix US and UK order.
 const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 const dobKeys = (v) => { const t = String(v || '').toLowerCase(); if (!t || blank(t)) return []; const m = MONTHS.findIndex((mo) => t.includes(mo)); const nums = (t.match(/\d+/g) || []).map(Number); if (m >= 0 && nums.length >= 2) { const year = nums.find((n) => n > 31) ?? nums[nums.length - 1]; const day = nums.find((n) => n <= 31) ?? 0; return [`${day}-${m + 1}-${String(year).slice(-2)}`]; } if (nums.length >= 3) { const [a, b, c] = nums; const y = String(c).slice(-2); return [`${a}-${b}-${y}`, `${b}-${a}-${y}`]; } return []; };
+const words_ = (n) => String(n).split(/\s+/).filter((w) => /\p{L}/u.test(w)).length;
 const title = (rank, gender) => { const r = clean(rank).toLowerCase(), f = /^f/i.test(clean(gender)); if (/bishop/.test(r)) return 'Bishop'; if (/mother/.test(r)) return 'Mother'; if (/episcopal|sister/.test(r)) return 'Episcopal Sister'; if (/rev/.test(r)) return f ? 'Lady Rev.' : 'Rev.'; if (/apostle/.test(r)) return 'Apostle'; return 'Pastor'; };
 const isHeader = (r) => r.filter((c) => Object.values(COLS).some((re) => re.test(c.toLowerCase().trim()))).length >= 3;
 const mapHeader = (r) => { const map = {}; r.forEach((h, i) => { for (const [k, re] of Object.entries(COLS)) if (re.test(h.toLowerCase().trim()) && map[k] === undefined) map[k] = i; });
@@ -45,8 +46,9 @@ for (const DIR of DIRS) for (const file of readdirSync(DIR).filter((f) => f.ends
     if (isHeader(r)) { map = mapHeader(r); return; }
     if (!map) return;
     const g = (k) => (map[k] === undefined ? '' : r[map[k]] || '');
-    const rawName = map.name !== undefined ? g('name') : `${g('first')} ${g('last')}`;
-    if (blank(rawName) || /^full name$/i.test(rawName.trim())) return;
+    // Names come without row numbers, titles or stray labels: "23 Richard Tetteh", "Bishop Luke Mensah", "Rev Samuel Boateng", "L P Nora Sewornu".
+    let rawName = (map.name !== undefined ? g('name') : `${g('first')} ${g('last')}`).replace(/^[\s\d.)-]+/, '').replace(/^(bishop|rev\.?|reverend|pastor|ps\.?|lp|l\s?p|mr\.?|mrs\.?|ms\.?|dr\.?|sister|mother)\s+/i, '').replace(/^(bishop|rev\.?|reverend|pastor)\s+/i, '').trim();
+    if (blank(rawName) || /^full name$/i.test(rawName) || /\bpastors?\b|under bishop|^names? /i.test(rawName) || words_(rawName) < 2) return;
     const rec = { name: tc(rawName.replace(/\s*\.\s*/g, ' ').replace(/\s*-\s*/g, '-')), gender: /^f/i.test(clean(g('gender'))) ? 'female' : /^m/i.test(clean(g('gender'))) ? 'male' : '', title: title(g('rank'), g('gender')), denomination: clean(g('denomination')), branch: tc(g('branch')), city: tc(g('city')), country: tc(g('country')), yearAppointed: year(g('yearAppointed')), yearOrdained: year(g('yearOrdained')), yearConsecrated: year(g('yearConsecrated')), dobKeys: dobKeys(g('dob')), row: rowIndex + 1, cells: r.filter((c) => c.trim()).map((c) => c.replace(/[\d+][\d\s\/()-]{6,}\d/g, '…').replace(/\S+@\S+/g, '…').slice(0, 40)) };
     if (section === 'bishop' && /Bishop|Mother|Episcopal/.test(rec.title)) { sub.bishopRow = rec; return; }
     sub.pastors.push(rec);

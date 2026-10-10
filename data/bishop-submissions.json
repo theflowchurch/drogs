@@ -22639,25 +22639,6 @@
      "Yes",
      "…"
     ]
-   },
-   {
-    "name": "1994",
-    "gender": "",
-    "title": "Pastor",
-    "denomination": "",
-    "branch": "",
-    "city": "",
-    "country": "",
-    "yearAppointed": "",
-    "yearOrdained": "",
-    "yearConsecrated": "",
-    "dobKeys": [],
-    "row": 90,
-    "cells": [
-     "1994",
-     "2026",
-     "32"
-    ]
    }
   ],
   "removed": []
@@ -39349,7 +39330,7 @@
   "noPastors": false,
   "pastors": [
    {
-    "name": "Dr Kumah Agyeman",
+    "name": "Kumah Agyeman",
     "gender": "male",
     "title": "Rev.",
     "denomination": "EAST MOUNTAIN CHURCHES",
@@ -41682,7 +41663,7 @@
     ]
    },
    {
-    "name": "Bishop Emmanuel Nterful",
+    "name": "Emmanuel Nterful",
     "gender": "",
     "title": "Pastor",
     "denomination": "",
@@ -49454,7 +49435,7 @@
     ]
    },
    {
-    "name": "Bishop Francis Nii Aryee Hammond",
+    "name": "Francis Nii Aryee Hammond",
     "gender": "",
     "title": "Pastor",
     "denomination": "",
@@ -49813,7 +49794,7 @@
     ]
    },
    {
-    "name": "L P Justina Asempa",
+    "name": "Justina Asempa",
     "gender": "female",
     "title": "Pastor",
     "denomination": "ANAGKAZO ASSEMBLIES",
@@ -50148,7 +50129,7 @@
     ]
    },
    {
-    "name": "L P Nora Sewornu",
+    "name": "Nora Sewornu",
     "gender": "female",
     "title": "Pastor",
     "denomination": "ANAGKAZO ASSEMBLIES",
@@ -50177,7 +50158,7 @@
     ]
    },
    {
-    "name": "L P Melissa Sosuh",
+    "name": "Melissa Sosuh",
     "gender": "female",
     "title": "Pastor",
     "denomination": "ANAGKAZO ASSEMBLIES",
@@ -63067,7 +63048,7 @@
     ]
    },
    {
-    "name": "Lp Grace Boateng",
+    "name": "Grace Boateng",
     "gender": "female",
     "title": "Pastor",
     "denomination": "QODESH CITY CHURCHES",
@@ -110894,7 +110875,7 @@
     ]
    },
    {
-    "name": "Bishop Luke Akwasi Frimpong Mensah",
+    "name": "Luke Akwasi Frimpong Mensah",
     "gender": "",
     "title": "Pastor",
     "denomination": "",
@@ -116021,7 +116002,7 @@
   "noPastors": false,
   "pastors": [
    {
-    "name": "1 Albert Addia",
+    "name": "Albert Addia",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116054,7 +116035,7 @@
     ]
    },
    {
-    "name": "2 Eunice Morrison-Addo",
+    "name": "Eunice Morrison-Addo",
     "gender": "female",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116087,7 +116068,7 @@
     ]
    },
    {
-    "name": "3 Samuel Kwojo Adjorlolo",
+    "name": "Samuel Kwojo Adjorlolo",
     "gender": "male",
     "title": "Rev.",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116120,7 +116101,7 @@
     ]
    },
    {
-    "name": "4 Joseph Worlanyo Adombor",
+    "name": "Joseph Worlanyo Adombor",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116153,7 +116134,7 @@
     ]
    },
    {
-    "name": "5 David Asare Afram",
+    "name": "David Asare Afram",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116186,7 +116167,7 @@
     ]
    },
    {
-    "name": "6 Philip Aklamakpe",
+    "name": "Philip Aklamakpe",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116219,7 +116200,7 @@
     ]
    },
    {
-    "name": "7 Philip Yaw Akpo",
+    "name": "Philip Yaw Akpo",
     "gender": "male",
     "title": "Rev.",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116252,7 +116233,7 @@
     ]
    },
    {
-    "name": "8 Festus Akuffo",
+    "name": "Festus Akuffo",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116285,7 +116266,7 @@
     ]
    },
    {
-    "name": "9 Crowis Ampofo",
+    "name": "Crowis Ampofo",
     "gender": "male",
     "title": "Rev.",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116318,7 +116299,7 @@
     ]
    },
    {
-    "name": "10 Richmond Ampofo",
+    "name": "Richmond Ampofo",
     "gender": "male",
     "title": "Rev.",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116351,7 +116332,7 @@
     ]
    },
    {
-    "name": "11 William Ansah-Twum",
+    "name": "William Ansah-Twum",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116384,7 +116365,7 @@
     ]
    },
    {
-    "name": "12 Annabera Arhin",
+    "name": "Annabera Arhin",
     "gender": "female",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116417,7 +116398,7 @@
     ]
    },
    {
-    "name": "13 Stephen Selorm Komla Asamany",
+    "name": "Stephen Selorm Komla Asamany",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116450,7 +116431,7 @@
     ]
    },
    {
-    "name": "14 John Ayibontey",
+    "name": "John Ayibontey",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116483,7 +116464,7 @@
     ]
    },
    {
-    "name": "15 Emmanuel Asante Budjah",
+    "name": "Emmanuel Asante Budjah",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116516,7 +116497,7 @@
     ]
    },
    {
-    "name": "16 Saviour Emma Dogbe",
+    "name": "Saviour Emma Dogbe",
     "gender": "female",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116549,7 +116530,7 @@
     ]
    },
    {
-    "name": "17 Joel Adjei Duodu",
+    "name": "Joel Adjei Duodu",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116582,7 +116563,7 @@
     ]
    },
    {
-    "name": "18 Henry Fato-Obidieho",
+    "name": "Henry Fato-Obidieho",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116615,7 +116596,7 @@
     ]
    },
    {
-    "name": "19 Samuel Kenou",
+    "name": "Samuel Kenou",
     "gender": "male",
     "title": "Rev.",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116648,7 +116629,7 @@
     ]
    },
    {
-    "name": "20 Sampson Mabi",
+    "name": "Sampson Mabi",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116681,7 +116662,7 @@
     ]
    },
    {
-    "name": "21 John Dela Quashiegah",
+    "name": "John Dela Quashiegah",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116714,7 +116695,7 @@
     ]
    },
    {
-    "name": "22 Philip Sakyiamah",
+    "name": "Philip Sakyiamah",
     "gender": "male",
     "title": "Pastor",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -116747,7 +116728,7 @@
     ]
    },
    {
-    "name": "23 Richard Nii Tettey Tetteh",
+    "name": "Richard Nii Tettey Tetteh",
     "gender": "male",
     "title": "Rev.",
     "denomination": "LIGHTHOUSE CHAPEL INTERNATIONAL",
@@ -119033,7 +119014,7 @@
     ]
    },
    {
-    "name": "Rev Samuel Ekow Boateng",
+    "name": "Samuel Ekow Boateng",
     "gender": "male",
     "title": "Rev.",
     "denomination": "THE MEGA CHURCH",
@@ -148456,23 +148437,6 @@
     ]
    },
    {
-    "name": "Pastors E",
-    "gender": "",
-    "title": "Pastor",
-    "denomination": "",
-    "branch": "",
-    "city": "",
-    "country": "",
-    "yearAppointed": "",
-    "yearOrdained": "",
-    "yearConsecrated": "",
-    "dobKeys": [],
-    "row": 56,
-    "cells": [
-     "Pastors E"
-    ]
-   },
-   {
     "name": "Eric Elorm Akoe",
     "gender": "male",
     "title": "Pastor",
@@ -171900,23 +171864,6 @@
      "NIL",
      "Yes",
      "…"
-    ]
-   },
-   {
-    "name": "Names Which Have Been Taken Out",
-    "gender": "",
-    "title": "Pastor",
-    "denomination": "",
-    "branch": "",
-    "city": "",
-    "country": "",
-    "yearAppointed": "",
-    "yearOrdained": "",
-    "yearConsecrated": "",
-    "dobKeys": [],
-    "row": 76,
-    "cells": [
-     "NAMES WHICH HAVE BEEN TAKEN OUT"
     ]
    },
    {

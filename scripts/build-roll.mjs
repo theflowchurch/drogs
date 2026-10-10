@@ -14,6 +14,7 @@ import { normalName, namesAlike } from '../src/registration/model.mjs';
 import { GROUPS } from '../src/registration/groups.mjs';
 import { DENOMINATIONS } from '../src/registration/denominations.mjs';
 import { sameSoul, words } from './lib/names.mjs';
+import { dhash, hamming, SAME_PICTURE } from './lib/photo-hash.mjs';
 const root = new URL('..', import.meta.url).pathname;
 const BASE = `${process.env.HOME}/Downloads/Kuriake Castle Project/01 Office source data`;
 const read = (rel, fallback) => { try { return JSON.parse(readFileSync(`${root}${rel}`, 'utf8')); } catch { return fallback; } };
@@ -23,6 +24,7 @@ const key = (n) => normalName(ap(n));
 const COUNTRY_FIX = { uk: 'United Kingdom', england: 'United Kingdom', scotland: 'United Kingdom', 'northern ireland': 'United Kingdom', wales: 'United Kingdom', usa: 'United States', us: 'United States', 'u s a': 'United States', drc: 'Congo, Democratic Republic', 'd r congo': 'Congo, Democratic Republic', rdc: 'Congo, Democratic Republic', 'dr congo': 'Congo, Democratic Republic', 'south african': 'South Africa', accra: 'Ghana', hawaii: 'United States', 'cote d ivoire ivory coast': "Cote D'Ivoire", 'ivory coast': "Cote D'Ivoire" };
 const fixCountry = (c) => { const k = normalName(c); return COUNTRY_FIX[k] || (c ? tc(c) : ''); };
 const tc = (t) => String(t || '').trim().replace(/\s+/g, ' ').toLowerCase().replace(/(^|[\s'’(-])\p{L}/gu, (c) => c.toUpperCase());
+const subsetName = (a, b) => { const A = words(a), B = words(b); if (A.length < 2 || B.length < 2) return false; return A.every((w) => B.includes(w)) || B.every((w) => A.includes(w)); };
 const blank = (v) => !v || /^(n\/?a|none|nil|missing|-+)$/i.test(String(v).trim());
 // ---------- 1. The Bishops List: the anchor
 const listRows = XLSX.utils.sheet_to_json(XLSX.readFile(`${BASE}/Bishops List (9 Oct 2026).xlsx`).Sheets.Sheet1, { raw: false, defval: '' }).filter((r) => r.NAME.trim());
@@ -75,6 +77,11 @@ for (const b of listBishops) {
 }
 const bishopByList = new Map(listBishops.map((b, i) => [b.listName, bishops[i]]));
 const bishopKeys = new Set(bishops.map((b) => key(b.name))); for (const b of listBishops) { bishopKeys.add(key(b.name)); for (const a of aliasesOf(b)) bishopKeys.add(key(a)); }
+// The same picture on both records makes them one person even when the birthdays were typed differently.
+const hashCache = new Map();
+const imageOnFile = (name) => { let olds = oldPastorsByKey.get(key(name)) || []; if (!olds.length) { const alike = cont.pastors.filter((x) => x.image && subsetName(key(x.name), key(name))); if (alike.length === 1) olds = alike; } return olds.find((x) => x.image)?.image || ''; };
+const hashOf = async (p) => { const img = imageOnFile(p.row.name); if (!img || !existsSync(`${root}${img}`)) return null; if (!hashCache.has(img)) { try { hashCache.set(img, await dhash(`${root}${img.replace(/^(assets\/portraits)\/([^/]+)\.[^.]+$/, '$1/thumbs/$2.webp')}`)); } catch { try { hashCache.set(img, await dhash(`${root}${img}`)); } catch { hashCache.set(img, null); } } } return hashCache.get(img); };
+const samePicture = async (a, b) => { const x = await hashOf(a), y = await hashOf(b); return Boolean(x && y && hamming(x, y) <= SAME_PICTURE); };
 // ---------- 6. Pastors from the sheets
 const rulings = read('data/sheet-conflict-rulings.json', { rules: [], people: [], remove: [] });
 const removeKeys = new Set([...rulings.remove.map((r) => key(r.name)), ...read('data/not-pastors.json', []).map((n) => key(n.name))]); // Walter, plus the office's Minister Shepherds / Shepherds / Elders (7 Oct)
@@ -83,9 +90,12 @@ const claims = new Map(); // person key → [{bishop (record), row, sub}]
 const bishopRankRows = [], skippedSelf = [];
 for (const [listName, s] of latestByBishop) {
   const bishop = bishopByList.get(listName); const seen = new Set();
-  for (const r of s.pastors) {
+  const rows = [...s.pastors]; const dropped = new Set();
+  for (let i = 0; i < rows.length; i++) for (let j = i + 1; j < rows.length; j++) { const a = rows[i], b = rows[j]; if (dropped.has(a) || dropped.has(b)) continue; const ka = key(a.name), kb = key(b.name); if (ka === kb) continue; if ((subsetName(ka, kb) || sameSoul(ka, kb)) && (!a.dobKeys?.length || !b.dobKeys?.length || a.dobKeys.some((d) => b.dobKeys.includes(d)) || await samePicture({ row: a, bishop }, { row: b, bishop }))) dropped.add(words(ka).length >= words(kb).length ? b : a); } // the same person twice on one sheet
+  for (const r of rows) {
+    if (dropped.has(r)) continue;
     const k = key(r.name); if (!k || seen.has(k)) continue; seen.add(k);
-    if (k === key(bishop.name) || k === key(listName)) { skippedSelf.push({ name: r.name, sheet: s.file }); continue; }
+    if (k === key(bishop.name) || k === key(listName) || subsetName(k, key(bishop.name))) { skippedSelf.push({ name: r.name, sheet: s.file }); continue; } // the bishop's own row, under any spelling
     if (/Bishop|Mother|Episcopal/.test(r.title) || bishopKeys.has(k)) { bishopRankRows.push({ name: r.name, title: r.title, onSheetOf: bishop.name, file: s.file, row: r.row, onList: bishopKeys.has(k) }); continue; }
     if (removeKeys.has(k)) continue;
     if (!claims.has(k)) claims.set(k, []); claims.get(k).push({ bishop, row: r, sub: s });
@@ -96,10 +106,10 @@ const keys = [...claims.keys()];
 // Two rows are one person when the names are the same words (any order) or one name's words all sit inside the other's,
 // in the same country, and the birthdays do not disagree. Different birthdays = two people, whatever the name.
 const sameDob = (x, y) => !x.length || !y.length || x.some((k) => y.includes(k));
-const subsetName = (a, b) => { const A = words(a), B = words(b); if (A.length < 2 || B.length < 2) return false; return A.every((w) => B.includes(w)) || B.every((w) => A.includes(w)); };
 for (let i = 0; i < keys.length; i++) for (let j = i + 1; j < keys.length; j++) { const a = keys[i], b = keys[j]; if (!claims.has(a) || !claims.has(b)) continue; const ca = claims.get(a), cb = claims.get(b); if (ca[0].bishop === cb[0].bishop) continue; if (!(words(a).sort().join(' ') === words(b).sort().join(' ') || subsetName(a, b))) continue; const countryA = ca[0].row.country || ca[0].bishop.country, countryB = cb[0].row.country || cb[0].bishop.country; if (countryA && countryB && key(countryA) !== key(countryB)) continue; if (!sameDob(ca[0].row.dobKeys || [], cb[0].row.dobKeys || [])) continue; claims.set(a, [...ca, ...cb]); claims.delete(b); }
-// Even an identical name on two sheets is two people when the birthdays differ.
-for (const [k, list] of claims) if (list.length > 1) { const groups = []; for (const c of list) { const g = groups.find((grp) => sameDob(grp[0].row.dobKeys || [], c.row.dobKeys || [])); if (g) g.push(c); else groups.push([c]); } if (groups.length > 1) { claims.set(k, groups[0]); groups.slice(1).forEach((g, n) => claims.set(`${k}#${n + 2}`, g)); } }
+for (let i = 0; i < keys.length; i++) for (let j = i + 1; j < keys.length; j++) { const a = keys[i], b = keys[j]; if (!claims.has(a) || !claims.has(b)) continue; const ca = claims.get(a), cb = claims.get(b); if (ca[0].bishop === cb[0].bishop) continue; if (!(words(a).sort().join(' ') === words(b).sort().join(' ') || subsetName(a, b) || sameSoul(a, b))) continue; if (await samePicture(ca[0], cb[0])) { claims.set(a, [...ca, ...cb]); claims.delete(b); } }
+// Even an identical name on two sheets is two people when the birthdays differ — unless the picture says otherwise.
+for (const [k, list] of claims) if (list.length > 1) { const groups = []; for (const c of list) { let g = null; for (const grp of groups) if (sameDob(grp[0].row.dobKeys || [], c.row.dobKeys || []) || await samePicture(grp[0], c) || (key(grp[0].row.name) === key(c.row.name) && key(grp[0].row.city || grp[0].bishop.city) === key(c.row.city || c.bishop.city))) { g = grp; break; } if (g) g.push(c); else groups.push([c]); } if (groups.length > 1) { claims.set(k, groups[0]); groups.slice(1).forEach((g, n) => claims.set(`${k}#${n + 2}`, g)); } }
 // Rulings
 const ruleWinner = (name, list) => {
   const names = list.map((c) => key(c.bishop.name));
@@ -117,7 +127,7 @@ const ruleWinner = (name, list) => {
 const pastors = [], conflicts = [], resolved = [], rulingNotOnSheet = [];
 const usedIds = new Set();
 const idFor = (name, bishopName) => { const olds = oldPastorsByKey.get(key(name)) || []; const o = olds.find((x) => key(x.bishop || '') === key(bishopName) && !usedIds.has(x.id)) || olds.find((x) => !usedIds.has(x.id)); let id = o?.id || `S${createHash('sha1').update(key(name)).digest('hex').slice(0, 8)}`; if (usedIds.has(id)) id = `${id}-${createHash('sha1').update(key(bishopName)).digest('hex').slice(0, 4)}`; usedIds.add(id); return id; }; // two people with one name (different birthdays) never share an id
-const oldImage = (name, bishopName) => { let olds = oldPastorsByKey.get(key(name)) || []; if (!olds.length) { const alike = cont.pastors.filter((x) => x.image && namesAlike(ap(x.name), ap(name))); if (alike.length === 1) olds = alike; } return (olds.find((x) => x.image && key(x.bishop || '') === key(bishopName)) || olds.find((x) => x.image))?.image || ''; }; // "Joshua Korsi Gbafa" keeps the picture filed as "Joshua Gbafa"
+const oldImage = (name, bishopName) => { let olds = oldPastorsByKey.get(key(name)) || []; if (!olds.length) { const alike = cont.pastors.filter((x) => x.image && subsetName(key(x.name), key(name))); if (alike.length === 1) olds = alike; } return (olds.find((x) => x.image && key(x.bishop || '') === key(bishopName)) || olds.find((x) => x.image))?.image || ''; }; // "Joshua Korsi Gbafa" keeps the picture filed as "Joshua Gbafa"
 const make = (c, extra = {}) => { const { bishop, row } = c; const v = years.get(words(key(row.name)).sort().join(' ')); const base = { id: idFor(row.name, bishop.name), role: 'pastor', name: row.name, title: row.title || 'Pastor', organization: bishop.organization, denomination: (() => { const raw = row.denomination || ''; if (!raw) return bishop.denomination; if (bishop.denomination && nearest(raw, [bishop.denomination])) return bishop.denomination; const d = canonDen(bishop.group, raw); const pool = GROUPS[bishop.group]?.denominations || []; return !d || (bishop.denomination && denKey(bishop.denomination).startsWith(denKey(d) + ' ')) || (pool.length && !pool.some((x) => denKey(x) === denKey(d)) && bishop.organization === 'United Denominations') ? bishop.denomination : d; })(), denominationLogo: '', city: row.city || '', branch: row.branch || '', country: fixCountry(row.country) || bishop.country || '', image: oldImage(row.name, bishop.name), gender: row.gender || (/^Lady/.test(row.title) ? 'female' : ''), yearAppointed: row.yearAppointed || v?.yearAppointed || '', yearOrdained: row.yearOrdained || v?.yearOrdained || '', yearConsecrated: '', bishop: bishop.name, group: bishop.group, source: { file: c.sub.file, row: row.row }, ...extra }; return base; };
 for (const [k, list] of claims) {
   if (list.length === 1) { pastors.push(make(list[0])); continue; }
@@ -166,6 +176,26 @@ for (const b of bishops) if (!b.image) { const hits = (indexByKey.get(key(b.name
 // Official portraits the office shared on Drive (scripts/bishop-photos-from-drive.mjs) beat any other picture.
 const overrides = read('data/bishop-photo-overrides.json', {});
 for (const b of bishops) if (overrides[b.id] && existsSync(`${root}${overrides[b.id]}`)) b.image = overrides[b.id];
+// Second look once every picture is in place: the same picture on two records under different bishops with
+// alike names is one person claimed twice — settled by the rulings, otherwise Unclaimed for the office.
+{
+  const hashes = []; const withPic = pastors.filter((p) => p.bishop && p.image && existsSync(`${root}${p.image}`));
+  for (let i = 0; i < withPic.length; i += 50) await Promise.all(withPic.slice(i, i + 50).map(async (p) => { const t = p.image.replace(/^(assets\/portraits)\/([^/]+)\.[^.]+$/, '$1/thumbs/$2.webp'); try { hashes.push([p, await dhash(`${root}${existsSync(`${root}${t}`) ? t : p.image}`)]); } catch {} }));
+  const bishopOf = (name) => bishops.find((b) => b.name === name);
+  const gone = new Set(); let merged = 0;
+  for (let i = 0; i < hashes.length; i++) for (let j = i + 1; j < hashes.length; j++) {
+    const [a, ha] = hashes[i], [b, hb] = hashes[j]; if (gone.has(a.id) || gone.has(b.id) || a.bishop === b.bishop) continue;
+    if (hamming(ha, hb) > SAME_PICTURE) continue;
+    const ka = key(a.name), kb = key(b.name); if (!(words(ka).sort().join(' ') === words(kb).sort().join(' ') || subsetName(ka, kb) || sameSoul(ka, kb))) continue;
+    const list = [a, b].map((p) => ({ bishop: bishopOf(p.bishop), row: { name: p.name, city: p.city, dobKeys: [] }, sub: { file: p.source?.file || '' }, rec: p }));
+    const r = ruleWinner(a.name, list);
+    if (r) { const loser = list.find((c) => c !== r.winner).rec; gone.add(loser.id); resolved.push({ name: r.winner.rec.name, winner: r.winner.bishop.name, losers: [loser.bishop], by: r.by + ' (same picture)' }); }
+    else { gone.add(b.id); a.bishop = ''; a.unclaimed = `Claimed by Bishop ${list[0].bishop.name} and Bishop ${list[1].bishop.name} — the office must decide`; conflicts.push({ name: a.name, claims: list.map((c) => ({ bishop: c.bishop.name, group: c.bishop.group, file: c.sub.file, folder: '', row: c.rec.source?.row || 0, cells: [`${c.rec.name}`, c.rec.title, c.rec.city, c.rec.country, 'same picture on both sheets'], city: c.rec.city, country: c.rec.country, title: c.rec.title })) }); }
+    merged++;
+  }
+  for (let i = pastors.length - 1; i >= 0; i--) if (gone.has(pastors[i].id)) pastors.splice(i, 1);
+  if (merged) console.log(`Same picture under two bishops: ${merged} pairs (${gone.size} records folded)`);
+}
 // A thumbnail for every portrait that lacks one (the grids load thumbs; the dialog loads the full picture).
 for (const p of [...bishops, ...pastors]) { if (!p.image || !/^assets\/portraits\//.test(p.image)) continue; const t = `${root}${p.image.replace('assets/portraits/', 'assets/portraits/thumbs/')}`; if (!existsSync(t) && existsSync(`${root}${p.image}`)) { try { await sharp(`${root}${p.image}`).resize({ width: 400, withoutEnlargement: true }).webp({ quality: 80 }).toFile(t); } catch {} } }
 // The structure (Settings → Denominations) follows the roll: each United Denominations group lists the denominations its bishops and pastors use.
