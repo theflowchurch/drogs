@@ -1,10 +1,10 @@
 {
- "generated": "2026-10-11T10:49:09.157Z",
+ "generated": "2026-10-11T11:01:39.815Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 4989,
-  "assigned": 4966,
+  "pastors": 4988,
+  "assigned": 4965,
   "unclaimed": 23,
   "withPhoto": 4124,
   "sheets": 288,
@@ -82,6 +82,14 @@
    "onSheetOf": "Nely Nina Masuku",
    "file": "Bishop_Nely_Nina_Masuku_Completed.xlsx",
    "row": 9,
+   "onList": true
+  },
+  {
+   "name": "Leonard Peter Hyde",
+   "title": "Pastor",
+   "onSheetOf": "Nely Nina Masuku",
+   "file": "Bishop_Nely_Nina_Masuku_Completed.xlsx",
+   "row": 11,
    "onList": true
   },
   {
@@ -2874,11 +2882,16 @@
    "file": "Bishop_Nely_Nina_Masuku_Completed.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
    "sheetRows": 7,
-   "onRoll": 6,
+   "onRoll": 5,
    "notUnder": [
     {
      "row": 9,
      "name": "Brian Masuku",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 11,
+     "name": "Leonard Peter Hyde",
      "fate": "a bishop on the Bishops List, not a pastor"
     }
    ],
@@ -7031,14 +7044,6 @@
   {
    "id": "S156fc274",
    "name": "Joel Cobina Obuobisa",
-   "bishop": "Nely Nina Masuku",
-   "group": "FLOW",
-   "denomination": "FLOW",
-   "place": "Ghana"
-  },
-  {
-   "id": "S725bdf87",
-   "name": "Leonard Peter Hyde",
    "bishop": "Nely Nina Masuku",
    "group": "FLOW",
    "denomination": "FLOW",
