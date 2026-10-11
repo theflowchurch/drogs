@@ -1,12 +1,12 @@
 {
- "generated": "2026-10-10T21:48:30.622Z",
+ "generated": "2026-10-11T09:23:04.172Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 4900,
-  "assigned": 4847,
+  "pastors": 4898,
+  "assigned": 4845,
   "unclaimed": 53,
-  "withPhoto": 4053,
+  "withPhoto": 4052,
   "sheets": 287,
   "bishopsWithSheet": 279,
   "noPastorsSheets": 72
@@ -4001,6 +4001,5070 @@
  ],
  "nonListPastors": [],
  "rulingNotOnSheet": [],
+ "dupMerged": [
+  {
+   "keep": "Kakra Ankobiah",
+   "drop": "Kakra Ankobia-Achimota Central",
+   "bishop": "Kofi Hene Asare",
+   "set": {
+    "branch": "Achimota Central"
+   },
+   "source": "Joshua 11 Oct 09:07: these guys are the same person so for Kakra just merge his record",
+   "applied": true,
+   "keptId": "Sdfc497e4",
+   "droppedId": "PF729",
+   "under": "Kofi Hene Asare"
+  },
+  {
+   "keep": "Cyril Lartey",
+   "drop": "Kenneth Cyril Nartey",
+   "bishop": "Joshua Heward-Mills",
+   "source": "Joshua 11 Oct 09:07: Cyril just put him in First Love (same picture on both sheets; Bishop Eddy Addy's own 'Pastors removed' sheet lists Cyril Lartey)",
+   "applied": true,
+   "keptId": "P4526",
+   "droppedId": "S1301620d",
+   "under": "Joshua Heward-Mills"
+  }
+ ],
+ "reconcile": [
+  {
+   "bishop": "Daniel Odei-Siaw",
+   "lay": false,
+   "file": "BIshop Daniel Odei Siaw, Vietnam.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 2,
+   "onRoll": 2,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Abednego Nyarkoh-Mensah",
+   "lay": false,
+   "file": "Bishop Abednego Nyarkoh-Mensah-1.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 4,
+   "onRoll": 3,
+   "notUnder": [
+    {
+     "row": 9,
+     "name": "Esther Nyamekye Okokon",
+     "fate": "claimed by Bishop Abednego Nyarkoh-Mensah and Bishop Edwin Morgan Ogoe — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Adeolu Adepoju",
+   "lay": false,
+   "file": "Bishop Adeolu Adepoju.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "David Adjah Ashong",
+   "lay": false,
+   "file": "Bishop David Adjah Ashong_034906.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 13,
+   "onRoll": 12,
+   "notUnder": [
+    {
+     "row": 19,
+     "name": "James Yeboah",
+     "fate": "claimed by Bishop David Adjah Ashong and Bishop Sam Sawyerr — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Frank Tawiah-Amissah",
+   "lay": false,
+   "file": "Bishop Frank Tawiah-Amissah.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 11,
+   "onRoll": 11,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Hamish Oddoye",
+   "lay": false,
+   "file": "Bishop Hamish Oddoye-1.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 22,
+   "onRoll": 21,
+   "notUnder": [
+    {
+     "row": 8,
+     "name": "Victor Akwaah-Sakyi",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Immanuel Obeng",
+   "lay": false,
+   "file": "Bishop Immanuel Obeng.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 46,
+   "onRoll": 40,
+   "notUnder": [
+    {
+     "row": 13,
+     "name": "Emmanuel Yeboah",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 30,
+     "name": "Michael Asare",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 39,
+     "name": "Emmanuella Ntim",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 47,
+     "name": "Raphael Aidoo",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 49,
+     "name": "Tamara Musunga",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 52,
+     "name": "Eric Ampontuah",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kay Francis Kwao",
+   "lay": false,
+   "file": "Bishop Kay Francis Kwao.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 5,
+   "onRoll": 5,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "King Bodom Appiagyei",
+   "lay": false,
+   "file": "Bishop King Bodom Appiagyei.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 12,
+   "onRoll": 12,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kwame Asiedu Owusu",
+   "lay": false,
+   "file": "Bishop Kwame Asiedu Owusu.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 4,
+   "onRoll": 4,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kweku Amonoo-Neizer",
+   "lay": false,
+   "file": "Bishop Kweku Amonoo-Neizer_updated.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 9,
+   "onRoll": 8,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Deconte Thompson Akligo",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kweku Amponsah",
+   "lay": false,
+   "file": "Bishop Kweku Amponsah.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 12,
+   "onRoll": 10,
+   "notUnder": [
+    {
+     "row": 13,
+     "name": "Francis Asare",
+     "fate": "claimed by Bishop Kweku Amponsah and Bishop Frank Opoku — Unclaimed for the office"
+    },
+    {
+     "row": 14,
+     "name": "Sylvia Amo Asiamah",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Moro Martin-Luther Okoh",
+   "lay": false,
+   "file": "Bishop Moro Martin-Luther Okoh.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 3,
+   "onRoll": 3,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Nelson Tika",
+   "lay": false,
+   "file": "Bishop Nelson Tika.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 3,
+   "onRoll": 3,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Noble Nobleson",
+   "lay": false,
+   "file": "Bishop Noble Nobleson 3.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 7,
+   "onRoll": 7,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Philip Asante",
+   "lay": false,
+   "file": "Bishop Philip Asante.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 6,
+   "onRoll": 6,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Irene Valeria Odei Siaw",
+   "lay": false,
+   "file": "Episcopal Sister Irene Odei-Siaw.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Phillippa-Marka Coker",
+   "lay": false,
+   "file": "Episcopal Sister Phillippa-Marka Coker.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 14,
+   "onRoll": 12,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Daniel Acheampong",
+     "fate": "claimed by Bishop Phillippa-Marka Coker and Bishop Jude Orraca-Tetteh — Unclaimed for the office"
+    },
+    {
+     "row": 18,
+     "name": "Leonora-Jamie Hyde",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Jude Orraca-Tetteh",
+   "lay": false,
+   "file": "JUDE ORRACA TETTEH.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 26,
+   "onRoll": 24,
+   "notUnder": [
+    {
+     "row": 8,
+     "name": "Daniel Acheampong",
+     "fate": "claimed by Bishop Phillippa-Marka Coker and Bishop Jude Orraca-Tetteh — Unclaimed for the office"
+    },
+    {
+     "row": 25,
+     "name": "David Okine",
+     "fate": "ruled to Daniel Harlley (Bishop Jake Godwyll 13:10: David Okine is in South Africa under Daniel Harley)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Tennyson Ojeisekhoba",
+   "lay": false,
+   "file": "Tennyson Ojeiskhoba.xlsx",
+   "folder": "Bishop submitted sheets",
+   "sheetRows": 2,
+   "onRoll": 2,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Tomi Njoku",
+   "lay": false,
+   "file": "Bishop (Tomi Njoku) John Thomas.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Adara Hyde",
+   "lay": false,
+   "file": "Bishop Adara Hyde.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Andrew Gyamfi",
+   "lay": false,
+   "file": "Bishop Andrew Gyamfi.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Annika Dwimoh",
+   "lay": false,
+   "file": "Bishop Annika Dwimoh.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Baara Woode",
+   "lay": false,
+   "file": "Bishop Baara Woode.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Bernard Koranteng",
+   "lay": false,
+   "file": "Bishop Bernard Koranteng.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "David Asomani",
+   "lay": false,
+   "file": "Bishop David Asomani.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Ebenezer Fiifi Biney",
+   "lay": false,
+   "file": "Bishop Ebenezer Fiifi Biney.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Eddie Fabin",
+   "lay": false,
+   "file": "Bishop Eddie Fabin.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Edwin Morgan Ogoe Jr",
+   "lay": false,
+   "file": "Bishop Edwin Morgan Ogoe Jr.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel Amartey",
+   "lay": false,
+   "file": "Bishop Emmanuel Amartey ...xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel Fosu",
+   "lay": false,
+   "file": "Bishop Emmanuel Fosu.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel Klufio",
+   "lay": false,
+   "file": "Bishop Emmanuel Klufio.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Esme Asha Mantiziba",
+   "lay": false,
+   "file": "Bishop Esme Asha Mantiziba.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Faustina Carla Boateng",
+   "lay": false,
+   "file": "Bishop Faustina Carla Boateng.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "George Aferi Obeng",
+   "lay": false,
+   "file": "Bishop George Aferi Obeng.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "George Antwi",
+   "lay": false,
+   "file": "Bishop George Antwi.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Gifty Iris Calah Krofuah",
+   "lay": false,
+   "file": "Bishop Gifty Iris Calah Krofuah.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Henri Fogwe",
+   "lay": false,
+   "file": "Bishop Henri Fogwe.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Isaac Nakoja",
+   "lay": false,
+   "file": "Bishop Isaac Nakoja.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Isaac OB Commey",
+   "lay": false,
+   "file": "Bishop Isaac OB Commey.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Joel Obuobisa",
+   "lay": false,
+   "file": "Bishop Joel Obuobisa.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Joseph Odarkwei Mills",
+   "lay": false,
+   "file": "Bishop Joseph Odarkwei Mills.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kwabena Junior Asamoah",
+   "lay": false,
+   "file": "Bishop Kwabena  Asamoah Jnr.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Leonard Hyde",
+   "lay": false,
+   "file": "Bishop Leonard Hyde.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Marcel Aboagye",
+   "lay": false,
+   "file": "Bishop Marcel Aboagye.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Mary Rea Bandoh",
+   "lay": false,
+   "file": "Bishop Mary Rea Bandoh.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Nii Adjeidu Armar",
+   "lay": false,
+   "file": "Bishop Nii Adjeidu Armar.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Paa Kwesi Nyarkoh",
+   "lay": false,
+   "file": "Bishop Paa Kwesi Nyarkoh.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Paul Anaba Mbah",
+   "lay": false,
+   "file": "Bishop Paul Anaba Mbah.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Peter Onasis",
+   "lay": false,
+   "file": "Bishop Peter Onasis.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Pius Worlano",
+   "lay": false,
+   "file": "Bishop Pius Worlano.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Prince Charles Addae",
+   "lay": false,
+   "file": "Bishop Prince Charles Addae.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Randy Mills-Thompson",
+   "lay": false,
+   "file": "Bishop Randy Mills-Thompson.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Richard Aryee",
+   "lay": false,
+   "file": "Bishop Richard Aryee.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Robert Dodoo",
+   "lay": false,
+   "file": "Bishop Robert Dodoo.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Ruthie Appiah Denkyira",
+   "lay": false,
+   "file": "Bishop Ruthie Appiah Denkyira.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Stephen Sawyerr",
+   "lay": false,
+   "file": "Bishop Stephen Sawyerr.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Terry Bartels",
+   "lay": false,
+   "file": "Bishop Terry Bartels.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Foster Boadi",
+   "lay": false,
+   "file": "Bishop Thaddeus Boadi.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "William Ato Wilson",
+   "lay": false,
+   "file": "Bishop William Ato Wilson.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Wisdom Felix Ahiagah",
+   "lay": false,
+   "file": "Bishop Wisdom Felix Ahiagah.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Brian Masuku",
+   "lay": false,
+   "file": "Bishop_Brian_Masuku_Completed.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Nely Nina Masuku",
+   "lay": false,
+   "file": "Bishop_Nely_Nina_Masuku_Completed.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 7,
+   "onRoll": 6,
+   "notUnder": [
+    {
+     "row": 9,
+     "name": "Brian Masuku",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Leonora-Jamie Hyde",
+   "lay": false,
+   "file": "ESPISCOPAL SISTER LEONORA JAMIE HYDE.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Akwele Ivanna Kiruja",
+   "lay": false,
+   "file": "Episcopal Sister Akwele Ivanna Kiruja.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Amelia Aidoo",
+   "lay": false,
+   "file": "Episcopal Sister Amelia Aidoo.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Bridgette-Marian Ogoe",
+   "lay": false,
+   "file": "Episcopal Sister Bridgette-Marian Ogoe.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Josie Marie Asamoah",
+   "lay": false,
+   "file": "Episcopal Sister Josie Marie Asamoah.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Sara Lanita Obuobisa",
+   "lay": false,
+   "file": "Episcopal Sister Sara Lanita Obuobisa.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Maya Aida Asiedu",
+   "lay": false,
+   "file": "Mother Aida Maya Asiedu Owusu.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Alice Renatta Obaka",
+   "lay": false,
+   "file": "Mother Alice Renatta Obaka.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Erica-Luka Aryee",
+   "lay": false,
+   "file": "Mother Erica-Luka Aryee.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Henrietta Ariel Orleans-Lindsay",
+   "lay": false,
+   "file": "Mother Henrietta Ariel Orleans-Lindsay.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kiki Heward-Mills",
+   "lay": false,
+   "file": "Mother Kiki Heward-Mills.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Louisa-Timothea Mills-Odoi",
+   "lay": false,
+   "file": "Mother Louisa-Timothea Mills-Odoi.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Miranda Siweya",
+   "lay": false,
+   "file": "Mother Miranda Siweya.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Serena Ariana Ababio",
+   "lay": false,
+   "file": "Mother Serena Ariana Ababio.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Simone-Pierre Eyra Ademola",
+   "lay": false,
+   "file": "Mother Simone-Pierre Eyra Ademola.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Zoe-Andria Asamoah",
+   "lay": false,
+   "file": "Mother Zoe-Freda Andria Asamoah.xlsx",
+   "folder": "Bishop sheets - no pastors (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Alexander Gottlieb Kofi-Opata",
+   "lay": false,
+   "file": "Alex Kofi Opata.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 18,
+   "onRoll": 17,
+   "notUnder": [
+    {
+     "row": 20,
+     "name": "Chiebuka Itanyi",
+     "fate": "ruled to Olivia Kofi-Opata (Bishop Jake Godwyll 10 Oct 10:10: Chiebuka Itanyi should be ES Olivia Opata)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Daniel Arthur-Baidoo",
+   "lay": false,
+   "file": "BISHOP DANIEL ARTHUR-BAIDOO.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 29,
+   "onRoll": 29,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel Kofi-Yeboah",
+   "lay": false,
+   "file": "BISHOP EMMANUEL KOFI YEBOAH.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 22,
+   "onRoll": 22,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Solomon Boateng",
+   "lay": false,
+   "file": "BIshop Solomon Boateng...xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 29,
+   "onRoll": 29,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Baffour Kwaku Kyei",
+   "lay": false,
+   "file": "Baffour Kyei.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 7,
+   "onRoll": 7,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Adedayo Adeyemi Adeniji",
+   "lay": false,
+   "file": "Bishop Adedayo Adeyemi Adeniji.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 1,
+   "onRoll": 1,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Alfred Adigbo",
+   "lay": false,
+   "file": "Bishop Alfred Adigbo RPI Pastors.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 13,
+   "onRoll": 13,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Andrew Kwaku Osei",
+   "lay": false,
+   "file": "Bishop Andrew Kwaku Osei.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 10,
+   "onRoll": 10,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Andrews Osei",
+   "lay": false,
+   "file": "Bishop Andrews Osei_Tamale North Pastors (1).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 25,
+   "onRoll": 25,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Andy Agyemang Jumah",
+   "lay": false,
+   "file": "Bishop Andy Agyemang Jumah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 38,
+   "onRoll": 38,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Armstrong Simpson Nartey",
+   "lay": false,
+   "file": "Bishop Armstrong Simpson Nartey.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 18,
+   "onRoll": 17,
+   "notUnder": [
+    {
+     "row": 15,
+     "name": "Yanisse Mbou",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Augustine Frantz Appiah",
+   "lay": false,
+   "file": "Bishop Augustine Frantz Appiah (1).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 37,
+   "onRoll": 37,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Augustine Kunituo",
+   "lay": false,
+   "file": "Bishop Augustine Kunituo.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 10,
+   "onRoll": 10,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Andrae George Woode",
+   "lay": false,
+   "file": "Bishop Aundrae George Wood Updated (1).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 28,
+   "onRoll": 28,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Benjamin Fiadonu",
+   "lay": false,
+   "file": "Bishop Benjamin Fiadonu Updated Data (1).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 7,
+   "onRoll": 6,
+   "notUnder": [
+    {
+     "row": 11,
+     "name": "Darius Phiri",
+     "fate": "ruled to Nely Nina Masuku (Joshua 9 Oct: Darius is supposed to be under Mother Nina)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Benjamin Kwapong Lokko",
+   "lay": false,
+   "file": "Bishop Benjamin Kwapong Lokko.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 82,
+   "onRoll": 80,
+   "notUnder": [
+    {
+     "row": 45,
+     "name": "Ernest Adjei Dwamena",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 85,
+     "name": "Nathaniel Turkson",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Brian Bonnah",
+   "lay": false,
+   "file": "Bishop Brian Bonnah (1).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 3,
+   "onRoll": 3,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Charles Amoo",
+   "lay": false,
+   "file": "Bishop Charles Amoo.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 2,
+   "onRoll": 2,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Charles Bonsu",
+   "lay": false,
+   "file": "Bishop Charles Bonsu.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 35,
+   "onRoll": 31,
+   "notUnder": [
+    {
+     "row": 31,
+     "name": "Daniel Owusu Adjei",
+     "fate": "claimed by Bishop Charles Bonsu and Bishop Ebenezer Adom Barnor — Unclaimed for the office"
+    },
+    {
+     "row": 36,
+     "name": "Mathias Dongzoola",
+     "fate": "claimed by Bishop Charles Bonsu and Bishop David Afreh — Unclaimed for the office"
+    },
+    {
+     "row": 37,
+     "name": "Moses Appoh",
+     "fate": "claimed by Bishop Charles Bonsu and Bishop David Afreh — Unclaimed for the office"
+    },
+    {
+     "row": 40,
+     "name": "Wisdom Dery",
+     "fate": "claimed by Bishop Charles Bonsu and Bishop David Afreh — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Charles Smith",
+   "lay": false,
+   "file": "Bishop Charles Smith.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 1,
+   "onRoll": 1,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Christian Agbosu-Agorvor",
+   "lay": false,
+   "file": "Bishop Christian Agbosu-Agorvor.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 6,
+   "onRoll": 6,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Christian Assi Adoupo",
+   "lay": false,
+   "file": "Bishop Christian Assi Adoupo.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 12,
+   "onRoll": 12,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Christos Isaac Abbey",
+   "lay": false,
+   "file": "Bishop Christos Isaac Abbey.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 16,
+   "onRoll": 16,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Clarence Welds",
+   "lay": false,
+   "file": "Bishop Clarence Welds.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 4,
+   "onRoll": 4,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Cleland Cofie Bruce",
+   "lay": false,
+   "file": "Bishop Cleland Cofie Bruce.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 3,
+   "onRoll": 3,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Clement Asante",
+   "lay": false,
+   "file": "Bishop Clement Asante FLC.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 59,
+   "onRoll": 49,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Geraldo Kuma Amoa",
+     "fate": "titled Bishop, not a pastor"
+    },
+    {
+     "row": 11,
+     "name": "Paula Denton Amoa",
+     "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
+    },
+    {
+     "row": 19,
+     "name": "Ian Chiweshe",
+     "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
+    },
+    {
+     "row": 42,
+     "name": "Violet Musonda",
+     "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
+    },
+    {
+     "row": 55,
+     "name": "Rosemary Sinta",
+     "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
+    },
+    {
+     "row": 60,
+     "name": "Prisca Mwendabai Mtonga",
+     "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
+    },
+    {
+     "row": 61,
+     "name": "Mwenda Machima",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 62,
+     "name": "Niza Mtonga",
+     "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
+    },
+    {
+     "row": 63,
+     "name": "Angela Mpundu",
+     "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
+    },
+    {
+     "row": 64,
+     "name": "Moreblessings Suya Daka",
+     "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Courage Ahedor",
+   "lay": false,
+   "file": "Bishop Courage Ahedor.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 8,
+   "onRoll": 0,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Fred Akator",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 8,
+     "name": "Rockson Adjei Bekoe",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 9,
+     "name": "Obed Essel",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 10,
+     "name": "Isaac Koffie",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 11,
+     "name": "Eric Koomson",
+     "fate": "ruled to Joojo Stephens (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
+    },
+    {
+     "row": 12,
+     "name": "Emmanuel Kudzo Kpeglo",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 13,
+     "name": "Barbara Abena Sakyiwaa Sackey",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 14,
+     "name": "Benjamin Ekow Tawiah Tetteh",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Daniel Adjei",
+   "lay": false,
+   "file": "Bishop Daniel Adjei-1.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 15,
+   "onRoll": 15,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Daniel Amofah",
+   "lay": false,
+   "file": "Bishop Daniel Amofah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 5,
+   "onRoll": 5,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Daniel Darku",
+   "lay": false,
+   "file": "Bishop Daniel Darku.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 3,
+   "onRoll": 3,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Daniel Fiifi Gyamerah",
+   "lay": false,
+   "file": "Bishop Daniel Fiifi Gyamerah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 2,
+   "onRoll": 1,
+   "notUnder": [
+    {
+     "row": 6,
+     "name": "Esrael Seleshi",
+     "fate": "claimed by Bishop Daniel Fiifi Gyamerah and Bishop Roger Hiltbrunner — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Daniel Harlley",
+   "lay": false,
+   "file": "Bishop Daniel Harlley.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 12,
+   "onRoll": 12,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Daniel Kwaku Atiemoh",
+   "lay": false,
+   "file": "Bishop Daniel Kwaku Atiemoh.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 16,
+   "onRoll": 16,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Daniel Marcus",
+   "lay": false,
+   "file": "Bishop Daniel Marcus.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 36,
+   "onRoll": 36,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "David Afreh",
+   "lay": false,
+   "file": "Bishop David Afreh.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 9,
+   "onRoll": 6,
+   "notUnder": [
+    {
+     "row": 8,
+     "name": "Moses Appoh",
+     "fate": "claimed by Bishop Charles Bonsu and Bishop David Afreh — Unclaimed for the office"
+    },
+    {
+     "row": 9,
+     "name": "Mathias Dongzoola",
+     "fate": "claimed by Bishop Charles Bonsu and Bishop David Afreh — Unclaimed for the office"
+    },
+    {
+     "row": 11,
+     "name": "Wisdom Dery",
+     "fate": "claimed by Bishop Charles Bonsu and Bishop David Afreh — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "David Kwaku Asiedu",
+   "lay": false,
+   "file": "Bishop David Kwaku Asiedu_043046.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 10,
+   "onRoll": 9,
+   "notUnder": [
+    {
+     "row": 14,
+     "name": "Ayaaba Philip Sankarl",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "David Ofori Gyedu",
+   "lay": false,
+   "file": "Bishop David Ofori Gyedu.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 11,
+   "onRoll": 11,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Dennis Agyei-Gyan",
+   "lay": false,
+   "file": "Bishop Dennis Agyei-Gyan.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 45,
+   "onRoll": 42,
+   "notUnder": [
+    {
+     "row": 31,
+     "name": "Jemima Sossou",
+     "fate": "claimed by Bishop Dennis Agyei-Gyan and Bishop Sampson Kweku Kissi — Unclaimed for the office"
+    },
+    {
+     "row": 33,
+     "name": "Wildana Fortune",
+     "fate": "claimed by Bishop Dennis Agyei-Gyan and Bishop Sampson Kweku Kissi — Unclaimed for the office"
+    },
+    {
+     "row": 44,
+     "name": "Doris Ewusi-Mensah",
+     "fate": "claimed by Bishop Dennis Agyei-Gyan and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Dennis Ampofo Cudjoe",
+   "lay": false,
+   "file": "Bishop Dennis Ampofo Cudjoe.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 9,
+   "onRoll": 9,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Dennis Djagbletey",
+   "lay": false,
+   "file": "Bishop Dennis Djagbletey.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 14,
+   "onRoll": 14,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Eat Sackey",
+   "lay": false,
+   "file": "Bishop E.A.T Sackey.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 34,
+   "onRoll": 29,
+   "notUnder": [
+    {
+     "row": 25,
+     "name": "Dennis Mensah",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 26,
+     "name": "Joseph Emmanuel Koufie",
+     "fate": "claimed by Bishop Eat Sackey and Bishop Henry Oti-Frimpong — Unclaimed for the office"
+    },
+    {
+     "row": 29,
+     "name": "William Ato Wilson",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 30,
+     "name": "Michael Aggrey-Fynn",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 33,
+     "name": "Sandra Acquah",
+     "fate": "claimed by Bishop Eat Sackey and Bishop Luke Akwasi Frimpong Mensah — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Eddy Addy",
+   "lay": false,
+   "file": "Bishop Eddy Addy.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 26,
+   "onRoll": 23,
+   "notUnder": [
+    {
+     "row": 18,
+     "name": "Kenneth Cyril Nartey",
+     "fate": "one person with Cyril Lartey, kept under Joshua Heward-Mills (Joshua 11 Oct)"
+    },
+    {
+     "row": 32,
+     "name": "Afua Boateng",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 33,
+     "name": "Kenneth Cyril Nartey",
+     "fate": "the same name twice on the sheet; one record kept"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Eddy Cofie",
+   "lay": false,
+   "file": "Bishop Eddy Cofie.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 16,
+   "onRoll": 16,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Edward Botwe",
+   "lay": false,
+   "file": "Bishop Edward Botwe.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 18,
+   "onRoll": 17,
+   "notUnder": [
+    {
+     "row": 8,
+     "name": "Daniel Anto",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Edwin Adu-Tutu",
+   "lay": false,
+   "file": "Bishop Edwin Adu-Tutu - completed Pastor Germany.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 3,
+   "onRoll": 1,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Christopher Obinna Ekwuruke",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 8,
+     "name": "Jennifer Antwi Ekwuruke",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Edwin Morgan Ogoe",
+   "lay": false,
+   "file": "Bishop Edwin Morgan Ogoe.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 25,
+   "onRoll": 23,
+   "notUnder": [
+    {
+     "row": 20,
+     "name": "Esther Okokon",
+     "fate": "claimed by Bishop Abednego Nyarkoh-Mensah and Bishop Edwin Morgan Ogoe — Unclaimed for the office"
+    },
+    {
+     "row": 28,
+     "name": "Samuel Sawyerr",
+     "fate": "titled Bishop, not a pastor"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel Ankrah",
+   "lay": false,
+   "file": "Bishop Emmanuel Ankrah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 8,
+   "onRoll": 8,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel Bekoe Saforo Sakyi",
+   "lay": false,
+   "file": "Bishop Emmanuel Bekoe Saforo Sakyi.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 8,
+   "onRoll": 8,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel John Peters",
+   "lay": false,
+   "file": "Bishop Emmanuel John Peters (2).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 8,
+   "onRoll": 8,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel Kwaku Klutse",
+   "lay": false,
+   "file": "Bishop Emmanuel Kwaku Klutse.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 6,
+   "onRoll": 6,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel Nterful",
+   "lay": false,
+   "file": "Bishop Emmanuel Nterful.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 81,
+   "onRoll": 51,
+   "notUnder": [
+    {
+     "row": 21,
+     "name": "Michael Kofi Mensah",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 35,
+     "name": "Leticia Mensah",
+     "fate": "claimed by Bishop Emmanuel Nterful and Bishop Kodwo K Orleans-Lindsay — Unclaimed for the office"
+    },
+    {
+     "row": 39,
+     "name": "Stephen Fiifi Bondzie",
+     "fate": "claimed by Bishop Emmanuel Nterful and Bishop Francis Nii Aryee Hammond — Unclaimed for the office"
+    },
+    {
+     "row": 43,
+     "name": "Richmond Quansah",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 52,
+     "name": "Emmanuel Nterful",
+     "fate": "the bishop's own row"
+    },
+    {
+     "row": 55,
+     "name": "Emmanuel Nterful",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 63,
+     "name": "Pearl Antwi B",
+     "fate": "the same person twice on the sheet; one record kept"
+    },
+    {
+     "row": 64,
+     "name": "Clifford Isaac Doodo",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 65,
+     "name": "David Dearon Doodo",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 66,
+     "name": "Kingsford Eduful",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 67,
+     "name": "Raymond Fassio",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 68,
+     "name": "Eli Gaewu",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 69,
+     "name": "Samuel Kontoh",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 70,
+     "name": "Emmanuel Korletey Korle",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 71,
+     "name": "Sonia Kwami",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 75,
+     "name": "Caroline Mensah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 76,
+     "name": "Maxwell Mensah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 77,
+     "name": "Michael Kofi Mensah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 78,
+     "name": "Cindy Michaels",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 79,
+     "name": "Francis Michaels",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 80,
+     "name": "Paula Danielle Nterful",
+     "fate": "the same person twice on the sheet; one record kept"
+    },
+    {
+     "row": 81,
+     "name": "Frederick Ababio Nuamah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 82,
+     "name": "Lil Paula",
+     "fate": "the same person twice on the sheet; one record kept"
+    },
+    {
+     "row": 84,
+     "name": "Godfred Shemen Quartey",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 85,
+     "name": "Jamal Amartey Quaye",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 86,
+     "name": "Millicent Storph",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 87,
+     "name": "Ruth Nterful Turkson",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 88,
+     "name": "Bismark Tweneboah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 89,
+     "name": "Evelyn Selasie Wemegah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 90,
+     "name": "Isaac Yeboah",
+     "fate": "the same person twice on the sheet; one record kept"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel Tetteh",
+   "lay": false,
+   "file": "Bishop Emmanuel Tetteh.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 31,
+   "onRoll": 28,
+   "notUnder": [
+    {
+     "row": 9,
+     "name": "Evans Yaw Manu Agbenya",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 21,
+     "name": "David Mensah",
+     "fate": "claimed by Bishop Emmanuel Tetteh and Bishop Francis Philip Asamoah — Unclaimed for the office"
+    },
+    {
+     "row": 36,
+     "name": "Emmanuel Kofi Yeboah",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Enoch Boakye-Yiadom",
+   "lay": false,
+   "file": "Bishop Enoch Boakye-Yiadom.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 7,
+   "onRoll": 7,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Enoch Odartei Lamptey",
+   "lay": false,
+   "file": "Bishop Enoch Odartei Lamptey.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 2,
+   "onRoll": 2,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Enoch Tettey-Angmor",
+   "lay": false,
+   "file": "Bishop Enoch Tettey-Angmor.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 36,
+   "onRoll": 31,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Ray-Charles Agbekey",
+     "fate": "ruled to Daniel Amofah (Bishop Yoku Amonoo-Neizer 10 Oct 10:24: Adrienne, Maureen, Kelvin, Ray Charles, Clinton are all under Bs Daniel Amofa)"
+    },
+    {
+     "row": 14,
+     "name": "Epey Lord Clinton",
+     "fate": "ruled to Daniel Amofah (Bishop Yoku Amonoo-Neizer 10 Oct 10:24: Adrienne, Maureen, Kelvin, Ray Charles, Clinton are all under Bs Daniel Amofa)"
+    },
+    {
+     "row": 35,
+     "name": "Adrienne Wakam Nziamen",
+     "fate": "ruled to Daniel Amofah (Bishop Yoku Amonoo-Neizer 10 Oct 10:24: Adrienne, Maureen, Kelvin, Ray Charles, Clinton are all under Bs Daniel Amofa)"
+    },
+    {
+     "row": 41,
+     "name": "Maureen Amofah",
+     "fate": "ruled to Daniel Amofah (Bishop Yoku Amonoo-Neizer 10 Oct 10:24: Adrienne, Maureen, Kelvin, Ray Charles, Clinton are all under Bs Daniel Amofa)"
+    },
+    {
+     "row": 42,
+     "name": "Daniel Amofah",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Erasmus Pascal Mensah",
+   "lay": false,
+   "file": "Bishop Erasmus Pascal Mensah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 9,
+   "onRoll": 9,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Eric Kobina Asare",
+   "lay": false,
+   "file": "Bishop Eric Kobina Asare.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 23,
+   "onRoll": 22,
+   "notUnder": [
+    {
+     "row": 12,
+     "name": "Emmanuel Frank Asare",
+     "fate": "ruled to Samuel Obeng (Sakyi 14:29 'Samuel Obeng')"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Eric Lamptey",
+   "lay": false,
+   "file": "Bishop Eric Lamptey.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 13,
+   "onRoll": 12,
+   "notUnder": [
+    {
+     "row": 8,
+     "name": "Leinad Silmaro Nzau Bamoquina",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Ernest Addai-Duah",
+   "lay": false,
+   "file": "Bishop Ernest Addai-Duah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 13,
+   "onRoll": 13,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Ernest Aryee",
+   "lay": false,
+   "file": "Bishop Ernest Aryee-JESUS IS THE MASTER PASTORS INFORMATION.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 6,
+   "onRoll": 5,
+   "notUnder": [
+    {
+     "row": 10,
+     "name": "Eric Ayerh Mensah",
+     "fate": "claimed by Bishop Ernest Aryee and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Farrell N.K.A Bruce",
+   "lay": false,
+   "file": "Bishop Farrell N.K.A Bruce.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 9,
+   "onRoll": 9,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Felix Bediako",
+   "lay": false,
+   "file": "Bishop Felix Bediako.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 3,
+   "onRoll": 3,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Foster Sefakor Mensah",
+   "lay": false,
+   "file": "Bishop Foster Sefakor Mensah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 10,
+   "onRoll": 9,
+   "notUnder": [
+    {
+     "row": 15,
+     "name": "Bright Limel",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Francis Nii Aryee Hammond",
+   "lay": false,
+   "file": "Bishop Francis Hammond.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 29,
+   "onRoll": 25,
+   "notUnder": [
+    {
+     "row": 15,
+     "name": "Stephen Bondzie",
+     "fate": "claimed by Bishop Emmanuel Nterful and Bishop Francis Nii Aryee Hammond — Unclaimed for the office"
+    },
+    {
+     "row": 23,
+     "name": "Emmanuel Kwarko",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 32,
+     "name": "Francis Nii Aryee Hammond",
+     "fate": "the bishop's own row"
+    },
+    {
+     "row": 35,
+     "name": "Francis Nii Aryee Hammond",
+     "fate": "the same name twice on the sheet; one record kept"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Francis Philip Asamoah",
+   "lay": false,
+   "file": "Bishop Francis Philip Asamoah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 28,
+   "onRoll": 27,
+   "notUnder": [
+    {
+     "row": 22,
+     "name": "David Obeng-Mensah",
+     "fate": "claimed by Bishop Emmanuel Tetteh and Bishop Francis Philip Asamoah — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Francis Tsikata-Akatto",
+   "lay": false,
+   "file": "Bishop Francis Tsikata-Akatto.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 26,
+   "onRoll": 26,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Frank Ofori Adjei",
+   "lay": false,
+   "file": "Bishop Frank Ofori Adjei 2632 1.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 47,
+   "onRoll": 47,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Frank Opoku",
+   "lay": false,
+   "file": "Bishop Frank Opoku.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 14,
+   "onRoll": 9,
+   "notUnder": [
+    {
+     "row": 8,
+     "name": "Emmanuel Kofi Acheampong",
+     "fate": "claimed by Bishop Frank Opoku and Bishop Esther-Richie Okyere — Unclaimed for the office"
+    },
+    {
+     "row": 9,
+     "name": "Francis Asare",
+     "fate": "claimed by Bishop Kweku Amponsah and Bishop Frank Opoku — Unclaimed for the office"
+    },
+    {
+     "row": 15,
+     "name": "Maxwell Ntefune Nayan",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 16,
+     "name": "Gabriel Niii Lante Lamptey",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 20,
+     "name": "Solomon Francis Apam",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Frank Otchere",
+   "lay": false,
+   "file": "Bishop Frank Otchere.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 36,
+   "onRoll": 34,
+   "notUnder": [
+    {
+     "row": 30,
+     "name": "Leonardo Ngariamao",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 32,
+     "name": "Pedro Alberto Nhanengue",
+     "fate": "claimed by Bishop Frank Otchere and Bishop Nelson Agbemava — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Fred Ansah Quartey",
+   "lay": false,
+   "file": "Bishop Fred Ansah Quartey.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 90,
+   "onRoll": 90,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "George Seneagya",
+   "lay": false,
+   "file": "Bishop George Seneagya.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 9,
+   "onRoll": 8,
+   "notUnder": [
+    {
+     "row": 14,
+     "name": "Emmanuel Kojo Awotwe",
+     "fate": "claimed by Bishop George Seneagya and Bishop Joshua Heward-Mills — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Geraldo Amoa",
+   "lay": false,
+   "file": "Bishop Geraldo Amoa Lsk Pastors.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 11,
+   "onRoll": 10,
+   "notUnder": [
+    {
+     "row": 12,
+     "name": "Mwenda Machima",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Glen Kwame Opoku",
+   "lay": false,
+   "file": "Bishop Glen Kwame Opoku.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 155,
+   "onRoll": 142,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Adelaide Heward-Mills",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 8,
+     "name": "Joojo Stephens",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 9,
+     "name": "Pius Akator",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 10,
+     "name": "Amelia Beracha Aidoo",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 97,
+     "name": "Albert Mensah",
+     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
+    },
+    {
+     "row": 100,
+     "name": "Maurice Mintah-Aboagye",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 112,
+     "name": "Emmanuel Opuni",
+     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Norman Kwadwo Darkwa — Unclaimed for the office"
+    },
+    {
+     "row": 147,
+     "name": "Isaac Nii Bonney Mensah",
+     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Richard Afenyo Tsaku — Unclaimed for the office"
+    },
+    {
+     "row": 148,
+     "name": "Daniel Boateng",
+     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Romeo Sosu — Unclaimed for the office"
+    },
+    {
+     "row": 149,
+     "name": "Grace Boateng",
+     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Kofi Hene Asare — Unclaimed for the office"
+    },
+    {
+     "row": 153,
+     "name": "Helena Dadzie-Yorke",
+     "fate": "ruled to Joojo Stephens (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
+    },
+    {
+     "row": 154,
+     "name": "Priscilla April Yeboah",
+     "fate": "ruled to Joojo Stephens (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
+    },
+    {
+     "row": 160,
+     "name": "Eric Koomson",
+     "fate": "ruled to Joojo Stephens (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Gustav Offei-Manu",
+   "lay": false,
+   "file": "Bishop Gustav Offei-Manu.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 67,
+   "onRoll": 66,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Edward Owusu Nyarko",
+     "fate": "ruled to Kwabena Asare Asamoa (Sakyi 14:29 'Kwabena Asare Asamoa'; Fabin asks whether he is still in Ghana)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Harold Bedu-Addo",
+   "lay": false,
+   "file": "Bishop Harold Bedu-Addo.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 7,
+   "onRoll": 7,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Henry Asare-Duah",
+   "lay": false,
+   "file": "Bishop Henry Asare-Duah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 24,
+   "onRoll": 23,
+   "notUnder": [
+    {
+     "row": 24,
+     "name": "Dickson Poku",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Henry Oti-Frimpong",
+   "lay": false,
+   "file": "Bishop Henry Oti-Frimpong.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 65,
+   "onRoll": 62,
+   "notUnder": [
+    {
+     "row": 26,
+     "name": "Emmanuel Joseph Koufie",
+     "fate": "claimed by Bishop Eat Sackey and Bishop Henry Oti-Frimpong — Unclaimed for the office"
+    },
+    {
+     "row": 45,
+     "name": "Kwaku Osei Bonsu",
+     "fate": "claimed by Bishop Henry Oti-Frimpong and Bishop Joshua Heward-Mills — Unclaimed for the office"
+    },
+    {
+     "row": 51,
+     "name": "Prince Takyi Turkson",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Isaac Agyeman",
+   "lay": false,
+   "file": "Bishop Isaac Agyeman. -  Fiilled.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 106,
+   "onRoll": 54,
+   "notUnder": [
+    {
+     "row": 9,
+     "name": "Abednego Abbey",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 10,
+     "name": "Herbert Tawiah Aidoo",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 11,
+     "name": "Richmond Annan",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 12,
+     "name": "Zenas Adarkwah Yiadom",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 13,
+     "name": "Foanor Alloh",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 14,
+     "name": "Eric Boachie-Yiadom",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 15,
+     "name": "Enoch Bentil",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 18,
+     "name": "Prince Forson",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 19,
+     "name": "Andrew Jason Heward-Mills",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 20,
+     "name": "Joseph Halivor",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 21,
+     "name": "Dennis Kpogli",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 22,
+     "name": "Abraham Koney",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 23,
+     "name": "Nana Ahema Forson",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 24,
+     "name": "Ishmael Oplerm Narh",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 25,
+     "name": "Michael Oteng",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 26,
+     "name": "Caleb Osei-Kofi",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 27,
+     "name": "Divine Olubakinde",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 28,
+     "name": "Malcolm Otchere-Forbih",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 29,
+     "name": "Jayson Quarshie",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 31,
+     "name": "Michael Kwaku Boadu Sarpong",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 32,
+     "name": "Joseph Teye",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 33,
+     "name": "David Yalleh",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 34,
+     "name": "Albert Gillies Heward-Mills",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 83,
+     "name": "Sylvester Cudjoe",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 84,
+     "name": "Hannah Emefa Vanderpuije",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 85,
+     "name": "Dennis Darko Mensah",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 86,
+     "name": "Elliott Mawuko Sallah",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 87,
+     "name": "Godsway Boakye",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 88,
+     "name": "Albert Teye Quarmyne",
+     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+    },
+    {
+     "row": 89,
+     "name": "Ohemaa Afua Korang Aidoo",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 90,
+     "name": "Joseph Vanderpuije",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 91,
+     "name": "Paulina Ama Ansah",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 92,
+     "name": "Akweley Okutu",
+     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+    },
+    {
+     "row": 93,
+     "name": "Augustine Kwabena Asubonteng",
+     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+    },
+    {
+     "row": 94,
+     "name": "Emmanuel Narteh Ayiku",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 95,
+     "name": "Osei Baffour Ansah",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 96,
+     "name": "Yvonne Dove",
+     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+    },
+    {
+     "row": 97,
+     "name": "Charles Wireko-Brobbey",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 98,
+     "name": "Seth Lavoe Tsikata",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 99,
+     "name": "Isaac Enyemadze",
+     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+    },
+    {
+     "row": 100,
+     "name": "Francisca Boateng",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 101,
+     "name": "Richmond Opoku Seffah",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 102,
+     "name": "Pearl Woedem Clifford",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 103,
+     "name": "Isaac Bonuedi",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 104,
+     "name": "Hannah Adu",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 105,
+     "name": "Rejoice Owusua Quarmyne",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 106,
+     "name": "Vida Zook",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 107,
+     "name": "Desma Naa Adei Boye-Amasah",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 108,
+     "name": "Norietta Addai Frimpong",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 109,
+     "name": "Ebenezer Opoku",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    },
+    {
+     "row": 110,
+     "name": "Humaima Nunoo",
+     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+    },
+    {
+     "row": 111,
+     "name": "Joanne Bruce",
+     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Isaac Sappor",
+   "lay": false,
+   "file": "Bishop Isaac Sappor.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 6,
+   "onRoll": 6,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Isaac Ssali",
+   "lay": false,
+   "file": "Bishop Isaac Ssali.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 18,
+   "onRoll": 17,
+   "notUnder": [
+    {
+     "row": 13,
+     "name": "Ishmael Antwi",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Ishmael Sam",
+   "lay": false,
+   "file": "Bishop Ishmael Sam.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 31,
+   "onRoll": 30,
+   "notUnder": [
+    {
+     "row": 22,
+     "name": "Ishmael Nathaniel Jojo Sam",
+     "fate": "the bishop's own row"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Jamel Amponsah-Baa",
+   "lay": false,
+   "file": "Bishop Jamel Amponsah-Baa - updated-1.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 36,
+   "onRoll": 36,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Jason Kofi Opata",
+   "lay": false,
+   "file": "Bishop Jason Kofi Opata.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 1,
+   "onRoll": 1,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Jeffrey Kwame Ocran",
+   "lay": false,
+   "file": "Bishop Jeffrey Kwame Ocran.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 25,
+   "onRoll": 24,
+   "notUnder": [
+    {
+     "row": 15,
+     "name": "Maisa Dju",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Jennis Opoku",
+   "lay": false,
+   "file": "Bishop Jennis Opoku.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 24,
+   "onRoll": 23,
+   "notUnder": [
+    {
+     "row": 30,
+     "name": "Isaac Joseph Williams",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Jeremy Menyisse",
+   "lay": false,
+   "file": "Bishop Jeremy Menyisse.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 12,
+   "onRoll": 12,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Joe Owusu-Adjei",
+   "lay": false,
+   "file": "Bishop Joe Owusu-Adjei.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 26,
+   "onRoll": 25,
+   "notUnder": [
+    {
+     "row": 32,
+     "name": "Ransford Darko",
+     "fate": "ruled to Kofi Hene Asare (Archbishop Fabin 14:50 ('Ransford is with Bishop Kofi Hene') overrides Sakyi 14:23 (Joe Adjei), same picture)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "John Ato Dickson",
+   "lay": false,
+   "file": "Bishop John Ato Dickson.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 38,
+   "onRoll": 37,
+   "notUnder": [
+    {
+     "row": 20,
+     "name": "Richard Tetteh Ayim",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "John Boffah",
+   "lay": false,
+   "file": "Bishop John Boffah(Pastors) (1).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 17,
+   "onRoll": 16,
+   "notUnder": [
+    {
+     "row": 16,
+     "name": "Eddie Kaidong",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "John Yaw Frimpong",
+   "lay": false,
+   "file": "Bishop John Yaw Frimpong.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 42,
+   "onRoll": 42,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Joojo Stephens",
+   "lay": false,
+   "file": "Bishop Jojo Stephens Ofori-Addo.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 3,
+   "onRoll": 3,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Joseph Aboagye",
+   "lay": false,
+   "file": "Bishop Joseph Aboagye-1 copy.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 12,
+   "onRoll": 12,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Joseph Aryee",
+   "lay": false,
+   "file": "Bishop Joseph Aryee.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 17,
+   "onRoll": 17,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Joseph Kofi Amable",
+   "lay": false,
+   "file": "Bishop Joseph Kofi Amable-1 (1).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 15,
+   "onRoll": 15,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Joseph Papa Wachirah Kabiro",
+   "lay": false,
+   "file": "Bishop Joseph Papa Wachirah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 20,
+   "onRoll": 19,
+   "notUnder": [
+    {
+     "row": 22,
+     "name": "Erick Maundu Nzuki",
+     "fate": "claimed by Bishop Joseph Papa Wachirah Kabiro and Bishop Prince Samuel Osei — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Joshua Dormediame",
+   "lay": false,
+   "file": "Bishop Joshua Dormediame.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 12,
+   "onRoll": 12,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Joshua Heward-Mills",
+   "lay": false,
+   "file": "Bishop Joshua Heward-Mills.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 136,
+   "onRoll": 131,
+   "notUnder": [
+    {
+     "row": 41,
+     "name": "Emmanuel Awotwe",
+     "fate": "claimed by Bishop George Seneagya and Bishop Joshua Heward-Mills — Unclaimed for the office"
+    },
+    {
+     "row": 103,
+     "name": "John Thomas",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 118,
+     "name": "David Yalleh",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 130,
+     "name": "Kwaku Bonsu",
+     "fate": "claimed by Bishop Henry Oti-Frimpong and Bishop Joshua Heward-Mills — Unclaimed for the office"
+    },
+    {
+     "row": 133,
+     "name": "Michael Sarpong",
+     "fate": "ruled to Patrick Bruce (Sakyi 14:21, same picture)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kenneth Agyei",
+   "lay": false,
+   "file": "Bishop Kenneth Agyei.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 1,
+   "onRoll": 1,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kenneth Kissi Bamfo",
+   "lay": false,
+   "file": "Bishop Kenneth Kissi Bamfo-1.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 33,
+   "onRoll": 30,
+   "notUnder": [
+    {
+     "row": 28,
+     "name": "Afanvi Marius Mawudina",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 37,
+     "name": "Richard Tetteh",
+     "fate": "claimed by Bishop Kenneth Kissi Bamfo and Bishop Kofi Hene Asare and Bishop Morrison Addo — Unclaimed for the office"
+    },
+    {
+     "row": 39,
+     "name": "Felix Tetteh",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kenneth Oswald Awutey",
+   "lay": false,
+   "file": "Bishop Kenneth Oswald Awutey.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 8,
+   "onRoll": 8,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kenrick Thomas",
+   "lay": false,
+   "file": "Bishop Kenrick Thomas.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 16,
+   "onRoll": 16,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kent Njeru",
+   "lay": false,
+   "file": "Bishop Kent Njeru.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 55,
+   "onRoll": 54,
+   "notUnder": [
+    {
+     "row": 39,
+     "name": "Jude Baiden",
+     "fate": "claimed by Bishop Kent Njeru and Bishop Stephen Poku — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Khauhelo Mokobocho",
+   "lay": false,
+   "file": "Bishop Khauhelo Mokobocho-2.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 1,
+   "onRoll": 1,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kingsley Gyasi",
+   "lay": false,
+   "file": "Bishop Kingsley Gyasi.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 7,
+   "onRoll": 6,
+   "notUnder": [
+    {
+     "row": 13,
+     "name": "Evelyn Yates",
+     "fate": "claimed by Bishop Kingsley Gyasi and Bishop Selasy Mcsaint — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kodwo K Orleans-Lindsay",
+   "lay": false,
+   "file": "Bishop Kodwo K Orleans-Lindsay.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 108,
+   "onRoll": 106,
+   "notUnder": [
+    {
+     "row": 66,
+     "name": "Kwabena Addo",
+     "fate": "claimed by Bishop Kodwo K Orleans-Lindsay and Bishop Kobina Quansah (same picture) — Unclaimed for the office"
+    },
+    {
+     "row": 69,
+     "name": "Leticia Mensah-Fio",
+     "fate": "claimed by Bishop Emmanuel Nterful and Bishop Kodwo K Orleans-Lindsay — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kofi Hene Asare",
+   "lay": false,
+   "file": "Bishop Kofi Hene Asare_updated.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 104,
+   "onRoll": 85,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Margaret Frimpong",
+     "fate": "the same person twice on the sheet; one record kept"
+    },
+    {
+     "row": 27,
+     "name": "Shadrach Okoh Ashley",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 32,
+     "name": "Nana Ama Hene-Asare",
+     "fate": "the same person twice on the sheet; one record kept"
+    },
+    {
+     "row": 44,
+     "name": "Jonathan Botchway",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 53,
+     "name": "Agnes Dzansi",
+     "fate": "the same person twice on the sheet; one record kept"
+    },
+    {
+     "row": 65,
+     "name": "Joseph Amoah",
+     "fate": "claimed by Bishop Kofi Hene Asare and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
+    },
+    {
+     "row": 67,
+     "name": "Emmanuel Quaye",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 77,
+     "name": "Yayra Ama Oteng",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 79,
+     "name": "Cornelius Yirtegr",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 80,
+     "name": "Emmanuel Ansah",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 82,
+     "name": "Patrick Annor",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 83,
+     "name": "Francis Asara",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 84,
+     "name": "Francis Nana Kwame Opoku",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 90,
+     "name": "Marian Korkor Ansong",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 97,
+     "name": "Eunice Owusu Baah",
+     "fate": "claimed by Bishop Kofi Hene Asare and Bishop Steve Asare — Unclaimed for the office"
+    },
+    {
+     "row": 98,
+     "name": "Abigail Koran Boateng",
+     "fate": "claimed by Bishop Kofi Hene Asare and Bishop Steve Asare — Unclaimed for the office"
+    },
+    {
+     "row": 99,
+     "name": "Grace Boateng",
+     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Kofi Hene Asare — Unclaimed for the office"
+    },
+    {
+     "row": 100,
+     "name": "Kakra Ankobia-Achimota Central",
+     "fate": "one person with Kakra Ankobiah, kept under Kofi Hene Asare (Joshua 11 Oct)"
+    },
+    {
+     "row": 109,
+     "name": "Richard Sagmor Tetteh",
+     "fate": "claimed by Bishop Kenneth Kissi Bamfo and Bishop Kofi Hene Asare and Bishop Morrison Addo — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kojo Yeboah Atiemo",
+   "lay": false,
+   "file": "Bishop Kojo Yeboah Atiemo.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 1,
+   "onRoll": 1,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kristoffer Odoi Yemoh",
+   "lay": false,
+   "file": "Bishop Kristoffer Odoi Yemoh.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 10,
+   "onRoll": 10,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kudzo Jonathan Sewornuku Bekui",
+   "lay": false,
+   "file": "Bishop Kudzo Jonathan Sewornuku Bekui-2.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 18,
+   "onRoll": 16,
+   "notUnder": [
+    {
+     "row": 14,
+     "name": "Prince Kusi",
+     "fate": "ruled to Benjamin Kwapong Lokko (Sakyi 14:28 'Benjamin Lokko')"
+    },
+    {
+     "row": 24,
+     "name": "David Agbenyo",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kwabena Appiah Denkyira",
+   "lay": false,
+   "file": "Bishop Kwabena Appiah Denkyira.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 3,
+   "onRoll": 3,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kwabena Asare Asamoa",
+   "lay": false,
+   "file": "Bishop Kwabena Asare Asamoa.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 50,
+   "onRoll": 49,
+   "notUnder": [
+    {
+     "row": 56,
+     "name": "Eric Asamoah",
+     "fate": "the same person twice on the sheet; one record kept"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kwame Adu Gyamfi",
+   "lay": false,
+   "file": "Bishop Kwame Adu Gyamfi (1).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 149,
+   "onRoll": 148,
+   "notUnder": [
+    {
+     "row": 123,
+     "name": "Richard Otoo",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kwesi Woode",
+   "lay": false,
+   "file": "Bishop Kwesi Woode.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 8,
+   "onRoll": 8,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Luke Akwasi Frimpong Mensah",
+   "lay": false,
+   "file": "Bishop Luke Akwasi Frimpong Mensah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 119,
+   "onRoll": 59,
+   "notUnder": [
+    {
+     "row": 62,
+     "name": "Sandra Sheila Acquah",
+     "fate": "claimed by Bishop Eat Sackey and Bishop Luke Akwasi Frimpong Mensah — Unclaimed for the office"
+    },
+    {
+     "row": 64,
+     "name": "Luke Akwasi Frimpong Mensah",
+     "fate": "the bishop's own row"
+    },
+    {
+     "row": 67,
+     "name": "Luke Akwasi Frimpong Mensah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 70,
+     "name": "Eugene Osei Aboagye",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 71,
+     "name": "Frank Oduro Acquah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 72,
+     "name": "Sandra Sheila Acquah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 73,
+     "name": "Christopher I A Acquaye",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 74,
+     "name": "Patrick Wetarni Adda",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 75,
+     "name": "Charles Kwashie Agamah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 76,
+     "name": "Akuetteh Agovi",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 77,
+     "name": "Derek A Agyapong-Poku",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 78,
+     "name": "Endurance Ama Akom-Addo",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 79,
+     "name": "Emmanuel Kwasi Amoah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 80,
+     "name": "Isaac Amokwandoh",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 81,
+     "name": "Isaac A Annan",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 82,
+     "name": "Vida Azariah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 83,
+     "name": "Caroline Seena Banfro",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 84,
+     "name": "Francis Banfro",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 85,
+     "name": "Michael Kofi Bedzo",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 86,
+     "name": "Gartay G Brew",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 87,
+     "name": "Kwame Buatsie",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 88,
+     "name": "Iné Michelle Dah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 89,
+     "name": "Jean Jacques Debohi Dah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 90,
+     "name": "Rita Ewuradwoa Daniels",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 91,
+     "name": "Michael Dogah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 92,
+     "name": "John Ekow Eshun",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 93,
+     "name": "Anna Serwa Essuman",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 94,
+     "name": "Alberta Frempong",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 95,
+     "name": "Kojo Frempong",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 97,
+     "name": "Kwadwo Sarfo Gyamfi",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 98,
+     "name": "Rosemond Gyawu-Amoateng",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 99,
+     "name": "Samuel Gyawu-Amoateng",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 100,
+     "name": "Henry Buernor Hadjor",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 101,
+     "name": "Gifty Naa Ayeley Hammond",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 102,
+     "name": "Aboagye Henaku",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 103,
+     "name": "Rita R Henaku",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 104,
+     "name": "Henry Inkum",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 105,
+     "name": "Michael Koranteng",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 106,
+     "name": "Robert Odartei Lawson",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 107,
+     "name": "Newton L Lubuya",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 108,
+     "name": "Cassia Maame Afua Konadu Mensah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 109,
+     "name": "Moses Ahmed Mensah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 110,
+     "name": "Nii Odoi Peter Mensah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 111,
+     "name": "Fred Nonterah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 113,
+     "name": "Isaac Nii Yeboah Norteye",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 114,
+     "name": "Caleb Nunoo",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 115,
+     "name": "Harry Odamtten",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 116,
+     "name": "Erick Otieno Okutah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 117,
+     "name": "Evans Oppong-Mensah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 118,
+     "name": "Rosemary Araba Oppong-Mensah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 119,
+     "name": "Alice P Prah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 120,
+     "name": "Joseph Prah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 121,
+     "name": "Kofi Franklin Quansah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 122,
+     "name": "Francis Sonny Quaye",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 123,
+     "name": "Ranee Naa Bigi Quaye",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 124,
+     "name": "Sandra A Quincy-Jones",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 125,
+     "name": "David Ahmed Sadiq",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 126,
+     "name": "Elorm Mawuli Tsegah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 127,
+     "name": "Fleur Akpeley Yeboah",
+     "fate": "the same name twice on the sheet; one record kept"
+    },
+    {
+     "row": 128,
+     "name": "Frank Yeboah",
+     "fate": "the same name twice on the sheet; one record kept"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Mawusi Adabge",
+   "lay": false,
+   "file": "Bishop Mawusi Adagbe.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Maxwell Manu",
+   "lay": false,
+   "file": "Bishop Maxwell Agyei-Manu.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 5,
+   "onRoll": 5,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Mcivin Afetseng Mafora",
+   "lay": false,
+   "file": "Bishop Mcivin Afetseng Mafora.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 26,
+   "onRoll": 26,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Michael Amoh",
+   "lay": false,
+   "file": "Bishop Michael Amoh.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 12,
+   "onRoll": 11,
+   "notUnder": [
+    {
+     "row": 5,
+     "name": "Michael Amoh",
+     "fate": "the bishop's own row"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Michael Asare",
+   "lay": false,
+   "file": "Bishop Michael Asare.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 2,
+   "onRoll": 2,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Michael Dotsey-Dzokoto",
+   "lay": false,
+   "file": "Bishop Michael Dotsey-Dzokoto.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 14,
+   "onRoll": 14,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Michael Oddoye",
+   "lay": false,
+   "file": "Bishop Michael Oddoye.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 10,
+   "onRoll": 10,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Michael Vengkomwine Tengabo",
+   "lay": false,
+   "file": "Bishop Michael Vengkomwine Tengabo.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 21,
+   "onRoll": 19,
+   "notUnder": [
+    {
+     "row": 8,
+     "name": "Daniel Dexter Adzah",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 23,
+     "name": "Mark Frimpong",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Morrison Addo",
+   "lay": false,
+   "file": "Bishop Morrison Addo.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 23,
+   "onRoll": 21,
+   "notUnder": [
+    {
+     "row": 8,
+     "name": "Eunice Morrison-Addo",
+     "fate": "the bishop's own row"
+    },
+    {
+     "row": 29,
+     "name": "Richard Nii Tettey Tetteh",
+     "fate": "claimed by Bishop Kenneth Kissi Bamfo and Bishop Kofi Hene Asare and Bishop Morrison Addo — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Nana Kwasi Mensah",
+   "lay": false,
+   "file": "Bishop Nana Kwasi Mensah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 3,
+   "onRoll": 3,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Napoleon Essien",
+   "lay": false,
+   "file": "Bishop Napoleon Essien.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 53,
+   "onRoll": 53,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Nassib Hage",
+   "lay": false,
+   "file": "Bishop Nassib Hage.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 10,
+   "onRoll": 10,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Nee Nunoo",
+   "lay": false,
+   "file": "Bishop Nee Nunoo.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 13,
+   "onRoll": 13,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Nelson Agbemava",
+   "lay": false,
+   "file": "Bishop Nelson Agbemava.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 26,
+   "onRoll": 25,
+   "notUnder": [
+    {
+     "row": 32,
+     "name": "Pedro Alberto",
+     "fate": "claimed by Bishop Frank Otchere and Bishop Nelson Agbemava — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Norman Kwadwo Darkwa",
+   "lay": false,
+   "file": "Bishop Norman Kwadwo Darkwa.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 32,
+   "onRoll": 29,
+   "notUnder": [
+    {
+     "row": 36,
+     "name": "Emmanuel Opuni",
+     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Norman Kwadwo Darkwa — Unclaimed for the office"
+    },
+    {
+     "row": 37,
+     "name": "Ama Blankson-Anaman",
+     "fate": "claimed by Bishop Norman Kwadwo Darkwa and Bishop Patrick Inkoom — Unclaimed for the office"
+    },
+    {
+     "row": 38,
+     "name": "Prince Appiah",
+     "fate": "ruled to Benjamin Kwapong Lokko (Sakyi 14:28 'Benjamin Lokko')"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Okereke Peter Chibuzor",
+   "lay": false,
+   "file": "Bishop Okereke Peter Chibuzor.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 7,
+   "onRoll": 7,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Olivia Sam",
+   "lay": false,
+   "file": "Bishop Olivia Sam.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Oreal Valerius Lartey",
+   "lay": false,
+   "file": "Bishop Oreal Valerius Lartey.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 4,
+   "onRoll": 4,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Paschal Kow Dadzie Godwyll",
+   "lay": false,
+   "file": "Bishop Paschal Kow Dadzie Godwyll.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 41,
+   "onRoll": 40,
+   "notUnder": [
+    {
+     "row": 23,
+     "name": "Gideon Boateng",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Patrick Bruce",
+   "lay": false,
+   "file": "Bishop Patrick Bruce.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 15,
+   "onRoll": 14,
+   "notUnder": [
+    {
+     "row": 8,
+     "name": "Gabriel Kofi Twum",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Patrick Inkoom",
+   "lay": false,
+   "file": "Bishop Patrick Inkoom ..xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 81,
+   "onRoll": 79,
+   "notUnder": [
+    {
+     "row": 8,
+     "name": "Ama Blankson",
+     "fate": "claimed by Bishop Norman Kwadwo Darkwa and Bishop Patrick Inkoom — Unclaimed for the office"
+    },
+    {
+     "row": 16,
+     "name": "Thomas Mabotja",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Paul Ackuaku",
+   "lay": false,
+   "file": "Bishop Paul Ackuaku.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 34,
+   "onRoll": 33,
+   "notUnder": [
+    {
+     "row": 8,
+     "name": "Perpetua Ackuaku",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Paul Baidoo",
+   "lay": false,
+   "file": "Bishop Paul Baidoo (1).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 27,
+   "onRoll": 7,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Tibu Kwabena Anaman",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 8,
+     "name": "Chancellor Adjei Ansu",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 9,
+     "name": "Joseph Kanyiti Kiipo",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 10,
+     "name": "Elorm Yao Gogovi",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 11,
+     "name": "Festus Afriyie-Frimpong",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 13,
+     "name": "Saviour Deku",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 14,
+     "name": "Oliver Zigah",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 15,
+     "name": "Gabriel Twum Dufe",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 16,
+     "name": "Upjohn Kofi Sangmor",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 17,
+     "name": "Edem Ahiator",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 18,
+     "name": "Irene Alipoh",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 19,
+     "name": "Samuel Kojo Hammond",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 20,
+     "name": "David Kwame Yeboah Mantey",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 21,
+     "name": "Albert Mawuli Beckley",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 22,
+     "name": "Clement Gomez Lahenor",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 24,
+     "name": "Solomon Amoah Odame",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 28,
+     "name": "Brinda Osei",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 29,
+     "name": "Frederick Kwesi Asare",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 31,
+     "name": "Patterson Dogah",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    },
+    {
+     "row": 32,
+     "name": "Ernest Acheampong Yeboah",
+     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Peter Mokganya",
+   "lay": false,
+   "file": "Bishop Peter Mokganya.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 94,
+   "onRoll": 93,
+   "notUnder": [
+    {
+     "row": 58,
+     "name": "Mosa Enoch Ngoasheng",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Phillip Obeng Asamoah",
+   "lay": false,
+   "file": "Bishop Phillip Obeng-Asamoah-.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 23,
+   "onRoll": 22,
+   "notUnder": [
+    {
+     "row": 26,
+     "name": "Adu Sarkodee",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Prince Paul",
+   "lay": false,
+   "file": "Bishop Prince Paul.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 4,
+   "onRoll": 4,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Prince Samuel Osei",
+   "lay": false,
+   "file": "Bishop Prince Samuel Osei.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 7,
+   "onRoll": 6,
+   "notUnder": [
+    {
+     "row": 11,
+     "name": "Erick Nzuki Maundu",
+     "fate": "claimed by Bishop Joseph Papa Wachirah Kabiro and Bishop Prince Samuel Osei — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Raphael Mendes Essien",
+   "lay": false,
+   "file": "Bishop Raphael Mendes Essien-1.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 13,
+   "onRoll": 13,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Raymond Amarkyne",
+   "lay": false,
+   "file": "Bishop Raymond Amarkyne.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 37,
+   "onRoll": 37,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Raymond Mensah",
+   "lay": false,
+   "file": "Bishop Raymond Mensah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 28,
+   "onRoll": 28,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Raymond Stephens",
+   "lay": false,
+   "file": "Bishop Raymond Stephens.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 5,
+   "onRoll": 0,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Israel Acquah",
+     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 8,
+     "name": "Felix Fiadufe",
+     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 9,
+     "name": "Bernard Tawiah Mensah",
+     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 10,
+     "name": "Raphael Dziedzorm Quashigah",
+     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 11,
+     "name": "Esther Stephens",
+     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Reginald Agyir Dadzie",
+   "lay": false,
+   "file": "Bishop Reginald Agyir Dadzie.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 9,
+   "onRoll": 9,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Reginald Sarkodie",
+   "lay": false,
+   "file": "Bishop Reginald Sarkodie.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 1,
+   "onRoll": 1,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Richard Afenyo Tsaku",
+   "lay": false,
+   "file": "Bishop Richard Afenyo Tsaku - filled.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 68,
+   "onRoll": 66,
+   "notUnder": [
+    {
+     "row": 38,
+     "name": "Philip Asare",
+     "fate": "ruled to Steve Asare (Sakyi 14:21: Philp Asare - Bishop Steve)"
+    },
+    {
+     "row": 71,
+     "name": "Isaac Mensah",
+     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Richard Afenyo Tsaku — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Richard Nii Okai Aryee",
+   "lay": false,
+   "file": "Bishop Richard Nii Okai Aryee.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 24,
+   "onRoll": 23,
+   "notUnder": [
+    {
+     "row": 14,
+     "name": "Emmanuel Baiden",
+     "fate": "titled Bishop, not a pastor"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Robert Amanquanor",
+   "lay": false,
+   "file": "Bishop Robert Amanquanor.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 7,
+   "onRoll": 6,
+   "notUnder": [
+    {
+     "row": 13,
+     "name": "Alfred Wirekoh",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Robert Okai Nunoo",
+   "lay": false,
+   "file": "Bishop Robert Okai Nunoo.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 18,
+   "onRoll": 18,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Rodino Daniel Nhabanga",
+   "lay": false,
+   "file": "Bishop Rodino Daniel Nhabanga-2.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 35,
+   "onRoll": 32,
+   "notUnder": [
+    {
+     "row": 13,
+     "name": "Denilson Moniz Guirrugo",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 14,
+     "name": "Diocleciano Ricardo Gujamo",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 28,
+     "name": "Edson Inocencia Mondlane",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Rory Aryee",
+   "lay": false,
+   "file": "Bishop Rory Aryee.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 14,
+   "onRoll": 13,
+   "notUnder": [
+    {
+     "row": 20,
+     "name": "Michael Kwadwo Ayeh",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Rudy Vaye",
+   "lay": false,
+   "file": "Bishop Rudy Vaye.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 11,
+   "onRoll": 11,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Rutendo Mantiziba",
+   "lay": false,
+   "file": "Bishop Rutendo Mantiziba.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 49,
+   "onRoll": 47,
+   "notUnder": [
+    {
+     "row": 21,
+     "name": "Deborah Best",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 43,
+     "name": "Esme Mantiziba",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Sam Sawyerr",
+   "lay": false,
+   "file": "Bishop Sam Sawyerr.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 9,
+   "onRoll": 7,
+   "notUnder": [
+    {
+     "row": 14,
+     "name": "James Yeboah",
+     "fate": "claimed by Bishop David Adjah Ashong and Bishop Sam Sawyerr — Unclaimed for the office"
+    },
+    {
+     "row": 15,
+     "name": "Joseph Adjei",
+     "fate": "ruled to Fred Ansah Quartey (Sakyi 14:24)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Sampson Kweku Kissi",
+   "lay": false,
+   "file": "Bishop Sampson Kwaku Kissi (1).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 14,
+   "onRoll": 12,
+   "notUnder": [
+    {
+     "row": 19,
+     "name": "Jemima Sossou",
+     "fate": "claimed by Bishop Dennis Agyei-Gyan and Bishop Sampson Kweku Kissi — Unclaimed for the office"
+    },
+    {
+     "row": 20,
+     "name": "Wildana Fortune",
+     "fate": "claimed by Bishop Dennis Agyei-Gyan and Bishop Sampson Kweku Kissi — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Samuel Obeng",
+   "lay": false,
+   "file": "Bishop Samuel Obeng.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 41,
+   "onRoll": 39,
+   "notUnder": [
+    {
+     "row": 28,
+     "name": "Abraham Coleman",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 33,
+     "name": "Bernard Keyeremanteng",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Selasy Mcsaint",
+   "lay": false,
+   "file": "Bishop Selasy Mcsaint.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 57,
+   "onRoll": 51,
+   "notUnder": [
+    {
+     "row": 45,
+     "name": "Emmanuel Kwaku Quansah",
+     "fate": "claimed by Bishop Selasy Mcsaint and Bishop Ebenezer Johnson (same picture) — Unclaimed for the office"
+    },
+    {
+     "row": 58,
+     "name": "Emmanuel Robert Ashietey",
+     "fate": "claimed by Bishop Selasy Mcsaint and Bishop Sompa Osei — Unclaimed for the office"
+    },
+    {
+     "row": 60,
+     "name": "Timothy George Fiawotor",
+     "fate": "claimed by Bishop Selasy Mcsaint and Bishop Sompa Osei — Unclaimed for the office"
+    },
+    {
+     "row": 61,
+     "name": "Noah Nyarko",
+     "fate": "claimed by Bishop Selasy Mcsaint and Bishop Sompa Osei — Unclaimed for the office"
+    },
+    {
+     "row": 62,
+     "name": "Emmanuel Quansah",
+     "fate": "the same person twice on the sheet; one record kept"
+    },
+    {
+     "row": 64,
+     "name": "Evelyn Yates",
+     "fate": "claimed by Bishop Kingsley Gyasi and Bishop Selasy Mcsaint — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Sena Agyepong",
+   "lay": false,
+   "file": "Bishop Sena Agyepong-1.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 17,
+   "onRoll": 17,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Solomon Tay",
+   "lay": false,
+   "file": "Solomon Tay First Love Passion Campus-1.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 33,
+   "onRoll": 32,
+   "notUnder": [
+    {
+     "row": 12,
+     "name": "John Amponsah",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Sompa Osei",
+   "lay": false,
+   "file": "Bishop Sompa Osei.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 32,
+   "onRoll": 27,
+   "notUnder": [
+    {
+     "row": 12,
+     "name": "Nyarko Noah",
+     "fate": "claimed by Bishop Selasy Mcsaint and Bishop Sompa Osei — Unclaimed for the office"
+    },
+    {
+     "row": 23,
+     "name": "Richard Hogrey",
+     "fate": "the same person twice on the sheet; one record kept"
+    },
+    {
+     "row": 31,
+     "name": "Emmanuel Robert Ashietey",
+     "fate": "claimed by Bishop Selasy Mcsaint and Bishop Sompa Osei — Unclaimed for the office"
+    },
+    {
+     "row": 34,
+     "name": "Timothy George Fiawotor",
+     "fate": "claimed by Bishop Selasy Mcsaint and Bishop Sompa Osei — Unclaimed for the office"
+    },
+    {
+     "row": 35,
+     "name": "Paul Kofi Okwabi",
+     "fate": "the same name twice on the sheet; one record kept"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Stephen Poku",
+   "lay": false,
+   "file": "Bishop Stephen Poku.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 63,
+   "onRoll": 61,
+   "notUnder": [
+    {
+     "row": 20,
+     "name": "Jude Baiden",
+     "fate": "claimed by Bishop Kent Njeru and Bishop Stephen Poku — Unclaimed for the office"
+    },
+    {
+     "row": 52,
+     "name": "Emmanuel Alade",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Steve Asare",
+   "lay": false,
+   "file": "Bishop Steve Asare.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 29,
+   "onRoll": 27,
+   "notUnder": [
+    {
+     "row": 33,
+     "name": "Abigail Koran Boateng",
+     "fate": "claimed by Bishop Kofi Hene Asare and Bishop Steve Asare — Unclaimed for the office"
+    },
+    {
+     "row": 35,
+     "name": "Eunice Owusu",
+     "fate": "claimed by Bishop Kofi Hene Asare and Bishop Steve Asare — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Victor Collins Asabere",
+   "lay": false,
+   "file": "Bishop Victor Collins Asabere.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 11,
+   "onRoll": 11,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Wisdom Kwesi Eli Tsyi",
+   "lay": false,
+   "file": "Bishop Wisdom Kwesi Eli Tsyi (1).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 8,
+   "onRoll": 8,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Wisdom Nii Lartey Adams",
+   "lay": false,
+   "file": "Bishop Wisdom Nii Lartey Adams.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 22,
+   "onRoll": 22,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Xola Mpupu",
+   "lay": false,
+   "file": "Bishop Xola Mpupu.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 5,
+   "onRoll": 5,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Ebenezer Adom Barnor",
+   "lay": false,
+   "file": "EBENEZER ADOM BARNOR.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 26,
+   "onRoll": 23,
+   "notUnder": [
+    {
+     "row": 6,
+     "name": "Daniel Owusu",
+     "fate": "claimed by Bishop Charles Bonsu and Bishop Ebenezer Adom Barnor — Unclaimed for the office"
+    },
+    {
+     "row": 10,
+     "name": "Francis Eshun",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 15,
+     "name": "Joshua Mankwofie Agbezukeh",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Elaine Klufio",
+   "lay": false,
+   "file": "Episcopal Sister Elaine Klufio-1.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 23,
+   "onRoll": 23,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Esther-Richie Okyere",
+   "lay": false,
+   "file": "Episcopal Sister Esther-Carina Riche Okyere.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 21,
+   "onRoll": 20,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "Emmanuel Acheampong",
+     "fate": "claimed by Bishop Frank Opoku and Bishop Esther-Richie Okyere — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Joy Bruce",
+   "lay": false,
+   "file": "Episcopal Sister Joy Bruce_updated.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 29,
+   "onRoll": 27,
+   "notUnder": [
+    {
+     "row": 12,
+     "name": "Isaac Bonuedi",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 16,
+     "name": "Francisca Boateng",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kathleen-Sarah Parker-Allotey",
+   "lay": false,
+   "file": "Episcopal Sister Kathleen-Sarah Parker-Allotey.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 3,
+   "onRoll": 3,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Lilian Hasia Ofosua Commey",
+   "lay": false,
+   "file": "Episcopal Sister Lilian Hasia Ofosua Commey.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 16,
+   "onRoll": 15,
+   "notUnder": [
+    {
+     "row": 21,
+     "name": "Jeanne Andrealy Sirou",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Linda Aryee",
+   "lay": false,
+   "file": "Episcopal Sister Linda Aryee.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Olivia Kofi-Opata",
+   "lay": false,
+   "file": "Episcopal Sister Olivia Anna Kofi-Opata.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 2,
+   "onRoll": 2,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Otonye Alba Bassey Ekefre",
+   "lay": false,
+   "file": "Episcopal Sister Otonye Alba Bassey Ekefre (2).xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 4,
+   "onRoll": 4,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Pamela Marnette Dickson",
+   "lay": false,
+   "file": "Episcopal Sister Pamela Marnette Dickson-1.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 10,
+   "onRoll": 10,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Rebecca Joana Addae",
+   "lay": false,
+   "file": "Episcopal Sister Rebecca Joana Addaexlsx.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 8,
+   "onRoll": 8,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Frederick Nortey",
+   "lay": false,
+   "file": "Frederick Nortey 2.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 17,
+   "onRoll": 17,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Harry Kwesi Dodd",
+   "lay": false,
+   "file": "HARRY DODD.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 15,
+   "onRoll": 15,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Isaac Koranteng",
+   "lay": false,
+   "file": "ISaac Korangten FLC ENERGY CAMPUS PASTORS 2026.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 43,
+   "onRoll": 43,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "James Quist-Therson",
+   "lay": false,
+   "file": "Nii Nortey Quist Therson First_Love_North_America_Pastors_Updated.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 56,
+   "onRoll": 56,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Richard Gyamena",
+   "lay": false,
+   "file": "Richard Gyamena.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 79,
+   "onRoll": 69,
+   "notUnder": [
+    {
+     "row": 16,
+     "name": "Peter Mintah Agyekum",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 24,
+     "name": "Francis Aniawu",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 33,
+     "name": "Getrude Boame",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 44,
+     "name": "Godwin Seyram Dese",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 58,
+     "name": "Daniel Kwao",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 59,
+     "name": "Eric Kwao",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 63,
+     "name": "Oscar Kodzo Nsiawu",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 65,
+     "name": "Theresa Akosua Osahene",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 82,
+     "name": "Delali Kwami Adzima",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 84,
+     "name": "Eric Adjei",
+     "fate": "the same name twice on the sheet; one record kept"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Romeo Sosu",
+   "lay": false,
+   "file": "Romeo Sosu 4.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 21,
+   "onRoll": 18,
+   "notUnder": [
+    {
+     "row": 10,
+     "name": "Mohammed Bentil",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 13,
+     "name": "Daniel Kharis Boateng",
+     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Romeo Sosu — Unclaimed for the office"
+    },
+    {
+     "row": 19,
+     "name": "George Akuobeagye Kumah",
+     "fate": "removed by the office (not a pastor)"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel Samuel Baidoo",
+   "lay": false,
+   "file": "SAMUEL BAIDOO 2.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 57,
+   "onRoll": 54,
+   "notUnder": [
+    {
+     "row": 4,
+     "name": "Albert Ansah Mensah",
+     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
+    },
+    {
+     "row": 23,
+     "name": "Eric Mensah",
+     "fate": "claimed by Bishop Ernest Aryee and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
+    },
+    {
+     "row": 37,
+     "name": "Joseph Willie Amoah",
+     "fate": "claimed by Bishop Kofi Hene Asare and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Abraham Nii Ayi Aryee",
+   "lay": false,
+   "file": "Bishop Abraham Aryee.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 15,
+   "onRoll": 15,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "David Yalleh",
+   "lay": false,
+   "file": "Bishop David Yalleh.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 2,
+   "onRoll": 2,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Ebo Ankrah",
+   "lay": false,
+   "file": "Bishop Ebo Ankrah.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Emmanuel Opoku Baah",
+   "lay": false,
+   "file": "Bishop Emmanuel Opoku Baah.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 1,
+   "onRoll": 1,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Kwabena Oware Amoako-Doku",
+   "lay": false,
+   "file": "Bishop Kwabena Amoako-Doku.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Roger Hiltbrunner",
+   "lay": false,
+   "file": "Bishop Roger Hiltbrunner.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 21,
+   "onRoll": 19,
+   "notUnder": [
+    {
+     "row": 19,
+     "name": "Solomon Moussa",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 22,
+     "name": "Esrael Seleshi",
+     "fate": "claimed by Bishop Daniel Fiifi Gyamerah and Bishop Roger Hiltbrunner — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Samuel Kwame Gasper",
+   "lay": false,
+   "file": "Bishop Samuel Gaspar.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 29,
+   "onRoll": 29,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Stephen Jaiden Asamoah",
+   "lay": false,
+   "file": "Bishop Stephen Jaiden Asamoah.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Toss Mills-Odoi",
+   "lay": false,
+   "file": "Bishop Toss Mills-Odoi.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 103,
+   "onRoll": 82,
+   "notUnder": [
+    {
+     "row": 24,
+     "name": "Joseph Buabin",
+     "fate": "claimed by Bishop Toss Mills-Odoi and Bishop Kobina Quansah (same picture) — Unclaimed for the office"
+    },
+    {
+     "row": 59,
+     "name": "Frank Otchere",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 65,
+     "name": "Doris Mensah",
+     "fate": "claimed by Bishop Dennis Agyei-Gyan and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 66,
+     "name": "Foster Mensah",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 84,
+     "name": "Emmanuel Okpoti Richter",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 86,
+     "name": "Reinhard Elwood Tagoe",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 95,
+     "name": "Fred Akator",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 96,
+     "name": "Rockson Adjei Bekoe",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 97,
+     "name": "Obed Essel",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 98,
+     "name": "Isaac Koffie",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 99,
+     "name": "Eric Koomson",
+     "fate": "ruled to Joojo Stephens (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
+    },
+    {
+     "row": 100,
+     "name": "Emmanuel Kudzo Kpeglo",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 101,
+     "name": "Barbara Abena Sakyiwaa Sackey",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 102,
+     "name": "Benjamin Ekow Tawiah Tetteh",
+     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 103,
+     "name": "Israel Acquah",
+     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 104,
+     "name": "Felix Fiadufe",
+     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 105,
+     "name": "Bernard Tawiah Mensah",
+     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 106,
+     "name": "Raphael Dziedzorm Quashigah",
+     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 107,
+     "name": "Esther Stephens",
+     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+    },
+    {
+     "row": 108,
+     "name": "Raymond Stephens",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    },
+    {
+     "row": 109,
+     "name": "Courage Kwami Ahedor",
+     "fate": "titled Bishop, not a pastor"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Adelaide Heward-Mills",
+   "lay": false,
+   "file": "Episcopal Sister Adelaide Heward-Mills.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Daniella Hart",
+   "lay": false,
+   "file": "Mother Daniella Hart.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Perpetua-Claire Ackuaku",
+   "lay": false,
+   "file": "Mother Perpsie Claire Ackuaku.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Vivaldi-Joy Aboagye",
+   "lay": false,
+   "file": "Mother Vivaldi-Joy Aboagye.xlsx",
+   "folder": "Bishop submitted sheets (10 Oct 2026)",
+   "sheetRows": 0,
+   "onRoll": 0,
+   "notUnder": [],
+   "extra": []
+  },
+  {
+   "bishop": "Ebenezer Johnson",
+   "lay": true,
+   "file": "Rev Ebenezer Johnson.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 35,
+   "onRoll": 32,
+   "notUnder": [
+    {
+     "row": 7,
+     "name": "David Newman Brenya",
+     "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 30,
+     "name": "Ebenezer Johnson",
+     "fate": "the lay president's own row"
+    },
+    {
+     "row": 31,
+     "name": "Emmanuel Quansah",
+     "fate": "claimed by Bishop Selasy Mcsaint and Bishop Ebenezer Johnson (same picture) — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Justice Hagan",
+   "lay": true,
+   "file": "Rev Justice Hagan.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 99,
+   "onRoll": 96,
+   "notUnder": [
+    {
+     "row": 52,
+     "name": "Justice Hagan",
+     "fate": "the lay president's own row"
+    },
+    {
+     "row": 99,
+     "name": "Andrew Luguterah",
+     "fate": "already on the roll under Justice Hagan"
+    },
+    {
+     "row": 100,
+     "name": "Comfort Glory Adza",
+     "fate": "already on the roll under Justice Hagan"
+    }
+   ],
+   "extra": []
+  },
+  {
+   "bishop": "Kobina Quansah",
+   "lay": true,
+   "file": "Rev Kobina Quansah.xlsx",
+   "folder": "Bishop submitted sheets (9 Oct 2026)",
+   "sheetRows": 77,
+   "onRoll": 74,
+   "notUnder": [
+    {
+     "row": 5,
+     "name": "Kobina Quansah",
+     "fate": "the lay president's own row"
+    },
+    {
+     "row": 56,
+     "name": "Enoch Kwabena Addo Yalley",
+     "fate": "claimed by Bishop Kodwo K Orleans-Lindsay and Bishop Kobina Quansah (same picture) — Unclaimed for the office"
+    },
+    {
+     "row": 78,
+     "name": "Joseph Buabin-Nkansah",
+     "fate": "claimed by Bishop Toss Mills-Odoi and Bishop Kobina Quansah (same picture) — Unclaimed for the office"
+    }
+   ],
+   "extra": []
+  }
+ ],
+ "reconcileProblems": [],
  "rulingsNotFound": [
   {
    "name": "Ebenezer Kwasi Opoku",
@@ -7716,14 +12780,6 @@
   {
    "id": "S1a3474d2",
    "name": "Ernest Yaw Amponsah",
-   "bishop": "Kofi Hene Asare",
-   "group": "UD Ghana",
-   "denomination": "Qodesh Family Churches",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "Sdfc497e4",
-   "name": "Kakra Ankobiah",
    "bishop": "Kofi Hene Asare",
    "group": "UD Ghana",
    "denomination": "Qodesh Family Churches",

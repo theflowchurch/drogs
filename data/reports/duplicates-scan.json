@@ -1,96 +1,7 @@
 [
  {
-  "likely": true,
-  "reasons": [
-   "fuller or shorter form of the name"
-  ],
-  "people": [
-   {
-    "id": "Sdfc497e4",
-    "name": "Kakra Ankobiah",
-    "title": "Pastor",
-    "bishop": "Kofi Hene Asare",
-    "group": "UD Ghana",
-    "denomination": "Qodesh Family Churches",
-    "place": "Accra, Ghana",
-    "photo": false,
-    "unclaimed": ""
-   },
-   {
-    "id": "PF729",
-    "name": "Kakra Ankobia-Achimota Central",
-    "title": "Pastor",
-    "bishop": "Kofi Hene Asare",
-    "group": "UD Ghana",
-    "denomination": "Qodesh Family Churches",
-    "place": "Accra, Ghana",
-    "photo": true,
-    "unclaimed": ""
-   }
-  ]
- },
- {
-  "likely": true,
-  "reasons": [
-   "same picture"
-  ],
-  "people": [
-   {
-    "id": "P4526",
-    "name": "Cyril Lartey",
-    "title": "Pastor",
-    "bishop": "Joshua Heward-Mills",
-    "group": "First Love",
-    "denomination": "First Love Church",
-    "place": "Accra, Ghana",
-    "photo": true,
-    "unclaimed": ""
-   },
-   {
-    "id": "S1301620d",
-    "name": "Kenneth Cyril Nartey",
-    "title": "Rev.",
-    "bishop": "Eddy Addy",
-    "group": "Reasonable Service",
-    "denomination": "Anointed Word Chapel Int",
-    "place": "Accra, Ghana",
-    "photo": true,
-    "unclaimed": ""
-   }
-  ]
- },
- {
-  "likely": true,
-  "reasons": [
-   "spelling differs"
-  ],
-  "people": [
-   {
-    "id": "P833",
-    "name": "Daniel Ofosu",
-    "title": "Rev.",
-    "bishop": "Justice Hagan",
-    "group": "UD North America",
-    "denomination": "Laikos International Church",
-    "place": "Philadelphia, United States",
-    "photo": true,
-    "unclaimed": ""
-   },
-   {
-    "id": "P835",
-    "name": "Daniel Owusu",
-    "title": "Pastor",
-    "bishop": "Justice Hagan",
-    "group": "UD North America",
-    "denomination": "Laikos International Church",
-    "place": "Attleboro, United States",
-    "photo": true,
-    "unclaimed": ""
-   }
-  ]
- },
- {
   "likely": false,
+  "pending": true,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -121,6 +32,7 @@
  },
  {
   "likely": false,
+  "pending": true,
   "reasons": [
    "spelling differs"
   ],
@@ -151,6 +63,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -181,6 +94,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "spelling differs"
   ],
@@ -211,6 +125,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -263,6 +178,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -293,6 +209,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "spelling differs"
   ],
@@ -323,6 +240,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -353,6 +271,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "spelling differs",
    "fuller or shorter form of the name"
@@ -395,6 +314,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -425,6 +345,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name",
    "spelling differs"
@@ -500,6 +421,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "spelling differs"
   ],
@@ -530,6 +452,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -560,6 +483,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "spelling differs"
   ],
@@ -590,6 +514,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "spelling differs"
   ],
@@ -620,6 +545,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -650,6 +576,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -680,6 +607,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -721,6 +649,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -751,6 +680,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "spelling differs"
   ],
@@ -781,6 +711,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -811,6 +742,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -841,6 +773,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -871,6 +804,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -901,6 +835,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -931,6 +866,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -961,6 +897,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -991,6 +928,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -1021,6 +959,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -1051,6 +990,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -1081,6 +1021,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "spelling differs"
   ],
@@ -1111,6 +1052,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -1163,6 +1105,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "spelling differs"
   ],
@@ -1193,6 +1136,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -1223,6 +1167,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -1253,6 +1198,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -1283,6 +1229,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -1313,6 +1260,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -1343,6 +1291,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -1373,6 +1322,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "fuller or shorter form of the name"
   ],
@@ -1403,6 +1353,7 @@
  },
  {
   "likely": false,
+  "pending": false,
   "reasons": [
    "spelling differs"
   ],

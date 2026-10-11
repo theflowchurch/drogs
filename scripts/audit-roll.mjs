@@ -49,7 +49,15 @@ check('Every portrait has a thumbnail', noThumb.length === 0, noThumb.map((p) =>
 check('Bishops without a photo are only the known two', bishops.filter((b) => !b.image).length <= 2, bishops.filter((b) => !b.image).map((b) => b.name).join(', '));
 const drive = Object.keys(read('data/bishop-photo-overrides.json')).length;
 check('Drive portraits applied', bishops.filter((b) => /-[0-9a-f]{8}\.webp$/.test(b.image)).length === drive, `${drive} overrides`);
-// 5. Structure
+// Bishop by bishop: every row on a bishop's latest sheet is a record under them or has a reason; nobody sits under a bishop who is not on their sheet
+check('Every sheet row is on the roll under its bishop or accounted for', report.reconcileProblems.length === 0, `${report.reconcile.length} sheets, ${report.reconcile.reduce((n, r) => n + r.sheetRows, 0)} rows; problems: ${report.reconcileProblems.slice(0, 5).map((x) => `${x.name} (${x.bishop}: ${x.problem})`).join('; ') || 'none'}`);
+check('Nobody is under a bishop whose sheet does not list them', report.reconcile.every((r) => r.extra.length === 0), report.reconcile.filter((r) => r.extra.length).map((r) => `${r.bishop}: ${r.extra.map((x) => x.name).join(', ')}`).join('; '));
+check('Every bishop with a sheet and every lay president was reconciled', report.reconcile.length === report.totals.bishopsWithSheet + lays.length, `${report.reconcile.length} vs ${report.totals.bishopsWithSheet} + ${lays.length}`);
+// Duplicate rulings (data/duplicate-rulings.json)
+const dupRulings = read('data/duplicate-rulings.json');
+for (const m of dupRulings.merge) { const kept = pastors.filter((p) => key(p.name) === key(m.keep)), dropped = pastors.filter((p) => key(p.name) === key(m.drop)); check(`Merged: ${m.drop} into ${m.keep} under ${m.bishop}`, kept.length === 1 && dropped.length === 0 && key(kept[0].bishop || '').includes(key(m.bishop).split(' ').pop()) && (!m.set || Object.entries(m.set).every(([k, v]) => kept[0][k] === v)), `${kept.length} kept (${kept.map((p) => p.bishop).join('/')}), ${dropped.length} still on the roll`); }
+for (const d of dupRulings.distinct) check(`Two people: ${d.names.join(' and ')}`, d.names.every((n) => pastors.some((p) => key(p.name) === key(n))));
+
 const conflicts = structureConflicts(catalogOf({}), people.filter((p) => !p.unclaimed));
 check('Structure conflicts', conflicts.length === 0, `${conflicts.length}: ${[...new Set(conflicts.map((c) => c.kind))].join(', ')}`);
 // 6. Office views depend on these helpers
