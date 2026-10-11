@@ -1,26 +1,17 @@
 {
- "generated": "2026-10-11T09:23:04.172Z",
+ "generated": "2026-10-11T10:49:09.157Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 4898,
-  "assigned": 4845,
-  "unclaimed": 53,
-  "withPhoto": 4052,
-  "sheets": 287,
-  "bishopsWithSheet": 279,
+  "pastors": 4989,
+  "assigned": 4966,
+  "unclaimed": 23,
+  "withPhoto": 4124,
+  "sheets": 288,
+  "bishopsWithSheet": 280,
   "noPastorsSheets": 72
  },
  "noSheet": [
-  {
-   "id": "B65",
-   "name": "Francis Okyere",
-   "listName": "Francis Okyere",
-   "group": "UD Ghana",
-   "denomination": "The Mega Church",
-   "branch": "Tikrom",
-   "hadPastorsBefore": 0
-  },
   {
    "id": "BL1",
    "name": "Lovell Ankrah",
@@ -298,23 +289,6 @@
    "by": "Bishop Jake Godwyll 10 Oct 10:10: Chiebuka Itanyi should be ES Olivia Opata"
   },
   {
-   "name": "Prince Kusi Appiah",
-   "winner": "Benjamin Kwapong Lokko",
-   "losers": [
-    "Kudzo Jonathan Sewornuku Bekui",
-    "Norman Kwadwo Darkwa"
-   ],
-   "by": "Sakyi 14:28 'Benjamin Lokko'"
-  },
-  {
-   "name": "Paula Amoa",
-   "winner": "Geraldo Amoa",
-   "losers": [
-    "Clement Asante"
-   ],
-   "by": "Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa"
-  },
-  {
    "name": "Ian Chiweshe",
    "winner": "Geraldo Amoa",
    "losers": [
@@ -324,14 +298,6 @@
   },
   {
    "name": "Violet Musonda",
-   "winner": "Geraldo Amoa",
-   "losers": [
-    "Clement Asante"
-   ],
-   "by": "Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa"
-  },
-  {
-   "name": "Rosemary Sinta",
    "winner": "Geraldo Amoa",
    "losers": [
     "Clement Asante"
@@ -355,14 +321,6 @@
    "by": "Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa"
   },
   {
-   "name": "Angela Mpundu",
-   "winner": "Geraldo Amoa",
-   "losers": [
-    "Clement Asante"
-   ],
-   "by": "Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa"
-  },
-  {
    "name": "Moreblessings Daka",
    "winner": "Geraldo Amoa",
    "losers": [
@@ -371,14 +329,68 @@
    "by": "Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa"
   },
   {
-   "name": "Eric Koomson",
-   "winner": "Joojo Stephens",
+   "name": "Fred Akator",
+   "winner": "Toss Mills-Odoi",
    "losers": [
-    "Courage Ahedor",
-    "Glen Kwame Opoku",
-    "Toss Mills-Odoi"
+    "Courage Ahedor"
    ],
-   "by": "Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens"
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+  },
+  {
+   "name": "Rockson Adjei Bekoe",
+   "winner": "Toss Mills-Odoi",
+   "losers": [
+    "Courage Ahedor"
+   ],
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+  },
+  {
+   "name": "Obed Essel",
+   "winner": "Toss Mills-Odoi",
+   "losers": [
+    "Courage Ahedor"
+   ],
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+  },
+  {
+   "name": "Isaac Koffie",
+   "winner": "Toss Mills-Odoi",
+   "losers": [
+    "Courage Ahedor"
+   ],
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+  },
+  {
+   "name": "Eric Koomson",
+   "winner": "Toss Mills-Odoi",
+   "losers": [
+    "Courage Ahedor"
+   ],
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+  },
+  {
+   "name": "Emmanuel Kudzo Kpeglo",
+   "winner": "Toss Mills-Odoi",
+   "losers": [
+    "Courage Ahedor"
+   ],
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+  },
+  {
+   "name": "Barbara Abena Sakyiwaa Sackey",
+   "winner": "Toss Mills-Odoi",
+   "losers": [
+    "Courage Ahedor"
+   ],
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+  },
+  {
+   "name": "Benjamin Ekow Tawiah Tetteh",
+   "winner": "Toss Mills-Odoi",
+   "losers": [
+    "Courage Ahedor"
+   ],
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
   },
   {
    "name": "Maureen Amofah",
@@ -413,21 +425,20 @@
    "by": "Bishop Yoku Amonoo-Neizer 10 Oct 10:24: Adrienne, Maureen, Kelvin, Ray Charles, Clinton are all under Bs Daniel Amofa"
   },
   {
-   "name": "Dennis Darko Mensah",
-   "winner": "Joy Bruce",
+   "name": "Esrael Seleshi",
+   "winner": "Roger Hiltbrunner",
    "losers": [
-    "Eat Sackey",
-    "Isaac Agyeman"
+    "Daniel Fiifi Gyamerah"
    ],
-   "by": "Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce"
+   "by": "Joshua 11 Oct: a clash with Bishop Roger Hiltbrunner goes to him"
   },
   {
-   "name": "Emmanuel Frank Asare",
-   "winner": "Samuel Obeng",
+   "name": "Sandra Sheila Acquah",
+   "winner": "Luke Akwasi Frimpong Mensah",
    "losers": [
-    "Eric Kobina Asare"
+    "Eat Sackey"
    ],
-   "by": "Sakyi 14:29 'Samuel Obeng'"
+   "by": "Sakyi 14:32"
   },
   {
    "name": "Maxwell Nayan",
@@ -454,12 +465,12 @@
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
   },
   {
-   "name": "Joseph Adjei",
-   "winner": "Fred Ansah Quartey",
+   "name": "Emmanuel Kojo Awotwe",
+   "winner": "George Seneagya",
    "losers": [
-    "Sam Sawyerr"
+    "Joshua Heward-Mills"
    ],
-   "by": "Sakyi 14:24"
+   "by": "Joshua 11 Oct: any other clash with Bishop Joshua Heward-Mills goes to the other bishop"
   },
   {
    "name": "Helena Dadzie Yorke",
@@ -476,14 +487,6 @@
     "Glen Kwame Opoku"
    ],
    "by": "Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens"
-  },
-  {
-   "name": "Edward Owusu Nyarko",
-   "winner": "Kwabena Asare Asamoa",
-   "losers": [
-    "Gustav Offei-Manu"
-   ],
-   "by": "Sakyi 14:29 'Kwabena Asare Asamoa'; Fabin asks whether he is still in Ghana"
   },
   {
    "name": "Abednego Abbey",
@@ -503,14 +506,6 @@
   },
   {
    "name": "Richmond Annan",
-   "winner": "Joshua Heward-Mills",
-   "losers": [
-    "Isaac Agyeman"
-   ],
-   "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
-  },
-  {
-   "name": "Zenas Adarkwah Yiadom",
    "winner": "Joshua Heward-Mills",
    "losers": [
     "Isaac Agyeman"
@@ -630,14 +625,6 @@
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
   },
   {
-   "name": "Jayson Quarshie",
-   "winner": "Joshua Heward-Mills",
-   "losers": [
-    "Isaac Agyeman"
-   ],
-   "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
-  },
-  {
    "name": "Michael Sarpong",
    "winner": "Joshua Heward-Mills",
    "losers": [
@@ -676,6 +663,14 @@
     "Isaac Agyeman"
    ],
    "by": "Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce"
+  },
+  {
+   "name": "Dennis Darko Mensah",
+   "winner": "Joy Bruce",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "by": "screenshot 14:15"
   },
   {
    "name": "Elliott Mawuko Sallah",
@@ -918,14 +913,6 @@
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
   },
   {
-   "name": "Joseph Kiipo",
-   "winner": "Joshua Heward-Mills",
-   "losers": [
-    "Paul Baidoo"
-   ],
-   "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
-  },
-  {
    "name": "Clement Lahenor",
    "winner": "Joshua Heward-Mills",
    "losers": [
@@ -961,8 +948,7 @@
    "name": "Gabriel Twum",
    "winner": "Joshua Heward-Mills",
    "losers": [
-    "Paul Baidoo",
-    "Patrick Bruce"
+    "Paul Baidoo"
    ],
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
   },
@@ -1031,33 +1017,234 @@
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
   },
   {
-   "name": "Philip Otikwa Asare",
-   "winner": "Steve Asare",
+   "name": "Israel Acquah",
+   "winner": "Toss Mills-Odoi",
    "losers": [
-    "Richard Afenyo Tsaku"
+    "Raymond Stephens"
    ],
-   "by": "Sakyi 14:21: Philp Asare - Bishop Steve"
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
   },
   {
-   "name": "Michael Kofi Sarpong",
-   "winner": "Patrick Bruce",
+   "name": "Felix Fiadufe",
+   "winner": "Toss Mills-Odoi",
    "losers": [
-    "Joshua Heward-Mills"
+    "Raymond Stephens"
    ],
-   "by": "Sakyi 14:21 (same picture)"
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
   },
   {
-   "name": "Ransford Darko",
-   "winner": "Kofi Hene Asare",
+   "name": "Bernard Tawiah Mensah",
+   "winner": "Toss Mills-Odoi",
    "losers": [
-    "Joe Owusu-Adjei"
+    "Raymond Stephens"
    ],
-   "by": "Archbishop Fabin 14:50 ('Ransford is with Bishop Kofi Hene') overrides Sakyi 14:23 (Joe Adjei) (same picture)"
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+  },
+  {
+   "name": "Raphael Dziedzorm Quashigah",
+   "winner": "Toss Mills-Odoi",
+   "losers": [
+    "Raymond Stephens"
+   ],
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+  },
+  {
+   "name": "Esther Stephens",
+   "winner": "Toss Mills-Odoi",
+   "losers": [
+    "Raymond Stephens"
+   ],
+   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+  },
+  {
+   "name": "Eric Koomson",
+   "winner": "Joojo Stephens",
+   "losers": [
+    "Glen Kwame Opoku"
+   ],
+   "by": "Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens"
   }
  ],
  "conflicts": [
   {
+   "name": "Macdonald Penney / Mcdonald Raynes Penney",
+   "id": "P4591",
+   "pending": true,
+   "why": "Joshua 11 Oct 10:19: confirm his name spelling; claimed by two (Joshua Heward-Mills and Kwabena Appiah Denkyira)",
+   "claims": [
+    {
+     "bishop": "Joshua Heward-Mills",
+     "group": "First Love",
+     "file": "Bishop Joshua Heward-Mills.xlsx",
+     "folder": "",
+     "row": 93,
+     "cells": [
+      "Macdonald Penney",
+      "Pastor",
+      "First Love Church",
+      "Accra",
+      "Ghana"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor",
+     "id": "P4591"
+    },
+    {
+     "bishop": "Kwabena Appiah Denkyira",
+     "group": "UD Ghana",
+     "file": "Bishop Kwabena Appiah Denkyira.xlsx",
+     "folder": "",
+     "row": 9,
+     "cells": [
+      "Mcdonald Raynes Penney",
+      "Rev.",
+      "East Mountain Churches",
+      "Akuapim Mampong",
+      "Ghana"
+     ],
+     "city": "Akuapim Mampong",
+     "country": "Ghana",
+     "title": "Rev.",
+     "id": "Sc3bc6b27"
+    }
+   ]
+  },
+  {
+   "name": "Langelihle Mmgomezulu / Langelihle Mngomezulu",
+   "id": "S284dc07f",
+   "pending": true,
+   "why": "Joshua 11 Oct 10:19: add Langelihle Mngomezulu to claimed by two (Geraldo Amoa and Clement Asante, Lusaka)",
+   "claims": [
+    {
+     "bishop": "Geraldo Amoa",
+     "group": "First Love",
+     "file": "Bishop Geraldo Amoa Lsk Pastors.xlsx",
+     "folder": "",
+     "row": 16,
+     "cells": [
+      "Langelihle Mmgomezulu",
+      "Pastor",
+      "First Love Church",
+      "Lusaka",
+      "Zambia"
+     ],
+     "city": "Lusaka",
+     "country": "Zambia",
+     "title": "Pastor",
+     "id": "S284dc07f"
+    },
+    {
+     "bishop": "Clement Asante",
+     "group": "First Love",
+     "file": "Bishop Clement Asante FLC.xlsx",
+     "folder": "",
+     "row": 39,
+     "cells": [
+      "Langelihle Mngomezulu",
+      "Pastor",
+      "First Love Church",
+      "Lusaka",
+      "Zambia"
+     ],
+     "city": "Lusaka",
+     "country": "Zambia",
+     "title": "Pastor",
+     "id": "PF132"
+    }
+   ]
+  },
+  {
+   "name": "Kow Acquaah / Kow Acquah",
+   "id": "P2636",
+   "pending": true,
+   "why": "Joshua 11 Oct 09:10: the office must confirm who they are (Kofi Hene Asare and Steve Asare)",
+   "claims": [
+    {
+     "bishop": "Kofi Hene Asare",
+     "group": "UD Ghana",
+     "file": "Bishop Kofi Hene Asare_updated.xlsx",
+     "folder": "",
+     "row": 94,
+     "cells": [
+      "Kow Acquaah",
+      "Rev.",
+      "Qodesh Family Churches",
+      "Accra",
+      "Ghana"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Rev.",
+     "id": "P2636"
+    },
+    {
+     "bishop": "Steve Asare",
+     "group": "Reasonable Service",
+     "file": "Bishop Steve Asare.xlsx",
+     "folder": "",
+     "row": 34,
+     "cells": [
+      "Kow Acquah",
+      "Pastor",
+      "Allos Mega Church",
+      "Accra",
+      "Ghana"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor",
+     "id": "S1e704ffc"
+    }
+   ]
+  },
+  {
+   "name": "Emmanuel Prince Abakah / Emmanuel Abankwah",
+   "id": "P1322",
+   "pending": true,
+   "why": "Joshua 11 Oct 09:10: the office must confirm who they are (same picture, Takoradi and Accra)",
+   "claims": [
+    {
+     "bishop": "Emmanuel Samuel Baidoo",
+     "group": "UD Ghana",
+     "file": "SAMUEL BAIDOO 2.xlsx",
+     "folder": "",
+     "row": 20,
+     "cells": [
+      "Emmanuel Prince Abakah",
+      "Pastor",
+      "The Makarios Church",
+      "Takoradi",
+      "Ghana"
+     ],
+     "city": "Takoradi",
+     "country": "Ghana",
+     "title": "Pastor",
+     "id": "P1322"
+    },
+    {
+     "bishop": "Edwin Morgan Ogoe",
+     "group": "Reasonable Service",
+     "file": "Bishop Edwin Morgan Ogoe.xlsx",
+     "folder": "",
+     "row": 9,
+     "cells": [
+      "Emmanuel Abankwah",
+      "Pastor",
+      "Anointed People International",
+      "Accra",
+      "Ghana"
+     ],
+     "city": "Accra",
+     "country": "Ghana",
+     "title": "Pastor",
+     "id": "S64038323"
+    }
+   ]
+  },
+  {
    "name": "Esther Nyamekye Okokon",
+   "id": "PF365",
    "claims": [
     {
      "bishop": "Abednego Nyarkoh-Mensah",
@@ -1111,121 +1298,8 @@
    ]
   },
   {
-   "name": "James Yeboah",
-   "claims": [
-    {
-     "bishop": "David Adjah Ashong",
-     "group": "UD Ghana",
-     "file": "Bishop David Adjah Ashong_034906.xlsx",
-     "folder": "Bishop submitted sheets",
-     "row": 19,
-     "cells": [
-      "James Yeboah",
-      "Male",
-      "Pastor",
-      "…",
-      "8/11/77",
-      "49",
-      "JESUS SAVIOUR OF THE WORLD CHURCH INTERN",
-      "Adom No. 1",
-      "Berekum",
-      "Ghana",
-      "2023",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Berekum",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Sam Sawyerr",
-     "group": "Reasonable Service",
-     "file": "Bishop Sam Sawyerr.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 14,
-     "cells": [
-      "8.",
-      "James Yeboah ",
-      "Male ",
-      "Pastor ",
-      "…",
-      "10th September 1998",
-      "28",
-      "Anointed People International",
-      "24Hills Cathedral, Santeo",
-      "Accra",
-      "Ghana",
-      "2022",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Francis Asare",
-   "claims": [
-    {
-     "bishop": "Kweku Amponsah",
-     "group": "UD Europe",
-     "file": "Bishop Kweku Amponsah.xlsx",
-     "folder": "Bishop submitted sheets",
-     "row": 13,
-     "cells": [
-      "Francis Asare",
-      "Male",
-      "Pastor",
-      "…",
-      "29th May, 1969",
-      "57",
-      "CANDLE IN THE DARK CHURCH",
-      "Vienna",
-      "Vienna",
-      "Austria",
-      "2025",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Vienna",
-     "country": "Austria",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Frank Opoku",
-     "group": "First Love",
-     "file": "Bishop Frank Opoku.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 9,
-     "cells": [
-      "Francis Asare",
-      "Male",
-      "Pastor",
-      "2.33242E+11",
-      "…",
-      "38",
-      "FIRST LOVE CHURCH",
-      "First Love Centre",
-      "Accra",
-      "Ghana",
-      "2026",
-      "N/A",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
    "name": "Daniel Acheampong",
+   "id": "PB21",
    "claims": [
     {
      "bishop": "Phillippa-Marka Coker",
@@ -1274,57 +1348,8 @@
    ]
   },
   {
-   "name": "Daniel Owusu Adjei",
-   "claims": [
-    {
-     "bishop": "Charles Bonsu",
-     "group": "UD Ghana",
-     "file": "Bishop Charles Bonsu.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 31,
-     "cells": [
-      "Daniel Owusu Adjei",
-      "Male",
-      "Pastor",
-      "…",
-      "6th May, 1992",
-      "34",
-      "JESUS SAVIOUR OF THE WORLD CHURCH INTERN",
-      "Nsawkaw",
-      "Techiman",
-      "Ghana",
-      "2018",
-      "Not ordained",
-      "Yes",
-      "MISSING"
-     ],
-     "city": "Techiman",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Ebenezer Adom Barnor",
-     "group": "UD Ghana",
-     "file": "EBENEZER ADOM BARNOR.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 6,
-     "cells": [
-      "5",
-      "DANIEL OWUSU",
-      "…",
-      "PASTOR",
-      "MALE",
-      "SEKONDI APARCHE",
-      "SEKONDI"
-     ],
-     "city": "Sekondi",
-     "country": "",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
    "name": "Mathias Dongzoola",
+   "id": "P2964",
    "claims": [
     {
      "bishop": "Charles Bonsu",
@@ -1382,6 +1407,7 @@
   },
   {
    "name": "Moses Appoh",
+   "id": "P3160",
    "claims": [
     {
      "bishop": "Charles Bonsu",
@@ -1438,518 +1464,8 @@
    ]
   },
   {
-   "name": "Wisdom Dery",
-   "claims": [
-    {
-     "bishop": "Charles Bonsu",
-     "group": "UD Ghana",
-     "file": "Bishop Charles Bonsu.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 40,
-     "cells": [
-      "Wisdom Dery",
-      "Male",
-      "Pastor",
-      "…",
-      "6th March, 1991",
-      "35",
-      "JESUS SAVIOUR OF THE WORLD CHURCH INTERN",
-      "Ampoma",
-      "Kintampo",
-      "Ghana",
-      "2024",
-      "Not ordained",
-      "Yes",
-      "…"
-     ],
-     "city": "Kintampo",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "David Afreh",
-     "group": "UD Ghana",
-     "file": "Bishop David Afreh.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 11,
-     "cells": [
-      "Wisdom Dery ",
-      "Male",
-      "Pastor",
-      "…",
-      "…",
-      "35",
-      "JESUS SAVIOUR OF THE WORLD CHURCH INTERN",
-      "MISSING",
-      "Kintampo",
-      "Ghana",
-      "2024",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Kintampo",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Fred Akator",
-   "claims": [
-    {
-     "bishop": "Courage Ahedor",
-     "group": "United Jesus",
-     "file": "Bishop Courage Ahedor.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 7,
-     "cells": [
-      "Fred Akator",
-      "Male",
-      "Pastor",
-      "…",
-      "1989",
-      "37",
-      "JESUS IS THE MASTER",
-      "Afrangua Town",
-      "Afrangua Town",
-      "Ghana",
-      "2023",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Afrangua Town",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 95,
-     "cells": [
-      "Fred Akator",
-      "Male",
-      "Pastor",
-      "…",
-      "18th Jan 1989",
-      "37",
-      "JESUS IS THE MASTER CHURCH",
-      "Afrangua Town",
-      "Afrangua Town",
-      "Ghana",
-      "2023",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Afrangua Town",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Rockson Adjei Bekoe",
-   "claims": [
-    {
-     "bishop": "Courage Ahedor",
-     "group": "United Jesus",
-     "file": "Bishop Courage Ahedor.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 8,
-     "cells": [
-      "Rockson Adjei Bekoe",
-      "Male",
-      "Pastor",
-      "…",
-      "2nd July, 1976",
-      "50",
-      "JESUS IS THE MASTER",
-      "Abonko",
-      "Abonko",
-      "Ghana",
-      "2023",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Abonko",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 96,
-     "cells": [
-      "Rockson Adjei Bekoe",
-      "Male",
-      "Pastor",
-      "…",
-      "2nd July, 1976",
-      "50",
-      "JESUS IS THE MASTER CHURCH",
-      "Abonko",
-      "Abonko",
-      "Ghana",
-      "2023",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Abonko",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Obed Essel",
-   "claims": [
-    {
-     "bishop": "Courage Ahedor",
-     "group": "United Jesus",
-     "file": "Bishop Courage Ahedor.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 9,
-     "cells": [
-      "Obed Essel",
-      "Male",
-      "Rev.",
-      "…",
-      "3rd March 1988",
-      "38",
-      "JESUS IS THE MASTER",
-      "Ekumfi Esuehyia",
-      "Essuehyia",
-      "Ghana",
-      "2014",
-      "2021",
-      "Yes",
-      "…"
-     ],
-     "city": "Essuehyia",
-     "country": "Ghana",
-     "title": "Rev."
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 97,
-     "cells": [
-      "Obed Essel",
-      "Male",
-      "Rev.",
-      "…",
-      "3rd March 1988",
-      "38",
-      "JESUS IS THE MASTER CHURCH",
-      "Ekumfi Esuehyia",
-      "Essuehyia",
-      "Ghana",
-      "2014",
-      "2021",
-      "Yes",
-      "…"
-     ],
-     "city": "Essuehyia",
-     "country": "Ghana",
-     "title": "Rev."
-    }
-   ]
-  },
-  {
-   "name": "Isaac Koffie",
-   "claims": [
-    {
-     "bishop": "Courage Ahedor",
-     "group": "United Jesus",
-     "file": "Bishop Courage Ahedor.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 10,
-     "cells": [
-      "Isaac Koffie",
-      "Male",
-      "Pastor",
-      "…",
-      "23rd Nov. 1990",
-      "35",
-      "JESUS IS THE MASTER",
-      "Mankessim",
-      "Mankessim",
-      "Ghana",
-      "2024",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Mankessim",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 98,
-     "cells": [
-      "Isaac Koffie",
-      "Male",
-      "Pastor",
-      "…",
-      "23rd Nov. 1990",
-      "35",
-      "JESUS IS THE MASTER CHURCH",
-      "Mankessim",
-      "Mankessim",
-      "Ghana",
-      "2024",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Mankessim",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Emmanuel Kudzo Kpeglo",
-   "claims": [
-    {
-     "bishop": "Courage Ahedor",
-     "group": "United Jesus",
-     "file": "Bishop Courage Ahedor.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 12,
-     "cells": [
-      "Emmanuel Kudzo Kpeglo",
-      "Male",
-      "Rev.",
-      "…",
-      "24th Nov 1980",
-      "45",
-      "JESUS IS THE MASTER",
-      "Mankessim",
-      "Mankessim",
-      "Ghana",
-      "2016",
-      "2021",
-      "Yes",
-      "…"
-     ],
-     "city": "Mankessim",
-     "country": "Ghana",
-     "title": "Rev."
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 100,
-     "cells": [
-      "Emmanuel Kudzo Kpeglo",
-      "Male",
-      "Rev.",
-      "…",
-      "24th Nov 1980",
-      "45",
-      "JESUS IS THE MASTER CHURCH",
-      "Mankessim",
-      "Mankessim",
-      "Ghana",
-      "2016",
-      "2021",
-      "Yes",
-      "…"
-     ],
-     "city": "Mankessim",
-     "country": "Ghana",
-     "title": "Rev."
-    }
-   ]
-  },
-  {
-   "name": "Barbara Abena Sakyiwaa Sackey",
-   "claims": [
-    {
-     "bishop": "Courage Ahedor",
-     "group": "United Jesus",
-     "file": "Bishop Courage Ahedor.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 13,
-     "cells": [
-      "Barbara Abena Sakyiwaa Sackey",
-      "Female",
-      "Pastor",
-      "…",
-      "27th April 1993",
-      "33",
-      "JESUS IS THE MASTER",
-      "Mankessim",
-      "Mankessim",
-      "Ghana",
-      "2018",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Mankessim",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 101,
-     "cells": [
-      "Barbara Abena Sakyiwaa Sackey",
-      "Female",
-      "Pastor",
-      "…",
-      "27th April 1993",
-      "33",
-      "JESUS IS THE MASTER CHURCH",
-      "Mankessim",
-      "Mankessim",
-      "Ghana",
-      "2018",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Mankessim",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Benjamin Ekow Tawiah Tetteh",
-   "claims": [
-    {
-     "bishop": "Courage Ahedor",
-     "group": "United Jesus",
-     "file": "Bishop Courage Ahedor.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 14,
-     "cells": [
-      "Benjamin Ekow Tawiah Tetteh",
-      "Male",
-      "Pastor",
-      "…",
-      "18th Jan. 1990",
-      "36",
-      "JESUS IS THE MASTER",
-      "Kormantse",
-      "Kormantse",
-      "Ghana",
-      "2023",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Kormantse",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 102,
-     "cells": [
-      "Benjamin Ekow Tawiah Tetteh",
-      "Male",
-      "Pastor",
-      "…",
-      "18th Jan. 1990",
-      "36",
-      "JESUS IS THE MASTER CHURCH",
-      "Kormantse",
-      "Kormantse",
-      "Ghana",
-      "2023",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Kormantse",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Esrael Seleshi",
-   "claims": [
-    {
-     "bishop": "Daniel Fiifi Gyamerah",
-     "group": "First Love",
-     "file": "Bishop Daniel Fiifi Gyamerah.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 6,
-     "cells": [
-      "Esrael Seleshi",
-      "Male",
-      "Pastor",
-      "…",
-      "35744",
-      "28",
-      "FIRST LOVE CHURCH",
-      "First Love Geneva",
-      "Geneva",
-      "Switzerland",
-      "2026",
-      "/",
-      "/",
-      "…"
-     ],
-     "city": "Geneva",
-     "country": "Switzerland",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Roger Hiltbrunner",
-     "group": "First Love",
-     "file": "Bishop Roger Hiltbrunner.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 22,
-     "cells": [
-      "Esrael Seleshi",
-      "male",
-      "Pastor",
-      "…",
-      "…",
-      "28",
-      "FIRST LOVE CHURCH",
-      "Geneva",
-      "Geneva",
-      "Switzerland",
-      "2026",
-      "…"
-     ],
-     "city": "Geneva",
-     "country": "Switzerland",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
    "name": "Jemima Sossou",
+   "id": "P2223",
    "claims": [
     {
      "bishop": "Dennis Agyei-Gyan",
@@ -2008,6 +1524,7 @@
   },
   {
    "name": "Wildana Fortune",
+   "id": "P4414",
    "claims": [
     {
      "bishop": "Dennis Agyei-Gyan",
@@ -2065,65 +1582,8 @@
    ]
   },
   {
-   "name": "Doris Ewusi-Mensah",
-   "claims": [
-    {
-     "bishop": "Dennis Agyei-Gyan",
-     "group": "UD Ghana",
-     "file": "Bishop Dennis Agyei-Gyan.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 44,
-     "cells": [
-      "38",
-      "Doris Ewusi-Mensah",
-      "Female",
-      "Pastor",
-      "…",
-      "9/12/86",
-      "40",
-      "THE MEGA CHURCH",
-      "Sabin Akrofrom",
-      "Kumasi",
-      "Ghana",
-      "2024",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Kumasi",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 65,
-     "cells": [
-      "Doris Mensah",
-      "Female",
-      "Pastor",
-      "…",
-      "1968",
-      "57",
-      "JESUS IS THE MASTER CHURCH",
-      "Cornerstone Cathedral",
-      "Tema",
-      "Ghana",
-      "2020",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Tema",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
    "name": "Joseph Emmanuel Koufie",
+   "id": "S824b1da2",
    "claims": [
     {
      "bishop": "Eat Sackey",
@@ -2179,669 +1639,8 @@
    ]
   },
   {
-   "name": "Sandra Acquah",
-   "claims": [
-    {
-     "bishop": "Eat Sackey",
-     "group": "Reasonable Service",
-     "file": "Bishop E.A.T Sackey.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 33,
-     "cells": [
-      "Sandra Acquah",
-      "FEMALE",
-      "PASTOR",
-      "…",
-      "9/6/73",
-      "53",
-      "GLORY HOPE LIFE CENTER",
-      "SAKAMAN",
-      "ACCRA",
-      "GHANA",
-      "2023",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Luke Akwasi Frimpong Mensah",
-     "group": "UD North America",
-     "file": "Bishop Luke Akwasi Frimpong Mensah.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 62,
-     "cells": [
-      "Sandra Sheila Acquah",
-      "Female",
-      "Pastor",
-      "…",
-      "…",
-      "53",
-      "AMERICAN MISSIONARY CHURCH",
-      "Edmonton",
-      "Edmonton",
-      "Canada",
-      "2023",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Edmonton",
-     "country": "Canada",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Leticia Mensah",
-   "claims": [
-    {
-     "bishop": "Emmanuel Nterful",
-     "group": "Reasonable Service",
-     "file": "Bishop Emmanuel Nterful.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 35,
-     "cells": [
-      "Leticia Mensah",
-      "Female",
-      "Pastor",
-      "…",
-      "9/13/60",
-      "66",
-      "Keep My Word Chapel International",
-      "Gbawe",
-      "Accra",
-      "Ghana",
-      "2005",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Kodwo K Orleans-Lindsay",
-     "group": "UD North America",
-     "file": "Bishop Kodwo K Orleans-Lindsay.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 69,
-     "cells": [
-      "Leticia Mensah-Fio",
-      "Female",
-      "Pastor",
-      "…",
-      "4/21/80",
-      "46",
-      "REVIVAL INTERNATIONAL",
-      "Columbia Laurel Ccl",
-      "Columbia",
-      "United States",
-      "2023",
-      "na",
-      "na",
-      "Yes",
-      "…"
-     ],
-     "city": "Columbia",
-     "country": "United States",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Stephen Fiifi Bondzie",
-   "claims": [
-    {
-     "bishop": "Emmanuel Nterful",
-     "group": "Reasonable Service",
-     "file": "Bishop Emmanuel Nterful.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 39,
-     "cells": [
-      "Stephen Fiifi Bondzie",
-      "Male",
-      "Rev.",
-      "…",
-      "…",
-      "50",
-      "Keep My Word Chapel International",
-      "Gbawe",
-      "Accra",
-      "Ghana",
-      "2011",
-      "2012",
-      "Yes",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Rev."
-    },
-    {
-     "bishop": "Francis Nii Aryee Hammond",
-     "group": "UD Ghana",
-     "file": "Bishop Francis Hammond.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 15,
-     "cells": [
-      "Stephen Bondzie",
-      "Male",
-      "Pastor",
-      "…",
-      "…",
-      "41",
-      "ANAGKAZO ASSEMBLIES",
-      "Ngyeresi",
-      "Ngyeresi",
-      "Ghana",
-      "2019",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Ngyeresi",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "David Mensah",
-   "claims": [
-    {
-     "bishop": "Emmanuel Tetteh",
-     "group": "UD Ghana",
-     "file": "Bishop Emmanuel Tetteh.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 21,
-     "cells": [
-      "David Mensah",
-      "Male",
-      "Pastor",
-      "…",
-      "8/4/93",
-      "33",
-      "LIGHTHOUSE CHAPEL INTERNATIONAL",
-      "Nsutam",
-      "Nsutam",
-      "Ghana",
-      "2020",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Nsutam",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Francis Philip Asamoah",
-     "group": "UD Ghana",
-     "file": "Bishop Francis Philip Asamoah.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 22,
-     "cells": [
-      "David Obeng-Mensah",
-      "Male",
-      "Pastor",
-      "…",
-      "29470",
-      "46",
-      "ANAGKAZO ASSEMBLIES",
-      "Nyanyano Kakraba",
-      "Kasoa",
-      "Ghana",
-      "2021",
-      "Yes",
-      "…"
-     ],
-     "city": "Kasoa",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Eric Ayerh Mensah",
-   "claims": [
-    {
-     "bishop": "Ernest Aryee",
-     "group": "United Jesus",
-     "file": "Bishop Ernest Aryee-JESUS IS THE MASTER PASTORS INFORMATION.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 10,
-     "cells": [
-      "Eric Ayerh Mensah",
-      "Male",
-      "Pastor",
-      "…",
-      "…",
-      "39",
-      "JESUS IS THE MASTER CHURCH",
-      "GILGAL",
-      "Accra",
-      "Ghana",
-      "2021",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Emmanuel Samuel Baidoo",
-     "group": "UD Ghana",
-     "file": "SAMUEL BAIDOO 2.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 23,
-     "cells": [
-      "22",
-      "ERIC MENSAH",
-      "…",
-      "REVEREND",
-      "MALE",
-      "APOWA",
-      "TAKORADI"
-     ],
-     "city": "Takoradi",
-     "country": "",
-     "title": "Rev."
-    }
-   ]
-  },
-  {
-   "name": "Emmanuel Kofi Acheampong",
-   "claims": [
-    {
-     "bishop": "Frank Opoku",
-     "group": "First Love",
-     "file": "Bishop Frank Opoku.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 8,
-     "cells": [
-      "Emmanuel Kofi Acheampong",
-      "Male",
-      "Pastor",
-      "2.33243E+11",
-      "…",
-      "33",
-      "FIRST LOVE CHURCH",
-      "First Love Centre",
-      "Accra",
-      "Ghana",
-      "2026",
-      "N/A",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Esther-Richie Okyere",
-     "group": "UD Ghana",
-     "file": "Episcopal Sister Esther-Carina Riche Okyere.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 7,
-     "cells": [
-      "Emmanuel Acheampong",
-      "Male",
-      "Pastor",
-      "…",
-      "10/8/93",
-      "33",
-      "THE MEGA CHURCH",
-      "Tikrom",
-      "Kumasi",
-      "Ghana",
-      "2023",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Kumasi",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Pedro Alberto Nhanengue",
-   "claims": [
-    {
-     "bishop": "Frank Otchere",
-     "group": "UD Africa",
-     "file": "Bishop Frank Otchere.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 32,
-     "cells": [
-      "Pedro Alberto Nhanengue",
-      "Male",
-      "Pastor",
-      "…",
-      "…",
-      "28",
-      "PRIMEIRAS OBRAS",
-      "Alpha And Omega Cathedral",
-      "Maputo",
-      "Mozambique",
-      "2025",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Maputo",
-     "country": "Mozambique",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Nelson Agbemava",
-     "group": "UD Africa",
-     "file": "Bishop Nelson Agbemava.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 32,
-     "cells": [
-      "Pedro Alberto",
-      "Male",
-      "Pastor",
-      "…",
-      "PRIMEIRAS OBRAS",
-      "Zimpeto Stadium",
-      "Zimpeto",
-      "Mozambique",
-      "2024",
-      "MISSING",
-      "yes"
-     ],
-     "city": "Zimpeto",
-     "country": "Mozambique",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Emmanuel Kojo Awotwe",
-   "claims": [
-    {
-     "bishop": "George Seneagya",
-     "group": "First Love",
-     "file": "Bishop George Seneagya.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 14,
-     "cells": [
-      "Emmanuel  Kojo Awotwe",
-      "Male",
-      "Pastor",
-      "…",
-      "23 Jun 1997",
-      "29",
-      "First Love Church",
-      "Gbawe Campus",
-      "Gbawe",
-      "Ghana",
-      "2023",
-      "NA",
-      "Yes",
-      "…"
-     ],
-     "city": "Gbawe",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Joshua Heward-Mills",
-     "group": "First Love",
-     "file": "Bishop Joshua Heward-Mills.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 41,
-     "cells": [
-      "Emmanuel Awotwe",
-      "Male",
-      "Pastor",
-      "…",
-      "6/23/97",
-      "29",
-      "FIRST LOVE CHURCH",
-      "First Love Center",
-      "Accra",
-      "Ghana",
-      "MISSING",
-      "MISSING",
-      "Yes",
-      "MISSING"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Albert Mensah",
-   "claims": [
-    {
-     "bishop": "Glen Kwame Opoku",
-     "group": "First Love",
-     "file": "Bishop Glen Kwame Opoku.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 97,
-     "cells": [
-      "Albert Mensah",
-      "Male",
-      "Pastor",
-      "…",
-      "8/4/93",
-      "33",
-      "QODESH CITY CHURCHES",
-      "Adabraka",
-      "Accra",
-      "Ghana",
-      "2025",
-      "Yes",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Emmanuel Samuel Baidoo",
-     "group": "UD Ghana",
-     "file": "SAMUEL BAIDOO 2.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 4,
-     "cells": [
-      "3",
-      "ALBERT ANSAH MENSAH",
-      "…",
-      "PASTOR",
-      "MALE",
-      "WORD OF LIFE CATHEDRAL",
-      "TAKORADI"
-     ],
-     "city": "Takoradi",
-     "country": "",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Emmanuel Opuni",
-   "claims": [
-    {
-     "bishop": "Glen Kwame Opoku",
-     "group": "First Love",
-     "file": "Bishop Glen Kwame Opoku.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 112,
-     "cells": [
-      "Emmanuel Opuni",
-      "Male",
-      "Pastor",
-      "…",
-      "2/14/81",
-      "45",
-      "QODESH CITY CHURCHES",
-      "Qodesh",
-      "Accra",
-      "Ghana",
-      "2021",
-      "Yes",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Norman Kwadwo Darkwa",
-     "group": "UD North America",
-     "file": "Bishop Norman Kwadwo Darkwa.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 36,
-     "cells": [
-      "Emmanuel Opuni",
-      "Male",
-      "Pastor",
-      "…",
-      "…",
-      "56",
-      "REJOICE GREATLY",
-      "Jacksonville",
-      "Jacksonville",
-      "United States",
-      "2021",
-      "NA",
-      "Yes",
-      "…"
-     ],
-     "city": "Jacksonville",
-     "country": "United States",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Isaac Nii Bonney Mensah",
-   "claims": [
-    {
-     "bishop": "Glen Kwame Opoku",
-     "group": "First Love",
-     "file": "Bishop Glen Kwame Opoku.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 147,
-     "cells": [
-      "Isaac Nii Bonney Mensah",
-      "Male",
-      "Pastor",
-      "…",
-      "7/11/84",
-      "42",
-      "QODESH CITY CHURCHES",
-      "Bubuashie",
-      "Accra",
-      "Ghana",
-      "2020",
-      "Yes",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Richard Afenyo Tsaku",
-     "group": "UD Ghana",
-     "file": "Bishop Richard Afenyo Tsaku - filled.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 71,
-     "cells": [
-      "65",
-      "66",
-      "Isaac Mensah",
-      "Male",
-      "Pastor",
-      "…",
-      "8/14/82",
-      "44",
-      "WEST END CITY CHURCHES",
-      "Swedru Cathedral",
-      "Swedru",
-      "Ghana",
-      "2013",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Swedru",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Daniel Boateng",
-   "claims": [
-    {
-     "bishop": "Glen Kwame Opoku",
-     "group": "First Love",
-     "file": "Bishop Glen Kwame Opoku.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 148,
-     "cells": [
-      "Daniel Boateng",
-      "Male",
-      "Pastor",
-      "…",
-      "6/12/90",
-      "36",
-      "QODESH CITY CHURCHES",
-      "Odorkor Main",
-      "Accra",
-      "Ghana",
-      "2018",
-      "Yes",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Romeo Sosu",
-     "group": "United Jesus",
-     "file": "Romeo Sosu 4.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 13,
-     "cells": [
-      "Daniel Kharis Boateng",
-      "Male",
-      "Rev.",
-      "…",
-      "4/10/86",
-      "40",
-      "JESUS IS THE DOOR",
-      "Kpandai",
-      "Kpandai",
-      "Ghana",
-      "2013",
-      "2020",
-      "Yes",
-      "…"
-     ],
-     "city": "Kpandai",
-     "country": "Ghana",
-     "title": "Rev."
-    }
-   ]
-  },
-  {
    "name": "Grace Boateng",
+   "id": "P1907",
    "claims": [
     {
      "bishop": "Glen Kwame Opoku",
@@ -2897,64 +1696,8 @@
    ]
   },
   {
-   "name": "Kwaku Osei Bonsu",
-   "claims": [
-    {
-     "bishop": "Henry Oti-Frimpong",
-     "group": "UD Ghana",
-     "file": "Bishop Henry Oti-Frimpong.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 45,
-     "cells": [
-      "Kwaku Osei Bonsu",
-      "Male",
-      "Rev.",
-      "…",
-      "2/13/72",
-      "54",
-      "THE MEGA CHURCH",
-      "Suame",
-      "Kumasi",
-      "Ghana",
-      "2005",
-      "2012",
-      "No",
-      "…"
-     ],
-     "city": "Kumasi",
-     "country": "Ghana",
-     "title": "Rev."
-    },
-    {
-     "bishop": "Joshua Heward-Mills",
-     "group": "First Love",
-     "file": "Bishop Joshua Heward-Mills.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 130,
-     "cells": [
-      "Kwaku Bonsu",
-      "Male",
-      "Pastor",
-      "…",
-      "11/6/85",
-      "40",
-      "FIRST LOVE CHURCH",
-      "First Love Center",
-      "Accra",
-      "Ghana",
-      "MISSING",
-      "MISSING",
-      "MISSING",
-      "MISSING"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
    "name": "Erick Maundu Nzuki",
+   "id": "S1bd10d33",
    "claims": [
     {
      "bishop": "Joseph Papa Wachirah Kabiro",
@@ -3011,6 +1754,7 @@
   },
   {
    "name": "Richard Tetteh",
+   "id": "S0e52f70b",
    "claims": [
     {
      "bishop": "Kenneth Kissi Bamfo",
@@ -3063,94 +1807,12 @@
      "city": "Amasaman",
      "country": "Ghana",
      "title": "Pastor"
-    },
-    {
-     "bishop": "Morrison Addo",
-     "group": "UD Ghana",
-     "file": "Bishop Morrison Addo.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 29,
-     "cells": [
-      "23. Richard Nii Tettey Tetteh ",
-      "Male",
-      "Rev.",
-      "2.33242E+11",
-      "…",
-      "46",
-      "LIGHTHOUSE CHAPEL INTERNATIONAL",
-      "Asamankese ",
-      "Juapong",
-      "Ghana",
-      "2014",
-      "2016",
-      "Yes",
-      "…"
-     ],
-     "city": "Juapong",
-     "country": "Ghana",
-     "title": "Rev."
-    }
-   ]
-  },
-  {
-   "name": "Jude Baiden",
-   "claims": [
-    {
-     "bishop": "Kent Njeru",
-     "group": "First Love",
-     "file": "Bishop Kent Njeru.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 39,
-     "cells": [
-      "Jude Baiden",
-      "MALE",
-      "Pastor",
-      "…",
-      "…",
-      "27",
-      "FIRST LOVE CHURCH",
-      "First Love - London",
-      "London",
-      "United Kingdom",
-      "2024",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "London",
-     "country": "United Kingdom",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Stephen Poku",
-     "group": "UD Europe",
-     "file": "Bishop Stephen Poku.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 20,
-     "cells": [
-      "Jude Baiden",
-      "Male",
-      "Rev.",
-      "…",
-      "…",
-      "62",
-      "PLEASANT SURPRISE",
-      "Peterborough",
-      "Peterborough",
-      "United Kingdom",
-      "1997",
-      "2004",
-      "Yes",
-      "…"
-     ],
-     "city": "Peterborough",
-     "country": "United Kingdom",
-     "title": "Rev."
     }
    ]
   },
   {
    "name": "Evelyn Yates",
+   "id": "P1518",
    "claims": [
     {
      "bishop": "Kingsley Gyasi",
@@ -3205,114 +1867,8 @@
    ]
   },
   {
-   "name": "Joseph Amoah",
-   "claims": [
-    {
-     "bishop": "Kofi Hene Asare",
-     "group": "UD Ghana",
-     "file": "Bishop Kofi Hene Asare_updated.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 65,
-     "cells": [
-      "Joseph Amoah ",
-      "Male",
-      "Pastor",
-      "…",
-      "…",
-      "40",
-      "QODESH FAMILY CHURCHES",
-      "Darkoman PP",
-      "Accra",
-      "Ghana",
-      "2026",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Emmanuel Samuel Baidoo",
-     "group": "UD Ghana",
-     "file": "SAMUEL BAIDOO 2.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 37,
-     "cells": [
-      "36",
-      "JOSEPH WILLIE AMOAH",
-      "…",
-      "PASTOR",
-      "MALE",
-      "EWUSIEJOE",
-      "TAKORADI"
-     ],
-     "city": "Takoradi",
-     "country": "",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Eunice Owusu Baah",
-   "claims": [
-    {
-     "bishop": "Kofi Hene Asare",
-     "group": "UD Ghana",
-     "file": "Bishop Kofi Hene Asare_updated.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 97,
-     "cells": [
-      "Eunice Owusu Baah",
-      "Female",
-      "Pastor",
-      "…",
-      "MISSING",
-      "26",
-      "QODESH FAMILY CHURCHES",
-      "Ayawaso Cathedral",
-      "Accra",
-      "Ghana",
-      "2025",
-      "MISSING",
-      "No",
-      "."
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Steve Asare",
-     "group": "Reasonable Service",
-     "file": "Bishop Steve Asare.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 35,
-     "cells": [
-      "EUNICE OWUSU",
-      "M",
-      "Pastor",
-      "…",
-      "4-Oct-91",
-      "35",
-      "Allos Mega Church",
-      "Allos Mega Church",
-      "Accra",
-      "Ghana",
-      "2025",
-      "NA",
-      "Attached ",
-      "…"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
    "name": "Abigail Koran Boateng",
+   "id": "P29",
    "claims": [
     {
      "bishop": "Kofi Hene Asare",
@@ -3369,349 +1925,8 @@
    ]
   },
   {
-   "name": "Ama Blankson-Anaman",
-   "claims": [
-    {
-     "bishop": "Norman Kwadwo Darkwa",
-     "group": "UD North America",
-     "file": "Bishop Norman Kwadwo Darkwa.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 37,
-     "cells": [
-      "Ama Blankson-Anaman",
-      "Female",
-      "Pastor",
-      "…",
-      "…",
-      "45",
-      "REJOICE GREATLY",
-      "Jacksonville",
-      "Jacksonville",
-      "United States",
-      "2021",
-      "NA",
-      "Yes",
-      "…"
-     ],
-     "city": "Jacksonville",
-     "country": "United States",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Patrick Inkoom",
-     "group": "First Love",
-     "file": "Bishop Patrick Inkoom ..xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 8,
-     "cells": [
-      "Ama Blankson",
-      "FEMALE",
-      "Pastor ",
-      "…",
-      "…",
-      "29",
-      "FIRST LOVE CHURCH",
-      "Premier ",
-      "Pretoria ",
-      "South Africa",
-      "2023",
-      "N/A",
-      "Yes ",
-      "…"
-     ],
-     "city": "Pretoria",
-     "country": "South Africa",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Israel Acquah",
-   "claims": [
-    {
-     "bishop": "Raymond Stephens",
-     "group": "United Jesus",
-     "file": "Bishop Raymond Stephens.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 7,
-     "cells": [
-      "Israel Acquah",
-      "Male",
-      "Pastor",
-      "…",
-      "2nd Oct. 1997",
-      "29",
-      "JESUS IS THE MASTER",
-      "Saltpond Gethsemane ",
-      "Saltpond",
-      "Ghana",
-      "2024",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Saltpond",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 103,
-     "cells": [
-      "Israel Acquah",
-      "Male",
-      "Pastor",
-      "…",
-      "2nd Oct. 1997",
-      "29",
-      "JESUS IS THE MASTER CHURCH",
-      "Saltpond Gethsemane ",
-      "Saltpond",
-      "Ghana",
-      "2024",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Saltpond",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Felix Fiadufe",
-   "claims": [
-    {
-     "bishop": "Raymond Stephens",
-     "group": "United Jesus",
-     "file": "Bishop Raymond Stephens.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 8,
-     "cells": [
-      "Felix Fiadufe",
-      "Male",
-      "Pastor",
-      "…",
-      "15th Feb 1984",
-      "42",
-      "JESUS IS THE MASTER",
-      "Saltpond Gethsemane",
-      "Saltpond",
-      "Ghana",
-      "2025",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Saltpond",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 104,
-     "cells": [
-      "Felix Fiadufe",
-      "Male",
-      "Pastor",
-      "…",
-      "15th Feb 1984",
-      "42",
-      "JESUS IS THE MASTER CHURCH",
-      "Saltpond Gethsemane",
-      "Saltpond",
-      "Ghana",
-      "2025",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Saltpond",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Bernard Tawiah Mensah",
-   "claims": [
-    {
-     "bishop": "Raymond Stephens",
-     "group": "United Jesus",
-     "file": "Bishop Raymond Stephens.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 9,
-     "cells": [
-      "Bernard Tawiah Mensah",
-      "Male",
-      "Pastor",
-      "…",
-      "23rd April, 1996.",
-      "30",
-      "JESUS IS THE MASTER",
-      "Saltpond Gethsemane",
-      "Saltpond",
-      "Ghana",
-      "2019",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Saltpond",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 105,
-     "cells": [
-      "Bernard Tawiah Mensah",
-      "Male",
-      "Pastor",
-      "…",
-      "23rd April, 1996.",
-      "30",
-      "JESUS IS THE MASTER CHURCH",
-      "Saltpond Gethsemane",
-      "Saltpond",
-      "Ghana",
-      "2019",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Saltpond",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Raphael Dziedzorm Quashigah",
-   "claims": [
-    {
-     "bishop": "Raymond Stephens",
-     "group": "United Jesus",
-     "file": "Bishop Raymond Stephens.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 10,
-     "cells": [
-      "Raphael Dziedzorm Quashigah",
-      "Male",
-      "Pastor",
-      "…",
-      "30th June 1987",
-      "39",
-      "JESUS IS THE MASTER",
-      "Saltpond Gethsemane",
-      "Saltpond",
-      "Ghana",
-      "2024",
-      "MISSING",
-      "Yes",
-      "…"
-     ],
-     "city": "Saltpond",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 106,
-     "cells": [
-      "Raphael Dziedzorm Quashigah",
-      "Male",
-      "Pastor",
-      "…",
-      "30th June 1987",
-      "39",
-      "JESUS IS THE MASTER CHURCH",
-      "Saltpond Gethsemane",
-      "Saltpond",
-      "Ghana",
-      "2024",
-      "N/A",
-      "Yes",
-      "…"
-     ],
-     "city": "Saltpond",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Esther Stephens",
-   "claims": [
-    {
-     "bishop": "Raymond Stephens",
-     "group": "United Jesus",
-     "file": "Bishop Raymond Stephens.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 11,
-     "cells": [
-      "Esther Stephens",
-      "Female",
-      "Lady Rev.",
-      "…",
-      "15th Sept. 1978",
-      "47",
-      "JESUS IS THE MASTER",
-      "Saltpond Gethsemane",
-      "Saltpond",
-      "Ghana",
-      "2014",
-      "2022",
-      "Yes",
-      "…"
-     ],
-     "city": "Saltpond",
-     "country": "Ghana",
-     "title": "Lady Rev."
-    },
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "Bishop submitted sheets (10 Oct 2026)",
-     "row": 107,
-     "cells": [
-      "Esther Stephens",
-      "Female",
-      "Lady Rev.",
-      "…",
-      "15th Sept. 1978",
-      "47",
-      "JESUS IS THE MASTER CHURCH",
-      "Saltpond Gethsemane",
-      "Saltpond",
-      "Ghana",
-      "2014",
-      "2022",
-      "Yes",
-      "…"
-     ],
-     "city": "Saltpond",
-     "country": "Ghana",
-     "title": "Lady Rev."
-    }
-   ]
-  },
-  {
    "name": "Emmanuel Robert Ashietey",
+   "id": "P1326",
    "claims": [
     {
      "bishop": "Selasy Mcsaint",
@@ -3769,6 +1984,7 @@
   },
   {
    "name": "Timothy George Fiawotor",
+   "id": "P4315",
    "claims": [
     {
      "bishop": "Selasy Mcsaint",
@@ -3826,6 +2042,7 @@
   },
   {
    "name": "Noah Nyarko",
+   "id": "P3298",
    "claims": [
     {
      "bishop": "Selasy Mcsaint",
@@ -3880,123 +2097,6 @@
      "title": "Pastor"
     }
    ]
-  },
-  {
-   "name": "Kwabena Addo",
-   "claims": [
-    {
-     "bishop": "Kodwo K Orleans-Lindsay",
-     "group": "UD North America",
-     "file": "Bishop Kodwo K Orleans-Lindsay.xlsx",
-     "folder": "",
-     "row": 66,
-     "cells": [
-      "Kwabena Addo",
-      "Rev.",
-      "Frederick",
-      "United States",
-      "same picture on both sheets"
-     ],
-     "city": "Frederick",
-     "country": "United States",
-     "title": "Rev."
-    },
-    {
-     "bishop": "Kobina Quansah",
-     "group": "UD Ghana",
-     "file": "Rev Kobina Quansah.xlsx",
-     "folder": "",
-     "row": 56,
-     "cells": [
-      "Enoch Kwabena Addo Yalley",
-      "Pastor",
-      "Tema",
-      "Ghana",
-      "same picture on both sheets"
-     ],
-     "city": "Tema",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
-  },
-  {
-   "name": "Emmanuel Kwaku Quansah",
-   "claims": [
-    {
-     "bishop": "Selasy Mcsaint",
-     "group": "UD Ghana",
-     "file": "Bishop Selasy Mcsaint.xlsx",
-     "folder": "",
-     "row": 45,
-     "cells": [
-      "Emmanuel Kwaku Quansah",
-      "Pastor",
-      "Accra",
-      "Ghana",
-      "same picture on both sheets"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Ebenezer Johnson",
-     "group": "UD Europe",
-     "file": "Rev Ebenezer Johnson.xlsx",
-     "folder": "",
-     "row": 31,
-     "cells": [
-      "Emmanuel Quansah",
-      "Rev.",
-      "Geneva",
-      "Switzerland",
-      "same picture on both sheets"
-     ],
-     "city": "Geneva",
-     "country": "Switzerland",
-     "title": "Rev."
-    }
-   ]
-  },
-  {
-   "name": "Joseph Buabin",
-   "claims": [
-    {
-     "bishop": "Toss Mills-Odoi",
-     "group": "United Jesus",
-     "file": "Bishop Toss Mills-Odoi.xlsx",
-     "folder": "",
-     "row": 24,
-     "cells": [
-      "Joseph Buabin",
-      "Rev.",
-      "Accra",
-      "Ghana",
-      "same picture on both sheets"
-     ],
-     "city": "Accra",
-     "country": "Ghana",
-     "title": "Rev."
-    },
-    {
-     "bishop": "Kobina Quansah",
-     "group": "UD Ghana",
-     "file": "Rev Kobina Quansah.xlsx",
-     "folder": "",
-     "row": 78,
-     "cells": [
-      "Joseph Buabin-Nkansah",
-      "Pastor",
-      "",
-      "Ghana",
-      "same picture on both sheets"
-     ],
-     "city": "",
-     "country": "Ghana",
-     "title": "Pastor"
-    }
-   ]
   }
  ],
  "nonListPastors": [],
@@ -4024,6 +2124,40 @@
    "keptId": "P4526",
    "droppedId": "S1301620d",
    "under": "Joshua Heward-Mills"
+  }
+ ],
+ "dupPending": [
+  {
+   "names": [
+    "Emmanuel Prince Abakah",
+    "Emmanuel Abankwah"
+   ],
+   "source": "Joshua 11 Oct 09:10: the office must confirm who they are (same picture, Takoradi and Accra)",
+   "applied": true
+  },
+  {
+   "names": [
+    "Kow Acquaah",
+    "Kow Acquah"
+   ],
+   "source": "Joshua 11 Oct 09:10: the office must confirm who they are (Kofi Hene Asare and Steve Asare)",
+   "applied": true
+  },
+  {
+   "names": [
+    "Langelihle Mmgomezulu",
+    "Langelihle Mngomezulu"
+   ],
+   "source": "Joshua 11 Oct 10:19: add Langelihle Mngomezulu to claimed by two (Geraldo Amoa and Clement Asante, Lusaka)",
+   "applied": true
+  },
+  {
+   "names": [
+    "Macdonald Penney",
+    "Mcdonald Raynes Penney"
+   ],
+   "source": "Joshua 11 Oct 10:19: confirm his name spelling; claimed by two (Joshua Heward-Mills and Kwabena Appiah Denkyira)",
+   "applied": true
   }
  ],
  "reconcile": [
@@ -4069,14 +2203,8 @@
    "file": "Bishop David Adjah Ashong_034906.xlsx",
    "folder": "Bishop submitted sheets",
    "sheetRows": 13,
-   "onRoll": 12,
-   "notUnder": [
-    {
-     "row": 19,
-     "name": "James Yeboah",
-     "fate": "claimed by Bishop David Adjah Ashong and Bishop Sam Sawyerr — Unclaimed for the office"
-    }
-   ],
+   "onRoll": 13,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -4198,13 +2326,8 @@
    "file": "Bishop Kweku Amponsah.xlsx",
    "folder": "Bishop submitted sheets",
    "sheetRows": 12,
-   "onRoll": 10,
+   "onRoll": 11,
    "notUnder": [
-    {
-     "row": 13,
-     "name": "Francis Asare",
-     "fate": "claimed by Bishop Kweku Amponsah and Bishop Frank Opoku — Unclaimed for the office"
-    },
     {
      "row": 14,
      "name": "Sylvia Amo Asiamah",
@@ -5136,13 +3259,8 @@
    "file": "Bishop Charles Bonsu.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 35,
-   "onRoll": 31,
+   "onRoll": 33,
    "notUnder": [
-    {
-     "row": 31,
-     "name": "Daniel Owusu Adjei",
-     "fate": "claimed by Bishop Charles Bonsu and Bishop Ebenezer Adom Barnor — Unclaimed for the office"
-    },
     {
      "row": 36,
      "name": "Mathias Dongzoola",
@@ -5151,11 +3269,6 @@
     {
      "row": 37,
      "name": "Moses Appoh",
-     "fate": "claimed by Bishop Charles Bonsu and Bishop David Afreh — Unclaimed for the office"
-    },
-    {
-     "row": 40,
-     "name": "Wisdom Dery",
      "fate": "claimed by Bishop Charles Bonsu and Bishop David Afreh — Unclaimed for the office"
     }
    ],
@@ -5227,7 +3340,7 @@
    "file": "Bishop Clement Asante FLC.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 59,
-   "onRoll": 49,
+   "onRoll": 51,
    "notUnder": [
     {
      "row": 7,
@@ -5235,23 +3348,18 @@
      "fate": "titled Bishop, not a pastor"
     },
     {
-     "row": 11,
-     "name": "Paula Denton Amoa",
-     "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
-    },
-    {
      "row": 19,
      "name": "Ian Chiweshe",
      "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
     },
     {
-     "row": 42,
-     "name": "Violet Musonda",
-     "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
+     "row": 39,
+     "name": "Langelihle Mngomezulu",
+     "fate": "Possibly the same person as Langelihle Mmgomezulu, listed by Bishop Geraldo Amoa — the office must confirm (Joshua 11 Oct)"
     },
     {
-     "row": 55,
-     "name": "Rosemary Sinta",
+     "row": 42,
+     "name": "Violet Musonda",
      "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
     },
     {
@@ -5267,11 +3375,6 @@
     {
      "row": 62,
      "name": "Niza Mtonga",
-     "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
-    },
-    {
-     "row": 63,
-     "name": "Angela Mpundu",
      "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
     },
     {
@@ -5293,42 +3396,42 @@
     {
      "row": 7,
      "name": "Fred Akator",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     },
     {
      "row": 8,
      "name": "Rockson Adjei Bekoe",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     },
     {
      "row": 9,
      "name": "Obed Essel",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     },
     {
      "row": 10,
      "name": "Isaac Koffie",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     },
     {
      "row": 11,
      "name": "Eric Koomson",
-     "fate": "ruled to Joojo Stephens (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     },
     {
      "row": 12,
      "name": "Emmanuel Kudzo Kpeglo",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     },
     {
      "row": 13,
      "name": "Barbara Abena Sakyiwaa Sackey",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     },
     {
      "row": 14,
      "name": "Benjamin Ekow Tawiah Tetteh",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     }
    ],
    "extra": []
@@ -5374,7 +3477,7 @@
     {
      "row": 6,
      "name": "Esrael Seleshi",
-     "fate": "claimed by Bishop Daniel Fiifi Gyamerah and Bishop Roger Hiltbrunner — Unclaimed for the office"
+     "fate": "ruled to Roger Hiltbrunner (Joshua 11 Oct: a clash with Bishop Roger Hiltbrunner goes to him)"
     }
    ],
    "extra": []
@@ -5415,7 +3518,7 @@
    "file": "Bishop David Afreh.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 9,
-   "onRoll": 6,
+   "onRoll": 7,
    "notUnder": [
     {
      "row": 8,
@@ -5425,11 +3528,6 @@
     {
      "row": 9,
      "name": "Mathias Dongzoola",
-     "fate": "claimed by Bishop Charles Bonsu and Bishop David Afreh — Unclaimed for the office"
-    },
-    {
-     "row": 11,
-     "name": "Wisdom Dery",
      "fate": "claimed by Bishop Charles Bonsu and Bishop David Afreh — Unclaimed for the office"
     }
    ],
@@ -5467,7 +3565,7 @@
    "file": "Bishop Dennis Agyei-Gyan.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 45,
-   "onRoll": 42,
+   "onRoll": 43,
    "notUnder": [
     {
      "row": 31,
@@ -5478,11 +3576,6 @@
      "row": 33,
      "name": "Wildana Fortune",
      "fate": "claimed by Bishop Dennis Agyei-Gyan and Bishop Sampson Kweku Kissi — Unclaimed for the office"
-    },
-    {
-     "row": 44,
-     "name": "Doris Ewusi-Mensah",
-     "fate": "claimed by Bishop Dennis Agyei-Gyan and Bishop Toss Mills-Odoi — Unclaimed for the office"
     }
    ],
    "extra": []
@@ -5513,13 +3606,8 @@
    "file": "Bishop E.A.T Sackey.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 34,
-   "onRoll": 29,
+   "onRoll": 30,
    "notUnder": [
-    {
-     "row": 25,
-     "name": "Dennis Mensah",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
-    },
     {
      "row": 26,
      "name": "Joseph Emmanuel Koufie",
@@ -5538,7 +3626,7 @@
     {
      "row": 33,
      "name": "Sandra Acquah",
-     "fate": "claimed by Bishop Eat Sackey and Bishop Luke Akwasi Frimpong Mensah — Unclaimed for the office"
+     "fate": "ruled to Luke Akwasi Frimpong Mensah (Sakyi 14:32)"
     }
    ],
    "extra": []
@@ -5622,8 +3710,13 @@
    "file": "Bishop Edwin Morgan Ogoe.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 25,
-   "onRoll": 23,
+   "onRoll": 22,
    "notUnder": [
+    {
+     "row": 9,
+     "name": "Emmanuel Abankwah",
+     "fate": "Possibly the same person as Emmanuel Prince Abakah, listed by Bishop Emmanuel Samuel Baidoo — the office must confirm (Joshua 11 Oct)"
+    },
     {
      "row": 20,
      "name": "Esther Okokon",
@@ -5683,22 +3776,12 @@
    "file": "Bishop Emmanuel Nterful.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 81,
-   "onRoll": 51,
+   "onRoll": 53,
    "notUnder": [
     {
      "row": 21,
      "name": "Michael Kofi Mensah",
      "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 35,
-     "name": "Leticia Mensah",
-     "fate": "claimed by Bishop Emmanuel Nterful and Bishop Kodwo K Orleans-Lindsay — Unclaimed for the office"
-    },
-    {
-     "row": 39,
-     "name": "Stephen Fiifi Bondzie",
-     "fate": "claimed by Bishop Emmanuel Nterful and Bishop Francis Nii Aryee Hammond — Unclaimed for the office"
     },
     {
      "row": 43,
@@ -5844,17 +3927,12 @@
    "file": "Bishop Emmanuel Tetteh.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 31,
-   "onRoll": 28,
+   "onRoll": 29,
    "notUnder": [
     {
      "row": 9,
      "name": "Evans Yaw Manu Agbenya",
      "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 21,
-     "name": "David Mensah",
-     "fate": "claimed by Bishop Emmanuel Tetteh and Bishop Francis Philip Asamoah — Unclaimed for the office"
     },
     {
      "row": 36,
@@ -5936,14 +4014,8 @@
    "file": "Bishop Eric Kobina Asare.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 23,
-   "onRoll": 22,
-   "notUnder": [
-    {
-     "row": 12,
-     "name": "Emmanuel Frank Asare",
-     "fate": "ruled to Samuel Obeng (Sakyi 14:29 'Samuel Obeng')"
-    }
-   ],
+   "onRoll": 23,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5978,14 +4050,8 @@
    "file": "Bishop Ernest Aryee-JESUS IS THE MASTER PASTORS INFORMATION.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 6,
-   "onRoll": 5,
-   "notUnder": [
-    {
-     "row": 10,
-     "name": "Eric Ayerh Mensah",
-     "fate": "claimed by Bishop Ernest Aryee and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
-    }
-   ],
+   "onRoll": 6,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -6030,13 +4096,8 @@
    "file": "Bishop Francis Hammond.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 29,
-   "onRoll": 25,
+   "onRoll": 26,
    "notUnder": [
-    {
-     "row": 15,
-     "name": "Stephen Bondzie",
-     "fate": "claimed by Bishop Emmanuel Nterful and Bishop Francis Nii Aryee Hammond — Unclaimed for the office"
-    },
     {
      "row": 23,
      "name": "Emmanuel Kwarko",
@@ -6061,14 +4122,8 @@
    "file": "Bishop Francis Philip Asamoah.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 28,
-   "onRoll": 27,
-   "notUnder": [
-    {
-     "row": 22,
-     "name": "David Obeng-Mensah",
-     "fate": "claimed by Bishop Emmanuel Tetteh and Bishop Francis Philip Asamoah — Unclaimed for the office"
-    }
-   ],
+   "onRoll": 28,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -6097,18 +4152,8 @@
    "file": "Bishop Frank Opoku.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 14,
-   "onRoll": 9,
+   "onRoll": 11,
    "notUnder": [
-    {
-     "row": 8,
-     "name": "Emmanuel Kofi Acheampong",
-     "fate": "claimed by Bishop Frank Opoku and Bishop Esther-Richie Okyere — Unclaimed for the office"
-    },
-    {
-     "row": 9,
-     "name": "Francis Asare",
-     "fate": "claimed by Bishop Kweku Amponsah and Bishop Frank Opoku — Unclaimed for the office"
-    },
     {
      "row": 15,
      "name": "Maxwell Ntefune Nayan",
@@ -6133,17 +4178,12 @@
    "file": "Bishop Frank Otchere.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 36,
-   "onRoll": 34,
+   "onRoll": 35,
    "notUnder": [
     {
      "row": 30,
      "name": "Leonardo Ngariamao",
      "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 32,
-     "name": "Pedro Alberto Nhanengue",
-     "fate": "claimed by Bishop Frank Otchere and Bishop Nelson Agbemava — Unclaimed for the office"
     }
    ],
    "extra": []
@@ -6164,14 +4204,8 @@
    "file": "Bishop George Seneagya.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 9,
-   "onRoll": 8,
-   "notUnder": [
-    {
-     "row": 14,
-     "name": "Emmanuel Kojo Awotwe",
-     "fate": "claimed by Bishop George Seneagya and Bishop Joshua Heward-Mills — Unclaimed for the office"
-    }
-   ],
+   "onRoll": 9,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -6180,12 +4214,17 @@
    "file": "Bishop Geraldo Amoa Lsk Pastors.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 11,
-   "onRoll": 10,
+   "onRoll": 9,
    "notUnder": [
     {
      "row": 12,
      "name": "Mwenda Machima",
      "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 16,
+     "name": "Langelihle Mmgomezulu",
+     "fate": "Possibly the same person as Langelihle Mngomezulu, listed by Bishop Clement Asante — the office must confirm (Joshua 11 Oct)"
     }
    ],
    "extra": []
@@ -6196,7 +4235,7 @@
    "file": "Bishop Glen Kwame Opoku.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 155,
-   "onRoll": 142,
+   "onRoll": 146,
    "notUnder": [
     {
      "row": 7,
@@ -6219,29 +4258,9 @@
      "fate": "a bishop on the Bishops List, not a pastor"
     },
     {
-     "row": 97,
-     "name": "Albert Mensah",
-     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
-    },
-    {
      "row": 100,
      "name": "Maurice Mintah-Aboagye",
      "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 112,
-     "name": "Emmanuel Opuni",
-     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Norman Kwadwo Darkwa — Unclaimed for the office"
-    },
-    {
-     "row": 147,
-     "name": "Isaac Nii Bonney Mensah",
-     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Richard Afenyo Tsaku — Unclaimed for the office"
-    },
-    {
-     "row": 148,
-     "name": "Daniel Boateng",
-     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Romeo Sosu — Unclaimed for the office"
     },
     {
      "row": 149,
@@ -6272,14 +4291,8 @@
    "file": "Bishop Gustav Offei-Manu.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 67,
-   "onRoll": 66,
-   "notUnder": [
-    {
-     "row": 7,
-     "name": "Edward Owusu Nyarko",
-     "fate": "ruled to Kwabena Asare Asamoa (Sakyi 14:29 'Kwabena Asare Asamoa'; Fabin asks whether he is still in Ghana)"
-    }
-   ],
+   "onRoll": 67,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -6314,17 +4327,12 @@
    "file": "Bishop Henry Oti-Frimpong.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 65,
-   "onRoll": 62,
+   "onRoll": 63,
    "notUnder": [
     {
      "row": 26,
      "name": "Emmanuel Joseph Koufie",
      "fate": "claimed by Bishop Eat Sackey and Bishop Henry Oti-Frimpong — Unclaimed for the office"
-    },
-    {
-     "row": 45,
-     "name": "Kwaku Osei Bonsu",
-     "fate": "claimed by Bishop Henry Oti-Frimpong and Bishop Joshua Heward-Mills — Unclaimed for the office"
     },
     {
      "row": 51,
@@ -6340,7 +4348,7 @@
    "file": "Bishop Isaac Agyeman. -  Fiilled.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 106,
-   "onRoll": 54,
+   "onRoll": 56,
    "notUnder": [
     {
      "row": 9,
@@ -6355,11 +4363,6 @@
     {
      "row": 11,
      "name": "Richmond Annan",
-     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
-    },
-    {
-     "row": 12,
-     "name": "Zenas Adarkwah Yiadom",
      "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
     },
     {
@@ -6433,11 +4436,6 @@
      "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
     },
     {
-     "row": 29,
-     "name": "Jayson Quarshie",
-     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
-    },
-    {
      "row": 31,
      "name": "Michael Kwaku Boadu Sarpong",
      "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
@@ -6470,7 +4468,7 @@
     {
      "row": 85,
      "name": "Dennis Darko Mensah",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy Bruce (screenshot 14:15)"
     },
     {
      "row": 86,
@@ -6715,14 +4713,8 @@
    "file": "Bishop Joe Owusu-Adjei.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 26,
-   "onRoll": 25,
-   "notUnder": [
-    {
-     "row": 32,
-     "name": "Ransford Darko",
-     "fate": "ruled to Kofi Hene Asare (Archbishop Fabin 14:50 ('Ransford is with Bishop Kofi Hene') overrides Sakyi 14:23 (Joe Adjei), same picture)"
-    }
-   ],
+   "onRoll": 26,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -6839,12 +4831,17 @@
    "file": "Bishop Joshua Heward-Mills.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 136,
-   "onRoll": 131,
+   "onRoll": 132,
    "notUnder": [
     {
      "row": 41,
      "name": "Emmanuel Awotwe",
-     "fate": "claimed by Bishop George Seneagya and Bishop Joshua Heward-Mills — Unclaimed for the office"
+     "fate": "ruled to George Seneagya (Joshua 11 Oct: any other clash with Bishop Joshua Heward-Mills goes to the other bishop)"
+    },
+    {
+     "row": 93,
+     "name": "Macdonald Penney",
+     "fate": "Possibly the same person as Mcdonald Raynes Penney, listed by Bishop Kwabena Appiah Denkyira — the office must confirm (Joshua 11 Oct)"
     },
     {
      "row": 103,
@@ -6855,16 +4852,6 @@
      "row": 118,
      "name": "David Yalleh",
      "fate": "a bishop on the Bishops List, not a pastor"
-    },
-    {
-     "row": 130,
-     "name": "Kwaku Bonsu",
-     "fate": "claimed by Bishop Henry Oti-Frimpong and Bishop Joshua Heward-Mills — Unclaimed for the office"
-    },
-    {
-     "row": 133,
-     "name": "Michael Sarpong",
-     "fate": "ruled to Patrick Bruce (Sakyi 14:21, same picture)"
     }
    ],
    "extra": []
@@ -6895,7 +4882,7 @@
     {
      "row": 37,
      "name": "Richard Tetteh",
-     "fate": "claimed by Bishop Kenneth Kissi Bamfo and Bishop Kofi Hene Asare and Bishop Morrison Addo — Unclaimed for the office"
+     "fate": "claimed by Bishop Kenneth Kissi Bamfo and Bishop Kofi Hene Asare — Unclaimed for the office"
     },
     {
      "row": 39,
@@ -6931,14 +4918,8 @@
    "file": "Bishop Kent Njeru.xlsx",
    "folder": "Bishop submitted sheets (10 Oct 2026)",
    "sheetRows": 55,
-   "onRoll": 54,
-   "notUnder": [
-    {
-     "row": 39,
-     "name": "Jude Baiden",
-     "fate": "claimed by Bishop Kent Njeru and Bishop Stephen Poku — Unclaimed for the office"
-    }
-   ],
+   "onRoll": 55,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -6973,19 +4954,8 @@
    "file": "Bishop Kodwo K Orleans-Lindsay.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 108,
-   "onRoll": 106,
-   "notUnder": [
-    {
-     "row": 66,
-     "name": "Kwabena Addo",
-     "fate": "claimed by Bishop Kodwo K Orleans-Lindsay and Bishop Kobina Quansah (same picture) — Unclaimed for the office"
-    },
-    {
-     "row": 69,
-     "name": "Leticia Mensah-Fio",
-     "fate": "claimed by Bishop Emmanuel Nterful and Bishop Kodwo K Orleans-Lindsay — Unclaimed for the office"
-    }
-   ],
+   "onRoll": 108,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -6994,7 +4964,7 @@
    "file": "Bishop Kofi Hene Asare_updated.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 104,
-   "onRoll": 85,
+   "onRoll": 86,
    "notUnder": [
     {
      "row": 7,
@@ -7020,11 +4990,6 @@
      "row": 53,
      "name": "Agnes Dzansi",
      "fate": "the same person twice on the sheet; one record kept"
-    },
-    {
-     "row": 65,
-     "name": "Joseph Amoah",
-     "fate": "claimed by Bishop Kofi Hene Asare and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
     },
     {
      "row": 67,
@@ -7067,9 +5032,9 @@
      "fate": "removed by the office (not a pastor)"
     },
     {
-     "row": 97,
-     "name": "Eunice Owusu Baah",
-     "fate": "claimed by Bishop Kofi Hene Asare and Bishop Steve Asare — Unclaimed for the office"
+     "row": 94,
+     "name": "Kow Acquaah",
+     "fate": "Possibly the same person as Kow Acquah, listed by Bishop Steve Asare — the office must confirm (Joshua 11 Oct)"
     },
     {
      "row": 98,
@@ -7089,7 +5054,7 @@
     {
      "row": 109,
      "name": "Richard Sagmor Tetteh",
-     "fate": "claimed by Bishop Kenneth Kissi Bamfo and Bishop Kofi Hene Asare and Bishop Morrison Addo — Unclaimed for the office"
+     "fate": "claimed by Bishop Kenneth Kissi Bamfo and Bishop Kofi Hene Asare — Unclaimed for the office"
     }
    ],
    "extra": []
@@ -7120,13 +5085,8 @@
    "file": "Bishop Kudzo Jonathan Sewornuku Bekui-2.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 18,
-   "onRoll": 16,
+   "onRoll": 17,
    "notUnder": [
-    {
-     "row": 14,
-     "name": "Prince Kusi",
-     "fate": "ruled to Benjamin Kwapong Lokko (Sakyi 14:28 'Benjamin Lokko')"
-    },
     {
      "row": 24,
      "name": "David Agbenyo",
@@ -7141,8 +5101,14 @@
    "file": "Bishop Kwabena Appiah Denkyira.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 3,
-   "onRoll": 3,
-   "notUnder": [],
+   "onRoll": 2,
+   "notUnder": [
+    {
+     "row": 9,
+     "name": "Mcdonald Raynes Penney",
+     "fate": "Possibly the same person as Macdonald Penney, listed by Bishop Joshua Heward-Mills — the office must confirm (Joshua 11 Oct)"
+    }
+   ],
    "extra": []
   },
   {
@@ -7151,14 +5117,8 @@
    "file": "Bishop Kwabena Asare Asamoa.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 50,
-   "onRoll": 49,
-   "notUnder": [
-    {
-     "row": 56,
-     "name": "Eric Asamoah",
-     "fate": "the same person twice on the sheet; one record kept"
-    }
-   ],
+   "onRoll": 50,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -7193,13 +5153,8 @@
    "file": "Bishop Luke Akwasi Frimpong Mensah.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 119,
-   "onRoll": 59,
+   "onRoll": 60,
    "notUnder": [
-    {
-     "row": 62,
-     "name": "Sandra Sheila Acquah",
-     "fate": "claimed by Bishop Eat Sackey and Bishop Luke Akwasi Frimpong Mensah — Unclaimed for the office"
-    },
     {
      "row": 64,
      "name": "Luke Akwasi Frimpong Mensah",
@@ -7601,17 +5556,12 @@
    "file": "Bishop Morrison Addo.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 23,
-   "onRoll": 21,
+   "onRoll": 22,
    "notUnder": [
     {
      "row": 8,
      "name": "Eunice Morrison-Addo",
      "fate": "the bishop's own row"
-    },
-    {
-     "row": 29,
-     "name": "Richard Nii Tettey Tetteh",
-     "fate": "claimed by Bishop Kenneth Kissi Bamfo and Bishop Kofi Hene Asare and Bishop Morrison Addo — Unclaimed for the office"
     }
    ],
    "extra": []
@@ -7662,14 +5612,8 @@
    "file": "Bishop Nelson Agbemava.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 26,
-   "onRoll": 25,
-   "notUnder": [
-    {
-     "row": 32,
-     "name": "Pedro Alberto",
-     "fate": "claimed by Bishop Frank Otchere and Bishop Nelson Agbemava — Unclaimed for the office"
-    }
-   ],
+   "onRoll": 26,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -7678,24 +5622,8 @@
    "file": "Bishop Norman Kwadwo Darkwa.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 32,
-   "onRoll": 29,
-   "notUnder": [
-    {
-     "row": 36,
-     "name": "Emmanuel Opuni",
-     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Norman Kwadwo Darkwa — Unclaimed for the office"
-    },
-    {
-     "row": 37,
-     "name": "Ama Blankson-Anaman",
-     "fate": "claimed by Bishop Norman Kwadwo Darkwa and Bishop Patrick Inkoom — Unclaimed for the office"
-    },
-    {
-     "row": 38,
-     "name": "Prince Appiah",
-     "fate": "ruled to Benjamin Kwapong Lokko (Sakyi 14:28 'Benjamin Lokko')"
-    }
-   ],
+   "onRoll": 32,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -7750,14 +5678,8 @@
    "file": "Bishop Patrick Bruce.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 15,
-   "onRoll": 14,
-   "notUnder": [
-    {
-     "row": 8,
-     "name": "Gabriel Kofi Twum",
-     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
-    }
-   ],
+   "onRoll": 15,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -7766,13 +5688,8 @@
    "file": "Bishop Patrick Inkoom ..xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 81,
-   "onRoll": 79,
+   "onRoll": 80,
    "notUnder": [
-    {
-     "row": 8,
-     "name": "Ama Blankson",
-     "fate": "claimed by Bishop Norman Kwadwo Darkwa and Bishop Patrick Inkoom — Unclaimed for the office"
-    },
     {
      "row": 16,
      "name": "Thomas Mabotja",
@@ -7803,7 +5720,7 @@
    "file": "Bishop Paul Baidoo (1).xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 27,
-   "onRoll": 7,
+   "onRoll": 8,
    "notUnder": [
     {
      "row": 7,
@@ -7813,11 +5730,6 @@
     {
      "row": 8,
      "name": "Chancellor Adjei Ansu",
-     "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
-    },
-    {
-     "row": 9,
-     "name": "Joseph Kanyiti Kiipo",
      "fate": "ruled to Joshua Heward-Mills (Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills)"
     },
     {
@@ -8007,27 +5919,27 @@
     {
      "row": 7,
      "name": "Israel Acquah",
-     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     },
     {
      "row": 8,
      "name": "Felix Fiadufe",
-     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     },
     {
      "row": 9,
      "name": "Bernard Tawiah Mensah",
-     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     },
     {
      "row": 10,
      "name": "Raphael Dziedzorm Quashigah",
-     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     },
     {
      "row": 11,
      "name": "Esther Stephens",
-     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
+     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
     }
    ],
    "extra": []
@@ -8058,19 +5970,8 @@
    "file": "Bishop Richard Afenyo Tsaku - filled.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 68,
-   "onRoll": 66,
-   "notUnder": [
-    {
-     "row": 38,
-     "name": "Philip Asare",
-     "fate": "ruled to Steve Asare (Sakyi 14:21: Philp Asare - Bishop Steve)"
-    },
-    {
-     "row": 71,
-     "name": "Isaac Mensah",
-     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Richard Afenyo Tsaku — Unclaimed for the office"
-    }
-   ],
+   "onRoll": 68,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -8194,19 +6095,8 @@
    "file": "Bishop Sam Sawyerr.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 9,
-   "onRoll": 7,
-   "notUnder": [
-    {
-     "row": 14,
-     "name": "James Yeboah",
-     "fate": "claimed by Bishop David Adjah Ashong and Bishop Sam Sawyerr — Unclaimed for the office"
-    },
-    {
-     "row": 15,
-     "name": "Joseph Adjei",
-     "fate": "ruled to Fred Ansah Quartey (Sakyi 14:24)"
-    }
-   ],
+   "onRoll": 9,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -8257,13 +6147,8 @@
    "file": "Bishop Selasy Mcsaint.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 57,
-   "onRoll": 51,
+   "onRoll": 52,
    "notUnder": [
-    {
-     "row": 45,
-     "name": "Emmanuel Kwaku Quansah",
-     "fate": "claimed by Bishop Selasy Mcsaint and Bishop Ebenezer Johnson (same picture) — Unclaimed for the office"
-    },
     {
      "row": 58,
      "name": "Emmanuel Robert Ashietey",
@@ -8324,17 +6209,12 @@
    "file": "Bishop Sompa Osei.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 32,
-   "onRoll": 27,
+   "onRoll": 28,
    "notUnder": [
     {
      "row": 12,
      "name": "Nyarko Noah",
      "fate": "claimed by Bishop Selasy Mcsaint and Bishop Sompa Osei — Unclaimed for the office"
-    },
-    {
-     "row": 23,
-     "name": "Richard Hogrey",
-     "fate": "the same person twice on the sheet; one record kept"
     },
     {
      "row": 31,
@@ -8360,13 +6240,8 @@
    "file": "Bishop Stephen Poku.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 63,
-   "onRoll": 61,
+   "onRoll": 62,
    "notUnder": [
-    {
-     "row": 20,
-     "name": "Jude Baiden",
-     "fate": "claimed by Bishop Kent Njeru and Bishop Stephen Poku — Unclaimed for the office"
-    },
     {
      "row": 52,
      "name": "Emmanuel Alade",
@@ -8389,9 +6264,9 @@
      "fate": "claimed by Bishop Kofi Hene Asare and Bishop Steve Asare — Unclaimed for the office"
     },
     {
-     "row": 35,
-     "name": "Eunice Owusu",
-     "fate": "claimed by Bishop Kofi Hene Asare and Bishop Steve Asare — Unclaimed for the office"
+     "row": 34,
+     "name": "Kow Acquah",
+     "fate": "Possibly the same person as Kow Acquaah, listed by Bishop Kofi Hene Asare — the office must confirm (Joshua 11 Oct)"
     }
    ],
    "extra": []
@@ -8442,13 +6317,8 @@
    "file": "EBENEZER ADOM BARNOR.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 26,
-   "onRoll": 23,
+   "onRoll": 24,
    "notUnder": [
-    {
-     "row": 6,
-     "name": "Daniel Owusu",
-     "fate": "claimed by Bishop Charles Bonsu and Bishop Ebenezer Adom Barnor — Unclaimed for the office"
-    },
     {
      "row": 10,
      "name": "Francis Eshun",
@@ -8478,14 +6348,8 @@
    "file": "Episcopal Sister Esther-Carina Riche Okyere.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 21,
-   "onRoll": 20,
-   "notUnder": [
-    {
-     "row": 7,
-     "name": "Emmanuel Acheampong",
-     "fate": "claimed by Bishop Frank Opoku and Bishop Esther-Richie Okyere — Unclaimed for the office"
-    }
-   ],
+   "onRoll": 21,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -8692,17 +6556,12 @@
    "file": "Romeo Sosu 4.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 21,
-   "onRoll": 18,
+   "onRoll": 19,
    "notUnder": [
     {
      "row": 10,
      "name": "Mohammed Bentil",
      "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 13,
-     "name": "Daniel Kharis Boateng",
-     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Romeo Sosu — Unclaimed for the office"
     },
     {
      "row": 19,
@@ -8718,22 +6577,12 @@
    "file": "SAMUEL BAIDOO 2.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 57,
-   "onRoll": 54,
+   "onRoll": 56,
    "notUnder": [
     {
-     "row": 4,
-     "name": "Albert Ansah Mensah",
-     "fate": "claimed by Bishop Glen Kwame Opoku and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
-    },
-    {
-     "row": 23,
-     "name": "Eric Mensah",
-     "fate": "claimed by Bishop Ernest Aryee and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
-    },
-    {
-     "row": 37,
-     "name": "Joseph Willie Amoah",
-     "fate": "claimed by Bishop Kofi Hene Asare and Bishop Emmanuel Samuel Baidoo — Unclaimed for the office"
+     "row": 20,
+     "name": "Emmanuel Prince Abakah",
+     "fate": "Possibly the same person as Emmanuel Abankwah, listed by Bishop Edwin Morgan Ogoe — the office must confirm (Joshua 11 Oct)"
     }
    ],
    "extra": []
@@ -8794,17 +6643,12 @@
    "file": "Bishop Roger Hiltbrunner.xlsx",
    "folder": "Bishop submitted sheets (10 Oct 2026)",
    "sheetRows": 21,
-   "onRoll": 19,
+   "onRoll": 20,
    "notUnder": [
     {
      "row": 19,
      "name": "Solomon Moussa",
      "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 22,
-     "name": "Esrael Seleshi",
-     "fate": "claimed by Bishop Daniel Fiifi Gyamerah and Bishop Roger Hiltbrunner — Unclaimed for the office"
     }
    ],
    "extra": []
@@ -8835,22 +6679,12 @@
    "file": "Bishop Toss Mills-Odoi.xlsx",
    "folder": "Bishop submitted sheets (10 Oct 2026)",
    "sheetRows": 103,
-   "onRoll": 82,
+   "onRoll": 97,
    "notUnder": [
-    {
-     "row": 24,
-     "name": "Joseph Buabin",
-     "fate": "claimed by Bishop Toss Mills-Odoi and Bishop Kobina Quansah (same picture) — Unclaimed for the office"
-    },
     {
      "row": 59,
      "name": "Frank Otchere",
      "fate": "a bishop on the Bishops List, not a pastor"
-    },
-    {
-     "row": 65,
-     "name": "Doris Mensah",
-     "fate": "claimed by Bishop Dennis Agyei-Gyan and Bishop Toss Mills-Odoi — Unclaimed for the office"
     },
     {
      "row": 66,
@@ -8866,71 +6700,6 @@
      "row": 86,
      "name": "Reinhard Elwood Tagoe",
      "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 95,
-     "name": "Fred Akator",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
-    },
-    {
-     "row": 96,
-     "name": "Rockson Adjei Bekoe",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
-    },
-    {
-     "row": 97,
-     "name": "Obed Essel",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
-    },
-    {
-     "row": 98,
-     "name": "Isaac Koffie",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
-    },
-    {
-     "row": 99,
-     "name": "Eric Koomson",
-     "fate": "ruled to Joojo Stephens (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
-    },
-    {
-     "row": 100,
-     "name": "Emmanuel Kudzo Kpeglo",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
-    },
-    {
-     "row": 101,
-     "name": "Barbara Abena Sakyiwaa Sackey",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
-    },
-    {
-     "row": 102,
-     "name": "Benjamin Ekow Tawiah Tetteh",
-     "fate": "claimed by Bishop Courage Ahedor and Bishop Toss Mills-Odoi — Unclaimed for the office"
-    },
-    {
-     "row": 103,
-     "name": "Israel Acquah",
-     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
-    },
-    {
-     "row": 104,
-     "name": "Felix Fiadufe",
-     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
-    },
-    {
-     "row": 105,
-     "name": "Bernard Tawiah Mensah",
-     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
-    },
-    {
-     "row": 106,
-     "name": "Raphael Dziedzorm Quashigah",
-     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
-    },
-    {
-     "row": 107,
-     "name": "Esther Stephens",
-     "fate": "claimed by Bishop Raymond Stephens and Bishop Toss Mills-Odoi — Unclaimed for the office"
     },
     {
      "row": 108,
@@ -8986,12 +6755,22 @@
    "extra": []
   },
   {
+   "bishop": "Francis Okyere",
+   "lay": false,
+   "file": "Bishop Francis Okyere.xlsx",
+   "folder": "Bishop submitted sheets (11 Oct 2026)",
+   "sheetRows": 49,
+   "onRoll": 49,
+   "notUnder": [],
+   "extra": []
+  },
+  {
    "bishop": "Ebenezer Johnson",
    "lay": true,
    "file": "Rev Ebenezer Johnson.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 35,
-   "onRoll": 32,
+   "onRoll": 33,
    "notUnder": [
     {
      "row": 7,
@@ -9002,11 +6781,6 @@
      "row": 30,
      "name": "Ebenezer Johnson",
      "fate": "the lay president's own row"
-    },
-    {
-     "row": 31,
-     "name": "Emmanuel Quansah",
-     "fate": "claimed by Bishop Selasy Mcsaint and Bishop Ebenezer Johnson (same picture) — Unclaimed for the office"
     }
    ],
    "extra": []
@@ -9017,8 +6791,13 @@
    "file": "Rev Justice Hagan.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 99,
-   "onRoll": 96,
+   "onRoll": 95,
    "notUnder": [
+    {
+     "row": 22,
+     "name": "Daniel Owusu",
+     "fate": "already on the roll under Ebenezer Adom Barnor"
+    },
     {
      "row": 52,
      "name": "Justice Hagan",
@@ -9043,22 +6822,12 @@
    "file": "Rev Kobina Quansah.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 77,
-   "onRoll": 74,
+   "onRoll": 76,
    "notUnder": [
     {
      "row": 5,
      "name": "Kobina Quansah",
      "fate": "the lay president's own row"
-    },
-    {
-     "row": 56,
-     "name": "Enoch Kwabena Addo Yalley",
-     "fate": "claimed by Bishop Kodwo K Orleans-Lindsay and Bishop Kobina Quansah (same picture) — Unclaimed for the office"
-    },
-    {
-     "row": 78,
-     "name": "Joseph Buabin-Nkansah",
-     "fate": "claimed by Bishop Toss Mills-Odoi and Bishop Kobina Quansah (same picture) — Unclaimed for the office"
     }
    ],
    "extra": []
@@ -9070,36 +6839,6 @@
    "name": "Ebenezer Kwasi Opoku",
    "ruledTo": "Joy Bruce",
    "source": "screenshot 14:15"
-  },
-  {
-   "name": "Michael Sarpong",
-   "ruledTo": "Patrick Bruce",
-   "source": "Sakyi 14:21"
-  },
-  {
-   "name": "Stephen Bondzie",
-   "ruledTo": "Francis Nii Aryee Hammond",
-   "source": "Sakyi 14:22 'Bishop Francis Hammond'"
-  },
-  {
-   "name": "Emmanuel Acheampong",
-   "ruledTo": "Esther-Carina Riche Okyere",
-   "source": "Sakyi 14:30 'Esther Richie Okyere'"
-  },
-  {
-   "name": "Sandra Sheila Acquah",
-   "ruledTo": "Luke Akwasi Frimpong Mensah",
-   "source": "Sakyi 14:32"
-  },
-  {
-   "name": "Leticia Mensah-Fio",
-   "ruledTo": "Kodwo K Orleans-Lindsay",
-   "source": "Sakyi 14:32"
-  },
-  {
-   "name": "Philip Asare",
-   "ruledTo": "Steve Asare",
-   "source": "Sakyi 14:21: Philp Asare - Bishop Steve"
   },
   {
    "name": "Chiebuka Itanyi",
@@ -9828,7 +7567,7 @@
   {
    "id": "Sf24de6ca",
    "name": "Daniel Owusu Adjei",
-   "bishop": "",
+   "bishop": "Charles Bonsu",
    "group": "UD Ghana",
    "denomination": "Jesus Saviour Of The World Church International",
    "place": "Techiman, Ghana"
@@ -9996,7 +7735,7 @@
   {
    "id": "Scf04bc98",
    "name": "Rosemary Sinta",
-   "bishop": "Geraldo Amoa",
+   "bishop": "Clement Asante",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Lusaka, Zambia"
@@ -11316,7 +9055,7 @@
   {
    "id": "S284dc07f",
    "name": "Langelihle Mmgomezulu",
-   "bishop": "Geraldo Amoa",
+   "bishop": "",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Lusaka, Zambia"
@@ -11586,6 +9325,14 @@
    "place": "Accra, Ghana"
   },
   {
+   "id": "S7b0ade02",
+   "name": "Zenas Adarkwah Yiadom",
+   "bishop": "Isaac Agyeman",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Accra, Ghana"
+  },
+  {
    "id": "PN865f9c967990",
    "name": "Enoch Bentil",
    "bishop": "Joshua Heward-Mills",
@@ -11628,7 +9375,7 @@
   {
    "id": "S893cce89",
    "name": "Jayson Quarshie",
-   "bishop": "Joshua Heward-Mills",
+   "bishop": "Isaac Agyeman",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Accra, Ghana"
@@ -12088,6 +9835,14 @@
    "group": "UD Africa",
    "denomination": "Bema International Church",
    "place": "Kigali, Rwanda"
+  },
+  {
+   "id": "P3648",
+   "name": "Ransford Darko",
+   "bishop": "Joe Owusu-Adjei",
+   "group": "UD Africa",
+   "denomination": "Bema International Church",
+   "place": "Huye, Rwanda"
   },
   {
    "id": "P2189",
@@ -12964,7 +10719,7 @@
   {
    "id": "P2636",
    "name": "Kow Acquaah",
-   "bishop": "Kofi Hene Asare",
+   "bishop": "",
    "group": "UD Ghana",
    "denomination": "Qodesh Family Churches",
    "place": "Accra, Ghana"
@@ -12988,7 +10743,7 @@
   {
    "id": "P1492",
    "name": "Eunice Owusu Baah",
-   "bishop": "",
+   "bishop": "Kofi Hene Asare",
    "group": "UD Ghana",
    "denomination": "Qodesh Family Churches",
    "place": "Accra, Ghana"
@@ -13084,7 +10839,7 @@
   {
    "id": "Sc3bc6b27",
    "name": "Mcdonald Raynes Penney",
-   "bishop": "Kwabena Appiah Denkyira",
+   "bishop": "",
    "group": "UD Ghana",
    "denomination": "East Mountain Churches",
    "place": "Akuapim Mampong, Ghana"
@@ -13730,6 +11485,22 @@
    "place": "Maputo, Mozambique"
   },
   {
+   "id": "Scff87c2e",
+   "name": "Pedro Alberto",
+   "bishop": "Nelson Agbemava",
+   "group": "UD Africa",
+   "denomination": "Primeiras Obras",
+   "place": "Zimpeto, Mozambique"
+  },
+  {
+   "id": "S4e1184da",
+   "name": "Prince Appiah",
+   "bishop": "Norman Kwadwo Darkwa",
+   "group": "UD North America",
+   "denomination": "Rejoice Greatly",
+   "place": "El Paso, United States"
+  },
+  {
    "id": "P3276",
    "name": "Nemi Edmund-Tamnabo",
    "bishop": "Okereke Peter Chibuzor",
@@ -13778,8 +11549,24 @@
    "place": "Kumasi, Ghana"
   },
   {
+   "id": "S235c4cd9",
+   "name": "Gabriel Kofi Twum",
+   "bishop": "Patrick Bruce",
+   "group": "Reasonable Service",
+   "denomination": "The Mega Church – Grace Chapel",
+   "place": "Kumasi, Ghana"
+  },
+  {
    "id": "S53d26bd1",
    "name": "Akwasi Appau Sakyi",
+   "bishop": "Patrick Bruce",
+   "group": "Reasonable Service",
+   "denomination": "The Mega Church – Grace Chapel",
+   "place": "Kumasi, Ghana"
+  },
+  {
+   "id": "S382c44ef",
+   "name": "Michael Kofi Sarpong",
    "bishop": "Patrick Bruce",
    "group": "Reasonable Service",
    "denomination": "The Mega Church – Grace Chapel",
@@ -14772,6 +12559,14 @@
   {
    "id": "S1e704ffc",
    "name": "Kow Acquah",
+   "bishop": "",
+   "group": "Reasonable Service",
+   "denomination": "Allos Mega Church",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "PNf5ed854d60e1",
+   "name": "Eunice Owusu",
    "bishop": "Steve Asare",
    "group": "Reasonable Service",
    "denomination": "Allos Mega Church",
@@ -15442,6 +13237,14 @@
    "place": "Takoradi, Ghana"
   },
   {
+   "id": "P2407",
+   "name": "Joseph Willie Amoah",
+   "bishop": "Emmanuel Samuel Baidoo",
+   "group": "UD Ghana",
+   "denomination": "The Makarios Church",
+   "place": "Takoradi, Ghana"
+  },
+  {
    "id": "P2909",
    "name": "Mark Kanyo",
    "bishop": "Emmanuel Samuel Baidoo",
@@ -15607,6 +13410,78 @@
    "bishop": "Toss Mills-Odoi",
    "group": "United Jesus",
    "denomination": "Jesus Is The Master",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S8cd0e3ce",
+   "name": "Kwesi Annin Nyarko",
+   "bishop": "Francis Okyere",
+   "group": "UD Ghana",
+   "denomination": "The Mega Church",
+   "place": "Kumasi, Ghana"
+  },
+  {
+   "id": "P2908",
+   "name": "Mark Kakraba-Ampeh",
+   "bishop": "Francis Okyere",
+   "group": "UD Ghana",
+   "denomination": "The Mega Church",
+   "place": "Kumasi, Ghana"
+  },
+  {
+   "id": "Sdb542231-bed5",
+   "name": "Wisdom Dery",
+   "bishop": "David Afreh",
+   "group": "UD Ghana",
+   "denomination": "Jesus Saviour Of The World Church International",
+   "place": "Kintampo, Ghana"
+  },
+  {
+   "id": "Scf04bc98-c685",
+   "name": "Rosemary Sinta",
+   "bishop": "Geraldo Amoa",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Lusaka, Zambia"
+  },
+  {
+   "id": "Scb8b8c9b",
+   "name": "Eric Koomson",
+   "bishop": "Joojo Stephens",
+   "group": "First Love",
+   "denomination": "Qodesh City Church",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S8c77dcfd",
+   "name": "Emmanuel Frank Asare",
+   "bishop": "Samuel Obeng",
+   "group": "UD Ghana",
+   "denomination": "The Makarios Church",
+   "place": "Tarkwa, Ghana"
+  },
+  {
+   "id": "Sf1fb1e78",
+   "name": "Joseph Adjei",
+   "bishop": "Sam Sawyerr",
+   "group": "Reasonable Service",
+   "denomination": "Anointed People International",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S7b0ade02-1c64",
+   "name": "Zenas Adarkwah Yiadom",
+   "bishop": "Joshua Heward-Mills",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S893cce89-1c64",
+   "name": "Jayson Quarshie",
+   "bishop": "Joshua Heward-Mills",
+   "group": "First Love",
+   "denomination": "First Love Church",
    "place": "Accra, Ghana"
   },
   {
@@ -15826,6 +13701,14 @@
    "place": "Tema, Ghana"
   },
   {
+   "id": "S9a8c4e0f",
+   "name": "Enoch Kwabena Addo Yalley",
+   "bishop": "Kobina Quansah",
+   "group": "UD Ghana",
+   "denomination": "Saviours Of Men International",
+   "place": "Tema, Ghana"
+  },
+  {
    "id": "PNc0f71d3ef211",
    "name": "Mavis Yeboah",
    "bishop": "Kobina Quansah",
@@ -15858,6 +13741,14 @@
    "place": "Ghana"
   },
   {
+   "id": "P2376",
+   "name": "Joseph Buabin-Nkansah",
+   "bishop": "Kobina Quansah",
+   "group": "UD Ghana",
+   "denomination": "Saviours Of Men International",
+   "place": "Ghana"
+  },
+  {
    "id": "P1756",
    "name": "Geoffrey Dotse",
    "bishop": "Kobina Quansah",
@@ -15883,7 +13774,7 @@
   }
  ],
  "photos": {
-  "fromFolders": 138,
+  "fromFolders": 147,
   "converted": 0
  }
 }

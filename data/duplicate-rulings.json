@@ -1,14 +1,79 @@
 {
- "note": "Joshua's rulings on PDF 05 (Possible duplicates), 11 Oct 2026. 'merge': the two records are one person — the first is kept under the named bishop, blanks filled from the second, the second removed. 'distinct': two people, never flagged again. 'pending': the office still has to say who they are; they head PDF 05 until ruled.",
+ "note": "Joshua's rulings on the duplicates report, 11 Oct 2026. 'merge': one person — the first record is kept under the named bishop, blanks filled from the second, the second removed. 'distinct': two people (a single name with 'bishops' means the namesakes under those bishops are two people). 'pending': the office must confirm — both records are Unclaimed and head the report. Everything else Joshua went through on 11 Oct is unique.",
  "merge": [
-  { "keep": "Kakra Ankobiah", "drop": "Kakra Ankobia-Achimota Central", "bishop": "Kofi Hene Asare", "set": { "branch": "Achimota Central" }, "source": "Joshua 11 Oct 09:07: these guys are the same person so for Kakra just merge his record" },
-  { "keep": "Cyril Lartey", "drop": "Kenneth Cyril Nartey", "bishop": "Joshua Heward-Mills", "source": "Joshua 11 Oct 09:07: Cyril just put him in First Love (same picture on both sheets; Bishop Eddy Addy's own 'Pastors removed' sheet lists Cyril Lartey)" }
+  {
+   "keep": "Kakra Ankobiah",
+   "drop": "Kakra Ankobia-Achimota Central",
+   "bishop": "Kofi Hene Asare",
+   "set": {
+    "branch": "Achimota Central"
+   },
+   "source": "Joshua 11 Oct 09:07: these guys are the same person so for Kakra just merge his record"
+  },
+  {
+   "keep": "Cyril Lartey",
+   "drop": "Kenneth Cyril Nartey",
+   "bishop": "Joshua Heward-Mills",
+   "source": "Joshua 11 Oct 09:07: Cyril just put him in First Love (same picture on both sheets; Bishop Eddy Addy's own 'Pastors removed' sheet lists Cyril Lartey)"
+  }
  ],
  "distinct": [
-  { "names": ["Daniel Ofosu", "Daniel Owusu"], "source": "Joshua 11 Oct 09:07: Daniel is different people" }
+  {
+   "names": [
+    "Daniel Ofosu",
+    "Daniel Owusu"
+   ],
+   "source": "Joshua 11 Oct 09:07: Daniel is different people"
+  },
+  {
+   "names": [
+    "Albert Mensah"
+   ],
+   "bishops": [
+    "Glen Kwame Opoku",
+    "Emmanuel Samuel Baidoo"
+   ],
+   "source": "Joshua 11 Oct 10:19: Albert Mensah — two different people"
+  },
+  {
+   "names": [
+    "Emmanuel Opuni"
+   ],
+   "bishops": [
+    "Glen Kwame Opoku",
+    "Norman Kwadwo Darkwa"
+   ],
+   "source": "Joshua 11 Oct 10:19: North America and First Love Ghana with different birthdays are two people"
+  }
  ],
  "pending": [
-  { "names": ["Emmanuel Prince Abakah", "Emmanuel Abankwah"], "source": "Joshua 11 Oct 09:10: the office must confirm who they are (same picture, Takoradi and Accra)" },
-  { "names": ["Kow Acquaah", "Kow Acquah"], "source": "Joshua 11 Oct 09:10: the office must confirm who they are (Kofi Hene Asare and Steve Asare)" }
+  {
+   "names": [
+    "Emmanuel Prince Abakah",
+    "Emmanuel Abankwah"
+   ],
+   "source": "Joshua 11 Oct 09:10: the office must confirm who they are (same picture, Takoradi and Accra)"
+  },
+  {
+   "names": [
+    "Kow Acquaah",
+    "Kow Acquah"
+   ],
+   "source": "Joshua 11 Oct 09:10: the office must confirm who they are (Kofi Hene Asare and Steve Asare)"
+  },
+  {
+   "names": [
+    "Langelihle Mmgomezulu",
+    "Langelihle Mngomezulu"
+   ],
+   "source": "Joshua 11 Oct 10:19: add Langelihle Mngomezulu to claimed by two (Geraldo Amoa and Clement Asante, Lusaka)"
+  },
+  {
+   "names": [
+    "Macdonald Penney",
+    "Mcdonald Raynes Penney"
+   ],
+   "source": "Joshua 11 Oct 10:19: confirm his name spelling; claimed by two (Joshua Heward-Mills and Kwabena Appiah Denkyira)"
+  }
  ]
 }

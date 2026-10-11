@@ -1,5 +1,5 @@
 {
- "note": "Rulings from the KURIAKE C group on 9 Oct 2026 (Bishop Emmanuel Sakyi, Archbishop Eddie Fabin, Mother Nina) for pastors named on more than one bishop's submitted sheet. Applied after the sheets are read: the pastor stays under the ruled bishop and is removed from the other sheets' lists. 'rules' are general; 'people' are named individuals. Mother Nina's sheet (9 Oct) lists Eniola Ajiga, Joshua Korsi Gbafa and Joel Cobina Obuobisa as her pastors: they stay, with the pictures already on file (Joshua, 9 Oct: consolidate, keep the picture).",
+ "note": "Rulings from the KURIAKE C group on 9 Oct 2026 (Bishop Emmanuel Sakyi, Archbishop Eddie Fabin, Mother Nina) for pastors named on more than one bishop's submitted sheet. Applied after the sheets are read: the pastor stays under the ruled bishop and is removed from the other sheets' lists. 'rules' are general; 'people' are named individuals. Mother Nina's sheet (9 Oct) lists Eniola Ajiga, Joshua Korsi Gbafa and Joel Cobina Obuobisa as her pastors: they stay, with the pictures already on file (Joshua, 9 Oct: consolidate, keep the picture). 11 Oct (Joshua): a double claim exists only when the name AND the date of birth agree (age stands in for a blank birthday); different birthdays are two people with one name.",
  "rules": [
   {
    "when": "A First Love pastor in Kumasi is claimed by Isaac Agyeman and Joy Bruce",
@@ -20,6 +20,26 @@
    "when": "A Lusaka pastor is claimed by Clement Asante and Geraldo Amoa",
    "winner": "Geraldo Amoa",
    "source": "Bishop Yoku Amonoo-Neizer 10 Oct 10:31: Lusaka city pastors are all directly under Bs Geraldo and not under Bs Clement"
+  },
+  {
+   "when": "Any clash with Roger Hiltbrunner",
+   "winner": "Roger Hiltbrunner",
+   "source": "Joshua 11 Oct"
+  },
+  {
+   "when": "Any clash with Toss Mills-Odoi",
+   "winner": "Toss Mills-Odoi",
+   "source": "Joshua 11 Oct"
+  },
+  {
+   "when": "Any clash with Emmanuel Samuel Baidoo",
+   "winner": "Emmanuel Samuel Baidoo",
+   "source": "Joshua 11 Oct"
+  },
+  {
+   "when": "Any other clash with Joshua Heward-Mills (except Macdonald Penney, who is for the office to confirm)",
+   "winner": "the other bishop",
+   "source": "Joshua 11 Oct: give them over to the other, not Joshua (Emmanuel Kojo Awotwe → George Seneagya)"
   }
  ],
  "people": [

@@ -1,4 +1,5 @@
 // Audit of the roll after a build: every check prints PASS or FAIL with the evidence. Exit code 1 if anything fails.
+import { birthAgrees } from './lib/birth.mjs';
 import { readFileSync, existsSync } from 'node:fs';
 import * as XLSX from 'xlsx'; import fs from 'node:fs'; XLSX.set_fs(fs);
 import { normalName, structureConflicts, catalogOf, titleFor, pastorsByBishop } from '../src/registration/model.mjs';
@@ -38,7 +39,7 @@ check('Each named ruling that matches a sheet row is honoured', report.rulingNot
 // A ruling is honoured when the ruled bishop's sheet lists the person. When it does not, the sheet stands and the office is told.
 const sheetOf = (bishopName) => subs.find((s) => key(s.bishop) === key(bishopName) || key(s.bishop).includes(key(bishopName).split(' ').pop()));
 for (const r of rulings.people) { const ps = pastors.filter((x) => key(x.name) === key(r.name)); if (!ps.length) continue; const ok = ps.some((p) => p.bishop && (key(p.bishop) === key(r.winner) || key(p.bishop).includes(key(r.winner).split(' ').pop()))); const listed = sheetOf(r.winner)?.pastors.some((x) => key(x.name) === key(r.name)); if (ok) check(`Ruling: ${r.name} → ${r.winner}`, true); else if (!listed) out.push(`NOTE  Ruling: ${r.name} → ${r.winner} — ${r.winner}'s sheet does not list them; left under ${ps.map((p) => p.bishop || 'Unclaimed').join(' / ')} as the sheets say`); else check(`Ruling: ${r.name} → ${r.winner}`, false, ps.map((p) => p.bishop || p.unclaimed).join(' / ')); }
-const badConf = report.conflicts.filter((c) => { const p = pastors.find((x) => key(x.name) === key(c.name) && /^Claimed by/.test(x.unclaimed || '')); return !(p && c.claims.every((k) => p.unclaimed.includes(k.bishop))); });
+const badConf = report.conflicts.filter((c) => !c.pending).filter((c) => { const p = pastors.find((x) => key(x.name) === key(c.name) && /^Claimed by/.test(x.unclaimed || '')); return !(p && c.claims.every((k) => p.unclaimed.includes(k.bishop))); });
 check('Unresolved double claims are Unclaimed with both bishops named', badConf.length === 0, badConf.map((c) => c.name).join(', '));
 check('Only Toss Mills-Odoi carries a pre-reset list', pastors.filter((p) => p.bishop && !subs.some((s) => s.pastors.some((r) => key(r.name) === key(p.name)))).every((p) => p.bishop === 'Toss Mills-Odoi'));
 // 4. Pictures
@@ -54,6 +55,9 @@ check('Every sheet row is on the roll under its bishop or accounted for', report
 check('Nobody is under a bishop whose sheet does not list them', report.reconcile.every((r) => r.extra.length === 0), report.reconcile.filter((r) => r.extra.length).map((r) => `${r.bishop}: ${r.extra.map((x) => x.name).join(', ')}`).join('; '));
 check('Every bishop with a sheet and every lay president was reconciled', report.reconcile.length === report.totals.bishopsWithSheet + lays.length, `${report.reconcile.length} vs ${report.totals.bishopsWithSheet} + ${lays.length}`);
 // Duplicate rulings (data/duplicate-rulings.json)
+check('Pairs to confirm are Unclaimed on both sides', report.dupPending.every((d) => d.applied) && report.dupPending.every((d) => d.names.every((n) => pastors.some((p) => key(p.name) === key(n) && p.unclaimed && !p.bishop))), report.dupPending.map((d) => `${d.names.join(' / ')}: ${d.applied ? 'ok' : 'NOT FOUND'}`).join('; '));
+check('Healing Jesus Campaign is its own group, apart from FLOW', bishops.every((b) => (b.organization === 'HJC') === (b.group === 'Healing Jesus Campaign')) && pastors.every((p) => (p.organization === 'HJC') === (p.group === 'Healing Jesus Campaign')));
+check('Namesakes with different birthdays are two records, each under their own bishop', (() => { const bad = []; for (const c of report.conflicts.filter((c) => !c.pending)) { const rows = c.claims.map((k) => subs.find((s) => s.file === k.file)?.pastors.find((r) => r.row === k.row)).filter(Boolean); for (let i = 0; i < rows.length; i++) for (let j = i + 1; j < rows.length; j++) if (birthAgrees(rows[i], rows[j]) === false && !/same picture/.test(c.claims[0].cells.at(-1) || '')) bad.push(c.name); } return bad; })().length === 0);
 const dupRulings = read('data/duplicate-rulings.json');
 for (const m of dupRulings.merge) { const kept = pastors.filter((p) => key(p.name) === key(m.keep)), dropped = pastors.filter((p) => key(p.name) === key(m.drop)); check(`Merged: ${m.drop} into ${m.keep} under ${m.bishop}`, kept.length === 1 && dropped.length === 0 && key(kept[0].bishop || '').includes(key(m.bishop).split(' ').pop()) && (!m.set || Object.entries(m.set).every(([k, v]) => kept[0][k] === v)), `${kept.length} kept (${kept.map((p) => p.bishop).join('/')}), ${dropped.length} still on the roll`); }
 for (const d of dupRulings.distinct) check(`Two people: ${d.names.join(' and ')}`, d.names.every((n) => pastors.some((p) => key(p.name) === key(n))));
