@@ -3478,7 +3478,7 @@ function SearchResults({ list, q }) {
   );
 }
 // Bishops are pastors too, so the pastors' list carries everyone; the bishops' list only bishops.
-const inRole = (p, role) => (role === "lay" ? isLay(p) : role === "pastor" || p.role === role);
+const inRole = (p, role) => (role === "lay" ? isLay(p) : role === "pastor" || (p.role === role && !isLay(p))); // the Bishops view is bishops only; lay presidents lead the Pastors view
 const countRole = (list, role) => list.filter((p) => (role === "lay" ? isLay(p) : p.role === role && !isLay(p))).length; // lay presidents are counted on their own, never among the bishops
 // The pastors shown under a bishop: the list they uploaded this year (lit once registered with a photo), then pastors whose record names them.
 const pastorsUnder = (b, byBishop) => {
