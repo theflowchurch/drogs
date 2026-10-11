@@ -44,6 +44,7 @@ export const LOGOS = {
   "Precious Souls Swaziland": "assets/denominations/precious-souls-church.png",
   "Premiero Amor": "assets/denominations/primeiro-amor.png",
   "Primeiras Obras": "assets/denominations/primeiras-obras.png",
+  "Qodesh City Church": "assets/denominations/qodesh-family-church.png",
   "Qodesh City Churches": "assets/denominations/qodesh-family-church.png",
   "Qodesh Family Churches": "assets/denominations/qodesh-family-church.png",
   "Rencontre Prophetique Internationale": "assets/denominations/rencontre-prophetique-internationale.png",
