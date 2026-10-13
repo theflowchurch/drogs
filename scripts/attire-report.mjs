@@ -1,0 +1,33 @@
+// "Photos to retake": pastors whose portrait fails the dress code or photo standard (Joshua, 13 Oct 2026).
+// Input: data/reports/attire-review.json (written by the review merge: id → { codes, note }). Output: one PDF for the
+// office, by bishop, with the photo, the name and the reason in words. Needs `python3 -m http.server 4301` at the repo root.
+import { readFileSync, existsSync, mkdirSync } from 'node:fs';
+import { chromium } from 'playwright';
+import sharp from 'sharp';
+import { titleFor, bySurname } from '../src/registration/model.mjs';
+const root = new URL('..', import.meta.url).pathname;
+const people = JSON.parse(readFileSync(`${root}src/registration/reference-people.json`, 'utf8'));
+const review = JSON.parse(readFileSync(`${root}data/reports/attire-review.json`, 'utf8'));
+const OUT = `${process.env.HOME}/Downloads/Kuriake Castle Project/02 Deliverables for the office`;
+mkdirSync(`${root}.tmp-checks/pdfthumbs`, { recursive: true });
+const WORDS = { LOW: 'Too blurry or too small', TIGHT: 'Cropped too close to the face', CASUAL: 'Casual clothes', TIE: 'Jacket but no tie', COLOUR: 'Suit or tie not black or red', BG: 'Busy background or outdoors', BGCOLOUR: 'Background not white', WDRESS: 'Not a red, yellow or blue dress', UNREVIEWED: 'Could not be reviewed' };
+const esc = (s) => String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+const pending = [];
+const thumb = (p) => { if (!p.image || !existsSync(`${root}${p.image}`)) return ''; const t = p.image.replace(/^(assets\/(?:portraits|bishops|pastors))\/([^/]+)\.[^.]+$/, '$1/thumbs/$2.webp'); const src = `${root}${existsSync(`${root}${t}`) ? t : p.image}`; const out = `.tmp-checks/pdfthumbs/${p.id}.jpg`; pending.push(existsSync(`${root}${out}`) ? null : sharp(src).resize({ width: 180, withoutEnlargement: true }).jpeg({ quality: 72 }).toFile(`${root}${out}`).catch(() => {})); return `http://localhost:4301/${out}`; };
+const flagged = people.filter((p) => p.role === 'pastor' && review[p.id]).map((p) => ({ ...p, codes: review[p.id].codes, note: review[p.id].note || '' }));
+const byBishop = [...new Set(flagged.map((p) => p.bishop || 'Unclaimed'))].sort();
+const counts = Object.entries(WORDS).map(([c, w]) => [w, flagged.filter((p) => p.codes.includes(c)).length]).filter(([, n]) => n);
+const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + ', ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+const css = `@page { size: A4; margin: 14mm 12mm; } body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; color: #13324c; font-size: 10.5px; }
+  .cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; text-align: center; page-break-after: always; } .cover h1 { font-size: 40px; margin: 0 0 10px; line-height: 1.05; } .cover h1 small { display: block; font-size: 14px; letter-spacing: .3em; color: #6a7283; margin-bottom: 14px; } .cover p { max-width: 150mm; margin: 0 auto; color: #425466; font-size: 12.5px; line-height: 1.5; }
+  .cover table { margin: 24px auto 0; border-collapse: collapse; font-size: 12.5px; } .cover td { padding: 5px 16px; border-bottom: 1px solid #dfe6f3; text-align: left; } .cover td:last-child { text-align: right; font-weight: 700; } .gen { margin-top: 18px; color: #8a94a6; font-size: 11px; }
+  .group { page-break-before: always; } .group h1 { font-size: 20px; margin: 0 0 2px; } .count { margin: 0 0 8px; color: #6a7283; font-size: 12px; }
+  table.b { width: 100%; border-collapse: collapse; } table.b th { text-align: left; font-size: 9.5px; color: #6a7283; padding: 3px 5px; border-bottom: 1px solid #c9d3e6; } table.b td { padding: 4px 5px; border-bottom: 1px solid #e7ecf5; vertical-align: middle; }
+  table.b img, table.b .nophoto { width: 46px; height: 58px; object-fit: cover; border-radius: 5px; background: #e6ece9; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #8a94a6; } .muted { color: #6a7283; } .code { display: inline-block; padding: 1px 6px; border-radius: 4px; background: #fff7f6; border: 1px solid #f3b4ae; color: #b42318; font-size: 9px; margin: 1px 3px 1px 0; }`;
+const row = (p) => `<tr><td><img src="${thumb(p)}"></td><td><b>${esc(p.name)}</b><br><span class="muted">${esc(titleFor(p))} · ${esc(p.denomination || p.group || '')}</span></td><td>${p.codes.map((c) => `<span class="code">${esc(WORDS[c] || c)}</span>`).join('')}${p.note ? `<br><span class="muted">${esc(p.note)}</span>` : ''}</td></tr>`;
+const sections = byBishop.map((b) => { const list = flagged.filter((p) => (p.bishop || 'Unclaimed') === b).sort(bySurname); return `<section class="group"><h1>Bishop ${esc(b)}</h1><p class="count">${list.length} photo${list.length === 1 ? '' : 's'} to retake</p><table class="b"><thead><tr><th>Photo</th><th>Name</th><th>Why</th></tr></thead><tbody>${list.map(row).join('')}</tbody></table></section>`; }).join('');
+const html = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body><div class="cover"><h1><small>KURIAKE CASTLE</small>PASTOR PHOTOS<br>TO RETAKE</h1><p>Every pastor's portrait on the roll was checked against the standard: men in a dark suit with a black or red tie (a Rev. may wear the clerical collar), women in a red, yellow or blue dress (a Lady Rev. may wear the clerical collar), head and shoulders, sharp, on a plain background. These did not pass. Grouped by bishop so each can collect new photos.</p><table><tr><td>Pastors with a photo</td><td>${people.filter((p) => p.role === 'pastor' && p.image).length}</td></tr><tr><td>Photos to retake</td><td>${flagged.length}</td></tr>${counts.map(([w, n]) => `<tr><td>${esc(w)}</td><td>${n}</td></tr>`).join('')}</table><p class="gen">Generated ${esc(date)}</p></div>${sections}</body></html>`;
+await Promise.all(pending.filter(Boolean));
+const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' }); const pg = await browser.newPage(); await pg.setContent(html, { waitUntil: 'networkidle', timeout: 300000 }); await pg.emulateMedia({ media: 'print' });
+await pg.pdf({ path: `${OUT}/Pastor photos to retake.pdf`, format: 'A4', printBackground: true, displayHeaderFooter: true, headerTemplate: '<span></span>', footerTemplate: '<div style="width:100%;text-align:center;font-size:9px;color:#8a94a6;font-family:Arial">Kuriake Castle · Pastor photos to retake · page <span class="pageNumber"></span> of <span class="totalPages"></span></div>', margin: { top: '14mm', bottom: '16mm', left: '12mm', right: '12mm' } }); await browser.close();
+console.log(`written Pastor photos to retake · ${flagged.length} photos · ${byBishop.length} bishops`);
