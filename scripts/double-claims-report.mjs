@@ -1,0 +1,38 @@
+// "Double claims": an executive overview of every pastor named on two (or more) bishops' sheets and where each went.
+// One numbered item per pair of bishops: who both listed them, how many, who got them, and why — with small photos.
+// Needs `python3 -m http.server 4301` at the repo root. Output: ~/Downloads/Kuriake Castle Project/02 Deliverables for the office/Double claims.pdf
+import { readFileSync, existsSync, mkdirSync } from 'node:fs';
+import { chromium } from 'playwright';
+import sharp from 'sharp';
+import { normalName, bySurname } from '../src/registration/model.mjs';
+const root = new URL('..', import.meta.url).pathname;
+const people = JSON.parse(readFileSync(`${root}src/registration/reference-people.json`, 'utf8'));
+const report = JSON.parse(readFileSync(`${root}data/reports/roll-build.json`, 'utf8'));
+const OUT = `${process.env.HOME}/Downloads/Kuriake Castle Project/02 Deliverables for the office`;
+mkdirSync(`${root}.tmp-checks/pdfthumbs`, { recursive: true });
+const key = (n) => normalName(String(n).replace(/[’'`]/g, ''));
+const esc = (s) => String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+const pending = [];
+const thumb = (p) => { if (!p?.image || !existsSync(`${root}${p.image}`)) return ''; const t = p.image.replace(/^(assets\/(?:portraits|bishops|pastors))\/([^/]+)\.[^.]+$/, '$1/thumbs/$2.webp'); const src = `${root}${existsSync(`${root}${t}`) ? t : p.image}`; const out = `.tmp-checks/pdfthumbs/${p.id}.jpg`; pending.push(existsSync(`${root}${out}`) ? null : sharp(src).resize({ width: 120, withoutEnlargement: true }).jpeg({ quality: 70 }).toFile(`${root}${out}`).catch(() => {})); return `http://localhost:4301/${out}`; };
+const rec = (name, bishop) => people.find((p) => p.role === 'pastor' && key(p.name) === key(name) && (!bishop || p.bishop === bishop)) || people.find((p) => p.role === 'pastor' && key(p.name) === key(name));
+// Plain words for the source of a decision.
+const why = (by) => { const b = String(by || ''); if (/Joshua/.test(b)) return 'Decided by Joshua'; if (/Office corrections/.test(b)) return 'Decided by the office (corrections of 12 October)'; if (/Sakyi|Fabin|Godwyll|Amonoo-Neizer|Mother Nina/.test(b)) return 'Decided in the KURIAKE C group'; if (/same picture/.test(b)) return 'Same picture on both sheets'; return 'Decided by the office'; };
+// Group settled claims by the set of bishops involved and the winner.
+const groups = new Map();
+for (const r of report.resolved) { const bishops = [r.winner, ...r.losers].sort(); const k = `${bishops.join(' + ')}→${r.winner}`; if (!groups.has(k)) groups.set(k, { bishops, winner: r.winner, people: [], why: new Set() }); const g = groups.get(k); g.people.push(rec(r.name, r.winner) || { name: r.name }); g.why.add(why(r.by)); }
+const settled = [...groups.values()].sort((a, b) => b.people.length - a.people.length || a.bishops.join().localeCompare(b.bishops.join()));
+const open = report.conflicts.map((c) => ({ bishops: c.claims.map((k) => k.bishop), people: [rec(c.name) || { name: c.name }] }));
+const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + ', ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+const css = `@page { size: A4; margin: 14mm 12mm; } body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; color: #13324c; font-size: 10.5px; }
+  .cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; text-align: center; page-break-after: always; } .cover h1 { font-size: 40px; margin: 0 0 10px; line-height: 1.05; } .cover h1 small { display: block; font-size: 14px; letter-spacing: .3em; color: #6a7283; margin-bottom: 14px; } .cover p { max-width: 150mm; margin: 0 auto; color: #425466; font-size: 12.5px; line-height: 1.5; }
+  .cover table { margin: 24px auto 0; border-collapse: collapse; font-size: 12.5px; } .cover td { padding: 5px 16px; border-bottom: 1px solid #dfe6f3; text-align: left; } .cover td:last-child { text-align: right; font-weight: 700; } .gen { margin-top: 18px; color: #8a94a6; font-size: 11px; }
+  h1.sec { font-size: 18px; margin: 10px 0 8px; } .item { page-break-inside: avoid; border: 1px solid #e7ecf5; border-radius: 10px; padding: 9px 12px 10px; margin: 0 0 10px; } .item.open { border-color: #f3b4ae; background: #fff7f6; }
+  .item h2 { font-size: 13px; margin: 0 0 2px; } .item h2 .n { display: inline-block; min-width: 22px; color: #8a94a6; } .item .to { margin: 0 0 8px; font-size: 12px; } .item .to b { color: #0b6b2e; } .item.open .to b { color: #b42318; } .item .src { color: #6a7283; font-size: 10px; margin-left: 6px; }
+  .faces { display: flex; flex-wrap: wrap; gap: 6px 10px; } .face { width: 92px; text-align: center; font-size: 9px; line-height: 1.2; } .face img, .face .nophoto { width: 44px; height: 54px; object-fit: cover; border-radius: 5px; background: #e6ece9; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; color: #8a94a6; margin-bottom: 2px; }`;
+const face = (p) => `<div class="face">${thumb(p) ? `<img src="${thumb(p)}">` : '<div class="nophoto">no photo</div>'}<br>${esc(p.name)}</div>`;
+const item = (g, i, isOpen) => `<div class="item${isOpen ? ' open' : ''}"><h2><span class="n">${i}.</span>${g.bishops.map((b) => `Bishop ${esc(b)}`).join(' and ')} both listed ${g.people.length === 1 ? 'this pastor' : `these ${g.people.length} pastors`}</h2><p class="to">${isOpen ? '<b>Not decided yet — the office must say</b>' : `Given to <b>Bishop ${esc(g.winner)}</b><span class="src">${esc([...g.why].join('; '))}</span>`}</p><div class="faces">${[...g.people].sort(bySurname).map(face).join('')}</div></div>`;
+const html = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body><div class="cover"><h1><small>KURIAKE CASTLE</small>DOUBLE CLAIMS</h1><p>Every pastor named on two bishops’ sheets (same name and birthday), and where each one went. One item per pair of bishops: who both listed them, how many, and who got them. Say the number and the bishop to change any of them.</p><table><tr><td>Pairs of bishops with a double claim</td><td>${settled.length + open.length}</td></tr><tr><td>Pastors involved</td><td>${settled.reduce((n, g) => n + g.people.length, 0) + open.length}</td></tr><tr><td>Still to decide</td><td>${open.length}</td></tr></table><p class="gen">Generated ${esc(date)}</p></div>${open.length ? `<h1 class="sec">Still to decide</h1>${open.map((g, i) => item(g, i + 1, true)).join('')}` : ''}<h1 class="sec">Decided</h1>${settled.map((g, i) => item(g, open.length + i + 1, false)).join('')}</body></html>`;
+await Promise.all(pending.filter(Boolean));
+const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' }); const pg = await browser.newPage(); await pg.setContent(html, { waitUntil: 'networkidle', timeout: 300000 }); await pg.emulateMedia({ media: 'print' });
+await pg.pdf({ path: `${OUT}/Double claims.pdf`, format: 'A4', printBackground: true, displayHeaderFooter: true, headerTemplate: '<span></span>', footerTemplate: '<div style="width:100%;text-align:center;font-size:9px;color:#8a94a6;font-family:Arial">Kuriake Castle · Double claims · page <span class="pageNumber"></span> of <span class="totalPages"></span></div>', margin: { top: '14mm', bottom: '16mm', left: '12mm', right: '12mm' } }); await browser.close();
+console.log(`written Double claims · ${settled.length} decided pairs, ${open.length} open · ${settled.reduce((n, g) => n + g.people.length, 0) + open.length} pastors`);

@@ -125,8 +125,8 @@ for (const [k, list] of claims) if (list.length > 1) { const groups = []; for (c
 const ruleWinner = (name, list) => {
   const names = list.map((c) => key(c.bishop.name));
   const has = (n) => names.some((x) => x === key(n) || namesAlike(x, n));
-  const person = rulings.people.find((p) => [name, ...list.map((c) => c.row.name)].some((n) => key(p.name) === key(n) || words(key(p.name)).sort().join(' ') === words(key(n)).sort().join(' '))); // the ruling may use either sheet's spelling
-  if (person) { const w = list.find((c) => namesAlike(c.bishop.name, person.winner) || key(c.bishop.name) === key(person.winner)); if (w) return { winner: w, by: person.source }; } // a namesake claimed by other bishops is not this ruling's person
+  const persons = rulings.people.filter((p) => [name, ...list.map((c) => c.row.name)].some((n) => key(p.name) === key(n) || words(key(p.name)).sort().join(' ') === words(key(n)).sort().join(' '))); // the ruling may use either sheet's spelling
+  for (const person of persons) { const w = list.find((c) => namesAlike(c.bishop.name, person.winner) || key(c.bishop.name) === key(person.winner)); if (w) return { winner: w, by: person.source }; } // a namesake claimed by other bishops is not this ruling's person; later rulings apply when the earlier winner is not a claimant
   const by = (n) => list.find((c) => key(c.bishop.name) === key(n)); // Joshua 11 Oct: Roger, Toss and Samuel Baidoo win any clash they are in
   for (const n of ['Roger Hiltbrunner', 'Toss Mills-Odoi', 'Emmanuel Samuel Baidoo']) { const w = by(n); if (w) return { winner: w, by: `Joshua 11 Oct: a clash with Bishop ${n} goes to him` }; }
   const geraldo = list.find((c) => key(c.bishop.name) === 'geraldo amoa');

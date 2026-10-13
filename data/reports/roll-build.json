@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-13T09:35:42.086Z",
+ "generated": "2026-10-13T11:19:23.188Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
@@ -358,67 +358,67 @@
   },
   {
    "name": "Fred Akator",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Courage Ahedor",
    "losers": [
-    "Courage Ahedor"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets)"
   },
   {
    "name": "Rockson Adjei Bekoe",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Courage Ahedor",
    "losers": [
-    "Courage Ahedor"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets)"
   },
   {
    "name": "Obed Essel",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Courage Ahedor",
    "losers": [
-    "Courage Ahedor"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets)"
   },
   {
    "name": "Isaac Koffie",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Courage Ahedor",
    "losers": [
-    "Courage Ahedor"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets)"
   },
   {
    "name": "Eric Koomson",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Courage Ahedor",
    "losers": [
-    "Courage Ahedor"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets)"
   },
   {
    "name": "Emmanuel Kudzo Kpeglo",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Courage Ahedor",
    "losers": [
-    "Courage Ahedor"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets)"
   },
   {
    "name": "Barbara Abena Sakyiwaa Sackey",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Courage Ahedor",
    "losers": [
-    "Courage Ahedor"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets)"
   },
   {
    "name": "Benjamin Ekow Tawiah Tetteh",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Courage Ahedor",
    "losers": [
-    "Courage Ahedor"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets)"
   },
   {
    "name": "Maureen Amofah",
@@ -2523,49 +2523,8 @@
    "file": "Bishop Courage Ahedor.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 8,
-   "onRoll": 0,
-   "notUnder": [
-    {
-     "row": 7,
-     "name": "Fred Akator",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    },
-    {
-     "row": 8,
-     "name": "Rockson Adjei Bekoe",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    },
-    {
-     "row": 9,
-     "name": "Obed Essel",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    },
-    {
-     "row": 10,
-     "name": "Isaac Koffie",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    },
-    {
-     "row": 11,
-     "name": "Eric Koomson",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    },
-    {
-     "row": 12,
-     "name": "Emmanuel Kudzo Kpeglo",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    },
-    {
-     "row": 13,
-     "name": "Barbara Abena Sakyiwaa Sackey",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    },
-    {
-     "row": 14,
-     "name": "Benjamin Ekow Tawiah Tetteh",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    }
-   ],
+   "onRoll": 8,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5747,7 +5706,7 @@
    "file": "Bishop Toss Mills-Odoi.xlsx",
    "folder": "Bishop submitted sheets (10 Oct 2026)",
    "sheetRows": 103,
-   "onRoll": 97,
+   "onRoll": 89,
    "notUnder": [
     {
      "row": 59,
@@ -5768,6 +5727,46 @@
      "row": 86,
      "name": "Reinhard Elwood Tagoe",
      "fate": "removed by the office (not a pastor)"
+    },
+    {
+     "row": 95,
+     "name": "Fred Akator",
+     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+    },
+    {
+     "row": 96,
+     "name": "Rockson Adjei Bekoe",
+     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+    },
+    {
+     "row": 97,
+     "name": "Obed Essel",
+     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+    },
+    {
+     "row": 98,
+     "name": "Isaac Koffie",
+     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+    },
+    {
+     "row": 99,
+     "name": "Eric Koomson",
+     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+    },
+    {
+     "row": 100,
+     "name": "Emmanuel Kudzo Kpeglo",
+     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+    },
+    {
+     "row": 101,
+     "name": "Barbara Abena Sakyiwaa Sackey",
+     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+    },
+    {
+     "row": 102,
+     "name": "Benjamin Ekow Tawiah Tetteh",
+     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
     },
     {
      "row": 108,
