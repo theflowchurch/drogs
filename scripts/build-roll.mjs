@@ -202,6 +202,7 @@ for (const b of bishops) if (overrides[b.id] && existsSync(`${root}${overrides[b
     const [a, ha] = hashes[i], [b, hb] = hashes[j]; if (gone.has(a.id) || gone.has(b.id) || a.bishop === b.bishop || a.image === b.image) continue; // one file on two records is no evidence
     if (hamming(ha, hb) > SAME_PICTURE) continue;
     if (birthAgrees(rowOfRec(a), rowOfRec(b)) === false) continue; // different birthdays are two people (Joshua, 11 Oct), whatever the picture
+    if (ruledDistinct({ row: { name: a.name }, bishop: { name: a.bishop } }, { row: { name: b.name }, bishop: { name: b.bishop } })) continue; // the office ruled these namesakes two people
     const ka = key(a.name), kb = key(b.name); if (!(words(ka).sort().join(' ') === words(kb).sort().join(' ') || subsetName(ka, kb) || sameSoul(ka, kb))) continue;
     const list = [a, b].map((p) => ({ bishop: bishopOf(p.bishop), row: { name: p.name, city: p.city, dobKeys: [] }, sub: { file: p.source?.file || '' }, rec: p }));
     const r = ruleWinner(a.name, list);

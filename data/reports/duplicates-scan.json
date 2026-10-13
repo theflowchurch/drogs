@@ -1,125 +1,32 @@
 [
  {
   "likely": true,
-  "pending": true,
+  "pending": false,
   "reasons": [
-   "the office must confirm"
+   "same picture"
   ],
   "people": [
    {
-    "id": "P1322",
-    "name": "Emmanuel Prince Abakah",
+    "id": "PB21",
+    "name": "Daniel Acheampong",
     "title": "Pastor",
-    "bishop": "",
-    "group": "UD Ghana",
-    "denomination": "The Makarios Church",
-    "place": "Takoradi, Ghana",
+    "bishop": "Phillippa-Marka Coker",
+    "group": "UD Europe",
+    "denomination": "Rose Of Sharon",
+    "place": "Milton Keynes, United Kingdom",
     "photo": true,
-    "unclaimed": "Possibly the same person as Emmanuel Abankwah, listed by Bishop Edwin Morgan Ogoe — the office must confirm"
+    "unclaimed": ""
    },
    {
-    "id": "S64038323",
-    "name": "Emmanuel Abankwah",
-    "title": "Pastor",
-    "bishop": "",
-    "group": "Reasonable Service",
-    "denomination": "Anointed People International",
-    "place": "Accra, Ghana",
-    "photo": true,
-    "unclaimed": "Possibly the same person as Emmanuel Prince Abakah, listed by Bishop Emmanuel Samuel Baidoo — the office must confirm"
-   }
-  ]
- },
- {
-  "likely": true,
-  "pending": true,
-  "reasons": [
-   "the office must confirm"
-  ],
-  "people": [
-   {
-    "id": "P2636",
-    "name": "Kow Acquaah",
+    "id": "Sd52fd988",
+    "name": "Daniel Acheampong",
     "title": "Rev.",
-    "bishop": "",
+    "bishop": "Jude Orraca-Tetteh",
     "group": "UD Ghana",
-    "denomination": "Qodesh Family Churches",
-    "place": "Accra, Ghana",
-    "photo": false,
-    "unclaimed": "Possibly the same person as Kow Acquah, listed by Bishop Steve Asare — the office must confirm"
-   },
-   {
-    "id": "S1e704ffc",
-    "name": "Kow Acquah",
-    "title": "Pastor",
-    "bishop": "",
-    "group": "Reasonable Service",
-    "denomination": "Allos Mega Church",
-    "place": "Accra, Ghana",
-    "photo": false,
-    "unclaimed": "Possibly the same person as Kow Acquaah, listed by Bishop Kofi Hene Asare — the office must confirm"
-   }
-  ]
- },
- {
-  "likely": true,
-  "pending": true,
-  "reasons": [
-   "the office must confirm"
-  ],
-  "people": [
-   {
-    "id": "S284dc07f",
-    "name": "Langelihle Mmgomezulu",
-    "title": "Pastor",
-    "bishop": "",
-    "group": "First Love",
-    "denomination": "First Love Church",
-    "place": "Lusaka, Zambia",
-    "photo": false,
-    "unclaimed": "Possibly the same person as Langelihle Mngomezulu, listed by Bishop Clement Asante — the office must confirm"
-   },
-   {
-    "id": "PF132",
-    "name": "Langelihle Mngomezulu",
-    "title": "Pastor",
-    "bishop": "",
-    "group": "First Love",
-    "denomination": "First Love Church",
-    "place": "Lusaka, Zambia",
-    "photo": true,
-    "unclaimed": "Possibly the same person as Langelihle Mmgomezulu, listed by Bishop Geraldo Amoa — the office must confirm"
-   }
-  ]
- },
- {
-  "likely": true,
-  "pending": true,
-  "reasons": [
-   "the office must confirm"
-  ],
-  "people": [
-   {
-    "id": "P4591",
-    "name": "Macdonald Penney",
-    "title": "Pastor",
-    "bishop": "",
-    "group": "First Love",
-    "denomination": "First Love Church",
+    "denomination": "The Glorious Mega Church",
     "place": "Accra, Ghana",
     "photo": true,
-    "unclaimed": "Possibly the same person as Mcdonald Raynes Penney, listed by Bishop Kwabena Appiah Denkyira — the office must confirm"
-   },
-   {
-    "id": "Sc3bc6b27",
-    "name": "Mcdonald Raynes Penney",
-    "title": "Rev.",
-    "bishop": "",
-    "group": "UD Ghana",
-    "denomination": "East Mountain Churches",
-    "place": "Akuapim Mampong, Ghana",
-    "photo": false,
-    "unclaimed": "Possibly the same person as Macdonald Penney, listed by Bishop Joshua Heward-Mills — the office must confirm"
+    "unclaimed": ""
    }
   ]
  },

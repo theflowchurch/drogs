@@ -6,7 +6,7 @@
 import * as XLSX from 'xlsx'; import fs from 'node:fs'; XLSX.set_fs(fs);
 import { readdirSync, writeFileSync } from 'node:fs';
 const BASE = `${process.env.HOME}/Downloads/Kuriake Castle Project/01 Office source data`;
-const DIRS = process.argv.length > 2 ? process.argv.slice(2) : [`${BASE}/Bishop submitted sheets`, `${BASE}/Bishop sheets - no pastors (9 Oct 2026)`, `${BASE}/Bishop submitted sheets (9 Oct 2026)`, `${BASE}/Bishop submitted sheets (10 Oct 2026)`, `${BASE}/Bishop submitted sheets (11 Oct 2026)`];
+const DIRS = process.argv.length > 2 ? process.argv.slice(2) : [`${BASE}/Bishop submitted sheets`, `${BASE}/Bishop sheets - no pastors (9 Oct 2026)`, `${BASE}/Bishop submitted sheets (9 Oct 2026)`, `${BASE}/Bishop submitted sheets (10 Oct 2026)`, `${BASE}/Bishop submitted sheets (11 Oct 2026)`, `${BASE}/Bishop submitted sheets (13 Oct 2026)`];
 const blank = (v) => !v || /^(missing|n\/?a|nil|none|not applicable|-+|\.)$/i.test(String(v).trim());
 const clean = (v) => (blank(v) ? '' : String(v).replace(/\s+/g, ' ').trim());
 const tc = (t) => clean(t).toLowerCase().replace(/(^|[\s'’(-])\p{L}/gu, (c) => c.toUpperCase());

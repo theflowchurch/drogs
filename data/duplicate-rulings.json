@@ -15,6 +15,27 @@
    "drop": "Kenneth Cyril Nartey",
    "bishop": "Joshua Heward-Mills",
    "source": "Joshua 11 Oct 09:07: Cyril just put him in First Love (same picture on both sheets; Bishop Eddy Addy's own 'Pastors removed' sheet lists Cyril Lartey)"
+  },
+  {
+   "keep": "Kow Acquah",
+   "drop": "Kow Acquaah",
+   "bishop": "Steve Asare",
+   "source": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections): Kow Acquaah and Kow Acquah are the same person, claimed by Bishop Steve Asare"
+  },
+  {
+   "keep": "Langelihle Mmgomezulu",
+   "drop": "Langelihle Mngomezulu",
+   "bishop": "Geraldo Amoa",
+   "set": {
+    "name": "Langelihle Mngomezulu"
+   },
+   "source": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections): Langelihle Mngomezulu goes to Bishop Geraldo Amoa (Geraldo's row kept, name spelled as on Clement Asante's sheet, picture carried over)"
+  },
+  {
+   "keep": "Mcdonald Raynes Penney",
+   "drop": "Macdonald Penney",
+   "bishop": "Kwabena Appiah Denkyira",
+   "source": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections): Mcdonald Raynes Penney and Macdonald Penney are the same person, with Bishop Kwabena Appiah Denkyira"
   }
  ],
  "distinct": [
@@ -44,36 +65,24 @@
     "Norman Kwadwo Darkwa"
    ],
    "source": "Joshua 11 Oct 10:19: North America and First Love Ghana with different birthdays are two people"
-  }
- ],
- "pending": [
+  },
   {
    "names": [
     "Emmanuel Prince Abakah",
     "Emmanuel Abankwah"
    ],
-   "source": "Joshua 11 Oct 09:10: the office must confirm who they are (same picture, Takoradi and Accra)"
+   "source": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections): Emmanuel Prince Abakah is Bishop Samuel Baidoo's, Emmanuel Abankwah is Bishop Edwin Morgan Ogoe's — two people"
   },
   {
    "names": [
-    "Kow Acquaah",
-    "Kow Acquah"
+    "Daniel Acheampong"
    ],
-   "source": "Joshua 11 Oct 09:10: the office must confirm who they are (Kofi Hene Asare and Steve Asare)"
-  },
-  {
-   "names": [
-    "Langelihle Mmgomezulu",
-    "Langelihle Mngomezulu"
+   "bishops": [
+    "Phillippa-Marka Coker",
+    "Jude Orraca-Tetteh"
    ],
-   "source": "Joshua 11 Oct 10:19: add Langelihle Mngomezulu to claimed by two (Geraldo Amoa and Clement Asante, Lusaka)"
-  },
-  {
-   "names": [
-    "Macdonald Penney",
-    "Mcdonald Raynes Penney"
-   ],
-   "source": "Joshua 11 Oct 10:19: confirm his name spelling; claimed by two (Joshua Heward-Mills and Kwabena Appiah Denkyira)"
+   "source": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections): two Daniel Acheampongs — a Pastor under Sister Phillippa, a Reverend under Bishop Jude"
   }
- ]
+ ],
+ "pending": []
 }
