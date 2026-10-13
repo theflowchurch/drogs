@@ -162,37 +162,6 @@
   ],
   "people": [
    {
-    "id": "PNc8fa42a151fe",
-    "name": "Danny Marcus Annan Jnr",
-    "title": "Pastor",
-    "bishop": "Daniel Marcus",
-    "group": "UD Africa",
-    "denomination": "First Love Church",
-    "place": "Harare, Zimbabwe",
-    "photo": true,
-    "unclaimed": ""
-   },
-   {
-    "id": "B253",
-    "name": "Daniel Marcus",
-    "title": "Bishop",
-    "bishop": "(bishop)",
-    "group": "UD Africa",
-    "denomination": "First Love Church",
-    "place": "Harare, Zimbabwe",
-    "photo": true,
-    "unclaimed": ""
-   }
-  ]
- },
- {
-  "likely": true,
-  "pending": false,
-  "reasons": [
-   "same picture"
-  ],
-  "people": [
-   {
     "id": "Sd8624927",
     "name": "Joseph Kanyiti Kiipo",
     "title": "Pastor",
