@@ -176,12 +176,19 @@ const indexByKey = new Map(); for (const e of index) { const k = key(e.name); if
 mkdirSync(`${root}assets/portraits/thumbs`, { recursive: true });
 let converted = 0, photoFromFolder = 0;
 const nameCount = new Map(); for (const p of pastors) nameCount.set(key(p.name), (nameCount.get(key(p.name)) || 0) + 1);
+const bishopIdByName = new Map(bishops.map((b) => [key(b.name), b.id]));
+const inOwnFolder = (h, p) => Boolean(p.bishop && ((h.bishopId && h.bishopId === bishopIdByName.get(key(p.bishop))) || (h.folderName && namesAlike(h.folderName, p.bishop)) || (h.folder && namesAlike(h.folder, p.bishop))));
+const ownFolder = new Map(); for (const b of bishops) ownFolder.set(key(b.name), index.filter((h) => !h.own && inOwnFolder(h, { bishop: b.name })));
+const looseMatches = [];
 for (const p of pastors) {
   if (p.image && existsSync(`${root}${p.image}`)) continue;
   let hits = indexByKey.get(key(p.name)) || [];
   if (!hits.length) { const sorted = words(key(p.name)).sort().join(' '); for (const [k, list] of indexByKey) if (words(k).sort().join(' ') === sorted) { hits = list; break; } }
-  if (!hits.length) continue;
-  const own = hits.find((h) => p.bishop && h.folder && namesAlike(h.folder, p.bishop)) || (nameCount.get(key(p.name)) > 1 ? null : hits[0]); if (!own) continue; // namesakes only take a picture from their own bishop's folder
+  let own = hits.find((h) => inOwnFolder(h, p)) || (hits.length && nameCount.get(key(p.name)) > 1 ? null : hits[0]); // namesakes only take a picture from their own bishop's folder
+  // No exact name: a file in the pastor's own bishop's folder whose name is a shorter or fuller form ("Kelvin Peprah" for Kelvin Oppong Peprah),
+  // or a close respelling ("JOSEPH NABILA" for Joseph Nabilla) — only there, never from another bishop's folder.
+  if (!own) { const mine = ownFolder.get(key(p.bishop || '')) || []; const k = key(p.name); const sub = mine.filter((h) => subsetName(key(h.name), k)); const alike = sub.length ? [] : mine.filter((h) => words(key(h.name)).length >= 2 && (namesAlike(h.name, p.name) || sameSoul(key(h.name), k))); const pick = sub.length ? sub : alike; if (pick.length && new Set(pick.map((h) => key(h.name))).size === 1) { own = pick[0]; looseMatches.push({ pastor: p.name, bishop: p.bishop, file: own.name, how: sub.length ? 'shorter or fuller form' : 'respelling' }); } }
+  if (!own) continue;
   const rel = `assets/portraits/${p.id}.webp`;
   if (!existsSync(`${root}${rel}`)) { try { const buf = readFileSync(own.path); await sharp(buf).rotate().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 75 }).toFile(`${root}${rel}`); await sharp(buf).rotate().resize({ width: 400, withoutEnlargement: true }).webp({ quality: 80 }).toFile(`${root}assets/portraits/thumbs/${p.id}.webp`); converted++; } catch { continue; } }
   p.image = rel; photoFromFolder++;
@@ -296,7 +303,7 @@ const report = {
   newBishops: bishops.filter((b) => /^BL/.test(b.id)).map((b) => b.name),
   oldBishopsNotOnList: cont.bishops.filter((o) => !bishops.some((b) => b.id === o.id)).map((o) => o.name),
   noPhoto: pastors.filter((p) => !p.image).map((p) => ({ id: p.id, name: p.name, bishop: p.bishop, group: p.group, denomination: p.denomination, place: [p.city, p.country].filter(Boolean).join(', ') })),
-  photos: { fromFolders: photoFromFolder, converted },
+  photos: { fromFolders: photoFromFolder, converted, looseMatches },
 };
 mkdirSync(`${root}data/reports`, { recursive: true });
 writeFileSync(`${root}data/reports/roll-build.json`, JSON.stringify(report, null, 1) + '\n');

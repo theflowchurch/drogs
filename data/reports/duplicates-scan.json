@@ -38,6 +38,37 @@
   ],
   "people": [
    {
+    "id": "P1277",
+    "name": "Emmanuel Frank Asare",
+    "title": "Pastor",
+    "bishop": "Eric Kobina Asare",
+    "group": "UD Ghana",
+    "denomination": "The Glorious Mega Church",
+    "place": "Accra, Ghana",
+    "photo": true,
+    "unclaimed": ""
+   },
+   {
+    "id": "S8c77dcfd",
+    "name": "Emmanuel Frank Asare",
+    "title": "Pastor",
+    "bishop": "Samuel Obeng",
+    "group": "UD Ghana",
+    "denomination": "The Makarios Church",
+    "place": "Tarkwa, Ghana",
+    "photo": true,
+    "unclaimed": ""
+   }
+  ]
+ },
+ {
+  "likely": true,
+  "pending": false,
+  "reasons": [
+   "same picture"
+  ],
+  "people": [
+   {
     "id": "Sd875d95a",
     "name": "Kwaku Bonsu",
     "title": "Pastor",
@@ -69,6 +100,99 @@
   ],
   "people": [
    {
+    "id": "Sdb542231",
+    "name": "Wisdom Dery",
+    "title": "Pastor",
+    "bishop": "Charles Bonsu",
+    "group": "UD Ghana",
+    "denomination": "Jesus Saviour Of The World Church International",
+    "place": "Kintampo, Ghana",
+    "photo": true,
+    "unclaimed": ""
+   },
+   {
+    "id": "Sdb542231-bed5",
+    "name": "Wisdom Dery",
+    "title": "Pastor",
+    "bishop": "David Afreh",
+    "group": "UD Ghana",
+    "denomination": "Jesus Saviour Of The World Church International",
+    "place": "Kintampo, Ghana",
+    "photo": true,
+    "unclaimed": ""
+   }
+  ]
+ },
+ {
+  "likely": true,
+  "pending": false,
+  "reasons": [
+   "same picture"
+  ],
+  "people": [
+   {
+    "id": "PN27e94b765a2b",
+    "name": "Andrew Shemen Luguterah Jnr",
+    "title": "Pastor",
+    "bishop": "Justice Hagan",
+    "group": "UD North America",
+    "denomination": "Laikos International Church",
+    "place": "Toronto, Canada",
+    "photo": true,
+    "unclaimed": ""
+   },
+   {
+    "id": "Sa1d339a5",
+    "name": "Andrew Luguterah",
+    "title": "Rev.",
+    "bishop": "Justice Hagan",
+    "group": "UD North America",
+    "denomination": "Laikos International Church",
+    "place": "Toronto, United States",
+    "photo": true,
+    "unclaimed": ""
+   }
+  ]
+ },
+ {
+  "likely": true,
+  "pending": false,
+  "reasons": [
+   "same picture"
+  ],
+  "people": [
+   {
+    "id": "PNc8fa42a151fe",
+    "name": "Danny Marcus Annan Jnr",
+    "title": "Pastor",
+    "bishop": "Daniel Marcus",
+    "group": "UD Africa",
+    "denomination": "First Love Church",
+    "place": "Harare, Zimbabwe",
+    "photo": true,
+    "unclaimed": ""
+   },
+   {
+    "id": "B253",
+    "name": "Daniel Marcus",
+    "title": "Bishop",
+    "bishop": "(bishop)",
+    "group": "UD Africa",
+    "denomination": "First Love Church",
+    "place": "Harare, Zimbabwe",
+    "photo": true,
+    "unclaimed": ""
+   }
+  ]
+ },
+ {
+  "likely": true,
+  "pending": false,
+  "reasons": [
+   "same picture"
+  ],
+  "people": [
+   {
     "id": "Sd8624927",
     "name": "Joseph Kanyiti Kiipo",
     "title": "Pastor",
@@ -86,6 +210,37 @@
     "bishop": "Joshua Heward-Mills",
     "group": "First Love",
     "denomination": "First Love Church",
+    "place": "Accra, Ghana",
+    "photo": true,
+    "unclaimed": ""
+   }
+  ]
+ },
+ {
+  "likely": true,
+  "pending": false,
+  "reasons": [
+   "same picture"
+  ],
+  "people": [
+   {
+    "id": "P1394",
+    "name": "Eric Koomson",
+    "title": "Pastor",
+    "bishop": "Toss Mills-Odoi",
+    "group": "United Jesus",
+    "denomination": "Jesus Is The Master",
+    "place": "Enyan Denkyira, Ghana",
+    "photo": true,
+    "unclaimed": ""
+   },
+   {
+    "id": "Scb8b8c9b",
+    "name": "Eric Koomson",
+    "title": "Pastor",
+    "bishop": "Joojo Stephens",
+    "group": "First Love",
+    "denomination": "Qodesh City Church",
     "place": "Accra, Ghana",
     "photo": true,
     "unclaimed": ""
@@ -180,6 +335,37 @@
     "group": "UD Europe",
     "denomination": "Living Waters International",
     "place": "Geneva, Switzerland",
+    "photo": true,
+    "unclaimed": ""
+   }
+  ]
+ },
+ {
+  "likely": true,
+  "pending": false,
+  "reasons": [
+   "same picture"
+  ],
+  "people": [
+   {
+    "id": "S382c44ef",
+    "name": "Michael Kofi Sarpong",
+    "title": "Pastor",
+    "bishop": "Patrick Bruce",
+    "group": "Reasonable Service",
+    "denomination": "The Mega Church – Grace Chapel",
+    "place": "Kumasi, Ghana",
+    "photo": true,
+    "unclaimed": ""
+   },
+   {
+    "id": "PF293",
+    "name": "Michael Sarpong",
+    "title": "Pastor",
+    "bishop": "Joshua Heward-Mills",
+    "group": "First Love",
+    "denomination": "First Love Church",
+    "place": "Accra, Ghana",
     "photo": true,
     "unclaimed": ""
    }

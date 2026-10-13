@@ -15,6 +15,8 @@ export const cleanName = (raw) => {
   s = s.replace(/^[^A-Za-zÀ-ÿ]+/, '').replace(/\b(\d{6,}|IMG[-_ ]?\d+|WhatsApp Image.*)\b/ig, ' ');
   for (let i = 0; i < 4; i++) s = s.replace(TITLE, '');
   s = s.replace(/\.(?=\S)/g, '. ').replace(/\s*\.\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  // Branch or church tags after the name ("EMMANUEL SAMPAH - Qodesh", "CHRISTIAN YAW KUMAH - GOASO", "BENJAMIN SAGOE-Qodesh") and stray format words ("Paulina Ama Ansah jpeg").
+  s = s.replace(/\s*-\s*(qodesh|lovefirst|first ?love)\b.*$/i, '').replace(/\s+-\s+.*$/, '').replace(/\b(jpe?g|png|heic)\b/ig, ' ').replace(/\s+/g, ' ').trim();
   return s;
 };
 const bishopFolderName = (dir) => cleanName(dir.replace(/^[^-]*-\s*(?=bishop|bs|es|sister|apostle|rev)/i, '').replace(/\s+-\s*$/, '').replace(/^e\.?s\.?\s+/i, '').split(/\s+-\s*/)[0]);
