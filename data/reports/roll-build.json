@@ -1,12 +1,12 @@
 {
- "generated": "2026-10-13T06:03:11.305Z",
+ "generated": "2026-10-13T06:21:23.604Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
   "pastors": 4985,
   "assigned": 4984,
   "unclaimed": 1,
-  "withPhoto": 4283,
+  "withPhoto": 4296,
   "sheets": 292,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -6631,70 +6631,6 @@
    "place": "Lusaka, Zambia"
   },
   {
-   "id": "P4702",
-   "name": "Richard Sena Addo",
-   "bishop": "Daniel Adjei",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "P4701",
-   "name": "Jennifer Joy Adjei",
-   "bishop": "Daniel Adjei",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "P4704",
-   "name": "Adebowale Balogun",
-   "bishop": "Daniel Adjei",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "P4705",
-   "name": "Evans Adjei Kuma-Amponsah",
-   "bishop": "Daniel Adjei",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "P4703",
-   "name": "Joshua Timothy Yalleh",
-   "bishop": "Daniel Adjei",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "PN915eacca94b2",
-   "name": "Wilhelmina Okley-Anum",
-   "bishop": "Daniel Adjei",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "PN7f0d68f1e4d6",
-   "name": "Betty Owusu Abayo",
-   "bishop": "Daniel Adjei",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "S26435dbf",
-   "name": "Clinton Ehuba Epey Lord",
-   "bishop": "Daniel Amofah",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Douala, Cameroon"
-  },
-  {
    "id": "PNa3089f37e785",
    "name": "Kgabo Francessca Mashamaite",
    "bishop": "Daniel Darku",
@@ -9607,14 +9543,6 @@
    "place": "Kade, Ghana"
   },
   {
-   "id": "P4803",
-   "name": "Aimee Mensah",
-   "bishop": "Nana Kwasi Mensah",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Auckland, New Zealand"
-  },
-  {
    "id": "PN479be6e3bb82",
    "name": "Masentle Mangoejane",
    "bishop": "Napoleon Essien",
@@ -10871,36 +10799,12 @@
    "place": "Old Bortianor, Ghana"
   },
   {
-   "id": "PN46950d11c354",
-   "name": "Dominic Addae",
-   "bishop": "James Quist-Therson",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "New York, United States"
-  },
-  {
-   "id": "P4878",
-   "name": "Ekow Bentsi-Enchill",
-   "bishop": "James Quist-Therson",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "New York, United States"
-  },
-  {
    "id": "P4910",
    "name": "Tiffany Bortei-Doku",
    "bishop": "James Quist-Therson",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "United States"
-  },
-  {
-   "id": "P4869",
-   "name": "Chibueze Meremetoh",
-   "bishop": "James Quist-Therson",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tuscaloosa, United States"
   },
   {
    "id": "P4870",
@@ -11255,14 +11159,6 @@
    "place": "Kumasi, Ghana"
   },
   {
-   "id": "Scf04bc98-c685",
-   "name": "Rosemary Sinta",
-   "bishop": "Geraldo Amoa",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Lusaka, Zambia"
-  },
-  {
    "id": "Sf1fb1e78",
    "name": "Joseph Adjei",
    "bishop": "Sam Sawyerr",
@@ -11504,8 +11400,8 @@
   }
  ],
  "photos": {
-  "fromFolders": 308,
-  "converted": 4,
+  "fromFolders": 321,
+  "converted": 13,
   "looseMatches": [
    {
     "pastor": "Kennedy Njenga Ng'Ang'A",
@@ -11608,6 +11504,12 @@
     "bishop": "Clement Asante",
     "file": "DANIEL KAPILA",
     "how": "respelling"
+   },
+   {
+    "pastor": "Evans Adjei Kuma-Amponsah",
+    "bishop": "Daniel Adjei",
+    "file": "EVANS KUMA-AMPONSAH",
+    "how": "shorter or fuller form"
    },
    {
     "pastor": "Danny Marcus Annan Jnr",
