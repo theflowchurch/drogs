@@ -1,0 +1,13 @@
+{
+ "note": "Corrections Joshua gave for individual pastor records, applied after the sheets are read: match by the sheet name (and bishop), then set the fields.",
+ "corrections": [
+  {
+   "name": "Larry Yorm Kploanyi",
+   "bishop": "Nely Nina Masuku",
+   "set": {
+    "name": "Lincoln Larry Kploanyi"
+   },
+   "source": "Joshua 13 Oct: make his name Lincoln and middle name Larry"
+  }
+ ]
+}

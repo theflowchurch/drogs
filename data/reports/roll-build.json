@@ -1,12 +1,12 @@
 {
- "generated": "2026-10-13T07:49:50.181Z",
+ "generated": "2026-10-13T08:01:49.469Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
   "pastors": 4985,
   "assigned": 4985,
   "unclaimed": 0,
-  "withPhoto": 4296,
+  "withPhoto": 4298,
   "sheets": 292,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -6007,22 +6007,6 @@
    "group": "UD Ghana",
    "denomination": "The Glorious Mega Church",
    "place": "Accra, Ghana"
-  },
-  {
-   "id": "S05f40dde",
-   "name": "Larry Yorm Kploanyi",
-   "bishop": "Nely Nina Masuku",
-   "group": "FLOW",
-   "denomination": "FLOW",
-   "place": "Ghana"
-  },
-  {
-   "id": "S156fc274",
-   "name": "Joel Cobina Obuobisa",
-   "bishop": "Nely Nina Masuku",
-   "group": "FLOW",
-   "denomination": "FLOW",
-   "place": "Ghana"
   },
   {
    "id": "PN5018e5b300dc",

@@ -238,6 +238,9 @@ for (const m of dupRulings.merge) {
   pastors.splice(pastors.indexOf(drop), 1); recFate.set(`${drop.source?.file}|${drop.source?.row}`, `one person with ${m.keep}, kept under ${keep.bishop} (Joshua 11 Oct)`); dupMerged.push({ ...m, applied: true, keptId: keep.id, droppedId: drop.id, under: keep.bishop });
 }
 if (dupMerged.length) console.log(`Duplicate rulings: ${dupMerged.filter((m) => m.applied).length} of ${dupMerged.length} merges applied`);
+// Joshua's corrections to individual pastor records (data/pastor-corrections.json): matched by the sheet's name and bishop, fields set.
+const corrections = read('data/pastor-corrections.json', { corrections: [] }).corrections;
+for (const c of corrections) { const p = pastors.find((x) => key(x.name) === key(c.name) && (!c.bishop || key(x.bishop || '') === key(c.bishop))); if (p) Object.assign(p, c.set); else console.log(`correction not matched: ${c.name}`); }
 // Pairs the office must still confirm (Joshua, 11 Oct): both records are Unclaimed, like any double claim, and head the report.
 const dupPending = [];
 for (const d of dupRulings.pending) {
