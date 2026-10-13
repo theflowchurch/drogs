@@ -1,11 +1,11 @@
 {
- "generated": "2026-10-13T06:34:56.017Z",
+ "generated": "2026-10-13T06:41:21.971Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
   "pastors": 4985,
-  "assigned": 4984,
-  "unclaimed": 1,
+  "assigned": 4985,
+  "unclaimed": 0,
   "withPhoto": 4296,
   "sheets": 292,
   "bishopsWithSheet": 283,
@@ -491,6 +491,14 @@
     "Frank Opoku"
    ],
    "by": "Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills"
+  },
+  {
+   "name": "Pedro Alberto Nhanengue",
+   "winner": "Frank Otchere",
+   "losers": [
+    "Nelson Agbemava"
+   ],
+   "by": "Joshua 13 Oct: Pedro Alberto Nhanengue is with Frank Otchere"
   },
   {
    "name": "Emmanuel Kojo Awotwe",
@@ -1157,48 +1165,7 @@
    "by": "Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens"
   }
  ],
- "conflicts": [
-  {
-   "name": "Pedro Alberto Nhanengue",
-   "id": "PF461",
-   "claims": [
-    {
-     "bishop": "Frank Otchere",
-     "group": "UD Africa",
-     "file": "Bishop Frank Otchere.xlsx",
-     "folder": "",
-     "row": 32,
-     "cells": [
-      "Pedro Alberto Nhanengue",
-      "Pastor",
-      "Maputo",
-      "Mozambique",
-      "same picture on both sheets"
-     ],
-     "city": "Maputo",
-     "country": "Mozambique",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Nelson Agbemava",
-     "group": "UD Africa",
-     "file": "Bishop Nelson Agbemava.xlsx",
-     "folder": "",
-     "row": 32,
-     "cells": [
-      "Pedro Alberto",
-      "Pastor",
-      "Zimpeto",
-      "Mozambique",
-      "same picture on both sheets"
-     ],
-     "city": "Zimpeto",
-     "country": "Mozambique",
-     "title": "Pastor"
-    }
-   ]
-  }
- ],
+ "conflicts": [],
  "nonListPastors": [],
  "rulingNotOnSheet": [],
  "dupMerged": [
@@ -3236,17 +3203,12 @@
    "file": "Bishop Frank Otchere.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 36,
-   "onRoll": 34,
+   "onRoll": 35,
    "notUnder": [
     {
      "row": 30,
      "name": "Leonardo Ngariamao",
      "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 32,
-     "name": "Pedro Alberto Nhanengue",
-     "fate": "claimed by Bishop Frank Otchere and Bishop Nelson Agbemava (same picture) — Unclaimed for the office"
     }
    ],
    "extra": []
@@ -4653,7 +4615,7 @@
     {
      "row": 32,
      "name": "Pedro Alberto",
-     "fate": "claimed by Bishop Frank Otchere and Bishop Nelson Agbemava (same picture) — Unclaimed for the office"
+     "fate": "ruled to Frank Otchere (Joshua 13 Oct: Pedro Alberto Nhanengue is with Frank Otchere)"
     }
    ],
    "extra": []
@@ -11400,7 +11362,7 @@
   }
  ],
  "photos": {
-  "fromFolders": 321,
+  "fromFolders": 320,
   "converted": 0,
   "looseMatches": [
    {
@@ -11954,12 +11916,6 @@
     "bishop": "Nelson Agbemava",
     "file": "FELIZARDO ABRAAO ANTONIO",
     "how": "respelling"
-   },
-   {
-    "pastor": "Pedro Alberto",
-    "bishop": "Nelson Agbemava",
-    "file": "Pedro Alberto Nhanengue",
-    "how": "shorter or fuller form"
    },
    {
     "pastor": "William Mawunyo Agbo",
