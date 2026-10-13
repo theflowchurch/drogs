@@ -55,7 +55,6 @@ export const GROUPS = {
       "Serious Christian Church",
       "Serious Christian Church Lesotho",
       "Strait Gate Church Liberia",
-      "Strong Christian Christian",
       "Strong Christian Church",
       "Strong Christian Church South Africa",
       "Talanta International Tanzania",
