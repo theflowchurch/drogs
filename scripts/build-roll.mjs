@@ -173,7 +173,8 @@ for (const s of nonList.filter((x) => !x.lay)) for (const r of s.pastors) { cons
 // Kent and Toss have not sent sheets: their current pastors stay as they were.
 for (const n of KEEP_OLD_PASTORS) { const b = bishops.find((x) => key(x.name) === key(n)); if (!b) continue; for (const o of cont.pastors.filter((p) => key(p.bishop || '') === key(n))) if (!pastors.some((p) => p.id === o.id || key(p.name) === key(o.name))) pastors.push({ id: o.id, role: 'pastor', name: o.name, title: o.title || 'Pastor', organization: b.organization, denomination: b.denomination, denominationLogo: '', city: o.city || '', branch: '', country: o.country || b.country || '', image: o.image || '', gender: o.gender || '', yearAppointed: o.yearAppointed || '', yearOrdained: o.yearOrdained || '', yearConsecrated: '', bishop: b.name, group: b.group, source: { file: 'kept until the sheet arrives', row: 0 } }); }
 // ---------- 7. Pictures from the photo folders for anyone still without one
-const index = read('/tmp/photo-index.json', null) || JSON.parse(readFileSync('/tmp/photo-index.json', 'utf8'));
+const index = existsSync('/tmp/photo-index.json') ? JSON.parse(readFileSync('/tmp/photo-index.json', 'utf8')) : []; // the office's photo folders live on Joshua's Mac; without the index (CI) the pictures already converted are kept
+if (!index.length) console.log('No photo index: keeping the portraits already converted from the folders');
 const indexByKey = new Map(); for (const e of index) { const k = key(e.name); if (!indexByKey.has(k)) indexByKey.set(k, []); indexByKey.get(k).push(e); }
 mkdirSync(`${root}assets/portraits/thumbs`, { recursive: true });
 let converted = 0, photoFromFolder = 0;
@@ -186,6 +187,7 @@ const ownFolder = new Map(); for (const b of bishops) ownFolder.set(key(b.name),
 const looseMatches = [];
 for (const p of pastors) {
   if (p.image && existsSync(`${root}${p.image}`)) continue;
+  if (!index.length) { const rel = `assets/portraits/${p.id}.webp`; if (existsSync(`${root}${rel}`)) { p.image = rel; photoFromFolder++; } continue; }
   let hits = indexByKey.get(key(p.name)) || [];
   if (!hits.length) { const sorted = words(key(p.name)).sort().join(' '); for (const [k, list] of indexByKey) if (words(k).sort().join(' ') === sorted) { hits = list; break; } }
   let own = hits.find((h) => inOwnFolder(h, p)) || (hits.length && nameCount.get(key(p.name)) > 1 ? null : hits[0]); // namesakes only take a picture from their own bishop's folder

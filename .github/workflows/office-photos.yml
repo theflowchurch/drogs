@@ -1,0 +1,39 @@
+name: Office uploads into the roll
+# Every night: pull the portraits the office uploaded on the site into the repo, rebuild the roll, audit, test, and push
+# so the build, the PDFs and the site agree and the pictures survive a server reset. Hostinger deploys the push.
+on:
+  schedule:
+    - cron: '15 2 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: office-photos
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/annual-registration
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Pull office uploads
+        run: node scripts/office-photos.mjs
+      - name: Rebuild the roll and audit
+        run: |
+          node scripts/build-roll.mjs
+          node scripts/audit-roll.mjs
+      - run: npm test
+      - name: Commit and push if anything changed
+        run: |
+          git config user.name "Kuriake office uploads"
+          git config user.email "office-uploads@kuriakecastle.org"
+          git add -A
+          if git diff --cached --quiet; then echo "Nothing new from the office"; exit 0; fi
+          git commit -m "Office uploads pulled into the roll ($(date -u +%Y-%m-%d))"
+          git push origin HEAD:codex/annual-registration
+          git push origin HEAD:check-version-history-access

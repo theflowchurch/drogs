@@ -12,6 +12,11 @@ const missed = [...cell.keys()].filter((n) => !seen.has(n));
 const people = JSON.parse(readFileSync(`${root}src/registration/reference-people.json`, 'utf8')).filter((p) => p.role === 'pastor');
 const byName = new Map(people.map((p) => [p.name.toLowerCase(), p])); // rulings may name someone the first pass had already cleared
 for (const n of rulings.approved) { const c = byName.get(n.toLowerCase()); if (c) delete out[c.id]; }
-for (const [n, codes] of Object.entries(rulings.forced)) { const c = byName.get(n.toLowerCase()); if (!c) continue; if (codes.length) out[c.id] = { codes, note: (out[c.id]?.note) || 'Joshua, 13 Oct' }; else delete out[c.id]; }
+// A clerical collar is accepted at every rank and does not need a tie.
+for (const [id, review] of Object.entries(out)) if (/clerical(?: collar)?/i.test(review.note || '') && !/no clerical collar/i.test(review.note || '')) {
+  review.codes = review.codes.filter((code) => !['TIE', 'CASUAL', 'WDRESS'].includes(code));
+  if (!review.codes.length) delete out[id];
+}
+for (const [n, codes] of Object.entries(rulings.forced)) { const c = byName.get(n.toLowerCase()); if (!c) continue; if (codes.length) out[c.id] = { codes, note: rulings.forcedNotes?.[n] || (out[c.id]?.note) || 'Joshua, 13 Oct' }; else delete out[c.id]; }
 writeFileSync(`${root}data/reports/attire-review.json`, JSON.stringify(out, null, 1) + '\n');
 console.log(`${Object.keys(out).length} photos flagged after the second pass · cells not covered by a reviewer: ${missed.length} · unreviewed sheets: ${unreviewed.join('; ') || 'none'}`);

@@ -853,12 +853,6 @@
   ],
   "note": "shirt and tie, no jacket"
  },
- "PF627": {
-  "codes": [
-   "EYES"
-  ],
-  "note": "dark glasses hide eyes"
- },
  "P854": {
   "codes": [
    "CASUAL",
@@ -996,12 +990,6 @@
   ],
   "note": "street with cars; pink over white fine"
  },
- "PF853": {
-  "codes": [
-   "FAR"
-  ],
-  "note": "far shot, face small"
- },
  "P888": {
   "codes": [
    "TIE"
@@ -1069,12 +1057,6 @@
   ],
   "note": "visibly pixelated upscale"
  },
- "P688": {
-  "codes": [
-   "FAR"
-  ],
-  "note": "waist-up at distance, face small"
- },
  "PF680": {
   "codes": [
    "FAR"
@@ -1092,12 +1074,6 @@
    "FAR"
   ],
   "note": "waist-up at distance, face small"
- },
- "P2157": {
-  "codes": [
-   "LOW"
-  ],
-  "note": "visibly soft and pixelated"
  },
  "P2668": {
   "codes": [
@@ -1493,7 +1469,7 @@
   "codes": [
    "FAR"
   ],
-  "note": "suit and tie but distant, face small"
+  "note": "Too far from the camera; face too small."
  },
  "P4880": {
   "codes": [
@@ -1648,13 +1624,6 @@
   ],
   "note": "brown backdrop"
  },
- "P727": {
-  "codes": [
-   "LOW",
-   "BGCOLOUR"
-  ],
-  "note": "blurry; brown backdrop"
- },
  "P916": {
   "codes": [
    "BGCOLOUR"
@@ -1794,12 +1763,6 @@
    "LOW"
   ],
   "note": "very blurry"
- },
- "P3329": {
-  "codes": [
-   "LOW"
-  ],
-  "note": "pixelated"
  },
  "P2488": {
   "codes": [
@@ -2378,10 +2341,9 @@
  },
  "P4187": {
   "codes": [
-   "BG",
-   "FAR"
+   "DIRECTION"
   ],
-  "note": "jagged cut-out, face small, sideways"
+  "note": "Face is turned away from the camera."
  },
  "S089e5b12": {
   "codes": [
@@ -4119,5 +4081,11 @@
    "BGCOLOUR"
   ],
   "note": "Joshua, 13 Oct"
+ },
+ "P2236": {
+  "codes": [
+   "STRETCH"
+  ],
+  "note": "Photo is stretched or distorted."
  }
 }

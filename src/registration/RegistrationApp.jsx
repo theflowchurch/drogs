@@ -2996,7 +2996,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
           ["Country", p.country || "—"],
           ["Email", p.email || "—"],
           ["Phone", p.phone || "—"],
-          ["Photo on file", p.image ? "Yes" : "No"],
+          ["Photo on file", p.image || p.photo ? "Yes" : "No"],
           ...(changed("email")
             ? [["Previous email on record", p.recorded.email]]
             : []),
@@ -3032,7 +3032,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
         ))}
       </dl>
       {p.role === "bishop" && (
-        <PastorsUnder bishop={p} extra={under} onOpen={onOpen} dots />
+        <PastorsUnder bishop={p} extra={under} onOpen={onOpen} dots from={state ? overlayReferences(publicPeople, state) : undefined} />
       )}
       {perform && state && (p.registration
         ? <OfficeEditor registration={p.registration} state={state} perform={perform} actor={actor} />

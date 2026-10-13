@@ -1,12 +1,12 @@
 {
- "generated": "2026-10-13T08:28:42.342Z",
+ "generated": "2026-10-13T09:04:54.591Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
   "pastors": 4984,
   "assigned": 4984,
   "unclaimed": 0,
-  "withPhoto": 4297,
+  "withPhoto": 4301,
   "sheets": 292,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -6479,14 +6479,6 @@
    "place": "Bimbo, Central African Republic"
   },
   {
-   "id": "P2551",
-   "name": "Kelvin Ayienda Mogire",
-   "bishop": "Christos Isaac Abbey",
-   "group": "UD Africa",
-   "denomination": "Double Mega Missionary Church",
-   "place": "Nairobi, Kenya"
-  },
-  {
    "id": "P4391",
    "name": "Vincent Mwale",
    "bishop": "Christos Isaac Abbey",
@@ -6901,14 +6893,6 @@
    "group": "UD Ghana",
    "denomination": "Jesus Saviour Of The World Church International",
    "place": "Kwame Danso, Ghana"
-  },
-  {
-   "id": "S1b9a0e51",
-   "name": "Francis Lebene Kumah",
-   "bishop": "Emmanuel Bekoe Saforo Sakyi",
-   "group": "UD Ghana",
-   "denomination": "East Mountain Churches",
-   "place": "Gyankama, Ghana"
   },
   {
    "id": "PN2716d1f1cd06",
@@ -8245,14 +8229,6 @@
    "group": "United Islands",
    "denomination": "Favourite Child Church",
    "place": "Ipswich, Australia"
-  },
-  {
-   "id": "PN21c0fc39e4b3",
-   "name": "Loussemo Agbevan",
-   "bishop": "Joseph Aboagye",
-   "group": "UD Africa",
-   "denomination": "Victoire Internationale",
-   "place": "Pointe Noire, Congo"
   },
   {
    "id": "PNe1c62a6d5627",
@@ -10565,14 +10541,6 @@
    "group": "UD Africa",
    "denomination": "Everything By Prayer Center",
    "place": "Abuja, Nigeria"
-  },
-  {
-   "id": "P3229",
-   "name": "Nana Yaa Adepa Sarpomaa Ane",
-   "bishop": "Rebecca Joana Addae",
-   "group": "UD Ghana",
-   "denomination": "Qodesh Family Churches",
-   "place": "Accra, Ghana"
   },
   {
    "id": "P4176",
