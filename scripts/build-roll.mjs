@@ -8,6 +8,7 @@
 // only carries ids and portrait paths forward so registrations and photos keep pointing at people.
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import * as XLSX from 'xlsx'; import fs from 'node:fs'; XLSX.set_fs(fs);
 import sharp from 'sharp';
 import { normalName, namesAlike } from '../src/registration/model.mjs';
@@ -175,6 +176,8 @@ const index = read('/tmp/photo-index.json', null) || JSON.parse(readFileSync('/t
 const indexByKey = new Map(); for (const e of index) { const k = key(e.name); if (!indexByKey.has(k)) indexByKey.set(k, []); indexByKey.get(k).push(e); }
 mkdirSync(`${root}assets/portraits/thumbs`, { recursive: true });
 let converted = 0, photoFromFolder = 0;
+// HEIC from iPhones trips the converter when read as a buffer; macOS's own converter turns it into a JPEG first.
+const readImage = (path) => { if (!/\.heic$/i.test(path)) return readFileSync(path); const tmp = `/tmp/kc-heic-${createHash('sha1').update(path).digest('hex').slice(0, 12)}.jpg`; if (!existsSync(tmp)) execFileSync('sips', ['-s', 'format', 'jpeg', path, '--out', tmp], { stdio: 'ignore' }); return readFileSync(tmp); };
 const nameCount = new Map(); for (const p of pastors) nameCount.set(key(p.name), (nameCount.get(key(p.name)) || 0) + 1);
 const bishopIdByName = new Map(bishops.map((b) => [key(b.name), b.id]));
 const inOwnFolder = (h, p) => Boolean(p.bishop && ((h.bishopId && h.bishopId === bishopIdByName.get(key(p.bishop))) || (h.folderName && namesAlike(h.folderName, p.bishop)) || (h.folder && namesAlike(h.folder, p.bishop))));
@@ -190,10 +193,10 @@ for (const p of pastors) {
   if (!own) { const mine = ownFolder.get(key(p.bishop || '')) || []; const k = key(p.name); const sub = mine.filter((h) => subsetName(key(h.name), k)); const alike = sub.length ? [] : mine.filter((h) => words(key(h.name)).length >= 2 && (namesAlike(h.name, p.name) || sameSoul(key(h.name), k))); const pick = sub.length ? sub : alike; if (pick.length && new Set(pick.map((h) => key(h.name))).size === 1) { own = pick[0]; looseMatches.push({ pastor: p.name, bishop: p.bishop, file: own.name, how: sub.length ? 'shorter or fuller form' : 'respelling' }); } }
   if (!own) continue;
   const rel = `assets/portraits/${p.id}.webp`;
-  if (!existsSync(`${root}${rel}`)) { try { const buf = readFileSync(own.path); await sharp(buf).rotate().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 75 }).toFile(`${root}${rel}`); await sharp(buf).rotate().resize({ width: 400, withoutEnlargement: true }).webp({ quality: 80 }).toFile(`${root}assets/portraits/thumbs/${p.id}.webp`); converted++; } catch { continue; } }
+  if (!existsSync(`${root}${rel}`)) { try { const buf = readImage(own.path); await sharp(buf).rotate().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 75 }).toFile(`${root}${rel}`); await sharp(buf).rotate().resize({ width: 400, withoutEnlargement: true }).webp({ quality: 80 }).toFile(`${root}assets/portraits/thumbs/${p.id}.webp`); converted++; } catch { continue; } }
   p.image = rel; photoFromFolder++;
 }
-for (const b of bishops) if (!b.image) { const hits = (indexByKey.get(key(b.name)) || []).filter((h) => h.own) ; if (hits.length) { const rel = `assets/portraits/${b.id}.webp`; try { if (!existsSync(`${root}${rel}`)) { const buf = readFileSync(hits[0].path); await sharp(buf).rotate().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 78 }).toFile(`${root}${rel}`); await sharp(buf).rotate().resize({ width: 400, withoutEnlargement: true }).webp({ quality: 80 }).toFile(`${root}assets/portraits/thumbs/${b.id}.webp`); } b.image = rel; } catch {} } }
+for (const b of bishops) if (!b.image) { const hits = (indexByKey.get(key(b.name)) || []).filter((h) => h.own) ; if (hits.length) { const rel = `assets/portraits/${b.id}.webp`; try { if (!existsSync(`${root}${rel}`)) { const buf = readImage(hits[0].path); await sharp(buf).rotate().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 78 }).toFile(`${root}${rel}`); await sharp(buf).rotate().resize({ width: 400, withoutEnlargement: true }).webp({ quality: 80 }).toFile(`${root}assets/portraits/thumbs/${b.id}.webp`); } b.image = rel; } catch {} } }
 // Official portraits the office shared on Drive (scripts/bishop-photos-from-drive.mjs) beat any other picture.
 const overrides = read('data/bishop-photo-overrides.json', {});
 for (const b of bishops) if (overrides[b.id] && existsSync(`${root}${overrides[b.id]}`)) b.image = overrides[b.id];

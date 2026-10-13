@@ -1,12 +1,12 @@
 {
- "generated": "2026-10-13T05:56:04.849Z",
+ "generated": "2026-10-13T06:03:11.305Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
   "pastors": 4985,
   "assigned": 4984,
   "unclaimed": 1,
-  "withPhoto": 4279,
+  "withPhoto": 4283,
   "sheets": 292,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -9735,14 +9735,6 @@
    "place": "Maputo, Mozambique"
   },
   {
-   "id": "S4e1184da",
-   "name": "Prince Appiah",
-   "bishop": "Norman Kwadwo Darkwa",
-   "group": "UD North America",
-   "denomination": "Rejoice Greatly",
-   "place": "El Paso, United States"
-  },
-  {
    "id": "P3276",
    "name": "Nemi Edmund-Tamnabo",
    "bishop": "Okereke Peter Chibuzor",
@@ -9861,22 +9853,6 @@
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Mafikeng, South Africa"
-  },
-  {
-   "id": "S04beb1b1",
-   "name": "Shanganani Manasseh Denest",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Gaborone, Botswana"
-  },
-  {
-   "id": "PN45d4b5bfd0a4",
-   "name": "Onnetse Marekwa",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Gaborone, Botswana"
   },
   {
    "id": "Se7c416b7",
@@ -10525,14 +10501,6 @@
    "group": "UD Europe",
    "denomination": "Pleasant Surprise",
    "place": "Dudley, United Kingdom"
-  },
-  {
-   "id": "S2ef90f0b",
-   "name": "Oluwatosin Damilola Adeniregun",
-   "bishop": "Stephen Poku",
-   "group": "UD Europe",
-   "denomination": "Pleasant Surprise",
-   "place": "Stevenage, United Kingdom"
   },
   {
    "id": "PN958921c3a18c",
@@ -11536,8 +11504,8 @@
   }
  ],
  "photos": {
-  "fromFolders": 304,
-  "converted": 151,
+  "fromFolders": 308,
+  "converted": 4,
   "looseMatches": [
    {
     "pastor": "Kennedy Njenga Ng'Ang'A",
