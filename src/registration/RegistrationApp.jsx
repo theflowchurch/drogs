@@ -2854,7 +2854,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
         {[
           ["Bishops", scope.filter((p) => p.role === "bishop" && !isLay(p)).length],
           ["Lay Presidents", scope.filter(isLay).length],
-          ["Pastors", scope.filter((p) => p.role === "pastor").length],
+          ["Pastors", scope.filter((p) => p.role === "pastor" || isLay(p)).length],
           ["Bishops and pastors", scope.length],
           [
             role === "bishop" ? "Registered this year" : "Claimed by a bishop",
@@ -3479,7 +3479,7 @@ function SearchResults({ list, q }) {
 }
 // Bishops are pastors too, so the pastors' list carries everyone; the bishops' list only bishops.
 const inRole = (p, role) => (role === "lay" ? isLay(p) : role === "pastor" || (p.role === role && !isLay(p))); // the Bishops view is bishops only; lay presidents lead the Pastors view
-const countRole = (list, role) => list.filter((p) => (role === "lay" ? isLay(p) : p.role === role && !isLay(p))).length; // lay presidents are counted on their own, never among the bishops
+const countRole = (list, role) => list.filter((p) => (role === "lay" ? isLay(p) : role === "pastor" ? p.role === "pastor" || isLay(p) : p.role === role && !isLay(p))).length; // lay presidents count among the pastors, never among the bishops (Joshua, 13 Oct)
 // The pastors shown under a bishop: the list they uploaded this year (lit once registered with a photo), then pastors whose record names them.
 const pastorsUnder = (b, byBishop) => {
   const uploaded = (b.pastors || []).map((q) => ({ id: q.id, role: "pastor", name: q.name, photo: q.photo || "", image: "", city: q.city || "", country: q.country || "", standing: Boolean(q.registered && q.photo), bishop: b.name }));
