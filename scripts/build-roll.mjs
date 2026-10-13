@@ -29,7 +29,7 @@ const tc = (t) => String(t || '').trim().replace(/\s+/g, ' ').toLowerCase().repl
 const subsetName = (a, b) => { const A = words(a), B = words(b); if (A.length < 2 || B.length < 2) return false; return A.every((w) => B.includes(w)) || B.every((w) => A.includes(w)); };
 const blank = (v) => !v || /^(n\/?a|none|nil|missing|-+)$/i.test(String(v).trim());
 // ---------- 1. The Bishops List: the anchor
-const listRows = XLSX.utils.sheet_to_json(XLSX.readFile(`${BASE}/Bishops List (9 Oct 2026).xlsx`).Sheets.Sheet1, { raw: false, defval: '' }).filter((r) => r.NAME.trim());
+const listRows = XLSX.utils.sheet_to_json(XLSX.readFile(`${root}data/source/Bishops List (9 Oct 2026).xlsx`).Sheets.Sheet1, { raw: false, defval: '' }).filter((r) => r.NAME.trim()); // the office's list, kept in the repo so the build runs anywhere
 const aliases = read('data/bishops-list-aliases.json', { aliases: {} }).aliases;
 const stripTitle = (n) => String(n).replace(/^\s*(bishop|episcopal sister|es|mother|rev\.?|reverend)\s+/i, '').replace(/\s*\(jnr\)\s*$/i, ' Jnr').trim();
 const aliasKeyed = Object.fromEntries(Object.entries(aliases).map(([k, v]) => [key(stripTitle(k)), v]));

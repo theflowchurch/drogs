@@ -7,7 +7,7 @@ const root = new URL('..', import.meta.url).pathname;
 const read = (rel) => JSON.parse(readFileSync(`${root}${rel}`, 'utf8'));
 const people = read('src/registration/reference-people.json'), report = read('data/reports/roll-build.json'), subs = read('data/bishop-submissions.json');
 const rulings = read('data/sheet-conflict-rulings.json'), notPastors = read('data/not-pastors.json'), lay = read('data/lay-presidents.json').names;
-const list = XLSX.utils.sheet_to_json(XLSX.readFile(`${process.env.HOME}/Downloads/Kuriake Castle Project/01 Office source data/Bishops List (9 Oct 2026).xlsx`).Sheets.Sheet1, { raw: false, defval: '' }).filter((r) => r.NAME.trim());
+const list = XLSX.utils.sheet_to_json(XLSX.readFile(`${root}data/source/Bishops List (9 Oct 2026).xlsx`).Sheets.Sheet1, { raw: false, defval: '' }).filter((r) => r.NAME.trim());
 const bishops = people.filter((p) => p.role === 'bishop' && !p.lay), lays = people.filter((p) => p.lay), pastors = people.filter((p) => p.role === 'pastor');
 const key = (n) => normalName(String(n).replace(/[’'`]/g, ''));
 let fails = 0; const out = [];
