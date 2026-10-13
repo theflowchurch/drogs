@@ -10,7 +10,7 @@ const people = JSON.parse(readFileSync(`${root}src/registration/reference-people
 const review = JSON.parse(readFileSync(`${root}data/reports/attire-review.json`, 'utf8'));
 const OUT = `${process.env.HOME}/Downloads/Kuriake Castle Project/02 Deliverables for the office`;
 mkdirSync(`${root}.tmp-checks/pdfthumbs`, { recursive: true });
-const WORDS = { LOW: 'Too blurry or too small', TIGHT: 'Cropped too close to the face', CASUAL: 'Casual clothes', TIE: 'Jacket but no tie', BG: 'Busy background or outdoors', BGCOLOUR: 'Background not white', WDRESS: 'Not a red, yellow or blue dress', UNREVIEWED: 'Could not be reviewed' };
+const WORDS = { LOW: 'Blurry, dark or pixelated', TIGHT: 'Cropped too close to the face', FAR: 'Too far away, face too small', EYES: 'Eyes not visible', CASUAL: 'Casual clothes', TIE: 'Open collar, no tie or cord', BG: 'Busy background or outdoors', BGCOLOUR: 'Background not white', WDRESS: 'Not the appropriate attire for a Lady Pastor', UNREVIEWED: 'Could not be reviewed' };
 const esc = (s) => String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 const pending = [];
 const thumb = (p) => { if (!p.image || !existsSync(`${root}${p.image}`)) return ''; const t = p.image.replace(/^(assets\/(?:portraits|bishops|pastors))\/([^/]+)\.[^.]+$/, '$1/thumbs/$2.webp'); const src = `${root}${existsSync(`${root}${t}`) ? t : p.image}`; const out = `.tmp-checks/pdfthumbs/${p.id}.jpg`; pending.push(existsSync(`${root}${out}`) ? null : sharp(src).resize({ width: 180, withoutEnlargement: true }).jpeg({ quality: 72 }).toFile(`${root}${out}`).catch(() => {})); return `http://localhost:4301/${out}`; };

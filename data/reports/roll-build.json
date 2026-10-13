@@ -1,12 +1,12 @@
 {
- "generated": "2026-10-13T08:01:49.469Z",
+ "generated": "2026-10-13T08:28:42.342Z",
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 4985,
-  "assigned": 4985,
+  "pastors": 4984,
+  "assigned": 4984,
   "unclaimed": 0,
-  "withPhoto": 4298,
+  "withPhoto": 4297,
   "sheets": 292,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -71,6 +71,14 @@
    "file": "Bishop Clement Asante FLC.xlsx",
    "row": 7,
    "onList": false
+  },
+  {
+   "name": "Danny Marcus Annan Jnr",
+   "title": "Pastor",
+   "onSheetOf": "Daniel Marcus",
+   "file": "Bishop Daniel Marcus.xlsx",
+   "row": 27,
+   "onList": true
   },
   {
    "name": "William Ato Wilson",
@@ -2559,8 +2567,14 @@
    "file": "Bishop Daniel Marcus.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 36,
-   "onRoll": 36,
-   "notUnder": [],
+   "onRoll": 35,
+   "notUnder": [
+    {
+     "row": 27,
+     "name": "Danny Marcus Annan Jnr",
+     "fate": "a bishop on the Bishops List, not a pastor"
+    }
+   ],
    "extra": []
   },
   {
@@ -11346,7 +11360,7 @@
   }
  ],
  "photos": {
-  "fromFolders": 320,
+  "fromFolders": 319,
   "converted": 0,
   "looseMatches": [
    {
@@ -11455,12 +11469,6 @@
     "pastor": "Evans Adjei Kuma-Amponsah",
     "bishop": "Daniel Adjei",
     "file": "EVANS KUMA-AMPONSAH",
-    "how": "shorter or fuller form"
-   },
-   {
-    "pastor": "Danny Marcus Annan Jnr",
-    "bishop": "Daniel Marcus",
-    "file": "DANNY MARCUS",
     "how": "shorter or fuller form"
    },
    {

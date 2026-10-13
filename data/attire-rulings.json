@@ -1,0 +1,64 @@
+{
+ "note": "Joshua's person-by-person rulings on the photo review (13 Oct 2026). approved: the photo is fine whatever the reviewers said. forced: the final reason codes for a person (LOW blurry/dark, FAR too far, TIGHT too close, CASUAL, WDRESS not the Lady Pastor attire, TIE open collar without tie or cord, BG busy/outdoors, BGCOLOUR clearly non-white wall, EYES eyes not visible).",
+ "approved": [
+  "Asiantewen Chosen Godwin Bawa",
+  "Brittney Bobby Hemmings",
+  "Calvin Elroy Kelvin",
+  "Cordia Chambers Johnson",
+  "Daniel Chris Sakyi",
+  "David Tracy",
+  "Dorcas Asare-Duah",
+  "Duke Gyamerah",
+  "Eli Akplor",
+  "Elsie Sackey",
+  "Emmanuel Nii Okai",
+  "Esther Nyamekye Okokon",
+  "Evangeline Afua Goodman",
+  "Felix Kofi Apeti",
+  "Gayrol Taylor",
+  "Jermaine Cargill",
+  "Jordan Fray",
+  "Kenrick Haynes",
+  "Latoya Adjetey",
+  "Lloyd Akeem George",
+  "Mataiasi Lomu Tavo",
+  "Nicole Femola Brown",
+  "Orin Jonas",
+  "Patrick Osei-Boamah",
+  "Paul Kutonge Kaba",
+  "Paula Headley",
+  "Raphael Fred Assefuah",
+  "Shanice Webb",
+  "Sharon Spence",
+  "Shine Nyarkoh-Mensah",
+  "Solomon Danso",
+  "Staciann Sampson",
+  "Toniann Mitchell"
+ ],
+ "forced": {
+  "samuel luwawu": [
+   "LOW"
+  ],
+  "jocelyn tchinan oga": [
+   "LOW"
+  ],
+  "abraham sagno": [
+   "LOW"
+  ],
+  "michael anderson": [
+   "FAR"
+  ],
+  "godfred shemen quartey": [
+   "CASUAL"
+  ],
+  "claudia bainson": [
+   "WDRESS"
+  ],
+  "daniel kwesi konde zah": [
+   "EYES"
+  ],
+  "elsie sackey": [],
+  "david tracey tanyi": [],
+  "arnaud roger aukoulile engone": []
+ }
+}
