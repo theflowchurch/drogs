@@ -199,7 +199,7 @@ for (const p of pastors) {
 for (const b of bishops) if (!b.image) { const hits = (indexByKey.get(key(b.name)) || []).filter((h) => h.own) ; if (hits.length) { const rel = `assets/portraits/${b.id}.webp`; try { if (!existsSync(`${root}${rel}`)) { const buf = readImage(hits[0].path); await sharp(buf).rotate().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 78 }).toFile(`${root}${rel}`); await sharp(buf).rotate().resize({ width: 400, withoutEnlargement: true }).webp({ quality: 80 }).toFile(`${root}assets/portraits/thumbs/${b.id}.webp`); } b.image = rel; } catch {} } }
 // Official portraits the office shared on Drive (scripts/bishop-photos-from-drive.mjs) beat any other picture.
 const overrides = read('data/bishop-photo-overrides.json', {});
-for (const b of bishops) if (overrides[b.id] && existsSync(`${root}${overrides[b.id]}`)) b.image = overrides[b.id];
+for (const b of [...bishops, ...pastors]) if (overrides[b.id] && existsSync(`${root}${overrides[b.id]}`)) b.image = overrides[b.id]; // a portrait the office sent for a pastor applies the same way
 // Second look once every picture is in place: the same picture on two records under different bishops with
 // alike names is one person claimed twice — settled by the rulings, otherwise Unclaimed for the office.
 {

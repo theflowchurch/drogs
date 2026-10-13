@@ -48,8 +48,8 @@ check('Every picture path exists on disk', missing.length === 0, missing.slice(0
 const noThumb = people.filter((p) => p.image && /^assets\/portraits\//.test(p.image) && !existsSync(`${root}${p.image.replace('assets/portraits/', 'assets/portraits/thumbs/')}`));
 check('Every portrait has a thumbnail', noThumb.length === 0, noThumb.map((p) => p.image).join(', '));
 check('Bishops without a photo are only the known two', bishops.filter((b) => !b.image).length <= 2, bishops.filter((b) => !b.image).map((b) => b.name).join(', '));
-const drive = Object.keys(read('data/bishop-photo-overrides.json')).length;
-check('Drive portraits applied', bishops.filter((b) => /-[0-9a-f]{8}\.webp$/.test(b.image)).length === drive, `${drive} overrides`);
+const overridesAll = read('data/bishop-photo-overrides.json');
+check('Office portraits applied', people.every((p) => !overridesAll[p.id] || p.image === overridesAll[p.id]), `${Object.keys(overridesAll).length} overrides (bishops and pastors)`);
 // Bishop by bishop: every row on a bishop's latest sheet is a record under them or has a reason; nobody sits under a bishop who is not on their sheet
 check('Every sheet row is on the roll under its bishop or accounted for', report.reconcileProblems.length === 0, `${report.reconcile.length} sheets, ${report.reconcile.reduce((n, r) => n + r.sheetRows, 0)} rows; problems: ${report.reconcileProblems.slice(0, 5).map((x) => `${x.name} (${x.bishop}: ${x.problem})`).join('; ') || 'none'}`);
 check('Nobody is under a bishop whose sheet does not list them', report.reconcile.every((r) => r.extra.length === 0), report.reconcile.filter((r) => r.extra.length).map((r) => `${r.bishop}: ${r.extra.map((x) => x.name).join(', ')}`).join('; '));
