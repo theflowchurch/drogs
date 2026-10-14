@@ -8,6 +8,8 @@ const root = new URL('..', import.meta.url).pathname;
 const read = (rel) => JSON.parse(readFileSync(`${root}${rel}`, 'utf8'));
 const people = read('src/registration/reference-people.json'), report = read('data/reports/roll-build.json'), subs = read('data/bishop-submissions.json');
 const rulings = read('data/sheet-conflict-rulings.json'), lay = read('data/lay-presidents.json').names;
+const officeAdditions = read('data/office-pastor-additions.json').additions;
+const officeAddedIds = new Set(officeAdditions.map(p => p.id));
 const list = XLSX.utils.sheet_to_json(XLSX.readFile(`${root}data/source/Bishops List (9 Oct 2026).xlsx`).Sheets.Sheet1, { raw: false, defval: '' }).filter((r) => r.NAME.trim());
 const bishops = people.filter((p) => p.role === 'bishop' && !p.lay), lays = people.filter((p) => p.lay), pastors = people.filter((p) => p.role === 'pastor');
 const key = (n) => normalName(String(n).replace(/[’'`]/g, ''));
@@ -53,7 +55,8 @@ for (const r of rulings.people) { const ps = pastors.filter((x) => key(x.name) =
 const badConf = report.conflicts.filter((c) => !c.pending).filter((c) => { const p = pastors.find((x) => key(x.name) === key(c.name) && /^Claimed by/.test(x.unclaimed || '')); return !(p && c.claims.every((k) => p.unclaimed.includes(k.bishop))); });
 check('Unresolved double claims are Unclaimed with both bishops named', badConf.length === 0, badConf.map((c) => c.name).join(', '));
 const corrected = new Set(read('data/pastor-corrections.json').corrections.map((c) => key(c.set?.name || c.name))); /* names Joshua corrected after the sheets */
-check('Every pastor name is on a sheet (or corrected by Joshua)', pastors.filter((p) => p.bishop && !corrected.has(key(p.name)) && !subs.some((s) => s.pastors.some((r) => key(r.name) === key(p.name)))).length === 0, pastors.filter((p) => p.bishop && !corrected.has(key(p.name)) && !subs.some((s) => s.pastors.some((r) => key(r.name) === key(p.name)))).map((p) => p.name).join(', '));
+check('Every pastor name is on a sheet or explicitly approved by Joshua', pastors.filter((p) => p.bishop && !officeAddedIds.has(p.id) && !corrected.has(key(p.name)) && !subs.some((s) => s.pastors.some((r) => key(r.name) === key(p.name)))).length === 0, pastors.filter((p) => p.bishop && !officeAddedIds.has(p.id) && !corrected.has(key(p.name)) && !subs.some((s) => s.pastors.some((r) => key(r.name) === key(p.name)))).map((p) => p.name).join(', '));
+check('Each explicit office addition is present once under its approved bishop', officeAdditions.every(a => { const matches = pastors.filter(p => p.id === a.id || key(p.name) === key(a.name)); const bishop = bishops.find(b => b.id === a.bishopId); return matches.length === 1 && matches[0].id === a.id && matches[0].name === a.name && matches[0].bishop === bishop?.name && matches[0].organization === bishop?.organization && matches[0].group === bishop?.group && report.officeAdditions?.some(p => p.id === a.id && p.source === a.source); }));
 // 4. Pictures
 const missing = people.filter((p) => p.image && !existsSync(`${root}${p.image}`));
 check('Every picture path exists on disk', missing.length === 0, missing.slice(0, 5).map((p) => p.image).join(', '));
@@ -64,7 +67,7 @@ const overridesAll = read('data/bishop-photo-overrides.json');
 check('Office portraits applied', people.every((p) => !overridesAll[p.id] || p.image === overridesAll[p.id]), `${Object.keys(overridesAll).length} overrides (bishops and pastors)`);
 // Bishop by bishop: every row on a bishop's latest sheet is a record under them or has a reason; nobody sits under a bishop who is not on their sheet
 check('Every sheet row is on the roll under its bishop or accounted for', report.reconcileProblems.length === 0, `${report.reconcile.length} sheets, ${report.reconcile.reduce((n, r) => n + r.sheetRows, 0)} rows; problems: ${report.reconcileProblems.slice(0, 5).map((x) => `${x.name} (${x.bishop}: ${x.problem})`).join('; ') || 'none'}`);
-check('Nobody is under a bishop whose sheet does not list them', report.reconcile.every((r) => r.extra.length === 0), report.reconcile.filter((r) => r.extra.length).map((r) => `${r.bishop}: ${r.extra.map((x) => x.name).join(', ')}`).join('; '));
+check('Nobody is assigned without a current sheet or explicit office approval', report.reconcile.every((r) => r.extra.length === 0 && (r.officeAdded || []).every(p => officeAddedIds.has(p.id))), report.reconcile.filter((r) => r.extra.length).map((r) => `${r.bishop}: ${r.extra.map((x) => x.name).join(', ')}`).join('; '));
 check('Every bishop with a sheet and every lay president was reconciled', report.reconcile.length === report.totals.bishopsWithSheet + lays.length, `${report.reconcile.length} vs ${report.totals.bishopsWithSheet} + ${lays.length}`);
 // Duplicate rulings (data/duplicate-rulings.json)
 check('Pairs to confirm are Unclaimed on both sides', report.dupPending.every((d) => d.applied) && report.dupPending.every((d) => d.names.every((n) => pastors.some((p) => key(p.name) === key(n) && p.unclaimed && !p.bishop))), report.dupPending.map((d) => `${d.names.join(' / ')}: ${d.applied ? 'ok' : 'NOT FOUND'}`).join('; '));

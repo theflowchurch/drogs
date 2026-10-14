@@ -17,6 +17,7 @@ import { sameSoul, words } from './lib/names.mjs';
 import { dhash, hamming, SAME_PICTURE } from './lib/photo-hash.mjs';
 import { birthAgrees } from './lib/birth.mjs';
 import { submittedRosterAssets, nonPastoralRank, newerSubmission } from './lib/submitted-sheet-authority.mjs';
+import { applyOfficePastorAdditions } from './lib/office-pastor-additions.mjs';
 const root = new URL('..', import.meta.url).pathname;
 const BASE = `${process.env.HOME}/Downloads/Kuriake Castle Project/01 Office source data`;
 const read = (rel, fallback) => { try { return JSON.parse(readFileSync(`${root}${rel}`, 'utf8')); } catch { return fallback; } };
@@ -266,6 +267,13 @@ for (const d of dupRulings.pending) {
   dupPending.push({ ...d, applied: true });
 }
 if (dupPending.length) console.log(`To confirm: ${dupPending.filter((m) => m.applied).length} of ${dupPending.length} pairs set Unclaimed for the office`);
+// New people the office explicitly added after submitting its spreadsheets.
+const officeAdditions = applyOfficePastorAdditions(pastors, bishops, read('data/office-pastor-additions.json', { additions: [] }).additions);
+const officeAddedIds = new Set(officeAdditions.map(p => p.id));
+for (const p of pastors.filter(p => officeAddedIds.has(p.id))) {
+  if (currentAssetsById.has(p.id)) p.image = currentAssetsById.get(p.id).image || '';
+  if (overrides[p.id] && existsSync(`${root}${overrides[p.id]}`)) p.image = overrides[p.id];
+}
 // A thumbnail for every portrait that lacks one (the grids load thumbs; the dialog loads the full picture).
 for (const p of [...bishops, ...pastors]) { if (!p.image || !/^assets\/portraits\//.test(p.image)) continue; const t = `${root}${p.image.replace('assets/portraits/', 'assets/portraits/thumbs/')}`; if (!existsSync(t) && existsSync(`${root}${p.image}`)) { try { await sharp(`${root}${p.image}`).resize({ width: 400, withoutEnlargement: true }).webp({ quality: 80 }).toFile(t); } catch {} } }
 // The structure (Settings → Denominations) follows the roll: each United Denominations group lists the denominations its bishops and pastors use.
@@ -291,8 +299,9 @@ for (const s of [...latestByBishop.values(), ...nonList.filter((x) => x.lay)]) {
     const why = merged ? `one person with ${merged.keep}, kept under ${merged.under} (Joshua 11 Oct)` : elsewhere?.unclaimed ? `claimed by two bishops — Unclaimed for the office` : ruled ? `ruled to ${ruled.winner}: ${ruled.by}` : elsewhere ? `on the roll under ${elsewhere.bishop} (${elsewhere.name})` : 'MISSING';
     return { row: r.row, name: r.name, fate: why };
   }).filter(Boolean);
-  const extra = under.filter((p) => p.source?.file !== s.file).map((p) => ({ id: p.id, name: p.name, from: p.source?.file || 'no sheet' }));
-  reconcile.push({ bishop: bishop.name, lay: Boolean(s.lay), file: s.file, folder: s.folder, sheetRows: s.pastors.length, onRoll: under.length, notUnder: rows, extra });
+  const extra = under.filter((p) => p.source?.file !== s.file && !officeAddedIds.has(p.id)).map((p) => ({ id: p.id, name: p.name, from: p.source?.file || 'no sheet' }));
+  const officeAdded = officeAdditions.filter(p => p.bishopId === bishop.id);
+  reconcile.push({ bishop: bishop.name, lay: Boolean(s.lay), file: s.file, folder: s.folder, sheetRows: s.pastors.length, onRoll: under.length, notUnder: rows, extra, ...(officeAdded.length ? { officeAdded } : {}) });
 }
 const reconcileProblems = reconcile.flatMap((r) => [...r.notUnder.filter((x) => x.fate === 'MISSING').map((x) => ({ bishop: r.bishop, file: r.file, row: x.row, name: x.name, problem: 'sheet row not on the roll' })), ...r.extra.map((x) => ({ bishop: r.bishop, file: r.file, name: x.name, problem: `under the bishop but not on their sheet (from ${x.from})` }))]);
 console.log(`Reconciled ${reconcile.length} sheets: ${reconcile.reduce((n, r) => n + r.sheetRows, 0)} rows → ${reconcile.reduce((n, r) => n + r.onRoll, 0)} records under their bishops, ${reconcile.reduce((n, r) => n + r.notUnder.length, 0)} rows accounted for otherwise, ${reconcileProblems.length} problems`);
@@ -340,7 +349,8 @@ writeFileSync(`${root}src/registration/reference-people.json`, JSON.stringify(pe
 const noSheet = listBishops.filter((b) => !latestByBishop.has(b.listName));
 const report = {
   generated: new Date().toISOString(),
-  sourceAuthority: { personalDetails: 'latest submitted spreadsheets', bishopMembership: 'current Bishops List and explicit office corrections', assetAuthority: 'audited current submitted roster only', legacyRankExclusions: false, legacyProfileFallbacks: false, googleFormYearFallbacks: false },
+  sourceAuthority: { personalDetails: 'latest submitted spreadsheets and explicit office additions', bishopMembership: 'current Bishops List and explicit office corrections', assetAuthority: 'audited current roster and explicitly approved new pastors only', legacyRankExclusions: false, legacyProfileFallbacks: false, googleFormYearFallbacks: false },
+  officeAdditions,
   totals: { bishops: bishops.length - layPresidents.length, layPresidents: layPresidents.length, pastors: pastors.length, assigned: pastors.filter((p) => !p.unclaimed).length, unclaimed: pastors.filter((p) => p.unclaimed).length, withPhoto: pastors.filter((p) => p.image).length, sheets: currentSheets.length, bishopsWithSheet: latestByBishop.size, noPastorsSheets: [...latestByBishop.values()].filter((s) => s.noPastors).length },
   noSheet: noSheet.map((b) => ({ id: bishopByList.get(b.listName)?.id, name: bishopByList.get(b.listName)?.name || b.name, listName: b.listName, group: b.listGroup, denomination: b.listDenomination, branch: b.branch, hadPastorsBefore: cont.pastors.filter((p) => key(p.bishop || '') === key(b.old?.name || b.name)).length })),
   sheetsNotOnList: nonList.filter((s) => !s.lay).map((s) => ({ bishop: s.bishop, file: s.file, folder: s.folder, pastors: s.pastors.length, noPastors: s.noPastors })),

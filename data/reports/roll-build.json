@@ -1,20 +1,57 @@
 {
- "generated": "2026-10-14T20:17:28.273Z",
+ "generated": "2026-10-14T22:28:16.503Z",
  "sourceAuthority": {
-  "personalDetails": "latest submitted spreadsheets",
+  "personalDetails": "latest submitted spreadsheets and explicit office additions",
   "bishopMembership": "current Bishops List and explicit office corrections",
-  "assetAuthority": "audited current submitted roster only",
+  "assetAuthority": "audited current roster and explicitly approved new pastors only",
   "legacyRankExclusions": false,
   "legacyProfileFallbacks": false,
   "googleFormYearFallbacks": false
  },
+ "officeAdditions": [
+  {
+   "id": "PN9379615f7b63",
+   "name": "Morrison Bennet Obeng Darkwa",
+   "bishopId": "B252",
+   "bishop": "Joseph Odarkwei Mills",
+   "source": "Joshua 14 Oct 2026: add Morrison Bennet Obeng Darkwa as a pastor under Bishop Joseph Mills everywhere, with supplied portrait"
+  },
+  {
+   "id": "PNdc08b751d3ae",
+   "name": "Daniel Fokuo",
+   "bishopId": "B194",
+   "bishop": "Joshua Heward-Mills",
+   "source": "Joshua 14 Oct 2026: put Daniel Fokuo under Joshua Heward-Mills in First Love, with supplied portrait"
+  },
+  {
+   "id": "PNb8ebe0e70952",
+   "name": "Calvince Dondi",
+   "bishopId": "B334",
+   "bishop": "Nely Nina Masuku",
+   "source": "Joshua 14 Oct 2026: add Calvince Dondi under Nely Nina Masuku in FLOW, with supplied portrait; Accra, Ghana"
+  },
+  {
+   "id": "PN5fdb88285737",
+   "name": "Natalie Welds",
+   "bishopId": "B334",
+   "bishop": "Nely Nina Masuku",
+   "source": "Joshua 14 Oct 2026: add Natalie Welds under Nely Nina Masuku in FLOW, with supplied portrait; Accra, Ghana"
+  },
+  {
+   "id": "PN410b12cf7f80",
+   "name": "Bright Mensah",
+   "bishopId": "B240",
+   "bishop": "Solomon Tay",
+   "source": "Joshua 14 Oct 2026: explicitly add Bright Mensah as a pastor under Solomon Tay, use his supplied ZIP portrait and Solomon Tay's location; other details to follow"
+  }
+ ],
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 5057,
-  "assigned": 5057,
+  "pastors": 5062,
+  "assigned": 5062,
   "unclaimed": 0,
-  "withPhoto": 4391,
+  "withPhoto": 4396,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -1720,9 +1757,18 @@
    "file": "Bishop Joseph Odarkwei Mills.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
    "sheetRows": 0,
-   "onRoll": 0,
+   "onRoll": 1,
    "notUnder": [],
-   "extra": []
+   "extra": [],
+   "officeAdded": [
+    {
+     "id": "PN9379615f7b63",
+     "name": "Morrison Bennet Obeng Darkwa",
+     "bishopId": "B252",
+     "bishop": "Joseph Odarkwei Mills",
+     "source": "Joshua 14 Oct 2026: add Morrison Bennet Obeng Darkwa as a pastor under Bishop Joseph Mills everywhere, with supplied portrait"
+    }
+   ]
   },
   {
    "bishop": "Kwabena Asamoah Jnr",
@@ -1930,7 +1976,7 @@
    "file": "Bishop_Nely_Nina_Masuku_Completed.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
    "sheetRows": 7,
-   "onRoll": 5,
+   "onRoll": 7,
    "notUnder": [
     {
      "row": 9,
@@ -1943,7 +1989,23 @@
      "fate": "a bishop on the Bishops List, not a pastor"
     }
    ],
-   "extra": []
+   "extra": [],
+   "officeAdded": [
+    {
+     "id": "PNb8ebe0e70952",
+     "name": "Calvince Dondi",
+     "bishopId": "B334",
+     "bishop": "Nely Nina Masuku",
+     "source": "Joshua 14 Oct 2026: add Calvince Dondi under Nely Nina Masuku in FLOW, with supplied portrait; Accra, Ghana"
+    },
+    {
+     "id": "PN5fdb88285737",
+     "name": "Natalie Welds",
+     "bishopId": "B334",
+     "bishop": "Nely Nina Masuku",
+     "source": "Joshua 14 Oct 2026: add Natalie Welds under Nely Nina Masuku in FLOW, with supplied portrait; Accra, Ghana"
+    }
+   ]
   },
   {
    "bishop": "Leonora-Jamie Hyde",
@@ -3676,7 +3738,7 @@
    "file": "Bishop Joshua Heward-Mills.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 136,
-   "onRoll": 132,
+   "onRoll": 133,
    "notUnder": [
     {
      "row": 41,
@@ -3699,7 +3761,16 @@
      "fate": "a bishop on the Bishops List, not a pastor"
     }
    ],
-   "extra": []
+   "extra": [],
+   "officeAdded": [
+    {
+     "id": "PNdc08b751d3ae",
+     "name": "Daniel Fokuo",
+     "bishopId": "B194",
+     "bishop": "Joshua Heward-Mills",
+     "source": "Joshua 14 Oct 2026: put Daniel Fokuo under Joshua Heward-Mills in First Love, with supplied portrait"
+    }
+   ]
   },
   {
    "bishop": "Kenneth Antwi Agyei",
@@ -4869,9 +4940,18 @@
    "file": "Solomon Tay First Love Passion Campus-1.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 33,
-   "onRoll": 33,
+   "onRoll": 34,
    "notUnder": [],
-   "extra": []
+   "extra": [],
+   "officeAdded": [
+    {
+     "id": "PN410b12cf7f80",
+     "name": "Bright Mensah",
+     "bishopId": "B240",
+     "bishop": "Solomon Tay",
+     "source": "Joshua 14 Oct 2026: explicitly add Bright Mensah as a pastor under Solomon Tay, use his supplied ZIP portrait and Solomon Tay's location; other details to follow"
+    }
+   ]
   },
   {
    "bishop": "Sompa Osei",
@@ -10796,7 +10876,7 @@
  ],
  "photos": {
   "fromFolders": 2,
-  "converted": 1,
+  "converted": 0,
   "looseMatches": [
    {
     "pastor": "David Fisayo Oluboye",
@@ -10804,12 +10884,6 @@
     "file": "DAVID F OLUBOYE",
     "how": "respelling"
    }
-  ],
-  "latestOfficeImport": {
-   "date": "2026-10-14",
-   "photos": 97,
-   "missingFilled": 14,
-   "flaggedReplaced": 65
-  }
+  ]
  }
 }

@@ -26,6 +26,10 @@ for (const r of report.reconcile) {
   }
   const copied = report.rowBelongsToAnother.find(s => s.file === r.file);
   const notes = [];
+  for (const p of r.officeAdded || []) {
+    notes.push(`Explicit office addition: ${p.name}`);
+    details.push([r.bishop, 'Explicit office approval', '', '', p.name, 'Pastor added by Joshua', p.source]);
+  }
   if (sheet && !sheet.pastors.length && !sheet.noPastors && !/no pastors/i.test(sheet.folder)) {
     notes.push('Confirm no pastors, or submit the missing pastor list');
     actions.push([r.bishop, 'Empty list without a no-pastors declaration', notes.at(-1), r.file]);

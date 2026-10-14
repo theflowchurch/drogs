@@ -1,0 +1,60 @@
+{
+ "note": "Current pastors explicitly added by Joshua after the submitted sheets. These approvals add only the named people and assignments; no older roster or personal details are imported.",
+ "additions": [
+  {
+   "id": "PN9379615f7b63",
+   "name": "Morrison Bennet Obeng Darkwa",
+   "bishopId": "B252",
+   "title": "Pastor",
+   "gender": "male",
+   "city": "Accra",
+   "country": "Ghana",
+   "image": "assets/portraits/PN9379615f7b63-b020c8323764.webp",
+   "source": "Joshua 14 Oct 2026: add Morrison Bennet Obeng Darkwa as a pastor under Bishop Joseph Mills everywhere, with supplied portrait"
+  },
+  {
+   "id": "PNdc08b751d3ae",
+   "name": "Daniel Fokuo",
+   "bishopId": "B194",
+   "title": "Pastor",
+   "gender": "male",
+   "city": "Accra",
+   "country": "Ghana",
+   "image": "assets/portraits/PNdc08b751d3ae-09a3ebd21e02.webp",
+   "source": "Joshua 14 Oct 2026: put Daniel Fokuo under Joshua Heward-Mills in First Love, with supplied portrait"
+  },
+  {
+   "id": "PNb8ebe0e70952",
+   "name": "Calvince Dondi",
+   "bishopId": "B334",
+   "title": "Pastor",
+   "gender": "male",
+   "city": "Accra",
+   "country": "Ghana",
+   "image": "assets/portraits/PNb8ebe0e70952-852d9e28cc71.webp",
+   "source": "Joshua 14 Oct 2026: add Calvince Dondi under Nely Nina Masuku in FLOW, with supplied portrait; Accra, Ghana"
+  },
+  {
+   "id": "PN5fdb88285737",
+   "name": "Natalie Welds",
+   "bishopId": "B334",
+   "title": "Pastor",
+   "gender": "female",
+   "city": "Accra",
+   "country": "Ghana",
+   "image": "assets/portraits/PN5fdb88285737-888fa1abae22.webp",
+   "source": "Joshua 14 Oct 2026: add Natalie Welds under Nely Nina Masuku in FLOW, with supplied portrait; Accra, Ghana"
+  },
+  {
+   "id": "PN410b12cf7f80",
+   "name": "Bright Mensah",
+   "bishopId": "B240",
+   "title": "Pastor",
+   "gender": "male",
+   "city": "Accra",
+   "country": "Ghana",
+   "image": "assets/portraits/PN410b12cf7f80-d1ee6baca44d.webp",
+   "source": "Joshua 14 Oct 2026: explicitly add Bright Mensah as a pastor under Solomon Tay, use his supplied ZIP portrait and Solomon Tay's location; other details to follow"
+  }
+ ]
+}
