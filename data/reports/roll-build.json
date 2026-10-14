@@ -1,12 +1,24 @@
 {
- "generated": "2026-10-13T11:19:23.188Z",
+ "generated": "2026-10-14T10:49:14.356Z",
+ "sourceAuthority": {
+  "personalDetails": "latest submitted spreadsheets",
+  "bishopMembership": "current Bishops List and explicit office corrections",
+  "continuity": [
+   "id",
+   "identity matching",
+   "portrait"
+  ],
+  "legacyRankExclusions": false,
+  "legacyProfileFallbacks": false,
+  "googleFormYearFallbacks": false
+ },
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 4981,
-  "assigned": 4980,
+  "pastors": 5060,
+  "assigned": 5059,
   "unclaimed": 1,
-  "withPhoto": 4304,
+  "withPhoto": 4377,
   "sheets": 292,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -17,6 +29,10 @@
   {
    "file": "Bishop Benjamin Kwapong Lokko.xlsx",
    "bishopRowNames": "Wisdom Ahiagah"
+  },
+  {
+   "file": "Bishop Isaac Agyeman. -  Fiilled.xlsx",
+   "bishopRowNames": "Edwin Ogoe"
   },
   {
    "file": "Nii Nortey Quist Therson First_Love_North_America_Pastors_Updated.xlsx",
@@ -75,7 +91,7 @@
   {
    "name": "Danny Marcus Annan Jnr",
    "title": "Pastor",
-   "onSheetOf": "Daniel Marcus",
+   "onSheetOf": "Daniel Marcus Annan Jnr",
    "file": "Bishop Daniel Marcus.xlsx",
    "row": 27,
    "onList": true
@@ -126,7 +142,7 @@
    "onSheetOf": "Glen Kwame Opoku",
    "file": "Bishop Glen Kwame Opoku.xlsx",
    "row": 8,
-   "onList": true
+   "onList": false
   },
   {
    "name": "Pius Akator",
@@ -222,7 +238,7 @@
    "onSheetOf": "Toss Mills-Odoi",
    "file": "Bishop Toss Mills-Odoi.xlsx",
    "row": 109,
-   "onList": false
+   "onList": true
   }
  ],
  "skippedSelf": [
@@ -254,7 +270,7 @@
  "resolved": [
   {
    "name": "Esther Nyamekye Okokon",
-   "winner": "Abednego Nyarkoh-Mensah",
+   "winner": "Abednego Nyarkoh Mensah",
    "losers": [
     "Edwin Morgan Ogoe"
    ],
@@ -280,7 +296,7 @@
    "name": "Chiebuka Ugochukwu Itanyi",
    "winner": "Olivia Kofi-Opata",
    "losers": [
-    "Alexander Gottlieb Kofi-Opata"
+    "Alex Tetteh Kofi-Opata"
    ],
    "by": "Bishop Jake Godwyll 10 Oct 10:10: Chiebuka Itanyi should be ES Olivia Opata"
   },
@@ -288,13 +304,13 @@
    "name": "Richard Essel-Mensah",
    "winner": "Toss Mills-Odoi",
    "losers": [
-    "Charles Bonsu"
+    "Charles Kwame Bonsu"
    ],
    "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
   },
   {
    "name": "Mathias Dongzoola",
-   "winner": "Charles Bonsu",
+   "winner": "Charles Kwame Bonsu",
    "losers": [
     "David Afreh"
    ],
@@ -304,7 +320,7 @@
    "name": "Moses Appoh",
    "winner": "David Afreh",
    "losers": [
-    "Charles Bonsu"
+    "Charles Kwame Bonsu"
    ],
    "by": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections)"
   },
@@ -358,7 +374,7 @@
   },
   {
    "name": "Fred Akator",
-   "winner": "Courage Ahedor",
+   "winner": "Courage Kwami Ahedor",
    "losers": [
     "Toss Mills-Odoi"
    ],
@@ -366,7 +382,7 @@
   },
   {
    "name": "Rockson Adjei Bekoe",
-   "winner": "Courage Ahedor",
+   "winner": "Courage Kwami Ahedor",
    "losers": [
     "Toss Mills-Odoi"
    ],
@@ -374,7 +390,7 @@
   },
   {
    "name": "Obed Essel",
-   "winner": "Courage Ahedor",
+   "winner": "Courage Kwami Ahedor",
    "losers": [
     "Toss Mills-Odoi"
    ],
@@ -382,7 +398,7 @@
   },
   {
    "name": "Isaac Koffie",
-   "winner": "Courage Ahedor",
+   "winner": "Courage Kwami Ahedor",
    "losers": [
     "Toss Mills-Odoi"
    ],
@@ -390,7 +406,7 @@
   },
   {
    "name": "Eric Koomson",
-   "winner": "Courage Ahedor",
+   "winner": "Courage Kwami Ahedor",
    "losers": [
     "Toss Mills-Odoi"
    ],
@@ -398,7 +414,7 @@
   },
   {
    "name": "Emmanuel Kudzo Kpeglo",
-   "winner": "Courage Ahedor",
+   "winner": "Courage Kwami Ahedor",
    "losers": [
     "Toss Mills-Odoi"
    ],
@@ -406,7 +422,7 @@
   },
   {
    "name": "Barbara Abena Sakyiwaa Sackey",
-   "winner": "Courage Ahedor",
+   "winner": "Courage Kwami Ahedor",
    "losers": [
     "Toss Mills-Odoi"
    ],
@@ -414,7 +430,7 @@
   },
   {
    "name": "Benjamin Ekow Tawiah Tetteh",
-   "winner": "Courage Ahedor",
+   "winner": "Courage Kwami Ahedor",
    "losers": [
     "Toss Mills-Odoi"
    ],
@@ -472,7 +488,7 @@
    "name": "Jemima Sossou",
    "winner": "Dennis Agyei-Gyan",
    "losers": [
-    "Sampson Kweku Kissi"
+    "Sampson Kwaku Kissi"
    ],
    "by": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections)"
   },
@@ -480,7 +496,7 @@
    "name": "Wildana Fortune",
    "winner": "Dennis Agyei-Gyan",
    "losers": [
-    "Sampson Kweku Kissi"
+    "Sampson Kwaku Kissi"
    ],
    "by": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections)"
   },
@@ -550,7 +566,7 @@
   },
   {
    "name": "Helena Dadzie Yorke",
-   "winner": "Joojo Stephens",
+   "winner": "Jojo Stephens Ofori-Addo",
    "losers": [
     "Glen Kwame Opoku"
    ],
@@ -558,7 +574,7 @@
   },
   {
    "name": "Priscilla April Yeboah",
-   "winner": "Joojo Stephens",
+   "winner": "Jojo Stephens Ofori-Addo",
    "losers": [
     "Glen Kwame Opoku"
    ],
@@ -726,7 +742,7 @@
   },
   {
    "name": "Sylvester Cudjoe",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -734,7 +750,7 @@
   },
   {
    "name": "Hannah Emefa Vanderpuije",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -742,7 +758,7 @@
   },
   {
    "name": "Dennis Darko Mensah",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -750,7 +766,7 @@
   },
   {
    "name": "Elliott Mawuko Sallah",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -758,7 +774,7 @@
   },
   {
    "name": "Godsway Boakye",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -766,7 +782,7 @@
   },
   {
    "name": "Albert Teye Quarmyne",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -774,7 +790,7 @@
   },
   {
    "name": "Ohemaa Afua Korang Aidoo",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -782,7 +798,7 @@
   },
   {
    "name": "Joseph Vanderpuije",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -790,7 +806,7 @@
   },
   {
    "name": "Paulina Ama Ansah",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -798,7 +814,7 @@
   },
   {
    "name": "Akweley Okutu",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -806,7 +822,7 @@
   },
   {
    "name": "Augustine Kwabena Asubonteng",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -814,7 +830,7 @@
   },
   {
    "name": "Emmanuel Narteh Ayiku",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -822,7 +838,7 @@
   },
   {
    "name": "Osei Baffour Ansah",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -830,7 +846,7 @@
   },
   {
    "name": "Yvonne Dove",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -838,7 +854,7 @@
   },
   {
    "name": "Charles Wireko-Brobbey",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -846,7 +862,7 @@
   },
   {
    "name": "Seth Lavoe Tsikata",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -854,15 +870,23 @@
   },
   {
    "name": "Isaac Enyemadze",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
    "by": "screenshot 14:15"
   },
   {
+   "name": "Francisca Boateng",
+   "winner": "Joy-Philippe Bruce",
+   "losers": [
+    "Isaac Agyeman"
+   ],
+   "by": "Joshua 14 Oct 2026: ES Joy has 29 pastors; Francisca Boateng and Isaac Bonuedi are pastors on her updated Excel. Supersedes the old Minister Shepherd exclusion."
+  },
+  {
    "name": "Richmond Opoku Seffah",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -870,7 +894,7 @@
   },
   {
    "name": "Pearl Woedem Clifford",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -878,7 +902,7 @@
   },
   {
    "name": "Hannah Adu",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -886,7 +910,7 @@
   },
   {
    "name": "Rejoice Owusua Quarmyne",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -894,7 +918,7 @@
   },
   {
    "name": "Vida Zook",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -902,7 +926,7 @@
   },
   {
    "name": "Desma Naa Adei Boye-Amasah",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -910,7 +934,7 @@
   },
   {
    "name": "Norietta Addai Frimpong",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -918,7 +942,7 @@
   },
   {
    "name": "Ebenezer Opoku",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -926,7 +950,7 @@
   },
   {
    "name": "Humaima Nunoo",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -934,7 +958,7 @@
   },
   {
    "name": "Joanne Bruce",
-   "winner": "Joy Bruce",
+   "winner": "Joy-Philippe Bruce",
    "losers": [
     "Isaac Agyeman"
    ],
@@ -1206,7 +1230,7 @@
   },
   {
    "name": "Eric Koomson",
-   "winner": "Joojo Stephens",
+   "winner": "Jojo Stephens Ofori-Addo",
    "losers": [
     "Glen Kwame Opoku"
    ],
@@ -1305,7 +1329,7 @@
  "dupPending": [],
  "reconcile": [
   {
-   "bishop": "Daniel Odei-Siaw",
+   "bishop": "Daniel Odei Siaw",
    "lay": false,
    "file": "BIshop Daniel Odei Siaw, Vietnam.xlsx",
    "folder": "Bishop submitted sheets",
@@ -1315,7 +1339,7 @@
    "extra": []
   },
   {
-   "bishop": "Abednego Nyarkoh-Mensah",
+   "bishop": "Abednego Nyarkoh Mensah",
    "lay": false,
    "file": "Bishop Abednego Nyarkoh-Mensah-1.xlsx",
    "folder": "Bishop submitted sheets",
@@ -1360,14 +1384,8 @@
    "file": "Bishop Hamish Oddoye-1.xlsx",
    "folder": "Bishop submitted sheets",
    "sheetRows": 22,
-   "onRoll": 21,
-   "notUnder": [
-    {
-     "row": 8,
-     "name": "Victor Akwaah-Sakyi",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 22,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -1376,7 +1394,7 @@
    "file": "Bishop Immanuel Obeng.xlsx",
    "folder": "Bishop submitted sheets",
    "sheetRows": 46,
-   "onRoll": 40,
+   "onRoll": 44,
    "notUnder": [
     {
      "row": 13,
@@ -1387,26 +1405,6 @@
      "row": 30,
      "name": "Michael Asare",
      "fate": "a bishop on the Bishops List, not a pastor"
-    },
-    {
-     "row": 39,
-     "name": "Emmanuella Ntim",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 47,
-     "name": "Raphael Aidoo",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 49,
-     "name": "Tamara Musunga",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 52,
-     "name": "Eric Ampontuah",
-     "fate": "removed by the office (not a pastor)"
     }
    ],
    "extra": []
@@ -1447,14 +1445,8 @@
    "file": "Bishop Kweku Amonoo-Neizer_updated.xlsx",
    "folder": "Bishop submitted sheets",
    "sheetRows": 9,
-   "onRoll": 8,
-   "notUnder": [
-    {
-     "row": 7,
-     "name": "Deconte Thompson Akligo",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 9,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -1463,14 +1455,8 @@
    "file": "Bishop Kweku Amponsah.xlsx",
    "folder": "Bishop submitted sheets",
    "sheetRows": 12,
-   "onRoll": 11,
-   "notUnder": [
-    {
-     "row": 14,
-     "name": "Sylvia Amo Asiamah",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 12,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -1566,7 +1552,7 @@
    "extra": []
   },
   {
-   "bishop": "Tomi Njoku",
+   "bishop": "John Ross Thomas",
    "lay": false,
    "file": "Bishop (Tomi Njoku) John Thomas.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
@@ -1726,7 +1712,7 @@
    "extra": []
   },
   {
-   "bishop": "George Antwi",
+   "bishop": "George Wiredu Antwi",
    "lay": false,
    "file": "Bishop George Antwi.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
@@ -1766,7 +1752,7 @@
    "extra": []
   },
   {
-   "bishop": "Isaac OB Commey",
+   "bishop": "Isaac Ob Commey",
    "lay": false,
    "file": "Bishop Isaac OB Commey.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
@@ -1796,7 +1782,7 @@
    "extra": []
   },
   {
-   "bishop": "Kwabena Junior Asamoah",
+   "bishop": "Kwabena Asamoah Jnr",
    "lay": false,
    "file": "Bishop Kwabena  Asamoah Jnr.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
@@ -1836,7 +1822,7 @@
    "extra": []
   },
   {
-   "bishop": "Nii Adjeidu Armar",
+   "bishop": "Nathaniel Nii Adjeidu Armar",
    "lay": false,
    "file": "Bishop Nii Adjeidu Armar.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
@@ -1876,7 +1862,7 @@
    "extra": []
   },
   {
-   "bishop": "Pius Worlano",
+   "bishop": "Pius Worlanyo Kwame Akator",
    "lay": false,
    "file": "Bishop Pius Worlano.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
@@ -1926,7 +1912,7 @@
    "extra": []
   },
   {
-   "bishop": "Ruthie Appiah Denkyira",
+   "bishop": "Ruthie-Jani Oye Appiah-Denkyira",
    "lay": false,
    "file": "Bishop Ruthie Appiah Denkyira.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
@@ -1936,7 +1922,7 @@
    "extra": []
   },
   {
-   "bishop": "Stephen Sawyerr",
+   "bishop": "Stephen Harry Sawyerr",
    "lay": false,
    "file": "Bishop Stephen Sawyerr.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
@@ -1956,7 +1942,7 @@
    "extra": []
   },
   {
-   "bishop": "Foster Boadi",
+   "bishop": "Thaddeus Gyabaah Boadi",
    "lay": false,
    "file": "Bishop Thaddeus Boadi.xlsx",
    "folder": "Bishop submitted sheets (10 Oct 2026)",
@@ -2077,7 +2063,7 @@
    "extra": []
   },
   {
-   "bishop": "Maya Aida Asiedu",
+   "bishop": "Aida Maya Asiedu Owusu",
    "lay": false,
    "file": "Mother Aida Maya Asiedu Owusu.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
@@ -2157,7 +2143,7 @@
    "extra": []
   },
   {
-   "bishop": "Simone-Pierre Eyra Ademola",
+   "bishop": "Simone Eyra Ademola",
    "lay": false,
    "file": "Mother Simone-Pierre Eyra Ademola.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
@@ -2167,7 +2153,7 @@
    "extra": []
   },
   {
-   "bishop": "Zoe-Andria Asamoah",
+   "bishop": "Zoe-Freda Andria Asamoah",
    "lay": false,
    "file": "Mother Zoe-Freda Andria Asamoah.xlsx",
    "folder": "Bishop sheets - no pastors (9 Oct 2026)",
@@ -2177,7 +2163,7 @@
    "extra": []
   },
   {
-   "bishop": "Alexander Gottlieb Kofi-Opata",
+   "bishop": "Alex Tetteh Kofi-Opata",
    "lay": false,
    "file": "Alex Kofi Opata.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -2203,7 +2189,7 @@
    "extra": []
   },
   {
-   "bishop": "Emmanuel Kofi-Yeboah",
+   "bishop": "Emmanuel Kofi Yeboah",
    "lay": false,
    "file": "BISHOP EMMANUEL KOFI YEBOAH.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -2288,14 +2274,8 @@
    "file": "Bishop Armstrong Simpson Nartey.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 18,
-   "onRoll": 17,
-   "notUnder": [
-    {
-     "row": 15,
-     "name": "Yanisse Mbou",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 18,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -2319,7 +2299,7 @@
    "extra": []
   },
   {
-   "bishop": "Andrae George Woode",
+   "bishop": "Aundrae George Wood",
    "lay": false,
    "file": "Bishop Aundrae George Wood Updated (1).xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -2345,24 +2325,13 @@
    "extra": []
   },
   {
-   "bishop": "Benjamin Kwapong Lokko",
+   "bishop": "Benjamin Lokko",
    "lay": false,
    "file": "Bishop Benjamin Kwapong Lokko.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 82,
-   "onRoll": 80,
-   "notUnder": [
-    {
-     "row": 45,
-     "name": "Ernest Adjei Dwamena",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 85,
-     "name": "Nathaniel Turkson",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 82,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -2386,7 +2355,7 @@
    "extra": []
   },
   {
-   "bishop": "Charles Bonsu",
+   "bishop": "Charles Kwame Bonsu",
    "lay": false,
    "file": "Bishop Charles Bonsu.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -2472,7 +2441,7 @@
    "file": "Bishop Clement Asante FLC.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 59,
-   "onRoll": 51,
+   "onRoll": 52,
    "notUnder": [
     {
      "row": 7,
@@ -2500,11 +2469,6 @@
      "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
     },
     {
-     "row": 61,
-     "name": "Mwenda Machima",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
      "row": 62,
      "name": "Niza Mtonga",
      "fate": "ruled to Geraldo Amoa (Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa)"
@@ -2518,7 +2482,7 @@
    "extra": []
   },
   {
-   "bishop": "Courage Ahedor",
+   "bishop": "Courage Kwami Ahedor",
    "lay": false,
    "file": "Bishop Courage Ahedor.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -2599,7 +2563,7 @@
    "extra": []
   },
   {
-   "bishop": "Daniel Marcus",
+   "bishop": "Daniel Marcus Annan Jnr",
    "lay": false,
    "file": "Bishop Daniel Marcus.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -2625,7 +2589,7 @@
     {
      "row": 9,
      "name": "Mathias Dongzoola",
-     "fate": "ruled to Charles Bonsu (Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections))"
+     "fate": "ruled to Charles Kwame Bonsu (Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections))"
     }
    ],
    "extra": []
@@ -2636,14 +2600,8 @@
    "file": "Bishop David Kwaku Asiedu_043046.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 10,
-   "onRoll": 9,
-   "notUnder": [
-    {
-     "row": 14,
-     "name": "Ayaaba Philip Sankarl",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 10,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -2692,17 +2650,12 @@
    "file": "Bishop E.A.T Sackey.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 34,
-   "onRoll": 31,
+   "onRoll": 32,
    "notUnder": [
     {
      "row": 29,
      "name": "William Ato Wilson",
      "fate": "a bishop on the Bishops List, not a pastor"
-    },
-    {
-     "row": 30,
-     "name": "Michael Aggrey-Fynn",
-     "fate": "removed by the office (not a pastor)"
     },
     {
      "row": 33,
@@ -2754,14 +2707,8 @@
    "file": "Bishop Edward Botwe.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 18,
-   "onRoll": 17,
-   "notUnder": [
-    {
-     "row": 8,
-     "name": "Daniel Anto",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 18,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -2770,19 +2717,8 @@
    "file": "Bishop Edwin Adu-Tutu - completed Pastor Germany.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 3,
-   "onRoll": 1,
-   "notUnder": [
-    {
-     "row": 7,
-     "name": "Christopher Obinna Ekwuruke",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 8,
-     "name": "Jennifer Antwi Ekwuruke",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 3,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -2796,7 +2732,7 @@
     {
      "row": 20,
      "name": "Esther Okokon",
-     "fate": "ruled to Abednego Nyarkoh-Mensah (Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections))"
+     "fate": "ruled to Abednego Nyarkoh Mensah (Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections))"
     },
     {
      "row": 28,
@@ -2852,18 +2788,8 @@
    "file": "Bishop Emmanuel Nterful.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 81,
-   "onRoll": 53,
+   "onRoll": 55,
    "notUnder": [
-    {
-     "row": 21,
-     "name": "Michael Kofi Mensah",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 43,
-     "name": "Richmond Quansah",
-     "fate": "removed by the office (not a pastor)"
-    },
     {
      "row": 52,
      "name": "Emmanuel Nterful",
@@ -3003,13 +2929,8 @@
    "file": "Bishop Emmanuel Tetteh.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 31,
-   "onRoll": 29,
+   "onRoll": 30,
    "notUnder": [
-    {
-     "row": 9,
-     "name": "Evans Yaw Manu Agbenya",
-     "fate": "removed by the office (not a pastor)"
-    },
     {
      "row": 36,
      "name": "Emmanuel Kofi Yeboah",
@@ -3029,7 +2950,7 @@
    "extra": []
   },
   {
-   "bishop": "Enoch Odartei Lamptey",
+   "bishop": "Enock Lamptey",
    "lay": false,
    "file": "Bishop Enoch Odartei Lamptey.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -3100,14 +3021,8 @@
    "file": "Bishop Eric Lamptey.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 13,
-   "onRoll": 12,
-   "notUnder": [
-    {
-     "row": 8,
-     "name": "Leinad Silmaro Nzau Bamoquina",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 13,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -3131,7 +3046,7 @@
    "extra": []
   },
   {
-   "bishop": "Farrell N.K.A Bruce",
+   "bishop": "Farrell N K A Bruce",
    "lay": false,
    "file": "Bishop Farrell N.K.A Bruce.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -3156,14 +3071,8 @@
    "file": "Bishop Foster Sefakor Mensah.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 10,
-   "onRoll": 9,
-   "notUnder": [
-    {
-     "row": 15,
-     "name": "Bright Limel",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 10,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -3172,13 +3081,8 @@
    "file": "Bishop Francis Hammond.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 29,
-   "onRoll": 26,
+   "onRoll": 27,
    "notUnder": [
-    {
-     "row": 23,
-     "name": "Emmanuel Kwarko",
-     "fate": "removed by the office (not a pastor)"
-    },
     {
      "row": 32,
      "name": "Francis Nii Aryee Hammond",
@@ -3254,14 +3158,8 @@
    "file": "Bishop Frank Otchere.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 36,
-   "onRoll": 35,
-   "notUnder": [
-    {
-     "row": 30,
-     "name": "Leonardo Ngariamao",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 36,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -3290,14 +3188,8 @@
    "file": "Bishop Geraldo Amoa Lsk Pastors.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 11,
-   "onRoll": 10,
-   "notUnder": [
-    {
-     "row": 12,
-     "name": "Mwenda Machima",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 11,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -3316,7 +3208,7 @@
     {
      "row": 8,
      "name": "Joojo Stephens",
-     "fate": "a bishop on the Bishops List, not a pastor"
+     "fate": "titled Bishop, not a pastor"
     },
     {
      "row": 9,
@@ -3329,24 +3221,24 @@
      "fate": "a bishop on the Bishops List, not a pastor"
     },
     {
-     "row": 100,
-     "name": "Maurice Mintah-Aboagye",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
      "row": 153,
      "name": "Helena Dadzie-Yorke",
-     "fate": "ruled to Joojo Stephens (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
+     "fate": "ruled to Jojo Stephens Ofori-Addo (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
     },
     {
      "row": 154,
      "name": "Priscilla April Yeboah",
-     "fate": "ruled to Joojo Stephens (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
+     "fate": "ruled to Jojo Stephens Ofori-Addo (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
     },
     {
      "row": 160,
      "name": "Eric Koomson",
-     "fate": "ruled to Joojo Stephens (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
+     "fate": "ruled to Jojo Stephens Ofori-Addo (Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens)"
+    },
+    {
+     "row": 161,
+     "name": "David Ofosu",
+     "fate": "ranked Minister Shepherd on the latest submitted sheet, not a pastor"
     }
    ],
    "extra": []
@@ -3377,14 +3269,8 @@
    "file": "Bishop Henry Asare-Duah.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 24,
-   "onRoll": 23,
-   "notUnder": [
-    {
-     "row": 24,
-     "name": "Dickson Poku",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 24,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -3393,17 +3279,12 @@
    "file": "Bishop Henry Oti-Frimpong.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 65,
-   "onRoll": 63,
+   "onRoll": 64,
    "notUnder": [
     {
      "row": 26,
      "name": "Emmanuel Joseph Koufie",
-     "fate": "ruled to Eat Sackey (Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections))"
-    },
-    {
-     "row": 51,
-     "name": "Prince Takyi Turkson",
-     "fate": "removed by the office (not a pastor)"
+     "fate": "ruled to E.A.T Sackey (Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections))"
     }
    ],
    "extra": []
@@ -3414,7 +3295,7 @@
    "file": "Bishop Isaac Agyeman. -  Fiilled.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 106,
-   "onRoll": 56,
+   "onRoll": 57,
    "notUnder": [
     {
      "row": 9,
@@ -3524,147 +3405,142 @@
     {
      "row": 83,
      "name": "Sylvester Cudjoe",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 84,
      "name": "Hannah Emefa Vanderpuije",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 85,
      "name": "Dennis Darko Mensah",
-     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+     "fate": "ruled to Joy-Philippe Bruce (screenshot 14:15)"
     },
     {
      "row": 86,
      "name": "Elliott Mawuko Sallah",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 87,
      "name": "Godsway Boakye",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 88,
      "name": "Albert Teye Quarmyne",
-     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+     "fate": "ruled to Joy-Philippe Bruce (screenshot 14:15)"
     },
     {
      "row": 89,
      "name": "Ohemaa Afua Korang Aidoo",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 90,
      "name": "Joseph Vanderpuije",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 91,
      "name": "Paulina Ama Ansah",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 92,
      "name": "Akweley Okutu",
-     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+     "fate": "ruled to Joy-Philippe Bruce (screenshot 14:15)"
     },
     {
      "row": 93,
      "name": "Augustine Kwabena Asubonteng",
-     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+     "fate": "ruled to Joy-Philippe Bruce (screenshot 14:15)"
     },
     {
      "row": 94,
      "name": "Emmanuel Narteh Ayiku",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 95,
      "name": "Osei Baffour Ansah",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 96,
      "name": "Yvonne Dove",
-     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+     "fate": "ruled to Joy-Philippe Bruce (screenshot 14:15)"
     },
     {
      "row": 97,
      "name": "Charles Wireko-Brobbey",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 98,
      "name": "Seth Lavoe Tsikata",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 99,
      "name": "Isaac Enyemadze",
-     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+     "fate": "ruled to Joy-Philippe Bruce (screenshot 14:15)"
     },
     {
      "row": 100,
      "name": "Francisca Boateng",
-     "fate": "removed by the office (not a pastor)"
+     "fate": "ruled to Joy-Philippe Bruce (Joshua 14 Oct 2026: ES Joy has 29 pastors; Francisca Boateng and Isaac Bonuedi are pastors on her updated Excel. Supersedes the old Minister Shepherd exclusion.)"
     },
     {
      "row": 101,
      "name": "Richmond Opoku Seffah",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 102,
      "name": "Pearl Woedem Clifford",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
-    },
-    {
-     "row": 103,
-     "name": "Isaac Bonuedi",
-     "fate": "removed by the office (not a pastor)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 104,
      "name": "Hannah Adu",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 105,
      "name": "Rejoice Owusua Quarmyne",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 106,
      "name": "Vida Zook",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 107,
      "name": "Desma Naa Adei Boye-Amasah",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 108,
      "name": "Norietta Addai Frimpong",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 109,
      "name": "Ebenezer Opoku",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     },
     {
      "row": 110,
      "name": "Humaima Nunoo",
-     "fate": "ruled to Joy Bruce (screenshot 14:15)"
+     "fate": "ruled to Joy-Philippe Bruce (screenshot 14:15)"
     },
     {
      "row": 111,
      "name": "Joanne Bruce",
-     "fate": "ruled to Joy Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
+     "fate": "ruled to Joy-Philippe Bruce (Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce)"
     }
    ],
    "extra": []
@@ -3685,14 +3561,8 @@
    "file": "Bishop Isaac Ssali.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 18,
-   "onRoll": 17,
-   "notUnder": [
-    {
-     "row": 13,
-     "name": "Ishmael Antwi",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 18,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -3742,14 +3612,8 @@
    "file": "Bishop Jeffrey Kwame Ocran.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 25,
-   "onRoll": 24,
-   "notUnder": [
-    {
-     "row": 15,
-     "name": "Maisa Dju",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 25,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -3758,14 +3622,8 @@
    "file": "Bishop Jennis Opoku.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 24,
-   "onRoll": 23,
-   "notUnder": [
-    {
-     "row": 30,
-     "name": "Isaac Joseph Williams",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 24,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -3794,14 +3652,8 @@
    "file": "Bishop John Ato Dickson.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 38,
-   "onRoll": 37,
-   "notUnder": [
-    {
-     "row": 20,
-     "name": "Richard Tetteh Ayim",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 38,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -3810,14 +3662,8 @@
    "file": "Bishop John Boffah(Pastors) (1).xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 17,
-   "onRoll": 16,
-   "notUnder": [
-    {
-     "row": 16,
-     "name": "Eddie Kaidong",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 17,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -3831,7 +3677,7 @@
    "extra": []
   },
   {
-   "bishop": "Joojo Stephens",
+   "bishop": "Jojo Stephens Ofori-Addo",
    "lay": false,
    "file": "Bishop Jojo Stephens Ofori-Addo.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -3928,7 +3774,7 @@
    "extra": []
   },
   {
-   "bishop": "Kenneth Agyei",
+   "bishop": "Kenneth Antwi Agyei",
    "lay": false,
    "file": "Bishop Kenneth Agyei.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -3943,19 +3789,8 @@
    "file": "Bishop Kenneth Kissi Bamfo-1.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 33,
-   "onRoll": 31,
-   "notUnder": [
-    {
-     "row": 28,
-     "name": "Afanvi Marius Mawudina",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 39,
-     "name": "Felix Tetteh",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 33,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -4024,7 +3859,7 @@
    "file": "Bishop Kofi Hene Asare_updated.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 104,
-   "onRoll": 86,
+   "onRoll": 96,
    "notUnder": [
     {
      "row": 7,
@@ -4032,64 +3867,14 @@
      "fate": "the same person twice on the sheet; one record kept"
     },
     {
-     "row": 27,
-     "name": "Shadrach Okoh Ashley",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
      "row": 32,
      "name": "Nana Ama Hene-Asare",
      "fate": "the same person twice on the sheet; one record kept"
     },
     {
-     "row": 44,
-     "name": "Jonathan Botchway",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
      "row": 53,
      "name": "Agnes Dzansi",
      "fate": "the same person twice on the sheet; one record kept"
-    },
-    {
-     "row": 67,
-     "name": "Emmanuel Quaye",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 77,
-     "name": "Yayra Ama Oteng",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 79,
-     "name": "Cornelius Yirtegr",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 80,
-     "name": "Emmanuel Ansah",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 82,
-     "name": "Patrick Annor",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 83,
-     "name": "Francis Asara",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 84,
-     "name": "Francis Nana Kwame Opoku",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 90,
-     "name": "Marian Korkor Ansong",
-     "fate": "removed by the office (not a pastor)"
     },
     {
      "row": 94,
@@ -4145,14 +3930,8 @@
    "file": "Bishop Kudzo Jonathan Sewornuku Bekui-2.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 18,
-   "onRoll": 17,
-   "notUnder": [
-    {
-     "row": 24,
-     "name": "David Agbenyo",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 18,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -4176,19 +3955,13 @@
    "extra": []
   },
   {
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "lay": false,
    "file": "Bishop Kwame Adu Gyamfi (1).xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 149,
-   "onRoll": 148,
-   "notUnder": [
-    {
-     "row": 123,
-     "name": "Richard Otoo",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 149,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -4508,7 +4281,7 @@
    "extra": []
   },
   {
-   "bishop": "Mawusi Adabge",
+   "bishop": "Mawusi Adagbe",
    "lay": false,
    "file": "Bishop Mawusi Adagbe.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -4518,7 +4291,7 @@
    "extra": []
   },
   {
-   "bishop": "Maxwell Manu",
+   "bishop": "Maxwell Agyei-Manu",
    "lay": false,
    "file": "Bishop Maxwell Agyei-Manu.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -4589,19 +4362,8 @@
    "file": "Bishop Michael Vengkomwine Tengabo.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 21,
-   "onRoll": 19,
-   "notUnder": [
-    {
-     "row": 8,
-     "name": "Daniel Dexter Adzah",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 23,
-     "name": "Mark Frimpong",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 21,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -4697,7 +4459,7 @@
    "extra": []
   },
   {
-   "bishop": "Olivia Sam",
+   "bishop": "Olivia Adalena S K Sam",
    "lay": false,
    "file": "Bishop Olivia Sam.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -4722,14 +4484,8 @@
    "file": "Bishop Paschal Kow Dadzie Godwyll.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 41,
-   "onRoll": 40,
-   "notUnder": [
-    {
-     "row": 23,
-     "name": "Gideon Boateng",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 41,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -4748,14 +4504,8 @@
    "file": "Bishop Patrick Inkoom ..xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 81,
-   "onRoll": 80,
-   "notUnder": [
-    {
-     "row": 16,
-     "name": "Thomas Mabotja",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 81,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -4886,30 +4636,18 @@
    "file": "Bishop Peter Mokganya.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 94,
-   "onRoll": 93,
-   "notUnder": [
-    {
-     "row": 58,
-     "name": "Mosa Enoch Ngoasheng",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 94,
+   "notUnder": [],
    "extra": []
   },
   {
-   "bishop": "Phillip Obeng Asamoah",
+   "bishop": "Philip Obeng-Asamoah",
    "lay": false,
    "file": "Bishop Phillip Obeng-Asamoah-.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 23,
-   "onRoll": 22,
-   "notUnder": [
-    {
-     "row": 26,
-     "name": "Adu Sarkodee",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 23,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5009,7 +4747,7 @@
    "extra": []
   },
   {
-   "bishop": "Reginald Sarkodie",
+   "bishop": "Reginald Opoku Sarkodie",
    "lay": false,
    "file": "Bishop Reginald Sarkodie.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -5055,14 +4793,8 @@
    "file": "Bishop Robert Amanquanor.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 7,
-   "onRoll": 6,
-   "notUnder": [
-    {
-     "row": 13,
-     "name": "Alfred Wirekoh",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 7,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5081,24 +4813,8 @@
    "file": "Bishop Rodino Daniel Nhabanga-2.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 35,
-   "onRoll": 32,
-   "notUnder": [
-    {
-     "row": 13,
-     "name": "Denilson Moniz Guirrugo",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 14,
-     "name": "Diocleciano Ricardo Gujamo",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 28,
-     "name": "Edson Inocencia Mondlane",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 35,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5107,14 +4823,8 @@
    "file": "Bishop Rory Aryee.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 14,
-   "onRoll": 13,
-   "notUnder": [
-    {
-     "row": 20,
-     "name": "Michael Kwadwo Ayeh",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 14,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5133,13 +4843,8 @@
    "file": "Bishop Rutendo Mantiziba.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 49,
-   "onRoll": 47,
+   "onRoll": 48,
    "notUnder": [
-    {
-     "row": 21,
-     "name": "Deborah Best",
-     "fate": "removed by the office (not a pastor)"
-    },
     {
      "row": 43,
      "name": "Esme Mantiziba",
@@ -5149,7 +4854,7 @@
    "extra": []
   },
   {
-   "bishop": "Sam Sawyerr",
+   "bishop": "Samuel B Sawyerr",
    "lay": false,
    "file": "Bishop Sam Sawyerr.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -5159,7 +4864,7 @@
    "extra": []
   },
   {
-   "bishop": "Sampson Kweku Kissi",
+   "bishop": "Sampson Kwaku Kissi",
    "lay": false,
    "file": "Bishop Sampson Kwaku Kissi (1).xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -5185,19 +4890,8 @@
    "file": "Bishop Samuel Obeng.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 41,
-   "onRoll": 39,
-   "notUnder": [
-    {
-     "row": 28,
-     "name": "Abraham Coleman",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 33,
-     "name": "Bernard Keyeremanteng",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 41,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5252,14 +4946,8 @@
    "file": "Solomon Tay First Love Passion Campus-1.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 33,
-   "onRoll": 32,
-   "notUnder": [
-    {
-     "row": 12,
-     "name": "John Amponsah",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 33,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5284,14 +4972,8 @@
    "file": "Bishop Stephen Poku.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 63,
-   "onRoll": 62,
-   "notUnder": [
-    {
-     "row": 52,
-     "name": "Emmanuel Alade",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 63,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5350,17 +5032,12 @@
    "file": "EBENEZER ADOM BARNOR.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 26,
-   "onRoll": 24,
+   "onRoll": 25,
    "notUnder": [
     {
-     "row": 10,
-     "name": "Francis Eshun",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 15,
-     "name": "Joshua Mankwofie Agbezukeh",
-     "fate": "removed by the office (not a pastor)"
+     "row": 28,
+     "name": "Nathaniel Quaye",
+     "fate": "ranked MINISTER SHEPHERD on the latest submitted sheet, not a pastor"
     }
    ],
    "extra": []
@@ -5376,7 +5053,7 @@
    "extra": []
   },
   {
-   "bishop": "Esther-Richie Okyere",
+   "bishop": "Esther-Carina Riche Okyere",
    "lay": false,
    "file": "Episcopal Sister Esther-Carina Riche Okyere.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -5386,24 +5063,13 @@
    "extra": []
   },
   {
-   "bishop": "Joy Bruce",
+   "bishop": "Joy-Philippe Bruce",
    "lay": false,
    "file": "Episcopal Sister Joy Bruce_updated.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 29,
-   "onRoll": 27,
-   "notUnder": [
-    {
-     "row": 12,
-     "name": "Isaac Bonuedi",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 16,
-     "name": "Francisca Boateng",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 29,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5422,18 +5088,12 @@
    "file": "Episcopal Sister Lilian Hasia Ofosua Commey.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 16,
-   "onRoll": 15,
-   "notUnder": [
-    {
-     "row": 21,
-     "name": "Jeanne Andrealy Sirou",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 16,
+   "notUnder": [],
    "extra": []
   },
   {
-   "bishop": "Linda Aryee",
+   "bishop": "Linda Abana Aryee",
    "lay": false,
    "file": "Episcopal Sister Linda Aryee.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -5493,7 +5153,7 @@
    "extra": []
   },
   {
-   "bishop": "Harry Kwesi Dodd",
+   "bishop": "Harry Dodd",
    "lay": false,
    "file": "HARRY DODD.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -5513,7 +5173,7 @@
    "extra": []
   },
   {
-   "bishop": "James Quist-Therson",
+   "bishop": "Nii Nortey Quist Therson",
    "lay": false,
    "file": "Nii Nortey Quist Therson First_Love_North_America_Pastors_Updated.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -5528,53 +5188,8 @@
    "file": "Richard Gyamena.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 79,
-   "onRoll": 69,
+   "onRoll": 78,
    "notUnder": [
-    {
-     "row": 16,
-     "name": "Peter Mintah Agyekum",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 24,
-     "name": "Francis Aniawu",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 33,
-     "name": "Getrude Boame",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 44,
-     "name": "Godwin Seyram Dese",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 58,
-     "name": "Daniel Kwao",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 59,
-     "name": "Eric Kwao",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 63,
-     "name": "Oscar Kodzo Nsiawu",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 65,
-     "name": "Theresa Akosua Osahene",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 82,
-     "name": "Delali Kwami Adzima",
-     "fate": "removed by the office (not a pastor)"
-    },
     {
      "row": 84,
      "name": "Eric Adjei",
@@ -5589,19 +5204,8 @@
    "file": "Romeo Sosu 4.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 21,
-   "onRoll": 19,
-   "notUnder": [
-    {
-     "row": 10,
-     "name": "Mohammed Bentil",
-     "fate": "removed by the office (not a pastor)"
-    },
-    {
-     "row": 19,
-     "name": "George Akuobeagye Kumah",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 21,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5635,7 +5239,7 @@
    "extra": []
   },
   {
-   "bishop": "Ebo Ankrah",
+   "bishop": "Schwarts Kobina Ankrah",
    "lay": false,
    "file": "Bishop Ebo Ankrah.xlsx",
    "folder": "Bishop submitted sheets (10 Oct 2026)",
@@ -5655,7 +5259,7 @@
    "extra": []
   },
   {
-   "bishop": "Kwabena Oware Amoako-Doku",
+   "bishop": "Kwabena Amoako-Doku",
    "lay": false,
    "file": "Bishop Kwabena Amoako-Doku.xlsx",
    "folder": "Bishop submitted sheets (10 Oct 2026)",
@@ -5670,14 +5274,8 @@
    "file": "Bishop Roger Hiltbrunner.xlsx",
    "folder": "Bishop submitted sheets (10 Oct 2026)",
    "sheetRows": 21,
-   "onRoll": 20,
-   "notUnder": [
-    {
-     "row": 19,
-     "name": "Solomon Moussa",
-     "fate": "removed by the office (not a pastor)"
-    }
-   ],
+   "onRoll": 21,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5721,52 +5319,52 @@
     {
      "row": 84,
      "name": "Emmanuel Okpoti Richter",
-     "fate": "removed by the office (not a pastor)"
+     "fate": "ranked MS on the latest submitted sheet, not a pastor"
     },
     {
      "row": 86,
      "name": "Reinhard Elwood Tagoe",
-     "fate": "removed by the office (not a pastor)"
+     "fate": "ranked MS on the latest submitted sheet, not a pastor"
     },
     {
      "row": 95,
      "name": "Fred Akator",
-     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+     "fate": "ruled to Courage Kwami Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
     },
     {
      "row": 96,
      "name": "Rockson Adjei Bekoe",
-     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+     "fate": "ruled to Courage Kwami Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
     },
     {
      "row": 97,
      "name": "Obed Essel",
-     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+     "fate": "ruled to Courage Kwami Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
     },
     {
      "row": 98,
      "name": "Isaac Koffie",
-     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+     "fate": "ruled to Courage Kwami Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
     },
     {
      "row": 99,
      "name": "Eric Koomson",
-     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+     "fate": "ruled to Courage Kwami Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
     },
     {
      "row": 100,
      "name": "Emmanuel Kudzo Kpeglo",
-     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+     "fate": "ruled to Courage Kwami Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
     },
     {
      "row": 101,
      "name": "Barbara Abena Sakyiwaa Sackey",
-     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+     "fate": "ruled to Courage Kwami Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
     },
     {
      "row": 102,
      "name": "Benjamin Ekow Tawiah Tetteh",
-     "fate": "ruled to Courage Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+     "fate": "ruled to Courage Kwami Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
     },
     {
      "row": 108,
@@ -5776,7 +5374,7 @@
     {
      "row": 109,
      "name": "Courage Kwami Ahedor",
-     "fate": "titled Bishop, not a pastor"
+     "fate": "a bishop on the Bishops List, not a pastor"
     }
    ],
    "extra": []
@@ -5792,7 +5390,7 @@
    "extra": []
   },
   {
-   "bishop": "Daniella Hart",
+   "bishop": "Danniella Hart",
    "lay": false,
    "file": "Mother Daniella Hart.xlsx",
    "folder": "Bishop submitted sheets (10 Oct 2026)",
@@ -5867,13 +5465,8 @@
    "file": "Rev Ebenezer Johnson.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 35,
-   "onRoll": 33,
+   "onRoll": 34,
    "notUnder": [
-    {
-     "row": 7,
-     "name": "David Newman Brenya",
-     "fate": "removed by the office (not a pastor)"
-    },
     {
      "row": 30,
      "name": "Ebenezer Johnson",
@@ -5952,7 +5545,7 @@
   {
    "id": "PB1",
    "name": "David Anang",
-   "bishop": "Abednego Nyarkoh-Mensah",
+   "bishop": "Abednego Nyarkoh Mensah",
    "group": "UD Africa",
    "denomination": "Praia City State Church",
    "place": "Praia, Cape Verde"
@@ -6107,47 +5700,23 @@
    "bishop": "Jude Orraca-Tetteh",
    "group": "UD Ghana",
    "denomination": "The Glorious Mega Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN5018e5b300dc",
-   "name": "Murphy Onyekachi Nwaoha Ezeofor",
-   "bishop": "Alexander Gottlieb Kofi-Opata",
-   "group": "UD Africa",
-   "denomination": "Everything By Prayer Center",
-   "place": "Lagos, Nigeria"
-  },
-  {
-   "id": "P71",
-   "name": "Adeseni Ayokunle Ilemobade",
-   "bishop": "Alexander Gottlieb Kofi-Opata",
-   "group": "UD Africa",
-   "denomination": "Everything By Prayer Center",
-   "place": "Lagos, Nigeria"
-  },
-  {
-   "id": "S887a9b01",
-   "name": "John Dag Micheal",
-   "bishop": "Alexander Gottlieb Kofi-Opata",
-   "group": "UD Africa",
-   "denomination": "Everything By Prayer Center",
-   "place": "Lagos, Nigeria"
+   "place": "Accra"
   },
   {
    "id": "P729",
    "name": "Collins Bah",
-   "bishop": "Alexander Gottlieb Kofi-Opata",
+   "bishop": "Alex Tetteh Kofi-Opata",
    "group": "UD Africa",
    "denomination": "Everything By Prayer Center",
-   "place": "Lagos, Nigeria"
+   "place": "Lagos"
   },
   {
    "id": "P3471",
    "name": "Pauline Adama",
-   "bishop": "Alexander Gottlieb Kofi-Opata",
+   "bishop": "Alex Tetteh Kofi-Opata",
    "group": "UD Africa",
    "denomination": "Everything By Prayer Center",
-   "place": "Lagos, Nigeria"
+   "place": "Lagos"
   },
   {
    "id": "S074127bd",
@@ -6216,7 +5785,7 @@
   {
    "id": "PN3a65c3739e5b",
    "name": "Marjorie Aicha Gaelle Wora Spouse Bouengui",
-   "bishop": "Emmanuel Kofi-Yeboah",
+   "bishop": "Emmanuel Kofi Yeboah",
    "group": "UD Africa",
    "denomination": "Libreville City State",
    "place": "Libreville, Gabon"
@@ -6224,7 +5793,7 @@
   {
    "id": "PNd686d83002de",
    "name": "Marien Koumba",
-   "bishop": "Emmanuel Kofi-Yeboah",
+   "bishop": "Emmanuel Kofi Yeboah",
    "group": "UD Africa",
    "denomination": "Libreville City State",
    "place": "Libreville, Gabon"
@@ -6232,7 +5801,7 @@
   {
    "id": "PN0ad69353bc7f",
    "name": "Alixe Ankele Marva",
-   "bishop": "Emmanuel Kofi-Yeboah",
+   "bishop": "Emmanuel Kofi Yeboah",
    "group": "UD Africa",
    "denomination": "Libreville City State",
    "place": "Librevile, Gabon"
@@ -6240,7 +5809,7 @@
   {
    "id": "PNdcdc3d949e5f",
    "name": "Jules Ronald Kurtis Djeki Robaki",
-   "bishop": "Emmanuel Kofi-Yeboah",
+   "bishop": "Emmanuel Kofi Yeboah",
    "group": "UD Africa",
    "denomination": "Libreville City State",
    "place": "Libreville, Gabon"
@@ -6496,7 +6065,7 @@
   {
    "id": "P3667",
    "name": "Raphael Nii Boye Aryeetey",
-   "bishop": "Benjamin Kwapong Lokko",
+   "bishop": "Benjamin Lokko",
    "group": "UD Ghana",
    "denomination": "Lighthouse City Churches",
    "place": "Accra, Ghana"
@@ -6504,7 +6073,7 @@
   {
    "id": "P2317",
    "name": "John Nditungma",
-   "bishop": "Charles Bonsu",
+   "bishop": "Charles Kwame Bonsu",
    "group": "UD Ghana",
    "denomination": "The Mega Church",
    "place": "Nkenkanso, Ghana"
@@ -6512,7 +6081,7 @@
   {
    "id": "PN92d2909402b8",
    "name": "Adelaide Ayim",
-   "bishop": "Charles Bonsu",
+   "bishop": "Charles Kwame Bonsu",
    "group": "UD Ghana",
    "denomination": "Jesus Saviour Of The World Church International",
    "place": "Kintampo, Ghana"
@@ -6520,7 +6089,7 @@
   {
    "id": "PN7481ba104dd4",
    "name": "Amankwah Charles",
-   "bishop": "Charles Bonsu",
+   "bishop": "Charles Kwame Bonsu",
    "group": "UD Ghana",
    "denomination": "The Mega Church",
    "place": "Offinso, Ghana"
@@ -6528,7 +6097,7 @@
   {
    "id": "PNadf862defcf4",
    "name": "Edmund Kojo Manu",
-   "bishop": "Charles Bonsu",
+   "bishop": "Charles Kwame Bonsu",
    "group": "UD Ghana",
    "denomination": "The Mega Church",
    "place": "Kumasi, Ghana"
@@ -6536,7 +6105,7 @@
   {
    "id": "S80e16d50",
    "name": "Nakoja Enock Oja",
-   "bishop": "Charles Bonsu",
+   "bishop": "Charles Kwame Bonsu",
    "group": "UD Ghana",
    "denomination": "Jesus Saviour Of The World Church International",
    "place": "Nkoranza, Ghana"
@@ -6664,6 +6233,14 @@
   {
    "id": "Scf04bc98",
    "name": "Rosemary Sinta",
+   "bishop": "Clement Asante",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Lusaka, Zambia"
+  },
+  {
+   "id": "S45729b62",
+   "name": "Mwenda Machima",
    "bishop": "Clement Asante",
    "group": "First Love",
    "denomination": "First Love Church",
@@ -7072,6 +6649,14 @@
   {
    "id": "PNd44107a7cf53",
    "name": "Emmanuel Okoe Mensah",
+   "bishop": "Emmanuel Nterful",
+   "group": "Reasonable Service",
+   "denomination": "Keep My Word Chapel International",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S9cf577a4",
+   "name": "Richmond Quansah",
    "bishop": "Emmanuel Nterful",
    "group": "Reasonable Service",
    "denomination": "Keep My Word Chapel International",
@@ -7774,14 +7359,6 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "S840a472d",
-   "name": "David Ofosu",
-   "bishop": "Glen Kwame Opoku",
-   "group": "First Love",
-   "denomination": "Qodesh City Church",
-   "place": "Accra, Ghana"
-  },
-  {
    "id": "PN7e4d5c2c518d",
    "name": "Priscilla Etornam Azasoo",
    "bishop": "Gustav Offei-Manu",
@@ -7966,9 +7543,17 @@
    "place": "Sunyani, Ghana"
   },
   {
+   "id": "S4994a2da",
+   "name": "Isaac Bonuedi",
+   "bishop": "Isaac Agyeman",
+   "group": "First Love",
+   "denomination": "First Love Church",
+   "place": "Kumasi, Ghana"
+  },
+  {
    "id": "PN939e8a5de976",
    "name": "Norietta Addai Frimpong",
-   "bishop": "Joy Bruce",
+   "bishop": "Joy-Philippe Bruce",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Kumasi, Ghana"
@@ -9038,8 +8623,24 @@
    "place": "Accra, Ghana"
   },
   {
+   "id": "S63294216",
+   "name": "Yayra Ama Oteng",
+   "bishop": "Kofi Hene Asare",
+   "group": "UD Ghana",
+   "denomination": "Qodesh Family Churches",
+   "place": "Accra, Ghana"
+  },
+  {
    "id": "P4031",
    "name": "Seth Ayivi",
+   "bishop": "Kofi Hene Asare",
+   "group": "UD Ghana",
+   "denomination": "Qodesh Family Churches",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S6a3f1219",
+   "name": "Cornelius Yirtegr",
    "bishop": "Kofi Hene Asare",
    "group": "UD Ghana",
    "denomination": "Qodesh Family Churches",
@@ -9054,8 +8655,32 @@
    "place": "Accra, Ghana"
   },
   {
+   "id": "Sbc515705",
+   "name": "Patrick Annor",
+   "bishop": "Kofi Hene Asare",
+   "group": "UD Ghana",
+   "denomination": "Qodesh Family Churches",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "S6aa91c4a",
+   "name": "Francis Nana Kwame Opoku",
+   "bishop": "Kofi Hene Asare",
+   "group": "UD Ghana",
+   "denomination": "Qodesh Family Churches",
+   "place": "Accra, Ghana"
+  },
+  {
    "id": "P275",
    "name": "Anita Asabea Owusu",
+   "bishop": "Kofi Hene Asare",
+   "group": "UD Ghana",
+   "denomination": "Qodesh Family Churches",
+   "place": "Accra, Ghana"
+  },
+  {
+   "id": "Saa57b7c9",
+   "name": "Marian Korkor Ansong",
    "bishop": "Kofi Hene Asare",
    "group": "UD Ghana",
    "denomination": "Qodesh Family Churches",
@@ -9176,7 +8801,7 @@
   {
    "id": "P408",
    "name": "Ben Anyan",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Reading, United Kingdom"
@@ -9184,7 +8809,7 @@
   {
    "id": "S4e2fbf5e",
    "name": "Benedict Asare",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Cambridge, United Kingdom"
@@ -9192,7 +8817,7 @@
   {
    "id": "Sd23f007f",
    "name": "Chantal Sholarin",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Manchester, United Kingdom"
@@ -9200,7 +8825,7 @@
   {
    "id": "S5fa29c1a",
    "name": "Christine Asare Bosumpem",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9208,7 +8833,7 @@
   {
    "id": "S66fd84b5",
    "name": "Ebenezer Anum Sowah",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9216,7 +8841,7 @@
   {
    "id": "P1119",
    "name": "Edward Kwame Deti",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9224,7 +8849,7 @@
   {
    "id": "S8bf70b99",
    "name": "Elisabeth Olufunmilyo Osagie",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9232,7 +8857,7 @@
   {
    "id": "Sadbbeedd",
    "name": "Emmanuel Kesse",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Staffordshire, United Kingdom"
@@ -9240,7 +8865,7 @@
   {
    "id": "S0a8664c3",
    "name": "Emmnauel Owiredu-Yeboah",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Reading, United Kingdom"
@@ -9248,7 +8873,7 @@
   {
    "id": "P1765",
    "name": "George Badu",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9256,7 +8881,7 @@
   {
    "id": "P1948",
    "name": "Harriet Nana-Owusu",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9264,7 +8889,7 @@
   {
    "id": "P1971",
    "name": "Henry Adi",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Coventry, United Kingdom"
@@ -9272,7 +8897,7 @@
   {
    "id": "P2047",
    "name": "Isaac Adjei",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9280,7 +8905,7 @@
   {
    "id": "PN5b3f459ff737",
    "name": "Jacob Adjei Kyei",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Birmingham, United Kingdom"
@@ -9288,7 +8913,7 @@
   {
    "id": "Scb4e127f",
    "name": "Joseph Adjimani",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Norwich, United Kingdom"
@@ -9296,7 +8921,7 @@
   {
    "id": "S0801b6e7",
    "name": "Joseph Nelson",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Covenry, United Kingdom"
@@ -9304,7 +8929,7 @@
   {
    "id": "P2554",
    "name": "Kelvin Kwadwo Koranteng",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Coventry, United Kingdom"
@@ -9312,7 +8937,7 @@
   {
    "id": "P2599",
    "name": "Kingsford Johnson",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9320,7 +8945,7 @@
   {
    "id": "P2647",
    "name": "Kurtis Hayfron",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9328,7 +8953,7 @@
   {
    "id": "P2662",
    "name": "Kwadwo Kumi Bonsu",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Walsall, United Kingdom"
@@ -9336,7 +8961,7 @@
   {
    "id": "Sae2e459d",
    "name": "Kwame Ofori Asumadu",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9344,7 +8969,7 @@
   {
    "id": "P2696",
    "name": "Kwasi Owusu Asamoah",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9352,7 +8977,7 @@
   {
    "id": "Sb35cc827",
    "name": "Laureeen Allotey",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9360,7 +8985,7 @@
   {
    "id": "P2747",
    "name": "Lenroy Meade",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Wolverhampton, United Kingdom"
@@ -9368,7 +8993,7 @@
   {
    "id": "S542b5ba1",
    "name": "Leonard Danvessell",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Northampton, United Kingdom"
@@ -9376,7 +9001,7 @@
   {
    "id": "P3230",
    "name": "Nana Yaa Bonsu",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Walsall, United Kingdom"
@@ -9384,7 +9009,7 @@
   {
    "id": "P3422",
    "name": "Patrick Asiedu",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Coventry, United Kingdom"
@@ -9392,7 +9017,7 @@
   {
    "id": "P4121",
    "name": "Solomon Merepa",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Oxford, United Kingdom"
@@ -9400,7 +9025,7 @@
   {
    "id": "PNdc4da95c38a5",
    "name": "Yaa Dankwa Ansu-Damoah",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "London, United Kingdom"
@@ -9408,7 +9033,7 @@
   {
    "id": "Sbf2338b0",
    "name": "Zachary Afreh",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Coventry, United Kingdom"
@@ -9416,7 +9041,7 @@
   {
    "id": "S78b1712f",
    "name": "Naomi Waweru",
-   "bishop": "Kwame Adu Gyamfi",
+   "bishop": "Kwame Adu-Gyamfi",
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Oxford, United Kingdom"
@@ -9496,7 +9121,7 @@
   {
    "id": "PN23bbefb5de45",
    "name": "Nutifafa Nani",
-   "bishop": "Maxwell Manu",
+   "bishop": "Maxwell Agyei-Manu",
    "group": "Eschatos",
    "denomination": "Eschatos",
    "place": "Mon Choisy, Mauritius"
@@ -9504,7 +9129,7 @@
   {
    "id": "PN514ca2c629ff",
    "name": "Martyna Agyei-Manu",
-   "bishop": "Maxwell Manu",
+   "bishop": "Maxwell Agyei-Manu",
    "group": "Eschatos",
    "denomination": "Eschatos",
    "place": "Quatre Bornes, Mauritius"
@@ -9512,7 +9137,7 @@
   {
    "id": "PN87e82d05fdea",
    "name": "Nii Nortey Nortey",
-   "bishop": "Maxwell Manu",
+   "bishop": "Maxwell Agyei-Manu",
    "group": "Eschatos",
    "denomination": "Eschatos",
    "place": "Flic En Flac, Mauritius"
@@ -9520,7 +9145,7 @@
   {
    "id": "PN0b28dbbe715f",
    "name": "Roxanne Sabawu",
-   "bishop": "Maxwell Manu",
+   "bishop": "Maxwell Agyei-Manu",
    "group": "Eschatos",
    "denomination": "Eschatos",
    "place": "Quatre Bornes, Mauritius"
@@ -9528,7 +9153,7 @@
   {
    "id": "PN692a3e984636",
    "name": "Anna Akhigbe",
-   "bishop": "Maxwell Manu",
+   "bishop": "Maxwell Agyei-Manu",
    "group": "Eschatos",
    "denomination": "Eschatos",
    "place": "Mon Choisy, Mauritius"
@@ -10024,7 +9649,7 @@
   {
    "id": "PN67cfed7b1b3f",
    "name": "Ama Obeng-Asamoah",
-   "bishop": "Phillip Obeng Asamoah",
+   "bishop": "Philip Obeng-Asamoah",
    "group": "United Jesus",
    "denomination": "Jesus Is The Answer Church",
    "place": "Tamale, Ghana"
@@ -10032,7 +9657,7 @@
   {
    "id": "P996",
    "name": "Divine Kofi Adevor",
-   "bishop": "Phillip Obeng Asamoah",
+   "bishop": "Philip Obeng-Asamoah",
    "group": "United Jesus",
    "denomination": "Jesus Is The Answer Church",
    "place": "Tamale, Ghana"
@@ -10064,7 +9689,7 @@
   {
    "id": "PNce460bd77a65",
    "name": "Claudia Ohemaa Forkuoh",
-   "bishop": "Reginald Sarkodie",
+   "bishop": "Reginald Opoku Sarkodie",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Fianarantsoa, Madagascar"
@@ -10158,6 +9783,14 @@
    "place": "Amanokrom, Ghana"
   },
   {
+   "id": "Se748b2a3",
+   "name": "Michael Kwadwo Ayeh",
+   "bishop": "Rory Aryee",
+   "group": "UD Ghana",
+   "denomination": "East Mountain Churches",
+   "place": "Obosomase, Ghana"
+  },
+  {
    "id": "PN00ab256ebe3e",
    "name": "Yasmine Sangwa Binti",
    "bishop": "Rudy Vaye",
@@ -10208,7 +9841,7 @@
   {
    "id": "PN9593868adb98",
    "name": "Anthony Aklika",
-   "bishop": "Sam Sawyerr",
+   "bishop": "Samuel B Sawyerr",
    "group": "Reasonable Service",
    "denomination": "Anointed People International",
    "place": "Accra, Ghana"
@@ -10526,14 +10159,6 @@
    "place": "Mwanza, Tanzania"
   },
   {
-   "id": "Sc08a721a",
-   "name": "Nathaniel Quaye",
-   "bishop": "Ebenezer Adom Barnor",
-   "group": "UD Ghana",
-   "denomination": "The Makarios Church",
-   "place": "Daboase, Ghana"
-  },
-  {
    "id": "PNc8291f562615",
    "name": "Goodness Sindiswa Tsobo",
    "bishop": "Elaine Klufio",
@@ -10595,7 +10220,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Amanfrom, Ghana"
+   "place": "Amanfrom"
   },
   {
    "id": "P3645",
@@ -10603,7 +10228,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Tuba, Ghana"
+   "place": "Tuba"
   },
   {
    "id": "P4669",
@@ -10611,7 +10236,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Achiaman, Amasaman, Ghana"
+   "place": "Achiaman, Amasaman"
   },
   {
    "id": "P973",
@@ -10619,7 +10244,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Broadcasting Last Stop, Ghana"
+   "place": "Broadcasting Last Stop"
   },
   {
    "id": "P1442",
@@ -10627,7 +10252,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Kokrobite - Langma, Ghana"
+   "place": "Kokrobite - Langma"
   },
   {
    "id": "P4670",
@@ -10635,7 +10260,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Bortianor, Ghana"
+   "place": "Bortianor"
   },
   {
    "id": "P1979",
@@ -10643,7 +10268,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Block Factory, Ghana"
+   "place": "Block Factory"
   },
   {
    "id": "P2942",
@@ -10651,7 +10276,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Congo Villa, Ghana"
+   "place": "Congo Villa"
   },
   {
    "id": "PNd7b2ba667567",
@@ -10659,7 +10284,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Broadcasting- Sackey Area, Ghana"
+   "place": "Broadcasting- Sackey Area"
   },
   {
    "id": "P4675",
@@ -10667,7 +10292,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Bortianor, Ghana"
+   "place": "Bortianor"
   },
   {
    "id": "P3618",
@@ -10675,7 +10300,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Tuba, Ghana"
+   "place": "Tuba"
   },
   {
    "id": "P4681",
@@ -10683,7 +10308,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Kasoa Cp, Ghana"
+   "place": "Kasoa Cp"
   },
   {
    "id": "P3962",
@@ -10691,7 +10316,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Kasoa Congo Villa, Ghana"
+   "place": "Kasoa Congo Villa"
   },
   {
    "id": "PN8d8b40b7d769",
@@ -10699,7 +10324,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Broadcasting Junction, Ghana"
+   "place": "Broadcasting Junction"
   },
   {
    "id": "S803c02ab",
@@ -10707,7 +10332,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Ghana"
+   "place": ""
   },
   {
    "id": "P353",
@@ -10715,7 +10340,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Kasoa Cp, Ghana"
+   "place": "Kasoa Cp"
   },
   {
    "id": "P3445",
@@ -10723,7 +10348,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "17,swamp Groove Avenue, Ghana"
+   "place": "17,swamp Groove Avenue"
   },
   {
    "id": "P4685",
@@ -10731,7 +10356,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Nsawam, Ghana"
+   "place": "Nsawam"
   },
   {
    "id": "S5c88b065",
@@ -10739,7 +10364,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Ablekuma, Ghana"
+   "place": "Ablekuma"
   },
   {
    "id": "PNc05fe50133ad",
@@ -10747,7 +10372,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Kasoa Akweley Hno Bt535/10, Ghana"
+   "place": "Kasoa Akweley Hno Bt535/10"
   },
   {
    "id": "PN5e09d64649bf",
@@ -10755,7 +10380,7 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Tuba, Ghana"
+   "place": "Tuba"
   },
   {
    "id": "PN12a4884139f0",
@@ -10763,12 +10388,12 @@
    "bishop": "Isaac Koranteng",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Old Bortianor, Ghana"
+   "place": "Old Bortianor"
   },
   {
    "id": "P4910",
    "name": "Tiffany Bortei-Doku",
-   "bishop": "James Quist-Therson",
+   "bishop": "Nii Nortey Quist Therson",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "United States"
@@ -10776,7 +10401,7 @@
   {
    "id": "P4870",
    "name": "Chinonye Ojinkeonye",
-   "bishop": "James Quist-Therson",
+   "bishop": "Nii Nortey Quist Therson",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Los Angeles, United States"
@@ -10784,7 +10409,7 @@
   {
    "id": "P4872",
    "name": "Christiana Gross",
-   "bishop": "James Quist-Therson",
+   "bishop": "Nii Nortey Quist Therson",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "St. Paul, United States"
@@ -10792,7 +10417,7 @@
   {
    "id": "P4879",
    "name": "Emmanuela Frempong",
-   "bishop": "James Quist-Therson",
+   "bishop": "Nii Nortey Quist Therson",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Vancouver, Canada"
@@ -10800,7 +10425,7 @@
   {
    "id": "PNba733b6f7f12",
    "name": "Adedamola Adepoju",
-   "bishop": "James Quist-Therson",
+   "bishop": "Nii Nortey Quist Therson",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Houston, United States"
@@ -10836,6 +10461,14 @@
    "group": "UD Ghana",
    "denomination": "Jesus Is The Rock Church",
    "place": "Ho, Ghana"
+  },
+  {
+   "id": "Sf234855e",
+   "name": "Delali Kwami Adzima",
+   "bishop": "Richard Gyamena",
+   "group": "UD Ghana",
+   "denomination": "Jesus Is The Rock Church",
+   "place": "Hohoe, Ghana"
   },
   {
    "id": "S0bb16078",
@@ -10899,7 +10532,7 @@
    "bishop": "Emmanuel Samuel Baidoo",
    "group": "UD Ghana",
    "denomination": "The Makarios Church",
-   "place": "Takoradi, Ghana"
+   "place": "Takoradi"
   },
   {
    "id": "P272",
@@ -10907,7 +10540,7 @@
    "bishop": "Emmanuel Samuel Baidoo",
    "group": "UD Ghana",
    "denomination": "The Makarios Church",
-   "place": "Takoradi, Ghana"
+   "place": "Takoradi"
   },
   {
    "id": "S13c51314",
@@ -10915,7 +10548,7 @@
    "bishop": "Emmanuel Samuel Baidoo",
    "group": "UD Ghana",
    "denomination": "The Makarios Church",
-   "place": "Takoradi, Ghana"
+   "place": "Takoradi"
   },
   {
    "id": "P1101",
@@ -10923,7 +10556,7 @@
    "bishop": "Emmanuel Samuel Baidoo",
    "group": "UD Ghana",
    "denomination": "The Makarios Church",
-   "place": "Takoradi, Ghana"
+   "place": "Takoradi"
   },
   {
    "id": "P1200",
@@ -10931,7 +10564,7 @@
    "bishop": "Emmanuel Samuel Baidoo",
    "group": "UD Ghana",
    "denomination": "The Makarios Church",
-   "place": "Takoradi, Ghana"
+   "place": "Takoradi"
   },
   {
    "id": "P2046",
@@ -10939,7 +10572,7 @@
    "bishop": "Emmanuel Samuel Baidoo",
    "group": "UD Ghana",
    "denomination": "The Makarios Church",
-   "place": "Takoradi, Ghana"
+   "place": "Takoradi"
   },
   {
    "id": "P2304",
@@ -10947,7 +10580,7 @@
    "bishop": "Emmanuel Samuel Baidoo",
    "group": "UD Ghana",
    "denomination": "The Makarios Church",
-   "place": "Takoradi, Ghana"
+   "place": "Takoradi"
   },
   {
    "id": "P2407",
@@ -10955,7 +10588,7 @@
    "bishop": "Emmanuel Samuel Baidoo",
    "group": "UD Ghana",
    "denomination": "The Makarios Church",
-   "place": "Takoradi, Ghana"
+   "place": "Takoradi"
   },
   {
    "id": "P2909",
@@ -10963,7 +10596,7 @@
    "bishop": "Emmanuel Samuel Baidoo",
    "group": "UD Ghana",
    "denomination": "The Makarios Church",
-   "place": "Takoradi, Ghana"
+   "place": "Takoradi"
   },
   {
    "id": "S326c6fe6",
@@ -11128,7 +10761,7 @@
   {
    "id": "Sf1fb1e78",
    "name": "Joseph Adjei",
-   "bishop": "Sam Sawyerr",
+   "bishop": "Samuel B Sawyerr",
    "group": "Reasonable Service",
    "denomination": "Anointed People International",
    "place": "Accra, Ghana"
@@ -11156,6 +10789,14 @@
    "group": "UD Europe",
    "denomination": "Living Waters International",
    "place": "Dornbirn, Switzerland"
+  },
+  {
+   "id": "S68da7de0",
+   "name": "David Newman Brenya",
+   "bishop": "Ebenezer Johnson",
+   "group": "UD Europe",
+   "denomination": "Living Waters International",
+   "place": "Lausanne, Switzerland"
   },
   {
    "id": "PN625f86cd3591",
@@ -11367,9 +11008,15 @@
   }
  ],
  "photos": {
-  "fromFolders": 319,
+  "fromFolders": 391,
   "converted": 0,
   "looseMatches": [
+   {
+    "pastor": "Victor Akwaah-Sakyi",
+    "bishop": "Hamish Oddoye",
+    "file": "VICTOR AKWAAH-SEKYI",
+    "how": "respelling"
+   },
    {
     "pastor": "Kennedy Njenga Ng'Ang'A",
     "bishop": "Immanuel Obeng",
@@ -11377,32 +11024,80 @@
     "how": "shorter or fuller form"
    },
    {
+    "pastor": "Emmanuella Ntim",
+    "bishop": "Immanuel Obeng",
+    "file": "EMMANUELLA NTIM, ROME, ITALY",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Raphael Aidoo",
+    "bishop": "Immanuel Obeng",
+    "file": "RAPHAEL AIDOO,VICENZA, ITALY",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Tamara Musunga",
+    "bishop": "Immanuel Obeng",
+    "file": "TAMARA MUSUNGA,MILAN,ITALY",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Eric Ampontuah",
+    "bishop": "Immanuel Obeng",
+    "file": "Eric Ampontuah Alessandria, ITALY",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Sylvia Amo Asiamah",
+    "bishop": "Kweku Amponsah",
+    "file": "SYLVIA AMO ASIAMAH, PÉCS, HUNGARY",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Murphy Onyekachi Nwaoha Ezeofor",
+    "bishop": "Alex Tetteh Kofi-Opata",
+    "file": "Murphy Ezeofor",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Adeseni Ayokunle Ilemobade",
+    "bishop": "Alex Tetteh Kofi-Opata",
+    "file": "Adeseni Illemobade",
+    "how": "respelling"
+   },
+   {
+    "pastor": "John Dag Micheal",
+    "bishop": "Alex Tetteh Kofi-Opata",
+    "file": "John Dag Michael",
+    "how": "respelling"
+   },
+   {
     "pastor": "Liane Akese",
-    "bishop": "Emmanuel Kofi-Yeboah",
+    "bishop": "Emmanuel Kofi Yeboah",
     "file": "Liane AKESSE",
     "how": "respelling"
    },
    {
     "pastor": "Sylvain Hans Boumah Ogowet",
-    "bishop": "Emmanuel Kofi-Yeboah",
+    "bishop": "Emmanuel Kofi Yeboah",
     "file": "Hans BOUMA OGOWET",
     "how": "respelling"
    },
    {
     "pastor": "Nzigou Nzigou Fernand Edgar",
-    "bishop": "Emmanuel Kofi-Yeboah",
+    "bishop": "Emmanuel Kofi Yeboah",
     "file": "Fernand NZIGOU NZIGOU",
     "how": "shorter or fuller form"
    },
    {
     "pastor": "Gwenaelle Frederique Biyoghe Mve Spouse Antchouwet",
-    "bishop": "Emmanuel Kofi-Yeboah",
+    "bishop": "Emmanuel Kofi Yeboah",
     "file": "Gwenaëlle BIYOHHE",
     "how": "respelling"
    },
    {
     "pastor": "Jasly Mamboundou Mamboundou",
-    "bishop": "Emmanuel Kofi-Yeboah",
+    "bishop": "Emmanuel Kofi Yeboah",
     "file": "Josly MAMBOUNDOU",
     "how": "respelling"
    },
@@ -11437,32 +11132,38 @@
     "how": "respelling"
    },
    {
+    "pastor": "Yanisse Mbou",
+    "bishop": "Armstrong Simpson Nartey",
+    "file": "YANISSE M BOU",
+    "how": "respelling"
+   },
+   {
     "pastor": "Ryan Lando Nelson",
-    "bishop": "Andrae George Woode",
+    "bishop": "Aundrae George Wood",
     "file": "RYAN NELSON",
     "how": "shorter or fuller form"
    },
    {
     "pastor": "Samuel Odoi Aseidu",
-    "bishop": "Benjamin Kwapong Lokko",
+    "bishop": "Benjamin Lokko",
     "file": "SAMUEL ASIEDU",
     "how": "respelling"
    },
    {
     "pastor": "Comfort Wassen",
-    "bishop": "Charles Bonsu",
+    "bishop": "Charles Kwame Bonsu",
     "file": "COMFORT WASSEM TECHIMAN",
     "how": "respelling"
    },
    {
     "pastor": "Daniel Owusu Adjei",
-    "bishop": "Charles Bonsu",
+    "bishop": "Charles Kwame Bonsu",
     "file": "DANIEL ADJEI OWUSU NSAWKAW",
     "how": "shorter or fuller form"
    },
    {
     "pastor": "Micheal Marshal Futukpor",
-    "bishop": "Charles Bonsu",
+    "bishop": "Charles Kwame Bonsu",
     "file": "MICHEAL MARSHAL FUTUKPOR TANOSO",
     "how": "shorter or fuller form"
    },
@@ -11563,10 +11264,22 @@
     "how": "respelling"
    },
    {
+    "pastor": "Michael Kofi Mensah",
+    "bishop": "Emmanuel Nterful",
+    "file": "MICHAEL MENSAH",
+    "how": "shorter or fuller form"
+   },
+   {
     "pastor": "Isaac Yeboah Darko",
     "bishop": "Emmanuel Nterful",
     "file": "ISAAC YEBOAH",
     "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Evans Yaw Manu Agbenya",
+    "bishop": "Emmanuel Tetteh",
+    "file": "EVANS YAW MANU AGYENYA",
+    "how": "respelling"
    },
    {
     "pastor": "Nkellefack Azetiah",
@@ -11581,9 +11294,21 @@
     "how": "shorter or fuller form"
    },
    {
+    "pastor": "Leinad Silmaro Nzau Bamoquina",
+    "bishop": "Eric Lamptey",
+    "file": "Leinad Bamoquina",
+    "how": "shorter or fuller form"
+   },
+   {
     "pastor": "Edmund Amarkai Amartey",
-    "bishop": "Farrell N.K.A Bruce",
+    "bishop": "Farrell N K A Bruce",
     "file": "Edmund Amartey",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Bright Limel",
+    "bishop": "Foster Sefakor Mensah",
+    "file": "JILINGUL BRIGHT LIMEL",
     "how": "shorter or fuller form"
    },
    {
@@ -11609,6 +11334,12 @@
     "bishop": "Frank Ofori Adjei",
     "file": "JOY APPENAHIER",
     "how": "respelling"
+   },
+   {
+    "pastor": "Leonardo Ngariamao",
+    "bishop": "Frank Otchere",
+    "file": "Leonardo Francisco Ngariamao",
+    "how": "shorter or fuller form"
    },
    {
     "pastor": "Phebemary Makafui Adodo-Samani",
@@ -11689,6 +11420,12 @@
     "how": "shorter or fuller form"
    },
    {
+    "pastor": "Prince Takyi Turkson",
+    "bishop": "Henry Oti-Frimpong",
+    "file": "PRINCE TURKSON",
+    "how": "shorter or fuller form"
+   },
+   {
     "pastor": "Samuel Kwadwo Aseidu",
     "bishop": "Henry Oti-Frimpong",
     "file": "Samuel Asiedu",
@@ -11708,13 +11445,13 @@
    },
    {
     "pastor": "Elliott Mawuko Sallah",
-    "bishop": "Joy Bruce",
+    "bishop": "Joy-Philippe Bruce",
     "file": "Elliot Mawuli Sallah",
     "how": "respelling"
    },
    {
     "pastor": "Emmanuel Narteh Ayiku",
-    "bishop": "Joy Bruce",
+    "bishop": "Joy-Philippe Bruce",
     "file": "Emmanuel Ayiku Nartey",
     "how": "respelling"
    },
@@ -11747,6 +11484,12 @@
     "bishop": "Jeffrey Kwame Ocran",
     "file": "JONIO JORGE GOMES",
     "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Maisa Dju",
+    "bishop": "Jeffrey Kwame Ocran",
+    "file": "MAIZA DJU",
+    "how": "respelling"
    },
    {
     "pastor": "Estevîo Té",
@@ -11785,6 +11528,12 @@
     "how": "respelling"
    },
    {
+    "pastor": "Felix Tetteh",
+    "bishop": "Kenneth Kissi Bamfo",
+    "file": "FELIX LARWEH TETTEH",
+    "how": "shorter or fuller form"
+   },
+   {
     "pastor": "Azenoza Osazae",
     "bishop": "Kent Njeru",
     "file": "AZENOSA OSAZEE",
@@ -11803,10 +11552,40 @@
     "how": "respelling"
    },
    {
+    "pastor": "Shadrach Okoh Ashley",
+    "bishop": "Kofi Hene Asare",
+    "file": "Okoh Shadrack Ashley WEIJA NEWTOWN",
+    "how": "respelling"
+   },
+   {
     "pastor": "Ishmeal Bonnah",
     "bishop": "Kofi Hene Asare",
     "file": "ISMEAL BONNAH WEIJA BETHEL",
     "how": "respelling"
+   },
+   {
+    "pastor": "Jonathan Botchway",
+    "bishop": "Kofi Hene Asare",
+    "file": "Kojo Jonathan Botchwey AYAWASO",
+    "how": "respelling"
+   },
+   {
+    "pastor": "Emmanuel Quaye",
+    "bishop": "Kofi Hene Asare",
+    "file": "Emmanuel Quaye RANSAY",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Emmanuel Ansah",
+    "bishop": "Kofi Hene Asare",
+    "file": "Emmanuel Quaye RANSAY",
+    "how": "respelling"
+   },
+   {
+    "pastor": "Francis Asara",
+    "bishop": "Kofi Hene Asare",
+    "file": "Francis Asara AYAWASO",
+    "how": "shorter or fuller form"
    },
    {
     "pastor": "Emmanuel Kofi Osei",
@@ -11893,6 +11672,12 @@
     "how": "respelling"
    },
    {
+    "pastor": "Daniel Dexter Adzah",
+    "bishop": "Michael Vengkomwine Tengabo",
+    "file": "DEXTER ADZAH",
+    "how": "shorter or fuller form"
+   },
+   {
     "pastor": "David Asare Afram",
     "bishop": "Morrison Addo",
     "file": "David Affim",
@@ -11971,6 +11756,18 @@
     "how": "respelling"
    },
    {
+    "pastor": "Mosa Enoch Ngoasheng",
+    "bishop": "Peter Mokganya",
+    "file": "ENOCH NGOASHENG",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Adu Sarkodee",
+    "bishop": "Philip Obeng-Asamoah",
+    "file": "ADU SAKORDEE",
+    "how": "respelling"
+   },
+   {
     "pastor": "Naomi Christabel Fogwe",
     "bishop": "Reginald Agyir Dadzie",
     "file": "Naomi Fogwe",
@@ -12037,6 +11834,12 @@
     "how": "shorter or fuller form"
    },
    {
+    "pastor": "Deborah Best",
+    "bishop": "Rutendo Mantiziba",
+    "file": "Deborah Abigail Sarah Best",
+    "how": "shorter or fuller form"
+   },
+   {
     "pastor": "Maliaka Dotting",
     "bishop": "Rutendo Mantiziba",
     "file": "Maliaka Gabriela Dotting",
@@ -12056,7 +11859,7 @@
    },
    {
     "pastor": "Patsy Fofo Sawyerr",
-    "bishop": "Sam Sawyerr",
+    "bishop": "Samuel B Sawyerr",
     "file": "PATSY SAWYER",
     "how": "respelling"
    },
@@ -12064,6 +11867,12 @@
     "pastor": "Nana Agyeman Aseidu",
     "bishop": "Samuel Obeng",
     "file": "NANA AGYEMANG ASIEDU",
+    "how": "respelling"
+   },
+   {
+    "pastor": "Bernard Keyeremanteng",
+    "bishop": "Samuel Obeng",
+    "file": "BERNARD KYEREMANTENG",
     "how": "respelling"
    },
    {
@@ -12109,6 +11918,18 @@
     "how": "respelling"
    },
    {
+    "pastor": "Francis Eshun",
+    "bishop": "Ebenezer Adom Barnor",
+    "file": "FRANSIC ESHUN",
+    "how": "respelling"
+   },
+   {
+    "pastor": "Joshua Mankwofie Agbezukeh",
+    "bishop": "Ebenezer Adom Barnor",
+    "file": "JOSHUA MANKWOFIE",
+    "how": "shorter or fuller form"
+   },
+   {
     "pastor": "Kenneth Yanzu",
     "bishop": "Ebenezer Adom Barnor",
     "file": "KENNETH YENZO",
@@ -12133,8 +11954,14 @@
     "how": "respelling"
    },
    {
+    "pastor": "Jeanne Andrealy Sirou",
+    "bishop": "Lilian Hasia Ofosua Commey",
+    "file": "JEANNE ANDREALLY SIROU-CASABLANCA-MOROCCO",
+    "how": "respelling"
+   },
+   {
     "pastor": "Alexander Lexes Amaning",
-    "bishop": "Harry Kwesi Dodd",
+    "bishop": "Harry Dodd",
     "file": "ALEXANDER LEXES",
     "how": "shorter or fuller form"
    },
@@ -12152,27 +11979,51 @@
    },
    {
     "pastor": "Kwadwo Nana Boahen",
-    "bishop": "James Quist-Therson",
+    "bishop": "Nii Nortey Quist Therson",
     "file": "Kwadwo Boahen",
     "how": "shorter or fuller form"
    },
    {
     "pastor": "Abeku Eshun (Cyrus Abeku Eshun)",
-    "bishop": "James Quist-Therson",
+    "bishop": "Nii Nortey Quist Therson",
     "file": "Cyrus Eshun",
     "how": "shorter or fuller form"
    },
    {
     "pastor": "Anthony Fokuoh (Tony Fokuoh)",
-    "bishop": "James Quist-Therson",
+    "bishop": "Nii Nortey Quist Therson",
     "file": "Tony Fokuoh",
     "how": "shorter or fuller form"
    },
    {
     "pastor": "Papa Amoo",
-    "bishop": "James Quist-Therson",
+    "bishop": "Nii Nortey Quist Therson",
     "file": "Papa Armoo",
     "how": "respelling"
+   },
+   {
+    "pastor": "Peter Mintah Agyekum",
+    "bishop": "Richard Gyamena",
+    "file": "PETER KOFI MINTAH AGYEKUM",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Godwin Seyram Dese",
+    "bishop": "Richard Gyamena",
+    "file": "GODWIN DESE",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Daniel Kwao",
+    "bishop": "Richard Gyamena",
+    "file": "DANIEL KOFI KWAO",
+    "how": "shorter or fuller form"
+   },
+   {
+    "pastor": "Theresa Akosua Osahene",
+    "bishop": "Richard Gyamena",
+    "file": "THERESA OSAHENE",
+    "how": "shorter or fuller form"
    },
    {
     "pastor": "⁠dodzi Amemasoe",
@@ -12184,6 +12035,12 @@
     "pastor": "Hebert Dibagnunk",
     "bishop": "Romeo Sosu",
     "file": "HERBERT DIBAGNUK",
+    "how": "respelling"
+   },
+   {
+    "pastor": "George Akuobeagye Kumah",
+    "bishop": "Romeo Sosu",
+    "file": "KUMAH AKOBEAGYE GEORGE",
     "how": "respelling"
    },
    {

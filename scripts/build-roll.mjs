@@ -3,7 +3,6 @@
 //   • every sheet the bishops sent back (their own details and the exact pastors under them),
 //   • the group chat's rulings for pastors claimed by two bishops,
 //   • pictures from the photo folders and the portraits already on file,
-//   • the Google Form's verified years.
 // Nothing comes from the original roster or the old office export. data/roll-continuity.json
 // only carries ids and portrait paths forward so registrations and photos keep pointing at people.
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
@@ -17,11 +16,13 @@ import { DENOMINATIONS } from '../src/registration/denominations.mjs';
 import { sameSoul, words } from './lib/names.mjs';
 import { dhash, hamming, SAME_PICTURE } from './lib/photo-hash.mjs';
 import { birthAgrees } from './lib/birth.mjs';
+import { continuityAssets, nonPastoralRank, newerSubmission } from './lib/submitted-sheet-authority.mjs';
 const root = new URL('..', import.meta.url).pathname;
 const BASE = `${process.env.HOME}/Downloads/Kuriake Castle Project/01 Office source data`;
 const read = (rel, fallback) => { try { return JSON.parse(readFileSync(`${root}${rel}`, 'utf8')); } catch { return fallback; } };
 const ap = (t) => String(t || '').replace(/[’'`]/g, '');
-const key = (n) => normalName(ap(n));
+const keyCache = new Map();
+const key = n => { const value = ap(n); if (!keyCache.has(value)) keyCache.set(value, normalName(value)); return keyCache.get(value); };
 // Countries as the sheets spell them → one spelling each.
 const COUNTRY_FIX = { uk: 'United Kingdom', england: 'United Kingdom', scotland: 'United Kingdom', 'northern ireland': 'United Kingdom', wales: 'United Kingdom', usa: 'United States', us: 'United States', 'u s a': 'United States', drc: 'Congo, Democratic Republic', 'd r congo': 'Congo, Democratic Republic', rdc: 'Congo, Democratic Republic', 'dr congo': 'Congo, Democratic Republic', 'south african': 'South Africa', accra: 'Ghana', hawaii: 'United States', 'cote d ivoire ivory coast': "Cote D'Ivoire", 'ivory coast': "Cote D'Ivoire" };
 const fixCountry = (c) => { const k = normalName(c); return COUNTRY_FIX[k] || (c ? tc(c) : ''); };
@@ -45,8 +46,8 @@ const findBishop = (name) => { const k = key(stripTitle(name)); if (!k) return n
   for (const [v, b] of variants) if (words(v).sort().join(' ') === sorted) return b;
   if (w.length >= 2) { const subset = new Set(); for (const [v, b] of variants) { const vw = words(v); if (vw.length >= 2 && (vw.every((x) => w.includes(x)) || w.every((x) => vw.includes(x)))) subset.add(b); } if (subset.size === 1) return [...subset][0]; if (subset.size > 1) return null; }
   const alike = new Set(); for (const [v, b] of variants) if (namesAlike(v, k) && words(v).at(-1) === w.at(-1)) alike.add(b); return alike.size === 1 ? [...alike][0] : null; };
-// ---------- 2. Continuity: ids, portraits, details we already held
-const cont = read('data/roll-continuity.json', { bishops: [], pastors: [] });
+// ---------- 2. Continuity: identity matching and portraits only
+const cont = continuityAssets(read('data/roll-continuity.json', { bishops: [], pastors: [] }));
 const oldBishopByKey = new Map(cont.bishops.map((b) => [key(b.name), b]));
 for (const b of listBishops) { let o = oldBishopByKey.get(key(b.name)); if (!o) for (const a of aliasesOf(b)) o = o || oldBishopByKey.get(key(a)); if (!o) { const alike = cont.bishops.filter((x) => namesAlike(ap(x.name), ap(b.name))); if (alike.length === 1) o = alike[0]; } b.old = o || null; }
 const oldPastorsByKey = new Map(); for (const p of cont.pastors) { const k = key(p.name); if (!oldPastorsByKey.has(k)) oldPastorsByKey.set(k, []); oldPastorsByKey.get(k).push(p); }
@@ -61,26 +62,35 @@ const squash = (d) => normalName(String(d || '').replace(/\(.*?\)/g, '')).replac
 const nearest = (raw, pool, max = 2) => { const r = squash(raw); if (!r) return ''; let best = '', bestD = max + 1; for (const d of pool) { const k = squash(d); if (!k) continue; if (k === r) return d; const dist = Math.abs(k.length - r.length) > 2 ? 9 : (await0(k, r)); if (dist < bestD) { bestD = dist; best = d; } } return best; };
 const await0 = (a, b) => { const m = a.length, n = b.length; const dp = Array.from({ length: m + 1 }, (_, i) => [i]); for (let j = 1; j <= n; j++) dp[0][j] = j; for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return dp[m][n]; };
 const groupOfList = (b) => GROUP_NAME[b.listGroup.toLowerCase()] || b.listGroup;
-const orgOfGroup = (g, b) => b.override?.organization || (g === 'First Love' ? 'First Love' : g === 'FLOW' ? (b.old?.organization === 'HJC' ? 'HJC' : 'FLOW') : 'United Denominations');
+const orgOfGroup = (g, b, sheet) => b.override?.organization || (g === 'First Love' ? 'First Love' : g === 'FLOW' ? (/^(HJC|Healing Jesus Campaign)$/i.test(sheet?.group || '') ? 'HJC' : 'FLOW') : 'United Denominations');
 // ---------- 4. Sheets
 const subs = read('data/bishop-submissions.json', []);
 for (const s of subs) if (!s.pastors.length && /no pastors/i.test(s.folder)) s.noPastors = true; // a sheet in the "no pastors" folder with nothing after the marker
 const latestByBishop = new Map(); const nonList = [];
 const fromFile = (f) => tc(f.replace(/\.xlsx$/, '').replace(/[-_ ]*(\d+|updated|completed|filled|copy|data)\b.*$/i, '').replace(/[-_]/g, ' ').replace(/^(bishop|episcopal sister|espiscopal sister|mother|rev)\s+/i, '').replace(/,.*$/, '').replace(/\(.*?\)/g, '').replace(/\s+(flc|first love|pastors?|jesus is the master|rpi|lsk|tamale north).*$/i, ''));
-for (const s of subs) { const b = findBishop(fromFile(s.file)) || findBishop(s.bishop) || findBishop(s.titleRow || ''); if (!b) { nonList.push(s); continue; } s.bishopRef = b; if (s.bishopRow && findBishop(s.bishopRow.name) && findBishop(s.bishopRow.name) !== b) s.rowBelongsToAnother = s.bishopRow.name; latestByBishop.set(b.listName, s); } // the office named each file after its bishop; a bishop row that names someone else (Lokko's sheet carries Wisdom Ahiagah's row) is not used for details // folders are ordered oldest → newest, so the last wins
+for (const s of subs) { const b = findBishop(fromFile(s.file)) || findBishop(s.bishop) || findBishop(s.titleRow || ''); if (!b) { nonList.push(s); continue; } s.bishopRef = b; if (s.bishopRow) {
+    const owner = findBishop(s.bishopRow.name);
+    const rowWords = words(stripTitle(s.bishopRow.name));
+    const compatible = listBishops.filter(candidate => { const w = words(candidate.name); return w.at(-1) === rowWords.at(-1) && (w[0] === rowWords[0] || (Math.min(w[0]?.length || 0, rowWords[0]?.length || 0) >= 3 && (w[0].startsWith(rowWords[0]) || rowWords[0].startsWith(w[0])))); });
+    if (owner ? owner !== b : compatible.length !== 1 || compatible[0] !== b) s.rowBelongsToAnother = s.bishopRow.name;
+  } latestByBishop.set(b.listName, newerSubmission(latestByBishop.get(b.listName), s)); } // the office named each file after its bishop; a bishop row that names someone else (Lokko's sheet carries Wisdom Ahiagah's row) is not used for details // folders are ordered oldest → newest, so the last wins
 // ---------- 5. Bishops
-const KEEP_OLD_PASTORS = []; // every bishop has now submitted (Toss Mills-Odoi's sheet arrived 10 Oct)
 let newBishopN = 1; const bishops = [];
+const anchorById = new Map();
 for (const b of listBishops) {
   const s = latestByBishop.get(b.listName); const row = s && !s.rowBelongsToAnother ? s.bishopRow : null; const o = b.old;
-  const organization = orgOfGroup(groupOfList(b), b); const group = organization === 'HJC' ? 'Healing Jesus Campaign' : groupOfList(b); // the Healing Jesus Campaign is its own group, apart from FLOW (Joshua, 11 Oct)
+  const organization = orgOfGroup(groupOfList(b), b, s); const group = organization === 'HJC' ? 'Healing Jesus Campaign' : groupOfList(b); // the Healing Jesus Campaign is its own group, apart from FLOW (Joshua, 11 Oct)
   const selfName = row?.name ? tc(stripTitle(row.name).replace(/^(es|dr|rev)\.?\s+/gi, '').replace(/^(es|dr|rev)\.?\s+/gi, '')) : '';
-  const name = (b.override?.name || o?.name || (selfName && words(selfName).length >= 2 ? selfName : b.name)).replace(/\s*-\s*/g, '-'); // the office's name correction, curated spelling, then the bishop's own row and list
-  const gender = row?.gender || o?.gender || (/^(mother|episcopal sister)/i.test(b.listName) ? 'female' : '');
+  const name = (b.override?.name || (selfName && words(selfName).length >= 2 ? selfName : b.name)).replace(/\s*-\s*/g, '-'); // latest submitted name, then the current list, with explicit office corrections
+  const gender = row?.gender || (/^(mother|episcopal sister)/i.test(b.listName) ? 'female' : '');
   // Only men are Bishops (Joshua, 9 Oct): a woman is an Episcopal Sister in the United Denominations and a Mother in First Love, FLOW and the Healing Jesus Campaign.
   const title = gender === 'female' ? (organization === 'United Denominations' ? 'Episcopal Sister' : 'Mother') : 'Bishop';
-  bishops.push({ id: o?.id || `BL${newBishopN++}`, role: 'bishop', name, title, organization, denomination: (COUNTRYISH.test(b.listDenomination.trim()) && row?.denomination && !COUNTRYISH.test(row.denomination) ? canonDen(group, row.denomination) : '') || canonDen(organization === 'HJC' ? 'HJC' : group, b.listDenomination) || o?.denomination || '', denominationLogo: '', city: b.override?.city || row?.city || b.branch || o?.city || '', branch: b.branch || row?.branch || '', country: fixCountry(row?.country) || o?.country || (COUNTRYISH.test(b.listDenomination) && !/n\/?a|other/i.test(b.listDenomination) ? tc(b.listDenomination.replace(/\s*[–(-].*$/, '')) : ''), image: o?.image || '', gender, yearAppointed: row?.yearAppointed || o?.yearAppointed || '', yearOrdained: row?.yearOrdained || o?.yearOrdained || '', yearConsecrated: row?.yearConsecrated || o?.yearConsecrated || '', group, sheet: s ? { file: s.file, folder: s.folder, noPastors: Boolean(s.noPastors), rows: s.pastors.length } : null });
+  bishops.push({ id: o?.id || `BL${newBishopN++}`, role: 'bishop', name, title, organization, denomination: (COUNTRYISH.test(b.listDenomination.trim()) && row?.denomination && !COUNTRYISH.test(row.denomination) ? canonDen(group, row.denomination) : '') || canonDen(organization === 'HJC' ? 'HJC' : group, b.listDenomination) || '', denominationLogo: '', city: b.override?.city || row?.city || '', branch: b.branch || row?.branch || '', country: fixCountry(row?.country) || (COUNTRYISH.test(b.listDenomination) && !/n\/?a|other/i.test(b.listDenomination) ? tc(b.listDenomination.replace(/\s*[–(-].*$/, '')) : ''), image: o?.image || '', gender, yearAppointed: row?.yearAppointed || '', yearOrdained: row?.yearOrdained || '', yearConsecrated: row?.yearConsecrated || '', group, sheet: s ? { file: s.file, folder: s.folder, noPastors: Boolean(s.noPastors), rows: s.pastors.length } : null });
+  anchorById.set(bishops.at(-1).id, b);
+  variants.set(key(bishops.at(-1).name), b);
 }
+const sameBishopName = (a, b) => key(a) === key(b) || Boolean(findBishop(a) && findBishop(a) === findBishop(b));
+const bishopNamed = (bishop, name) => Boolean(bishop && ((findBishop(name) && findBishop(name) === anchorById.get(bishop.id)) || key(bishop.name) === key(name) || namesAlike(bishop.name, name)));
 const bishopByList = new Map(listBishops.map((b, i) => [b.listName, bishops[i]]));
 const bishopKeys = new Set(bishops.map((b) => key(b.name))); for (const b of listBishops) { bishopKeys.add(key(b.name)); for (const a of aliasesOf(b)) bishopKeys.add(key(a)); }
 // The same picture on both records makes them one person even when the birthdays were typed differently.
@@ -91,11 +101,10 @@ const samePicture = async (a, b) => { if (imageOnFile(a.row.name) === imageOnFil
 // ---------- 6. Pastors from the sheets
 const rulings = read('data/sheet-conflict-rulings.json', { rules: [], people: [], remove: [] });
 const dupRulings = read('data/duplicate-rulings.json', { merge: [], distinct: [], pending: [] });
-const bishopIn = (list, n) => list.some((b) => namesAlike(b, n) || key(b) === key(n));
+const bishopIn = (list, n) => list.some(b => (findBishop(b) && findBishop(b) === findBishop(n)) || namesAlike(b, n) || key(b) === key(n));
 const ruledDistinct = (x, y) => dupRulings.distinct.some((d) => d.bishops && d.names.some((n) => key(n) === key(x.row.name) || key(n) === key(y.row.name)) && [x, y].every((c) => bishopIn(d.bishops, c.bishop.name))); // Joshua: these namesakes are two people
 const ruledTogether = (x, y) => rulings.people.some((p) => [x, y].some((c) => key(p.name) === key(c.row.name) || words(key(p.name)).sort().join(' ') === words(key(c.row.name)).sort().join(' ')) && [x, y].every((c) => bishopIn([p.winner, ...(p.losers || [])], c.bishop.name))); // the group ruled on exactly these two claims
-const removeKeys = new Set([...rulings.remove.map((r) => key(r.name)), ...read('data/not-pastors.json', []).map((n) => key(n.name))]); // Walter, plus the office's Minister Shepherds / Shepherds / Elders (7 Oct)
-const years = new Map(read('data/verified-years.json', []).map((v) => [words(key(v.name)).sort().join(' '), v]));
+const removeKeys = new Set(rulings.remove.map(r => key(r.name))); // explicit current office removals only
 const claims = new Map(); // person key → [{bishop (record), row, sub}]
 const bishopRankRows = [], skippedSelf = [];
 const fate = new Map(), recFate = new Map(); // sheet row (or 'file|row' of a record later folded) → why it is not a record under its bishop (for the bishop-by-bishop reconciliation)
@@ -108,7 +117,7 @@ for (const [listName, s] of latestByBishop) {
     const k = key(r.name); if (!k) { fate.set(r, 'blank name'); continue; } if (seen.has(k)) { fate.set(r, 'the same name twice on the sheet; one record kept'); continue; } seen.add(k);
     if (k === key(bishop.name) || k === key(listName) || subsetName(k, key(bishop.name))) { skippedSelf.push({ name: r.name, sheet: s.file }); fate.set(r, "the bishop's own row"); continue; } // the bishop's own row, under any spelling
     if (/Bishop|Mother|Episcopal/.test(r.title) || bishopKeys.has(k)) { bishopRankRows.push({ name: r.name, title: r.title, onSheetOf: bishop.name, file: s.file, row: r.row, onList: bishopKeys.has(k) }); fate.set(r, bishopKeys.has(k) ? 'a bishop on the Bishops List, not a pastor' : `titled ${r.title}, not a pastor`); continue; }
-    if (removeKeys.has(k)) { fate.set(r, 'removed by the office (not a pastor)'); continue; }
+    if (removeKeys.has(k) || nonPastoralRank(r)) { fate.set(r, removeKeys.has(k) ? 'removed by explicit office ruling' : `ranked ${r.rawRank} on the latest submitted sheet, not a pastor`); continue; }
     if (!claims.has(k)) claims.set(k, []); claims.get(k).push({ bishop, row: r, sub: s });
   }
 }
@@ -117,33 +126,32 @@ const keys = [...claims.keys()];
 // Two rows are one person when the names are the same words (any order) or one name's words all sit inside the other's,
 // in the same country, and the birthdays agree (Joshua, 11 Oct: same name and same date of birth; the age stands in for a
 // blank birthday) — or the group ruled on exactly these two claims. Different birthdays = two people, whatever the name.
-for (let i = 0; i < keys.length; i++) for (let j = i + 1; j < keys.length; j++) { const a = keys[i], b = keys[j]; if (!claims.has(a) || !claims.has(b)) continue; const ca = claims.get(a), cb = claims.get(b); if (ca[0].bishop === cb[0].bishop) continue; if (!(words(a).sort().join(' ') === words(b).sort().join(' ') || subsetName(a, b))) continue; if (ca[0].row.gender && cb[0].row.gender && ca[0].row.gender !== cb[0].row.gender) continue; { const ba = birthAgrees(ca[0].row, cb[0].row); if (ba !== true && !(ba === null && ruledTogether(ca[0], cb[0]))) continue; } claims.set(a, [...ca, ...cb]); claims.delete(b); }
-for (let i = 0; i < keys.length; i++) for (let j = i + 1; j < keys.length; j++) { const a = keys[i], b = keys[j]; if (!claims.has(a) || !claims.has(b)) continue; const ca = claims.get(a), cb = claims.get(b); if (ca[0].bishop === cb[0].bishop) continue; if (!(words(a).sort().join(' ') === words(b).sort().join(' ') || subsetName(a, b) || sameSoul(a, b))) continue; { if (ca[0].row.gender && cb[0].row.gender && ca[0].row.gender !== cb[0].row.gender) continue; /* a man and a woman are two people */ const ba = birthAgrees(ca[0].row, cb[0].row); if (ba === false) continue; if (ba === true || await samePicture(ca[0], cb[0])) { claims.set(a, [...ca, ...cb]); claims.delete(b); } } } /* a respelled name with the same birthday is one person (Joshua, 13 Oct: Abiye Sobere / Sobire, Brian Paapa Paintsil / Painstill) */
+for (let i = 0; i < keys.length; i++) for (let j = i + 1; j < keys.length; j++) { const a = keys[i], b = keys[j]; if (!claims.has(a) || !claims.has(b)) continue; const ca = claims.get(a), cb = claims.get(b); if (ca[0].bishop === cb[0].bishop || ruledDistinct(ca[0], cb[0])) continue; if (!(words(a).sort().join(' ') === words(b).sort().join(' ') || subsetName(a, b))) continue; if (ca[0].row.gender && cb[0].row.gender && ca[0].row.gender !== cb[0].row.gender) continue; { const ba = birthAgrees(ca[0].row, cb[0].row); if (ba !== true && !(ba === null && ruledTogether(ca[0], cb[0]))) continue; } claims.set(a, [...ca, ...cb]); claims.delete(b); }
+for (let i = 0; i < keys.length; i++) for (let j = i + 1; j < keys.length; j++) { const a = keys[i], b = keys[j]; if (!claims.has(a) || !claims.has(b)) continue; const ca = claims.get(a), cb = claims.get(b); if (ca[0].bishop === cb[0].bishop || ruledDistinct(ca[0], cb[0])) continue; if (!(words(a).sort().join(' ') === words(b).sort().join(' ') || subsetName(a, b) || sameSoul(a, b))) continue; { if (ca[0].row.gender && cb[0].row.gender && ca[0].row.gender !== cb[0].row.gender) continue; /* a man and a woman are two people */ const ba = birthAgrees(ca[0].row, cb[0].row); if (ba === false) continue; if (ba === true || await samePicture(ca[0], cb[0])) { claims.set(a, [...ca, ...cb]); claims.delete(b); } } } /* a respelled name with the same birthday is one person (Joshua, 13 Oct: Abiye Sobere / Sobire, Brian Paapa Paintsil / Painstill) */
 // Even an identical name on two sheets is two people when the birthdays (or ages) differ, or Joshua ruled them two — unless the picture says otherwise.
 for (const [k, list] of claims) if (list.length > 1) { const groups = []; for (const c of list) { let g = null; for (const grp of groups) { const ba = birthAgrees(grp[0].row, c.row); if (ba !== false && (!ruledDistinct(grp[0], c) || await samePicture(grp[0], c))) { g = grp; break; } } /* different birthdays are two people, whatever the group ruled or the picture shows (Joshua, 11 Oct) */ if (g) g.push(c); else groups.push([c]); } if (groups.length > 1) { claims.set(k, groups[0]); groups.slice(1).forEach((g, n) => claims.set(`${k}#${n + 2}`, g)); } }
 // Rulings
 const ruleWinner = (name, list) => {
-  const names = list.map((c) => key(c.bishop.name));
-  const has = (n) => names.some((x) => x === key(n) || namesAlike(x, n));
+  const has = n => list.some(c => bishopNamed(c.bishop, n));
   const persons = rulings.people.filter((p) => [name, ...list.map((c) => c.row.name)].some((n) => key(p.name) === key(n) || words(key(p.name)).sort().join(' ') === words(key(n)).sort().join(' '))); // the ruling may use either sheet's spelling
-  for (const person of persons) { const w = list.find((c) => namesAlike(c.bishop.name, person.winner) || key(c.bishop.name) === key(person.winner)); if (w) return { winner: w, by: person.source }; } // a namesake claimed by other bishops is not this ruling's person; later rulings apply when the earlier winner is not a claimant
-  const by = (n) => list.find((c) => key(c.bishop.name) === key(n)); // Joshua 11 Oct: Roger, Toss and Samuel Baidoo win any clash they are in
+  for (const person of persons) { const w = list.find((c) => bishopNamed(c.bishop, person.winner)); if (w) return { winner: w, by: person.source }; } // a namesake claimed by other bishops is not this ruling's person; later rulings apply when the earlier winner is not a claimant
+  const by = n => list.find(c => bishopNamed(c.bishop, n)); // Joshua 11 Oct: Roger, Toss and Samuel Baidoo win any clash they are in
   for (const n of ['Roger Hiltbrunner', 'Toss Mills-Odoi', 'Emmanuel Samuel Baidoo']) { const w = by(n); if (w) return { winner: w, by: `Joshua 11 Oct: a clash with Bishop ${n} goes to him` }; }
-  const geraldo = list.find((c) => key(c.bishop.name) === 'geraldo amoa');
+  const geraldo = by('Geraldo Amoa');
   if (geraldo && has('Clement Asante') && list.some((c) => /lusaka/i.test(c.row.city || c.bishop.city))) return { winner: geraldo, by: 'Amonoo-Neizer 10 Oct: Lusaka city pastors are all directly under Bishop Geraldo Amoa' };
-  const bjosh = list.find((c) => key(c.bishop.name) === 'joshua heward mills');
+  const bjosh = by('Joshua Heward-Mills');
   if (bjosh && (has('Isaac Agyeman') || has('Paul Baidoo') || has('Frank Opoku'))) return { winner: bjosh, by: 'Sakyi 9 Oct: clashes with Isaac Agyeman, Paul Baidoo or Frank Opoku go to Bishop Joshua Heward-Mills' };
-  const joy = list.find((c) => key(c.bishop.name) === 'joy bruce');
+  const joy = by('Joy Bruce');
   if (joy && has('Isaac Agyeman') && list.some((c) => /kumasi/i.test(c.row.city || c.bishop.city))) return { winner: joy, by: 'Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce' };
   if (bjosh && list.length === 2 && !/penney/i.test(name)) return { winner: list.find((c) => c !== bjosh), by: 'Joshua 11 Oct: any other clash with Bishop Joshua Heward-Mills goes to the other bishop' };
   return null;
 };
 const pastors = [], conflicts = [], resolved = [], rulingNotOnSheet = [];
 const usedIds = new Set();
-const idFor = (name, bishopName) => { const olds = oldPastorsByKey.get(key(name)) || []; const o = olds.find((x) => key(x.bishop || '') === key(bishopName) && !usedIds.has(x.id)) || olds.find((x) => !usedIds.has(x.id)); let id = o?.id || `S${createHash('sha1').update(key(name)).digest('hex').slice(0, 8)}`; if (usedIds.has(id)) id = `${id}-${createHash('sha1').update(key(bishopName)).digest('hex').slice(0, 4)}`; usedIds.add(id); return id; }; // two people with one name (different birthdays) never share an id
+const idFor = (name, bishopName) => { const olds = oldPastorsByKey.get(key(name)) || []; const o = olds.find((x) => sameBishopName(x.bishop || '', bishopName) && !usedIds.has(x.id)) || olds.find((x) => !usedIds.has(x.id)); let id = o?.id || `S${createHash('sha1').update(key(name)).digest('hex').slice(0, 8)}`; if (usedIds.has(id)) id = `${id}-${createHash('sha1').update(key(bishopName)).digest('hex').slice(0, 4)}`; usedIds.add(id); return id; }; // two people with one name (different birthdays) never share an id
 const usedImages = new Set();
-const oldImage = (name, bishopName) => { let olds = oldPastorsByKey.get(key(name)) || []; if (!olds.length) { const alike = cont.pastors.filter((x) => x.image && subsetName(key(x.name), key(name))); if (alike.length === 1) olds = alike; } const img = (olds.find((x) => x.image && key(x.bishop || '') === key(bishopName)) || olds.find((x) => x.image && !usedImages.has(x.image)))?.image || ''; if (img) usedImages.add(img); return img; }; // one picture on file goes to one record: namesakes under another bishop do not inherit it // "Joshua Korsi Gbafa" keeps the picture filed as "Joshua Gbafa"
-const make = (c, extra = {}) => { const { bishop, row } = c; const v = years.get(words(key(row.name)).sort().join(' ')); const base = { id: idFor(row.name, bishop.name), role: 'pastor', name: row.name, title: row.title || 'Pastor', organization: bishop.organization, denomination: (() => { const raw = row.denomination || ''; if (!raw) return bishop.denomination; if (bishop.denomination && nearest(raw, [bishop.denomination])) return bishop.denomination; const d = canonDen(bishop.group, raw); const pool = GROUPS[bishop.group]?.denominations || []; return !d || (bishop.denomination && denKey(bishop.denomination).startsWith(denKey(d) + ' ')) || (pool.length && !pool.some((x) => denKey(x) === denKey(d)) && bishop.organization === 'United Denominations') ? bishop.denomination : d; })(), denominationLogo: '', city: row.city || '', branch: row.branch || '', country: fixCountry(row.country) || bishop.country || '', image: oldImage(row.name, bishop.name), gender: row.gender || (/^Lady/.test(row.title) ? 'female' : ''), yearAppointed: row.yearAppointed || v?.yearAppointed || '', yearOrdained: row.yearOrdained || v?.yearOrdained || '', yearConsecrated: '', bishop: bishop.name, group: bishop.group, source: { file: c.sub.file, folder: c.sub.folder, row: row.row }, ...extra }; return base; };
+const oldImage = (name, bishopName) => { let olds = oldPastorsByKey.get(key(name)) || []; if (!olds.length) { const alike = cont.pastors.filter((x) => x.image && subsetName(key(x.name), key(name))); if (alike.length === 1) olds = alike; } const img = (olds.find((x) => x.image && sameBishopName(x.bishop || '', bishopName)) || olds.find((x) => x.image && !usedImages.has(x.image)))?.image || ''; if (img) usedImages.add(img); return img; }; // one picture on file goes to one record: namesakes under another bishop do not inherit it // "Joshua Korsi Gbafa" keeps the picture filed as "Joshua Gbafa"
+const make = (c, extra = {}) => { const { bishop, row } = c; const base = { id: idFor(row.name, bishop.name), role: 'pastor', name: row.name, title: row.title || 'Pastor', organization: bishop.organization, denomination: (() => { const raw = row.denomination || ''; if (!raw) return bishop.denomination; if (bishop.denomination && nearest(raw, [bishop.denomination])) return bishop.denomination; const d = canonDen(bishop.group, raw); const pool = GROUPS[bishop.group]?.denominations || []; return !d || (bishop.denomination && denKey(bishop.denomination).startsWith(denKey(d) + ' ')) || (pool.length && !pool.some((x) => denKey(x) === denKey(d)) && bishop.organization === 'United Denominations') ? bishop.denomination : d; })(), denominationLogo: '', city: row.city || '', branch: row.branch || '', country: fixCountry(row.country) || bishop.country || '', image: oldImage(row.name, bishop.name), gender: row.gender || (/^Lady/.test(row.title) ? 'female' : ''), yearAppointed: row.yearAppointed || '', yearOrdained: row.yearOrdained || '', yearConsecrated: '', bishop: bishop.name, group: bishop.group, source: { file: c.sub.file, folder: c.sub.folder, row: row.row }, ...extra }; return base; };
 for (const [k, list] of claims) {
   if (list.length === 1) { pastors.push(make(list[0])); continue; }
   const r = ruleWinner(list[0].row.name, list);
@@ -163,15 +171,13 @@ for (const s of nonList.filter((x) => layNames.some((n) => key(n) === key(x.bish
   const REGION = { 'united states': 'UD North America', canada: 'UD North America', switzerland: 'UD Europe', germany: 'UD Europe', 'united kingdom': 'UD Europe', italy: 'UD Europe', spain: 'UD Europe', france: 'UD Europe', belgium: 'UD Europe', netherlands: 'UD Europe', ghana: 'UD Ghana' };
   const group = s.group || groupByDen.get(denKey(den)) || REGION[key(country)] || '';
   const o = oldPastorsByKey.get(key(s.bishop))?.[0];
-  const lp = { id: o?.id || `LP${layPresidents.length + 1}`, role: 'bishop', title: 'Lay President', lay: true, name: s.bishop, organization: orgOfGroup(group || 'UD Ghana', {}), denomination: canonDen(group, den) || den, denominationLogo: '', city: own?.city || commonest(rows.map((r) => r.city).filter(Boolean)), branch: own?.branch || '', country: own?.country || commonest(rows.map((r) => r.country).filter(Boolean)), image: o?.image || '', gender: own?.gender || 'male', yearAppointed: own?.yearAppointed || '', yearOrdained: own?.yearOrdained || '', yearConsecrated: '', group, sheet: { file: s.file, folder: s.folder, noPastors: false, rows: rows.length } };
+  const lp = { id: o?.id || `LP${layPresidents.length + 1}`, role: 'bishop', title: 'Lay President', lay: true, name: s.bishop, organization: orgOfGroup(group || 'UD Ghana', {}), denomination: canonDen(group, den) || den, denominationLogo: '', city: own?.city || commonest(rows.map((r) => r.city).filter(Boolean)), branch: own?.branch || '', country: own?.country || commonest(rows.map((r) => r.country).filter(Boolean)), image: o?.image || '', gender: own?.gender || '', yearAppointed: own?.yearAppointed || '', yearOrdained: own?.yearOrdained || '', yearConsecrated: '', group, sheet: { file: s.file, folder: s.folder, noPastors: false, rows: rows.length } };
   bishops.push(lp); layPresidents.push(lp); s.lay = lp;
-  for (const r of rows) { const k = key(r.name); if (!k || removeKeys.has(k) || bishopKeys.has(k)) { fate.set(r, !k ? 'blank name' : removeKeys.has(k) ? 'removed by the office (not a pastor)' : 'a bishop on the Bishops List, not a pastor'); continue; } const already = pastors.find((p) => key(p.name) === k); if (already) { fate.set(r, `already on the roll under ${already.bishop || 'Unclaimed'}`); continue; } pastors.push(make({ bishop: lp, row: r, sub: s })); }
+  for (const r of rows) { const k = key(r.name); if (!k || removeKeys.has(k) || nonPastoralRank(r) || bishopKeys.has(k)) { fate.set(r, !k ? 'blank name' : removeKeys.has(k) ? 'removed by the office (not a pastor)' : 'a bishop on the Bishops List, not a pastor'); continue; } const already = pastors.find((p) => key(p.name) === k); if (already) { fate.set(r, `already on the roll under ${already.bishop || 'Unclaimed'}`); continue; } pastors.push(make({ bishop: lp, row: r, sub: s })); }
 }
 // Sheets from other people who are not on the Bishops List: their pastors are unclaimed, with the name kept.
 const nonListPastors = [];
-for (const s of nonList.filter((x) => !x.lay)) for (const r of s.pastors) { const k = key(r.name); if (!k || removeKeys.has(k) || bishopKeys.has(k)) continue; if (pastors.some((p) => key(p.name) === k)) continue; const fake = { name: s.bishop, group: '', organization: 'United Denominations', denomination: '', country: '' }; pastors.push({ ...make({ bishop: fake, row: r, sub: s }), bishop: '', group: '', unclaimed: `Listed by ${s.bishop}, who is not on the Bishops List` }); nonListPastors.push(r.name); }
-// Kent and Toss have not sent sheets: their current pastors stay as they were.
-for (const n of KEEP_OLD_PASTORS) { const b = bishops.find((x) => key(x.name) === key(n)); if (!b) continue; for (const o of cont.pastors.filter((p) => key(p.bishop || '') === key(n))) if (!pastors.some((p) => p.id === o.id || key(p.name) === key(o.name))) pastors.push({ id: o.id, role: 'pastor', name: o.name, title: o.title || 'Pastor', organization: b.organization, denomination: b.denomination, denominationLogo: '', city: o.city || '', branch: '', country: o.country || b.country || '', image: o.image || '', gender: o.gender || '', yearAppointed: o.yearAppointed || '', yearOrdained: o.yearOrdained || '', yearConsecrated: '', bishop: b.name, group: b.group, source: { file: 'kept until the sheet arrives', row: 0 } }); }
+for (const s of nonList.filter((x) => !x.lay)) for (const r of s.pastors) { const k = key(r.name); if (!k || removeKeys.has(k) || nonPastoralRank(r) || bishopKeys.has(k)) continue; if (pastors.some((p) => key(p.name) === k)) continue; const fake = { name: s.bishop, group: '', organization: 'United Denominations', denomination: '', country: '' }; pastors.push({ ...make({ bishop: fake, row: r, sub: s }), bishop: '', group: '', unclaimed: `Listed by ${s.bishop}, who is not on the Bishops List` }); nonListPastors.push(r.name); }
 // ---------- 7. Pictures from the photo folders for anyone still without one
 const index = existsSync('/tmp/photo-index.json') ? JSON.parse(readFileSync('/tmp/photo-index.json', 'utf8')) : []; // the office's photo folders live on Joshua's Mac; without the index (CI) the pictures already converted are kept
 if (!index.length) console.log('No photo index: keeping the portraits already converted from the folders');
@@ -230,7 +236,7 @@ for (const b of [...bishops, ...pastors]) if (overrides[b.id] && existsSync(`${r
 // kept under the ruled bishop with the blanks filled from the record that goes.
 const dupMerged = [];
 for (const m of dupRulings.merge) {
-  const under = bishops.find((b) => namesAlike(b.name, m.bishop) || key(b.name) === key(m.bishop));
+  const under = bishops.find(b => bishopNamed(b, m.bishop));
   const all = pastors.filter((p) => key(p.name) === key(m.keep)); const keep = all.find((p) => under && p.bishop === under.name) || all[0];
   const drop = pastors.find((p) => key(p.name) === key(m.drop) && p !== keep);
   if (!keep || !drop) { dupMerged.push({ ...m, applied: false, missing: !keep ? m.keep : m.drop }); continue; }
@@ -242,7 +248,7 @@ for (const m of dupRulings.merge) {
 if (dupMerged.length) console.log(`Duplicate rulings: ${dupMerged.filter((m) => m.applied).length} of ${dupMerged.length} merges applied`);
 // Joshua's corrections to individual pastor records (data/pastor-corrections.json): matched by the sheet's name and bishop, fields set.
 const corrections = read('data/pastor-corrections.json', { corrections: [] }).corrections;
-for (const c of corrections) { const p = pastors.find((x) => key(x.name) === key(c.name) && (!c.bishop || key(x.bishop || '') === key(c.bishop))); if (p) Object.assign(p, c.set); else console.log(`correction not matched: ${c.name}`); }
+for (const c of corrections) { const p = pastors.find((x) => key(x.name) === key(c.name) && (!c.bishop || bishopNamed(bishops.find(b => b.name === x.bishop), c.bishop))); if (p) Object.assign(p, c.set); else console.log(`correction not matched: ${c.name}`); }
 // Pairs the office must still confirm (Joshua, 11 Oct): both records are Unclaimed, like any double claim, and head the report.
 const dupPending = [];
 for (const d of dupRulings.pending) {
@@ -289,10 +295,10 @@ console.log(`Reconciled ${reconcile.length} sheets: ${reconcile.reduce((n, r) =>
 // Contact details for the server only (sign-in, office views): the sheets' own phone and email for every bishop and pastor,
 // over whatever was on file. The public roll never carries them (Bishop Sakyi, 12 Oct: the phone on the sheet was missing on the record).
 {
-  const contacts = read('data/reference-contacts.json', {});
+  const contacts = {}; // rebuilt only from the latest submitted sheets
   const blank = (v) => !v || /^(missing|n\/?a|none|-|…)$/i.test(v);
   const take = (id, row) => { if (!row) return; const c = contacts[id] || {}; if (!blank(row.email) && /@/.test(row.email)) c.email = row.email; if (!blank(row.phone) && row.phone.replace(/\D/g, '').length >= 6) c.phone = row.phone; if (c.email || c.phone) contacts[id] = c; };
-  for (const [listName, s] of latestByBishop) take(bishopByList.get(listName)?.id, s.bishopRow);
+  for (const [listName, s] of latestByBishop) take(bishopByList.get(listName)?.id, s.rowBelongsToAnother ? null : s.bishopRow);
   for (const s of nonList.filter((x) => x.lay)) take(s.lay.id, s.pastors.find((r) => key(r.name) === key(s.bishop)));
   for (const p of pastors) take(p.id, subs.find((x) => x.file === p.source?.file && x.folder === p.source?.folder)?.pastors.find((r) => r.row === p.source?.row));
   writeFileSync(`${root}data/reference-contacts.json`, JSON.stringify(contacts) + '\n');
@@ -300,9 +306,10 @@ console.log(`Reconciled ${reconcile.length} sheets: ${reconcile.reduce((n, r) =>
 }
 const people = [...bishops.filter((b) => !b.lay), ...layPresidents, ...pastors]; // lay presidents after the bishops
 writeFileSync(`${root}src/registration/reference-people.json`, JSON.stringify(people.map(({ sheet, source, ...rest }) => rest)) + '\n');
-const noSheet = listBishops.filter((b) => !latestByBishop.has(b.listName) && !KEEP_OLD_PASTORS.some((n) => key(n) === key(b.name) || aliasesOf(b).some((a) => key(a) === key(n))));
+const noSheet = listBishops.filter((b) => !latestByBishop.has(b.listName));
 const report = {
   generated: new Date().toISOString(),
+  sourceAuthority: { personalDetails: 'latest submitted spreadsheets', bishopMembership: 'current Bishops List and explicit office corrections', continuity: ['id', 'identity matching', 'portrait'], legacyRankExclusions: false, legacyProfileFallbacks: false, googleFormYearFallbacks: false },
   totals: { bishops: bishops.length - layPresidents.length, layPresidents: layPresidents.length, pastors: pastors.length, assigned: pastors.filter((p) => !p.unclaimed).length, unclaimed: pastors.filter((p) => p.unclaimed).length, withPhoto: pastors.filter((p) => p.image).length, sheets: subs.length, bishopsWithSheet: latestByBishop.size, noPastorsSheets: [...latestByBishop.values()].filter((s) => s.noPastors).length },
   noSheet: noSheet.map((b) => ({ id: bishopByList.get(b.listName)?.id, name: bishopByList.get(b.listName)?.name || b.name, listName: b.listName, group: b.listGroup, denomination: b.listDenomination, branch: b.branch, hadPastorsBefore: cont.pastors.filter((p) => key(p.bishop || '') === key(b.old?.name || b.name)).length })),
   sheetsNotOnList: nonList.filter((s) => !s.lay).map((s) => ({ bishop: s.bishop, file: s.file, folder: s.folder, pastors: s.pastors.length, noPastors: s.noPastors })),

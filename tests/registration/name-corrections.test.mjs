@@ -27,11 +27,11 @@ test('old saved spellings cannot reappear in office, registered or public views'
   assert.equal(updated.overrides.B39.name, 'E.A.T Sackey');
   assert.equal(s.profiles[0].name, 'Eat Sackey', 'the previous state is untouched, so database change detection can persist the correction');
 });
-test('the current roster retains Bishop B39 and all 31 of his pastors', () => {
+test('the current roster retains Bishop B39 and all 32 pastors from his current submitted list', () => {
   const people = JSON.parse(readFileSync('src/registration/reference-people.json', 'utf8'));
   const bishop = people.find(p => p.id === 'B39');
   assert.equal(bishop.name, 'E.A.T Sackey');
-  assert.equal(people.filter(p => p.role === 'pastor' && p.bishop === bishop.name).length, 31);
+  assert.equal(people.filter(p => p.role === 'pastor' && p.bishop === bishop.name).length, 32);
   assert.ok(!people.some(p => p.name === 'Eat Sackey' || p.bishop === 'Eat Sackey'));
 });
 test('saved pastors choosing this bishop retain the corrected supervising name', () => {

@@ -1,12 +1,13 @@
 // Audit of the roll after a build: every check prints PASS or FAIL with the evidence. Exit code 1 if anything fails.
 import { birthAgrees } from './lib/birth.mjs';
+import { nonPastoralRank } from './lib/submitted-sheet-authority.mjs';
 import { readFileSync, existsSync } from 'node:fs';
 import * as XLSX from 'xlsx'; import fs from 'node:fs'; XLSX.set_fs(fs);
 import { normalName, structureConflicts, catalogOf, titleFor, pastorsByBishop } from '../src/registration/model.mjs';
 const root = new URL('..', import.meta.url).pathname;
 const read = (rel) => JSON.parse(readFileSync(`${root}${rel}`, 'utf8'));
 const people = read('src/registration/reference-people.json'), report = read('data/reports/roll-build.json'), subs = read('data/bishop-submissions.json');
-const rulings = read('data/sheet-conflict-rulings.json'), notPastors = read('data/not-pastors.json'), lay = read('data/lay-presidents.json').names;
+const rulings = read('data/sheet-conflict-rulings.json'), lay = read('data/lay-presidents.json').names;
 const list = XLSX.utils.sheet_to_json(XLSX.readFile(`${root}data/source/Bishops List (9 Oct 2026).xlsx`).Sheets.Sheet1, { raw: false, defval: '' }).filter((r) => r.NAME.trim());
 const bishops = people.filter((p) => p.role === 'bishop' && !p.lay), lays = people.filter((p) => p.lay), pastors = people.filter((p) => p.role === 'pastor');
 const key = (n) => normalName(String(n).replace(/[’'`]/g, ''));
@@ -20,7 +21,8 @@ check('Only men hold the title Bishop', bishops.every((b) => b.gender === 'femal
 check('Women are Episcopal Sister (UD) or Mother (First Love, FLOW, HJC)', bishops.filter((b) => b.gender === 'female').every((b) => b.title === (b.organization === 'United Denominations' ? 'Episcopal Sister' : 'Mother')));
 check('No record from the purged roster survives', !people.some((p) => /^P\d+$|^PF\d+|^PS\d+|^PB\d+/.test(p.id) && !subs.some((s) => s.pastors.some((r) => key(r.name) === key(p.name))) && !(p.bishop === 'Toss Mills-Odoi')), 'every pastor id traces to a sheet row (Toss Mills-Odoi excepted)');
 check('Nobody filed under Dag Heward-Mills', !pastors.some((p) => /dag heward/i.test(p.bishop || '')));
-check('No Minister Shepherd / Shepherd / Elder from the office list', !pastors.some((p) => notPastors.some((n) => key(n.name) === key(p.name))));
+check('No older roster, rank list or Google Form fills current spreadsheet records', report.sourceAuthority?.legacyRankExclusions === false && report.sourceAuthority?.legacyProfileFallbacks === false && report.sourceAuthority?.googleFormYearFallbacks === false);
+check('Current sheet ranks exclude non-pastoral rows', report.reconcile.every(r => { const s = subs.find(s => s.file === r.file && s.folder === r.folder); return !s || s.pastors.filter(nonPastoralRank).every(p => r.notUnder.some(n => n.row === p.row)); }));
 check('Removed names are gone', rulings.remove.every((r) => !people.some((p) => key(p.name) === key(r.name))), rulings.remove.map((r) => r.name).join(', '));
 // 2. Structure of every record
 const ids = new Set(); const dup = people.filter((p) => ids.has(p.id) ? true : (ids.add(p.id), false));
