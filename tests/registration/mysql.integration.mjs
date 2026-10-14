@@ -76,7 +76,11 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.ok(published.data.referencePeople.length > 5000);
     assert.ok(published.data.referencePeople.every(p => !['phone', 'email', 'dob', 'dobKeys', '_officeFields'].some(key => key in p)), 'current public roster never includes server contact records');
     assert.ok(!published.data.referencePeople.some(p => ['P3860', 'P3468'].includes(p.id)), 'legacy-only records stay excluded');
-    assert.equal((await call('public-directory')).data.rosterVersion, published.data.rosterVersion);
+    const publicDirectory = (await call('public-directory')).data;
+    assert.equal(publicDirectory.rosterVersion, published.data.rosterVersion);
+    assert.ok(Number.isInteger(publicDirectory.photoProgress.missing));
+    assert.ok(Number.isInteger(publicDirectory.photoProgress.added));
+    assert.ok(!('missingIds' in publicDirectory.photoProgress) && !('replaceIds' in publicDirectory.photoProgress), 'public photo totals never publish individual office review lists');
     assert.equal((await call('snapshot')).status, 401);
     assert.ok([401, 404].includes((await call('auth/access', '', { code: '1234', office: false })).status), 'the site-code login is gone');
     const visitorAccess = { status: 404 };

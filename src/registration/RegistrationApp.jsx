@@ -2979,7 +2979,7 @@ function PhotoSummary({ progress, onSelect }) {
       {[
         ['Missing photos', progress.missing, 'missing', 'Need a photo on file'],
         ['Photos to replace', progress.replace, 'replace', 'Flagged photos still awaiting an update'],
-        ['Missing photos added', progress.added, null, 'From the original list of 687'],
+        ['Missing photos added', progress.added, null, `From the submitted-roster baseline of ${progress.originalMissing.toLocaleString()}`],
         ['Replacement photos updated', progress.replaced, null, 'New photos supplied for flagged records'],
       ].map(([label, count, status, detail]) => <button type="button" key={label} disabled={!status} onClick={() => onSelect?.(status)}>
         <span>{label}</span><strong>{count.toLocaleString()}</strong><small>{detail}</small>

@@ -14,7 +14,7 @@
   "pastors": 5057,
   "assigned": 5057,
   "unclaimed": 0,
-  "withPhoto": 4377,
+  "withPhoto": 4391,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -6682,22 +6682,6 @@
    "place": "Anyinam, Ghana"
   },
   {
-   "id": "P4844",
-   "name": "Francis Arku Edem",
-   "bishop": "Enoch Tettey-Angmor",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Ebolowa, Cameroon"
-  },
-  {
-   "id": "P4817",
-   "name": "Elizabeth Tettey Angmor",
-   "bishop": "Enoch Tettey-Angmor",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Yaounde, Cameroon"
-  },
-  {
    "id": "Sb38f125a",
    "name": "Rachel Moungoulou Mboumba",
    "bishop": "Erasmus Pascal Mensah",
@@ -7696,14 +7680,6 @@
    "group": "UD Africa",
    "denomination": "Fruitferos Internacional Guinea Bissau",
    "place": "Bissau, Guinea-Bissau"
-  },
-  {
-   "id": "PN67072cec1638",
-   "name": "Fortune Todemey Dassah",
-   "bishop": "Jennis Opoku",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Makeni, Sierra Leone"
   },
   {
    "id": "P3832",
@@ -9082,14 +9058,6 @@
    "place": "Zabzugu, Ghana"
   },
   {
-   "id": "P4690",
-   "name": "Jose Tertuliano Eneme",
-   "bishop": "Michael Oddoye",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
    "id": "P2292",
    "name": "John Ayibontey",
    "bishop": "Morrison Addo",
@@ -9394,54 +9362,6 @@
    "place": "Gaborone, Botswana"
   },
   {
-   "id": "PN13b067edea7c",
-   "name": "Albertina Asare",
-   "bishop": "Paul Baidoo",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN37f2b49c0f4d",
-   "name": "Evans Teye Doku",
-   "bishop": "Paul Baidoo",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN46f8720eb03e",
-   "name": "Kwaku Harrel Afreh-Nuamah",
-   "bishop": "Paul Baidoo",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PNaefd9fd37154",
-   "name": "Nora Achana",
-   "bishop": "Paul Baidoo",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PNcc3d47a151f7",
-   "name": "Stephen Tierry Dzekoe",
-   "bishop": "Paul Baidoo",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN4810867000ee",
-   "name": "Edmund Yeboah-Tetteh",
-   "bishop": "Paul Baidoo",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
    "id": "PNd28305f8fddf",
    "name": "Matome Mathipa",
    "bishop": "Peter Mokganya",
@@ -9690,30 +9610,6 @@
    "place": "Obosomase, Ghana"
   },
   {
-   "id": "PN00ab256ebe3e",
-   "name": "Yasmine Sangwa Binti",
-   "bishop": "Rudy Vaye",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Kinshasa, Congo, Democratic Republic"
-  },
-  {
-   "id": "PN382838f7d6b3",
-   "name": "Eric Yao Mawugbe",
-   "bishop": "Rudy Vaye",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Kinshasa, Congo, Democratic Republic"
-  },
-  {
-   "id": "PN5e5372bda9a9",
-   "name": "Arnold Mopata Bilonda",
-   "bishop": "Rudy Vaye",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Kinshasa, Congo, Democratic Republic"
-  },
-  {
    "id": "S41caa281",
    "name": "Chioma Chigbu",
    "bishop": "Rutendo Mantiziba",
@@ -9888,14 +9784,6 @@
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Tidworth, United Kingdom"
-  },
-  {
-   "id": "P4714",
-   "name": "Clive Dompreh",
-   "bishop": "Solomon Tay",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
   },
   {
    "id": "P636",
@@ -10916,6 +10804,12 @@
     "file": "DAVID F OLUBOYE",
     "how": "respelling"
    }
-  ]
+  ],
+  "latestOfficeImport": {
+   "date": "2026-10-14",
+   "photos": 97,
+   "missingFilled": 14,
+   "flaggedReplaced": 65
+  }
  }
 }

@@ -41,6 +41,17 @@ test('photo flags belong to stable record IDs and the exact media version', () =
   assert.throws(() => applyAction(s, office, 'reviewPhoto', { referenceId: 'P2', status: 'replace', codes: [] }, undefined, refs), /reason/);
   assert.deepEqual(visibleState(restored, { id: 'member' }, refs).photoReviews, {});
 });
+test('bulk source portraits update missing and replacement counters without office upload overrides', () => {
+  const state = emptyState();
+  const updated = refs.map(p => p.id === 'P1' ? { ...p, image: 'assets/portraits/P1-new.webp' } : p.id === 'P2' ? { ...p, image: 'assets/portraits/P2-new.webp' } : p);
+  const before = count(state);
+  const after = photoProgress(state, updated, state.year, reviews, ['P1']);
+  assert.equal(after.missing, before.missing - 1);
+  assert.equal(after.replace, before.replace - 1);
+  assert.equal(after.added, before.added + 1);
+  assert.equal(after.replaced, before.replaced + 1);
+  assert.equal(after.total, before.total, 'new portraits do not create roster records');
+});
 test('hidden records remain photo tasks; deleted records are accounted for separately from photos added', () => {
   let s = applyAction(emptyState(), office, 'hideReference', { referenceId: 'P1', hidden: true });
   assert.equal(count(s).missing, 1);

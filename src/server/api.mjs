@@ -101,7 +101,10 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         await rateLimit(pool, config, `public-directory:${request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'all'}`, 120, 60000);
         if (!publicCache.value || Date.now() - publicCache.at > 30000) {
           const state = await transaction(pool, conn => readState(conn));
-          publicCache = { at: Date.now(), value: { rosterVersion, source: config.publicDirectory, photos: config.publicPhotos, roll: publicRoll(state, people), ...publicOverlay(state) } };
+          // Aggregate totals use the same saved state as the office Photo tasks
+          // tab, including draft uploads. Individual review lists stay private.
+          const { missingIds, replaceIds, ...photoTotals } = photoProgress(state, people);
+          publicCache = { at: Date.now(), value: { rosterVersion, source: config.publicDirectory, photos: config.publicPhotos, photoProgress: photoTotals, roll: publicRoll(state, people), ...publicOverlay(state) } };
         }
         return json(publicCache.value, 200, { 'Cache-Control': 'public, max-age=30' });
       }
