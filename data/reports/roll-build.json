@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-14T14:43:18.859Z",
+ "generated": "2026-10-14T15:45:04.676Z",
  "sourceAuthority": {
   "personalDetails": "latest submitted spreadsheets",
   "bishopMembership": "current Bishops List and explicit office corrections",
@@ -16,8 +16,8 @@
   "bishops": 283,
   "layPresidents": 3,
   "pastors": 5057,
-  "assigned": 5056,
-  "unclaimed": 1,
+  "assigned": 5057,
+  "unclaimed": 0,
   "withPhoto": 4377,
   "sheets": 292,
   "bishopsWithSheet": 283,
@@ -965,6 +965,14 @@
    "by": "Sakyi 9 Oct: First Love Kumasi pastors belong to Sister Joy Bruce"
   },
   {
+   "name": "Brian Paapa Paintsil",
+   "winner": "Ishmael Sam",
+   "losers": [
+    "Richard Nii Okai Aryee"
+   ],
+   "by": "Joshua 14 Oct 2026: Brian Paapa Paintsil (also submitted as Painstill) belongs to Ishmael Sam."
+  },
+  {
    "name": "Erick Nzuki Maundu",
    "winner": "Prince Samuel Osei",
    "losers": [
@@ -1237,68 +1245,7 @@
    "by": "Bishop Sakyi 10 Oct 11:21: Eric Koomson, Priscilla Yeboah and Helena Dadzie Yorke will be with Bishop Joojo Stephens"
   }
  ],
- "conflicts": [
-  {
-   "name": "Brian Paapa Paintsil",
-   "id": "PN760ae7e511e5",
-   "claims": [
-    {
-     "bishop": "Ishmael Sam",
-     "group": "Reasonable Service",
-     "file": "Bishop Ishmael Sam.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 13,
-     "cells": [
-      "Brian Paapa Paintsil",
-      "Male",
-      "Pastor",
-      "…",
-      "8/12/90",
-      "36",
-      "True Son Chapel International",
-      "New Sebrepor",
-      "Tema",
-      "Ghana",
-      "2022",
-      "NA",
-      "NA",
-      "Yes",
-      "…"
-     ],
-     "city": "Tema",
-     "country": "Ghana",
-     "title": "Pastor"
-    },
-    {
-     "bishop": "Richard Nii Okai Aryee",
-     "group": "UD Europe",
-     "file": "Bishop Richard Nii Okai Aryee.xlsx",
-     "folder": "Bishop submitted sheets (9 Oct 2026)",
-     "row": 27,
-     "cells": [
-      "Brian Paapa Painstill",
-      "Male",
-      "Pastor",
-      "…",
-      "…",
-      "35",
-      "IT IS A GREAT THING TO SERVE THE LORD",
-      "Edinburgh",
-      "Edinburgh",
-      "United Kingdom",
-      "2022",
-      "N/A",
-      "N/A",
-      "No",
-      "…"
-     ],
-     "city": "Edinburgh",
-     "country": "United Kingdom",
-     "title": "Pastor"
-    }
-   ]
-  }
- ],
+ "conflicts": [],
  "nonListPastors": [],
  "rulingNotOnSheet": [],
  "dupMerged": [
@@ -3561,13 +3508,8 @@
    "file": "Bishop Ishmael Sam.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 31,
-   "onRoll": 29,
+   "onRoll": 30,
    "notUnder": [
-    {
-     "row": 13,
-     "name": "Brian Paapa Paintsil",
-     "fate": "claimed by Bishop Ishmael Sam and Bishop Richard Nii Okai Aryee — Unclaimed for the office"
-    },
     {
      "row": 22,
      "name": "Ishmael Nathaniel Jojo Sam",
@@ -4767,7 +4709,7 @@
     {
      "row": 27,
      "name": "Brian Paapa Painstill",
-     "fate": "claimed by Bishop Ishmael Sam and Bishop Richard Nii Okai Aryee — Unclaimed for the office"
+     "fate": "ruled to Ishmael Sam (Joshua 14 Oct 2026: Brian Paapa Paintsil (also submitted as Painstill) belongs to Ishmael Sam.)"
     }
    ],
    "extra": []
@@ -7578,7 +7520,7 @@
   {
    "id": "PN760ae7e511e5",
    "name": "Brian Paapa Paintsil",
-   "bishop": "",
+   "bishop": "Ishmael Sam",
    "group": "Reasonable Service",
    "denomination": "True Son Chapel International",
    "place": "Tema, Ghana"

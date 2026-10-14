@@ -71,3 +71,14 @@ test('repeated group headings do not become pastor records', () => {
   assert.equal(under('Luke Akwasi Frimpong Mensah').length, 59);
   assert.ok(!pastors.some(p => ['Se83d157c', 'Sfd42d70f', 'Sce1ded69'].includes(p.id)));
 });
+
+test('Brian Paapa Paintsil is assigned once to Ishmael Sam by the office ruling', () => {
+  const brian = pastors.filter(p => /brian paapa paints(?:il|till)/i.test(p.name));
+  assert.equal(brian.length, 1);
+  assert.equal(brian[0].id, 'PN760ae7e511e5');
+  assert.equal(brian[0].bishop, 'Ishmael Sam');
+  assert.equal(brian[0].city, 'Tema');
+  assert.equal(brian[0].unclaimed, undefined);
+  assert.ok(!report.conflicts.some(c => /brian paapa/i.test(c.name)));
+  assert.ok(report.resolved.some(r => r.name === 'Brian Paapa Paintsil' && r.winner === 'Ishmael Sam'));
+});
