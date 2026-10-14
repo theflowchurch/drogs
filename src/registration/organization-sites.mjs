@@ -6,6 +6,7 @@ export const ORGANIZATION_SITES = {
   firstlove: {
     name: 'First Love Movement', shortName: 'First Love',
     organizations: ['First Love'], logo: 'assets/denominations/first-love-church.png',
+    heroLogo: 'assets/brand/first-love-basic.png',
     description: 'Bishops, pastors and denominations of the First Love Movement.',
   },
   ud: {

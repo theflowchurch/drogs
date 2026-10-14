@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { ORGANIZATION_SITES, peopleForSite, siteCatalog, sitePath, organizationAudit } from '../../src/registration/organization-sites.mjs';
 import { withStanding, overlayReferences, emptyState, catalogOf } from '../../src/registration/model.mjs';
 const b = (id, organization, denomination = 'Shared church') => ({ id, role: 'bishop', name: `Bishop ${id}`, organization, denomination });
@@ -53,4 +54,22 @@ test('scoped catalogs follow saved admin denominations, paths include scope and 
   assert.equal(sitePath('','signup'),'/signup/');
   assert.equal(sitePath('flow'),'/flow/');
   assert.equal(organizationAudit([b('a','First Love'),b('b','United Denominations')]).sharedDenominations.length,1);
+});
+
+test('the nine women confirmed for FLOW move together while BDR remains in First Love', () => {
+  const people = JSON.parse(readFileSync('src/registration/reference-people.json', 'utf8'));
+  const ids = ['B187', 'B127', 'BO250', 'BO265', 'BO221', 'B59', 'BO215', 'B200', 'BO251'];
+  const flow = new Set(peopleForSite(people, 'flow').map(p => p.id));
+  const firstLove = new Set(peopleForSite(people, 'firstlove').map(p => p.id));
+  for (const id of ids) {
+    const person = people.find(p => p.id === id);
+    assert.equal(person.role, 'bishop');
+    assert.equal(person.organization, 'FLOW', person.name);
+    assert.equal(person.group, 'FLOW', person.name);
+    assert.ok(flow.has(id), person.name);
+    assert.ok(!firstLove.has(id), person.name);
+  }
+  assert.equal(people.find(p => p.id === 'B79').organization, 'First Love');
+  assert.ok(firstLove.has('B79'));
+  assert.ok(!flow.has('B79'));
 });

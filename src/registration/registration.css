@@ -821,7 +821,7 @@ p {
   color: var(--ink, #13324c);
 }
 .reg-standing-notice h2 { margin: 0 0 10px; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; }
-.reg-standing-notice h3 { margin: 14px 0 4px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.04em; }
+.reg-standing-notice h3 { margin: 14px 0 4px; font-size: 14px; text-transform: none; letter-spacing: 0; }
 .reg-standing-notice p, .reg-standing-notice li { margin: 0 0 6px; }
 .reg-standing-notice ul { margin: 4px 0 8px; padding-left: 20px; }
 :root[data-theme="dark"] .reg-standing-notice { background: rgba(14, 24, 42, 0.5); border-color: rgba(255, 255, 255, 0.18); color: #eef2fa; }
@@ -4020,8 +4020,8 @@ input[type="date"] {
 .reg-organization-app.organization-ud .reg-brand-mark { width: 100px; }
 .reg-organization-app .reg-brand-mark img { object-fit: contain; }
 .reg-organization-app .reg-account.signin .reg-hero-title img.reg-organization-hero-logo { width: min(420px, 72vw); height: auto; object-fit: contain; background: transparent; border-radius: 0; padding: 0; }
-.reg-organization-app.organization-firstlove .reg-account.signin .reg-hero-title img.reg-organization-hero-logo { width: clamp(180px, 24vw, 280px); }
-.reg-organization-app.organization-ud .reg-account.signin .reg-hero-title img.reg-organization-hero-logo { filter: brightness(0) invert(1); }
+.reg-organization-app.organization-firstlove .reg-account.signin .reg-hero-title img.reg-organization-hero-logo { width: clamp(230px, 32vw, 400px); }
+.reg-organization-app.organization-ud .reg-account.signin .reg-hero-title img.reg-organization-hero-logo { width: clamp(160px, 20vw, 260px); filter: brightness(0) invert(1); }
 .reg-organization-app.organization-flow .reg-account.signin .reg-hero-title img.reg-organization-hero-logo { content: normal; }
 .reg-main-sites { position: absolute; bottom: 35px; left: 20px; right: 20px; display: flex; justify-content: center; gap: 30px; z-index: 2; }
 .reg-main-sites a { color: white; text-decoration: none; font-size: 13px; text-shadow: 0 1px 4px #000; }

@@ -3636,15 +3636,15 @@ function GoodStandingNotice({ compact = false }) {
   return (
     <section className={`reg-standing-notice ${compact ? "compact" : ""} ${open ? "open" : ""}`} aria-label="Roll of Good Standing">
       {compact ? <div className="reg-standing-intro">
-        <h2>What it means to be in good standing</h2>
+        <h2>What It Means To Be In Good Standing</h2>
         <button type="button" className="reg-standing-arrow" aria-label={open ? "Collapse good standing explanation" : "Expand good standing explanation"} aria-expanded={open} aria-controls={detailsId} onClick={() => setOpen(!open)}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
         </button>
-      </div> : <><h2>Roll of Good Standing</h2><h3>What it means to be in good standing</h3></>}
+      </div> : <><h2>Roll of Good Standing</h2><h3>What It Means To Be In Good Standing</h3></>}
       <div id={detailsId}>
       <p className="reg-standing-preview">A Bishop or pastor is of good standing when he or she fulfills the requirements, expectations, and responsibilities of the office as determined. Such a Bishop or minister is entitled to exercise all rights, privileges, titles, and functions attached to that ministerial office.</p>
       {open && (<>
-      <h3>What it means to not be in good standing</h3>
+      <h3>What It Means To Not Be In Good Standing</h3>
       <p>A Bishop or pastor who is not in good standing is not entitled to exercise the rights, privileges, titles, or functions attached to that ministerial office for the period in which they remain not in good standing.</p>
       <p>While a Bishop or pastor is not in good standing in their office, the following restrictions apply:</p>
       <ul>
@@ -3657,7 +3657,7 @@ function GoodStandingNotice({ compact = false }) {
         <li>You may be required to withdraw from official communication channels, including WhatsApp groups, mailing lists, directories, and other forums reserved for {many}.</li>
         <li>Your name will not appear on the Roll of {many} in Good Standing.</li>
       </ul>
-      <h3>Restoration to good standing</h3>
+      <h3>Restoration To Good Standing</h3>
       <p>Being not in good standing does not necessarily mean permanent removal from ministry or permanent loss of office.</p>
       <p>A Bishop or minister may be restored to good standing when the requirements and expectations of the office have been satisfied.</p>
       <p>Upon restoration, the minister's name may be returned to the Roll of ministers in Good Standing, together with the rights, functions, recognition, and privileges applicable to that office.</p>
