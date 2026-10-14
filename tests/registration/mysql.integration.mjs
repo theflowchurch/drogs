@@ -69,6 +69,13 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   const profile = (photo, role = 'bishop') => ({ role, firstName: role === 'bishop' ? 'Test' : 'John', lastName: role === 'bishop' ? 'Bishop' : 'Doe', phone: '+233201234567', dob: '1990-01-01', country: 'Ghana', city: 'Accra', organization: 'First Love', denomination: 'First Love Church', photo, gender: 'male', photoConfirmed: true, consentedAt: '2026-09-29T08:00:00.000Z', bishopId: 'B1', bishopFirstName: 'Test', bishopLastName: 'Bishop' });
   try {
     await migrate(pool); await migrate(pool); // Idempotent, preserves existing records.
+    const published = await call('references');
+    assert.equal(published.status, 200);
+    assert.match(published.data.rosterVersion, /^[a-f0-9]{64}$/);
+    assert.ok(published.data.referencePeople.length > 5000);
+    assert.ok(published.data.referencePeople.every(p => !['phone', 'email', 'dob', 'dobKeys', '_officeFields'].some(key => key in p)), 'current public roster never includes server contact records');
+    assert.ok(!published.data.referencePeople.some(p => ['P3860', 'P3468'].includes(p.id)), 'legacy-only records stay excluded');
+    assert.equal((await call('public-directory')).data.rosterVersion, published.data.rosterVersion);
     assert.equal((await call('snapshot')).status, 401);
     assert.ok([401, 404].includes((await call('auth/access', '', { code: '1234', office: false })).status), 'the site-code login is gone');
     const visitorAccess = { status: 404 };
@@ -113,6 +120,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call(`media?path=${pastorPhoto}`, bishop.cookie)).status, 200);
     assert.equal((await call(`media?path=${pastorPhoto}`, stranger.cookie)).status, 403);
     const unclaimed = await call('snapshot', pastor.cookie);
+    assert.equal(unclaimed.data.rosterVersion, published.data.rosterVersion, 'signed-in and public clients follow the same submitted roster');
     assert.equal(unclaimed.data.registrations[0].status, 'unclaimed');
     assert.equal((await call('action', bishop.cookie, { name: 'addRoster', payload: { rows: [{ name: 'Valid Person', dob: '01/01/1990' }, { name: '' }] } })).status, 400);
     assert.equal((await call('snapshot', bishop.cookie)).data.rosters.length, 0, 'failed bulk write rolled back');

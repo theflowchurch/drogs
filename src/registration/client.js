@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import people from "./reference-people.json";
 import { photoProgress } from './photo-progress.mjs';
+import { createRosterLoader } from './live-roster.mjs';
 const references = people.filter((p) => p.role === "bishop");
 import {
   STORAGE_KEY,
@@ -40,6 +41,7 @@ async function server(path, body, options = {}, attempt = 0) {
   if (!response.ok) throw Error(data.error || "Unable to complete the request.");
   return data;
 }
+const withCurrentRoster = createRosterLoader(() => server('references'));
 export const configError = Boolean(url) !== Boolean(key) || (mode === "supabase" && !url);
 let client;
 const supabase = () =>
@@ -154,7 +156,7 @@ export async function signOut(office = false, forget = true) {
   }
 }
 export async function snapshot(actor) {
-  if (mysqlBackend) return server("snapshot");
+  if (mysqlBackend) return withCurrentRoster(await server("snapshot"));
   if (!live) { const s = read(), v = visibleState(s, actor, references, people); return { ...v, ...(actor.office ? { photoProgress: photoProgress(s, people) } : {}), publicPhotos: "confirmed", ...(process.env.NEXT_PUBLIC_PREVIEW === "1" && !s.fees ? { fees: { bishop: 100, pastor: 20 } } : {}) }; }
   const { data, error } = await supabase().rpc("registration_snapshot");
   check(error);
@@ -237,7 +239,7 @@ export const logins = (user, before = '') => server(`logins?user=${encodeURIComp
 export const supportAvailable = mysqlBackend;
 // The public directory needs no account. Locally it is the saved roll.
 export async function publicDirectory() {
-  if (mysqlBackend) return server("public-directory");
+  if (mysqlBackend) return withCurrentRoster(await server("public-directory"));
   const v = visibleState(read(), { id: "public", email: "", office: false }, references, people);
   return { source: "original", photos: "confirmed", year: v.year, roll: v.roll, hidden: v.hidden, overrides: v.overrides, extraReferences: v.extraReferences, signup: v.signup, catalog: v.catalog };
 }

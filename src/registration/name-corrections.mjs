@@ -5,18 +5,34 @@ export function canonicalBishopName(value) {
   const match = name.trim().match(/^((?:bishop|rev\.?|reverend)\s+)?(?:eat|e[.\s]*a[.\s]*t\.?)\s+sackey$/i);
   return match ? `${match[1] || ''}E.A.T Sackey` : name;
 }
+export function canonicalPersonName(id, value) {
+  if (id === 'B39') return canonicalBishopName(value);
+  // Joshua's correction, 14 October. Match the linked record, not every
+  // person who happens to share an older name; later office edits still work.
+  if (id === 'S10325a07' && /^(paulina ama (ansah|drah)|osylina ama ansah)$/i.test(String(value || '').trim()))
+    return 'Osylina Ama Ansah';
+  return value;
+}
 export function canonicalPerson(person) {
   return { ...person,
-    ...(person.id === 'B39' && person.name !== undefined ? { name: canonicalBishopName(person.name) } : {}),
+    ...(person.name !== undefined ? { name: canonicalPersonName(person.id, person.name) } : {}),
     ...(person.bishop !== undefined ? { bishop: canonicalBishopName(person.bishop) } : {}),
   };
 }
 export function canonicalOfficeNames(state) {
   const next = structuredClone(state);
   const accounts = new Set([...next.profiles.filter(p => p.referenceId === 'B39').map(p => p.id), ...next.registrations.filter(r => r.data.referenceId === 'B39').map(r => r.userId)]);
+  const linked = new Map([...next.profiles.filter(p => p.referenceId).map(p => [p.id, p.referenceId]), ...next.registrations.filter(r => r.data.referenceId).map(r => [r.userId, r.data.referenceId])]);
   for (const p of next.profiles) if (accounts.has(p.id)) p.name = canonicalBishopName(p.name);
+  for (const p of next.profiles) p.name = canonicalPersonName(p.referenceId || linked.get(p.id), p.name);
   for (const r of next.registrations) {
     const d = r.data;
+    const corrected = canonicalPersonName(d.referenceId || linked.get(r.userId), d.name);
+    if (corrected !== d.name) {
+      d.name = corrected;
+      const [firstName, ...lastName] = corrected.split(' ');
+      d.firstName = firstName; d.lastName = lastName.join(' ');
+    }
     if (d.referenceId === 'B39' || accounts.has(r.userId)) {
       d.name = canonicalBishopName(d.name);
       if (d.name === 'E.A.T Sackey') { d.firstName = 'E.A.T'; d.lastName = 'Sackey'; }

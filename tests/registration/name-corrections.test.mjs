@@ -40,3 +40,21 @@ test('saved pastors choosing this bishop retain the corrected supervising name',
   assert.equal(corrected.registrations[0].data.bishopName, 'E.A.T Sackey');
   assert.equal(corrected.registrations[0].data.bishopFirstName, 'E.A.T');
 });
+test('Osylina retains her linked record and portrait across old saved names', () => {
+  const people = JSON.parse(readFileSync('src/registration/reference-people.json', 'utf8'));
+  const id = 'S10325a07';
+  assert.equal(people.find(p => p.id === id).name, 'Osylina Ama Ansah');
+  const s = { ...emptyState(), overrides: { [id]: { name: 'Paulina Ama Drah', city: 'Office-corrected city' } }, profiles: [{ id: 'account', referenceId: id, name: 'Paulina Ama Drah' }], registrations: [{ userId: 'account', year: 2027, status: 'confirmed', manual: true, data: { role: 'pastor', referenceId: id, name: 'Paulina Ama Ansah', firstName: 'Paulina', lastName: 'Ama Ansah' } }] };
+  const p = overlayReferences(people, s).find(p => p.id === id);
+  assert.equal(p.name, 'Osylina Ama Ansah');
+  assert.equal(p.image, 'assets/portraits/S10325a07.webp');
+  assert.equal(p.city, 'Office-corrected city');
+  assert.equal(publicRoll(s, people)[0].name, 'Osylina Ama Ansah');
+  const updated = syncRoll(s, people, 'osylina-correction');
+  assert.equal(updated.profiles[0].name, 'Osylina Ama Ansah');
+  assert.equal(updated.registrations[0].data.firstName, 'Osylina');
+  assert.equal(updated.overrides[id].name, 'Osylina Ama Ansah');
+  assert.equal(s.profiles[0].name, 'Paulina Ama Drah');
+  const other = overlayReferences([{ id: 'unrelated', name: 'Paulina Ama Drah' }], emptyState());
+  assert.equal(other[0].name, 'Paulina Ama Drah', 'no renaming people just because names match');
+});

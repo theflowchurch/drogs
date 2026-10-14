@@ -3,6 +3,7 @@ import { createKeyService } from './api-keys.mjs';
 import { createSupport } from './support.mjs';
 import { applySettings, bootstrapSettings, describeSettings, officeMembers, readSettings, writeSettings } from './settings.mjs';
 import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
 import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED } from '../registration/model.mjs';
@@ -12,7 +13,10 @@ import { assertOwnedMedia, assignedPortrait, canReadMedia } from './storage.mjs'
 import { photoProgress } from '../registration/photo-progress.mjs';
 // The roster the browser gets has no contact details; the server merges them back for its own use (office views, broadcasts, matching).
 const contacts = JSON.parse(await readFile(new URL('../../data/reference-contacts.json', import.meta.url), 'utf8'));
-const people = JSON.parse(await readFile(new URL('../registration/reference-people.json', import.meta.url), 'utf8')).map(p => ({ ...p, ...(contacts[p.id] || {}) }));
+const rosterFile = await readFile(new URL('../registration/reference-people.json', import.meta.url), 'utf8');
+const referencePeople = JSON.parse(rosterFile);
+const rosterVersion = createHash('sha256').update(rosterFile).digest('hex');
+const people = referencePeople.map(p => ({ ...p, ...(contacts[p.id] || {}) }));
 const references = people.filter(p => p.role === 'bishop');
 export async function readBody(request, limit = 256 * 1024) {
   if (Number(request.headers.get('content-length')) > limit) throw new HttpError(413, 'The upload is too large.');
@@ -86,13 +90,18 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         await auth.requestCode(address, url.origin, ['signin', 'office'].includes(mode) ? mode : 'signup');
         return json({ ok: true, codeRequired: true });
       }
+      if (path === '/api/registration/references' && method === 'GET') {
+        // Only the contact-free published sheet data, never the server's
+        // contact-enriched matching records. No account is needed to read it.
+        return json({ rosterVersion, referencePeople });
+      }
       if (path === '/api/registration/public-directory' && method === 'GET') {
         // Open to everyone: the roll carries no contact details. Cached briefly and
         // rate limited so the public page cannot be used to hammer the database.
         await rateLimit(pool, config, `public-directory:${request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'all'}`, 120, 60000);
         if (!publicCache.value || Date.now() - publicCache.at > 30000) {
           const state = await transaction(pool, conn => readState(conn));
-          publicCache = { at: Date.now(), value: { source: config.publicDirectory, photos: config.publicPhotos, roll: publicRoll(state, people), ...publicOverlay(state) } };
+          publicCache = { at: Date.now(), value: { rosterVersion, source: config.publicDirectory, photos: config.publicPhotos, roll: publicRoll(state, people), ...publicOverlay(state) } };
         }
         return json(publicCache.value, 200, { 'Cache-Control': 'public, max-age=30' });
       }
@@ -158,7 +167,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           // Payment evidence is available only to its owner and the office.
           view.registrations = view.registrations.map(r => r.userId === actor.id ? r : { ...r, proof: undefined });
         }
-        return json({ ...view, ...(actor.office ? { photoProgress: photoProgress(state, people) } : {}), office: actor.office, payment: config.momo, paystackKey: config.paystackPublic, publicDirectory: config.publicDirectory, publicPhotos: config.publicPhotos });
+        return json({ ...view, rosterVersion, ...(actor.office ? { photoProgress: photoProgress(state, people) } : {}), office: actor.office, payment: config.momo, paystackKey: config.paystackPublic, publicDirectory: config.publicDirectory, publicPhotos: config.publicPhotos });
       }
       if (path === '/api/registration/communication/send' && method === 'POST') {
         // A broadcast from the office to everyone, all bishops, all pastors, or chosen people.

@@ -1,7 +1,7 @@
 import { DENOMINATIONS } from "./denominations.mjs";
 import { GROUPS } from "./groups.mjs";
 import { LOGOS } from "./logos.mjs";
-import { canonicalBishopName, canonicalPerson, canonicalOfficeNames } from './name-corrections.mjs';
+import { canonicalBishopName, canonicalPersonName, canonicalPerson, canonicalOfficeNames } from './name-corrections.mjs';
 // Full names for display; the short keys stay as stored identifiers.
 export const ORGANIZATION_LABEL = {
   "First Love": "First Love Church",
@@ -312,7 +312,7 @@ const referenceField = k => ['firstName', 'lastName'].includes(k) ? 'name' : k =
 function registrationDetails(state, data, id = data?.referenceId) {
   const corrections = state.overrides?.[id] || {};
   const details = { ...data, ...Object.fromEntries(REFERENCE_FIELDS.filter(k => k !== 'photo' && corrections[k] !== undefined).map(k => [k, corrections[k]])) };
-  if (id === 'B39') details.name = canonicalBishopName(details.name);
+  if (details.name !== undefined) details.name = canonicalPersonName(id, details.name);
   if (details.bishop !== undefined) details.bishop = canonicalBishopName(details.bishop);
   return details;
 }

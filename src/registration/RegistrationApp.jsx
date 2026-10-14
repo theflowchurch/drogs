@@ -73,12 +73,13 @@ import { shortDateTime, longDate } from "./format.mjs";
 import { checkAttire, expectedAttire } from "./attire-check.mjs";
 import DataExport from "./DataExport.jsx";
 import people from "./reference-people.json";
+import { rosterFrom, publicRosterFrom } from "./live-roster.mjs";
+const RosterContext = createContext(people);
 import { photoProgress, photoTask, PHOTO_REASONS } from './photo-progress.mjs';
 import { snapshotSync, changedFields } from './snapshot-sync.mjs';
 // Everyone Kuriake Castle already knows. Bishops are the linkable approval references;
 // the whole roster backs the Directory and the member search.
 const references = people.filter((p) => p.role === "bishop");
-const index = referenceIndex(people);
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 // A self-contained preview for /directory-demo/. It deliberately never reads
 // or writes the registration store: ten bishops appear as paid/confirmed and
@@ -240,7 +241,7 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
   const [f, setF] = useState({ gender: d.gender || "", title: d.title || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "" });
   const [busyPhoto, setBusyPhoto] = useState(false), [problem, setProblem] = useState("");
   const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "", ...((state.bishops || []).find(b => b.id === x.bishopId)?.organization !== v ? { bishopId: "" } : {}) } : {}) }));
-  const countries = [...new Set([...overlayReferences(people, state).map((x) => x.country), f.country].filter(Boolean))].sort();
+  const countries = [...new Set([...overlayReferences(rosterFrom(state, people), state).map((x) => x.country), f.country].filter(Boolean))].sort();
   const bishops = [...(state.bishops || [])].filter((b) => b.approved && b.organization === f.organization).sort((a, b) => a.name.localeCompare(b.name));
   const denominations = catalog.denominations[f.organization] || [];
   const save = () => perform("update", { ...f, photoConfirmed: true }, "Your details were updated.").then((ok) => ok && onDone());
@@ -289,9 +290,9 @@ function Communication({ state, run }) {
   // Registered members and the original data's emails can both be picked.
   const members = [
     ...(state.profiles || []).filter((p) => p.email && !/@manual\.invalid$/.test(p.email)),
-    ...overlayReferences(people, state).map((p) => ({ ...p, ...(state.contacts?.[p.id] || {}) })).filter((p) => p.email).map((p) => ({ id: p.id, name: p.name, email: p.email, role: p.role, original: true })),
+    ...overlayReferences(rosterFrom(state, people), state).map((p) => ({ ...p, ...(state.contacts?.[p.id] || {}) })).filter((p) => p.email).map((p) => ({ id: p.id, name: p.name, email: p.email, role: p.role, original: true })),
   ].sort((a, b) => a.name.localeCompare(b.name));
-  const targets = broadcastRecipients(state, audience, picked, people);
+  const targets = broadcastRecipients(state, audience, picked, rosterFrom(state, people));
   const term = q.trim().toLowerCase();
   const matches = term ? members.filter((p) => !picked.includes(p.id) && (normalName(p.name).includes(normalName(q)) || p.email.toLowerCase().includes(term))).slice(0, 12) : [];
   const ready = subject.trim() && message.trim() && targets.length > 0;
@@ -709,11 +710,13 @@ export default function RegistrationApp({
           : []),
       ];
   const view = SUBS[tab] ? sub[tab] || SUBS[tab][0] : tab;
-  const photos = useMemo(() => office && state ? state.photoProgress || photoProgress(state, people) : null, [office, state]);
+  const everyone = rosterFrom(state || pub, people);
+  const unclaimedPeople = everyone.filter(p => p.unclaimed);
+  const photos = useMemo(() => office && state ? state.photoProgress || photoProgress(state, rosterFrom(state, people)) : null, [office, state]);
   const [photoFilter, setPhotoFilter] = useState('all');
   const openPhotoTasks = (status) => { setPhotoFilter(status); setTab('Photo tasks'); };
   // Records that contradict the office's group and denomination structure (Denominations tab).
-  const conflicts = useMemo(() => (office && state ? structureConflicts(catalogOf(state), directoryPeople(state, publicPeople, Number(year))) : []), [office, state, year]);
+  const conflicts = useMemo(() => (office && state ? structureConflicts(catalogOf(state), directoryPeople(state, publicRosterFrom(state, people), Number(year))) : []), [office, state, year]);
   async function logout() {
     await run(async () => {
       await api.signOut(office);
@@ -741,6 +744,7 @@ export default function RegistrationApp({
   return (
     <EntranceContext.Provider value={entrance}>
     <OrganizationSiteContext.Provider value={site}>
+    <RosterContext.Provider value={everyone}>
     <div className={`reg-app ${site ? `reg-organization-app organization-${site}` : ""}`}>
       {!hero && (
         <div
@@ -1069,7 +1073,7 @@ export default function RegistrationApp({
                   {rollTabRole(tab) && (
                     <PublicDirectory
                       key={tab}
-                      data={{ source: state.publicDirectory || "original", photos: facePref || state.publicPhotos, roll: state.roll || [], catalog: catalogOf(state), year: state.year, hidden: state.hidden, overrides: state.overrides, extraReferences: state.extraReferences }}
+                      data={{ referencePeople: state.referencePeople, source: state.publicDirectory || "original", photos: facePref || state.publicPhotos, roll: state.roll || [], catalog: catalogOf(state), year: state.year, hidden: state.hidden, overrides: state.overrides, extraReferences: state.extraReferences }}
                       embedded
                       role={rollTabRole(tab)}
                     />
@@ -1136,6 +1140,7 @@ export default function RegistrationApp({
       )}
       <LegalFooter hidden={hero || browse} />
     </div>
+    </RosterContext.Provider>
     </OrganizationSiteContext.Provider>
     </EntranceContext.Provider>
   );
@@ -1682,7 +1687,7 @@ function RegistrationForm({
   const site = useContext(OrganizationSiteContext);
   const siteConfig = ORGANIZATION_SITES[site];
   const catalog = siteCatalog(state.catalog || catalogOf(state), site);
-  const matchingIndex = useMemo(() => site ? referenceIndex(peopleForSite(overlayReferences(people, state), site)) : index, [site, state.overrides, state.extraReferences, state.hidden]);
+  const matchingIndex = useMemo(() => referenceIndex(peopleForSite(overlayReferences(rosterFrom(state, people), state), site)), [site, state.referencePeople, state.overrides, state.extraReferences, state.hidden]);
   const [data, setData] = useState(() => ({
       ...{
         entrance,
@@ -2838,7 +2843,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
     [selectedId, setSelectedId] = useState(null);
   const all = useMemo(() => {
     const catalog = catalogOf(state);
-    const everyone = directoryPeople(state, people, year).map((p) => ({ ...p, denominationListed: denominationListed(catalog, p) }));
+    const everyone = directoryPeople(state, rosterFrom(state, people), year).map((p) => ({ ...p, denominationListed: denominationListed(catalog, p) }));
     // The registered view is what the public roll counts: people confirmed this year.
     return mode === "registered"
       ? everyone.filter((p) => p.registration?.status === "confirmed")
@@ -2986,7 +2991,7 @@ function PhotoSummary({ progress, onSelect }) {
 }
 function PhotoTasks({ state, progress, filter, setFilter, perform, actor, refresh }) {
   const [q, setQ] = useState(''), [bishop, setBishop] = useState(''), [limit, setLimit] = useState(50), [selectedId, setSelectedId] = useState(null);
-  const all = useMemo(() => directoryPeople({ ...state, hidden: [] }, people, state.year), [state]);
+  const all = useMemo(() => directoryPeople({ ...state, hidden: [] }, rosterFrom(state, people), state.year), [state]);
   const missing = new Set(progress.missingIds), replace = new Set(progress.replaceIds);
   const tasks = all.filter(p => missing.has(p.id) || replace.has(p.id));
   const bishops = [...new Set(tasks.map(p => p.bishop || 'Office to assign'))].sort();
@@ -3144,7 +3149,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
         ))}
       </dl>
       {p.role === "bishop" && (
-        <PastorsUnder bishop={p} extra={under} onOpen={onOpen} dots from={state ? overlayReferences(publicPeople, state) : undefined} />
+        <PastorsUnder bishop={p} extra={under} onOpen={onOpen} dots from={state ? overlayReferences(publicRosterFrom(state, people), state) : undefined} />
       )}
       {perform && state && (p.registration
         ? <OfficeEditor registration={p.registration} state={state} perform={perform} actor={actor} />
@@ -3169,7 +3174,7 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
   const save = () => perform("officeEdit", { userId: r.userId, data: changedFields(initial.current, form) }, "Details updated.").then((ok) => ok && setOpen(false));
   const statuses = d.role === "bishop" ? ["confirmed", "pending", "denied"] : ["confirmed", "unclaimed", "removed"];
-  const roster = overlayReferences(people, state);
+  const roster = overlayReferences(rosterFrom(state, people), state);
   const bishops = [...new Map([...roster.filter((p) => p.role === "bishop"), ...(state.bishops || [])].map((p) => [p.id, p])).values()];
   return (
     <section className="reg-office-editor">
@@ -3272,7 +3277,7 @@ function ReferenceEditor({ person: p, state, perform, actor }) {
   // Choices: the office's organizations and denominations, plus whatever the
   // original data already uses, so old spellings stay selectable.
   const catalog = state.catalog || catalogOf(state);
-  const roster = overlayReferences(people, state);
+  const roster = overlayReferences(rosterFrom(state, people), state);
   const unique = (list) => [...new Set(list.filter(Boolean))].sort();
   const denominations = form && unique([...(catalog.denominations[form.organization] || []), ...roster.filter((x) => x.organization === form.organization).map((x) => x.denomination)]);
   const countries = unique(roster.map((x) => x.country));
@@ -3330,7 +3335,7 @@ function AddPersonForm({ state, mode, perform, onDone, actor }) {
   const [f, setF] = useState({ role: "pastor", firstName: "", lastName: "", gender: "", organization: catalog.organizations[0] || "", denomination: "", city: "", country: "", phone: "", email: "", dob: "", bishopId: "", bishop: "", title: "" });
   const [file, setFile] = useState(null), [preview, setPreview] = useState(""), [busy, setBusy] = useState(false), [problem, setProblem] = useState("");
   const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
-  const roster = overlayReferences(people, state);
+  const roster = overlayReferences(rosterFrom(state, people), state);
   const unique = (list) => [...new Set(list.filter(Boolean))].sort();
   const countries = unique(roster.map((x) => x.country));
   const bishopNames = unique(roster.filter((x) => x.role === "bishop").map((x) => x.name));
@@ -3422,25 +3427,23 @@ function RosterRowEditor({ row, state, office, perform, onDone }) {
 // Members search the published roster: portrait, name, title, country,
 // denomination, branch and who oversees whom. Contact details and dates of
 // birth are removed before the roster reaches the browser.
-const everyone = people.map(({ email, phone, ...rest }) => rest);
 // Pastors under no bishop (not on any bishop's submitted list) stay off the roll until a bishop names them; the office sees them under Review → Unclaimed.
-const publicPeople = everyone.filter((p) => !p.unclaimed);
-const unclaimedPeople = everyone.filter((p) => p.unclaimed);
 // Pastors whose record names this bishop as overseer (typo-tolerant). A bishop
 // nobody named has no pastors listed; a pastor who named nobody sits under no one.
-const bishopPastors = (bishop, from = publicPeople) => ({
+const bishopPastors = (bishop, from) => ({
   list: pastorsOf(bishop, from),
   heading: "Pastors under their oversight",
 });
 function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
   const [limit, setLimit] = useState(24);
-  const named = bishopPastors(bishop, from);
+  const roster = useContext(RosterContext);
+  const named = bishopPastors(bishop, from || roster.filter(p => !p.unclaimed));
   const seen = new Set(extra.map((q) => q.id));
   const list = [...extra, ...named.list.filter((q) => !seen.has(q.id))].sort(bySurname);
   if (!list.length) return <section className="reg-record-group"><h3>No pastors under their oversight</h3></section>;
   return (
     <section className="reg-record-group">
-      <h3>{named.heading}</h3>
+      <h3>{named.heading} · {list.length.toLocaleString()}</h3>
       <div className="reg-thumb-grid">
         {list.slice(0, limit).map((q) => q.standing === false ? (
           <button key={q.id} type="button" className="reg-thumb-dark" onClick={() => onOpen?.(q)} disabled={!onOpen} aria-label="Pastor · not yet approved"><Portrait person={q} /></button>
@@ -3529,10 +3532,11 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
 // their totals — before any faces are shown. Lists the existing roster until the
 // office switches the source to this year's roll.
 function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
+  const fallback = useContext(RosterContext);
   const site = useContext(OrganizationSiteContext);
   // Built once per data load, not per render: the people, then the bishop → pastor index (the
   // expensive matching), then the lit/dark flags which are the only part the face switch changes.
-  const people = useMemo(() => (data.source === "roll" ? data.roll : overlayReferences(publicPeople, data)), [data.source, data.roll, data.catalog, data.year, data.hidden, data.overrides, data.extraReferences]);
+  const people = useMemo(() => (data.source === "roll" ? data.roll : overlayReferences(publicRosterFrom(data, fallback), data)), [data.referencePeople, fallback, data.source, data.roll, data.catalog, data.year, data.hidden, data.overrides, data.extraReferences]);
   const index = useMemo(() => new Map([...pastorsByBishop(peopleForSite(people, site))].map(([id, qs]) => [id, qs.map((q) => q.id)])), [people, site]);
   const list = useMemo(() => {
     const base = data.source !== "roll" && data.photos === "confirmed" ? withStanding(people, data.roll || []) : people;
@@ -4024,7 +4028,7 @@ function ReviewQueue({ records, floating = [], state, perform, actor, office, ca
   );
 }
 // Existing bishops whose names are alike this registrant's, best first.
-const bishopSuggestionsFor = (r) =>
+const bishopSuggestionsFor = (r, references) =>
   references
     .filter((b) => namesAlike(b.name, r.data.name))
     .sort((a, b) => Number(b.id === r.data.referenceId) - Number(a.id === r.data.referenceId))
@@ -4039,6 +4043,8 @@ const REVIEW_REASONS = [
 // Bishops waiting on the office, plus everyone (bishops and pastors) already
 // approved this year. Approved rows open read-only.
 function BishopApprovals({ records, directory = [], state, actor, perform, canEdit }) {
+  const references = overlayReferences(rosterFrom(state, people), state).filter(p => p.role === "bishop");
+  const index = referenceIndex(references);
   const [selectedId, setSelectedId] = useState(null),
     [ref, setRef] = useState(""),
     [confirmed, setConfirmed] = useState(false),
@@ -4092,7 +4098,7 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
               onClick={() => {
                 setSelectedId(r.userId);
                 // Preselect the record the registrant confirmed, else the best name match.
-                setRef(r.data.referenceId || bishopSuggestionsFor(r)[0]?.id || "");
+                setRef(r.data.referenceId || bishopSuggestionsFor(r, references)[0]?.id || "");
                 setConfirmed(false);
                 setReasons([]);
                 setNote("");
@@ -4132,7 +4138,7 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
           <ProfileDetails record={selected} />
           {state && <OfficeEditor registration={selected} state={state} perform={perform} actor={actor} />}
           {(() => {
-            const suggestions = bishopSuggestionsFor(selected);
+            const suggestions = bishopSuggestionsFor(selected, references);
             const chosen = index.byId.get(ref);
             const diffs = chosen
               ? [
