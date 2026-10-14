@@ -48,7 +48,7 @@ export async function readState(conn, lock = false) {
   if (extra.length) Object.assign(state, Object.fromEntries(Object.entries(parse(extra[0])).filter(([k]) => OFFICE_FIELDS.includes(k))));
   return state;
 }
-const OFFICE_FIELDS = ['hidden', 'catalog', 'fees', 'overrides', 'extraReferences', 'signup', 'rollSync', 'photoReviews'];
+const OFFICE_FIELDS = ['hidden', 'catalog', 'fees', 'overrides', 'extraReferences', 'signup', 'rollSync', 'submittedSourceSync', 'photoReviews'];
 export async function persistState(conn, before, after) {
   if (before.year !== after.year) await conn.execute('UPDATE dr_settings SET current_year=? WHERE id=1', [after.year]);
   if (OFFICE_FIELDS.some(k => JSON.stringify(before[k] ?? null) !== JSON.stringify(after[k] ?? null)))
@@ -59,6 +59,8 @@ export async function persistState(conn, before, after) {
     await conn.execute('DELETE FROM dr_registrations WHERE user_id=? AND registration_year=?', [r.userId, r.year]);
   for (const r of gone('rosters', r => r.id))
     await conn.execute('DELETE FROM dr_rosters WHERE id=?', [r.id]);
+  for (const p of gone('profiles', p => p.id))
+    await conn.execute('DELETE FROM dr_profiles WHERE id=?', [p.id]);
   const changed = (field, key) => {
     const old = new Map(before[field].map(v => [key(v), JSON.stringify(v)]));
     return after[field].filter(v => old.get(key(v)) !== JSON.stringify(v));

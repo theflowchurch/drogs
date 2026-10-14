@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { continuityAssets, nonPastoralRank, newerSubmission, submittedBirthKeys, submittedSheetBanner } from '../../scripts/lib/submitted-sheet-authority.mjs';
+import { submittedRosterAssets, nonPastoralRank, newerSubmission, submittedBirthKeys, submittedSheetBanner } from '../../scripts/lib/submitted-sheet-authority.mjs';
 
-test('continuity cannot supply old profile data, ranks, groups, years or contacts', () => {
+test('submitted asset index cannot supply profile data, ranks, groups, years or contacts', () => {
   const old = { id: 'B1', name: 'Identity match', image: 'portrait.webp', bishop: 'Identity link', organization: 'Old group',
     title: 'Old rank', city: 'Old city', country: 'Old country', gender: 'female', yearAppointed: '1990', phone: 'Old number', email: 'old@example.invalid' };
-  const data = continuityAssets({ bishops: [old], pastors: [old] });
+  const data = submittedRosterAssets({ bishops: [old], pastors: [old] });
   for (const record of [...data.bishops, ...data.pastors]) assert.deepEqual(Object.keys(record).sort(), ['bishop', 'id', 'image', 'name']);
 });
 

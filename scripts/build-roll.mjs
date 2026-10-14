@@ -3,7 +3,7 @@
 //   • every sheet the bishops sent back (their own details and the exact pastors under them),
 //   • the group chat's rulings for pastors claimed by two bishops,
 //   • pictures from the photo folders and the portraits already on file,
-// Nothing comes from the original roster or the old office export. data/roll-continuity.json
+// Nothing comes from the original roster or the old office export. data/submitted-roster-assets.json
 // only carries ids and portrait paths forward so registrations and photos keep pointing at people.
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -16,7 +16,7 @@ import { DENOMINATIONS } from '../src/registration/denominations.mjs';
 import { sameSoul, words } from './lib/names.mjs';
 import { dhash, hamming, SAME_PICTURE } from './lib/photo-hash.mjs';
 import { birthAgrees } from './lib/birth.mjs';
-import { continuityAssets, nonPastoralRank, newerSubmission } from './lib/submitted-sheet-authority.mjs';
+import { submittedRosterAssets, nonPastoralRank, newerSubmission } from './lib/submitted-sheet-authority.mjs';
 const root = new URL('..', import.meta.url).pathname;
 const BASE = `${process.env.HOME}/Downloads/Kuriake Castle Project/01 Office source data`;
 const read = (rel, fallback) => { try { return JSON.parse(readFileSync(`${root}${rel}`, 'utf8')); } catch { return fallback; } };
@@ -46,8 +46,9 @@ const findBishop = (name) => { const k = key(stripTitle(name)); if (!k) return n
   for (const [v, b] of variants) if (words(v).sort().join(' ') === sorted) return b;
   if (w.length >= 2) { const subset = new Set(); for (const [v, b] of variants) { const vw = words(v); if (vw.length >= 2 && (vw.every((x) => w.includes(x)) || w.every((x) => vw.includes(x)))) subset.add(b); } if (subset.size === 1) return [...subset][0]; if (subset.size > 1) return null; }
   const alike = new Set(); for (const [v, b] of variants) if (namesAlike(v, k) && words(v).at(-1) === w.at(-1)) alike.add(b); return alike.size === 1 ? [...alike][0] : null; };
-// ---------- 2. Continuity: identity matching and portraits only
-const cont = continuityAssets(read('data/roll-continuity.json', { bishops: [], pastors: [] }));
+// ---------- 2. Audited current roster: stable IDs and portraits only
+const cont = submittedRosterAssets(read('data/submitted-roster-assets.json', { bishops: [], pastors: [] }));
+const currentAssetsById = new Map([...cont.bishops, ...cont.pastors].map(p => [p.id, p]));
 const oldBishopByKey = new Map(cont.bishops.map((b) => [key(b.name), b]));
 for (const b of listBishops) { let o = oldBishopByKey.get(key(b.name)); if (!o) for (const a of aliasesOf(b)) o = o || oldBishopByKey.get(key(a)); if (!o) { const alike = cont.bishops.filter((x) => namesAlike(ap(x.name), ap(b.name))); if (alike.length === 1) o = alike[0]; } b.old = o || null; }
 const oldPastorsByKey = new Map(); for (const p of cont.pastors) { const k = key(p.name); if (!oldPastorsByKey.has(k)) oldPastorsByKey.set(k, []); oldPastorsByKey.get(k).push(p); }
@@ -76,6 +77,7 @@ for (const s of subs) { const b = findBishop(fromFile(s.file)) || findBishop(s.b
   } latestByBishop.set(b.listName, newerSubmission(latestByBishop.get(b.listName), s)); } // the office named each file after its bishop; a bishop row that names someone else (Lokko's sheet carries Wisdom Ahiagah's row) is not used for details // folders are ordered oldest → newest, so the last wins
 // ---------- 5. Bishops
 let newBishopN = 1; const bishops = [];
+const nextBishopId = () => { while (currentAssetsById.has(`BL${newBishopN}`)) newBishopN++; return `BL${newBishopN++}`; };
 const anchorById = new Map();
 for (const b of listBishops) {
   const s = latestByBishop.get(b.listName); const row = s && !s.rowBelongsToAnother ? s.bishopRow : null; const o = b.old;
@@ -85,7 +87,7 @@ for (const b of listBishops) {
   const gender = row?.gender || (/^(mother|episcopal sister)/i.test(b.listName) ? 'female' : '');
   // Only men are Bishops (Joshua, 9 Oct): a woman is an Episcopal Sister in the United Denominations and a Mother in First Love, FLOW and the Healing Jesus Campaign.
   const title = gender === 'female' ? (organization === 'United Denominations' ? 'Episcopal Sister' : 'Mother') : 'Bishop';
-  bishops.push({ id: o?.id || `BL${newBishopN++}`, role: 'bishop', name, title, organization, denomination: (COUNTRYISH.test(b.listDenomination.trim()) && row?.denomination && !COUNTRYISH.test(row.denomination) ? canonDen(group, row.denomination) : '') || canonDen(organization === 'HJC' ? 'HJC' : group, b.listDenomination) || '', denominationLogo: '', city: b.override?.city || row?.city || '', branch: b.branch || row?.branch || '', country: fixCountry(row?.country) || (COUNTRYISH.test(b.listDenomination) && !/n\/?a|other/i.test(b.listDenomination) ? tc(b.listDenomination.replace(/\s*[–(-].*$/, '')) : ''), image: o?.image || '', gender, yearAppointed: row?.yearAppointed || '', yearOrdained: row?.yearOrdained || '', yearConsecrated: row?.yearConsecrated || '', group, sheet: s ? { file: s.file, folder: s.folder, noPastors: Boolean(s.noPastors), rows: s.pastors.length } : null });
+  bishops.push({ id: o?.id || nextBishopId(), role: 'bishop', name, title, organization, denomination: (COUNTRYISH.test(b.listDenomination.trim()) && row?.denomination && !COUNTRYISH.test(row.denomination) ? canonDen(group, row.denomination) : '') || canonDen(organization === 'HJC' ? 'HJC' : group, b.listDenomination) || '', denominationLogo: '', city: b.override?.city || row?.city || '', branch: b.branch || row?.branch || '', country: fixCountry(row?.country) || (COUNTRYISH.test(b.listDenomination) && !/n\/?a|other/i.test(b.listDenomination) ? tc(b.listDenomination.replace(/\s*[–(-].*$/, '')) : ''), image: o?.image || '', gender, yearAppointed: row?.yearAppointed || '', yearOrdained: row?.yearOrdained || '', yearConsecrated: row?.yearConsecrated || '', group, sheet: s ? { file: s.file, folder: s.folder, noPastors: Boolean(s.noPastors), rows: s.pastors.length } : null });
   anchorById.set(bishops.at(-1).id, b);
   variants.set(key(bishops.at(-1).name), b);
 }
@@ -206,6 +208,9 @@ for (const p of pastors) {
   p.image = rel; photoFromFolder++;
 }
 for (const b of bishops) if (!b.image) { const hits = (indexByKey.get(key(b.name)) || []).filter((h) => h.own) ; if (hits.length) { const rel = `assets/portraits/${b.id}.webp`; try { if (!existsSync(`${root}${rel}`)) { const buf = readImage(hits[0].path); await sharp(buf).rotate().resize({ width: 640, withoutEnlargement: true }).webp({ quality: 78 }).toFile(`${root}${rel}`); await sharp(buf).rotate().resize({ width: 400, withoutEnlargement: true }).webp({ quality: 80 }).toFile(`${root}assets/portraits/thumbs/${b.id}.webp`); } b.image = rel; } catch {} } }
+// Known records retain the audited portrait (including an intentional blank).
+// A namesake or an old folder file cannot silently change their photo.
+for (const p of [...bishops, ...pastors]) if (currentAssetsById.has(p.id)) p.image = currentAssetsById.get(p.id).image || '';
 // Official portraits the office shared on Drive (scripts/bishop-photos-from-drive.mjs) beat any other picture.
 const overrides = read('data/bishop-photo-overrides.json', {});
 for (const b of [...bishops, ...pastors]) if (overrides[b.id] && existsSync(`${root}${overrides[b.id]}`)) b.image = overrides[b.id]; // a portrait the office sent for a pastor applies the same way
@@ -291,13 +296,24 @@ for (const s of [...latestByBishop.values(), ...nonList.filter((x) => x.lay)]) {
 }
 const reconcileProblems = reconcile.flatMap((r) => [...r.notUnder.filter((x) => x.fate === 'MISSING').map((x) => ({ bishop: r.bishop, file: r.file, row: x.row, name: x.name, problem: 'sheet row not on the roll' })), ...r.extra.map((x) => ({ bishop: r.bishop, file: r.file, name: x.name, problem: `under the bishop but not on their sheet (from ${x.from})` }))]);
 console.log(`Reconciled ${reconcile.length} sheets: ${reconcile.reduce((n, r) => n + r.sheetRows, 0)} rows → ${reconcile.reduce((n, r) => n + r.onRoll, 0)} records under their bishops, ${reconcile.reduce((n, r) => n + r.notUnder.length, 0)} rows accounted for otherwise, ${reconcileProblems.length} problems`);
+// Location labels use current source data only. A bishop's submitted branch
+// or the documented countries of their oversight is not a made-up home city.
+for (const b of bishops) {
+  if (b.city || b.country || b.branch) continue;
+  const sheet = [...latestByBishop.values()].find(s => s.bishopRef && bishopByList.get(s.bishopRef.listName)?.id === b.id);
+  if (sheet && /FLC ENERGY CAMPUS/i.test(sheet.file)) b.branch = 'Energy Campus';
+  else {
+    const countries = [...new Set(pastors.filter(p => p.bishop === b.name).map(p => p.country).filter(Boolean))].sort();
+    if (countries.length) b.oversightArea = countries.join(' / ');
+  }
+}
 // ---------- 8. Write
 // Contact details for the server only (sign-in, office views): the sheets' own phone and email for every bishop and pastor,
 // over whatever was on file. The public roll never carries them (Bishop Sakyi, 12 Oct: the phone on the sheet was missing on the record).
 {
   const contacts = {}; // rebuilt only from the latest submitted sheets
   const blank = (v) => !v || /^(missing|n\/?a|none|-|…)$/i.test(v);
-  const take = (id, row) => { if (!row) return; const c = contacts[id] || {}; if (!blank(row.email) && /@/.test(row.email)) c.email = row.email; if (!blank(row.phone) && row.phone.replace(/\D/g, '').length >= 6) c.phone = row.phone; if (c.email || c.phone) contacts[id] = c; };
+  const take = (id, row) => { if (!row) return; const c = contacts[id] || {}; if (!blank(row.email) && /@/.test(row.email)) c.email = row.email; if (!blank(row.phone) && row.phone.replace(/\D/g, '').length >= 6) c.phone = row.phone; if (row.dobKeys?.length) c.dobKeys = row.dobKeys; if (c.email || c.phone || c.dobKeys?.length) contacts[id] = c; };
   for (const [listName, s] of latestByBishop) take(bishopByList.get(listName)?.id, s.rowBelongsToAnother ? null : s.bishopRow);
   for (const s of nonList.filter((x) => x.lay)) take(s.lay.id, s.pastors.find((r) => key(r.name) === key(s.bishop)));
   for (const p of pastors) take(p.id, subs.find((x) => x.file === p.source?.file && x.folder === p.source?.folder)?.pastors.find((r) => r.row === p.source?.row));
@@ -305,12 +321,27 @@ console.log(`Reconciled ${reconcile.length} sheets: ${reconcile.reduce((n, r) =>
   console.log(`Contacts: ${Object.keys(contacts).length} records with an email or phone (${bishops.filter((b) => contacts[b.id]?.email).length} bishops with an email)`);
 }
 const people = [...bishops.filter((b) => !b.lay), ...layPresidents, ...pastors]; // lay presidents after the bishops
+// Persist only the 286 audited latest sheets, never superseded submissions.
+const currentSheets = [...latestByBishop.values(), ...nonList.filter(s => s.lay)];
+writeFileSync(`${root}data/bishop-submissions.json`, JSON.stringify(currentSheets.map(({ bishopRef, lay, rowBelongsToAnother, ...sheet }) => sheet), null, 1) + '\n');
+// Refresh the matching/portrait index from these current people, with the
+// actual current list/row spelling as an alias. It contains no profile fields.
+const assetOf = p => {
+  const anchor = anchorById.get(p.id);
+  const row = p.source && currentSheets.find(s => s.file === p.source.file && s.folder === p.source.folder)?.pastors.find(r => r.row === p.source.row);
+  const submittedName = anchor ? stripTitle(anchor.listName) : row?.name || p.name;
+  return { id: p.id, name: p.name, bishop: p.bishop || '', image: p.image || '', ...(submittedName !== p.name ? { submittedName } : {}) };
+};
+writeFileSync(`${root}data/submitted-roster-assets.json`, JSON.stringify({ bishops: people.filter(p => p.role === 'bishop' && !p.lay).map(assetOf), pastors: people.filter(p => p.role === 'pastor' || p.lay).map(assetOf) }) + '\n');
+// Choices in sign-up/admin are also drawn from the current sheets.
+const denominations = Object.fromEntries(['First Love', 'United Denominations', 'FLOW', 'HJC', 'DHMM'].map(o => [o, ['FLOW', 'HJC', 'DHMM'].includes(o) ? [] : [...new Set(people.filter(p => p.organization === o).map(p => p.denomination).filter(Boolean))].sort()]));
+writeFileSync(`${root}src/registration/denominations.mjs`, `// Generated from the current submitted sheets by scripts/build-roll.mjs.\nexport const DENOMINATIONS = ${JSON.stringify(denominations, null, 2)};\n`);
 writeFileSync(`${root}src/registration/reference-people.json`, JSON.stringify(people.map(({ sheet, source, ...rest }) => rest)) + '\n');
 const noSheet = listBishops.filter((b) => !latestByBishop.has(b.listName));
 const report = {
   generated: new Date().toISOString(),
-  sourceAuthority: { personalDetails: 'latest submitted spreadsheets', bishopMembership: 'current Bishops List and explicit office corrections', continuity: ['id', 'identity matching', 'portrait'], legacyRankExclusions: false, legacyProfileFallbacks: false, googleFormYearFallbacks: false },
-  totals: { bishops: bishops.length - layPresidents.length, layPresidents: layPresidents.length, pastors: pastors.length, assigned: pastors.filter((p) => !p.unclaimed).length, unclaimed: pastors.filter((p) => p.unclaimed).length, withPhoto: pastors.filter((p) => p.image).length, sheets: subs.length, bishopsWithSheet: latestByBishop.size, noPastorsSheets: [...latestByBishop.values()].filter((s) => s.noPastors).length },
+  sourceAuthority: { personalDetails: 'latest submitted spreadsheets', bishopMembership: 'current Bishops List and explicit office corrections', assetAuthority: 'audited current submitted roster only', legacyRankExclusions: false, legacyProfileFallbacks: false, googleFormYearFallbacks: false },
+  totals: { bishops: bishops.length - layPresidents.length, layPresidents: layPresidents.length, pastors: pastors.length, assigned: pastors.filter((p) => !p.unclaimed).length, unclaimed: pastors.filter((p) => p.unclaimed).length, withPhoto: pastors.filter((p) => p.image).length, sheets: currentSheets.length, bishopsWithSheet: latestByBishop.size, noPastorsSheets: [...latestByBishop.values()].filter((s) => s.noPastors).length },
   noSheet: noSheet.map((b) => ({ id: bishopByList.get(b.listName)?.id, name: bishopByList.get(b.listName)?.name || b.name, listName: b.listName, group: b.listGroup, denomination: b.listDenomination, branch: b.branch, hadPastorsBefore: cont.pastors.filter((p) => key(p.bishop || '') === key(b.old?.name || b.name)).length })),
   sheetsNotOnList: nonList.filter((s) => !s.lay).map((s) => ({ bishop: s.bishop, file: s.file, folder: s.folder, pastors: s.pastors.length, noPastors: s.noPastors })),
   rowBelongsToAnother: [...latestByBishop.values()].filter((s) => s.rowBelongsToAnother).map((s) => ({ file: s.file, bishopRowNames: s.rowBelongsToAnother })),

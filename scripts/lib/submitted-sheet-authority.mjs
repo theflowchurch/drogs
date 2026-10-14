@@ -1,7 +1,7 @@
-// Continuity is only an identity/portrait index. No old profile detail can
-// cross this boundary into a record built from the current submitted sheets.
-export function continuityAssets(data) {
-  const pick = ({ id, name, bishop, image }) => ({ id, name, bishop, image });
+// Only assets belonging to the audited current submitted roster are carried
+// forward. These cannot supply profile details or add people to a sheet.
+export function submittedRosterAssets(data) {
+  const pick = ({ id, name, submittedName, bishop, image }) => ({ id, name: submittedName || name, bishop, image });
   return { bishops: (data.bishops || []).map(pick), pastors: (data.pastors || []).map(pick) };
 }
 

@@ -864,7 +864,6 @@ export default function RegistrationApp({
             <span className="reg-shimmer">View All Bishops and Pastors in Good Standing</span>
             <span className="reg-enter-arrow" aria-hidden="true">→</span>
           </a>
-          {!site && <nav className="reg-main-sites" aria-label="Organization sites">{Object.entries(ORGANIZATION_SITES).map(([key, config]) => <a key={key} href={sitePath(key, "", base)}>{config.shortName}</a>)}</nav>}
         </section>
       ) : !gate ? (
         <Gate
@@ -3085,7 +3084,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
           <span className="reg-eyebrow">{(p.title || p.role).toUpperCase()}</span>
           <h2>{p.name}</h2>
           <p className="reg-record-country">
-            {[p.city, p.country].filter(Boolean).join(", ") || "Location not recorded"}
+            {placeOf(p)}
           </p>
           {p.denomination && (
             <p className="reg-record-denomination">
@@ -3478,7 +3477,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
           <span className="reg-eyebrow">{(p.title || p.role).toUpperCase()}</span>
           <h2>{p.name}</h2>
           <p className="reg-record-country">
-            {placeOf(p) || "Location not recorded"}
+            {placeOf(p)}
           </p>
           {p.standing !== undefined && (
             <p className={`reg-record-line reg-standing ${p.standing ? "good" : "pending"}`}>{p.standing ? "In Good Standing" : "Standing not yet confirmed"}</p>
@@ -3594,9 +3593,10 @@ function SearchResults({ list, q }) {
   const setSelected = p => setSelectedId(p?.id || null);
   const trail = useTrail(selected, setSelected);
   const words = normalName(q);
-  const byName = list.filter((p) => normalName(p.name).includes(words));
+  const matchesName = p => words.split(/\s+/).every(word => normalName(p.name).includes(word));
+  const byName = list.filter(matchesName);
   const elsewhere = list.filter(
-    (p) => !normalName(p.name).includes(words) && normalName(`${p.city} ${p.country} ${p.denomination} ${p.group || ""}`).includes(words),
+    (p) => !matchesName(p) && normalName(`${p.city} ${p.country} ${p.denomination} ${p.group || ""}`).includes(words),
   );
   const shown = [...byName, ...elsewhere].slice(0, 60);
   return (
@@ -4118,7 +4118,7 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
                 <h3>{r.data.name}</h3>
                 <p>
                   {titleFor(r.data)} · {orgLabel(r.data.organization)} · {r.data.email}{r.entrance === "appointments" ? " · Pastoral appointment" : ""}{r.photoChangedAt ? " · Photo changed after approval" : ""}{r.data.photoCheck && r.data.photoCheck.verdict !== "ok" && r.data.photoCheck.verdict !== "skipped" ? ` · ${attireWords(r.data.photoCheck)}` : ""}
-                  {state.profiles.find((p) => p.id === r.userId)?.autoApproved ? " · approved automatically: matched the original data" : ""}
+                  {state.profiles.find((p) => p.id === r.userId)?.autoApproved ? " · approved automatically: matched the submitted roster" : ""}
                 </p>
               </div>
               <Badge status={r.status === "confirmed" ? "confirmed" : r.status === "denied" ? "denied" : "pending"}>{r.resubmit ? "Asked to resubmit" : null}</Badge>

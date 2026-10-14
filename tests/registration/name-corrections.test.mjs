@@ -16,7 +16,7 @@ test('older sheet spellings match E.A.T Sackey without changing other people', (
   assert.equal(canonicalBishopName('Eat Sackey.xlsx'), 'Eat Sackey.xlsx', 'source filenames stay usable');
 });
 test('old saved spellings cannot reappear in office, registered or public views', () => {
-  const s = { ...emptyState(), overrides: { B39: { name: 'Eat Sackey' }, P1: { bishop: 'Eat Sackey' } }, profiles: [{ id: 'account', role: 'bishop', referenceId: 'B39', name: 'Eat Sackey', bishopApproved: true }], registrations: [{ userId: 'account', year: 2027, status: 'confirmed', data: { role: 'bishop', referenceId: 'B39', name: 'Eat Sackey', firstName: 'Eat', lastName: 'Sackey', photo: 'account/portrait/bishop.webp' } }] };
+  const s = { ...emptyState(), overrides: { B39: { name: 'Eat Sackey', _officeFields: ['name'] }, P1: { bishop: 'Eat Sackey', _officeFields: ['bishop'] } }, profiles: [{ id: 'account', role: 'bishop', referenceId: 'B39', name: 'Eat Sackey', bishopApproved: true }], registrations: [{ userId: 'account', year: 2027, status: 'confirmed', data: { role: 'bishop', referenceId: 'B39', name: 'Eat Sackey', firstName: 'Eat', lastName: 'Sackey', photo: 'account/portrait/bishop.webp' } }] };
   assert.equal(overlayReferences(refs, s)[0].name, 'E.A.T Sackey');
   assert.equal(directoryPeople(s, refs).find(p => p.id === 'B39').name, 'E.A.T Sackey');
   assert.equal(overlayReferences(refs, s)[1].bishop, 'E.A.T Sackey');
@@ -44,7 +44,7 @@ test('Osylina retains her linked record and portrait across old saved names', ()
   const people = JSON.parse(readFileSync('src/registration/reference-people.json', 'utf8'));
   const id = 'S10325a07';
   assert.equal(people.find(p => p.id === id).name, 'Osylina Ama Ansah');
-  const s = { ...emptyState(), overrides: { [id]: { name: 'Paulina Ama Drah', city: 'Office-corrected city' } }, profiles: [{ id: 'account', referenceId: id, name: 'Paulina Ama Drah' }], registrations: [{ userId: 'account', year: 2027, status: 'confirmed', manual: true, data: { role: 'pastor', referenceId: id, name: 'Paulina Ama Ansah', firstName: 'Paulina', lastName: 'Ama Ansah' } }] };
+  const s = { ...emptyState(), overrides: { [id]: { name: 'Paulina Ama Drah', city: 'Office-corrected city', _officeFields: ['name', 'city'] } }, profiles: [{ id: 'account', referenceId: id, name: 'Paulina Ama Drah' }], registrations: [{ userId: 'account', year: 2027, status: 'confirmed', manual: true, data: { role: 'pastor', referenceId: id, name: 'Paulina Ama Ansah', firstName: 'Paulina', lastName: 'Ama Ansah' } }] };
   const p = overlayReferences(people, s).find(p => p.id === id);
   assert.equal(p.name, 'Osylina Ama Ansah');
   assert.equal(p.image, 'assets/portraits/S10325a07.webp');

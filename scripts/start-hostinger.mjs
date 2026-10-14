@@ -27,9 +27,10 @@ await migrate(pool); // idempotent: creates any missing dr_ tables
   const { createHash } = await import('node:crypto'); const { readFile } = await import('node:fs/promises');
   const { syncRoll } = await import('../src/registration/model.mjs'); const { transaction, readState, persistState } = await import('../src/server/database.mjs');
   const raw = await readFile(new URL('../src/registration/reference-people.json', import.meta.url), 'utf8');
+  const contacts = JSON.parse(await readFile(new URL('../data/reference-contacts.json', import.meta.url), 'utf8'));
   const version = createHash('sha1').update(raw).digest('hex').slice(0, 12);
-  try { await transaction(pool, async (conn) => { const before = await readState(conn, true); const after = syncRoll(before, JSON.parse(raw), version); if (after) { await persistState(conn, before, after); console.log(`Roll ${version}: structure and corrections aligned with the new roll`); } }); }
-  catch (error) { console.error('Roll sync failed', error.message); }
+  try { await transaction(pool, async (conn) => { const before = await readState(conn, true); const after = syncRoll(before, JSON.parse(raw).map(p => ({ ...p, ...contacts[p.id] })), version); if (after) { await persistState(conn, before, after); console.log(`Roll ${version}: structure and corrections aligned with the submitted sheets`); } }); }
+  catch (error) { throw new Error('Cannot start with an unreconciled submitted roster', { cause: error }); }
 }
 await pool.query('SELECT current_year FROM dr_settings WHERE id=1');
 await applySettings(config, pool); // saved settings (office emails included) apply before anything acts on them

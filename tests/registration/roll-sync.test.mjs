@@ -9,7 +9,7 @@ const people = [
   { id: 'P1', role: 'pastor', name: 'B', organization: 'First Love', group: 'First Love', denomination: 'Qodesh City Church', bishop: 'A' },
 ];
 test('syncRoll adds denominations, preserves all office corrections and runs once per version', () => {
-  const state = { ...emptyState(), catalog: { organizations: ['United Denominations', 'First Love'], denominations: { 'United Denominations': ['Old One'], 'First Love': [] }, groups: { 'UD Ghana': { organization: 'United Denominations', denominations: ['Old One'] } }, logos: {} }, overrides: { B1: { denomination: 'Old One', photo: 'x.webp' }, P1: { city: 'Nowhere' }, GONE: { photo: 'y.webp' } }, hidden: ['GONE', 'P1'] };
+  const state = { ...emptyState(), catalog: { organizations: ['United Denominations', 'First Love'], denominations: { 'United Denominations': ['Old One'], 'First Love': [] }, groups: { 'UD Ghana': { organization: 'United Denominations', denominations: ['Old One'] } }, logos: {} }, overrides: { B1: { denomination: 'Old One', photo: 'x.webp' }, P1: { city: 'Nowhere' }, GONE: { photo: 'y.webp' } }, audit: [{ action: 'setCatalog', actor: 'office' }, { action: 'editReference', target: 'B1', detail: { denomination: 'Old One' } }, { action: 'editReference', target: 'P1', detail: { city: 'Nowhere' } }], hidden: ['GONE', 'P1'] };
   const next = syncRoll(state, people, 'v1');
   assert.ok(next.catalog.denominations['United Denominations'].includes('Brand New Church'));
   assert.ok(next.catalog.denominations['United Denominations'].includes('Old One'), 'the office\'s own additions stay');
@@ -23,7 +23,7 @@ test('syncRoll adds denominations, preserves all office corrections and runs onc
   assert.ok(Object.keys(GROUPS).length > 0);
 });
 test('hand-added records, deleted records and photo reviews survive a roster refresh', () => {
-  const state = { ...emptyState(), extraReferences: [{ id: 'X1', name: 'Added Pastor', role: 'pastor' }], overrides: { X1: { name: 'Corrected Added Pastor', _officeFields: ['name'] }, P1: { name: 'Corrected Pastor', deleted: true } }, photoReviews: { P1: { photo: 'upload:new.webp', status: 'replace', codes: ['FAR'] } } };
+  const state = { ...emptyState(), extraReferences: [{ id: 'X1', name: 'Added Pastor', role: 'pastor' }], overrides: { X1: { name: 'Corrected Added Pastor', _officeFields: ['name'] }, P1: { name: 'Corrected Pastor', _officeFields: ['name'], deleted: true } }, photoReviews: { P1: { photo: 'upload:new.webp', status: 'replace', codes: ['FAR'] } } };
   const refreshed = syncRoll(state, people, 'v2');
   assert.deepEqual(refreshed.overrides, state.overrides);
   assert.deepEqual(refreshed.photoReviews, state.photoReviews);

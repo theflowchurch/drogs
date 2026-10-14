@@ -154,9 +154,11 @@ export const pauseFor = (state, entrance) => { const s = signupOf(state); return
 // United Denominations group lists what its bishops and pastors use. Office corrections remain
 // authoritative; hidden ids that no longer exist are forgotten.
 export function syncRoll(state, people, version) {
-  if (state.rollSync === version) return null;
+  if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1') return null;
   state = canonicalOfficeNames(state);
-  const saved = state.catalog?.organizations?.length ? state.catalog : null;
+  const aligned = reconcileSubmittedState(state, people);
+  state = aligned.state;
+  const saved = state.catalog?.organizations?.length && state.audit.some(a => a.action === 'setCatalog' && a.actor !== 'system') ? state.catalog : null;
   const organizations = [...new Set([...ORGANIZATIONS, ...(saved?.organizations || [])])];
   const denominations = {};
   for (const o of organizations) denominations[o] = new Set([...(DENOMINATIONS[o] || []), ...((saved?.denominations || {})[o] || [])]);
@@ -178,9 +180,10 @@ export function syncRoll(state, people, version) {
     overrides,
     hidden: (state.hidden || []).filter((id) => ids.has(id)),
     rollSync: version,
+    submittedSourceSync: 'submitted-only-v1',
   };
   const dropped = Object.keys(state.overrides || {}).length - Object.keys(overrides).length;
-  next.audit = [...state.audit, { id: crypto.randomUUID(), actor: "system", at: new Date().toISOString(), action: "rollSync", detail: { version, corrections: dropped, denominations: Object.values(next.catalog.denominations).reduce((n, d) => n + d.length, 0) } }];
+  next.audit = [...state.audit, { id: crypto.randomUUID(), actor: "system", at: new Date().toISOString(), action: "rollSync", detail: { version, corrections: dropped, sourceCleanup: aligned.summary, denominations: Object.values(next.catalog.denominations).reduce((n, d) => n + d.length, 0) } }];
   return next;
 }
 export const catalogOf = (state) => {
@@ -252,7 +255,7 @@ export const feesOf = (state) => state?.fees?.bishop ? state.fees : AMOUNTS;
 export const REFERENCE_FIELDS = ["name", "role", "title", "gender", "dob", "organization", "denomination", "group", "city", "country", "bishop", "branch", "yearAppointed", "yearOrdained", "yearConsecrated", "photo", "phone", "email"];
 // Contact details and birth dates stay in the office: public and member views
 // receive corrections without these private fields.
-const CONTACT_FIELDS = ["phone", "email", "dob"];
+const CONTACT_FIELDS = ["phone", "email", "dob", "dobKeys"];
 const scrubContacts = (o) => Object.fromEntries(Object.entries(o || {}).filter(([k]) => !CONTACT_FIELDS.includes(k) && k !== '_officeFields'));
 // The pastors under a bishop: those whose record names this bishop exactly, plus those whose
 // bishop text is an alike spelling that matches no bishop on the list (so two bishops with
@@ -280,14 +283,18 @@ export function pastorsByBishop(people) {
 // Denominations are always written in capitals on the site.
 export const caps = (s) => String(s || "").toUpperCase();
 // Surname first for ordering: the last word of the name (hyphenated names stay whole).
-// When a record has no city, the country's capital stands in so every place reads "City, Country".
-export const CAPITALS = { ghana: "Accra", "united states": "Washington, D.C.", usa: "Washington, D.C.", "united kingdom": "London", uk: "London", "south africa": "Pretoria", kenya: "Nairobi", mozambique: "Maputo", botswana: "Gaborone", zambia: "Lusaka", nigeria: "Abuja", liberia: "Monrovia", togo: "Lomé", italy: "Rome", uganda: "Kampala", zimbabwe: "Harare", namibia: "Windhoek", "sierra leone": "Freetown", benin: "Porto-Novo", switzerland: "Bern", australia: "Canberra", canada: "Ottawa", cameroon: "Yaoundé", guyana: "Georgetown", rwanda: "Kigali", "cote d'ivoire": "Yamoussoukro", "cote d'ivoire (ivory coast)": "Yamoussoukro", "ivory coast": "Yamoussoukro", germany: "Berlin", tanzania: "Dodoma", jamaica: "Kingston", "guinea-bissau": "Bissau", guinea: "Conakry", eswatini: "Mbabane", "new zealand": "Wellington", brazil: "Brasília", france: "Paris", gabon: "Libreville", madagascar: "Antananarivo", gambia: "Banjul", "saint lucia": "Castries", "st lucia": "Castries", philippines: "Manila", congo: "Brazzaville", ethiopia: "Addis Ababa", "solomon islands": "Honiara", drc: "Kinshasa", "congo, democratic republic": "Kinshasa", burundi: "Gitega", "central african republic": "Bangui", angola: "Luanda", "papua new guinea": "Port Moresby", "burkina faso": "Ouagadougou", india: "New Delhi", malawi: "Lilongwe", seychelles: "Victoria", colombia: "Bogotá", senegal: "Dakar", barbados: "Bridgetown", fiji: "Suva", belgium: "Brussels", vanuatu: "Port Vila", "antigua and barbuda": "St. John's", antigua: "St. John's", netherlands: "Amsterdam", nicaragua: "Managua", mali: "Bamako", "trinidad and tobago": "Port of Spain", "trinidad & tobago": "Port of Spain", bangladesh: "Dhaka", hungary: "Budapest", "equatorial guinea": "Malabo", ireland: "Dublin", malaysia: "Kuala Lumpur", chile: "Santiago", china: "Beijing", belize: "Belmopan", spain: "Madrid", "saint kitts and nevis": "Basseterre", "st kitts & nevis": "Basseterre", "st. kitts & nevis": "Basseterre", portugal: "Lisbon", "south sudan": "Juba", martinique: "Fort-de-France", thailand: "Bangkok", dominica: "Roseau", sweden: "Stockholm", "cape verde": "Praia", vietnam: "Hanoi", lesotho: "Maseru", indonesia: "Jakarta", chad: "N'Djamena", haiti: "Port-au-Prince", "st vincent": "Kingstown", "saint vincent & the grenadines": "Kingstown", austria: "Vienna", "dominican republic": "Santo Domingo", samoa: "Apia", cuba: "Havana", guadeloupe: "Basse-Terre", tonga: "Nukuʻalofa", niger: "Niamey", tunisia: "Tunis", liechtenstein: "Vaduz", norway: "Oslo", cambodia: "Phnom Penh", "sao tome and principe": "São Tomé", romania: "Bucharest", luxembourg: "Luxembourg", suriname: "Paramaribo", morocco: "Rabat", turkey: "Ankara", qatar: "Doha", peru: "Lima", grenada: "St. George's", panama: "Panama City", "costa rica": "San José", taiwan: "Taipei", mauritius: "Port Louis", "american samoa": "Pago Pago", "middle east": "", bahamas: "Nassau", egypt: "Cairo", sudan: "Khartoum" };
-export const placeOf = (p) => { const country = String(p?.country || "").trim(); const city = String(p?.city || "").trim() || CAPITALS[country.toLowerCase()] || ""; return [city, country].filter(Boolean).join(", "); };
+export const placeOf = p => {
+  const city = String(p?.city || '').trim(), country = String(p?.country || '').trim();
+  const supplied = [city, country].filter(Boolean).join(', ');
+  return supplied || (p?.branch ? `Branch · ${p.branch}` : p?.oversightArea ? `Oversight · ${p.oversightArea}` : '');
+};
 // The public directory lists everyone from the original data, but a photograph
 // appears only once the person is on this year's roll (registered, paid and
 // confirmed). Everyone else is shown as a dark silhouette. People on the roll
 // who were not in the original data are added with their photo.
 export function withStanding(references, roll) {
+  const ids = new Set(references.map(p => p.id));
+  roll = (roll || []).filter(r => !r.referenceId || ids.has(r.referenceId));
   const onRoll = new Map((roll || []).filter((r) => r.referenceId).map((r) => [r.referenceId, r]));
   const seen = new Set();
   const out = references.map((p) => {
@@ -295,7 +302,7 @@ export function withStanding(references, roll) {
     if (r) seen.add(r.id);
     return r ? { ...p, standing: true, photo: r.photo || "", image: r.photo ? "" : r.image || p.image || "", ...(r.pastors ? { pastors: r.pastors } : {}) } : { ...p, standing: false, photo: "", image: "" };
   });
-  for (const r of roll || []) if (!seen.has(r.id) && !(r.referenceId && onRoll.has(r.referenceId))) out.push({ ...r, standing: true });
+  for (const r of roll) if (!seen.has(r.id) && !(r.referenceId && onRoll.has(r.referenceId))) out.push({ ...r, standing: true });
   return out;
 }
 export const publicOverlay = (state) => ({
@@ -326,6 +333,110 @@ function officeFields(state, id) {
       for (const k of Object.keys(a.detail || {})) if (REFERENCE_FIELDS.includes(referenceField(k))) fields.add(referenceField(k));
   }
   return fields;
+}
+// A previous reference ID is not a second person. Reconnect only an exact,
+// unique name/role/country match in the current submitted roster. Never fuzzy
+// match namesakes or turn an unlisted legacy record into a new registration.
+export function reconcileSubmittedState(source, people) {
+  const state = structuredClone(source);
+  const summary = { relinked: [], removedProfiles: 0, removedRegistrations: 0, removedRosterRows: 0, removedOverrides: 0, removedOverrideFields: 0 };
+  const byId = new Map([...people, ...(state.extraReferences || [])].map(p => [p.id, p]));
+  const exact = p => {
+    const matches = people.filter(q => q.role === p.role && normalName(q.name) === normalName(p.name) &&
+      (!q.country || !p.country || normalName(q.country) === normalName(p.country)) &&
+      (!p.dob || !q.dobKeys?.length || q.dobKeys.includes(`${Number(String(p.dob).slice(8, 10))}-${Number(String(p.dob).slice(5, 7))}-${String(p.dob).slice(2, 4)}`)));
+    return matches.length === 1 ? matches[0] : null;
+  };
+  const links = new Map();
+  for (const r of state.registrations) if (r.data.referenceId && !byId.has(r.data.referenceId)) {
+    const match = exact(r.data);
+    if (match) links.set(r.data.referenceId, match.id);
+  }
+  for (const p of state.profiles) if (p.referenceId && !byId.has(p.referenceId) && !links.has(p.referenceId)) {
+    const registration = state.registrations.find(r => r.userId === p.id && r.data.referenceId === p.referenceId);
+    const match = exact(registration?.data || p);
+    if (match) links.set(p.referenceId, match.id);
+  }
+  for (const [from, to] of links) {
+    summary.relinked.push({ from, to });
+    // Move the ownership evidence with the account, then discard old keys.
+    const old = state.overrides?.[from];
+    if (old) {
+      const owned = officeFields(state, from);
+      const kept = Object.fromEntries(Object.entries(old).filter(([k]) => owned.has(k) || ['photo', 'deleted'].includes(k)));
+      state.overrides[to] = { ...kept, ...state.overrides[to], _officeFields: [...new Set([...owned, ...(state.overrides[to]?._officeFields || [])])] };
+      delete state.overrides[from];
+    }
+  }
+  for (const p of state.profiles) if (links.has(p.referenceId)) p.referenceId = links.get(p.referenceId);
+  for (const r of state.registrations) if (links.has(r.data.referenceId)) r.data.referenceId = links.get(r.data.referenceId);
+  const orphanAccounts = new Set(state.profiles.filter(p => p.referenceId && !byId.has(p.referenceId)).map(p => p.id));
+  for (const r of state.registrations) if (r.data.referenceId && !byId.has(r.data.referenceId)) orphanAccounts.add(r.userId);
+  const beforeProfiles = state.profiles.length, beforeRegistrations = state.registrations.length;
+  state.profiles = state.profiles.filter(p => !orphanAccounts.has(p.id));
+  state.registrations = state.registrations.filter(r => !orphanAccounts.has(r.userId));
+  summary.removedProfiles = beforeProfiles - state.profiles.length;
+  summary.removedRegistrations = beforeRegistrations - state.registrations.length;
+  const preserved = id => {
+    const fields = officeFields(state, id);
+    // Actual member edits are also evidence; automatically copied fields have
+    // neither this history nor office ownership.
+    const accounts = new Set(state.profiles.filter(p => p.referenceId === id).map(p => p.id));
+    for (const r of state.registrations) if (r.data.referenceId === id) accounts.add(r.userId);
+    for (const a of state.audit || []) if (a.action === 'update' && accounts.has(a.target))
+      for (const k of Object.keys(a.detail || {})) if (REFERENCE_FIELDS.includes(referenceField(k))) fields.add(referenceField(k));
+    return fields;
+  };
+  const overrides = {};
+  for (const [id, fields] of Object.entries(state.overrides || {})) {
+    if (!byId.has(id)) { summary.removedOverrides++; continue; }
+    const owned = preserved(id);
+    const kept = Object.fromEntries(Object.entries(fields).filter(([k]) => owned.has(k) || ['photo', 'deleted', '_officeFields'].includes(k)));
+    summary.removedOverrideFields += Object.keys(fields).length - Object.keys(kept).length;
+    if (Object.keys(kept).length) overrides[id] = kept;
+  }
+  state.overrides = overrides;
+  const effective = new Map(overlayReferences([...byId.values()], { ...state, hidden: [] }).map(p => [p.id, p]));
+  for (const r of state.registrations) {
+    const p = effective.get(r.data.referenceId);
+    if (!p) continue;
+    const owned = preserved(p.id);
+    for (const k of REFERENCE_FIELDS) if (k !== 'photo' && k !== 'dob' && p[k] !== undefined && (!owned.has(k) || state.overrides[p.id]?.[k] !== undefined))
+      r.data[k === 'branch' ? 'church' : k] = p[k];
+    if (r.data.name && [r.data.firstName, r.data.lastName].filter(Boolean).join(' ') !== r.data.name) {
+      const words = r.data.name.split(/\s+/);
+      r.data.firstName = words.slice(0, -1).join(' '); r.data.lastName = words.at(-1);
+    }
+    if (p.role === 'pastor' && !owned.has('bishop')) {
+      const bishop = [...effective.values()].find(b => b.role === 'bishop' && normalName(b.name) === normalName(p.bishop));
+      if (bishop) {
+        r.data.bishopId = bishop.id; r.data.bishopName = bishop.name;
+        const words = bishop.name.split(/\s+/);
+        r.data.bishopFirstName = words.slice(0, -1).join(' '); r.data.bishopLastName = words.at(-1);
+      }
+    }
+  }
+  for (const p of state.profiles) {
+    const ref = effective.get(p.referenceId);
+    if (ref) for (const k of ['name', 'role', 'organization']) p[k] = ref[k];
+  }
+  const beforeRows = state.rosters.length;
+  state.rosters = state.rosters.filter(row => {
+    if (orphanAccounts.has(row.bishopId) || orphanAccounts.has(row.pastorId)) return false;
+    if (links.has(row.referenceId)) row.referenceId = links.get(row.referenceId);
+    const bishop = state.profiles.find(p => p.id === row.bishopId);
+    const listedBishop = effective.get(bishop?.referenceId);
+    const candidates = [...effective.values()].filter(p => p.role === 'pastor' &&
+      (!listedBishop || normalName(p.bishop) === normalName(listedBishop.name)) && normalName(p.name) === normalName(row.name));
+    const ref = effective.get(row.referenceId) || (candidates.length === 1 ? candidates[0] : null);
+    if (row.referenceId && !ref) return false;
+    if (listedBishop && (!ref || ref.role !== 'pastor' || normalName(ref.bishop) !== normalName(listedBishop.name))) return false;
+    if (ref) { row.referenceId = ref.id; row.name = ref.name; }
+    return true;
+  });
+  summary.removedRosterRows = beforeRows - state.rosters.length;
+  state.photoReviews = Object.fromEntries(Object.entries(state.photoReviews || {}).filter(([id]) => byId.has(id)));
+  return { state, summary };
 }
 function syncReference(state, r, { byOffice = false, changed = null } = {}) {
   const id = r?.data?.referenceId;
@@ -365,7 +476,7 @@ export function broadcastRecipients(state, audience = "all", ids = [], reference
     audience === "original-all" || (audience === "original-bishops" && p.role === "bishop") || (audience === "original-pastors" && p.role === "pastor") || (audience === "selected" && chosen.has(p.id))));
   return [...members, ...original.map((p) => ({ id: p.id, name: p.name, email: p.email, role: p.role, original: true }))].filter(take);
 }
-// The old roster as the office has corrected it: hidden and deleted records out,
+// The submitted roster as the office has corrected it: hidden and deleted records out,
 // corrected fields in, hand-added people appended.
 export function overlayReferences(references, state) {
   const hidden = new Set(state?.hidden || []), overrides = state?.overrides || {};
@@ -376,6 +487,11 @@ export function overlayReferences(references, state) {
     out.push(canonicalPerson(o ? { ...p, ...Object.fromEntries(REFERENCE_FIELDS.filter((f) => o[f] !== undefined).map((f) => [f, o[f]])) } : p));
   }
   for (const p of state?.extraReferences || []) if (!hidden.has(p.id)) out.push(canonicalPerson(p));
+  // A corrected bishop name keeps the same identity and pastors. Derive the
+  // supervising label from that ID instead of needing old copied overrides.
+  const byId = new Map(out.map(p => [p.id, p]));
+  const names = new Map(references.filter(p => p.role === 'bishop' && byId.has(p.id)).map(p => [normalName(p.name), byId.get(p.id).name]));
+  for (const p of out) if (p.role === 'pastor' && names.has(normalName(p.bishop))) p.bishop = names.get(normalName(p.bishop));
   return out;
 }
 export function validateProfile(p, email, { draft = false, catalog = { organizations: ORGANIZATIONS, denominations: DENOMINATIONS } } = {}) {
@@ -931,7 +1047,7 @@ export function applyAction(
       const ref = overlayReferences(references, state).find((x) => x.id === id);
       if (!ref || ref.role !== "pastor" || !namesAlike(ref.name, row.name)) throw Error("That record does not carry this pastor’s name.");
     }
-    if (!/^[BP]\d+$/.test(id))
+    if (!/^[A-Z][A-Za-z0-9-]+$/.test(id))
       throw Error("Choose the pastor to confirm.");
     if (
       state.rosters.some(
@@ -1356,7 +1472,7 @@ export function publicRoll(state, people, year = state.year) {
   const byId = new Map(overlayReferences(people, state).map((p) => [p.id, p]));
   const bishopOf = (r) => state.profiles.find((p) => (p.referenceId || p.id) === r.data.bishopId && p.bishopApproved);
   return state.registrations
-    .filter((r) => r.year === year && r.status === "confirmed" && !r.hidden && (r.data.role === "bishop" || r.manual || bishopOf(r)))
+    .filter((r) => r.year === year && r.status === "confirmed" && !r.hidden && (!r.data.referenceId || byId.has(r.data.referenceId)) && (r.data.role === "bishop" || r.manual || bishopOf(r)))
     .map((r) => {
       const ref = byId.get(r.data.referenceId) || null;
       const d = registrationDetails(state, r.data);
@@ -1528,7 +1644,7 @@ export function directoryPeople(state, references, year = state.year) {
   });
   const matched = new Set([...registrations.values()].map((r) => r.userId));
   for (const r of submitted.filter(
-    (r) => r.status === "confirmed" && !matched.has(r.userId),
+    (r) => r.status === "confirmed" && !matched.has(r.userId) && (!r.data.referenceId || references.some(p => p.id === r.data.referenceId)),
   ))
     people.push({
       id: `new:${r.userId}`,

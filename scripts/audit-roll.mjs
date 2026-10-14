@@ -3,7 +3,7 @@ import { birthAgrees } from './lib/birth.mjs';
 import { nonPastoralRank } from './lib/submitted-sheet-authority.mjs';
 import { readFileSync, existsSync } from 'node:fs';
 import * as XLSX from 'xlsx'; import fs from 'node:fs'; XLSX.set_fs(fs);
-import { normalName, structureConflicts, catalogOf, titleFor, pastorsByBishop } from '../src/registration/model.mjs';
+import { normalName, structureConflicts, catalogOf, titleFor, pastorsByBishop, placeOf } from '../src/registration/model.mjs';
 const root = new URL('..', import.meta.url).pathname;
 const read = (rel) => JSON.parse(readFileSync(`${root}${rel}`, 'utf8'));
 const people = read('src/registration/reference-people.json'), report = read('data/reports/roll-build.json'), subs = read('data/bishop-submissions.json');
@@ -24,6 +24,12 @@ check('Nobody filed under Dag Heward-Mills', !pastors.some((p) => /dag heward/i.
 check('No older roster, rank list or Google Form fills current spreadsheet records', report.sourceAuthority?.legacyRankExclusions === false && report.sourceAuthority?.legacyProfileFallbacks === false && report.sourceAuthority?.googleFormYearFallbacks === false);
 check('Current sheet ranks exclude non-pastoral rows', report.reconcile.every(r => { const s = subs.find(s => s.file === r.file && s.folder === r.folder); return !s || s.pastors.filter(nonPastoralRank).every(p => r.notUnder.some(n => n.row === p.row)); }));
 check('Removed names are gone', rulings.remove.every((r) => !people.some((p) => key(p.name) === key(r.name))), rulings.remove.map((r) => r.name).join(', '));
+const assetIndex = read('data/submitted-roster-assets.json');
+const assets = [...assetIndex.bishops, ...assetIndex.pastors];
+check('Asset index contains exactly the audited current roster', assets.length === people.length && assets.every(a => people.some(p => p.id === a.id && p.image === a.image)));
+check('Old office datasets and superseded roster reports are deleted', ['data/roll-continuity.json', 'data/not-pastors.json', 'data/verified-years.json', 'data/official-bishops.json', 'data/reports/official-list-reconciliation.json'].every(file => !existsSync(`${root}${file}`)));
+check('Only the latest reconciled source sheets remain', subs.length === report.reconcile.length && subs.every(s => report.reconcile.some(r => r.file === s.file && r.folder === s.folder)));
+check('Every bishop has a current source place, branch or documented oversight area', [...bishops, ...lays].every(b => placeOf(b)));
 // 2. Structure of every record
 const ids = new Set(); const dup = people.filter((p) => ids.has(p.id) ? true : (ids.add(p.id), false));
 check('Ids are unique', dup.length === 0, dup.map((p) => p.id).join(', '));
@@ -39,7 +45,7 @@ check('Worksheet group banners are never imported as pastors', pastors.every(p =
 check('No pastor is listed twice under the same bishop', (() => { const seen = new Set(); return !pastors.some((p) => { const k = `${key(p.name)}|${key(p.bishop || '')}`; if (seen.has(k)) return true; seen.add(k); return false; }); })());
 check('No email, phone or birthday in the public file', !people.some((p) => p.email || p.phone || p.dob || p.dobKeys));
 // 3. Sheets and rulings
-check('Every sheet downloaded was read', report.totals.sheets === subs.length && subs.filter((s) => !s.pastors.length && !s.noPastors).length <= 3, `${subs.length} sheets; empty without a "no pastors" line: ${subs.filter((s) => !s.pastors.length && !s.noPastors).map((s) => s.file).join(', ') || 'none'}`);
+check('Stored sources are the latest audited submitted sheets', report.totals.sheets === subs.length && subs.filter((s) => !s.pastors.length && !s.noPastors).length <= 3, `${subs.length} sheets; empty without a "no pastors" line: ${subs.filter((s) => !s.pastors.length && !s.noPastors).map((s) => s.file).join(', ') || 'none'}`);
 check('Each named ruling that matches a sheet row is honoured', report.rulingNotOnSheet.length === 0, JSON.stringify(report.rulingNotOnSheet));
 // A ruling is honoured when the ruled bishop's sheet lists the person. When it does not, the sheet stands and the office is told.
 const sheetOf = (bishopName) => subs.find((s) => key(s.bishop) === key(bishopName) || key(s.bishop).includes(key(bishopName).split(' ').pop()));

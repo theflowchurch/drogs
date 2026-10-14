@@ -1,5 +1,5 @@
 import test from 'node:test';
-import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, writeFile, rm, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { createServer } from 'node:http';
 import { execFile } from 'node:child_process';
@@ -10,7 +10,8 @@ import mysql from 'mysql2/promise';
 import { S3Client } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
 import sharp from 'sharp';
-import { migrate, launchReset } from '../../src/server/database.mjs';
+import { migrate, launchReset, transaction, readState, persistState } from '../../src/server/database.mjs';
+import { reconcileSubmittedState } from '../../src/registration/model.mjs';
 import { createAuth } from '../../src/server/auth.mjs';
 import { createStorage } from '../../src/server/storage.mjs';
 import { configuration } from '../../src/server/config.mjs';
@@ -313,6 +314,17 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('auth/me', stranger.cookie)).data, null, 'removed account is signed out');
     const officeId = (await call('accounts?search=office%40example.com', office.cookie)).data.data[0].id;
     assert.equal((await call('accounts/remove', office.cookie, { user: officeId })).data.removed, 0);
+    // The source cleanup really deletes retired profile/list records in MySQL,
+    // while leaving authentication accounts and uploaded media alone.
+    const retired = { id: extra.data.id, name: 'Russell Amoah Konadu', role: 'pastor', referenceId: 'P3860' };
+    await pool.execute('INSERT INTO dr_profiles (id,data) VALUES (?,?) ON DUPLICATE KEY UPDATE data=VALUES(data)', [retired.id, JSON.stringify(retired)]);
+    const currentPeople = JSON.parse(await readFile(new URL('../../src/registration/reference-people.json', import.meta.url), 'utf8'));
+    await transaction(pool, async conn => {
+      const before = await readState(conn, true);
+      await persistState(conn, before, reconcileSubmittedState(before, currentPeople).state);
+    });
+    assert.equal((await pool.execute('SELECT id FROM dr_profiles WHERE id=?', [retired.id]))[0].length, 0);
+    assert.equal((await pool.execute('SELECT id FROM dr_users WHERE id=?', [retired.id]))[0].length, 1, 'authentication is preserved');
     // One-time launch reset: people and their records go; structure, settings and office accounts stay; never runs twice.
     assert.equal((await call('action', office.cookie, { name: 'setFees', payload: { bishop: 120, pastor: 60 } })).status, 200);
     const [[stateBefore]] = await pool.query('SELECT data FROM dr_state WHERE id=1');
