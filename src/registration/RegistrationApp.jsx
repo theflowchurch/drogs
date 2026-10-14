@@ -164,7 +164,7 @@ function Field({ label, children, wide = false, hint }) {
       <label htmlFor={id}>{label}</label>
       {Children.map(children, (child) =>
         isValidElement(child) &&
-        ["input", "select", "textarea", Choice].includes(child.type)
+        ["input", "select", "textarea", Choice, TextChoice].includes(child.type)
           ? cloneElement(child, {
               id,
               "aria-describedby": hint ? `${id}-hint` : undefined,
@@ -1405,7 +1405,7 @@ const ACTION_LABELS = {
                   apiKeyCreated: "API key created",
                   apiKeyRevoked: "API key revoked",
 };
-const FIELD_LABELS = { firstName: "First name", lastName: "Last name", name: "Name", gender: "Gender", title: "Title", organization: "Organization", denomination: "Denomination", country: "Country", city: "City", phone: "WhatsApp number", email: "Email", bishopId: "Bishop", photo: "Photo", amount: "Amount", currency: "Currency", status: "Status", subject: "Subject", recipients: "Recipients", audience: "Audience", autoApproved: "Matched original record", closed: "Paused", notice: "Message" };
+const FIELD_LABELS = { firstName: "First name", lastName: "Last name", name: "Name", role: "Ministerial category", gender: "Gender", dob: "Date of birth", title: "Title", organization: "Organization", denomination: "Denomination", group: "Group", country: "Country", city: "City", branch: "Branch", church: "Church / branch", yearAppointed: "Year appointed", yearOrdained: "Year ordained", yearConsecrated: "Year consecrated", phone: "WhatsApp number", email: "Email", bishopId: "Bishop", bishopFirstName: "Bishop first name", bishopLastName: "Bishop surname", photo: "Photo", amount: "Amount", currency: "Currency", status: "Status", subject: "Subject", recipients: "Recipients", audience: "Audience", autoApproved: "Matched original record", closed: "Paused", notice: "Message" };
 // What an audit entry changed, in words: "City: Kumasi · WhatsApp number: +233…".
 function detailWords(detail, state) {
   if (!detail || typeof detail !== "object") return "";
@@ -2793,7 +2793,7 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
     [selectedId, setSelectedId] = useState(null);
   const all = useMemo(() => {
     const catalog = catalogOf(state);
-    const everyone = directoryPeople(state, people, year).map((p) => ({ ...p, ...(state.contacts?.[p.id] || {}), denominationListed: denominationListed(catalog, p) }));
+    const everyone = directoryPeople(state, people, year).map((p) => ({ ...p, denominationListed: denominationListed(catalog, p) }));
     // The registered view is what the public roll counts: people confirmed this year.
     return mode === "registered"
       ? everyone.filter((p) => p.registration?.status === "confirmed")
@@ -3051,11 +3051,12 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
     [busyPhoto, setBusyPhoto] = useState(false);
   const catalog = state.catalog || catalogOf(state);
   const d = r.data;
-  const begin = () => { setForm({ firstName: d.firstName || "", lastName: d.lastName || "", title: d.title || "", gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", phone: d.phone || "", dob: d.dob || "", country: d.country || "", city: d.city || "", email: d.email || "", bishopId: d.bishopId || "", role: d.role }); setOpen(true); };
+  const begin = () => { setForm({ firstName: d.firstName || "", lastName: d.lastName || "", title: d.title || "", gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", phone: d.phone || "", dob: d.dob || "", country: d.country || "", city: d.city || "", church: d.church || "", email: d.email || "", bishopId: d.bishopId || "", bishopFirstName: d.bishopFirstName || "", bishopLastName: d.bishopLastName || "", role: d.role }); setOpen(true); };
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
   const save = () => perform("officeEdit", { userId: r.userId, data: form }, "Details updated.").then((ok) => ok && setOpen(false));
   const statuses = d.role === "bishop" ? ["confirmed", "pending", "denied"] : ["confirmed", "unclaimed", "removed"];
-  const bishops = state.bishops || [];
+  const roster = overlayReferences(people, state);
+  const bishops = [...new Map([...roster.filter((p) => p.role === "bishop"), ...(state.bishops || [])].map((p) => [p.id, p])).values()];
   return (
     <section className="reg-office-editor">
       <h3>Office tools</h3>
@@ -3105,14 +3106,19 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
           <Field label="Gender"><select value={form.gender} onChange={(e) => set("gender", e.target.value)}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></Field>
           <Field label="Email address"><input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} /></Field>
           <Field label="WhatsApp number"><input value={form.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
-          <Field label="Date of birth"><input type="date" value={form.dob} onChange={(e) => set("dob", e.target.value)} /></Field>
+          <Field label="Date of birth"><input type="date" value={form.dob} onInput={(e) => set("dob", e.target.value)} onChange={(e) => set("dob", e.target.value)} /></Field>
           {(catalog.denominations[form.organization] || []).length > 0 && (
             <Field label="Denomination"><select value={form.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{catalog.denominations[form.organization].map((x) => <option key={x} value={x}>{caps(x)}</option>)}</select></Field>
           )}
-          <Field label="Country"><Choice value={form.country} options={[...new Set(overlayReferences(people, state).map((x) => x.country).filter(Boolean))].sort()} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
+          <Field label="Country"><TextChoice value={form.country} options={[...new Set(roster.map((x) => x.country).filter(Boolean))].sort()} onChange={(v) => set("country", v)} /></Field>
           <Field label="City"><input value={form.city} onChange={(e) => set("city", e.target.value)} /></Field>
+          <Field label="Church / branch"><input value={form.church} onChange={(e) => set("church", e.target.value)} /></Field>
           {form.role === "pastor" && (
-            <Field label="Bishop"><select value={form.bishopId} onChange={(e) => set("bishopId", e.target.value)}><option value="">None</option>{bishops.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></Field>
+            <>
+              <Field label="Bishop"><Choice value={form.bishopId} options={bishops.map((b) => b.id)} labelOf={(id) => bishops.find((b) => b.id === id)?.name || id} onChange={(v) => set("bishopId", v)} blank="None" /></Field>
+              <Field label="Bishop first name"><input value={form.bishopFirstName} onChange={(e) => set("bishopFirstName", e.target.value)} /></Field>
+              <Field label="Bishop surname"><input value={form.bishopLastName} onChange={(e) => set("bishopLastName", e.target.value)} /></Field>
+            </>
           )}
           <div className="reg-form-actions wide">
             <button type="button" className="reg-secondary" onClick={() => setOpen(false)}>Cancel</button>
@@ -3135,7 +3141,12 @@ function Choice({ value, options, onChange, labelOf = (v) => v, blank = "", ...r
     </select>
   );
 }
-const TITLES = ["Bishop", "Pastor", "Reverend", "Dr", "Mother", "Episcopal Sister", "Lady Pastor"];
+// Offer known spellings while allowing the office to correct a country not yet on the roll.
+function TextChoice({ value, options, onChange, ...rest }) {
+  const listId = useId();
+  return <><input {...rest} value={value} list={listId} onChange={(e) => onChange(e.target.value)} /><datalist id={listId}>{options.map((option) => <option key={option} value={option} />)}</datalist></>;
+}
+const TITLES = ["Bishop", "Pastor", "Rev.", "Lady Rev.", "Reverend", "Dr", "Mother", "Episcopal Sister", "Lady Pastor", "Lay President"];
 function ReferenceEditor({ person: p, state, perform, actor }) {
   const [open, setOpen] = useState(false),
     [form, setForm] = useState(null);
@@ -3171,16 +3182,24 @@ function ReferenceEditor({ person: p, state, perform, actor }) {
       {open && form && (
         <div className="reg-fields reg-office-form">
           <Field label="Full name"><input value={form.name} onChange={(e) => set("name")(e.target.value)} /></Field>
+          <Field label="Ministerial category"><Choice value={form.role} options={["bishop", "pastor"]} labelOf={(value) => value === "bishop" ? "Bishop" : "Pastor"} onChange={set("role")} blank={null} /></Field>
           <Field label="Title"><Choice value={form.title} options={TITLES} onChange={set("title")} blank={null} /></Field>
+          <Field label="Gender"><Choice value={form.gender} options={["male", "female"]} labelOf={(value) => value === "male" ? "Male" : "Female"} onChange={set("gender")} blank="Not recorded" /></Field>
+          <Field label="Date of birth"><input type="date" value={form.dob} onInput={(e) => set("dob")(e.target.value)} onChange={(e) => set("dob")(e.target.value)} /></Field>
+          <Field label="Email address"><input type="email" value={form.email} onChange={(e) => set("email")(e.target.value)} /></Field>
+          <Field label="WhatsApp number"><input value={form.phone} onChange={(e) => set("phone")(e.target.value)} /></Field>
           <Field label="Organization"><Choice value={form.organization} options={catalog.organizations} onChange={set("organization")} labelOf={orgLabel} blank="Choose…" /></Field>
           <Field label="Denomination"><Choice value={form.denomination} options={denominations} onChange={set("denomination")} blank="None" /></Field>
           <Field label="Group"><Choice value={form.group} options={Object.keys(catalog.groups || {}).filter((g) => !form.organization || catalog.groups[g].organization === form.organization)} onChange={set("group")} blank="By denomination" /></Field>
           <Field label="City"><input value={form.city} onChange={(e) => set("city")(e.target.value)} /></Field>
-          <Field label="Country"><Choice value={form.country} options={countries} onChange={set("country")} blank="Choose…" /></Field>
-          {p.role !== "bishop" && (
+          <Field label="Country"><TextChoice value={form.country} options={countries} onChange={set("country")} /></Field>
+          {form.role !== "bishop" && (
             <Field label="Bishop"><Choice value={form.bishop} options={bishops} onChange={set("bishop")} blank="None listed" /></Field>
           )}
           <Field label="Branch"><input value={form.branch} onChange={(e) => set("branch")(e.target.value)} /></Field>
+          <Field label="Year appointed"><input inputMode="numeric" value={form.yearAppointed} onChange={(e) => set("yearAppointed")(e.target.value)} /></Field>
+          <Field label="Year ordained"><input inputMode="numeric" value={form.yearOrdained} onChange={(e) => set("yearOrdained")(e.target.value)} /></Field>
+          <Field label="Year consecrated"><input inputMode="numeric" value={form.yearConsecrated} onChange={(e) => set("yearConsecrated")(e.target.value)} /></Field>
           <div className="reg-form-actions wide">
             <button type="button" className="reg-secondary" onClick={() => setOpen(false)}>Cancel</button>
             <button type="button" className="reg-primary" onClick={() => perform("editReference", { referenceId: p.id, fields: form }, "Record updated.").then((ok) => ok && setOpen(false))}>Save changes</button>

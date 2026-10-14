@@ -246,10 +246,10 @@ export function structureConflicts(catalog, people) {
 }
 export const feesOf = (state) => state?.fees?.bishop ? state.fees : AMOUNTS;
 // Fields of an old roster record the office may correct.
-export const REFERENCE_FIELDS = ["name", "title", "organization", "denomination", "group", "city", "country", "bishop", "branch", "photo", "phone", "email"];
-// Contact details never leave the office: the public page and members see the
-// corrected records without phone or email.
-const CONTACT_FIELDS = ["phone", "email"];
+export const REFERENCE_FIELDS = ["name", "role", "title", "gender", "dob", "organization", "denomination", "group", "city", "country", "bishop", "branch", "yearAppointed", "yearOrdained", "yearConsecrated", "photo", "phone", "email"];
+// Contact details and birth dates stay in the office: public and member views
+// receive corrections without these private fields.
+const CONTACT_FIELDS = ["phone", "email", "dob"];
 const scrubContacts = (o) => Object.fromEntries(Object.entries(o || {}).filter(([k]) => !CONTACT_FIELDS.includes(k)));
 // The pastors under a bishop: those whose record names this bishop exactly, plus those whose
 // bishop text is an alike spelling that matches no bishop on the list (so two bishops with
@@ -1048,7 +1048,7 @@ export function applyAction(
     office();
     const r = registration();
     if (!r) throw Error("Select a registration.");
-    const EDITABLE = ["firstName", "lastName", "title", "gender", "organization", "denomination", "church", "phone", "dob", "country", "city", "email", "bishopId", "referenceId", "photo", "role"];
+    const EDITABLE = ["firstName", "lastName", "title", "gender", "organization", "denomination", "church", "phone", "dob", "country", "city", "email", "bishopId", "bishopFirstName", "bishopLastName", "referenceId", "photo", "role"];
     const incoming = Object.fromEntries(Object.entries(payload.data || {}).filter(([k, v]) => EDITABLE.includes(k) && v !== undefined));
     const merged = { ...r.data, ...incoming };
     if (!["bishop", "pastor"].includes(merged.role)) throw Error("Choose Bishop or Pastor.");
@@ -1176,6 +1176,10 @@ export function applyAction(
     if (!id) throw Error("Select a record.");
     const fields = Object.fromEntries(Object.entries(payload.fields || {}).filter(([k]) => REFERENCE_FIELDS.includes(k)).map(([k, v]) => [k, String(v ?? "").trim()]));
     if (fields.name !== undefined && fields.name.split(/\s+/).length < 2) throw Error("Enter the full name.");
+    if (fields.role !== undefined && !["bishop", "pastor"].includes(fields.role)) throw Error("Choose Bishop or Pastor.");
+    if (fields.gender && !["male", "female"].includes(fields.gender)) throw Error("Select male or female.");
+    if (fields.dob && (!/^\d{4}-\d{2}-\d{2}$/.test(fields.dob) || !Number.isFinite(Date.parse(fields.dob)) || new Date(fields.dob).toISOString().slice(0, 10) !== fields.dob || fields.dob < "1900-01-01" || fields.dob >= new Date().toISOString().slice(0, 10))) throw Error("Enter a valid date of birth in the past.");
+    for (const k of ["yearAppointed", "yearOrdained", "yearConsecrated"]) if (fields[k] && !/^(19|20)\d{2}$/.test(fields[k])) throw Error("Enter a four-digit year or leave it blank.");
     state.overrides = { ...(state.overrides || {}), [id]: { ...((state.overrides || {})[id] || {}), ...fields, deleted: false } };
     const extra = (state.extraReferences || []).find((x) => x.id === id);
     if (extra) Object.assign(extra, fields);
@@ -1353,7 +1357,7 @@ export function visibleState(state, actor, references, people = references) {
       (r) => actor.office || r.bishopId === actor.id,
     ),
     audit: state.audit.filter((r) => actor.office || r.actor === actor.id),
-    directory: directoryFor(state, references),
+    directory: actor.office ? directoryFor(state, references) : directoryFor(state, references).map(scrubContacts),
     roll: publicRoll(state, people),
     bishops: registeredBishops(state),
     catalog: catalogOf(state),
@@ -1432,14 +1436,14 @@ export function directoryPeople(state, references, year = state.year) {
       d = registration?.data;
     return {
       ...p,
-      email: d?.email || row?.email || p.email,
-      phone: d?.phone || row?.phone || p.phone,
+      email: d?.email ?? row?.email ?? p.email ?? state.contacts?.[p.id]?.email,
+      phone: d?.phone ?? row?.phone ?? p.phone ?? state.contacts?.[p.id]?.phone,
       city: d?.city || p.city,
       country: d?.country || p.country,
       denomination: d?.denomination || p.denomination,
       // The office's "which photo" choice applies everywhere, not only on the public roll.
       photo: registration?.displayPhoto === "reference" && p.image ? "" : d?.photo || p.photo || "",
-      recorded: { email: p.email, phone: p.phone },
+      recorded: { email: state.contacts?.[p.id]?.email ?? p.email, phone: state.contacts?.[p.id]?.phone ?? p.phone },
       updated: Boolean(registration || row?.referenceConfirmedAt),
       updatedAt:
         registration?.submittedAt || row?.referenceConfirmedAt || null,

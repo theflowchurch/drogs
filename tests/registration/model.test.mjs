@@ -11,6 +11,7 @@ import {
   referenceMatches,
   directoryPeople,
   publicRoll,
+  publicOverlay,
   overlayReferences,
   registeredBishops,
   broadcastRecipients,
@@ -611,6 +612,53 @@ test("the office corrects, hides, deletes and adds old roster records without to
   s = applyAction(s, office, "deleteReference", { referenceId: "P9", deleted: false });
   s = applyAction(s, office, "hideReference", { referenceId: "B1", hidden: false });
   assert.equal(overlayReferences(references, s).length, 3);
+});
+test("office reference corrections persist location and ministry details without exposing private fields", () => {
+  const refs = [{ id: "B9", role: "bishop", name: "Ama Bishop", city: "Accra", country: "Ghana", image: "assets/bishop.webp" }];
+  let s = applyAction(emptyState(), office, "editReference", { referenceId: "B9", fields: {
+    role: "bishop", gender: "female", dob: "1980-02-14", city: "New City", country: "New Country", branch: "Grace Branch",
+    phone: "+233201234567", email: "corrected@example.com", yearAppointed: "2004", yearOrdained: "2010", yearConsecrated: "2021",
+  } }, undefined, refs);
+  const corrected = overlayReferences(refs, s)[0];
+  assert.equal(corrected.country, "New Country");
+  assert.equal(corrected.branch, "Grace Branch");
+  assert.equal(corrected.gender, "female");
+  assert.equal(corrected.yearConsecrated, "2021");
+  assert.equal(corrected.dob, "1980-02-14");
+  assert.equal(corrected.image, "assets/bishop.webp", "editing details preserves the existing portrait");
+  assert.equal(visibleState(s, office, refs).directory[0].dob, "1980-02-14");
+  for (const fields of [publicOverlay(s).overrides.B9, visibleState(s, pastor, refs).overrides.B9, visibleState(s, pastor, refs).directory[0]]) {
+    for (const field of ["dob", "phone", "email"]) assert.equal(fields[field], undefined, `${field} stays office-only`);
+  }
+  assert.throws(() => applyAction(s, pastor, "editReference", { referenceId: "B9", fields: { city: "Other" } }), /Office/);
+  assert.throws(() => applyAction(s, office, "editReference", { referenceId: "B9", fields: { dob: "1980-02-30" } }), /date of birth/);
+  assert.throws(() => applyAction(s, office, "editReference", { referenceId: "B9", fields: { yearOrdained: "unknown" } }), /four-digit year/);
+});
+test("office registration edits retain church and the entered supervising bishop name", () => {
+  let s = setup();
+  s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: "B1" });
+  s = applyAction(s, office, "officeEdit", { userId: pastor.id, data: { country: "New Country", city: "New City", church: "Grace Branch", bishopFirstName: "Correct", bishopLastName: "Bishop" } });
+  const r = s.registrations.find((x) => x.userId === pastor.id);
+  assert.equal(r.data.country, "New Country");
+  assert.equal(r.data.city, "New City");
+  assert.equal(r.data.church, "Grace Branch");
+  assert.equal(r.data.bishopName, "Correct Bishop");
+  assert.equal(r.data.firstName, "John");
+  assert.equal(r.data.photo, `${pastor.id}/portrait/image.jpg`);
+});
+test("saved office contact corrections take precedence over the original server contacts", () => {
+  const refs = [{ id: "P9", role: "pastor", name: "Kofi Mensah", city: "Accra", country: "Ghana" }];
+  let s = { ...emptyState(), contacts: { P9: { email: "old@example.com", phone: "+233209999999" } } };
+  assert.equal(directoryPeople(s, refs)[0].email, "old@example.com");
+  s = applyAction(s, office, "editReference", { referenceId: "P9", fields: { email: "new@example.com", phone: "+233208888888" } });
+  let p = directoryPeople(s, refs)[0];
+  assert.equal(p.email, "new@example.com");
+  assert.equal(p.phone, "+233208888888");
+  assert.equal(p.recorded.email, "old@example.com");
+  s = applyAction(s, office, "editReference", { referenceId: "P9", fields: { email: "", phone: "" } });
+  p = directoryPeople(s, refs)[0];
+  assert.equal(p.email, "", "clearing a contact does not restore the original value");
+  assert.equal(p.phone, "");
 });
 test("the office edits the organization and denomination lists and the fees, and sign-up follows", () => {
   let s = setup();
