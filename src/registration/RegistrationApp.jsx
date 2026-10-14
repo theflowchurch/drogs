@@ -768,11 +768,11 @@ export default function RegistrationApp({
             </svg>
           </button>
         )}
-        <a className="reg-brand" href={actor ? (office ? `${base}/admin/` : signupPath) : home}>
+        <a className="reg-brand" href={actor ? (office ? `${base}/admin/` : signupPath) : home} aria-label={siteConfig?.shortName || "Kuriake Castle"}>
           <span className="reg-brand-mark">
             <img src={`${base}/${siteConfig?.logo || "assets/brand/castle-blue.png"}`} alt="" />
           </span>
-          <strong>{siteConfig?.shortName || "Kuriake Castle"}</strong>
+          {site !== "flow" && <strong>{siteConfig?.shortName || "Kuriake Castle"}</strong>}
         </a>
         <div className="reg-header-right">
           {gate && actor ? (
