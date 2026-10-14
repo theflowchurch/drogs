@@ -3589,7 +3589,9 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
 }
 // Results for the single search box on the doors page: names first.
 function SearchResults({ list, q }) {
-  const [selected, setSelected] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+  const selected = list.find(p => p.id === selectedId) || null;
+  const setSelected = p => setSelectedId(p?.id || null);
   const trail = useTrail(selected, setSelected);
   const words = normalName(q);
   const byName = list.filter((p) => normalName(p.name).includes(words));
@@ -3668,8 +3670,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
       country: "",
     }),
     [limit, setLimit] = useState(PAGE),
-    [selected, setSelected] = useState(null);
-  const trail = useTrail(selected, setSelected);
+    [selectedId, setSelectedId] = useState(null);
   // Surname order, numbered once for the whole list so a search keeps each person's number.
   const numbered = useMemo(
     () => [...roll.filter((p) => inRole(p, role))].sort(byRank).map((p, i) => ({ ...p, n: i + 1 })),
@@ -3712,6 +3713,14 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
     return { withPastors, alone, rest, order };
   }, [roll, role, filtering, byBishop]);
   const pastorCount = useMemo(() => new Map(roll.filter((p) => p.role === "bishop").map((b) => [b.id, pastorsUnder(b, byBishop).length])), [roll, byBishop]);
+  // Resolve an open profile against each refreshed list as well: holding the
+  // old person object would leave its name/photo unchanged inside the dialog.
+  const currentPeople = useMemo(() => new Map([
+    ...roll, ...roll.filter(p => p.role === "bishop").flatMap(b => pastorsUnder(b, byBishop)),
+  ].map(p => [p.id, p])), [roll, byBishop]);
+  const selected = currentPeople.get(selectedId) || null;
+  const setSelected = p => setSelectedId(p?.id || null);
+  const trail = useTrail(selected, setSelected);
   const unapproved = selected?.standing === false;
   // Which sequence the dialog arrows step through: the grid as shown, or one bishop's pastors.
   const [stepList, setStepList] = useState(null);
