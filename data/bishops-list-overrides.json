@@ -1,5 +1,9 @@
 {
- "note": "Joshua's corrections to the office's Bishops List (9 Oct 2026), applied after the list is read. Key: the name on the list (or any alias). Fields replace the list's CHURCH GROUP / DENOMINATION and the organization; city replaces the record's city.",
+ "note": "Joshua's corrections to the office's Bishops List, applied after the list is read. Key: the name on the list (or any alias). Name replaces the displayed name; group, denomination, organization and city replace those fields.",
+ "Eat Sackey": {
+  "name": "E.A.T Sackey",
+  "source": "Joshua 14 Oct: E.A.T Sackey across all views"
+ },
  "Pius Akator": {
   "group": "First Love",
   "denomination": "Qodesh City Church",

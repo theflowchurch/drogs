@@ -83,7 +83,7 @@
   {
    "name": "William Ato Wilson",
    "title": "Bishop",
-   "onSheetOf": "Eat Sackey",
+   "onSheetOf": "E.A.T Sackey",
    "file": "Bishop E.A.T Sackey.xlsx",
    "row": 29,
    "onList": true
@@ -486,7 +486,7 @@
   },
   {
    "name": "Joseph Emmanuel Koufie",
-   "winner": "Eat Sackey",
+   "winner": "E.A.T Sackey",
    "losers": [
     "Henry Oti-Frimpong"
    ],
@@ -496,7 +496,7 @@
    "name": "Sandra Sheila Acquah",
    "winner": "Luke Akwasi Frimpong Mensah",
    "losers": [
-    "Eat Sackey"
+    "E.A.T Sackey"
    ],
    "by": "Sakyi 14:32"
   },
@@ -2687,7 +2687,7 @@
    "extra": []
   },
   {
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "lay": false,
    "file": "Bishop E.A.T Sackey.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -6744,7 +6744,7 @@
   {
    "id": "P2389",
    "name": "Joseph Nana Asarboakye Goodman",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6752,7 +6752,7 @@
   {
    "id": "PNb82974782698",
    "name": "James Marrah",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6760,7 +6760,7 @@
   {
    "id": "PN4ef92a7b573f",
    "name": "Caesar Kwesi Abbam",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6768,7 +6768,7 @@
   {
    "id": "P2127",
    "name": "Ivan Kwakye Appah",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6776,7 +6776,7 @@
   {
    "id": "P2770",
    "name": "Linda Sosu",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6784,7 +6784,7 @@
   {
    "id": "PN10a68146a18e",
    "name": "Elliot Barnor Ogude",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6792,7 +6792,7 @@
   {
    "id": "PN14e96f51c121",
    "name": "Alberta Akua Kwarteng",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6800,7 +6800,7 @@
   {
    "id": "PNdb7011000054",
    "name": "Joana Dzigbodi Abena Abbam",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6808,7 +6808,7 @@
   {
    "id": "PNf9dbb5f96aa6",
    "name": "Issifu Amoaba",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6816,7 +6816,7 @@
   {
    "id": "P3067",
    "name": "Michael Bedzrah",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6824,7 +6824,7 @@
   {
    "id": "PN3989e59d9259",
    "name": "Caroline Buertey",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6832,7 +6832,7 @@
   {
    "id": "PN0b627b0859be",
    "name": "Janet Agyei-Gyane",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -6840,7 +6840,7 @@
   {
    "id": "S977ee2ee",
    "name": "Isaac Baiden",
-   "bishop": "Eat Sackey",
+   "bishop": "E.A.T Sackey",
    "group": "Reasonable Service",
    "denomination": "Glory Life Hope Center",
    "place": "Accra, Ghana"
@@ -11486,7 +11486,7 @@
    },
    {
     "pastor": "Kweku Sampson",
-    "bishop": "Eat Sackey",
+    "bishop": "E.A.T Sackey",
     "file": "Kwaku Sampson",
     "how": "respelling"
    },

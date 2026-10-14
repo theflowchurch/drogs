@@ -1,6 +1,7 @@
 import { DENOMINATIONS } from "./denominations.mjs";
 import { GROUPS } from "./groups.mjs";
 import { LOGOS } from "./logos.mjs";
+import { canonicalBishopName, canonicalPerson, canonicalOfficeNames } from './name-corrections.mjs';
 // Full names for display; the short keys stay as stored identifiers.
 export const ORGANIZATION_LABEL = {
   "First Love": "First Love Church",
@@ -44,7 +45,7 @@ export const AMOUNTS = { bishop: 100, pastor: 50 };
 export const paymentReference = (r) =>
   `KC-${r.year}-${String(r.userId).replace(/-/g, "").slice(-6).toUpperCase()}`;
 export const normalName = (value) =>
-  String(value || "")
+  canonicalBishopName(value)
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
@@ -150,10 +151,11 @@ export const pauseFor = (state, entrance) => { const s = signupOf(state); return
 // that lists their denomination.
 // After a new roll is built, the office's saved structure and record corrections are brought in line with it
 // (run once per roll by the server at start-up): every denomination the roll uses is in the structure, each
-// United Denominations group lists what its bishops and pastors use, corrections to fields that the sheets now
-// decide are dropped (uploaded photos and deletions stay), and hidden ids that no longer exist are forgotten.
+// United Denominations group lists what its bishops and pastors use. Office corrections remain
+// authoritative; hidden ids that no longer exist are forgotten.
 export function syncRoll(state, people, version) {
   if (state.rollSync === version) return null;
+  state = canonicalOfficeNames(state);
   const saved = state.catalog?.organizations?.length ? state.catalog : null;
   const organizations = [...new Set([...ORGANIZATIONS, ...(saved?.organizations || [])])];
   const denominations = {};
@@ -309,7 +311,10 @@ export const publicOverlay = (state) => ({
 const referenceField = k => ['firstName', 'lastName'].includes(k) ? 'name' : k === 'church' ? 'branch' : k;
 function registrationDetails(state, data, id = data?.referenceId) {
   const corrections = state.overrides?.[id] || {};
-  return { ...data, ...Object.fromEntries(REFERENCE_FIELDS.filter(k => k !== 'photo' && corrections[k] !== undefined).map(k => [k, corrections[k]])) };
+  const details = { ...data, ...Object.fromEntries(REFERENCE_FIELDS.filter(k => k !== 'photo' && corrections[k] !== undefined).map(k => [k, corrections[k]])) };
+  if (id === 'B39') details.name = canonicalBishopName(details.name);
+  if (details.bishop !== undefined) details.bishop = canonicalBishopName(details.bishop);
+  return details;
 }
 function officeFields(state, id) {
   const fields = new Set(state.overrides?.[id]?._officeFields || []);
@@ -368,9 +373,9 @@ export function overlayReferences(references, state) {
   for (const p of references) {
     const o = overrides[p.id];
     if (o?.deleted || hidden.has(p.id)) continue;
-    out.push(o ? { ...p, ...Object.fromEntries(REFERENCE_FIELDS.filter((f) => o[f] !== undefined).map((f) => [f, o[f]])) } : p);
+    out.push(canonicalPerson(o ? { ...p, ...Object.fromEntries(REFERENCE_FIELDS.filter((f) => o[f] !== undefined).map((f) => [f, o[f]])) } : p));
   }
-  for (const p of state?.extraReferences || []) if (!hidden.has(p.id)) out.push(p);
+  for (const p of state?.extraReferences || []) if (!hidden.has(p.id)) out.push(canonicalPerson(p));
   return out;
 }
 export function validateProfile(p, email, { draft = false, catalog = { organizations: ORGANIZATIONS, denominations: DENOMINATIONS } } = {}) {
@@ -479,7 +484,7 @@ export const registeredBishops = (state) =>
     .filter((p) => submittedBishop(state, p))
     .map((p) => {
       const r = state.registrations.find((x) => x.userId === p.id && x.year === state.year);
-      return { id: bishopKey(p), accountId: p.id, name: p.name, approved: Boolean(p.bishopApproved), photo: r?.data.photo || "", organization: p.organization || "", denomination: r?.data.denomination || "" };
+      return { id: bishopKey(p), accountId: p.id, name: p.referenceId === 'B39' ? canonicalBishopName(p.name) : p.name, approved: Boolean(p.bishopApproved), photo: r?.data.photo || "", organization: p.organization || "", denomination: r?.data.denomination || "" };
     })
     .sort((a, b) => a.name.localeCompare(b.name));
 export const approvedBishop = (state, id) =>

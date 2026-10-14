@@ -75,7 +75,7 @@ for (const b of listBishops) {
   const s = latestByBishop.get(b.listName); const row = s && !s.rowBelongsToAnother ? s.bishopRow : null; const o = b.old;
   const organization = orgOfGroup(groupOfList(b), b); const group = organization === 'HJC' ? 'Healing Jesus Campaign' : groupOfList(b); // the Healing Jesus Campaign is its own group, apart from FLOW (Joshua, 11 Oct)
   const selfName = row?.name ? tc(stripTitle(row.name).replace(/^(es|dr|rev)\.?\s+/gi, '').replace(/^(es|dr|rev)\.?\s+/gi, '')) : '';
-  const name = (o?.name || (selfName && words(selfName).length >= 2 ? selfName : b.name)).replace(/\s*-\s*/g, '-'); // our curated spelling first, then the bishop's own row, then the list
+  const name = (b.override?.name || o?.name || (selfName && words(selfName).length >= 2 ? selfName : b.name)).replace(/\s*-\s*/g, '-'); // the office's name correction, curated spelling, then the bishop's own row and list
   const gender = row?.gender || o?.gender || (/^(mother|episcopal sister)/i.test(b.listName) ? 'female' : '');
   // Only men are Bishops (Joshua, 9 Oct): a woman is an Episcopal Sister in the United Denominations and a Mother in First Love, FLOW and the Healing Jesus Campaign.
   const title = gender === 'female' ? (organization === 'United Denominations' ? 'Episcopal Sister' : 'Mother') : 'Bishop';
