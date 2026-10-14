@@ -853,8 +853,8 @@ export default function RegistrationApp({
           )}
           <HeroVideo src={`${base}/assets/brand/castle-hero-night-b-{size}.mp4`} />
           <h1 className="reg-hero-title">
-            <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${siteConfig?.logo || "assets/brand/castle-white.png"}`} alt="" />
-            {siteConfig?.name || "Kuriake Castle"}
+            <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${siteConfig?.heroLogo || siteConfig?.logo || "assets/brand/castle-white.png"}`} alt={site === "flow" ? siteConfig.name : ""} />
+            {site !== "flow" && (siteConfig?.name || "Kuriake Castle")}
           </h1>
           <a className="reg-enter" href={sitePath(site, "directory", base)}>
             <span className="reg-shimmer">View All Bishops and Pastors in Good Standing</span>
@@ -1393,8 +1393,8 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
       ) : (
         <>
           <h1 className="reg-hero-title">
-            <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${config?.logo || "assets/brand/castle-white.png"}`} alt="" />
-            {config?.name || "Kuriake Castle"}
+            <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${config?.heroLogo || config?.logo || "assets/brand/castle-white.png"}`} alt={site === "flow" ? config.name : ""} />
+            {site !== "flow" && (config?.name || "Kuriake Castle")}
           </h1>
           {open && (
             <Dialog title={open === "signin" ? "Sign in" : "Sign up"} onClose={onClose}>

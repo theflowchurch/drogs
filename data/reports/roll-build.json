@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-14T10:49:14.356Z",
+ "generated": "2026-10-14T14:43:18.859Z",
  "sourceAuthority": {
   "personalDetails": "latest submitted spreadsheets",
   "bishopMembership": "current Bishops List and explicit office corrections",
@@ -15,8 +15,8 @@
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 5060,
-  "assigned": 5059,
+  "pastors": 5057,
+  "assigned": 5056,
   "unclaimed": 1,
   "withPhoto": 4377,
   "sheets": 292,
@@ -2787,18 +2787,13 @@
    "lay": false,
    "file": "Bishop Emmanuel Nterful.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
-   "sheetRows": 81,
-   "onRoll": 55,
+   "sheetRows": 79,
+   "onRoll": 54,
    "notUnder": [
-    {
-     "row": 52,
-     "name": "Emmanuel Nterful",
-     "fate": "the bishop's own row"
-    },
     {
      "row": 55,
      "name": "Emmanuel Nterful",
-     "fate": "the same name twice on the sheet; one record kept"
+     "fate": "the bishop's own row"
     },
     {
      "row": 63,
@@ -3080,18 +3075,13 @@
    "lay": false,
    "file": "Bishop Francis Hammond.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
-   "sheetRows": 29,
-   "onRoll": 27,
+   "sheetRows": 27,
+   "onRoll": 26,
    "notUnder": [
-    {
-     "row": 32,
-     "name": "Francis Nii Aryee Hammond",
-     "fate": "the bishop's own row"
-    },
     {
      "row": 35,
      "name": "Francis Nii Aryee Hammond",
-     "fate": "the same name twice on the sheet; one record kept"
+     "fate": "the bishop's own row"
     }
    ],
    "extra": []
@@ -3979,18 +3969,13 @@
    "lay": false,
    "file": "Bishop Luke Akwasi Frimpong Mensah.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
-   "sheetRows": 119,
-   "onRoll": 60,
+   "sheetRows": 117,
+   "onRoll": 59,
    "notUnder": [
-    {
-     "row": 64,
-     "name": "Luke Akwasi Frimpong Mensah",
-     "fate": "the bishop's own row"
-    },
     {
      "row": 67,
      "name": "Luke Akwasi Frimpong Mensah",
-     "fate": "the same name twice on the sheet; one record kept"
+     "fate": "the bishop's own row"
     },
     {
      "row": 70,
@@ -6727,14 +6712,6 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "Se83d157c",
-   "name": "Reasonable Service · Keep My Word Chapel International",
-   "bishop": "Emmanuel Nterful",
-   "group": "Reasonable Service",
-   "denomination": "Keep My Word Chapel International",
-   "place": "Ghana"
-  },
-  {
    "id": "P762",
    "name": "Cynthia Tabitha Effah Kodom",
    "bishop": "Emmanuel Tetteh",
@@ -6893,14 +6870,6 @@
    "group": "UD Ghana",
    "denomination": "Anagkazo Assemblies",
    "place": "Winneba, Ghana"
-  },
-  {
-   "id": "Sce1ded69",
-   "name": "Ud Ghana · Anagkazo Assemblies",
-   "bishop": "Francis Nii Aryee Hammond",
-   "group": "UD Ghana",
-   "denomination": "Anagkazo Assemblies",
-   "place": "Ghana"
   },
   {
    "id": "PNcd2462d57ddf",
@@ -9101,14 +9070,6 @@
    "group": "UD North America",
    "denomination": "American Missionary Church",
    "place": "Aurora, United States"
-  },
-  {
-   "id": "Sfd42d70f",
-   "name": "Ud North America · American Missionary Church",
-   "bishop": "Luke Akwasi Frimpong Mensah",
-   "group": "UD North America",
-   "denomination": "American Missionary Church",
-   "place": "United States"
   },
   {
    "id": "P2734",

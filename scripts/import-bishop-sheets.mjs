@@ -5,7 +5,7 @@
 // lists (Jude Orraca-Tetteh, Harry Dodd), and a bare Name/Title/Date list (Isaac Koranteng's campus).
 import * as XLSX from 'xlsx'; import fs from 'node:fs'; XLSX.set_fs(fs);
 import { readdirSync, writeFileSync } from 'node:fs';
-import { submittedBirthKeys } from './lib/submitted-sheet-authority.mjs';
+import { submittedBirthKeys, submittedSheetBanner } from './lib/submitted-sheet-authority.mjs';
 const BASE = `${process.env.HOME}/Downloads/Kuriake Castle Project/01 Office source data`;
 const DIRS = process.argv.length > 2 ? process.argv.slice(2) : [`${BASE}/Bishop submitted sheets`, `${BASE}/Bishop sheets - no pastors (9 Oct 2026)`, `${BASE}/Bishop submitted sheets (9 Oct 2026)`, `${BASE}/Bishop submitted sheets (10 Oct 2026)`, `${BASE}/Bishop submitted sheets (11 Oct 2026)`, `${BASE}/Bishop submitted sheets (13 Oct 2026)`];
 const blank = (v) => !v || /^(missing|n\/?a|nil|none|not applicable|-+|\.)$/i.test(String(v).trim());
@@ -39,8 +39,10 @@ for (const DIR of DIRS) for (const file of readdirSync(DIR).filter((f) => f.ends
   let map = null, section = 'bishop';
   rows.forEach((r, rowIndex) => {
     const text = r.join(' ').trim(), low = text.toLowerCase();
-    if (!map && /^(bishop|episcopal sister|mother)\s/i.test(text) && r.filter((c) => c.trim()).length <= 2) { sub.titleRow = clean(text.replace(/^(bishop|episcopal sister|mother)\s+/i, '')); return; }
-    if (!map && / ·/.test(text)) { const [g, d] = text.split(/\s*·\s*/); sub.group = clean(g); sub.denomination = clean(d); return; }
+    const banner = submittedSheetBanner(r);
+    if (banner && map) (sub.metadataRows ||= []).push({ row: rowIndex + 1, name: clean(text), kind: banner.kind });
+    if (banner?.kind === 'bishop') { if (!map) sub.titleRow = clean(banner.titleRow); return; }
+    if (banner?.kind === 'group') { if (!map) { sub.group = clean(banner.group); sub.denomination = clean(banner.denomination); } return; }
     if (/^no pastors? under|^none$|^no pastors?$/.test(low)) { sub.noPastors = true; return; }
     if (/pastors under/.test(low)) { section = 'pastors'; if (isHeader(r)) map = mapHeader(r.map((c, i) => (i === 0 ? 'Full Name' : c))); return; }
     if (isHeader(r)) { map = mapHeader(r); return; }

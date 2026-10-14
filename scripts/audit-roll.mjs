@@ -28,11 +28,14 @@ check('Removed names are gone', rulings.remove.every((r) => !people.some((p) => 
 const ids = new Set(); const dup = people.filter((p) => ids.has(p.id) ? true : (ids.add(p.id), false));
 check('Ids are unique', dup.length === 0, dup.map((p) => p.id).join(', '));
 check('Every pastor is under one bishop or Unclaimed with a reason', pastors.every((p) => Boolean(p.unclaimed) !== Boolean(p.bishop)));
+check('No bishop is assigned under another bishop', [...bishops, ...lays].every(b => !b.bishop && !b.bishopId && !b.bishopKey));
+check('No bishop appears again as a pastor', pastors.every(p => ![...bishops, ...lays].some(b => key(b.name) === key(p.name)) && !/bishop|mother|episcopal/i.test(p.title || '')));
 const bishopNames = new Set([...bishops, ...lays].map((b) => b.name));
 check("Every pastor's bishop exists on the roll", pastors.filter((p) => p.bishop).every((p) => bishopNames.has(p.bishop)), pastors.filter((p) => p.bishop && !bishopNames.has(p.bishop)).map((p) => p.bishop).slice(0, 5).join(', '));
 check('Every bishop has a group and organization', [...bishops, ...lays].every((b) => b.group && b.organization), [...bishops, ...lays].filter((b) => !b.group).map((b) => b.name).join(', '));
 check("Every pastor carries their bishop's group and organization", pastors.filter((p) => p.bishop).every((p) => { const b = [...bishops, ...lays].find((x) => x.name === p.bishop); return b && p.group === b.group && p.organization === b.organization; }));
 check('Every title is a known one', people.every((p) => ['Bishop', 'Mother', 'Episcopal Sister', 'Lay President', 'Pastor', 'Rev.', 'Lady Rev.', 'Apostle'].includes(p.title)), [...new Set(people.map((p) => p.title))].join(', '));
+check('Worksheet group banners are never imported as pastors', pastors.every(p => !p.name.includes(' · ')));
 check('No pastor is listed twice under the same bishop', (() => { const seen = new Set(); return !pastors.some((p) => { const k = `${key(p.name)}|${key(p.bishop || '')}`; if (seen.has(k)) return true; seen.add(k); return false; }); })());
 check('No email, phone or birthday in the public file', !people.some((p) => p.email || p.phone || p.dob || p.dobKeys));
 // 3. Sheets and rulings

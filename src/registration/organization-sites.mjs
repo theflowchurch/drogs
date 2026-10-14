@@ -15,7 +15,7 @@ export const ORGANIZATION_SITES = {
   },
   flow: {
     name: 'FLOW', shortName: 'FLOW',
-    organizations: ['FLOW', 'HJC', 'DHMM'], logo: 'assets/brand/flow-logo-black.png',
+    organizations: ['FLOW', 'HJC', 'DHMM'], logo: 'assets/brand/flow-logo-black.png', heroLogo: 'assets/brand/flow-logo.png',
     description: 'The bishops and pastors of FLOW, Healing Jesus Campaign and DHMM.',
   },
 };

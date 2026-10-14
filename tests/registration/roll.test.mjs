@@ -63,3 +63,11 @@ test("Mother Nina's pastors keep the pictures already on file", () => {
   assert.ok(nina.some((p) => p.name === 'Eniola Ajiga' && p.image));
   assert.ok(nina.some((p) => /Joshua .*Gbafa/.test(p.name) && p.image));
 });
+
+test('repeated group headings do not become pastor records', () => {
+  assert.ok(!pastors.some(p => p.name.includes(' · ')));
+  assert.equal(under('Emmanuel Nterful').length, 54);
+  assert.equal(under('Francis Nii Aryee Hammond').length, 26);
+  assert.equal(under('Luke Akwasi Frimpong Mensah').length, 59);
+  assert.ok(!pastors.some(p => ['Se83d157c', 'Sfd42d70f', 'Sce1ded69'].includes(p.id)));
+});

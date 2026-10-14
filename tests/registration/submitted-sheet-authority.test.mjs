@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { continuityAssets, nonPastoralRank, newerSubmission, submittedBirthKeys } from '../../scripts/lib/submitted-sheet-authority.mjs';
+import { continuityAssets, nonPastoralRank, newerSubmission, submittedBirthKeys, submittedSheetBanner } from '../../scripts/lib/submitted-sheet-authority.mjs';
 
 test('continuity cannot supply old profile data, ranks, groups, years or contacts', () => {
   const old = { id: 'B1', name: 'Identity match', image: 'portrait.webp', bishop: 'Identity link', organization: 'Old group',
@@ -28,4 +28,12 @@ test('ISO birthdays match day/month and named-month spellings without invalid ke
   assert.deepEqual(submittedBirthKeys('5 September 2000'), ['5-9-00']);
   assert.deepEqual(submittedBirthKeys('not supplied'), []);
   assert.deepEqual(submittedBirthKeys('2000-42-99'), []);
+});
+
+test('repeated worksheet banners are metadata, while tabular bishop rows retain their rank', () => {
+  assert.deepEqual(submittedSheetBanner(['Reasonable Service · Keep My Word Chapel']), { kind: 'group', group: 'Reasonable Service', denomination: 'Keep My Word Chapel' });
+  assert.deepEqual(submittedSheetBanner(['UD North America · American Missionary Church']), { kind: 'group', group: 'UD North America', denomination: 'American Missionary Church' });
+  assert.deepEqual(submittedSheetBanner(['Bishop Emmanuel Nterful']), { kind: 'bishop', titleRow: 'Emmanuel Nterful' });
+  assert.equal(submittedSheetBanner(['Bishop William Ato Wilson', 'Male', 'Bishop']), null);
+  assert.equal(submittedSheetBanner(['Francisca Boateng', 'Female', 'Lady Pastor']), null);
 });

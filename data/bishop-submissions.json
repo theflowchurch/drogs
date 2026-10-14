@@ -46119,48 +46119,6 @@
    {
     "name": "Emmanuel Nterful",
     "gender": "",
-    "title": "Pastor",
-    "rawRank": "",
-    "denomination": "",
-    "branch": "",
-    "city": "",
-    "country": "",
-    "yearAppointed": "",
-    "yearOrdained": "",
-    "yearConsecrated": "",
-    "phone": "",
-    "email": "",
-    "dobKeys": [],
-    "age": null,
-    "row": 52,
-    "cells": [
-     "Bishop Emmanuel Nterful"
-    ]
-   },
-   {
-    "name": "Reasonable Service · Keep My Word Chapel International",
-    "gender": "",
-    "title": "Pastor",
-    "rawRank": "",
-    "denomination": "",
-    "branch": "",
-    "city": "",
-    "country": "",
-    "yearAppointed": "",
-    "yearOrdained": "",
-    "yearConsecrated": "",
-    "phone": "",
-    "email": "",
-    "dobKeys": [],
-    "age": null,
-    "row": 53,
-    "cells": [
-     "Reasonable Service · Keep My Word Chapel"
-    ]
-   },
-   {
-    "name": "Emmanuel Nterful",
-    "gender": "",
     "title": "Bishop",
     "rawRank": "Bishop",
     "denomination": "Keep My Word Chapel International",
@@ -47316,7 +47274,19 @@
     ]
    }
   ],
-  "removed": []
+  "removed": [],
+  "metadataRows": [
+   {
+    "row": 52,
+    "name": "Bishop Emmanuel Nterful",
+    "kind": "bishop"
+   },
+   {
+    "row": 53,
+    "name": "Reasonable Service · Keep My Word Chapel International",
+    "kind": "group"
+   }
+  ]
  },
  {
   "file": "Bishop Emmanuel Tetteh.xlsx",
@@ -54720,48 +54690,6 @@
    },
    {
     "name": "Francis Nii Aryee Hammond",
-    "gender": "",
-    "title": "Pastor",
-    "rawRank": "",
-    "denomination": "",
-    "branch": "",
-    "city": "",
-    "country": "",
-    "yearAppointed": "",
-    "yearOrdained": "",
-    "yearConsecrated": "",
-    "phone": "",
-    "email": "",
-    "dobKeys": [],
-    "age": null,
-    "row": 32,
-    "cells": [
-     "Bishop Francis Nii Aryee Hammond"
-    ]
-   },
-   {
-    "name": "Ud Ghana · Anagkazo Assemblies",
-    "gender": "",
-    "title": "Pastor",
-    "rawRank": "",
-    "denomination": "",
-    "branch": "",
-    "city": "",
-    "country": "",
-    "yearAppointed": "",
-    "yearOrdained": "",
-    "yearConsecrated": "",
-    "phone": "",
-    "email": "",
-    "dobKeys": [],
-    "age": null,
-    "row": 33,
-    "cells": [
-     "UD Ghana · ANAGKAZO ASSEMBLIES"
-    ]
-   },
-   {
-    "name": "Francis Nii Aryee Hammond",
     "gender": "male",
     "title": "Bishop",
     "rawRank": "Bishop",
@@ -54833,7 +54761,19 @@
     ]
    }
   ],
-  "removed": []
+  "removed": [],
+  "metadataRows": [
+   {
+    "row": 32,
+    "name": "Bishop Francis Nii Aryee Hammond",
+    "kind": "bishop"
+   },
+   {
+    "row": 33,
+    "name": "UD Ghana · ANAGKAZO ASSEMBLIES",
+    "kind": "group"
+   }
+  ]
  },
  {
   "file": "Bishop Francis Philip Asamoah.xlsx",
@@ -122547,48 +122487,6 @@
    },
    {
     "name": "Luke Akwasi Frimpong Mensah",
-    "gender": "",
-    "title": "Pastor",
-    "rawRank": "",
-    "denomination": "",
-    "branch": "",
-    "city": "",
-    "country": "",
-    "yearAppointed": "",
-    "yearOrdained": "",
-    "yearConsecrated": "",
-    "phone": "",
-    "email": "",
-    "dobKeys": [],
-    "age": null,
-    "row": 64,
-    "cells": [
-     "Bishop Luke Akwasi Frimpong Mensah"
-    ]
-   },
-   {
-    "name": "Ud North America · American Missionary Church",
-    "gender": "",
-    "title": "Pastor",
-    "rawRank": "",
-    "denomination": "",
-    "branch": "",
-    "city": "",
-    "country": "",
-    "yearAppointed": "",
-    "yearOrdained": "",
-    "yearConsecrated": "",
-    "phone": "",
-    "email": "",
-    "dobKeys": [],
-    "age": null,
-    "row": 65,
-    "cells": [
-     "UD North America · AMERICAN MISSIONARY C"
-    ]
-   },
-   {
-    "name": "Luke Akwasi Frimpong Mensah",
     "gender": "male",
     "title": "Bishop",
     "rawRank": "Bishop",
@@ -124629,7 +124527,19 @@
     ]
    }
   ],
-  "removed": []
+  "removed": [],
+  "metadataRows": [
+   {
+    "row": 64,
+    "name": "Bishop Luke Akwasi Frimpong Mensah",
+    "kind": "bishop"
+   },
+   {
+    "row": 65,
+    "name": "UD North America · AMERICAN MISSIONARY CHURCH",
+    "kind": "group"
+   }
+  ]
  },
  {
   "file": "Bishop Mawusi Adagbe.xlsx",

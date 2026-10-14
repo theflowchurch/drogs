@@ -32,3 +32,17 @@ export function submittedBirthKeys(value) {
   }
   return [...new Set(keys.filter(Boolean))];
 }
+
+// Workbooks sometimes repeat their title/group banners between two tables.
+// These are metadata even when a pastor column map has already been found.
+export function submittedSheetBanner(row) {
+  const filled = row.map(value => String(value || '').trim()).filter(Boolean);
+  if (filled.length > 2) return null;
+  const text = filled.join(' ');
+  if (/^(bishop|episcopal sister|mother)\s/i.test(text)) return { kind: 'bishop', titleRow: text.replace(/^(bishop|episcopal sister|mother)\s+/i, '').trim() };
+  if (/\s·/.test(text)) {
+    const [group, denomination] = text.split(/\s*·\s*/);
+    return { kind: 'group', group, denomination };
+  }
+  return null;
+}
