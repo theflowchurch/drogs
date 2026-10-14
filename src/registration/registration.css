@@ -3990,6 +3990,21 @@ input[type="date"] {
 .reg-subnav { margin-top: 14px; }
 .reg-subnav b { margin-left: 6px; font-size: 11px; background: #b42318; color: #fff; border-radius: 999px; padding: 1px 7px; }
 .reg-dashboard-activity { padding: 24px max(24px, 4vw) 40px; }
+.reg-dashboard-photos { padding: 24px max(24px, 4vw) 12px; }
+.reg-photo-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 16px 0; }
+.reg-photo-stats > button { text-align: left; display: flex; flex-direction: column; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 13px; padding: 22px; color: var(--ink); }
+.reg-photo-stats > button:not(:disabled):hover { border-color: var(--accent); }
+.reg-photo-stats > button:disabled { opacity: 1; cursor: default; }
+.reg-photo-stats span { font-size: 13px; font-weight: 600; }
+.reg-photo-stats strong { font-size: 38px; line-height: 1.1; font-weight: 600; }
+.reg-photo-stats small, .reg-photo-note { color: var(--muted); font-size: 12px; line-height: 1.5; }
+.reg-photo-tools { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 24px 0 18px; }
+.reg-photo-tasks td { vertical-align: middle; }
+.reg-table-wrap { overflow-x: auto; }
+.reg-photo-tasks td:first-child { width: 80px; }
+.reg-photo-tasks td:first-child > img, .reg-photo-tasks td:first-child > .reg-placeholder { width: 48px; height: 60px; object-fit: cover; border-radius: 6px; }
+@media (max-width: 900px) { .reg-photo-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 540px) { .reg-photo-stats > button { padding: 15px; } .reg-photo-stats strong { font-size: 30px; } }
 .reg-settings-search { width: 100%; max-width: 420px; margin: 0 0 14px; }
 
 /* Review → Conflicts and the Dashboard alert. */

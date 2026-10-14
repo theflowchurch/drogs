@@ -60,7 +60,7 @@ export default function DataExport({ state, people, year }) {
   const [only, setOnly] = useState([]);
   const [columns, setColumns] = useState(DEFAULT_COLUMNS);
   const [format, setFormat] = useState("xlsx");
-  const everyone = useMemo(() => directoryPeople(state, people, year).map((p) => ({ ...p, ...(state.contacts?.[p.id] || {}) })), [state, people, year]);
+  const everyone = useMemo(() => directoryPeople(state, people, year), [state, people, year]);
   const options = useMemo(() => ({
     group: [...new Set(everyone.map((p) => p.group || orgLabel(p.organization)).filter(Boolean))].sort(),
     denomination: [...new Set(everyone.map((p) => caps(p.denomination)).filter(Boolean))].sort(),

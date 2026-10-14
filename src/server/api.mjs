@@ -8,7 +8,8 @@ import { brandedMail } from './mail.mjs';
 import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit } from './auth.mjs';
-import { assertOwnedMedia, canReadMedia } from './storage.mjs';
+import { assertOwnedMedia, assignedPortrait, canReadMedia } from './storage.mjs';
+import { photoProgress } from '../registration/photo-progress.mjs';
 // The roster the browser gets has no contact details; the server merges them back for its own use (office views, broadcasts, matching).
 const contacts = JSON.parse(await readFile(new URL('../../data/reference-contacts.json', import.meta.url), 'utf8'));
 const people = JSON.parse(await readFile(new URL('../registration/reference-people.json', import.meta.url), 'utf8')).map(p => ({ ...p, ...(contacts[p.id] || {}) }));
@@ -157,7 +158,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           // Payment evidence is available only to its owner and the office.
           view.registrations = view.registrations.map(r => r.userId === actor.id ? r : { ...r, proof: undefined });
         }
-        return json({ ...view, office: actor.office, payment: config.momo, paystackKey: config.paystackPublic, publicDirectory: config.publicDirectory, publicPhotos: config.publicPhotos });
+        return json({ ...view, ...(actor.office ? { photoProgress: photoProgress(state, people) } : {}), office: actor.office, payment: config.momo, paystackKey: config.paystackPublic, publicDirectory: config.publicDirectory, publicPhotos: config.publicPhotos });
       }
       if (path === '/api/registration/communication/send' && method === 'POST') {
         // A broadcast from the office to everyone, all bishops, all pastors, or chosen people.
@@ -197,7 +198,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         let reviewed = null;
         await transaction(pool, async conn => {
           const before = await readState(conn, true);
-          if (['save', 'submit', 'update'].includes(name) && payload.photo) await assertOwnedMedia(conn, actor, payload.photo, 'portrait');
+          if (['save', 'submit', 'update'].includes(name) && payload.photo && !assignedPortrait(before, actor, payload.photo)) await assertOwnedMedia(conn, actor, payload.photo, 'portrait');
           if (name === 'payment') await assertOwnedMedia(conn, actor, payload.proof, 'receipt');
           if (name === 'approveBishop' && payload.referenceId && !references.some(r => r.id === payload.referenceId))
             throw new HttpError(400, 'Choose a listed bishop reference.');

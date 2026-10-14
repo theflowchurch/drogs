@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import people from "./reference-people.json";
+import { photoProgress } from './photo-progress.mjs';
 const references = people.filter((p) => p.role === "bishop");
 import {
   STORAGE_KEY,
@@ -154,7 +155,7 @@ export async function signOut(office = false, forget = true) {
 }
 export async function snapshot(actor) {
   if (mysqlBackend) return server("snapshot");
-  if (!live) { const v = visibleState(read(), actor, references, people); return { ...v, publicPhotos: "confirmed", ...(process.env.NEXT_PUBLIC_PREVIEW === "1" && !read().fees ? { fees: { bishop: 100, pastor: 20 } } : {}) }; }
+  if (!live) { const s = read(), v = visibleState(s, actor, references, people); return { ...v, ...(actor.office ? { photoProgress: photoProgress(s, people) } : {}), publicPhotos: "confirmed", ...(process.env.NEXT_PUBLIC_PREVIEW === "1" && !s.fees ? { fees: { bishop: 100, pastor: 20 } } : {}) }; }
   const { data, error } = await supabase().rpc("registration_snapshot");
   check(error);
   return data;

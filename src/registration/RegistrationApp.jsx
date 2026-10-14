@@ -71,6 +71,8 @@ import { shortDateTime, longDate } from "./format.mjs";
 import { checkAttire, expectedAttire } from "./attire-check.mjs";
 import DataExport from "./DataExport.jsx";
 import people from "./reference-people.json";
+import { photoProgress, photoTask, PHOTO_REASONS } from './photo-progress.mjs';
+import { snapshotSync, changedFields } from './snapshot-sync.mjs';
 // Everyone Kuriake Castle already knows. Bishops are the linkable approval references;
 // the whole roster backs the Directory and the member search.
 const references = people.filter((p) => p.role === "bishop");
@@ -522,13 +524,15 @@ export default function RegistrationApp({
     [notice, setNotice] = useState(""),
     [tab, setTab] = useState(() => { const wanted = typeof sessionStorage !== "undefined" && sessionStorage.getItem("kc-open-tab"); if (wanted) sessionStorage.removeItem("kc-open-tab"); return wanted || (office ? "Directory" : "Registration"); }),
     [year, setYear] = useState(null);
+  const snapshots = useRef(null), publicSnapshots = useRef(null), saving = useRef(0);
+  if (!snapshots.current) snapshots.current = snapshotSync(api.snapshot, data => {
+    setState(data);
+    setYear(y => y || data.year);
+  });
+  if (!publicSnapshots.current) publicSnapshots.current = snapshotSync(api.publicDirectory, setPub);
   const refresh = useCallback(
     async (a = actor) => {
-      if (a) {
-        const data = await api.snapshot(a);
-        setState(data);
-        setYear((y) => y || data.year);
-      }
+      if (a) await snapshots.current.refresh(a);
     },
     [actor],
   );
@@ -551,8 +555,10 @@ export default function RegistrationApp({
   }
   const perform = async (name, payload, message) =>
     run(async () => {
-      await api.action(actor, name, payload);
-      await refresh();
+      snapshots.current.invalidate();
+      saving.current++;
+      try { await api.action(actor, name, payload); await refresh(); }
+      finally { saving.current--; }
     }, message);
   useEffect(() => {
     setChecking(true);
@@ -604,16 +610,20 @@ export default function RegistrationApp({
     localStorage.setItem("kc-sidebar-hidden", next ? "yes" : "no");
   };
   const [pubError, setPubError] = useState("");
-  const loadPublic = () => { setPubError(""); api.publicDirectory().then(setPub).catch((e) => setPubError(e.message)); };
+  const loadPublic = () => { setPubError(""); publicSnapshots.current.refresh().catch((e) => setPubError(e.message)); };
   useEffect(() => {
     // The public directory needs no account at all.
-    if (browse && !showDirectoryDemo) loadPublic();
+    if (!browse || showDirectoryDemo) return;
+    loadPublic();
+    const timer = setInterval(loadPublic, 30000);
+    window.addEventListener('focus', loadPublic);
+    return () => { clearInterval(timer); window.removeEventListener('focus', loadPublic); };
   }, [browse, showDirectoryDemo]);
   useEffect(() => {
     if (!actor) return;
     // Background refreshes stay quiet when the network hiccups; the next tick tries again.
     // Background refreshes stay quiet, except when the session has ended: then show sign-in.
-    const update = () => refresh().catch((e) => { if (e.message === "Please sign in again.") { setActor(null); setState(null); setError("Your session has ended. Please sign in again."); } });
+    const update = () => { if (saving.current) return; refresh().catch((e) => { if (e.message === "Please sign in again.") { setActor(null); setState(null); setError("Your session has ended. Please sign in again."); } }); };
     window.addEventListener("storage", update);
     window.addEventListener("registration-change", update);
     const timer = setInterval(update, 30000);
@@ -679,7 +689,7 @@ export default function RegistrationApp({
   const SUB_LABEL = { Directory: "Roll of Good Standing", "Existing records": "Existing Records", "Pastor lists": "Pastor Lists", "API keys": "API Keys" };
   const [sub, setSub] = useState({}); // which page is open inside People, Review and Settings
   const nav = office
-    ? ["Dashboard", "Directory", "Review", "Data", "Communication", "Denominations", ...(SUBS.Settings.length ? ["Settings"] : [])]
+    ? ["Dashboard", "Directory", "Photo tasks", "Review", "Data", "Communication", "Denominations", ...(SUBS.Settings.length ? ["Settings"] : [])]
     : [
         "Registration",
         ...(current && current.status !== "draft" ? ROLL_TABS : []),
@@ -688,6 +698,9 @@ export default function RegistrationApp({
           : []),
       ];
   const view = SUBS[tab] ? sub[tab] || SUBS[tab][0] : tab;
+  const photos = useMemo(() => office && state ? state.photoProgress || photoProgress(state, people) : null, [office, state]);
+  const [photoFilter, setPhotoFilter] = useState('all');
+  const openPhotoTasks = (status) => { setPhotoFilter(status); setTab('Photo tasks'); };
   // Records that contradict the office's group and denomination structure (Denominations tab).
   const conflicts = useMemo(() => (office && state ? structureConflicts(catalogOf(state), directoryPeople(state, publicPeople, Number(year))) : []), [office, state, year]);
   async function logout() {
@@ -939,6 +952,10 @@ export default function RegistrationApp({
                       <button type="button" className="reg-text" onClick={() => { setTab("Review"); setSub({ ...sub, Review: "Conflicts" }); }}>Review the conflicts →</button>
                     </div>
                   )}
+                  <section className="reg-dashboard-photos">
+                    <h2>Pastor photos</h2>
+                    <PhotoSummary progress={photos} onSelect={openPhotoTasks} />
+                  </section>
                   <DashboardFrame />
                   <section className="reg-dashboard-activity">
                     <History state={state} records={scoped} office={office} actor={actor} year={Number(year)} perform={perform} />
@@ -996,6 +1013,7 @@ export default function RegistrationApp({
                             Communication: "Send an email to everyone, all bishops, all pastors, or selected people.",
                             Denominations: "Organisations, their denominations and logos, and the UD – OLGC groups.",
                             Accounts: "See who has created an account and when they last signed in.",
+                            'Photo tasks': "See exactly which pastors need a photo or a replacement. Counts update after a saved upload, and refresh every 30 seconds.",
                             "API keys": "Create secure, read-only access for applications connected to Kuriake Castle.",
                             Settings: "Manage registration, payments, email, access and other system settings.",
                           }[view]
@@ -1051,6 +1069,9 @@ export default function RegistrationApp({
                       actor={actor}
                       mode="original"
                     />
+                  )}
+                  {view === 'Photo tasks' && (
+                    <PhotoTasks state={state} progress={photos} filter={photoFilter} setFilter={setPhotoFilter} perform={perform} actor={actor} refresh={() => run(() => refresh())} />
                   )}
                   {view === "Unclaimed" && (
                     <ReviewQueue
@@ -1395,6 +1416,7 @@ const ACTION_LABELS = {
                   addPerson: "Person added by the office",
                   addReference: "Original record added",
                   editReference: "Original record corrected",
+                  reviewPhoto: "Photo task reviewed",
                   hideReference: "Original record hidden or shown",
                   deleteReference: "Original record deleted or restored",
                   setCatalog: "Organizations and denominations changed",
@@ -2923,6 +2945,73 @@ function Directory({ state, year, role, setRole, perform, actor, mode = "origina
     </>
   );
 }
+function PhotoSummary({ progress, onSelect }) {
+  if (!progress) return null;
+  return <>
+    <div className="reg-photo-stats" role="group" aria-label="Pastor photo progress" aria-live="polite">
+      {[
+        ['Missing photos', progress.missing, 'missing', 'Need a photo on file'],
+        ['Photos to replace', progress.replace, 'replace', 'Flagged photos still awaiting an update'],
+        ['Missing photos added', progress.added, null, 'From the original list of 687'],
+        ['Replacement photos updated', progress.replaced, null, 'New photos supplied for flagged records'],
+      ].map(([label, count, status, detail]) => <button type="button" key={label} disabled={!status} onClick={() => onSelect?.(status)}>
+        <span>{label}</span><strong>{count.toLocaleString()}</strong><small>{detail}</small>
+      </button>)}
+    </div>
+    {progress.removedFromOriginal > 0 && <p className="reg-photo-note">{progress.removedFromOriginal} records from the original missing list were merged or removed. These are separate from photos added.</p>}
+  </>;
+}
+function PhotoTasks({ state, progress, filter, setFilter, perform, actor, refresh }) {
+  const [q, setQ] = useState(''), [bishop, setBishop] = useState(''), [limit, setLimit] = useState(50), [selectedId, setSelectedId] = useState(null);
+  const all = useMemo(() => directoryPeople({ ...state, hidden: [] }, people, state.year), [state]);
+  const missing = new Set(progress.missingIds), replace = new Set(progress.replaceIds);
+  const tasks = all.filter(p => missing.has(p.id) || replace.has(p.id));
+  const bishops = [...new Set(tasks.map(p => p.bishop || 'Office to assign'))].sort();
+  const list = tasks.filter(p => (filter === 'all' || (filter === 'missing' ? missing.has(p.id) : replace.has(p.id))) &&
+    (!bishop || (p.bishop || 'Office to assign') === bishop) && (!q || normalName(`${p.name} ${p.bishop} ${p.branch} ${p.city} ${p.country} ${p.id}`).includes(normalName(q)))).sort(bySurname);
+  const selected = selectedId && all.find(p => p.id === selectedId);
+  useEffect(() => setLimit(50), [q, bishop, filter]);
+  return <>
+    <PhotoSummary progress={progress} onSelect={setFilter} />
+    <div className="reg-photo-tools">
+      <div className="reg-switch" role="group" aria-label="Photo task type">
+        {['all', 'missing', 'replace'].map(status => <button type="button" key={status} aria-pressed={filter === status} className={filter === status ? 'active' : ''} onClick={() => setFilter(status)}>{status === 'all' ? 'All photo tasks' : status === 'missing' ? 'Missing photos' : 'Photos to replace'}</button>)}
+      </div>
+      <button type="button" className="reg-secondary" onClick={refresh}>Refresh counts</button>
+    </div>
+    <div className="reg-filters">
+      <input type="search" aria-label="Search photo tasks" placeholder="Search pastor, branch or record ID" value={q} onChange={e => setQ(e.target.value)} />
+      <select aria-label="Filter photo tasks by bishop" value={bishop} onChange={e => setBishop(e.target.value)}><option value="">All bishops / overseers</option>{bishops.map(b => <option key={b}>{b}</option>)}</select>
+    </div>
+    <p>{list.length.toLocaleString()} {list.length === 1 ? 'pastor' : 'pastors'} in this view</p>
+    {list.length ? <div className="reg-table-wrap"><table className="reg-table reg-photo-tasks"><thead><tr><th>Photo</th><th>Pastor</th><th>Bishop / overseer</th><th>Photo task</th><th><span className="reg-visually-hidden">Actions</span></th></tr></thead><tbody>
+      {list.slice(0, limit).map(p => <tr key={p.id}>
+        <td><Portrait person={p} /></td>
+        <td><b>{p.name}</b><small>{[p.branch, placeOf(p)].filter(Boolean).join(' · ')}</small><small>{p.id}</small></td>
+        <td>{p.bishop || 'Office to assign'}</td>
+        <td>{missing.has(p.id) ? 'Missing photo' : <><b>Replace photo</b>{photoTask(p, state).codes.map(code => <small key={code}>{PHOTO_REASONS[code]}</small>)}</>}</td>
+        <td><button type="button" className="reg-secondary" onClick={() => setSelectedId(p.id)}>{missing.has(p.id) ? 'Add photo' : 'Replace photo'}</button></td>
+      </tr>)}
+    </tbody></table></div> : <Empty title="No photo tasks found">Try another filter, or refresh the counts.</Empty>}
+    {list.length > limit && <button className="reg-secondary full" onClick={() => setLimit(n => n + 50)}>Show more · {(list.length-limit).toLocaleString()} remaining</button>}
+    {selected && <Dialog title={selected.name} onClose={() => setSelectedId(null)}><RecordDetails person={selected} state={state} perform={perform} actor={actor} onOpen={p => setSelectedId(p.id)} /></Dialog>}
+  </>;
+}
+function PhotoReviewControls({ person, state, perform }) {
+  const [open, setOpen] = useState(false), [reason, setReason] = useState('LOW');
+  const task = photoTask(person, state);
+  if (person.role !== 'pastor' || person.organization === 'FLOW') return null;
+  return <section className="reg-office-editor">
+    <h3>Photo task</h3>
+    <p>{task.status === 'missing' ? 'Missing photo' : task.status === 'replace' ? 'Photo needs replacement' : 'No outstanding photo task'}</p>
+    {task.codes.map(code => <p key={code} className="reg-photo-note">{PHOTO_REASONS[code]}</p>)}
+    {task.status !== 'missing' && <div className="reg-office-actions">
+      <button type="button" className="reg-secondary" onClick={() => setOpen(!open)}>Mark photo for replacement</button>
+      {task.status === 'replace' && <button type="button" className="reg-secondary" onClick={() => perform('reviewPhoto', { referenceId: person.id, status: 'ok' }, 'This photo is marked acceptable.')}>Photo is acceptable</button>}
+    </div>}
+    {open && <div className="reg-fields"><Field label="Reason to replace photo"><select value={reason} onChange={e => setReason(e.target.value)}>{Object.entries(PHOTO_REASONS).map(([code, label]) => <option key={code} value={code}>{label}</option>)}</select></Field><div className="reg-form-actions"><button type="button" className="reg-primary" onClick={() => perform('reviewPhoto', { referenceId: person.id, status: 'replace', codes: [reason] }, 'Photo added to the replacement list.').then(ok => ok && setOpen(false))}>Save photo task</button></div></div>}
+  </section>;
+}
 function RecordDetails({ person: p, under = [], onOpen, perform, state, actor }) {
   const changed = (field) =>
     p.recorded && p.recorded[field] && p.recorded[field] !== p[field];
@@ -3037,6 +3126,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
       {perform && state && (p.registration
         ? <OfficeEditor registration={p.registration} state={state} perform={perform} actor={actor} />
         : <ReferenceEditor person={p} state={state} perform={perform} actor={actor} />)}
+      {perform && state && <PhotoReviewControls person={p} state={state} perform={perform} />}
     </>
   );
 }
@@ -3051,9 +3141,10 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
     [busyPhoto, setBusyPhoto] = useState(false);
   const catalog = state.catalog || catalogOf(state);
   const d = r.data;
-  const begin = () => { setForm({ firstName: d.firstName || "", lastName: d.lastName || "", title: d.title || "", gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", phone: d.phone || "", dob: d.dob || "", country: d.country || "", city: d.city || "", church: d.church || "", email: d.email || "", bishopId: d.bishopId || "", bishopFirstName: d.bishopFirstName || "", bishopLastName: d.bishopLastName || "", role: d.role }); setOpen(true); };
+  const initial = useRef(null);
+  const begin = () => { initial.current = { firstName: d.firstName || "", lastName: d.lastName || "", title: d.title || "", gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", phone: d.phone || "", dob: d.dob || "", country: d.country || "", city: d.city || "", church: d.church || "", email: d.email || "", bishopId: d.bishopId || "", bishopFirstName: d.bishopFirstName || "", bishopLastName: d.bishopLastName || "", role: d.role }; setForm(initial.current); setOpen(true); };
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
-  const save = () => perform("officeEdit", { userId: r.userId, data: form }, "Details updated.").then((ok) => ok && setOpen(false));
+  const save = () => perform("officeEdit", { userId: r.userId, data: changedFields(initial.current, form) }, "Details updated.").then((ok) => ok && setOpen(false));
   const statuses = d.role === "bishop" ? ["confirmed", "pending", "denied"] : ["confirmed", "unclaimed", "removed"];
   const roster = overlayReferences(people, state);
   const bishops = [...new Map([...roster.filter((p) => p.role === "bishop"), ...(state.bishops || [])].map((p) => [p.id, p])).values()];
@@ -3151,7 +3242,8 @@ function ReferenceEditor({ person: p, state, perform, actor }) {
   const [open, setOpen] = useState(false),
     [form, setForm] = useState(null);
   const hidden = (state.hidden || []).includes(p.id), deleted = Boolean((state.overrides || {})[p.id]?.deleted);
-  const begin = () => { setForm(Object.fromEntries(REFERENCE_FIELDS.filter((f) => f !== "photo").map((f) => [f, p[f] || ""]))); setOpen(true); };
+  const initial = useRef(null);
+  const begin = () => { initial.current = Object.fromEntries(REFERENCE_FIELDS.filter((f) => f !== "photo").map((f) => [f, p[f] || ""])); setForm(initial.current); setOpen(true); };
   const set = (f) => (v) => setForm((x) => ({ ...x, [f]: v, ...(f === "organization" ? { denomination: "" } : {}) }));
   const [busyPhoto, setBusyPhoto] = useState(false), [photoProblem, setPhotoProblem] = useState("");
   // Choices: the office's organizations and denominations, plus whatever the
@@ -3202,7 +3294,7 @@ function ReferenceEditor({ person: p, state, perform, actor }) {
           <Field label="Year consecrated"><input inputMode="numeric" value={form.yearConsecrated} onChange={(e) => set("yearConsecrated")(e.target.value)} /></Field>
           <div className="reg-form-actions wide">
             <button type="button" className="reg-secondary" onClick={() => setOpen(false)}>Cancel</button>
-            <button type="button" className="reg-primary" onClick={() => perform("editReference", { referenceId: p.id, fields: form }, "Record updated.").then((ok) => ok && setOpen(false))}>Save changes</button>
+            <button type="button" className="reg-primary" onClick={() => perform("editReference", { referenceId: p.id, fields: changedFields(initial.current, form) }, "Record updated.").then((ok) => ok && setOpen(false))}>Save changes</button>
           </div>
         </div>
       )}
@@ -3416,7 +3508,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
 function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
   // Built once per data load, not per render: the people, then the bishop → pastor index (the
   // expensive matching), then the lit/dark flags which are the only part the face switch changes.
-  const people = useMemo(() => (data.source === "roll" ? data.roll : overlayReferences(publicPeople, data)), [data.source, data.roll, data.catalog, data.year, data.hidden, data.overrides]);
+  const people = useMemo(() => (data.source === "roll" ? data.roll : overlayReferences(publicPeople, data)), [data.source, data.roll, data.catalog, data.year, data.hidden, data.overrides, data.extraReferences]);
   const index = useMemo(() => new Map([...pastorsByBishop(people)].map(([id, qs]) => [id, qs.map((q) => q.id)])), [people]);
   const list = useMemo(() => {
     const base = data.source !== "roll" && data.photos === "confirmed" ? withStanding(people, data.roll || []) : people;

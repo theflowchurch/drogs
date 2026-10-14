@@ -34,6 +34,9 @@ export function canReadMedia(state, actor, media) {
   return Boolean(profile && state.registrations.some(r => r.status !== 'draft' && r.data.role === 'pastor' &&
     r.data.photo === media.object_key && r.data.bishopId === (profile.referenceId || profile.id)));
 }
+// An office-supplied portrait can be retained on its assigned member's next save.
+// A different photo still has to be owned by the uploading member.
+export const assignedPortrait = (state, actor, path) => Boolean(path && state.registrations.some(r => r.userId === actor.id && r.year === state.year && r.data.photo === path));
 export async function assertOwnedMedia(conn, actor, path, kind) {
   if (typeof path !== 'string' || path.length > 512) throw new HttpError(400, 'Invalid image reference.');
   const [[media]] = await conn.execute('SELECT owner_id,kind FROM dr_media WHERE object_key=?', [path]);
