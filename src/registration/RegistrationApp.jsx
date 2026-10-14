@@ -864,6 +864,7 @@ export default function RegistrationApp({
             <span className="reg-shimmer">View All Bishops and Pastors in Good Standing</span>
             <span className="reg-enter-arrow" aria-hidden="true">→</span>
           </a>
+          {site && <GoodStandingNotice compact />}
         </section>
       ) : !gate ? (
         <Gate
@@ -3527,9 +3528,8 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
     </>
   );
 }
-// The public directory: a search bar, then two doors — Bishops and Pastors with
-// their totals — before any faces are shown. Lists the existing roster until the
-// office switches the source to this year's roll.
+// Organization directories open directly to the grouped Pastors view; the
+// central directory keeps its two doors. Both use the current live roster.
 function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
   const fallback = useContext(RosterContext);
   const site = useContext(OrganizationSiteContext);
@@ -3541,7 +3541,7 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
     const base = data.source !== "roll" && data.photos === "confirmed" ? withStanding(people, data.roll || []) : people;
     return peopleForSite(base, site).map((p) => ({ ...p, denomination: caps(p.denomination), ...(data.catalog ? { denominationListed: denominationListed(data.catalog, p) } : {}) }));
   }, [people, data.source, data.photos, data.roll, data.catalog, site]);
-  const [role, setRole] = useState(fixedRole),
+  const [role, setRole] = useState(fixedRole || (site && !embedded ? "pastor" : null)),
     [q, setQ] = useState("");
   const legend = data.photos === "confirmed" && (
     <p className="reg-roll-legend">A photograph appears once a bishop or pastor is in good standing.</p>
@@ -3627,16 +3627,22 @@ const pastorsUnder = (b, byBishop) => {
   return [...uploaded, ...(byBishop.get(b.id) || []).filter((q) => !uploaded.some((u) => namesAlike(u.name, q.name)))];
 };
 const overseeing = (n) => (n ? <>Overseeing <b>{n}</b> pastor{n === 1 ? "" : "s"}</> : "");
-// The Roll of Good Standing notice under the two doors on the public page: the
-// opening lines show, the rest unfolds behind "Read more".
-function GoodStandingNotice() {
+// Split-site homepages show two plain lines beneath the directory link. The
+// central directory retains its existing notice.
+function GoodStandingNotice({ compact = false }) {
   const [open, setOpen] = useState(false);
+  const detailsId = useId();
   const one = "bishop or pastor", many = "bishops and pastors";
   return (
-    <section className={`reg-standing-notice ${open ? "open" : ""}`} aria-label="Roll of Good Standing">
-      <h2>Roll of Good Standing</h2>
-      <h3>What it means to be in good standing</h3>
-      <p>A Bishop or pastor is of good standing when he or she fulfills the requirements, expectations, and responsibilities of the office as determined. Such a Bishop or minister is entitled to exercise all rights, privileges, titles, and functions attached to that ministerial office.</p>
+    <section className={`reg-standing-notice ${compact ? "compact" : ""} ${open ? "open" : ""}`} aria-label="Roll of Good Standing">
+      {compact ? <div className="reg-standing-intro">
+        <h2>What it means to be in good standing</h2>
+        <button type="button" className="reg-standing-arrow" aria-label={open ? "Collapse good standing explanation" : "Expand good standing explanation"} aria-expanded={open} aria-controls={detailsId} onClick={() => setOpen(!open)}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+        </button>
+      </div> : <><h2>Roll of Good Standing</h2><h3>What it means to be in good standing</h3></>}
+      <div id={detailsId}>
+      <p className="reg-standing-preview">A Bishop or pastor is of good standing when he or she fulfills the requirements, expectations, and responsibilities of the office as determined. Such a Bishop or minister is entitled to exercise all rights, privileges, titles, and functions attached to that ministerial office.</p>
       {open && (<>
       <h3>What it means to not be in good standing</h3>
       <p>A Bishop or pastor who is not in good standing is not entitled to exercise the rights, privileges, titles, or functions attached to that ministerial office for the period in which they remain not in good standing.</p>
@@ -3656,7 +3662,8 @@ function GoodStandingNotice() {
       <p>A Bishop or minister may be restored to good standing when the requirements and expectations of the office have been satisfied.</p>
       <p>Upon restoration, the minister's name may be returned to the Roll of ministers in Good Standing, together with the rights, functions, recognition, and privileges applicable to that office.</p>
       </>)}
-      <button type="button" className="reg-text reg-read-more" aria-expanded={open} onClick={() => setOpen(!open)}>{open ? "Show less" : "Read more"}</button>
+      </div>
+      {!compact && <button type="button" className="reg-text reg-read-more" aria-expanded={open} aria-controls={detailsId} onClick={() => setOpen(!open)}>{open ? "Show less" : "Read more"}</button>}
     </section>
   );
 }
@@ -3730,10 +3737,13 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
   return (
     <>
       {switcher && <div className="reg-toggle" role="group" aria-label="Bishops or pastors">
-        {[
+        {(site ? [
+          ["pastor", "Pastors"],
+          ["bishop", "Bishops"],
+        ] : [
           ["bishop", "Bishops"],
           ["pastor", "Pastors"],
-        ].map(([value, label]) => (
+        ]).map(([value, label]) => (
           <button
             key={value}
             aria-label={label}
