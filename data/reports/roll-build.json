@@ -58,7 +58,7 @@
   "pastors": 5064,
   "assigned": 5064,
   "unclaimed": 0,
-  "withPhoto": 4738,
+  "withPhoto": 4741,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -7675,30 +7675,6 @@
    "place": "Obosomase, Ghana"
   },
   {
-   "id": "S41caa281",
-   "name": "Chioma Chigbu",
-   "bishop": "Rutendo Mantiziba",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Basseterre, Saint Kitts And Nevis"
-  },
-  {
-   "id": "P5008",
-   "name": "Matilda Peter",
-   "bishop": "Rutendo Mantiziba",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Castries, Saint Lucia"
-  },
-  {
-   "id": "S0f2c9509",
-   "name": "Priest Powell",
-   "bishop": "Rutendo Mantiziba",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Warrens, Barbados"
-  },
-  {
    "id": "P1369",
    "name": "Eric Asante",
    "bishop": "Sena Agyepong",
@@ -8176,10 +8152,10 @@
   ],
   "latestOfficeImport": {
    "date": "2026-10-15",
-   "photos": 194,
+   "photos": 26,
    "newPastors": 0,
-   "missingFilled": 39,
-   "flaggedReplaced": 100
+   "missingFilled": 3,
+   "flaggedReplaced": 23
   }
  }
 }
