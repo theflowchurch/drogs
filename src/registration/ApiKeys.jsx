@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react';
 import * as api from './client';
 import { shortDate, shortDateTime } from './format.mjs';
 const scopes = [
+  ['backend:write', 'Manage all website data', 'Add and edit people, photos, pastor assignments, spreadsheet imports, registrations, catalog, fees and signup settings.'],
+  ['people:write', 'Manage people', 'Add people, correct names and details, move pastors, and remove or restore directory records.'],
+  ['photos:write', 'Manage photos', 'Upload and replace portraits, find people, and view current Photo tasks totals.'],
+  ['rosters:write', 'Import pastor sheets', 'Preview and apply pastor spreadsheets under a chosen bishop.'],
   ['backend:read', 'Read all data', 'Access all available Kuriake Castle data, including registrations, accounts, pastor lists, payments and photos.'],
   ['registrations:read', 'Read registrations', 'View submitted names, contact details, organisations and registration status.'],
   ['rosters:read', 'Read annual pastor lists', 'View names and contact details on bishops’ annual pastor lists.'],
@@ -22,7 +26,7 @@ export default function ApiKeys({ run }) {
       });
     }}>
       <h2>Create an API key</h2>
-      <p>Create a separate key for each connected application. API keys can only read the information you allow — they cannot change or delete anything.</p>
+      <p>Create a separate key for each connected application. Choose what this application can read or change. Management keys save to the same records as admin edits and update every directory and Photo tasks.</p>
       <label className="reg-field">Application name
         <input aria-label="Application name" required maxLength={80} value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Church directory" />
       </label>
@@ -32,6 +36,7 @@ export default function ApiKeys({ run }) {
           <option value="0">Never expires</option>
         </select>
       </label>
+      <button type="button" className="reg-text" onClick={() => setSelected(['backend:read', 'backend:write'])}>Select full data management access</button>
       <fieldset className="reg-api-permissions"><legend>Allowed access</legend>
         {scopes.map(([scope, label, description]) => <label key={scope}>
           <input type="checkbox" checked={selected.includes(scope)} onChange={e => setSelected(e.target.checked ? [...selected, scope] : selected.filter(s => s !== scope))} />
@@ -63,7 +68,9 @@ export default function ApiKeys({ run }) {
     </section>
     <section className="reg-card"><h2>Connect an application</h2>
       <p>Send the key in an <code>Authorization: Bearer YOUR_API_KEY</code> header from your app’s server. Don’t put it in a website’s public JavaScript.</p>
-      <p>Full access uses <code>/api/v1/backend/</code>: registrations, rosters, profiles, users, history, media, media-url, settings, reference and keys. Registrations include payments and receipt references. All years are included unless filtered.</p>
+      <p>For CLI agents, select <strong>Read all data</strong> and <strong>Manage all website data</strong>. Use the <a href="/docs/">API documentation and CLI guide</a>.</p>
+      <p>Management routes include <code>/api/v1/people</code>, <code>/api/v1/people/ID/photo</code>, <code>/api/v1/people/import</code>, <code>/api/v1/photo-progress</code> and <code>/api/v1/actions</code>. Each successful change returns updated photo totals.</p>
+      <p>Read access uses <code>/api/v1/backend/</code>: registrations, rosters, profiles, users, history, media, media-url, settings, reference and keys. Registrations include payments and receipt references. All years are included unless filtered.</p>
       <ul><li><code>GET /api/v1/registrations?year=2027&amp;limit=50</code></li><li><code>GET /api/v1/rosters?year=2027&amp;limit=50</code></li><li><code>GET /api/v1/photos?path=ENCODED_PHOTO_PATH</code></li></ul>
       <p>List responses include <code>nextCursor</code>. Pass it as <code>after</code> to get the next page. The limit is 120 requests per minute per key.</p>
     </section>

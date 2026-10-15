@@ -40,4 +40,4 @@ Provider references: [Hostinger MySQL setup](https://www.hostinger.com/support/c
 
 The backend never calls R2 delete operations, including after a failed database save. Removing delete calls alone does not restrict a credential: the signed action scope must also be enforced by Cloudflare.
 
-See [API.md](API.md) for the application API key system and read-only endpoints. The app-issued keys never permit deletion, regardless of the private server-side R2 credential.
+See [API.md](API.md) for application API keys, management routes and the CLI. Directory deletion is reversible; underlying media is retained. Read-only keys keep their restrictions.

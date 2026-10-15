@@ -1,3 +1,4 @@
+import * as XLSX from 'xlsx';
 import test from 'node:test';
 import { mkdtemp, writeFile, rm, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -45,7 +46,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
         await writeFile(`${mediaDir}/${Buffer.from(request.path).toString('hex')}`, request.body);
       }
       if (request.method === 'DELETE') objects.delete(request.path);
-      return { response: { statusCode: 200, headers: {}, body: Readable.from([]) } };
+      return { response: { statusCode: 200, headers: {}, body: Readable.from(request.method === 'GET' && objects.has(request.path) ? [objects.get(request.path)] : []) } };
     } } });
   const storage = createStorage({ pool, config, client });
   const api = createApi({ pool, config, auth, storage, mailer, fetcher: async (url, init) => { telegram.push({ url, body: init.body }); return { ok: true }; } });
@@ -226,6 +227,57 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('keys/revoke', bishop.cookie, { id: issued.data.key.id })).status, 403);
     assert.equal((await call('keys/revoke', office.cookie, { id: issued.data.key.id })).status, 200);
     assert.equal((await external('registrations')).status, 401);
+    // An agent key writes through the same state and media paths as the office.
+    const manager = await call('keys', office.cookie, { name: 'CLI manager', scopes: ['backend:read','backend:write'] });
+    assert.equal(manager.status, 201);
+    async function manage(path, method='GET', data, token=manager.data.token, type='application/json', extra={}) {
+      const response=await api(new Request(`${config.origin}/api/v1/${path}`, { method, headers:{authorization:`Bearer ${token}`,'content-type':type,...extra}, ...(data===undefined?{}:{body:type==='application/json'?JSON.stringify(data):data}) }));
+      return {status:response.status,data:await response.json(),etag:response.headers.get('etag')};
+    }
+    const firstBishop=published.data.referencePeople.find(p=>p.role==='bishop'&&p.organization==='First Love');
+    const udBishop=published.data.referencePeople.find(p=>p.role==='bishop'&&p.organization==='United Denominations');
+    assert.equal((await manage('people','POST',{fields:{name:'Forbidden New Person',role:'pastor'},bishopId:firstBishop.id},all.data.token)).status,403,'old read keys cannot gain write access');
+    const beforeManagement=(await manage('photo-progress')).data;
+    const added=await manage('people','POST',{fields:{name:'API Integration Pastor',role:'pastor',gender:'female'},bishopId:firstBishop.id});
+    assert.equal(added.status,201,JSON.stringify(added.data));const personId=added.data.person.id;
+    assert.equal(added.data.photoProgress.missing,beforeManagement.missing+1);
+    const photoOnly=await call('keys',office.cookie,{name:'Photo-only agent',scopes:['photos:write']});
+    assert.equal((await manage(`people/${personId}`,'PATCH',{fields:{name:'Not Allowed'}},photoOnly.data.token)).status,403);
+    const uploaded=await manage(`people/${personId}/photo`,'PUT',image,photoOnly.data.token,'image/png');
+    assert.equal(uploaded.status,201,JSON.stringify(uploaded.data));assert.equal(uploaded.data.photoProgress.missing,beforeManagement.missing);
+    let publicView=(await call('public-directory')).data;
+    assert.equal(publicView.overrides[personId].photo,uploaded.data.person.photo,'API portrait is immediately public');
+    assert.equal((await call('snapshot',office.cookie)).data.extraReferences.find(p=>p.id===personId).photo,uploaded.data.person.photo,'admin sees the same portrait');
+    assert.equal((await call('action',office.cookie,{name:'reviewPhoto',payload:{referenceId:personId,status:'replace',codes:['BG']}})).status,200);
+    const flagged=(await manage('photo-progress')).data;
+    const unchanged=await manage(`people/${personId}/photo`,'PUT',image,photoOnly.data.token,'image/png');
+    assert.equal(unchanged.data.unchanged,true,'resending the same image does not falsely complete its replacement task');
+    assert.equal(unchanged.data.photoProgress.replace,flagged.replace);
+    const different=await sharp({create:{width:60,height:80,channels:3,background:'green'}}).png().toBuffer();
+    const replaced=await manage(`people/${personId}/photo`,'PUT',different,photoOnly.data.token,'image/png');
+    assert.equal(replaced.status,201);assert.equal(replaced.data.photoProgress.replace,flagged.replace-1);
+    const original=await manage(`people/${personId}`);
+    const edited=await manage(`people/${personId}`,'PATCH',{fields:{name:'API Corrected Pastor',city:'Kumasi',dob:'05/09/1990'},bishopId:udBishop.id},manager.data.token,'application/json',{'if-match':original.etag});
+    assert.equal(edited.status,200,JSON.stringify(edited.data));assert.equal(edited.data.person.bishop,udBishop.name);
+    assert.equal((await manage(`people/${personId}`,'PATCH',{fields:{city:'Stale city'}},manager.data.token,'application/json',{'if-match':original.etag})).status,409,'stale edits are rejected');
+    publicView=(await call('public-directory')).data;assert.equal(publicView.extraReferences.find(p=>p.id===personId).name,'API Corrected Pastor');
+    const redacted=(await manage(`people/${personId}`,'GET',undefined,photoOnly.data.token)).data.person;assert.equal(redacted.dob,undefined);assert.equal(redacted.phone,undefined);assert.equal(redacted.registration,undefined,'photo-only keys never receive private registration records');
+    assert.ok(!('dob' in publicView.extraReferences.find(p=>p.id===personId)),'birthdays never become public');
+    const preview=await manage('people/import','POST',{bishopId:udBishop.id,allowNew:true,rows:[{name:'API Sheet Pastor',dob:'2000-01-01'}]});
+    assert.equal(preview.status,200);assert.equal(preview.data.dryRun,true);
+    assert.equal((await manage('people?search=API%20Sheet%20Pastor')).data.total,0,'preview never writes');
+    const badBatch=await manage('people/import','POST',{bishopId:udBishop.id,allowNew:true,dryRun:false,rows:[{name:'API Atomic Pastor'},{name:'Invalid'}]});
+    assert.equal(badBatch.status,400);assert.equal((await manage('people?search=API%20Atomic%20Pastor')).data.total,0,'invalid imports write no partial rows');
+    const workbook=XLSX.utils.book_new();XLSX.utils.book_append_sheet(workbook,XLSX.utils.aoa_to_sheet([['Name','Rank','DOB'],[udBishop.name,'Bishop',''],['API Sheet Pastor','Pastor','2000-01-01']]),'Pastors');
+    const sheet=await manage(`people/import?bishopId=${udBishop.id}&dryRun=false&allowNew=true`,'POST',XLSX.write(workbook,{type:'buffer',bookType:'xlsx'}),manager.data.token,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    assert.equal(sheet.status,200,JSON.stringify(sheet.data));assert.equal(sheet.data.created,1);assert.equal(sheet.data.skipped.length,1);
+    assert.equal((await manage(`people/${personId}`,'DELETE')).status,200);assert.equal((await manage(`people/${personId}`)).status,404);
+    publicView=(await call('public-directory')).data;assert.equal(publicView.overrides[personId].deleted,true);
+    assert.equal((await manage(`people/${personId}/restore`,'POST',{})).status,200);
+    const snap=(await call('snapshot',office.cookie)).data;assert.ok(snap.audit.some(a=>a.target===personId&&a.apiKeyId===manager.data.key.id),'mutations retain the issuing key attribution');
+    assert.equal((await manage(`people/${personId}`,'PATCH',{fields:{photo:receipt}})).status,400,'receipts cannot be made public portraits');
+    await call('keys/revoke',office.cookie,{id:photoOnly.data.key.id});
+    assert.equal((await manage('people','GET',undefined,photoOnly.data.token)).status,401);
     // When object storage rejects the credentials the image is kept in MySQL and still served.
     failStorage = true;
     const fallback = await upload(bishop, 'receipt');

@@ -486,7 +486,7 @@ export function overlayReferences(references, state) {
     if (o?.deleted || hidden.has(p.id)) continue;
     out.push(canonicalPerson(o ? { ...p, ...Object.fromEntries(REFERENCE_FIELDS.filter((f) => o[f] !== undefined).map((f) => [f, o[f]])) } : p));
   }
-  for (const p of state?.extraReferences || []) if (!hidden.has(p.id)) out.push(canonicalPerson(p));
+  for (const p of state?.extraReferences || []) if (!hidden.has(p.id) && !overrides[p.id]?.deleted) out.push(canonicalPerson(p));
   // A corrected bishop name keeps the same identity and pastors. Derive the
   // supervising label from that ID instead of needing old copied overrides.
   const byId = new Map(out.map(p => [p.id, p]));

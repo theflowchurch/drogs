@@ -51,7 +51,7 @@ export function createStorage({ config, pool, client, logger = console }) {
     async upload(actor, bytes, contentType, kind) {
       if (!['portrait', 'receipt', 'logo'].includes(kind)) throw new HttpError(400, 'Invalid upload type.');
       if (kind === 'logo' && !actor.office) throw new HttpError(403, 'Only the office uploads logos.');
-      await rateLimit(pool, config, `upload:${actor.id}`, 30, 3600000);
+      await rateLimit(pool, config, `upload:${actor.apiKeyId || actor.id}`, actor.apiKeyId ? 500 : 30, 3600000);
       let body = await prepareImage(bytes, contentType);
       let Key = `${actor.id}/${kind}/${randomUUID()}.webp`;
       try {

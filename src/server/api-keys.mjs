@@ -5,13 +5,13 @@ import { DENOMINATIONS } from '../registration/denominations.mjs';
 import { randomBytes, randomUUID } from 'node:crypto';
 import { HttpError, digest, rateLimit } from './auth.mjs';
 import { transaction } from './database.mjs';
-export const KEY_SCOPES = ['backend:read', 'registrations:read', 'rosters:read', 'photos:read'];
+export const KEY_SCOPES = ['backend:read', 'registrations:read', 'rosters:read', 'photos:read', 'backend:write', 'people:write', 'photos:write', 'rosters:write'];
 export function keyOptions(input) {
   const name = typeof input.name === 'string' ? input.name.trim() : '';
   const scopes = Array.isArray(input.scopes) ? [...new Set(input.scopes)] : [];
   const days = Number(input.days ?? 90);
   if (!name || name.length > 80) throw new HttpError(400, 'Give this key a name of up to 80 characters.');
-  if (!scopes.length || scopes.some(s => !KEY_SCOPES.includes(s))) throw new HttpError(400, 'Choose valid read permissions.');
+  if (!scopes.length || scopes.some(s => !KEY_SCOPES.includes(s))) throw new HttpError(400, 'Choose valid API permissions.');
   // 0 means the key never expires; it can still be revoked.
   if (!Number.isInteger(days) || days < 0 || days > 365) throw new HttpError(400, 'Expiry must be between 1 and 365 days, or 0 for never.');
   return { name, scopes, days };
@@ -60,19 +60,26 @@ export function createKeyService({ pool, config, storage }) {
       });
       return { ok: true };
     },
-    async read(request) {
-      if (request.method !== 'GET') throw new HttpError(405, 'API keys can only read data. Changes and deletion are not supported.');
+    async authenticate(request, permissions) {
       const token = (request.headers.get('authorization') || '').match(/^Bearer (drogs_live_[A-Za-z0-9_-]{43})$/)?.[1];
       if (!token) throw new HttpError(401, 'Send a valid API key in the Authorization: Bearer header.');
       const [[key]] = await pool.execute('SELECT k.*,u.email AS issuer_email FROM dr_api_keys k JOIN dr_users u ON u.id=k.created_by WHERE k.token_hash=? AND k.revoked_at IS NULL AND k.expires_at>?', [digest(config.secret, `api-key:${token}`), Date.now()]);
       if (!key || !config.admins.includes(key.issuer_email)) throw new HttpError(401, 'This API key is invalid, expired or revoked.');
+      const scopes = parse(key.scopes);
+      const allowed = (Array.isArray(permissions) ? permissions : [permissions]).some(p => scopes.includes(p)) ||
+        (scopes.includes('backend:write') && (Array.isArray(permissions) ? permissions : [permissions]).some(p => p.endsWith(':write')));
+      if (!allowed) throw new HttpError(403, `This key requires ${[].concat(permissions).join(' or ')} permission.`);
+      await rateLimit(pool, config, `api-key:${key.id}`, 120, 60000);
+      await pool.execute('UPDATE dr_api_keys SET last_used_at=? WHERE id=?', [Date.now(), key.id]);
+      return { id: key.created_by, email: key.issuer_email, office: true, apiKeyId: key.id, apiKeyName: key.name, apiScopes: scopes };
+    },
+    async read(request) {
+      if (request.method !== 'GET') throw new HttpError(405, 'This endpoint is read-only. Use the documented management endpoints for changes.');
       const url = new URL(request.url), route = url.pathname.replace(/\/$/, '');
       const backend = route.startsWith('/api/v1/backend/');
       const permission = backend ? 'backend:read' : { '/api/v1/registrations': 'registrations:read', '/api/v1/rosters': 'rosters:read', '/api/v1/photos': 'photos:read' }[route];
       if (!permission) throw new HttpError(404, 'API endpoint not found.');
-      if (!parse(key.scopes).includes(permission) && !parse(key.scopes).includes('backend:read')) throw new HttpError(403, `This key requires ${permission} permission.`);
-      await rateLimit(pool, config, `api-key:${key.id}`, 120, 60000);
-      await pool.execute('UPDATE dr_api_keys SET last_used_at=? WHERE id=?', [Date.now(), key.id]);
+      await this.authenticate(request, permission === 'backend:read' ? permission : [permission, 'backend:read']);
       if (backend) return readBackend(pool, storage, url, config);
       if (permission === 'photos:read') {
         const path = url.searchParams.get('path');

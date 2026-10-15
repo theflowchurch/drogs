@@ -6,7 +6,7 @@
     "serve": "node scripts/serve-export.mjs",
     "test:browser": "python3 tests/registration/browser.py",
     "test:api": "node --test tests/api.test.mjs",
-    "api:key": "node scripts/create_api_key.mjs",
+    "api:key": "node scripts/create-management-key.mjs",
     "predev": "node scripts/prepare-public.mjs",
     "dev": "next dev",
     "prebuild": "node scripts/prepare-public.mjs",
@@ -16,7 +16,9 @@
     "start": "node scripts/start-hostinger.mjs",
     "dev:hostinger": "node scripts/start-hostinger.mjs --dev",
     "db:migrate": "node scripts/migrate-mysql.mjs",
-    "test:mysql": "node --test tests/registration/mysql.integration.mjs"
+    "test:mysql": "node --test tests/registration/mysql.integration.mjs",
+    "api:key:legacy": "node scripts/create_api_key.mjs",
+    "api:cli": "node scripts/drogs-cli.mjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",

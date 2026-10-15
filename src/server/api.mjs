@@ -1,3 +1,5 @@
+import { readBody, jsonBody } from './api-body.mjs';
+import { createManagementApi } from './management-api.mjs';
 import { readAccounts, readLogins, removeAccounts } from './accounts.mjs';
 import { createKeyService } from './api-keys.mjs';
 import { createSupport } from './support.mjs';
@@ -18,33 +20,7 @@ const referencePeople = JSON.parse(rosterFile);
 const rosterVersion = createHash('sha256').update(rosterFile).digest('hex');
 const people = referencePeople.map(p => ({ ...p, ...(contacts[p.id] || {}) }));
 const references = people.filter(p => p.role === 'bishop');
-export async function readBody(request, limit = 256 * 1024) {
-  if (Number(request.headers.get('content-length')) > limit) throw new HttpError(413, 'The upload is too large.');
-  if (!request.body) return Buffer.alloc(0);
-  const reader = request.body.getReader(), chunks = [];
-  let size = 0;
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      size += value.length;
-      if (size > limit) { await reader.cancel(); throw new HttpError(413, 'The upload is too large.'); }
-      chunks.push(value);
-    }
-  } finally { reader.releaseLock(); }
-  return Buffer.concat(chunks);
-}
-async function jsonBody(request) {
-  if (!request.headers.get('content-type')?.startsWith('application/json')) throw new HttpError(415, 'Send JSON data.');
-  try {
-    const value = JSON.parse((await readBody(request)).toString('utf8'));
-    if (!value || Array.isArray(value) || typeof value !== 'object') throw Error();
-    return value;
-  } catch (error) {
-    if (error instanceof HttpError) throw error;
-    throw new HttpError(400, 'Invalid request data.');
-  }
-}
+export { readBody } from './api-body.mjs';
 // The smallest acceptable charge for this member's commitment, in the
 // transaction currency's minor unit. GHS uses the same indicative USD rate the
 // member saw, minus a 3% margin for the provider's own conversion.
@@ -63,12 +39,16 @@ const json = (value, status = 200, headers = {}) => Response.json(value, { statu
 export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch, logger = console }) {
   let publicCache = { at: 0, value: null };
   const keys = createKeyService({ pool, config, storage });
+  const management = createManagementApi({ pool, config, storage, keys, people, invalidate: () => { publicCache.at = 0; } });
   const support = createSupport({ config, mailer, fetcher, logger });
   return async function handle(request) {
     try {
       const url = new URL(request.url), path = url.pathname.replace(/\/$/, ''), method = request.method;
       await applySettings(config, pool);
-      if (path.startsWith('/api/v1/')) return json(await keys.read(request));
+      if (path.startsWith('/api/v1/')) {
+        const managed = await management(request);
+        return managed || json(await keys.read(request));
+      }
       if (!['GET', 'POST'].includes(method)) throw new HttpError(405, 'Method not allowed.');
       if (method === 'POST' && request.headers.get('origin') !== url.origin)
         throw new HttpError(403, 'Open the form on the configured website before continuing.');

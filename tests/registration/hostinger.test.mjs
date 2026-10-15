@@ -58,10 +58,11 @@ test('R2 scoped session token is forwarded into signed image URLs', async () => 
   assert.equal(url.searchParams.get('X-Amz-Security-Token'), 'test-scoped-session-token');
 });
 
-test('application API key permissions reject write/delete scopes and invalid lifetimes', async () => {
+test('application API key permissions accept explicit management scopes and reject unknown scopes and invalid lifetimes', async () => {
   const { keyOptions } = await import('../../src/server/api-keys.mjs');
   assert.deepEqual(keyOptions({ name: 'Directory', scopes: ['registrations:read'], days: 30 }), { name: 'Directory', scopes: ['registrations:read'], days: 30 });
+  assert.deepEqual(keyOptions({ name: 'Photo agent', scopes: ['backend:read','backend:write'], days: 90 }).scopes, ['backend:read','backend:write']);
   for (const scope of ['registrations:write', 'photos:delete', 'admin', '*'])
-    assert.throws(() => keyOptions({ name: 'Bad scope', scopes: [scope] }), /read permissions/);
+    assert.throws(() => keyOptions({ name: 'Bad scope', scopes: [scope] }), /API permissions/);
   assert.throws(() => keyOptions({ name: 'Bad expiry', scopes: ['photos:read'], days: 366 }), /Expiry/);
 });
