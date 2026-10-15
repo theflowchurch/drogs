@@ -55,6 +55,16 @@
    "country": "Ghana",
    "image": "assets/portraits/PN410b12cf7f80-d1ee6baca44d.webp",
    "source": "Joshua 14 Oct 2026: explicitly add Bright Mensah as a pastor under Solomon Tay, use his supplied ZIP portrait and Solomon Tay's location; other details to follow"
+  },
+  {
+   "id": "PNcac22be23559",
+   "name": "Dorcas Baah Boateng Bening",
+   "bishopId": "B219",
+   "title": "Pastor",
+   "gender": "female",
+   "branch": "Energy Campus",
+   "image": "assets/portraits/PNcac22be23559-1a7a7295f92d.webp",
+   "source": "Joshua 15 Oct 2026: explicitly approved adding LP Dorcas Baah Boateng Bening as a new pastor under Isaac Koranteng, using her supplied Energy Campus ZIP portrait. Other personal details were not supplied."
   }
  ]
 }

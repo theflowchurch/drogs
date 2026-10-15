@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-15T11:14:49.064Z",
+ "generated": "2026-10-15T11:41:44.308Z",
  "sourceAuthority": {
   "personalDetails": "latest submitted spreadsheets and explicit office additions",
   "bishopMembership": "current Bishops List and explicit office corrections",
@@ -43,15 +43,22 @@
    "bishopId": "B240",
    "bishop": "Solomon Tay",
    "source": "Joshua 14 Oct 2026: explicitly add Bright Mensah as a pastor under Solomon Tay, use his supplied ZIP portrait and Solomon Tay's location; other details to follow"
+  },
+  {
+   "id": "PNcac22be23559",
+   "name": "Dorcas Baah Boateng Bening",
+   "bishopId": "B219",
+   "bishop": "Isaac Koranteng",
+   "source": "Joshua 15 Oct 2026: explicitly approved adding LP Dorcas Baah Boateng Bening as a new pastor under Isaac Koranteng, using her supplied Energy Campus ZIP portrait. Other personal details were not supplied."
   }
  ],
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 5063,
-  "assigned": 5063,
+  "pastors": 5064,
+  "assigned": 5064,
   "unclaimed": 0,
-  "withPhoto": 4677,
+  "withPhoto": 4678,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -5139,9 +5146,18 @@
    "file": "ISaac Korangten FLC ENERGY CAMPUS PASTORS 2026.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 43,
-   "onRoll": 43,
+   "onRoll": 44,
    "notUnder": [],
-   "extra": []
+   "extra": [],
+   "officeAdded": [
+    {
+     "id": "PNcac22be23559",
+     "name": "Dorcas Baah Boateng Bening",
+     "bishopId": "B219",
+     "bishop": "Isaac Koranteng",
+     "source": "Joshua 15 Oct 2026: explicitly approved adding LP Dorcas Baah Boateng Bening as a new pastor under Isaac Koranteng, using her supplied Energy Campus ZIP portrait. Other personal details were not supplied."
+    }
+   ]
   },
   {
    "bishop": "Nii Nortey Quist Therson",
@@ -8640,8 +8656,8 @@
   ],
   "latestOfficeImport": {
    "date": "2026-10-15",
-   "photos": 61,
-   "newPastors": 0,
+   "photos": 62,
+   "newPastors": 1,
    "missingFilled": 28,
    "flaggedReplaced": 28
   }
