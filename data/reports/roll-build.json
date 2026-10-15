@@ -58,7 +58,7 @@
   "pastors": 5064,
   "assigned": 5064,
   "unclaimed": 0,
-  "withPhoto": 4678,
+  "withPhoto": 4699,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -5651,14 +5651,6 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "PB18",
-   "name": "Authur Jordan Williams",
-   "bishop": "Nelson Tika",
-   "group": "United Jesus",
-   "denomination": "Jesus Is The Answer Church",
-   "place": "Bunkpurugu, Ghana"
-  },
-  {
    "id": "P462",
    "name": "Bennedict Kinsman",
    "bishop": "Jude Orraca-Tetteh",
@@ -5979,110 +5971,6 @@
    "place": "Savelugu, Ghana"
   },
   {
-   "id": "P2389",
-   "name": "Joseph Nana Asarboakye Goodman",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PNb82974782698",
-   "name": "James Marrah",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN4ef92a7b573f",
-   "name": "Caesar Kwesi Abbam",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P2127",
-   "name": "Ivan Kwakye Appah",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P2770",
-   "name": "Linda Sosu",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN10a68146a18e",
-   "name": "Elliot Barnor Ogude",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN14e96f51c121",
-   "name": "Alberta Akua Kwarteng",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PNdb7011000054",
-   "name": "Joana Dzigbodi Abena Abbam",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PNf9dbb5f96aa6",
-   "name": "Issifu Amoaba",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P3067",
-   "name": "Michael Bedzrah",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN3989e59d9259",
-   "name": "Caroline Buertey",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN0b627b0859be",
-   "name": "Janet Agyei-Gyane",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "S977ee2ee",
-   "name": "Isaac Baiden",
-   "bishop": "E.A.T Sackey",
-   "group": "Reasonable Service",
-   "denomination": "Glory Life Hope Center",
-   "place": "Accra, Ghana"
-  },
-  {
    "id": "PF380",
    "name": "Matthew Assan",
    "bishop": "Edward Botwe",
@@ -6145,22 +6033,6 @@
    "group": "Reasonable Service",
    "denomination": "Anointed People International",
    "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN112160c221bc",
-   "name": "Gabbrielle John-Peters",
-   "bishop": "Emmanuel John Peters",
-   "group": "Eschatos",
-   "denomination": "Eschatos",
-   "place": "Taipei, Taiwan"
-  },
-  {
-   "id": "PN9312a2d6a91a",
-   "name": "Jesse Amara",
-   "bishop": "Emmanuel John Peters",
-   "group": "Eschatos",
-   "denomination": "Eschatos",
-   "place": "Kuala Lumpar, Malaysia"
   },
   {
    "id": "PN3031b92e0fdc",
@@ -7587,38 +7459,6 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "Sd23f007f",
-   "name": "Chantal Sholarin",
-   "bishop": "Kwame Adu-Gyamfi",
-   "group": "UD Europe",
-   "denomination": "Mustard Seed Chapel International",
-   "place": "Manchester, United Kingdom"
-  },
-  {
-   "id": "P1948",
-   "name": "Harriet Nana-Owusu",
-   "bishop": "Kwame Adu-Gyamfi",
-   "group": "UD Europe",
-   "denomination": "Mustard Seed Chapel International",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "Scb4e127f",
-   "name": "Joseph Adjimani",
-   "bishop": "Kwame Adu-Gyamfi",
-   "group": "UD Europe",
-   "denomination": "Mustard Seed Chapel International",
-   "place": "Norwich, United Kingdom"
-  },
-  {
-   "id": "Sbf2338b0",
-   "name": "Zachary Afreh",
-   "bishop": "Kwame Adu-Gyamfi",
-   "group": "UD Europe",
-   "denomination": "Mustard Seed Chapel International",
-   "place": "Coventry, United Kingdom"
-  },
-  {
    "id": "P1695",
    "name": "Fred Nonterah",
    "bishop": "Luke Akwasi Frimpong Mensah",
@@ -7985,14 +7825,6 @@
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Grenoble, France"
-  },
-  {
-   "id": "PNce460bd77a65",
-   "name": "Claudia Ohemaa Forkuoh",
-   "bishop": "Reginald Opoku Sarkodie",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Fianarantsoa, Madagascar"
   },
   {
    "id": "P3770",
@@ -8656,10 +8488,10 @@
   ],
   "latestOfficeImport": {
    "date": "2026-10-15",
-   "photos": 62,
-   "newPastors": 1,
-   "missingFilled": 28,
-   "flaggedReplaced": 28
+   "photos": 79,
+   "newPastors": 0,
+   "missingFilled": 21,
+   "flaggedReplaced": 30
   }
  }
 }
