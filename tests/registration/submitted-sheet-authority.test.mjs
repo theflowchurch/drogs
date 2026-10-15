@@ -22,6 +22,16 @@ test('ranks are judged from the current row rather than an old exclusion by name
   for (const rawRank of ['Minister Shepherd', 'MINISTER SHEPHERD', 'MS', 'Elder', 'Shepherd']) assert.equal(nonPastoralRank({ rawRank }), true);
 });
 
+test('explicit office promotion preserves the submitted rank and only approves the named row', () => {
+  const submitted = { name: 'Nathaniel Quaye', rawRank: 'MINISTER SHEPHERD' };
+  const approved = { ...submitted, officePastorApproval: { title: 'Pastor', source: 'Joshua 15 Oct 2026' } };
+  assert.equal(nonPastoralRank(approved), false);
+  assert.equal(approved.rawRank, submitted.rawRank);
+  assert.equal(nonPastoralRank(submitted), true);
+  assert.equal(nonPastoralRank({ ...submitted, officePastorApproval: { title: 'Pastor' } }), true);
+  assert.equal(nonPastoralRank({ ...submitted, officePastorApproval: { title: 'Bishop', source: 'Invalid promotion' } }), true);
+});
+
 test('ISO birthdays match day/month and named-month spellings without invalid keys', () => {
   assert.deepEqual(submittedBirthKeys('2000-09-05'), ['5-9-00']);
   assert.ok(submittedBirthKeys('05/09/2000').includes(submittedBirthKeys('2000-09-05')[0]));

@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-14T22:46:44.654Z",
+ "generated": "2026-10-15T11:14:49.064Z",
  "sourceAuthority": {
   "personalDetails": "latest submitted spreadsheets and explicit office additions",
   "bishopMembership": "current Bishops List and explicit office corrections",
@@ -48,10 +48,10 @@
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 5062,
-  "assigned": 5062,
+  "pastors": 5063,
+  "assigned": 5063,
   "unclaimed": 0,
-  "withPhoto": 4396,
+  "withPhoto": 4408,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -1207,43 +1207,43 @@
   },
   {
    "name": "Israel Acquah",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Raymond Stephens",
    "losers": [
-    "Raymond Stephens"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 15 Oct 2026: bring Bishop Raymond Stephens’s pastors back to him, not Toss; restore all five on Raymond’s current submitted sheet."
   },
   {
    "name": "Felix Fiadufe",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Raymond Stephens",
    "losers": [
-    "Raymond Stephens"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 15 Oct 2026: bring Bishop Raymond Stephens’s pastors back to him, not Toss; restore all five on Raymond’s current submitted sheet."
   },
   {
    "name": "Bernard Tawiah Mensah",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Raymond Stephens",
    "losers": [
-    "Raymond Stephens"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 15 Oct 2026: bring Bishop Raymond Stephens’s pastors back to him, not Toss; restore all five on Raymond’s current submitted sheet."
   },
   {
    "name": "Raphael Dziedzorm Quashigah",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Raymond Stephens",
    "losers": [
-    "Raymond Stephens"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 15 Oct 2026: bring Bishop Raymond Stephens’s pastors back to him, not Toss; restore all five on Raymond’s current submitted sheet."
   },
   {
    "name": "Esther Stephens",
-   "winner": "Toss Mills-Odoi",
+   "winner": "Raymond Stephens",
    "losers": [
-    "Raymond Stephens"
+    "Toss Mills-Odoi"
    ],
-   "by": "Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him"
+   "by": "Joshua 15 Oct 2026: bring Bishop Raymond Stephens’s pastors back to him, not Toss; restore all five on Raymond’s current submitted sheet."
   },
   {
    "name": "Emmanuel Robert Ashietey",
@@ -4700,34 +4700,8 @@
    "file": "Bishop Raymond Stephens.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 5,
-   "onRoll": 0,
-   "notUnder": [
-    {
-     "row": 7,
-     "name": "Israel Acquah",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    },
-    {
-     "row": 8,
-     "name": "Felix Fiadufe",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    },
-    {
-     "row": 9,
-     "name": "Bernard Tawiah Mensah",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    },
-    {
-     "row": 10,
-     "name": "Raphael Dziedzorm Quashigah",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    },
-    {
-     "row": 11,
-     "name": "Esther Stephens",
-     "fate": "ruled to Toss Mills-Odoi (Joshua 11 Oct: a clash with Bishop Toss Mills-Odoi goes to him)"
-    }
-   ],
+   "onRoll": 5,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5035,14 +5009,8 @@
    "file": "EBENEZER ADOM BARNOR.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 26,
-   "onRoll": 25,
-   "notUnder": [
-    {
-     "row": 28,
-     "name": "Nathaniel Quaye",
-     "fate": "ranked MINISTER SHEPHERD on the latest submitted sheet, not a pastor"
-    }
-   ],
+   "onRoll": 26,
+   "notUnder": [],
    "extra": []
   },
   {
@@ -5307,7 +5275,7 @@
    "file": "Bishop Toss Mills-Odoi.xlsx",
    "folder": "Bishop submitted sheets (10 Oct 2026)",
    "sheetRows": 103,
-   "onRoll": 89,
+   "onRoll": 84,
    "notUnder": [
     {
      "row": 59,
@@ -5368,6 +5336,31 @@
      "row": 102,
      "name": "Benjamin Ekow Tawiah Tetteh",
      "fate": "ruled to Courage Kwami Ahedor (Joshua 13 Oct: move them all back to Bishop Courage (on both Courage Ahedor's and Toss Mills-Odoi's sheets))"
+    },
+    {
+     "row": 103,
+     "name": "Israel Acquah",
+     "fate": "ruled to Raymond Stephens (Joshua 15 Oct 2026: bring Bishop Raymond Stephens’s pastors back to him, not Toss; restore all five on Raymond’s current submitted sheet.)"
+    },
+    {
+     "row": 104,
+     "name": "Felix Fiadufe",
+     "fate": "ruled to Raymond Stephens (Joshua 15 Oct 2026: bring Bishop Raymond Stephens’s pastors back to him, not Toss; restore all five on Raymond’s current submitted sheet.)"
+    },
+    {
+     "row": 105,
+     "name": "Bernard Tawiah Mensah",
+     "fate": "ruled to Raymond Stephens (Joshua 15 Oct 2026: bring Bishop Raymond Stephens’s pastors back to him, not Toss; restore all five on Raymond’s current submitted sheet.)"
+    },
+    {
+     "row": 106,
+     "name": "Raphael Dziedzorm Quashigah",
+     "fate": "ruled to Raymond Stephens (Joshua 15 Oct 2026: bring Bishop Raymond Stephens’s pastors back to him, not Toss; restore all five on Raymond’s current submitted sheet.)"
+    },
+    {
+     "row": 107,
+     "name": "Esther Stephens",
+     "fate": "ruled to Raymond Stephens (Joshua 15 Oct 2026: bring Bishop Raymond Stephens’s pastors back to him, not Toss; restore all five on Raymond’s current submitted sheet.)"
     },
     {
      "row": 108,
@@ -6063,14 +6056,6 @@
    "bishop": "Benjamin Fiadonu",
    "group": "First Love",
    "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P3667",
-   "name": "Raphael Nii Boye Aryeetey",
-   "bishop": "Benjamin Lokko",
-   "group": "UD Ghana",
-   "denomination": "Lighthouse City Churches",
    "place": "Accra, Ghana"
   },
   {
@@ -7784,38 +7769,6 @@
    "group": "UD Africa",
    "denomination": "Onction Internationale Benin",
    "place": "Porto Novo, Benin"
-  },
-  {
-   "id": "PN3f15a5a2514f",
-   "name": "Mavis Boatemaa Kotey",
-   "bishop": "Joe Owusu-Adjei",
-   "group": "UD Africa",
-   "denomination": "Bema International Church",
-   "place": "Kigali, Rwanda"
-  },
-  {
-   "id": "P2200",
-   "name": "Jean Baptiste Ndisanze",
-   "bishop": "Joe Owusu-Adjei",
-   "group": "UD Africa",
-   "denomination": "Bema International Church",
-   "place": "Muhanga, Rwanda"
-  },
-  {
-   "id": "P1534",
-   "name": "Fabrice Niyongira",
-   "bishop": "Joe Owusu-Adjei",
-   "group": "UD Africa",
-   "denomination": "Bema International Church",
-   "place": "Kigali, Rwanda"
-  },
-  {
-   "id": "P3648",
-   "name": "Ransford Darko",
-   "bishop": "Joe Owusu-Adjei",
-   "group": "UD Africa",
-   "denomination": "Bema International Church",
-   "place": "Huye, Rwanda"
   },
   {
    "id": "P2189",
@@ -9562,22 +9515,6 @@
    "place": "Tamale, Ghana"
   },
   {
-   "id": "PNe7bf197ff2cf",
-   "name": "Soni Dhaku Rathod",
-   "bishop": "Prince Paul",
-   "group": "Eschatos",
-   "denomination": "Eschatos",
-   "place": "Pune, India"
-  },
-  {
-   "id": "PNd33b27e868b9",
-   "name": "Paaras Rakesh Khatri",
-   "bishop": "Prince Paul",
-   "group": "Eschatos",
-   "denomination": "Eschatos",
-   "place": "Pune, India"
-  },
-  {
    "id": "P5095",
    "name": "Therese Omera Dennis",
    "bishop": "Reginald Agyir Dadzie",
@@ -9770,22 +9707,6 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "P4315",
-   "name": "Timothy George Fiawotor",
-   "bishop": "Sompa Osei",
-   "group": "UD Ghana",
-   "denomination": "Makarios City Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "S5ef9f25c",
-   "name": "Nyarko Noah",
-   "bishop": "Sompa Osei",
-   "group": "UD Ghana",
-   "denomination": "Makarios City Church",
-   "place": "Accra, Ghana"
-  },
-  {
    "id": "P842",
    "name": "Daniel Teye",
    "bishop": "Selasy Mcsaint",
@@ -9864,22 +9785,6 @@
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Tidworth, United Kingdom"
-  },
-  {
-   "id": "P636",
-   "name": "Charles Ayueboro Adama",
-   "bishop": "Sompa Osei",
-   "group": "UD Ghana",
-   "denomination": "The Machaneh Church International",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "S59172d00",
-   "name": "Rashid Abdul Fusheini",
-   "bishop": "Sompa Osei",
-   "group": "UD Ghana",
-   "denomination": "The Machaneh Church International",
-   "place": "Accra, Ghana"
   },
   {
    "id": "P1452",
@@ -10884,6 +10789,13 @@
     "file": "DAVID F OLUBOYE",
     "how": "respelling"
    }
-  ]
+  ],
+  "latestOfficeImport": {
+   "date": "2026-10-15",
+   "photos": 38,
+   "newPastors": 1,
+   "missingFilled": 11,
+   "flaggedReplaced": 22
+  }
  }
 }

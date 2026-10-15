@@ -6,6 +6,10 @@ export function submittedRosterAssets(data) {
 }
 
 export function nonPastoralRank(row) {
+  // A dated office approval can promote a current submitted row while its
+  // original spreadsheet rank and personal details remain intact.
+  const approval = row.officePastorApproval;
+  if (typeof approval?.source === 'string' && approval.source.trim() && ['Pastor', 'Rev.', 'Lady Rev.', 'Apostle'].includes(approval.title)) return false;
   return /^(?:minister\s*shepherd|shepherd|elder|ms)\.?$/i.test(String(row.rawRank || '').trim());
 }
 
