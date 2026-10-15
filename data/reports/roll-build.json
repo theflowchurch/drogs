@@ -51,7 +51,7 @@
   "pastors": 5063,
   "assigned": 5063,
   "unclaimed": 0,
-  "withPhoto": 4649,
+  "withPhoto": 4677,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -7491,22 +7491,6 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "P128",
-   "name": "Alain L Tchamba",
-   "bishop": "Kodwo K Orleans-Lindsay",
-   "group": "UD North America",
-   "denomination": "Revival International",
-   "place": "Louisville, United States"
-  },
-  {
-   "id": "P2531",
-   "name": "Kartuawonmah P Queeglay",
-   "bishop": "Kodwo K Orleans-Lindsay",
-   "group": "UD North America",
-   "denomination": "Revival International",
-   "place": "St. Paul, United States"
-  },
-  {
    "id": "S63294216",
    "name": "Yayra Ama Oteng",
    "bishop": "Kofi Hene Asare",
@@ -7617,30 +7601,6 @@
    "group": "UD Europe",
    "denomination": "Mustard Seed Chapel International",
    "place": "Coventry, United Kingdom"
-  },
-  {
-   "id": "PN3fd3372a82d0",
-   "name": "William Louis Kabango",
-   "bishop": "Kwesi Woode",
-   "group": "UD Africa",
-   "denomination": "First Love Church",
-   "place": "Blantyre, Malawi"
-  },
-  {
-   "id": "PN8525f78537d4",
-   "name": "Laurent Kutengule",
-   "bishop": "Kwesi Woode",
-   "group": "UD Africa",
-   "denomination": "First Love Church",
-   "place": "Lilongwe, Malawi"
-  },
-  {
-   "id": "PNd05e986f172f",
-   "name": "Charity Nkhono",
-   "bishop": "Kwesi Woode",
-   "group": "UD Africa",
-   "denomination": "First Love Church",
-   "place": "Lilongwe, Malawi"
   },
   {
    "id": "P1695",
@@ -8307,182 +8267,6 @@
    "place": "Bolgatanga, Ghana"
   },
   {
-   "id": "P3224",
-   "name": "Nana Osei Poku",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Amanfrom"
-  },
-  {
-   "id": "P3645",
-   "name": "Randy Benjamin Oppong",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tuba"
-  },
-  {
-   "id": "P4669",
-   "name": "Curtis Dela Kumi",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Achiaman, Amasaman"
-  },
-  {
-   "id": "P973",
-   "name": "Diana Adaboh",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Broadcasting Last Stop"
-  },
-  {
-   "id": "P1442",
-   "name": "Ernesto Quaye",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Kokrobite - Langma"
-  },
-  {
-   "id": "P4670",
-   "name": "Sammy Danquah",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Bortianor"
-  },
-  {
-   "id": "P1979",
-   "name": "Henry Nettey",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Block Factory"
-  },
-  {
-   "id": "P2942",
-   "name": "Mary Sarpei",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Congo Villa"
-  },
-  {
-   "id": "PNd7b2ba667567",
-   "name": "Ralph Hadjah",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Broadcasting- Sackey Area"
-  },
-  {
-   "id": "P4675",
-   "name": "Josephine Nana Serwah Asare Danquah",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Bortianor"
-  },
-  {
-   "id": "P3618",
-   "name": "Priscilla Oppong",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tuba"
-  },
-  {
-   "id": "P4681",
-   "name": "Sophia Armaa Blay",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Kasoa Cp"
-  },
-  {
-   "id": "P3962",
-   "name": "Samuel Sarpei",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Kasoa Congo Villa"
-  },
-  {
-   "id": "PN8d8b40b7d769",
-   "name": "Jospeh Damali",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Broadcasting Junction"
-  },
-  {
-   "id": "S803c02ab",
-   "name": "Beatrice Ofusua",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": ""
-  },
-  {
-   "id": "P353",
-   "name": "Augustina Aryee",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Kasoa Cp"
-  },
-  {
-   "id": "P3445",
-   "name": "Paul Ayi",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "17,swamp Groove Avenue"
-  },
-  {
-   "id": "P4685",
-   "name": "Richard Sadaya",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Nsawam"
-  },
-  {
-   "id": "S5c88b065",
-   "name": "Richard Ato Kwamena Biney",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Ablekuma"
-  },
-  {
-   "id": "PNc05fe50133ad",
-   "name": "Patrick Aryeetey",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Kasoa Akweley Hno Bt535/10"
-  },
-  {
-   "id": "PN5e09d64649bf",
-   "name": "Alfred Ofoe Mccarthy",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tuba"
-  },
-  {
-   "id": "PN12a4884139f0",
-   "name": "Enoch Ansah Ardey",
-   "bishop": "Isaac Koranteng",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Old Bortianor"
-  },
-  {
    "id": "P4910",
    "name": "Tiffany Bortei-Doku",
    "bishop": "Nii Nortey Quist Therson",
@@ -8593,14 +8377,6 @@
    "group": "UD Africa",
    "denomination": "Grace Internationale Sahel - Mali",
    "place": "Bamako, Mali"
-  },
-  {
-   "id": "P2908",
-   "name": "Mark Kakraba-Ampeh",
-   "bishop": "Francis Okyere",
-   "group": "UD Ghana",
-   "denomination": "The Mega Church",
-   "place": "Kumasi, Ghana"
   },
   {
    "id": "Sf1fb1e78",
@@ -8864,10 +8640,10 @@
   ],
   "latestOfficeImport": {
    "date": "2026-10-15",
-   "photos": 38,
-   "newPastors": 1,
-   "missingFilled": 11,
-   "flaggedReplaced": 22
+   "photos": 61,
+   "newPastors": 0,
+   "missingFilled": 28,
+   "flaggedReplaced": 28
   }
  }
 }
