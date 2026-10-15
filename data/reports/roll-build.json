@@ -58,7 +58,7 @@
   "pastors": 5064,
   "assigned": 5064,
   "unclaimed": 0,
-  "withPhoto": 4699,
+  "withPhoto": 4738,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -5675,38 +5675,6 @@
    "place": "Lekki, Nigeria"
   },
   {
-   "id": "PN3a65c3739e5b",
-   "name": "Marjorie Aicha Gaelle Wora Spouse Bouengui",
-   "bishop": "Emmanuel Kofi Yeboah",
-   "group": "UD Africa",
-   "denomination": "Libreville City State",
-   "place": "Libreville, Gabon"
-  },
-  {
-   "id": "PNd686d83002de",
-   "name": "Marien Koumba",
-   "bishop": "Emmanuel Kofi Yeboah",
-   "group": "UD Africa",
-   "denomination": "Libreville City State",
-   "place": "Libreville, Gabon"
-  },
-  {
-   "id": "PN0ad69353bc7f",
-   "name": "Alixe Ankele Marva",
-   "bishop": "Emmanuel Kofi Yeboah",
-   "group": "UD Africa",
-   "denomination": "Libreville City State",
-   "place": "Librevile, Gabon"
-  },
-  {
-   "id": "PNdcdc3d949e5f",
-   "name": "Jules Ronald Kurtis Djeki Robaki",
-   "bishop": "Emmanuel Kofi Yeboah",
-   "group": "UD Africa",
-   "denomination": "Libreville City State",
-   "place": "Libreville, Gabon"
-  },
-  {
    "id": "P3191",
    "name": "Nacanieli Lawevuso",
    "bishop": "Andrew Kwaku Osei",
@@ -5721,30 +5689,6 @@
    "group": "United Islands",
    "denomination": "Pacific Islands Missionary Church",
    "place": "Suva, Fiji"
-  },
-  {
-   "id": "PNb6853d8395e1",
-   "name": "Joy Balkisu Iddrisu",
-   "bishop": "Andrews Osei",
-   "group": "United Jesus",
-   "denomination": "Jesus Is The Door",
-   "place": "Tamale, Ghana"
-  },
-  {
-   "id": "PN25d7a43d76d6",
-   "name": "Sylas Hashim Issahaku",
-   "bishop": "Andrews Osei",
-   "group": "United Jesus",
-   "denomination": "Jesus Is The Door",
-   "place": "Tamale, Ghana"
-  },
-  {
-   "id": "S42517cda",
-   "name": "Stella Tetteh Anang",
-   "bishop": "Andrews Osei",
-   "group": "United Jesus",
-   "denomination": "Jesus Is The Door",
-   "place": "Tamale, Ghana"
   },
   {
    "id": "P4339",
@@ -5873,14 +5817,6 @@
    "group": "UD Ghana",
    "denomination": "East Mountain Churches",
    "place": "Asessieso, Ghana"
-  },
-  {
-   "id": "P4162",
-   "name": "Stephen Atobrah",
-   "bishop": "Clarence Welds",
-   "group": "UD Ghana",
-   "denomination": "East Mountain Churches",
-   "place": "Apirede, Ghana"
   },
   {
    "id": "PN2b164cf47255",
@@ -6587,62 +6523,6 @@
    "place": "Aflao, Ghana"
   },
   {
-   "id": "P19",
-   "name": "Abena Okyerebea Adu-Labi",
-   "bishop": "Glen Kwame Opoku",
-   "group": "First Love",
-   "denomination": "Qodesh City Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P3820",
-   "name": "Rogatta Antwi Baadu",
-   "bishop": "Glen Kwame Opoku",
-   "group": "First Love",
-   "denomination": "Qodesh City Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P3744",
-   "name": "Richard Kweku Boamah",
-   "bishop": "Glen Kwame Opoku",
-   "group": "First Love",
-   "denomination": "Qodesh City Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P1980",
-   "name": "Henry Nii Ofei Dodoo",
-   "bishop": "Glen Kwame Opoku",
-   "group": "First Love",
-   "denomination": "Qodesh City Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P2678",
-   "name": "Kwame Ansah Boadi Nwanwah",
-   "bishop": "Glen Kwame Opoku",
-   "group": "First Love",
-   "denomination": "Qodesh City Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P1140",
-   "name": "Efua Bedua Sompa-Osei",
-   "bishop": "Glen Kwame Opoku",
-   "group": "First Love",
-   "denomination": "Qodesh City Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "S4695267c",
-   "name": "Lorreta Mintah-Aboagye",
-   "bishop": "Glen Kwame Opoku",
-   "group": "First Love",
-   "denomination": "Qodesh City Church",
-   "place": "Accra, Ghana"
-  },
-  {
    "id": "PN7e4d5c2c518d",
    "name": "Priscilla Etornam Azasoo",
    "bishop": "Gustav Offei-Manu",
@@ -7251,126 +7131,6 @@
    "place": "Sao Paulo, Brazil"
   },
   {
-   "id": "P4727",
-   "name": "Aggie Botchey",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "S60d7924b",
-   "name": "Andrew Kojo Sarbeng",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "P4735",
-   "name": "Christiana Idowu",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "Sb3843009",
-   "name": "Clive Hart",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "P4737",
-   "name": "David Ajigbolamu",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Oxford, United Kingdom"
-  },
-  {
-   "id": "P4740",
-   "name": "Emmanuel Ofori-Attah",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Northampton, United Kingdom"
-  },
-  {
-   "id": "S7dbedfd6",
-   "name": "Frederick Serwadda",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Birmingham, United Kingdom"
-  },
-  {
-   "id": "P4745",
-   "name": "Jennifer Burland",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "P4749",
-   "name": "Kayla Aryee",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "P4753",
-   "name": "Michael Olatunji",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "P4758",
-   "name": "Prosper Chapu-Napor",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "S3cd8eae7",
-   "name": "Robert Cann",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "P4759",
-   "name": "Rochelle Nissin Quainoo",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "P4761",
-   "name": "Trishan Burland",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
-   "id": "P4766",
-   "name": "Verity Adusei",
-   "bishop": "Kent Njeru",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "London, United Kingdom"
-  },
-  {
    "id": "P1518",
    "name": "Evelyn Yates",
    "bishop": "Kingsley Gyasi",
@@ -7939,14 +7699,6 @@
    "place": "Warrens, Barbados"
   },
   {
-   "id": "PN9593868adb98",
-   "name": "Anthony Aklika",
-   "bishop": "Samuel B Sawyerr",
-   "group": "Reasonable Service",
-   "denomination": "Anointed People International",
-   "place": "Accra, Ghana"
-  },
-  {
    "id": "P1369",
    "name": "Eric Asante",
    "bishop": "Sena Agyepong",
@@ -8115,46 +7867,6 @@
    "place": "Bolgatanga, Ghana"
   },
   {
-   "id": "P4910",
-   "name": "Tiffany Bortei-Doku",
-   "bishop": "Nii Nortey Quist Therson",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "United States"
-  },
-  {
-   "id": "P4870",
-   "name": "Chinonye Ojinkeonye",
-   "bishop": "Nii Nortey Quist Therson",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Los Angeles, United States"
-  },
-  {
-   "id": "P4872",
-   "name": "Christiana Gross",
-   "bishop": "Nii Nortey Quist Therson",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "St. Paul, United States"
-  },
-  {
-   "id": "P4879",
-   "name": "Emmanuela Frempong",
-   "bishop": "Nii Nortey Quist Therson",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Vancouver, Canada"
-  },
-  {
-   "id": "PNba733b6f7f12",
-   "name": "Adedamola Adepoju",
-   "bishop": "Nii Nortey Quist Therson",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Houston, United States"
-  },
-  {
    "id": "P1343",
    "name": "Enoch Ayeh",
    "bishop": "Romeo Sosu",
@@ -8195,22 +7907,6 @@
    "place": "Kpandai, Ghana"
   },
   {
-   "id": "P5087",
-   "name": "Joanne Chiamaka Haruna",
-   "bishop": "Roger Hiltbrunner",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Den Haag, Netherlands"
-  },
-  {
-   "id": "Sddd54423",
-   "name": "Morenike Allen",
-   "bishop": "Roger Hiltbrunner",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Malmö, Sweden"
-  },
-  {
    "id": "P3355",
    "name": "Olga Suzane Koné",
    "bishop": "Samuel Kwame Gasper",
@@ -8225,14 +7921,6 @@
    "group": "UD Africa",
    "denomination": "Grace Internationale Sahel - Mali",
    "place": "Bamako, Mali"
-  },
-  {
-   "id": "Sf1fb1e78",
-   "name": "Joseph Adjei",
-   "bishop": "Samuel B Sawyerr",
-   "group": "Reasonable Service",
-   "denomination": "Anointed People International",
-   "place": "Accra, Ghana"
   },
   {
    "id": "S7b0ade02-1c64",
@@ -8488,10 +8176,10 @@
   ],
   "latestOfficeImport": {
    "date": "2026-10-15",
-   "photos": 79,
+   "photos": 194,
    "newPastors": 0,
-   "missingFilled": 21,
-   "flaggedReplaced": 30
+   "missingFilled": 39,
+   "flaggedReplaced": 100
   }
  }
 }

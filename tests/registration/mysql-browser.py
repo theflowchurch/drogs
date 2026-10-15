@@ -99,6 +99,7 @@ with sync_playwright() as p:
         page.set_viewport_size({'width':1440,'height':1050})
         page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Settings')).click(); page.get_by_role('button',name='API Keys',exact=True).click()
         page.get_by_label('Application name',exact=True).fill('Browser integration')
+        page.get_by_label('Key access',exact=True).select_option('full')
         page.get_by_role('button',name='Create API key',exact=True).click()
         expect(page.get_by_label('New API key',exact=True)).to_be_visible()
         key = page.get_by_label('New API key',exact=True).input_value()

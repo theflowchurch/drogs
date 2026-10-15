@@ -14,19 +14,18 @@ const scopes = [
 ];
 export default function ApiKeys({ run }) {
   const [keys, setKeys] = useState([]), [name, setName] = useState(''), [days, setDays] = useState('90');
-  const [selected, setSelected] = useState(['backend:read']), [issued, setIssued] = useState(null), [revoke, setRevoke] = useState(null);
+  const [access, setAccess] = useState('read'), [issued, setIssued] = useState(null), [revoke, setRevoke] = useState(null);
   const reload = async () => setKeys(await api.listKeys());
   useEffect(() => { run(reload); }, []);
   return <div className="reg-api-keys">
     <form className="reg-card" onSubmit={event => {
       event.preventDefault();
       run(async () => {
-        const result = await api.issueKey({ name, days: Number(days), scopes: selected });
+        const result = await api.issueKey({ name, days: Number(days), scopes: access === 'full' ? ['backend:read', 'backend:write'] : ['backend:read'] });
         setIssued(result); setName(''); await reload();
       });
     }}>
       <h2>Create an API key</h2>
-      <p>Create a separate key for each connected application. Choose what this application can read or change. Management keys save to the same records as admin edits and update every directory and Photo tasks.</p>
       <label className="reg-field">Application name
         <input aria-label="Application name" required maxLength={80} value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Church directory" />
       </label>
@@ -36,14 +35,13 @@ export default function ApiKeys({ run }) {
           <option value="0">Never expires</option>
         </select>
       </label>
-      <button type="button" className="reg-text" onClick={() => setSelected(['backend:read', 'backend:write'])}>Select full data management access</button>
-      <fieldset className="reg-api-permissions"><legend>Allowed access</legend>
-        {scopes.map(([scope, label, description]) => <label key={scope}>
-          <input type="checkbox" checked={selected.includes(scope)} onChange={e => setSelected(e.target.checked ? [...selected, scope] : selected.filter(s => s !== scope))} />
-          <span><strong>{label}</strong><small>{description}</small></span>
-        </label>)}
-      </fieldset>
-      <button className="reg-primary" disabled={!selected.length}>Create API key</button>
+      <label className="reg-field">Access
+        <select aria-label="Key access" value={access} onChange={e => setAccess(e.target.value)}>
+          <option value="read">Read only</option>
+          <option value="full">Full access — read, write and edit</option>
+        </select>
+      </label>
+      <button className="reg-primary">Create API key</button>
     </form>
     {issued && <section className="reg-card" aria-label="Created key details">
       <h2>Copy your key now</h2><p>This is the only time the full key is shown. Store it in the connected app’s server settings.</p>
@@ -57,7 +55,7 @@ export default function ApiKeys({ run }) {
         const inactive = key.revokedAt || key.expiresAt <= Date.now();
         return <article className="reg-api-key" key={key.id}>
           <div><h3>{key.name}</h3><code>{key.prefix}…</code>
-            <details className="reg-api-scopes"><summary>View permissions</summary><p>{key.scopes.map(scope => scopes.find(([k]) => k === scope)?.[1] || scope).join(' · ')}<br /><code>{key.scopes.join(' · ')}</code></p></details>
+            <small>{key.scopes.includes('backend:write') ? 'Full access' : key.scopes.includes('backend:read') ? 'Read only' : key.scopes.map(scope => scopes.find(([k]) => k === scope)?.[1] || scope).join(' · ')}</small>
             <small>{key.revokedAt ? 'Revoked' : key.expiresAt <= Date.now() ? 'Expired' : `Expires: ${shortDate(key.expiresAt)}`}{key.lastUsedAt ? ` · Last used: ${shortDateTime(key.lastUsedAt)}` : ' · Not used yet'}</small>
           </div>
           {!inactive && (revoke === key.id ? <div><p>Disconnect {key.name} immediately?</p>
@@ -65,14 +63,6 @@ export default function ApiKeys({ run }) {
             <button className="reg-text" onClick={() => setRevoke(null)}>Cancel</button></div> : <button className="reg-text" aria-label={`Revoke access for ${key.name}`} onClick={() => setRevoke(key.id)}>Revoke access</button>)}
         </article>;
       })}
-    </section>
-    <section className="reg-card"><h2>Connect an application</h2>
-      <p>Send the key in an <code>Authorization: Bearer YOUR_API_KEY</code> header from your app’s server. Don’t put it in a website’s public JavaScript.</p>
-      <p>For CLI agents, select <strong>Read all data</strong> and <strong>Manage all website data</strong>. Use the <a href="/docs/">API documentation and CLI guide</a>.</p>
-      <p>Management routes include <code>/api/v1/people</code>, <code>/api/v1/people/ID/photo</code>, <code>/api/v1/people/import</code>, <code>/api/v1/photo-progress</code> and <code>/api/v1/actions</code>. Each successful change returns updated photo totals.</p>
-      <p>Read access uses <code>/api/v1/backend/</code>: registrations, rosters, profiles, users, history, media, media-url, settings, reference and keys. Registrations include payments and receipt references. All years are included unless filtered.</p>
-      <ul><li><code>GET /api/v1/registrations?year=2027&amp;limit=50</code></li><li><code>GET /api/v1/rosters?year=2027&amp;limit=50</code></li><li><code>GET /api/v1/photos?path=ENCODED_PHOTO_PATH</code></li></ul>
-      <p>List responses include <code>nextCursor</code>. Pass it as <code>after</code> to get the next page. The limit is 120 requests per minute per key.</p>
     </section>
   </div>;
 }

@@ -7,7 +7,7 @@ import { createKeyService } from '../src/server/api-keys.mjs';
 if(process.argv.includes('--help')){console.log('Create a key in /admin/ → API keys, or run on the server: npm run api:key -- --name=Agent --days=90');process.exit(0);}
 const args=Object.fromEntries(process.argv.slice(2).map(arg=>{const n=arg.indexOf('=');if(!arg.startsWith('--')||n<0)throw Error('Use --name=value arguments.');return[arg.slice(2,n),arg.slice(n+1)];}));
 if(args.help!==undefined){console.log('Run on the server: node scripts/create-management-key.mjs --name="Photo CLI agent" --days=90 --output=.private/photo-agent-key.json [--email=APPROVED_OFFICE_EMAIL]');process.exit(0);}
-if(!process.env.DB_HOST||!process.env.SESSION_SECRET){console.error('Create a live key in https://kuriakecastle.org/admin/ → API keys → Select full data management access. This server-only issuer requires the deployed application environment.');process.exit(1);}
+if(!process.env.DB_HOST||!process.env.SESSION_SECRET){console.error('Create a live key in https://kuriakecastle.org/admin/ → API keys → Access: Full access — read, write and edit. This server-only issuer requires the deployed application environment.');process.exit(1);}
 const config=configuration(),pool=createPool(config);let handle;
 try{
  const email=(args.email||config.admins[0]).toLowerCase();if(!config.admins.includes(email))throw Error('Choose a configured office email.');

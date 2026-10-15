@@ -60,7 +60,7 @@ Office admins can also use **Accounts** in `/admin` to search accounts and view 
 
 ## Management API for CLI agents
 
-In **Admin → API keys**, click **Select full data management access**, enter an application name and choose an expiry, then create the key. The preset selects `backend:read` and `backend:write`. Copy the `drogs_live_…` token when it is shown. Existing keys are never upgraded automatically. Each key can be revoked independently.
+In **Admin → API keys**, enter an application name, choose **Full access — read, write and edit** in **Access**, select an expiry, then create the key. Full access selects `backend:read` and `backend:write`. Copy the `drogs_live_…` token when it is shown. Existing keys are never upgraded automatically. Each key can be revoked independently.
 
 | Permission | Access |
 | --- | --- |
