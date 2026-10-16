@@ -50,15 +50,22 @@
    "bishopId": "B219",
    "bishop": "Isaac Koranteng",
    "source": "Joshua 15 Oct 2026: explicitly approved adding LP Dorcas Baah Boateng Bening as a new pastor under Isaac Koranteng, using her supplied Energy Campus ZIP portrait. Other personal details were not supplied."
+  },
+  {
+   "id": "PNe028b545117a",
+   "name": "Precious Amukwe Etemesi",
+   "bishopId": "B99",
+   "bishop": "Joseph Papa Wachirah Kabiro",
+   "source": "Joshua 16 Oct 2026: explicitly confirmed adding Precious Amukwe Etemesi as a new pastor under Bishop Joseph Papa Wachirah Kabiro, using PRECIOUS AMUKWE ETEMESI.jpg from his supplied ZIP. Other personal details were not supplied."
   }
  ],
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 5062,
-  "assigned": 5062,
+  "pastors": 5063,
+  "assigned": 5063,
   "unclaimed": 0,
-  "withPhoto": 4896,
+  "withPhoto": 4897,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -3749,7 +3756,7 @@
    "file": "Bishop Joseph Papa Wachirah.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 20,
-   "onRoll": 19,
+   "onRoll": 20,
    "notUnder": [
     {
      "row": 22,
@@ -3757,7 +3764,16 @@
      "fate": "ruled to Prince Samuel Osei (Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections))"
     }
    ],
-   "extra": []
+   "extra": [],
+   "officeAdded": [
+    {
+     "id": "PNe028b545117a",
+     "name": "Precious Amukwe Etemesi",
+     "bishopId": "B99",
+     "bishop": "Joseph Papa Wachirah Kabiro",
+     "source": "Joshua 16 Oct 2026: explicitly confirmed adding Precious Amukwe Etemesi as a new pastor under Bishop Joseph Papa Wachirah Kabiro, using PRECIOUS AMUKWE ETEMESI.jpg from his supplied ZIP. Other personal details were not supplied."
+    }
+   ]
   },
   {
    "bishop": "Joshua Dormediame",
@@ -6925,9 +6941,9 @@
   "looseMatches": [],
   "latestOfficeImport": {
    "date": "2026-10-16",
-   "photos": 21,
-   "newPastors": 0,
-   "missingFilled": 7,
+   "photos": 1,
+   "newPastors": 1,
+   "missingFilled": 0,
    "flaggedReplaced": 0
   }
  }
