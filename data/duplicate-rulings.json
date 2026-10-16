@@ -21,6 +21,17 @@
    "drop": "Rebecca Siwoyle",
    "bishop": "Stephen Poku",
    "source": "16 Oct 2026: current Stephen Poku sheet rows 35 and 37 have matching DOB, city and appointment year; Joshua instructed using the supplied photo name for double names. Keep Rebecca Siyolwe."
+  },
+  {
+   "keep": "Samuel Twum Boateng",
+   "drop": "Berima Samuel Twum",
+   "bishop": "Emmanuel Tetteh",
+   "set": {
+    "branch": "Jamase",
+    "city": "Jamase",
+    "yearAppointed": "2017"
+   },
+   "source": "16 Oct 2026: Emmanuel Tetteh current submitted sheet rows 13 and 33 share DOB and phone; new ZIP labels the Jamase portrait Samuel Twum Boateng. Merge Berima Samuel Twum into that name, retaining Jamase and the 2017 appointment."
   }
  ],
  "distinct": [

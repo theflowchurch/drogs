@@ -1,6 +1,9 @@
-// The two Rebecca rows on Stephen Poku's current submission have the same
-// birthday, location and appointment year. Keep the spelling on the new photo.
-export const CURRENT_REFERENCE_MERGES = [{ from: 'P3682', to: 'PF538', source: '16 Oct 2026: Rebecca Siwoyle / Rebecca Siyolwe, same birthday on current Stephen Poku sheet; supplied portrait uses Rebecca Siyolwe' }];
+// These duplicate pairs are supported by the current submitted rows and the
+// supplied photo names. Relink saved work before removing the redundant IDs.
+export const CURRENT_REFERENCE_MERGES = [
+  { from: 'P3682', to: 'PF538', source: '16 Oct 2026: Rebecca Siwoyle / Rebecca Siyolwe, same birthday on current Stephen Poku sheet; supplied portrait uses Rebecca Siyolwe' },
+  { from: 'P465', to: 'PF612', source: '16 Oct 2026: Berima Samuel Twum / Samuel Twum Boateng, same birthday and phone on current Emmanuel Tetteh sheet; supplied Jamase portrait uses Samuel Twum Boateng' },
+];
 
 // Relink saved work before the general submitted-roster cleanup can treat a
 // duplicate ID as an orphan. Accounts, registrations and their uploads survive.

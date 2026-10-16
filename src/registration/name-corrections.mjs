@@ -8,6 +8,14 @@ export function canonicalBishopName(value) {
 // Joshua, 16 October: photo names resolve these current-sheet variants;
 // Thérèse's full name was explicitly confirmed in the supplied conversation.
 const photoNames = {
+  PF612: ['Samuel Twum Boateng', ['Berima Samuel Twum', 'Samuel Twum Boateng']],
+  P481: ['Bernice Agyapong Larbi', ['Bernice Agyapomaa Larbi', 'Bernice Agyapong Larbi']],
+  P762: ['Charity Tabitha Effah-Kodom', ['Cynthia Tabitha Effah Kodom', 'Charity Tabitha Effah-Kodom']],
+  PN85865896d372: ['Prosper Afedzi Oddom', ['Prosper Afedzi Odoom', 'Prosper Afedzi Oddom']],
+  PN0995efeca5cb: ['Brian Adwanzo Omondi', ['Brian Abwanzo Omondi', 'Brian Adwanzo Omondi']],
+  P5031: ['Azbeta Awya', ['Azbeta Aywa', 'Azbeta Awya']],
+  P5032: ['Derick Dickson Ouma', ['Derrick Dickson Ouma', 'Derick Dickson Ouma']],
+  P5033: ['Ayub Otieno Aketch', ['Ayub Otieno Akech', 'Ayub Otieno Aketch']],
   P1216: ['Emmanuel Arwuah-Blay', ['Emmanauel Arwuah-Blay', 'Emmanuel Arwuah-Blay']],
   PF538: ['Rebecca Siyolwe', ['Rebecca Siwoyle', 'Rebecca Siyolwe']],
   P5095: ['Thérèse Dennis', ['Therese Omera Dennis', 'Therese Bassen', 'Therese Dennis']],

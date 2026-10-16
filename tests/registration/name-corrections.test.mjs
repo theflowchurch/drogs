@@ -9,6 +9,14 @@ const refs = [
 ];
 test('confirmed photo-name corrections update saved profiles without changing unrelated people or later office edits', () => {
   for (const [id, oldName, name] of [
+    ['PF612', 'Berima Samuel Twum', 'Samuel Twum Boateng'],
+    ['P481', 'Bernice Agyapomaa Larbi', 'Bernice Agyapong Larbi'],
+    ['P762', 'Cynthia Tabitha Effah Kodom', 'Charity Tabitha Effah-Kodom'],
+    ['PN85865896d372', 'Prosper Afedzi Odoom', 'Prosper Afedzi Oddom'],
+    ['PN0995efeca5cb', 'Brian Abwanzo Omondi', 'Brian Adwanzo Omondi'],
+    ['P5031', 'Azbeta Aywa', 'Azbeta Awya'],
+    ['P5032', 'Derrick Dickson Ouma', 'Derick Dickson Ouma'],
+    ['P5033', 'Ayub Otieno Akech', 'Ayub Otieno Aketch'],
     ['P5095', 'Therese Omera Dennis', 'Thérèse Dennis'],
     ['PNd783e0961f5a', 'Thomas Eghan Jnr', 'Victor Eghan Jnr'],
     ['PN7224b850d261', 'Beverly Ngubani', 'Beverly Sanganza'],
