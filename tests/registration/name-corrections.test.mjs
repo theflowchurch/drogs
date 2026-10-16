@@ -1,12 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { canonicalBishopName, canonicalOfficeNames } from '../../src/registration/name-corrections.mjs';
+import { canonicalBishopName, canonicalPersonName, canonicalOfficeNames } from '../../src/registration/name-corrections.mjs';
 import { emptyState, normalName, overlayReferences, directoryPeople, publicRoll, syncRoll } from '../../src/registration/model.mjs';
 const refs = [
   { id: 'B39', role: 'bishop', name: 'E.A.T Sackey', image: 'bishop.jpg' },
   { id: 'P1', role: 'pastor', name: 'Pastor One', bishop: 'E.A.T Sackey', image: 'pastor.jpg' },
 ];
+test('confirmed photo-name corrections update saved profiles without changing unrelated people or later office edits', () => {
+  for (const [id, oldName, name] of [
+    ['P5095', 'Therese Omera Dennis', 'Thérèse Dennis'],
+    ['PNd783e0961f5a', 'Thomas Eghan Jnr', 'Victor Eghan Jnr'],
+    ['PN7224b850d261', 'Beverly Ngubani', 'Beverly Sanganza'],
+    ['Sac2f575d', 'Busane Oamogetswe Shoba', 'Busani Shoba'],
+  ]) {
+    const references = [{ id, role: 'pastor', name, image: 'current.webp' }];
+    const state = { ...emptyState(), overrides: { [id]: { name: oldName, _officeFields: ['name'] } }, profiles: [{ id: 'account', referenceId: id, name: oldName }], registrations: [{ userId: 'account', year: 2027, data: { role: 'pastor', referenceId: id, name: oldName, firstName: oldName.split(' ')[0] } }] };
+    const updated = syncRoll(state, references, `photo-name-${id}`);
+    assert.equal(updated.profiles[0].name, name);
+    assert.equal(updated.registrations[0].data.name, name);
+    assert.equal(overlayReferences(references, updated)[0].name, name);
+    assert.equal(overlayReferences(references, updated)[0].image, 'current.webp');
+    assert.equal(canonicalPersonName('unrelated', oldName), oldName);
+    assert.equal(canonicalPersonName(id, 'Later Office Correction'), 'Later Office Correction');
+  }
+});
 test('older sheet spellings match E.A.T Sackey without changing other people', () => {
   for (const name of ['Eat Sackey', 'E A T Sackey', 'E.A.T Sackey', 'E.A.T. Sackey']) {
     assert.equal(canonicalBishopName(name), 'E.A.T Sackey');

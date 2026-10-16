@@ -34,7 +34,7 @@ export function applyOfficePastorAdditions(pastors, bishops, additions) {
       organization: bishop.organization, denomination: bishop.denomination,
       denominationLogo: bishop.denominationLogo || '', group: bishop.group, bishop: bishop.name });
     if (addition.gender) person.gender = addition.gender;
-    for (const field of ['city', 'country', 'branch'])
+    for (const field of ['city', 'country', 'branch', 'yearAppointed', 'yearOrdained', 'yearConsecrated'])
       if (addition[field] !== undefined) person[field] = String(addition[field]).trim();
     delete person.unclaimed;
     return { id, name: person.name, bishopId, bishop: bishop.name, source };

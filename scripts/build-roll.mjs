@@ -326,6 +326,10 @@ for (const b of bishops) {
   for (const [listName, s] of latestByBishop) take(bishopByList.get(listName)?.id, s.rowBelongsToAnother ? null : s.bishopRow);
   for (const s of nonList.filter((x) => x.lay)) take(s.lay.id, s.pastors.find((r) => key(r.name) === key(s.bishop)));
   for (const p of pastors) take(p.id, subs.find((x) => x.file === p.source?.file && x.folder === p.source?.folder)?.pastors.find((r) => r.row === p.source?.row));
+  // Completed amendment sheets for explicitly approved additions are current
+  // submissions too. Keep these personal details in the server-only contact index.
+  for (const addition of read('data/office-pastor-additions.json', { additions: [] }).additions)
+    if (pastors.some(p => p.id === addition.id)) take(addition.id, addition);
   writeFileSync(`${root}data/reference-contacts.json`, JSON.stringify(contacts) + '\n');
   console.log(`Contacts: ${Object.keys(contacts).length} records with an email or phone (${bishops.filter((b) => contacts[b.id]?.email).length} bishops with an email)`);
 }

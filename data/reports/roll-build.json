@@ -58,7 +58,7 @@
   "pastors": 5064,
   "assigned": 5064,
   "unclaimed": 0,
-  "withPhoto": 4819,
+  "withPhoto": 4880,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -5755,14 +5755,6 @@
    "place": "Windhoek, Namibia"
   },
   {
-   "id": "PN48d2013bdece",
-   "name": "Ebenezer Mintah",
-   "bishop": "Clarence Welds",
-   "group": "UD Ghana",
-   "denomination": "East Mountain Churches",
-   "place": "Asessieso, Ghana"
-  },
-  {
    "id": "PN2b164cf47255",
    "name": "Theodora Daka",
    "bishop": "Clement Asante",
@@ -6041,222 +6033,6 @@
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Accra, Ghana"
-  },
-  {
-   "id": "P2945",
-   "name": "Mary Dickson",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "P4198",
-   "name": "Steve Elikplim Owens",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "P4455",
-   "name": "Wisdom Agbemordzi",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Battor, Ghana"
-  },
-  {
-   "id": "P1852",
-   "name": "Gilbert Koku Amemasor",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Aflao, Ghana"
-  },
-  {
-   "id": "PN70e4587cd9f1",
-   "name": "Richard Nyamalor",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Aflao, Ghana"
-  },
-  {
-   "id": "P1334",
-   "name": "Emmanuel Tetteh Benisson",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Agbozume, Ghana"
-  },
-  {
-   "id": "PN6e105c08ec55",
-   "name": "Daniel Amemasour",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Agbozume, Ghana"
-  },
-  {
-   "id": "P2490",
-   "name": "Julius Kojo Dzameshie",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Akatsi, Ghana"
-  },
-  {
-   "id": "P4189",
-   "name": "Stephen Parry",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Sege, Ghana"
-  },
-  {
-   "id": "P844",
-   "name": "Daniel Tsiemorlie",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Aletame, Ghana"
-  },
-  {
-   "id": "Sa240b665",
-   "name": "Israel Sefah",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Keta, Ghana"
-  },
-  {
-   "id": "PNa3cdcbc9c5c7",
-   "name": "Courage Bowman",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Keta, Ghana"
-  },
-  {
-   "id": "S201f8720",
-   "name": "Akpene Ama Sedem Sefah",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Keta, Ghana"
-  },
-  {
-   "id": "P2049",
-   "name": "Isaac Agbeve",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Keta, Ghana"
-  },
-  {
-   "id": "S504cd7bd",
-   "name": "Tsiemorlie Grace Makafui",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Keta, Ghana"
-  },
-  {
-   "id": "P800",
-   "name": "Daniel Gameli Ahiador",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Keta, Ghana"
-  },
-  {
-   "id": "P3898",
-   "name": "Samuel Biase",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Keta, Ghana"
-  },
-  {
-   "id": "P3733",
-   "name": "Richard Etsey Adegbe",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Woe, Ghana"
-  },
-  {
-   "id": "P3487",
-   "name": "Perry Dehadey Lawson",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Denu, Ghana"
-  },
-  {
-   "id": "PNd3b03f8ac2f0",
-   "name": "Promise Kwaku Afornyo",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Denu, Ghana"
-  },
-  {
-   "id": "Sbc40b5d9",
-   "name": "Deseth Atineku",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Denu, Ghana"
-  },
-  {
-   "id": "P893",
-   "name": "David Nudziekpor",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Denu, Ghana"
-  },
-  {
-   "id": "S5c95396b",
-   "name": "Charles Gablah",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Dzodze, Ghana"
-  },
-  {
-   "id": "P3999",
-   "name": "Sebastian Gadzanaki",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Aflao, Ghana"
-  },
-  {
-   "id": "PN213bbff3c838",
-   "name": "Leticia Ama-Doe Tekpor",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Aflao, Ghana"
-  },
-  {
-   "id": "PNe639da19b3d4",
-   "name": "Stella Nabenson",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Aflao, Ghana"
-  },
-  {
-   "id": "PNefc361452455",
-   "name": "Makafui Bless Yawa Gadzanaki",
-   "bishop": "Fred Ansah Quartey",
-   "group": "UD Ghana",
-   "denomination": "East End City Churches",
-   "place": "Aflao, Ghana"
   },
   {
    "id": "PN7e4d5c2c518d",
@@ -6867,30 +6643,6 @@
    "place": "Malabo, Equatorial Guinea"
   },
   {
-   "id": "P4930",
-   "name": "Orienther Banyini",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Johannesburg, South Africa"
-  },
-  {
-   "id": "PN95a805ff8def",
-   "name": "Vutivi Meyer",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Rustenburg, South Africa"
-  },
-  {
-   "id": "P4924",
-   "name": "Thabo Mashashane",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Johannesburg, South Africa"
-  },
-  {
    "id": "P4933",
    "name": "Ebenezer Nettey",
    "bishop": "Patrick Inkoom",
@@ -6899,56 +6651,8 @@
    "place": "Pretoria, South Africa"
   },
   {
-   "id": "PN7224b850d261",
-   "name": "Beverly Ngubani",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Johannesburg, South Africa"
-  },
-  {
-   "id": "P4914",
-   "name": "Siphamandla Tshabalala",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Pretoria, South Africa"
-  },
-  {
-   "id": "PNa25d227958dc",
-   "name": "Nhlanhla Monareng",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Mafikeng, South Africa"
-  },
-  {
-   "id": "Se7c416b7",
-   "name": "Refilwe Precious Shoba",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Gaborone, Botswana"
-  },
-  {
-   "id": "Sac2f575d",
-   "name": "Busane Oamogetswe Shoba",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Gaborone, Botswana"
-  },
-  {
    "id": "PN74070dffb7a6",
    "name": "Barbara Darling-Ampofo",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Gaborone, Botswana"
-  },
-  {
-   "id": "S8533a98f",
-   "name": "Pretty Tsaone Abloedey-Williams",
    "bishop": "Patrick Inkoom",
    "group": "First Love",
    "denomination": "First Love Church",
@@ -6961,22 +6665,6 @@
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Francistown, Botswana"
-  },
-  {
-   "id": "S50568aaa",
-   "name": "Sakaeyo Jaoline",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Gaborone, Botswana"
-  },
-  {
-   "id": "PN58882a7cb4b9",
-   "name": "Ellen Mmmaraka Rannoba",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Gaborone, Botswana"
   },
   {
    "id": "PNd28305f8fddf",
@@ -7033,14 +6721,6 @@
    "group": "UD Africa",
    "denomination": "Strong Christian Church",
    "place": "Middelburg, South Africa"
-  },
-  {
-   "id": "P5095",
-   "name": "Therese Omera Dennis",
-   "bishop": "Reginald Agyir Dadzie",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Grenoble, France"
   },
   {
    "id": "P3770",
@@ -7235,46 +6915,6 @@
    "place": "Abuja, Nigeria"
   },
   {
-   "id": "P1343",
-   "name": "Enoch Ayeh",
-   "bishop": "Romeo Sosu",
-   "group": "United Jesus",
-   "denomination": "Jesus Is The Door",
-   "place": "Kpandai, Ghana"
-  },
-  {
-   "id": "P1091",
-   "name": "Edith Mutse",
-   "bishop": "Romeo Sosu",
-   "group": "United Jesus",
-   "denomination": "Jesus Is The Door",
-   "place": "Salaga, Ghana"
-  },
-  {
-   "id": "P2672",
-   "name": "Kwame Tuah",
-   "bishop": "Romeo Sosu",
-   "group": "United Jesus",
-   "denomination": "Jesus Is The Door",
-   "place": "Bimbilla, Ghana"
-  },
-  {
-   "id": "P4291",
-   "name": "Thomas Akulobia Tuah",
-   "bishop": "Romeo Sosu",
-   "group": "United Jesus",
-   "denomination": "Jesus Is The Door",
-   "place": "Bimbilla, Ghana"
-  },
-  {
-   "id": "PNd242e1e37c94",
-   "name": "Elijah Wajul Unyimeya",
-   "bishop": "Romeo Sosu",
-   "group": "United Jesus",
-   "denomination": "Jesus Is The Door",
-   "place": "Kpandai, Ghana"
-  },
-  {
    "id": "P3355",
    "name": "Olga Suzane Koné",
    "bishop": "Samuel Kwame Gasper",
@@ -7347,134 +6987,6 @@
    "place": "Allentown, United States"
   },
   {
-   "id": "PNf989ba3f587f",
-   "name": "Evans Selasie Wemegah",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Tema Community 22, Ghana"
-  },
-  {
-   "id": "S2f7662d8",
-   "name": "Solomon Annor Tettey",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "Sea85c020",
-   "name": "Ernest Quanain",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Tema Community 22, Ghana"
-  },
-  {
-   "id": "PN29e689125b5b",
-   "name": "Bismark Larweh Ocansey",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Ashaiman, Ghana"
-  },
-  {
-   "id": "S8d027cdf",
-   "name": "Leon Mawuli Zakli",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Tema Community 22, Ghana"
-  },
-  {
-   "id": "S11d812de",
-   "name": "Cephas Narh Hendison",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "S93ccab05",
-   "name": "Francis Otu Sorgbojor",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Tema Community 22, Ghana"
-  },
-  {
-   "id": "PN33878091063b",
-   "name": "Adolf Kofi Nkrumah",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Ashaiman, Ghana"
-  },
-  {
-   "id": "S0f791582",
-   "name": "Enoch Kakanu",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Ashaiman, Ghana"
-  },
-  {
-   "id": "PN09cc944dcd4c",
-   "name": "Benjamin Kwame Atter",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Ashaiman, Ghana"
-  },
-  {
-   "id": "PN2951a25282c6",
-   "name": "Joshua Afedi Madjitey",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "PNbba7a14524c7",
-   "name": "Randy Sackey",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "S9a8c4e0f",
-   "name": "Enoch Kwabena Addo Yalley",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "PNc0f71d3ef211",
-   "name": "Mavis Yeboah",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "PNd783e0961f5a",
-   "name": "Thomas Eghan Jnr",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Ashaiman, Ghana"
-  },
-  {
-   "id": "PNb2a31104ca83",
-   "name": "Victor Adu-Sekyi Attopley",
-   "bishop": "Kobina Quansah",
-   "group": "UD Ghana",
-   "denomination": "Saviours Of Men International",
-   "place": "Ashaiman, Ghana"
-  },
-  {
    "id": "P1436",
    "name": "Ernest Kwesi Assan",
    "bishop": "Kobina Quansah",
@@ -7518,6 +7030,13 @@
  "photos": {
   "fromFolders": 1,
   "converted": 0,
-  "looseMatches": []
+  "looseMatches": [],
+  "latestOfficeImport": {
+   "date": "2026-10-16",
+   "photos": 178,
+   "newPastors": 0,
+   "missingFilled": 61,
+   "flaggedReplaced": 59
+  }
  }
 }

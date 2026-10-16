@@ -5,12 +5,23 @@ export function canonicalBishopName(value) {
   const match = name.trim().match(/^((?:bishop|rev\.?|reverend)\s+)?(?:eat|e[.\s]*a[.\s]*t\.?)\s+sackey$/i);
   return match ? `${match[1] || ''}E.A.T Sackey` : name;
 }
+// Joshua, 16 October: photo names resolve these current-sheet variants;
+// Thérèse's full name was explicitly confirmed in the supplied conversation.
+const photoNames = {
+  P5095: ['Thérèse Dennis', ['Therese Omera Dennis', 'Therese Bassen', 'Therese Dennis']],
+  PNd783e0961f5a: ['Victor Eghan Jnr', ['Thomas Eghan Jnr', 'Victor Eghan Jnr']],
+  PN7224b850d261: ['Beverly Sanganza', ['Beverly Ngubani', 'Beverly Sanganza']],
+  Sac2f575d: ['Busani Shoba', ['Busane Oamogetswe Shoba', 'Busani Shoba']],
+};
+const nameKey = name => String(name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().replace(/\s+/g, ' ').toLowerCase();
 export function canonicalPersonName(id, value) {
   if (id === 'B39') return canonicalBishopName(value);
   // Joshua's correction, 14 October. Match the linked record, not every
   // person who happens to share an older name; later office edits still work.
   if (id === 'S10325a07' && /^(paulina ama (ansah|drah)|osylina ama ansah)$/i.test(String(value || '').trim()))
     return 'Osylina Ama Ansah';
+  const confirmed = photoNames[id];
+  if (confirmed && confirmed[1].some(alias => nameKey(alias) === nameKey(value))) return confirmed[0];
   return value;
 }
 export function canonicalPerson(person) {

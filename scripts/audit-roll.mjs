@@ -13,6 +13,10 @@ const officeAddedIds = new Set(officeAdditions.map(p => p.id));
 const list = XLSX.utils.sheet_to_json(XLSX.readFile(`${root}data/source/Bishops List (9 Oct 2026).xlsx`).Sheets.Sheet1, { raw: false, defval: '' }).filter((r) => r.NAME.trim());
 const bishops = people.filter((p) => p.role === 'bishop' && !p.lay), lays = people.filter((p) => p.lay), pastors = people.filter((p) => p.role === 'pastor');
 const key = (n) => normalName(String(n).replace(/[’'`]/g, ''));
+const nameCorrections = read('data/pastor-corrections.json').corrections;
+const correctedSheetRow = p => nameCorrections.some(c =>
+  c.source && key(c.set?.name) === key(p.name) && (!c.bishop || key(c.bishop) === key(p.bishop)) &&
+  subs.some(s => (!c.bishop || key(s.bishop) === key(c.bishop)) && s.pastors.some(r => key(r.name) === key(c.name))));
 let fails = 0; const out = [];
 const check = (name, ok, evidence = '') => { out.push(`${ok ? 'PASS' : 'FAIL'}  ${name}${evidence ? ' — ' + evidence : ''}`); if (!ok) fails++; };
 // 1. Who is on the roll
@@ -21,7 +25,7 @@ check('Lay Presidents are exactly the three named', lays.length === 3 && lay.eve
 check('Lay Presidents come after every bishop', people.findIndex((p) => p.lay) > people.findLastIndex((p) => p.role === 'bishop' && !p.lay));
 check('Only men hold the title Bishop', bishops.every((b) => b.gender === 'female' ? b.title !== 'Bishop' : true), bishops.filter((b) => b.gender === 'female' && b.title === 'Bishop').map((b) => b.name).join(', '));
 check('Women are Episcopal Sister (UD) or Mother (First Love, FLOW, HJC)', bishops.filter((b) => b.gender === 'female').every((b) => b.title === (b.organization === 'United Denominations' ? 'Episcopal Sister' : 'Mother')));
-check('No record from the purged roster survives', !people.some((p) => /^P\d+$|^PF\d+|^PS\d+|^PB\d+/.test(p.id) && !subs.some((s) => s.pastors.some((r) => key(r.name) === key(p.name))) && !(p.bishop === 'Toss Mills-Odoi')), 'every pastor id traces to a sheet row (Toss Mills-Odoi excepted)');
+check('No record from the purged roster survives', !people.some((p) => /^P\d+$|^PF\d+|^PS\d+|^PB\d+/.test(p.id) && !subs.some((s) => s.pastors.some((r) => key(r.name) === key(p.name))) && !correctedSheetRow(p) && !(p.bishop === 'Toss Mills-Odoi')), 'every pastor id traces to a sheet row, including documented office name corrections (Toss Mills-Odoi excepted)');
 check('Nobody filed under Dag Heward-Mills', !pastors.some((p) => /dag heward/i.test(p.bishop || '')));
 check('No older roster, rank list or Google Form fills current spreadsheet records', report.sourceAuthority?.legacyRankExclusions === false && report.sourceAuthority?.legacyProfileFallbacks === false && report.sourceAuthority?.googleFormYearFallbacks === false);
 check('Current sheet ranks exclude non-pastoral rows', report.reconcile.every(r => { const s = subs.find(s => s.file === r.file && s.folder === r.folder); return !s || s.pastors.filter(nonPastoralRank).every(p => r.notUnder.some(n => n.row === p.row)); }));

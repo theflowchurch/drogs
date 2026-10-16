@@ -19,9 +19,14 @@ test('explicit pastor additions survive repeated builds without duplicates or in
   assert.equal(pastors[0].country, '');
   assert.equal(pastors[0].dob, undefined);
   pastors[0].image = 'assets/portraits/new-office-photo.webp';
-  applyOfficePastorAdditions(pastors, bishops, [{ ...addition, city: 'Accra', country: 'Ghana' }]);
+  applyOfficePastorAdditions(pastors, bishops, [{ ...addition, city: 'Accra', country: 'Ghana', branch: 'Passion Campus', yearAppointed: '2022', email: 'private@example.test', phone: '+233000000000', dobKeys: ['1-1-90'] }]);
   assert.equal(pastors[0].city, 'Accra');
   assert.equal(pastors[0].country, 'Ghana');
+  assert.equal(pastors[0].branch, 'Passion Campus');
+  assert.equal(pastors[0].yearAppointed, '2022');
+  assert.equal(pastors[0].email, undefined, 'private amendment details stay out of the public person record');
+  assert.equal(pastors[0].phone, undefined);
+  assert.equal(pastors[0].dobKeys, undefined);
   assert.equal(pastors[0].image, 'assets/portraits/new-office-photo.webp', 'later saved photographs are retained');
 });
 

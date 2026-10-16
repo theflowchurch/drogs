@@ -54,7 +54,15 @@
    "city": "Accra",
    "country": "Ghana",
    "image": "assets/portraits/PN410b12cf7f80-d1ee6baca44d.webp",
-   "source": "Joshua 14 Oct 2026: explicitly add Bright Mensah as a pastor under Solomon Tay, use his supplied ZIP portrait and Solomon Tay's location; other details to follow"
+   "source": "Joshua 14 Oct 2026: explicitly add Bright Mensah as a pastor under Solomon Tay, use his supplied ZIP portrait and Solomon Tay's location; other details to follow",
+   "branch": "FL Passion Campus",
+   "yearAppointed": "2022",
+   "dobKeys": [
+    "24-9-92"
+   ],
+   "phone": "544086141.0",
+   "email": "brightyawmensah@gmail.com",
+   "detailsSource": "Completed Bishop Solomon Tay - missing pastor details.xlsx, received from Joshua 16 Oct 2026"
   },
   {
    "id": "PNcac22be23559",
