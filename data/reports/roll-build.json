@@ -72,7 +72,7 @@
   "pastors": 5064,
   "assigned": 5064,
   "unclaimed": 0,
-  "withPhoto": 4900,
+  "withPhoto": 4915,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -6111,14 +6111,6 @@
    "place": "Kumasi, Ghana"
   },
   {
-   "id": "PNf62d6b97f3d9",
-   "name": "Kojo Afriyie",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
    "id": "S54c6000b",
    "name": "Herbert Aidoo",
    "bishop": "Joshua Heward-Mills",
@@ -6127,33 +6119,9 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "S7b0ade02",
-   "name": "Zenas Adarkwah Yiadom",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
    "id": "PN865f9c967990",
    "name": "Enoch Bentil",
    "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PNa785496feb77",
-   "name": "Nana Kofi Danso-Mensah",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PNb1f74d931f76",
-   "name": "Evanna Farhat",
-   "bishop": "Isaac Agyeman",
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Accra, Ghana"
@@ -6175,96 +6143,8 @@
    "place": "Accra, Ghana"
   },
   {
-   "id": "S893cce89",
-   "name": "Jayson Quarshie",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN1ef744b7d75d",
-   "name": "Jude Yamoah",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN11ea35f3cd0b",
-   "name": "Esther Atwere",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Ghana"
-  },
-  {
-   "id": "P4654",
-   "name": "Sharon Cobblah",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Kumasi, Ghana"
-  },
-  {
-   "id": "PNa6b1dc1c18d9",
-   "name": "Philip Agyei Boadu",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Sunyani, Ghana"
-  },
-  {
-   "id": "P4639",
-   "name": "William Longdon",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Cape Coast, Ghana"
-  },
-  {
-   "id": "P4637",
-   "name": "Kofi Twumasi Paddi",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Cape Coast, Ghana"
-  },
-  {
-   "id": "S1a5fdf9d",
-   "name": "Nathaniel Obeng",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tarkwa, Ghana"
-  },
-  {
-   "id": "PN88ec918eb1c2",
-   "name": "Patricia Korlekie Sogbodjor",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Sunyani, Ghana"
-  },
-  {
    "id": "S4994a2da",
    "name": "Isaac Bonuedi",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Kumasi, Ghana"
-  },
-  {
-   "id": "PNa819f4782a57",
-   "name": "Godiva Adelaide Iwarah",
-   "bishop": "Isaac Agyeman",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Sunyani, Ghana"
-  },
-  {
-   "id": "PN95a3238fe82b",
-   "name": "Theophilus Yanney",
    "bishop": "Isaac Agyeman",
    "group": "First Love",
    "denomination": "First Love Church",
@@ -6941,10 +6821,10 @@
   "looseMatches": [],
   "latestOfficeImport": {
    "date": "2026-10-16",
-   "photos": 34,
-   "newPastors": 1,
-   "missingFilled": 1,
-   "flaggedReplaced": 4
+   "photos": 42,
+   "newPastors": 0,
+   "missingFilled": 15,
+   "flaggedReplaced": 27
   }
  }
 }

@@ -16,7 +16,10 @@ const key = (n) => normalName(String(n).replace(/[’'`]/g, ''));
 const nameCorrections = read('data/pastor-corrections.json').corrections;
 const correctedSheetRow = p => nameCorrections.some(c =>
   c.source && key(c.set?.name) === key(p.name) && (!c.bishop || key(c.bishop) === key(p.bishop)) &&
-  subs.some(s => (!c.bishop || key(s.bishop) === key(c.bishop)) && s.pastors.some(r => key(r.name) === key(c.name))));
+  // Some submitted workbooks contain a copied bishop-details row. The audited
+  // file/folder assignment identifies their owner; that raw header cannot.
+  subs.some(s => (!c.bishop || report.reconcile.some(r => key(r.bishop) === key(c.bishop) && r.file === s.file && r.folder === s.folder)) &&
+    s.pastors.some(r => key(r.name) === key(c.name))));
 let fails = 0; const out = [];
 const check = (name, ok, evidence = '') => { out.push(`${ok ? 'PASS' : 'FAIL'}  ${name}${evidence ? ' — ' + evidence : ''}`); if (!ok) fails++; };
 // 1. Who is on the roll

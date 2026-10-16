@@ -8,6 +8,15 @@ export function canonicalBishopName(value) {
 // Joshua, 16 October: photo names resolve these current-sheet variants;
 // Thérèse's full name was explicitly confirmed in the supplied conversation.
 const photoNames = {
+  PF69: ['Cornelius Montri Déry', ['Cornelius Dery', 'Cornelius Montri Déry']],
+  P4650: ['Gideon Amponsa Darkwah', ['Gideon Amponsa Darkwa', 'Gideon Amponsa Darkwah']],
+  PNa785496feb77: ['Nana Kofi Danso Mensah', ['Nana Kofi Danso-Mensah', 'Nana Kofi Danso Mensah']],
+  P4637: ['Kofi Twumasi Padi', ['Kofi Twumasi Paddi', 'Kofi Twumasi Padi']],
+  S7b0ade02: ['Zenas Darkwah Yiadom', ['Zenas Adarkwah Yiadom', 'Zenas Darkwah Yiadom']],
+  P4657: ['Seth Junior Ahiyi', ['Seth Junior Ayihi', 'Seth Junior Ahiyi']],
+  P4645: ['Leonard Ashley', ['Leonard Ashiley', 'Leonard Ashley']],
+  PF63: ['Fredrick Kaledzi', ['Frederick Kaledzi', 'Fredrick Kaledzi']],
+  S4ad94a77: ['Hannah Elli Ofori-Akita', ['Hannah Elli Ofori-Kiti', 'Hannah Elli Ofori-Akita']],
   S580fc1df: ['Foster Opoku Sarpong', ['Foster Sarpong', 'Foster Opoku Sarpong']],
   PN41f445a6e047: ['Joseph Asamoah Asare', ['Joseph Asare', 'Joseph Asamoah Asare']],
   P4064: ['Sheldon A. Brown', ['Sheldon Brown', 'Sheldon A. Brown']],
