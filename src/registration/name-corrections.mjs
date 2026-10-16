@@ -8,6 +8,17 @@ export function canonicalBishopName(value) {
 // Joshua, 16 October: photo names resolve these current-sheet variants;
 // Thérèse's full name was explicitly confirmed in the supplied conversation.
 const photoNames = {
+  S580fc1df: ['Foster Opoku Sarpong', ['Foster Sarpong', 'Foster Opoku Sarpong']],
+  PN41f445a6e047: ['Joseph Asamoah Asare', ['Joseph Asare', 'Joseph Asamoah Asare']],
+  P4064: ['Sheldon A. Brown', ['Sheldon Brown', 'Sheldon A. Brown']],
+  P3704: ['Rhochellee Jackson', ['Rhochelee Jackson', 'Rhochellee Jackson']],
+  P4143: ['Stacian Martin-Sampson', ['Staciann Sampson', 'Stacian Martin-Sampson']],
+  P4055: ['Sharon Mills-Spence', ['Sharon Spence', 'Sharon Mills-Spence']],
+  P2179: ['Jamie-Lee Hannam-Wallace', ['Jamie-Lee Wallace', 'Jamie-Lee Hannam-Wallace']],
+  PF1: ['Shanice Webb-Gayle', ['Shanice Webb', 'Shanice Webb-Gayle']],
+  P4325: ['Toni-Ann Mitchell', ['Toniann Mitchell', 'Toni-Ann Mitchell']],
+  P746: ['Cordia Chambers-Johnson', ['Cordia Chambers Johnson', 'Cordia Chambers-Johnson']],
+  PN01a9240151ac: ['Siddy Ann McIntosh', ['Siddy Ann Mcintosh', 'Siddy Ann McIntosh']],
   PF612: ['Samuel Twum Boateng', ['Berima Samuel Twum', 'Samuel Twum Boateng']],
   P481: ['Bernice Agyapong Larbi', ['Bernice Agyapomaa Larbi', 'Bernice Agyapong Larbi']],
   P762: ['Charity Tabitha Effah-Kodom', ['Cynthia Tabitha Effah Kodom', 'Charity Tabitha Effah-Kodom']],

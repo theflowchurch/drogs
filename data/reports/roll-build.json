@@ -57,15 +57,22 @@
    "bishopId": "B99",
    "bishop": "Joseph Papa Wachirah Kabiro",
    "source": "Joshua 16 Oct 2026: explicitly confirmed adding Precious Amukwe Etemesi as a new pastor under Bishop Joseph Papa Wachirah Kabiro, using PRECIOUS AMUKWE ETEMESI.jpg from his supplied ZIP. Other personal details were not supplied."
+  },
+  {
+   "id": "PN964be2c30c79",
+   "name": "Paulett Byrd",
+   "bishopId": "BO181",
+   "bishop": "Aundrae George Wood",
+   "source": "Joshua 16 Oct 2026: explicitly approved adding Paulett Byrd as a new pastor under Bishop Aundrae George Wood, using Paulett Byrd.jpeg from Bishop Aundrae Wood.zip. Other personal details were not supplied."
   }
  ],
  "totals": {
   "bishops": 283,
   "layPresidents": 3,
-  "pastors": 5063,
-  "assigned": 5063,
+  "pastors": 5064,
+  "assigned": 5064,
   "unclaimed": 0,
-  "withPhoto": 4897,
+  "withPhoto": 4900,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -2348,9 +2355,18 @@
    "file": "Bishop Aundrae George Wood Updated (1).xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
    "sheetRows": 28,
-   "onRoll": 28,
+   "onRoll": 29,
    "notUnder": [],
-   "extra": []
+   "extra": [],
+   "officeAdded": [
+    {
+     "id": "PN964be2c30c79",
+     "name": "Paulett Byrd",
+     "bishopId": "BO181",
+     "bishop": "Aundrae George Wood",
+     "source": "Joshua 16 Oct 2026: explicitly approved adding Paulett Byrd as a new pastor under Bishop Aundrae George Wood, using Paulett Byrd.jpeg from Bishop Aundrae Wood.zip. Other personal details were not supplied."
+    }
+   ]
   },
   {
    "bishop": "Benjamin Fiadonu",
@@ -6703,22 +6719,6 @@
    "place": "Middelburg, South Africa"
   },
   {
-   "id": "P3770",
-   "name": "Richmond Arkoh",
-   "bishop": "Richard Afenyo Tsaku",
-   "group": "UD Ghana",
-   "denomination": "West End City Churches",
-   "place": "Ofaakor, Ghana"
-  },
-  {
-   "id": "PN41f445a6e047",
-   "name": "Joseph Asare",
-   "bishop": "Richard Afenyo Tsaku",
-   "group": "UD Ghana",
-   "denomination": "West End City Churches",
-   "place": "Ofaakor, Ghana"
-  },
-  {
    "id": "P421",
    "name": "Benjamin Dadebo",
    "bishop": "Richard Nii Okai Aryee",
@@ -6941,10 +6941,10 @@
   "looseMatches": [],
   "latestOfficeImport": {
    "date": "2026-10-16",
-   "photos": 1,
+   "photos": 34,
    "newPastors": 1,
-   "missingFilled": 0,
-   "flaggedReplaced": 0
+   "missingFilled": 1,
+   "flaggedReplaced": 4
   }
  }
 }
