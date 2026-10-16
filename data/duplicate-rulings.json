@@ -1,5 +1,5 @@
 {
- "note": "Joshua's rulings on the duplicates report, 11 Oct 2026. 'merge': one person — the first record is kept under the named bishop, blanks filled from the second, the second removed. 'distinct': two people (a single name with 'bishops' means the namesakes under those bishops are two people). 'pending': the office must confirm — both records are Unclaimed and head the report. Everything else Joshua went through on 11 Oct is unique.",
+ "note": "Joshua's rulings on the duplicates report, 11 Oct 2026. 'merge': one person \u2014 the first record is kept under the named bishop, blanks filled from the second, the second removed. 'distinct': two people (a single name with 'bishops' means the namesakes under those bishops are two people). 'pending': the office must confirm \u2014 both records are Unclaimed and head the report. Everything else Joshua went through on 11 Oct is unique.",
  "merge": [
   {
    "keep": "Kakra Ankobiah",
@@ -15,6 +15,12 @@
    "drop": "Kenneth Cyril Nartey",
    "bishop": "Joshua Heward-Mills",
    "source": "Joshua 11 Oct 09:07: Cyril just put him in First Love (same picture on both sheets; Bishop Eddy Addy's own 'Pastors removed' sheet lists Cyril Lartey)"
+  },
+  {
+   "keep": "Rebecca Siyolwe",
+   "drop": "Rebecca Siwoyle",
+   "bishop": "Stephen Poku",
+   "source": "16 Oct 2026: current Stephen Poku sheet rows 35 and 37 have matching DOB, city and appointment year; Joshua instructed using the supplied photo name for double names. Keep Rebecca Siyolwe."
   }
  ],
  "distinct": [
@@ -33,7 +39,7 @@
     "Glen Kwame Opoku",
     "Emmanuel Samuel Baidoo"
    ],
-   "source": "Joshua 11 Oct 10:19: Albert Mensah — two different people"
+   "source": "Joshua 11 Oct 10:19: Albert Mensah \u2014 two different people"
   },
   {
    "names": [
@@ -50,7 +56,7 @@
     "Emmanuel Prince Abakah",
     "Emmanuel Abankwah"
    ],
-   "source": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections): Emmanuel Prince Abakah is Bishop Samuel Baidoo's, Emmanuel Abankwah is Bishop Edwin Morgan Ogoe's — two people"
+   "source": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections): Emmanuel Prince Abakah is Bishop Samuel Baidoo's, Emmanuel Abankwah is Bishop Edwin Morgan Ogoe's \u2014 two people"
   },
   {
    "names": [
@@ -60,7 +66,7 @@
     "Phillippa-Marka Coker",
     "Jude Orraca-Tetteh"
    ],
-   "source": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections): two Daniel Acheampongs — a Pastor under Sister Phillippa, a Reverend under Bishop Jude"
+   "source": "Office corrections, 13 Oct 2026 (Unclaimed Pastors corrections): two Daniel Acheampongs \u2014 a Pastor under Sister Phillippa, a Reverend under Bishop Jude"
   }
  ],
  "pending": []

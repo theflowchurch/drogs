@@ -2,6 +2,7 @@ import { DENOMINATIONS } from "./denominations.mjs";
 import { GROUPS } from "./groups.mjs";
 import { LOGOS } from "./logos.mjs";
 import { canonicalBishopName, canonicalPersonName, canonicalPerson, canonicalOfficeNames } from './name-corrections.mjs';
+import { mergeCurrentReferences } from './reference-merges.mjs';
 // Full names for display; the short keys stay as stored identifiers.
 export const ORGANIZATION_LABEL = {
   "First Love": "First Love Church",
@@ -155,7 +156,7 @@ export const pauseFor = (state, entrance) => { const s = signupOf(state); return
 // authoritative; hidden ids that no longer exist are forgotten.
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1') return null;
-  state = canonicalOfficeNames(state);
+  state = canonicalOfficeNames(mergeCurrentReferences(state, people));
   const aligned = reconcileSubmittedState(state, people);
   state = aligned.state;
   const saved = state.catalog?.organizations?.length && state.audit.some(a => a.action === 'setCatalog' && a.actor !== 'system') ? state.catalog : null;

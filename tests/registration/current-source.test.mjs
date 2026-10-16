@@ -4,6 +4,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { publishedPortraits } from '../../scripts/lib/published-portraits.mjs';
 import { placeOf } from '../../src/registration/model.mjs';
 import { PHOTO_REVIEW, ORIGINALLY_MISSING } from '../../src/registration/photo-review-baseline.mjs';
+import { CURRENT_REFERENCE_MERGES } from '../../src/registration/reference-merges.mjs';
 const read = f => JSON.parse(readFileSync(f, 'utf8'));
 
 test('the asset index contains exactly current audited people and no old profile fields', () => {
@@ -25,7 +26,7 @@ test('only latest audited submissions and current photo/contact metadata remain'
   for (const file of ['reference-contacts', 'photo-approved', 'photo-quality', 'photo-sources', 'photo-manual-flags'])
     assert.ok(Object.keys(read(`data/${file}.json`)).every(id => ids.has(id)), file);
   assert.ok(Object.keys(PHOTO_REVIEW).every(id => ids.has(id)));
-  assert.ok(ORIGINALLY_MISSING.every(id => ids.has(id)));
+  assert.ok(ORIGINALLY_MISSING.every(id => ids.has(id) || CURRENT_REFERENCE_MERGES.some(m => m.from === id && ids.has(m.to))), 'the permanent missing-photo baseline keeps documented merged IDs so removals do not count as uploads');
   assert.ok(people.filter(p => p.role === 'bishop').every(p => placeOf(p)), 'every bishop has a supplied place, branch or documented oversight area');
 });
 test('published portraits follow current image paths, even when filenames have older IDs', () => {
