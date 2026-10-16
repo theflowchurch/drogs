@@ -740,6 +740,21 @@ p {
 .reg-circle-item .reg-circle { width: 96px; height: 96px; }
 .reg-circle-item .reg-person-n { top: 0; left: 0; }
 .reg-circle-item small .reg-given { font-weight: 400; }
+/* FLOW keeps bishops above a separate, ungrouped pastors grid. */
+.reg-flow-directory { display: grid; gap: 36px; }
+.reg-flow-directory .reg-circles { gap: 24px 18px; align-items: start; }
+.reg-flow-directory .reg-circle-item { width: 144px; font-size: 13px; gap: 10px; }
+.reg-flow-directory .reg-circle-item .reg-circle { width: 144px; height: 144px; }
+.reg-flow-directory .reg-circle-item small { font-size: inherit; line-height: 1.35; }
+.reg-flow-directory .reg-people-grid { grid-template-columns: repeat(auto-fill, 144px); gap: 18px; }
+.reg-flow-directory .reg-person-card > .reg-person-portrait > img,
+.reg-flow-directory .reg-person-card > .reg-person-portrait > .reg-placeholder { aspect-ratio: 1; }
+.reg-flow-directory .reg-person-card > .reg-person-name { padding: 9px; }
+.reg-flow-directory .reg-person-name h3 { font-size: 13px; line-height: 1.35; }
+@media (max-width: 380px) {
+  .reg-flow-directory .reg-circles { gap: 24px 12px; }
+  .reg-flow-directory .reg-people-grid { gap: 12px; }
+}
 /* A pastor thumbnail for someone not yet approved: the dark face, nothing else. */
 .reg-thumb-grid .reg-thumb-dark { background: #0d1017; border-color: #0d1017; }
 .reg-thumb-grid .reg-thumb-dark .reg-placeholder { height: 100%; }

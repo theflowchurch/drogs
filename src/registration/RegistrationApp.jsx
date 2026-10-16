@@ -3469,7 +3469,8 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
     </section>
   );
 }
-function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null, count = 0 }) {
+function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null, count = 0, oversight = false }) {
+  const showOversight = useContext(OrganizationSiteContext) !== "flow" || oversight;
   return (
     <>
       <div className="reg-record-hero">
@@ -3483,7 +3484,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
           {p.standing !== undefined && (
             <p className={`reg-record-line reg-standing ${p.standing ? "good" : "pending"}`}>{p.standing ? "In Good Standing" : "Standing not yet confirmed"}</p>
           )}
-          {p.role === "bishop" && count > 0 && <p className="reg-record-line"><span className="reg-count-pill">{overseeing(count)}</span></p>}
+          {showOversight && p.role === "bishop" && count > 0 && <p className="reg-record-line"><span className="reg-count-pill">{overseeing(count)}</span></p>}
           {p.denomination && (
             <p className="reg-record-denomination">
               <DenominationLogo person={p} catalog={catalog || catalogOf(null)} />
@@ -3498,14 +3499,14 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
               {[p.yearAppointed && `Appointed ${p.yearAppointed}`, p.yearOrdained && `Ordained ${p.yearOrdained}`, p.role === "bishop" && p.yearConsecrated && `Consecrated ${p.yearConsecrated}`].filter(Boolean).join(" · ")}
             </p>
           )}
-          {p.role === "pastor" && (
+          {showOversight && p.role === "pastor" && (
             <p className="reg-record-line">
               Bishop · {p.bishop || "Not recorded"}
             </p>
           )}
         </div>
       </div>
-      {pastors && p.role === "bishop" && p.pastors ? (
+      {showOversight && pastors && p.role === "bishop" && p.pastors ? (
         <section className="reg-record-group">
           <h3>{p.pastors.length ? "Pastors under their oversight" : "No pastors under their oversight"}</h3>
           {p.pastors.length > 0 && (
@@ -3522,13 +3523,13 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
             </div>
           )}
         </section>
-      ) : pastors && p.role === "bishop" ? (
+      ) : showOversight && pastors && p.role === "bishop" ? (
         <PastorsUnder bishop={p} onOpen={onOpen} from={from} />
       ) : null}
     </>
   );
 }
-// Organization directories open directly to the grouped Pastors view; the
+// Organization directories open directly to the Pastors view; the
 // central directory keeps its two doors. Both use the current live roster.
 function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
   const fallback = useContext(RosterContext);
@@ -3687,6 +3688,14 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
     () => numbered.filter((p) => personMatches(p, filter)),
     [numbered, filter],
   );
+  // FLOW presents two independent sections, including when searching or filtering.
+  // Keep the saved oversight relationships intact for the office and central site.
+  const flowSections = useMemo(() => {
+    if (site !== "flow" || role !== "pastor") return null;
+    const bishops = list.filter(p => p.role === "bishop" && !isLay(p));
+    const pastors = list.filter(p => p.role !== "bishop" || isLay(p));
+    return { bishops, pastors, order: [...bishops, ...pastors] };
+  }, [site, role, list]);
   useEffect(() => setLimit(pageFor(role)), [filter, role]);
   const options = useMemo(
     () => ({ ...filterOptions(roll, filter.org, filter.group), ...(site === "flow" ? { group: Object.values(FLOW_GROUPS) } : {}) }),
@@ -3701,7 +3710,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
     return new Map([...ids].map(([id, list]) => [id, list.map((i) => byId.get(i)).filter(Boolean)]));
   }, [roll, index]);
   const grouped = useMemo(() => {
-    if (role !== "pastor" || filtering) return null;
+    if (site === "flow" || role !== "pastor" || filtering) return null;
     const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(byOversight).map((p, i) => ({ ...p, n: i + 1 })); // lay presidents first (they oversee), then the bishops
     const taken = new Set(), blocks = [];
     for (const b of bishopsSorted) {
@@ -3718,7 +3727,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
     // The order people appear on screen, so the dialog's arrows move to the neighbour.
     const order = [...withPastors.flatMap((x) => [x.bishop, ...x.pastors]), ...alone, ...rest];
     return { withPastors, alone, rest, order };
-  }, [roll, role, filtering, byBishop]);
+  }, [roll, role, filtering, byBishop, site]);
   const pastorCount = useMemo(() => new Map(roll.filter((p) => p.role === "bishop").map((b) => [b.id, pastorsUnder(b, byBishop).length])), [roll, byBishop]);
   // Resolve an open profile against each refreshed list as well: holding the
   // old person object would leave its name/photo unchanged inside the dialog.
@@ -3733,11 +3742,11 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
   const [stepList, setStepList] = useState(null);
   const pick = (seq) => (p) => { setStepList(seq); setSelected(p); };
   const openUnder = (bishop) => (q) => { setStepList(pastorsOf(bishop, roll).sort(bySurname)); trail.open(q); };
-  const steps = stepList || (grouped ? grouped.order : list);
+  const steps = stepList || flowSections?.order || (grouped ? grouped.order : list);
   return (
     <>
       {switcher && <div className="reg-toggle" role="group" aria-label="Bishops or pastors">
-        {(site ? [
+        {(site && site !== "flow" ? [
           ["pastor", "Pastors"],
           ["bishop", "Bishops"],
         ] : [
@@ -3762,7 +3771,30 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
         options={options}
         site={site}
       />
-      {grouped ? (
+      {flowSections && list.length ? (
+        <div className="reg-flow-directory">
+          {flowSections.bishops.length > 0 && (
+            <section aria-label="Bishops">
+              <h2 className="reg-group-heading">Bishops</h2>
+              <div className="reg-circles">
+                {flowSections.bishops.map(b => (
+                  <button key={b.id} type="button" className="reg-circle-item" onClick={() => pick(null)(b)} aria-label={b.standing === false ? `Bishop ${b.n} · not yet approved` : b.name}>
+                    <span className="reg-person-n">{b.n}</span>
+                    <Portrait person={b} className="reg-circle" />
+                    {b.standing !== false && <small><PersonName name={b.name} /></small>}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+          {flowSections.pastors.length > 0 && (
+            <section aria-label="Pastors">
+              <h2 className="reg-group-heading">Pastors</h2>
+              <PeopleGrid list={flowSections.pastors} limit={limit} onMore={() => setLimit(n => n + 300)} onOpen={pick(null)} dots={false} />
+            </section>
+          )}
+        </div>
+      ) : grouped ? (
         <div className="reg-grouped">
           {grouped.withPastors.map(({ bishop: b, pastors: ps }) => (
             <section key={b.id} className={`reg-bishop-block ${b.standing === false ? "dark" : ""}`}>
@@ -3824,7 +3856,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
       )}
       {selected && !unapproved && (
         <Dialog title={selected.name} onClose={trail.close} onBack={trail.back} backLabel={trail.backLabel} {...stepper(steps, selected, trail.step)}>
-          <PublicRecord person={selected} onOpen={selected.role === "bishop" ? openUnder(selected) : trail.open} from={roll} count={selected.role === "bishop" ? pastorCount.get(selected.id) : 0} />
+          <PublicRecord person={selected} onOpen={selected.role === "bishop" ? openUnder(selected) : trail.open} from={roll} count={selected.role === "bishop" ? pastorCount.get(selected.id) : 0} oversight={site === "flow" && role === "bishop"} />
         </Dialog>
       )}
     </>
