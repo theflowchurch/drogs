@@ -32,7 +32,7 @@ check('No record from the purged roster survives', !people.some((p) => /^P\d+$|^
 check('Nobody filed under Dag Heward-Mills', !pastors.some((p) => /dag heward/i.test(p.bishop || '')));
 check('No older roster, rank list or Google Form fills current spreadsheet records', report.sourceAuthority?.legacyRankExclusions === false && report.sourceAuthority?.legacyProfileFallbacks === false && report.sourceAuthority?.googleFormYearFallbacks === false);
 check('Current sheet ranks exclude non-pastoral rows', report.reconcile.every(r => { const s = subs.find(s => s.file === r.file && s.folder === r.folder); return !s || s.pastors.filter(nonPastoralRank).every(p => r.notUnder.some(n => n.row === p.row)); }));
-check('Removed names are gone', rulings.remove.every((r) => !people.some((p) => key(p.name) === key(r.name))), rulings.remove.map((r) => r.name).join(', '));
+check('Removed names or scoped assignments are gone', rulings.remove.every((r) => !people.some((p) => key(p.name) === key(r.name) && (!r.bishop || key(p.bishop || '') === key(r.bishop)))), rulings.remove.map((r) => `${r.name}${r.bishop ? ` under ${r.bishop}` : ''}`).join(', '));
 const assetIndex = read('data/submitted-roster-assets.json');
 const assets = [...assetIndex.bishops, ...assetIndex.pastors];
 check('Asset index contains exactly the audited current roster', assets.length === people.length && assets.every(a => people.some(p => p.id === a.id && p.image === a.image)));

@@ -107,7 +107,8 @@ const dupRulings = read('data/duplicate-rulings.json', { merge: [], distinct: []
 const bishopIn = (list, n) => list.some(b => (findBishop(b) && findBishop(b) === findBishop(n)) || namesAlike(b, n) || key(b) === key(n));
 const ruledDistinct = (x, y) => dupRulings.distinct.some((d) => d.bishops && d.names.some((n) => key(n) === key(x.row.name) || key(n) === key(y.row.name)) && [x, y].every((c) => bishopIn(d.bishops, c.bishop.name))); // Joshua: these namesakes are two people
 const ruledTogether = (x, y) => rulings.people.some((p) => [x, y].some((c) => key(p.name) === key(c.row.name) || words(key(p.name)).sort().join(' ') === words(key(c.row.name)).sort().join(' ')) && [x, y].every((c) => bishopIn([p.winner, ...(p.losers || [])], c.bishop.name))); // the group ruled on exactly these two claims
-const removeKeys = new Set(rulings.remove.map(r => key(r.name))); // explicit current office removals only
+const removalFor = (name, bishop) => rulings.remove.find(r => key(r.name) === key(name) && (!r.bishop || bishopNamed(bishop, r.bishop))); // an assignment removal can be scoped to one bishop
+const removeKeys = new Set(rulings.remove.filter(r => !r.bishop).map(r => key(r.name))); // global exclusions also apply to lay-president sheets
 const claims = new Map(); // person key → [{bishop (record), row, sub}]
 const bishopRankRows = [], skippedSelf = [];
 const fate = new Map(), recFate = new Map(); // sheet row (or 'file|row' of a record later folded) → why it is not a record under its bishop (for the bishop-by-bishop reconciliation)
@@ -120,7 +121,8 @@ for (const [listName, s] of latestByBishop) {
     const k = key(r.name); if (!k) { fate.set(r, 'blank name'); continue; } if (seen.has(k)) { fate.set(r, 'the same name twice on the sheet; one record kept'); continue; } seen.add(k);
     if (k === key(bishop.name) || k === key(listName) || subsetName(k, key(bishop.name))) { skippedSelf.push({ name: r.name, sheet: s.file }); fate.set(r, "the bishop's own row"); continue; } // the bishop's own row, under any spelling
     if (/Bishop|Mother|Episcopal/.test(r.title) || bishopKeys.has(k)) { bishopRankRows.push({ name: r.name, title: r.title, onSheetOf: bishop.name, file: s.file, row: r.row, onList: bishopKeys.has(k) }); fate.set(r, bishopKeys.has(k) ? 'a bishop on the Bishops List, not a pastor' : `titled ${r.title}, not a pastor`); continue; }
-    if (removeKeys.has(k) || nonPastoralRank(r)) { fate.set(r, removeKeys.has(k) ? 'removed by explicit office ruling' : `ranked ${r.rawRank} on the latest submitted sheet, not a pastor`); continue; }
+    const removal = removalFor(r.name, bishop);
+    if (removal || nonPastoralRank(r)) { fate.set(r, removal ? `removed by explicit office ruling: ${removal.why || removal.source || ''}` : `ranked ${r.rawRank} on the latest submitted sheet, not a pastor`); continue; }
     if (!claims.has(k)) claims.set(k, []); claims.get(k).push({ bishop, row: r, sub: s });
   }
 }

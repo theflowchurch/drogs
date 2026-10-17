@@ -3,6 +3,23 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { emptyState, syncRoll, directoryPeople } from '../../src/registration/model.mjs';
 import { mergeCurrentReferences } from '../../src/registration/reference-merges.mjs';
+import { photoTask } from '../../src/registration/photo-progress.mjs';
+
+test('Isaac Bonuedi remains once under ES Joy and old assignment links follow him', () => {
+  const refs = JSON.parse(readFileSync('src/registration/reference-people.json'));
+  const matches = refs.filter(p => p.name === 'Isaac Bonuedi');
+  assert.equal(matches.length, 1);
+  assert.equal(matches[0].id, 'S4994a2da-5272');
+  assert.equal(matches[0].bishop, 'Joy-Philippe Bruce');
+  assert.equal(photoTask(matches[0], emptyState()).status, 'replace');
+  const rules = JSON.parse(readFileSync('data/sheet-conflict-rulings.json'));
+  assert.equal(rules.remove.find(r => r.name === 'Isaac Bonuedi').bishop, 'Isaac Agyeman');
+  const source = { ...emptyState(), profiles: [{ id: 'isaac', role: 'pastor', referenceId: 'S4994a2da' }], registrations: [{ userId: 'isaac', year: 2027, data: { role: 'pastor', name: 'Isaac Bonuedi', referenceId: 'S4994a2da', photo: 'saved-portrait.webp' } }] };
+  const merged = mergeCurrentReferences(source, refs);
+  assert.equal(merged.profiles[0].referenceId, matches[0].id);
+  assert.equal(merged.registrations[0].data.referenceId, matches[0].id);
+  assert.equal(merged.registrations[0].data.photo, 'saved-portrait.webp');
+});
 
 test('the Rebecca merge is supported by two current sheet rows with the same birthday', () => {
   const submissions = JSON.parse(readFileSync('data/bishop-submissions.json'));

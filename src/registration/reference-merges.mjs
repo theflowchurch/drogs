@@ -3,6 +3,7 @@
 export const CURRENT_REFERENCE_MERGES = [
   { from: 'P3682', to: 'PF538', source: '16 Oct 2026: Rebecca Siwoyle / Rebecca Siyolwe, same birthday on current Stephen Poku sheet; supplied portrait uses Rebecca Siyolwe' },
   { from: 'P465', to: 'PF612', source: '16 Oct 2026: Berima Samuel Twum / Samuel Twum Boateng, same birthday and phone on current Emmanuel Tetteh sheet; supplied Jamase portrait uses Samuel Twum Boateng' },
+  { from: 'S4994a2da', to: 'S4994a2da-5272', source: 'Joshua 17 Oct 2026: Isaac Bonuedi is under ES Joy only; remove the duplicate assignment under Isaac Agyeman' },
 ];
 
 // Relink saved work before the general submitted-roster cleanup can treat a

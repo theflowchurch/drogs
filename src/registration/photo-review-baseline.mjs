@@ -1,6 +1,8 @@
 // Office photo review, 13 October 2026. Flags belong to these exact photos, not to names.
 // Review and missing-photo baseline restricted to the audited current submitted roster.
 export const PHOTO_REVIEW = {
+  // Joshua 17 Oct 2026: Isaac Bonuedi belongs only to ES Joy and his photo remains outstanding.
+  "S4994a2da-5272": {"photo": "image:assets/portraits/S4994a2da-5272.webp","codes": ["OFFICE"]},
   "P1004": {"photo": "image:assets/pastors/verified-1004.webp","codes": ["CASUAL"]},
   "P237": {"photo": "image:assets/portraits/P237.webp","codes": ["BGCOLOUR","LOW"]},
   "P1596": {"photo": "image:assets/portraits/P1596.webp","codes": ["BG","EYES"]},

@@ -8,6 +8,7 @@ export const PHOTO_REASONS = {
   CASUAL: 'Casual clothes', TIE: 'Open shirt collar without a tie or cord',
   BG: 'Busy background or outdoors', BGCOLOUR: 'Background not white',
   WDRESS: 'Not the appropriate attire for a Lady Pastor', UNREVIEWED: 'Could not be reviewed',
+  OFFICE: 'Replacement requested by the office',
 };
 // Permanent media keys, never an expiring signed URL or a person's spelling.
 export const photoKey = (person) => person?.photo ? `upload:${person.photo}` : person?.image ? `image:${person.image}` : '';
