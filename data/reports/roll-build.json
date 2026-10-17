@@ -72,7 +72,7 @@
   "pastors": 5064,
   "assigned": 5064,
   "unclaimed": 0,
-  "withPhoto": 5007,
+  "withPhoto": 5010,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -5735,30 +5735,6 @@
    "place": "Essau, Gambia"
   },
   {
-   "id": "PN5ed98bbb4c30",
-   "name": "Luther Ayisi-Mensah",
-   "bishop": "Frank Opoku",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P4789",
-   "name": "Sam Abubakar",
-   "bishop": "Frank Opoku",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P3280",
-   "name": "Nicholas Amon-Kotey",
-   "bishop": "Frank Opoku",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
    "id": "S54c6000b",
    "name": "Herbert Aidoo",
    "bishop": "Joshua Heward-Mills",
@@ -6082,6 +6058,13 @@
  "photos": {
   "fromFolders": 1,
   "converted": 0,
-  "looseMatches": []
+  "looseMatches": [],
+  "latestOfficeImport": {
+   "date": "2026-10-17",
+   "photos": 10,
+   "newPastors": 0,
+   "missingFilled": 3,
+   "flaggedReplaced": 7
+  }
  }
 }
