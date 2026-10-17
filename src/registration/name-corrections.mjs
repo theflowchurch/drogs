@@ -8,6 +8,17 @@ export function canonicalBishopName(value) {
 // Joshua, 16 October: photo names resolve these current-sheet variants;
 // Thérèse's full name was explicitly confirmed in the supplied conversation.
 const photoNames = {
+  S82018e8a: ["Vivian Quansah",["Vivan Quansah","Vivian Quansah"]],
+  PF140: ["Vongai Moyo Amponsah",["Vongai Amponsah","Vongai Moyo Amponsah"]],
+  P5062: ["Sam Siliwimba",["Sam Silwimba","Sam Siliwimba"]],
+  PF130: ["Kaleb Mudenda Simusa",["Kaleb Simuusa","Kaleb Mudenda Simusa"]],
+  PF117: ["Aseda Amoah Sekyi",["Aseda Amofa-Sekyi","Aseda Amoah Sekyi"]],
+  P5050: ["Blessing Mulenga",["Blessings Mulenga","Blessing Mulenga"]],
+  Sa0029112: ["Eric Muzunga Nguni",["Muzunga Eric Nguni","Eric Muzunga Nguni"]],
+  PF121: ["Chrispin Kasongo",["Chrispine Kasongo","Chrispin Kasongo"]],
+  P5038: ["Stephen Macaulay",["Stephen Macauley","Stephen Macaulay"]],
+  PF125: ["Ernestina Dego Macbrown",["Ernestina Macbrown","Ernestina Dego Macbrown"]],
+  PF134: ["Nissi Carrie Juma",["Nissi Carri Jumar","Nissi Carrie Juma"]],
   PF69: ['Cornelius Montri Déry', ['Cornelius Dery', 'Cornelius Montri Déry']],
   P4650: ['Gideon Amponsa Darkwah', ['Gideon Amponsa Darkwa', 'Gideon Amponsa Darkwah']],
   PNa785496feb77: ['Nana Kofi Danso Mensah', ['Nana Kofi Danso-Mensah', 'Nana Kofi Danso Mensah']],

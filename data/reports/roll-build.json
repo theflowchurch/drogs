@@ -72,7 +72,7 @@
   "pastors": 5063,
   "assigned": 5063,
   "unclaimed": 0,
-  "withPhoto": 5010,
+  "withPhoto": 5026,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -5636,56 +5636,8 @@
    "place": "Lekki, Nigeria"
   },
   {
-   "id": "PN2b164cf47255",
-   "name": "Theodora Daka",
-   "bishop": "Clement Asante",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Livingstone, Zambia"
-  },
-  {
-   "id": "PN0e148d13589e",
-   "name": "Tiyananengi Memory Gondwe",
-   "bishop": "Clement Asante",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Chingola, Zambia"
-  },
-  {
    "id": "S7128fcc4",
    "name": "Shelly Amoa",
-   "bishop": "Clement Asante",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Lusaka, Zambia"
-  },
-  {
-   "id": "PNb70e3b504d24",
-   "name": "Leukanji Mwamba",
-   "bishop": "Clement Asante",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Lusaka, Zambia"
-  },
-  {
-   "id": "P5056",
-   "name": "Miriam Oplerm",
-   "bishop": "Clement Asante",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Lusaka, Zambia"
-  },
-  {
-   "id": "PN7eeba8b869b0",
-   "name": "David Masona",
-   "bishop": "Clement Asante",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Lusaka, Zambia"
-  },
-  {
-   "id": "Scf04bc98",
-   "name": "Rosemary Sinta",
    "bishop": "Clement Asante",
    "group": "First Love",
    "denomination": "First Love Church",
@@ -5940,14 +5892,6 @@
    "place": "Colorado Springs, United States"
   },
   {
-   "id": "P4933",
-   "name": "Ebenezer Nettey",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Pretoria, South Africa"
-  },
-  {
    "id": "PN74070dffb7a6",
    "name": "Barbara Darling-Ampofo",
    "bishop": "Patrick Inkoom",
@@ -5962,78 +5906,6 @@
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Francistown, Botswana"
-  },
-  {
-   "id": "P1369",
-   "name": "Eric Asante",
-   "bishop": "Sena Agyepong",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Basingstoke, United Kingdom"
-  },
-  {
-   "id": "S750d5694",
-   "name": "Nana Bompeh Asare",
-   "bishop": "Sena Agyepong",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Bournemouth, United Kingdom"
-  },
-  {
-   "id": "S051673ca",
-   "name": "George Nimfour",
-   "bishop": "Sena Agyepong",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "High Wycombe, United Kingdom"
-  },
-  {
-   "id": "P4321",
-   "name": "Tina Brako-Asamoah",
-   "bishop": "Sena Agyepong",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Portsmouth, United Kingdom"
-  },
-  {
-   "id": "P364",
-   "name": "Augustus Brako-Asamoah",
-   "bishop": "Sena Agyepong",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Southampton, United Kingdom"
-  },
-  {
-   "id": "S5acc7307",
-   "name": "George Sam Brew",
-   "bishop": "Sena Agyepong",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Southampton, United Kingdom"
-  },
-  {
-   "id": "S962a2629",
-   "name": "Gina Spencer",
-   "bishop": "Sena Agyepong",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Southampton, United Kingdom"
-  },
-  {
-   "id": "P3810",
-   "name": "Robert Quansah",
-   "bishop": "Sena Agyepong",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tidworth, United Kingdom"
-  },
-  {
-   "id": "S82018e8a",
-   "name": "Vivan Quansah",
-   "bishop": "Sena Agyepong",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Tidworth, United Kingdom"
   },
   {
    "id": "S7b0ade02-1c64",
@@ -6055,6 +5927,13 @@
  "photos": {
   "fromFolders": 1,
   "converted": 0,
-  "looseMatches": []
+  "looseMatches": [],
+  "latestOfficeImport": {
+   "date": "2026-10-17",
+   "photos": 134,
+   "newPastors": 0,
+   "missingFilled": 16,
+   "flaggedReplaced": 116
+  }
  }
 }
