@@ -12,7 +12,7 @@ import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, br
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, assignedPortrait, canReadMedia } from './storage.mjs';
-import { photoProgress } from '../registration/photo-progress.mjs';
+import { photoProgress, photoProgressGroups } from '../registration/photo-progress.mjs';
 // The roster the browser gets has no contact details; the server merges them back for its own use (office views, broadcasts, matching).
 const contacts = JSON.parse(await readFile(new URL('../../data/reference-contacts.json', import.meta.url), 'utf8'));
 const rosterFile = await readFile(new URL('../registration/reference-people.json', import.meta.url), 'utf8');
@@ -83,8 +83,9 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           const state = await transaction(pool, conn => readState(conn));
           // Aggregate totals use the same saved state as the office Photo tasks
           // tab, including draft uploads. Individual review lists stay private.
-          const { missingIds, replaceIds, ...photoTotals } = photoProgress(state, people);
-          publicCache = { at: Date.now(), value: { rosterVersion, source: config.publicDirectory, photos: config.publicPhotos, photoProgress: photoTotals, roll: publicRoll(state, people), ...publicOverlay(state) } };
+          const progress = photoProgress(state, people);
+          const { missingIds, replaceIds, ...photoTotals } = progress;
+          publicCache = { at: Date.now(), value: { rosterVersion, source: config.publicDirectory, photos: config.publicPhotos, photoProgress: photoTotals, photoGroups: photoProgressGroups(state, people, progress), roll: publicRoll(state, people), ...publicOverlay(state) } };
         }
         return json(publicCache.value, 200, { 'Cache-Control': 'public, max-age=30' });
       }

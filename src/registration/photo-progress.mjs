@@ -36,3 +36,19 @@ export function photoProgress(state, references, year = state.year, reviews = PH
     originalMissing: original.size, removedFromOriginal: [...original].filter(id => !active.has(id)).length,
     missingIds, replaceIds };
 }
+
+// Reports need the office's exact totals by overseer, including saved reviews
+// and draft uploads. Publish aggregate counts without individual review lists.
+export function photoProgressGroups(state, references, progress, year = state.year) {
+  const missing = new Set(progress.missingIds), replace = new Set(progress.replaceIds);
+  const groups = new Map();
+  for (const p of directoryPeople({ ...state, hidden: [] }, references, year)) {
+    if (p.role !== 'pastor' || (!missing.has(p.id) && !replace.has(p.id))) continue;
+    const bishop = p.bishop || '';
+    if (!groups.has(bishop)) groups.set(bishop, { bishop, missing: 0, replace: 0 });
+    const group = groups.get(bishop);
+    if (missing.has(p.id)) group.missing++;
+    if (replace.has(p.id)) group.replace++;
+  }
+  return [...groups.values()].sort((a, b) => b.missing + b.replace - a.missing - a.replace || a.bishop.localeCompare(b.bishop));
+}

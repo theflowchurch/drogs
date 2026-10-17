@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { emptyState, applyAction, directoryPeople, publicRoll, publicOverlay, visibleState } from '../../src/registration/model.mjs';
-import { photoProgress, photoTask, PHOTO_REASONS } from '../../src/registration/photo-progress.mjs';
+import { photoProgress, photoProgressGroups, photoTask, PHOTO_REASONS } from '../../src/registration/photo-progress.mjs';
 import { PHOTO_REVIEW } from '../../src/registration/photo-review-baseline.mjs';
 const office = { id: 'office', email: 'office@example.com', office: true };
 const refs = [
@@ -13,6 +13,17 @@ const refs = [
 const reviews = { P2: { photo: 'image:old.jpg', codes: ['FAR'] }, P3: { photo: 'image:flow.jpg', codes: ['BG'] } };
 const count = s => photoProgress(s, refs, s.year, reviews, ['P1']);
 const edit = (s, id, fields) => applyAction(s, office, 'editReference', { referenceId: id, fields }, undefined, refs);
+
+test('bishop photo aggregates use saved review decisions and agree with office totals', () => {
+  const state = { ...emptyState(), hidden: ['P1'], photoReviews: { P2: { photo: 'image:old.jpg', status: 'ok' } } };
+  assert.deepEqual(photoProgressGroups(state, refs, count(state)), [{ bishop: 'Old Bishop', missing: 1, replace: 0 }]);
+  state.photoReviews = {};
+  const progress = count(state), groups = photoProgressGroups(state, refs, progress);
+  assert.deepEqual(groups, [{ bishop: 'Old Bishop', missing: 1, replace: 1 }]);
+  assert.equal(groups.reduce((n, g) => n + g.missing, 0), progress.missing);
+  assert.equal(groups.reduce((n, g) => n + g.replace, 0), progress.replace);
+  assert.deepEqual(Object.keys(groups[0]).sort(), ['bishop', 'missing', 'replace']);
+});
 
 test('adding a missing photo and replacing a flagged photo decrease independent counters', () => {
   let s = emptyState();
