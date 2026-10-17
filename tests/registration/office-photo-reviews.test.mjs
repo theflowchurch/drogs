@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { emptyState, applyAction } from '../../src/registration/model.mjs';
+import { emptyState, applyAction, directoryPeople } from '../../src/registration/model.mjs';
 import { photoProgress } from '../../src/registration/photo-progress.mjs';
 import { applyOfficePhotoReviews } from '../../src/registration/office-photo-reviews.mjs';
 
@@ -17,4 +17,17 @@ test('an office review ruling flags the saved portrait once and a later upload c
   assert.equal(photoProgress(updated, refs).replace, 0);
   assert.equal(applyOfficePhotoReviews(updated, refs, rules), null, 'redeploy cannot restore an old review');
   assert.equal(state.photoReviews.P1.status, 'ok', 'original state untouched');
+});
+
+test('the explicit bishop assignment also corrects a conflicting saved organization before reviewing', () => {
+  const refs = [{ id: 'B1', role: 'bishop', name: 'ES Joy', organization: 'First Love', group: 'First Love', denomination: 'First Love Church' }, { id: 'P1', role: 'pastor', name: 'Isaac', bishop: 'ES Joy', organization: 'First Love', image: 'current.webp' }];
+  const state = { ...emptyState(), profiles: [{ id: 'member', referenceId: 'P1' }], registrations: [{ userId: 'member', year: 2027, status: 'unclaimed', data: { referenceId: 'P1', role: 'pastor', name: 'Isaac', bishop: 'Other Bishop', organization: 'FLOW', photo: 'saved.webp' } }] };
+  const rule = { id: 'P1', bishopId: 'B1', status: 'replace', codes: ['OFFICE'], source: 'Explicit assignment and photo instruction' };
+  const next = applyOfficePhotoReviews(state, refs, [rule]);
+  const pastor = directoryPeople(next, refs).find(p => p.id === 'P1');
+  assert.equal(pastor.bishop, 'ES Joy');
+  assert.equal(pastor.organization, 'First Love');
+  assert.equal(pastor.photo, 'saved.webp');
+  assert.equal(photoProgress(next, refs).replace, 1);
+  assert.equal(applyOfficePhotoReviews(next, refs, [rule]), null);
 });
