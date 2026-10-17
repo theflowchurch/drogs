@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { ORGANIZATION_SITES, peopleForSite, siteCatalog, sitePath, organizationAudit } from '../../src/registration/organization-sites.mjs';
+import { ORGANIZATION_SITES, peopleForSite, siteCatalog, sitePath, organizationAudit, organizationSiteKey, organizationSitePaths, canonicalSiteRedirect } from '../../src/registration/organization-sites.mjs';
 import { withStanding, overlayReferences, emptyState, catalogOf } from '../../src/registration/model.mjs';
 const b = (id, organization, denomination = 'Shared church') => ({ id, role: 'bishop', name: `Bishop ${id}`, organization, denomination });
 const p = (id, organization, bishop) => ({ id, role: 'pastor', name: `Pastor ${id}`, organization, bishop });
@@ -50,15 +50,30 @@ test('scoped catalogs follow saved admin denominations, paths include scope and 
   assert.deepEqual(scoped.organizations,['First Love']);
   assert.ok(scoped.denominations['First Love'].includes('New First Love denomination'));
   assert.equal(scoped.denominations['United Denominations'],undefined);
-  assert.equal(sitePath('firstlove','signup/pastor','/preview'),'/preview/firstlove/signup/pastor/');
+  assert.equal(sitePath('firstlove','signup/pastor','/preview'),'/preview/firstlovemovement/signup/pastor/');
   assert.equal(sitePath('','signup'),'/signup/');
   assert.equal(sitePath('flow'),'/flow/');
   assert.equal(organizationAudit([b('a','First Love'),b('b','United Denominations')]).sharedDenominations.length,1);
 });
 
-test('the nine women confirmed for FLOW move together while BDR remains in First Love', () => {
+test('new site addresses retain the same organization scopes and redirect old nested links', () => {
+  for (const [key, path] of [['firstlove','firstlovemovement'], ['ud','unitedenominations'], ['flow','flow']]) {
+    assert.equal(organizationSiteKey(path), key);
+    assert.equal(organizationSiteKey(key), key);
+    assert.ok(organizationSitePaths.includes(path));
+    assert.equal(sitePath(key, 'directory'), `/${path}/directory/`);
+    assert.equal(sitePath(path, 'signup/bishop'), `/${path}/signup/bishop/`);
+  }
+  assert.equal(organizationSiteKey('unknown'), '');
+  assert.equal(canonicalSiteRedirect('/firstlove/directory/?view=pastors'), '/firstlovemovement/directory/?view=pastors');
+  assert.equal(canonicalSiteRedirect('/ud/signup/pastor/?next=profile'), '/unitedenominations/signup/pastor/?next=profile');
+  assert.equal(canonicalSiteRedirect('/preview/ud/appointments/', '/preview'), '/preview/unitedenominations/appointments/');
+  for (const path of ['/flow/', '/firstlovemovement/', '/unitedenominations/directory/', '/admin/', '/api/v1/people', '/ud-other/', '/firstloveother/']) assert.equal(canonicalSiteRedirect(path), '');
+});
+
+test('the women confirmed for FLOW include Zoe while BDR remains in First Love', () => {
   const people = JSON.parse(readFileSync('src/registration/reference-people.json', 'utf8'));
-  const ids = ['B187', 'B127', 'BO250', 'BO265', 'BO221', 'B59', 'BO215', 'B200', 'BO251'];
+  const ids = ['B187', 'B127', 'BO250', 'BO265', 'BO221', 'B59', 'BO215', 'B200', 'BO251', 'B193'];
   const flow = new Set(peopleForSite(people, 'flow').map(p => p.id));
   const firstLove = new Set(peopleForSite(people, 'firstlove').map(p => p.id));
   for (const id of ids) {
@@ -72,4 +87,8 @@ test('the nine women confirmed for FLOW move together while BDR remains in First
   assert.equal(people.find(p => p.id === 'B79').organization, 'First Love');
   assert.ok(firstLove.has('B79'));
   assert.ok(!flow.has('B79'));
+  const zoe = people.find(p => p.id === 'B193');
+  assert.equal(zoe.image, 'assets/bishops/matched-193.webp');
+  const overrides = JSON.parse(readFileSync('data/bishops-list-overrides.json', 'utf8'));
+  assert.equal(overrides['Zoe Freda Asamoah'].organization, 'FLOW', 'nightly rebuilds preserve the office correction');
 });

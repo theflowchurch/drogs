@@ -4,26 +4,40 @@ import { normalName, pastorsByBishop } from './model.mjs';
 // organization keys remain intact for approvals, attire, payments and imports.
 export const ORGANIZATION_SITES = {
   firstlove: {
+    path: 'firstlovemovement',
     name: 'First Love Movement', shortName: 'First Love',
     organizations: ['First Love'], logo: 'assets/denominations/first-love-church.png',
     heroLogo: 'assets/brand/first-love-basic.png',
     description: 'Bishops, pastors and denominations of the First Love Movement.',
   },
   ud: {
+    path: 'unitedenominations',
     name: 'United Denominations', shortName: 'United Denominations',
     organizations: ['United Denominations'], logo: 'assets/brand/ud-logo.png',
     description: 'United Denominations originating from the Lighthouse Group of Churches.',
   },
   flow: {
+    path: 'flow',
     name: 'FLOW', shortName: 'FLOW',
     organizations: ['FLOW', 'HJC', 'DHMM'], logo: 'assets/brand/flow-logo-black.png', heroLogo: 'assets/brand/flow-logo.png',
     description: 'The bishops and pastors of FLOW, Healing Jesus Campaign and DHMM.',
   },
 };
 export const FLOW_GROUPS = { FLOW: 'FLOW', HJC: 'Healing Jesus Campaign', DHMM: 'DHMM' };
+// Keep the internal organization keys stable while public addresses change.
+export const organizationSiteKey = path => Object.keys(ORGANIZATION_SITES)
+  .find(key => key === path || ORGANIZATION_SITES[key].path === path) || '';
+export const organizationSitePaths = [...new Set(Object.entries(ORGANIZATION_SITES).flatMap(([key, site]) => [site.path, key]))];
 export const siteOfOrganization = organization => Object.keys(ORGANIZATION_SITES)
   .find(key => ORGANIZATION_SITES[key].organizations.includes(organization)) || '';
-export const sitePath = (site, path = '', base = '') => `${base}${site ? `/${site}` : ''}/${path ? `${path.replace(/^\/+|\/+$/g, '')}/` : ''}`;
+export const sitePath = (site, path = '', base = '') => `${base}${site ? `/${ORGANIZATION_SITES[organizationSiteKey(site)]?.path || site}` : ''}/${path ? `${path.replace(/^\/+|\/+$/g, '')}/` : ''}`;
+export function canonicalSiteRedirect(url, base = '') {
+  const prefix = base.replace(/\/$/, '');
+  if (prefix && !url.startsWith(prefix + '/')) return '';
+  const relative = url.slice(prefix.length);
+  const match = relative.match(/^\/(firstlove|ud)(?=\/|\?|$)/);
+  return match ? prefix + '/' + ORGANIZATION_SITES[match[1]].path + relative.slice(match[0].length) : '';
+}
 
 // A unique bishop relationship takes precedence over stale pastor affiliation.
 // Ambiguous names keep the saved organization; denomination names alone never

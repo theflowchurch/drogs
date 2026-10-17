@@ -18,7 +18,7 @@ import {
 // Which door the person came through: the general sign-up or pastoral appointments.
 const EntranceContext = createContext("general");
 const OrganizationSiteContext = createContext("");
-import { ORGANIZATION_SITES, FLOW_GROUPS, peopleForSite, siteCatalog, siteOfOrganization, sitePath } from "./organization-sites.mjs";
+import { ORGANIZATION_SITES, FLOW_GROUPS, peopleForSite, siteCatalog, siteOfOrganization, sitePath, organizationSiteKey } from "./organization-sites.mjs";
 import * as api from "./client";
 import { LegalFooter } from "./Docs";
 import { DENOMINATIONS } from "./denominations.mjs";
@@ -510,7 +510,7 @@ export default function RegistrationApp({
   organizationSite = "",
 }) {
   // Office always remains global, even if called with an organization scope.
-  const site = office ? "" : organizationSite;
+  const site = office ? "" : organizationSiteKey(organizationSite);
   const siteConfig = ORGANIZATION_SITES[site];
   const home = sitePath(site, "", base);
   const signupPath = sitePath(site, "signup", base);
@@ -3437,13 +3437,14 @@ const bishopPastors = (bishop, from) => ({
 function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
   const [limit, setLimit] = useState(24);
   const roster = useContext(RosterContext);
+  const flow = useContext(OrganizationSiteContext) === "flow";
   const named = bishopPastors(bishop, from || roster.filter(p => !p.unclaimed));
   const seen = new Set(extra.map((q) => q.id));
   const list = [...extra, ...named.list.filter((q) => !seen.has(q.id))].sort(bySurname);
-  if (!list.length) return <section className="reg-record-group"><h3>No pastors under their oversight</h3></section>;
+  if (!list.length) return <section className="reg-record-group"><h3>{flow ? "No pastors listed" : "No pastors under their oversight"}</h3></section>;
   return (
     <section className="reg-record-group">
-      <h3>{named.heading} · {list.length.toLocaleString()}</h3>
+      <h3>{flow ? "Pastors" : <>{named.heading} · {list.length.toLocaleString()}</>}</h3>
       <div className="reg-thumb-grid">
         {list.slice(0, limit).map((q) => q.standing === false ? (
           <button key={q.id} type="button" className="reg-thumb-dark" onClick={() => onOpen?.(q)} disabled={!onOpen} aria-label="Pastor · not yet approved"><Portrait person={q} /></button>
@@ -3470,7 +3471,8 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
   );
 }
 function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null, count = 0, oversight = false }) {
-  const showOversight = useContext(OrganizationSiteContext) !== "flow" || oversight;
+  const site = useContext(OrganizationSiteContext);
+  const showOversight = site !== "flow" || oversight;
   return (
     <>
       <div className="reg-record-hero">
@@ -3484,7 +3486,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
           {p.standing !== undefined && (
             <p className={`reg-record-line reg-standing ${p.standing ? "good" : "pending"}`}>{p.standing ? "In Good Standing" : "Standing not yet confirmed"}</p>
           )}
-          {showOversight && p.role === "bishop" && count > 0 && <p className="reg-record-line"><span className="reg-count-pill">{overseeing(count)}</span></p>}
+          {site !== "flow" && p.role === "bishop" && count > 0 && <p className="reg-record-line"><span className="reg-count-pill">{overseeing(count)}</span></p>}
           {p.denomination && (
             <p className="reg-record-denomination">
               <DenominationLogo person={p} catalog={catalog || catalogOf(null)} />
@@ -3508,7 +3510,7 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
       </div>
       {showOversight && pastors && p.role === "bishop" && p.pastors ? (
         <section className="reg-record-group">
-          <h3>{p.pastors.length ? "Pastors under their oversight" : "No pastors under their oversight"}</h3>
+          <h3>{site === "flow" ? (p.pastors.length ? "Pastors" : "No pastors listed") : (p.pastors.length ? "Pastors under their oversight" : "No pastors under their oversight")}</h3>
           {p.pastors.length > 0 && (
             <div className="reg-thumb-grid">
               {p.pastors.map((q) => q.standing === false || (!q.registered && !q.photo) ? (
@@ -3840,7 +3842,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
           onMore={() => setLimit((n) => n + 300)}
           onOpen={pick(null)}
           dots={false}
-          counts={pastorCount}
+          counts={site === "flow" ? null : pastorCount}
         />
       ) : (
         <Empty title={roll.length ? "No one matches this search" : "The roll is filling up"}>

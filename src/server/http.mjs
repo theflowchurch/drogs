@@ -1,4 +1,5 @@
 import { Readable } from 'node:stream';
+import { canonicalSiteRedirect } from '../registration/organization-sites.mjs';
 export function requestHandler({ origin, api, nextHandler }) {
   return async (req, res) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -13,6 +14,11 @@ export function requestHandler({ origin, api, nextHandler }) {
     const host = String(req.headers.host || '').split(':')[0];
     if (host === 'drogs.dagministry.org' && !path.startsWith('/api/')) {
       res.writeHead(301, { Location: `https://kuriakecastle.org${req.url || '/'}`, 'Cache-Control': 'no-store' });
+      return res.end();
+    }
+    const siteRedirect = canonicalSiteRedirect(req.url || '/');
+    if (siteRedirect) {
+      res.writeHead(308, { Location: siteRedirect, 'Cache-Control': 'no-store' });
       return res.end();
     }
     if (!path.startsWith('/api/registration/') && !path.startsWith('/api/v1/')) {
