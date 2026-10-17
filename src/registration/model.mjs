@@ -1358,7 +1358,7 @@ export function applyAction(
     const photo = person?.photo ? `upload:${person.photo}` : person?.image ? `image:${person.image}` : '';
     if (!photo || person.role !== 'pastor') throw Error('Select a pastor with a photo.');
     if (!['ok', 'replace'].includes(payload.status)) throw Error('Choose a photo review decision.');
-    const codes = [...new Set(payload.codes || [])].filter(c => ['LOW','TIGHT','FAR','STRETCH','DIRECTION','EYES','CASUAL','TIE','BG','BGCOLOUR','WDRESS','UNREVIEWED'].includes(c));
+    const codes = [...new Set(payload.codes || [])].filter(c => ['LOW','TIGHT','FAR','STRETCH','DIRECTION','EYES','CASUAL','TIE','BG','BGCOLOUR','WDRESS','UNREVIEWED','OFFICE'].includes(c));
     if (payload.status === 'replace' && !codes.length) throw Error('Choose a reason to replace this photo.');
     state.photoReviews = { ...(state.photoReviews || {}), [id]: { photo, status: payload.status, codes, at: now } };
     detail = { status: payload.status, codes };

@@ -26,12 +26,13 @@ await migrate(pool); // idempotent: creates any missing dr_ tables
 {
   const { createHash } = await import('node:crypto'); const { readFile } = await import('node:fs/promises');
   const { replaceOfficePortraits } = await import('../src/registration/office-portrait-replacements.mjs');
+  const { applyOfficePhotoReviews } = await import('../src/registration/office-photo-reviews.mjs');
   const replacements = JSON.parse(await readFile(new URL('../data/office-portrait-replacements.json', import.meta.url), 'utf8'));
   const { syncRoll } = await import('../src/registration/model.mjs'); const { transaction, readState, persistState } = await import('../src/server/database.mjs');
   const raw = await readFile(new URL('../src/registration/reference-people.json', import.meta.url), 'utf8');
   const contacts = JSON.parse(await readFile(new URL('../data/reference-contacts.json', import.meta.url), 'utf8'));
   const version = createHash('sha1').update(raw).digest('hex').slice(0, 12);
-  try { await transaction(pool, async (conn) => { const before = await readState(conn, true); const references = JSON.parse(raw).map(p => ({ ...p, ...contacts[p.id] })); const synced = syncRoll(before, references, version); const portraits = replaceOfficePortraits(synced || before, references, replacements); const after = portraits || synced; if (after) { await persistState(conn, before, after); console.log(`Roll ${version}: structure and corrections aligned with the submitted sheets`); } }); }
+  try { await transaction(pool, async (conn) => { const before = await readState(conn, true); const references = JSON.parse(raw).map(p => ({ ...p, ...contacts[p.id] })); const synced = syncRoll(before, references, version); const portraits = replaceOfficePortraits(synced || before, references, replacements); const reviews = applyOfficePhotoReviews(portraits || synced || before, references); const after = reviews || portraits || synced; if (after) { await persistState(conn, before, after); console.log(`Roll ${version}: structure and corrections aligned with the submitted sheets`); } }); }
   catch (error) { throw new Error('Cannot start with an unreconciled submitted roster', { cause: error }); }
 }
 await pool.query('SELECT current_year FROM dr_settings WHERE id=1');
