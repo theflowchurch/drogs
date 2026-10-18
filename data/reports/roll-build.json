@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-17T09:29:27.160Z",
+ "generated": "2026-10-18T07:19:27.215Z",
  "sourceAuthority": {
   "personalDetails": "latest submitted spreadsheets and explicit office additions",
   "bishopMembership": "current Bishops List and explicit office corrections",
@@ -72,7 +72,7 @@
   "pastors": 5063,
   "assigned": 5063,
   "unclaimed": 0,
-  "withPhoto": 5026,
+  "withPhoto": 5034,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -5628,14 +5628,6 @@
  "oldBishopsNotOnList": [],
  "noPhoto": [
   {
-   "id": "S074127bd",
-   "name": "Chiebuka Ugochukwu Itanyi",
-   "bishop": "Olivia Kofi-Opata",
-   "group": "UD Africa",
-   "denomination": "Everything By Prayer Center",
-   "place": "Lekki, Nigeria"
-  },
-  {
    "id": "S7128fcc4",
    "name": "Shelly Amoa",
    "bishop": "Clement Asante",
@@ -5650,46 +5642,6 @@
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Lusaka, Zambia"
-  },
-  {
-   "id": "PF380",
-   "name": "Matthew Assan",
-   "bishop": "Edward Botwe",
-   "group": "UD Africa",
-   "denomination": "Poimen Church Gambia",
-   "place": "Brikama, Gambia"
-  },
-  {
-   "id": "PF376",
-   "name": "Vivian Oluboye",
-   "bishop": "Edward Botwe",
-   "group": "UD Africa",
-   "denomination": "Poimen Church Gambia",
-   "place": "Kanifing Municipality, Gambia"
-  },
-  {
-   "id": "PNd79980b0ef96",
-   "name": "Josephine Ef Gomez",
-   "bishop": "Edward Botwe",
-   "group": "UD Africa",
-   "denomination": "Poimen Church Gambia",
-   "place": "Sanyang, Gambia"
-  },
-  {
-   "id": "PNc0604444b2b9",
-   "name": "Mawley Midzrato",
-   "bishop": "Edward Botwe",
-   "group": "UD Africa",
-   "denomination": "Poimen Church Gambia",
-   "place": "Essau, Gambia"
-  },
-  {
-   "id": "P877",
-   "name": "David Fisayo Oluboye",
-   "bishop": "Edward Botwe",
-   "group": "UD Africa",
-   "denomination": "Poimen Church Gambia",
-   "place": "Essau, Gambia"
   },
   {
    "id": "S54c6000b",
@@ -5722,22 +5674,6 @@
    "group": "First Love",
    "denomination": "First Love Church",
    "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN760ae7e511e5",
-   "name": "Brian Paapa Paintsil",
-   "bishop": "Ishmael Sam",
-   "group": "Reasonable Service",
-   "denomination": "True Son Chapel International",
-   "place": "Tema, Ghana"
-  },
-  {
-   "id": "P5036",
-   "name": "Stephenie Wanjiru",
-   "bishop": "Joseph Papa Wachirah Kabiro",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Nairobi, Kenya"
   },
   {
    "id": "P4625",
@@ -5927,13 +5863,6 @@
  "photos": {
   "fromFolders": 1,
   "converted": 0,
-  "looseMatches": [],
-  "latestOfficeImport": {
-   "date": "2026-10-17",
-   "photos": 134,
-   "newPastors": 0,
-   "missingFilled": 16,
-   "flaggedReplaced": 116
-  }
+  "looseMatches": []
  }
 }
