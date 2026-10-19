@@ -1,4 +1,8 @@
 import frames from '../../data/portrait-framing.json' with {type:'json'};
+import crops from '../../data/portrait-crops.json' with {type:'json'};
+// Match the exact media key, never a person's name: a replacement must not
+// inherit the crop belonging to their previous, labelled photograph.
+export const portraitCrop = path => crops[path] || null;
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 // CSS cover preserves the original proportions. Position its crop around the
 // detected face, including forehead/chin margin, instead of cropping from the top.

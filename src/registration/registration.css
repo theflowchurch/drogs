@@ -1,3 +1,5 @@
+/* Labelled portraits use the same dimensions as ordinary portrait images. */
+:where(svg.reg-cropped-portrait) { display: inline-block; height: auto; overflow: hidden; vertical-align: middle; aspect-ratio: var(--portrait-crop-ratio); }
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
@@ -699,7 +701,7 @@ p {
 }
 /* The office's pastors grid: half-size cards, there are thousands of them. */
 .reg-people-grid.compact { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
-.reg-people-grid.compact .reg-person-card > .reg-person-portrait > img,
+.reg-people-grid.compact .reg-person-card > .reg-person-portrait > :is(img, .reg-cropped-portrait),
 .reg-people-grid.compact .reg-person-card > .reg-person-portrait > .reg-placeholder { aspect-ratio: 1; }
 .reg-people-grid.compact .reg-person-card > .reg-person-name { padding: 8px 9px; }
 .reg-people-grid.compact .reg-person-name h3 { font-size: 11.5px; line-height: 1.25; }
@@ -717,7 +719,7 @@ p {
 :root[data-theme="dark"] .reg-bishop-block { background: rgba(20, 24, 34, 0.55); border-color: rgba(255, 255, 255, 0.08); }
 .reg-bishop-block.plain { background: transparent; border: 0; padding: 0; backdrop-filter: none; }
 .reg-bishop-block .reg-people-grid { grid-template-columns: repeat(auto-fill, 104px); gap: 10px; }
-.reg-bishop-block .reg-person-card > .reg-person-portrait > img,
+.reg-bishop-block .reg-person-card > .reg-person-portrait > :is(img, .reg-cropped-portrait),
 .reg-bishop-block .reg-person-card > .reg-person-portrait > .reg-placeholder { aspect-ratio: 1; }
 .reg-bishop-block .reg-person-card > .reg-person-name { padding: 8px 9px; }
 .reg-bishop-block .reg-person-name h3 { font-size: 11.5px; line-height: 1.25; }
@@ -747,7 +749,7 @@ p {
 .reg-flow-directory .reg-circle-item .reg-circle { width: 144px; height: 144px; }
 .reg-flow-directory .reg-circle-item small { font-size: inherit; line-height: 1.35; }
 .reg-flow-directory .reg-people-grid { grid-template-columns: repeat(auto-fill, 144px); gap: 18px; }
-.reg-flow-directory .reg-person-card > .reg-person-portrait > img,
+.reg-flow-directory .reg-person-card > .reg-person-portrait > :is(img, .reg-cropped-portrait),
 .reg-flow-directory .reg-person-card > .reg-person-portrait > .reg-placeholder { aspect-ratio: 1; }
 .reg-flow-directory .reg-person-card > .reg-person-name { padding: 9px; }
 .reg-flow-directory .reg-person-name h3 { font-size: 13px; line-height: 1.35; }
@@ -1003,7 +1005,7 @@ p {
   border-radius: 14px;
   overflow: hidden;
 }
-.reg-person-card > img,
+.reg-person-card > :is(img, .reg-cropped-portrait),
 .reg-person-card > .reg-placeholder {
   width: 100%;
   aspect-ratio: 4/4.5;
@@ -1521,7 +1523,7 @@ p {
   min-width: 0;
 }
 .reg-photo-comparison { max-width: 520px; }
-.reg-photo-comparison img,
+.reg-photo-comparison :is(img, .reg-cropped-portrait),
 .reg-photo-comparison .reg-placeholder {
   width: 100%;
   height: 190px;
@@ -1550,7 +1552,7 @@ p {
   .reg-photo-comparison {
     gap: 10px;
   }
-  .reg-photo-comparison img,
+  .reg-photo-comparison :is(img, .reg-cropped-portrait),
   .reg-photo-comparison .reg-placeholder {
     height: 175px;
   }
@@ -1601,7 +1603,7 @@ p {
   display: block;
   position: relative;
 }
-.reg-person-card > .reg-person-portrait > img,
+.reg-person-card > .reg-person-portrait > :is(img, .reg-cropped-portrait),
 .reg-person-card > .reg-person-portrait > .reg-placeholder {
   display: block;
   width: 100%;
@@ -1851,7 +1853,7 @@ p {
   overflow: hidden;
   text-align: center;
 }
-.reg-thumb-grid img,
+.reg-thumb-grid :is(img, .reg-cropped-portrait),
 .reg-thumb-grid .reg-placeholder {
   display: block;
   width: 100%;
@@ -1999,9 +2001,9 @@ p {
   color: inherit;
 }
 
-.reg-person-card > .reg-person-portrait > img,
+.reg-person-card > .reg-person-portrait > :is(img, .reg-cropped-portrait),
 .reg-record-photo,
-.reg-thumb-grid img {
+.reg-thumb-grid :is(img, .reg-cropped-portrait) {
   object-position: var(--portrait-x, 50%) var(--portrait-y, 25%);
 }
 .reg-person-card > .reg-person-name {
@@ -2270,7 +2272,7 @@ p {
   border-radius: 12px;
   padding: 10px;
 }
-.reg-candidate img,
+.reg-candidate :is(img, .reg-cropped-portrait),
 .reg-candidate .reg-placeholder {
   width: 64px;
   height: 78px;
@@ -2317,7 +2319,7 @@ p {
 .reg-photo-choice button.active {
   border-color: var(--teal);
 }
-.reg-photo-choice img,
+.reg-photo-choice :is(img, .reg-cropped-portrait),
 .reg-photo-choice .reg-placeholder {
   width: 100%;
   aspect-ratio: 4/4.6;
@@ -4017,7 +4019,7 @@ input[type="date"] {
 .reg-photo-tasks td { vertical-align: middle; }
 .reg-table-wrap { overflow-x: auto; }
 .reg-photo-tasks td:first-child { width: 80px; }
-.reg-photo-tasks td:first-child > img, .reg-photo-tasks td:first-child > .reg-placeholder { width: 48px; height: 60px; object-fit: cover; border-radius: 6px; }
+.reg-photo-tasks td:first-child > :is(img, .reg-cropped-portrait), .reg-photo-tasks td:first-child > .reg-placeholder { width: 48px; height: 60px; object-fit: cover; border-radius: 6px; }
 @media (max-width: 900px) { .reg-photo-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 540px) { .reg-photo-stats > button { padding: 15px; } .reg-photo-stats strong { font-size: 30px; } }
 .reg-settings-search { width: 100%; max-width: 420px; margin: 0 0 14px; }

@@ -69,6 +69,7 @@ import {
 } from "./exchange.mjs";
 import { checkReceiptImage } from "./receipt-check.mjs";
 import { portraitStyle } from "../runtime/portrait-framing";
+import PortraitImage from './PortraitImage';
 import { shortDateTime, longDate } from "./format.mjs";
 import { checkAttire, expectedAttire } from "./attire-check.mjs";
 import DataExport from "./DataExport.jsx";
@@ -215,7 +216,7 @@ function Media({ path, alt, className = "" }) {
     };
   }, [path]);
   return url ? (
-    <img className={className} src={url} alt={alt} loading="lazy" decoding="async" />
+    <PortraitImage media={path} className={className} src={url} alt={alt} />
   ) : (
     <div className={`reg-placeholder ${className}`} aria-label={alt}>
       ◯
@@ -2602,14 +2603,13 @@ function Portrait({ person, className = "", full = false }) {
   if (person.image) {
     const src = `${base}/${full ? person.image : thumbOf(person.image)}`;
     return (
-      <img
+      <PortraitImage
+        media={person.image}
         className={className}
         style={{ cssText: portraitStyle(person.image) }}
         src={src}
-        onError={(e) => { if (!full && e.currentTarget.src.includes("/thumbs/")) e.currentTarget.src = `${base}/${person.image}`; }}
+        fallbackSrc={full ? undefined : `${base}/${person.image}`}
         alt={person.name}
-        loading="lazy"
-        decoding="async"
       />
     );
   }

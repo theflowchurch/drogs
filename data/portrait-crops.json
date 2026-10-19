@@ -1,0 +1,654 @@
+{
+  "5732d404-b02c-4dd9-bf02-e7462e7f86d2/portrait/102ab57a-7ad4-4863-a502-e7a0d8cf9fa2.webp": {
+    "width": 679,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "5732d404-b02c-4dd9-bf02-e7462e7f86d2/portrait/81c01756-ac51-44dc-a5d1-cfd1cbca1442.webp": {
+    "width": 696,
+    "height": 900,
+    "bottom": 0.873
+  },
+  "5732d404-b02c-4dd9-bf02-e7462e7f86d2/portrait/897fd7b5-4772-4f9c-9794-8f6ba0d709d7.webp": {
+    "width": 794,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "5732d404-b02c-4dd9-bf02-e7462e7f86d2/portrait/c55cdb1b-d13b-4123-abb2-d63758aeda0d.webp": {
+    "width": 753,
+    "height": 900,
+    "bottom": 0.8376
+  },
+  "5732d404-b02c-4dd9-bf02-e7462e7f86d2/portrait/dbcb8029-6ac8-47ec-ad5a-c5a435629dd0.webp": {
+    "width": 703,
+    "height": 900,
+    "bottom": 0.8841
+  },
+  "5732d404-b02c-4dd9-bf02-e7462e7f86d2/portrait/e0cf3f90-d3de-4a7b-85b4-761a0a018d78.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9018
+  },
+  "assets/portraits/B228-697951c35058.webp": {
+    "width": 672,
+    "height": 900,
+    "bottom": 0.8819
+  },
+  "assets/portraits/P1274.webp": {
+    "width": 300,
+    "height": 414,
+    "bottom": 0.9415
+  },
+  "assets/portraits/P1960-acd7d5bec9fe.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9063
+  },
+  "assets/portraits/P2315.webp": {
+    "width": 300,
+    "height": 414,
+    "bottom": 0.9367
+  },
+  "assets/portraits/P3687-f00f538f9d79.webp": {
+    "width": 503,
+    "height": 900,
+    "bottom": 0.8353
+  },
+  "assets/portraits/P3839-26f3284b331f.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9107
+  },
+  "assets/portraits/P4912-537739ac539f.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9018
+  },
+  "assets/portraits/P4913-60f7996c6353.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/P4914-b1a80b967326.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/P4915-4f6355884227.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/P4917-4ae2c69fcec4.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9063
+  },
+  "assets/portraits/P4918-c32737180049.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/P4920-1e17174dbf30.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9129
+  },
+  "assets/portraits/P4921-383daf979c60.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9018
+  },
+  "assets/portraits/P4922-32a869f1f57a.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/P4923-cb10c3ce70ab.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/P4924-c7f49584983a.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9107
+  },
+  "assets/portraits/P4925-a7f5d0f27b48.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/P4926-445216089545.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/P4929-28d2dfceeff4.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.8995
+  },
+  "assets/portraits/P4930-e9dccb0e9f70.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/P4933-e9a9f524d02d.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/P4934-dad01082baaf.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9174
+  },
+  "assets/portraits/P4935-2dbce816edc5.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9107
+  },
+  "assets/portraits/P4936-cc35a5d03d98.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9063
+  },
+  "assets/portraits/P4937-178cbddc7cfc.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9107
+  },
+  "assets/portraits/P4939-01bb8beee45e.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9018
+  },
+  "assets/portraits/P4940-6bcad8dee148.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/P4941-dc16d7771138.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.8841
+  },
+  "assets/portraits/P4950-5963403f395d.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9106
+  },
+  "assets/portraits/P4953-06ec4a3d3331.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9151
+  },
+  "assets/portraits/P4955-87c23319742a.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9063
+  },
+  "assets/portraits/P4961-aeb80125fce4.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/P4963-950d2ec8e41f.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9129
+  },
+  "assets/portraits/P4964-c3132801d456.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/P4974-02c002f3cea2.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.8841
+  },
+  "assets/portraits/P4980-a6ca782413fc.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9018
+  },
+  "assets/portraits/P4981-49e508021663.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.8974
+  },
+  "assets/portraits/P4990-f9a646af7b6e.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/P5038-2d95757316c5.webp": {
+    "width": 680,
+    "height": 900,
+    "bottom": 0.8996
+  },
+  "assets/portraits/P5041-b5233332f6e7.webp": {
+    "width": 669,
+    "height": 900,
+    "bottom": 0.8908
+  },
+  "assets/portraits/P5042-f5c47f4628b3.webp": {
+    "width": 867,
+    "height": 900,
+    "bottom": 0.8376
+  },
+  "assets/portraits/P5045-7b325736.webp": {
+    "width": 640,
+    "height": 765,
+    "bottom": 0.8371
+  },
+  "assets/portraits/P5047-f1e5f68ee873.webp": {
+    "width": 582,
+    "height": 900,
+    "bottom": 0.8353
+  },
+  "assets/portraits/P5050-d72d6935a5aa.webp": {
+    "width": 615,
+    "height": 900,
+    "bottom": 0.8353
+  },
+  "assets/portraits/P5056-ec9c24719407.webp": {
+    "width": 900,
+    "height": 793,
+    "bottom": 0.8392
+  },
+  "assets/portraits/P5058-a6267d7a7cb4.webp": {
+    "width": 900,
+    "height": 890,
+    "bottom": 0.9101
+  },
+  "assets/portraits/P5060-116c0e80.webp": {
+    "width": 640,
+    "height": 725,
+    "bottom": 0.9037
+  },
+  "assets/portraits/P5062-02f6002ce29a.webp": {
+    "width": 513,
+    "height": 900,
+    "bottom": 0.8331
+  },
+  "assets/portraits/P5063-52c78c6e02c4.webp": {
+    "width": 820,
+    "height": 900,
+    "bottom": 0.8974
+  },
+  "assets/portraits/P5064-eab2f96e5122.webp": {
+    "width": 579,
+    "height": 900,
+    "bottom": 0.8353
+  },
+  "assets/portraits/PF102-e4f1d27b474d.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9151
+  },
+  "assets/portraits/PF103-6850ef1234d3.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9107
+  },
+  "assets/portraits/PF105-b2db6f6b8ca1.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/PF106-3e2c3795ef4b.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/PF107-477335ab7711.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.8974
+  },
+  "assets/portraits/PF108-50ff5a68d615.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9151
+  },
+  "assets/portraits/PF109-da89cd6bab55.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9151
+  },
+  "assets/portraits/PF116-75c42345225d.webp": {
+    "width": 707,
+    "height": 900,
+    "bottom": 0.903
+  },
+  "assets/portraits/PF117-1b6a3a516723.webp": {
+    "width": 610,
+    "height": 900,
+    "bottom": 0.8331
+  },
+  "assets/portraits/PF120-8f291830ece3.webp": {
+    "width": 750,
+    "height": 900,
+    "bottom": 0.8243
+  },
+  "assets/portraits/PF121-449cbb59b1b6.webp": {
+    "width": 610,
+    "height": 900,
+    "bottom": 0.8996
+  },
+  "assets/portraits/PF123-b5c2a5e71ac3.webp": {
+    "width": 569,
+    "height": 900,
+    "bottom": 0.8353
+  },
+  "assets/portraits/PF124-e9370f66d1a3.webp": {
+    "width": 569,
+    "height": 900,
+    "bottom": 0.8353
+  },
+  "assets/portraits/PF125-8a6cbd5c7226.webp": {
+    "width": 481,
+    "height": 900,
+    "bottom": 0.9129
+  },
+  "assets/portraits/PF128-f2b8c073beec.webp": {
+    "width": 804,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/PF129-c8edf0d1db15.webp": {
+    "width": 716,
+    "height": 900,
+    "bottom": 0.902
+  },
+  "assets/portraits/PF130-0dec1f5227b1.webp": {
+    "width": 467,
+    "height": 900,
+    "bottom": 0.8376
+  },
+  "assets/portraits/PF133-91bbe4307ed1.webp": {
+    "width": 612,
+    "height": 900,
+    "bottom": 0.8363
+  },
+  "assets/portraits/PF134-2feb33369c08.webp": {
+    "width": 679,
+    "height": 900,
+    "bottom": 0.8885
+  },
+  "assets/portraits/PF137-21d30fc76ae7.webp": {
+    "width": 333,
+    "height": 900,
+    "bottom": 0.8288
+  },
+  "assets/portraits/PF138-86879669c83c.webp": {
+    "width": 558,
+    "height": 900,
+    "bottom": 0.8331
+  },
+  "assets/portraits/PF139-18df79d0d8c2.webp": {
+    "width": 632,
+    "height": 900,
+    "bottom": 0.8353
+  },
+  "assets/portraits/PF140-7934bfd64ec5.webp": {
+    "width": 572,
+    "height": 900,
+    "bottom": 0.8331,
+    "align": "xMidYMid"
+  },
+  "assets/portraits/PF194-59db5eb5ae04.webp": {
+    "width": 900,
+    "height": 841,
+    "bottom": 0.9182
+  },
+  "assets/portraits/PF197-8ca9f241eef5.webp": {
+    "width": 688,
+    "height": 900,
+    "bottom": 0.8863
+  },
+  "assets/portraits/PF24.webp": {
+    "width": 561,
+    "height": 900,
+    "bottom": 0.9174,
+    "align": "xMidYMid"
+  },
+  "assets/portraits/PF92-100103cb8d48.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9107
+  },
+  "assets/portraits/PF94-f8e2cce52d7f.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9174
+  },
+  "assets/portraits/PF95-a49fc82c5e88.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/PF96-acba9c21f170.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9151
+  },
+  "assets/portraits/PF97-305590b7fe63.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9107
+  },
+  "assets/portraits/PF99-7f64d5c3a4e3.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9018
+  },
+  "assets/portraits/PN0e148d13589e-da1135708098.webp": {
+    "width": 572,
+    "height": 900,
+    "bottom": 0.8331
+  },
+  "assets/portraits/PN2b164cf47255-31d788c3b02f.webp": {
+    "width": 609,
+    "height": 900,
+    "bottom": 0.8996
+  },
+  "assets/portraits/PN2b47594db34b-c4664b26cccf.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/PN45d4b5bfd0a4-d457850abddd.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9107
+  },
+  "assets/portraits/PN58882a7cb4b9-8e70fef6fc7f.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9151
+  },
+  "assets/portraits/PN7224b850d261-b62439ccc192.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/PN74070dffb7a6-a2930488.webp": {
+    "width": 640,
+    "height": 832,
+    "bottom": 0.9008
+  },
+  "assets/portraits/PN7eeba8b869b0-4018996ac387.webp": {
+    "width": 657,
+    "height": 900,
+    "bottom": 0.8353
+  },
+  "assets/portraits/PN95a805ff8def-d7233217e505.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/PNa25d227958dc-5d8c52c13483.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9107
+  },
+  "assets/portraits/PNb70e3b504d24-c0839346542e.webp": {
+    "width": 536,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/PNbeb254bfeab0-efe53aff.webp": {
+    "width": 640,
+    "height": 827,
+    "bottom": 0.8739
+  },
+  "assets/portraits/S04beb1b1-882803863bf3.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9151
+  },
+  "assets/portraits/S0df51b86-b51340758d46.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/S11930732-2243172cf0ef.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/S12fa1687-60f756c016a6.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/S24c991ba-8f44912504a9.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.893
+  },
+  "assets/portraits/S2ded6ae3-70b308f16914.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9018
+  },
+  "assets/portraits/S50568aaa-05bd3fd9f6ff.webp": {
+    "width": 703,
+    "height": 900,
+    "bottom": 0.9151
+  },
+  "assets/portraits/S537f1af3-d7cc4eebe741.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9063
+  },
+  "assets/portraits/S7d3cd245-5f83eaa3ef32.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9063
+  },
+  "assets/portraits/S7e0c042e-1b1933e4.webp": {
+    "width": 640,
+    "height": 848,
+    "bottom": 0.909
+  },
+  "assets/portraits/S8452f4f5-8cdb77aeb64b.webp": {
+    "width": 706,
+    "height": 900,
+    "bottom": 0.8376
+  },
+  "assets/portraits/S848eccd7-835eb010.webp": {
+    "width": 640,
+    "height": 820,
+    "bottom": 0.885
+  },
+  "assets/portraits/S8533a98f-1ea900d24a57.webp": {
+    "width": 703,
+    "height": 900,
+    "bottom": 0.9018
+  },
+  "assets/portraits/S88dad778-3d9865e706b9.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/S8f0f4ac6-f2daac0879e3.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.8908
+  },
+  "assets/portraits/S9a9ed322-481c11d5ef29.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.8952
+  },
+  "assets/portraits/Sa0029112-fc0e5b5e3c3d.webp": {
+    "width": 544,
+    "height": 900,
+    "bottom": 0.8376
+  },
+  "assets/portraits/Sac2f575d-1ef68bb2000f.webp": {
+    "width": 700,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/Sb738eeff-d59218c19c91.webp": {
+    "width": 713,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/Sb7e4539e-79643cac99b8.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.8863
+  },
+  "assets/portraits/Sba9bfb70-1b899f1c66eb.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9041
+  },
+  "assets/portraits/Sbc7c82fe-4202e9231818.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9107
+  },
+  "assets/portraits/Sc497a865-eb0d1e36d7da.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9085
+  },
+  "assets/portraits/Sc8542d14-204dbb7879aa.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9018
+  },
+  "assets/portraits/Scf04bc98-335666fc6390.webp": {
+    "width": 900,
+    "height": 887,
+    "bottom": 0.8422
+  },
+  "assets/portraits/Se7c416b7-ad233499de20.webp": {
+    "width": 703,
+    "height": 900,
+    "bottom": 0.9174
+  },
+  "assets/portraits/Sebe396e2-1fbbbe291be2.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9129
+  },
+  "assets/portraits/Sec054d04-0474fa39faf0.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.9151
+  },
+  "assets/portraits/Sfad78a44-03d293ec2172.webp": {
+    "width": 692,
+    "height": 900,
+    "bottom": 0.8908
+  }
+}
