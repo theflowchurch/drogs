@@ -524,7 +524,7 @@ export default function RegistrationApp({
     [sidebarHidden, setSidebarHidden] = useState(false),
     [signinOpen, setSigninOpen] = useState(false),
     [directoryRole, setDirectoryRole] = useState("bishop"),
-    [facePref, setFacePref] = useState(() => (typeof localStorage !== "undefined" && localStorage.getItem("kc-faces")) || ""), // "" follows the site setting; "all" shows every photograph; "confirmed" darkens the unconfirmed
+    [facePref, setFacePref] = useState(""), // Read the saved choice after hydration so the switch matches the photographs.
     [gate, setGate] = useState(!gated),
     [actor, setActor] = useState(null),
     [checking, setChecking] = useState(true),
@@ -600,6 +600,18 @@ export default function RegistrationApp({
     const saved = localStorage.getItem("kc-theme") === "dark" ? "dark" : "light";
     setTheme(saved);
     document.documentElement.dataset.theme = saved;
+  }, []);
+  useEffect(() => {
+    const restore = () => {
+      const saved = localStorage.getItem("kc-faces");
+      setFacePref(["all", "confirmed"].includes(saved) ? saved : "");
+    };
+    const changed = (event) => {
+      if (event.storageArea === localStorage && (event.key === "kc-faces" || event.key === null)) restore();
+    };
+    restore();
+    window.addEventListener("storage", changed);
+    return () => window.removeEventListener("storage", changed);
   }, []);
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
