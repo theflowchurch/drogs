@@ -368,6 +368,14 @@
     "name": "Nissi Carrie Juma"
    },
    "source": "Joshua 17 Oct 2026: Reviewed unique current-roster spelling or printed label; retain omitted middle names"
+  },
+  {
+   "name": "Beatrice Ofusua",
+   "bishop": "Isaac Koranteng",
+   "set": {
+    "branch": "Energy Campus"
+   },
+   "source": "Joshua 19 Oct 2026: people without locations should use their bishop’s location; copied from Isaac Koranteng (B219)."
   }
  ]
 }

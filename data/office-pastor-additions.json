@@ -81,7 +81,11 @@
    "title": "Pastor",
    "gender": "female",
    "image": "assets/portraits/PNe028b545117a-a9c093451ead.webp",
-   "source": "Joshua 16 Oct 2026: explicitly confirmed adding Precious Amukwe Etemesi as a new pastor under Bishop Joseph Papa Wachirah Kabiro, using PRECIOUS AMUKWE ETEMESI.jpg from his supplied ZIP. Other personal details were not supplied."
+   "source": "Joshua 16 Oct 2026: explicitly confirmed adding Precious Amukwe Etemesi as a new pastor under Bishop Joseph Papa Wachirah Kabiro, using PRECIOUS AMUKWE ETEMESI.jpg from his supplied ZIP. Other personal details were not supplied.",
+   "city": "Nairobi",
+   "country": "Kenya",
+   "branch": "Thika Cathedral",
+   "locationSource": "Joshua 19 Oct 2026: people without locations should use their bishop’s location; copied from Joseph Papa Wachirah Kabiro (B99)."
   },
   {
    "id": "PN964be2c30c79",
@@ -90,7 +94,11 @@
    "title": "Pastor",
    "gender": "female",
    "image": "assets/portraits/PN964be2c30c79-b02094c49867.webp",
-   "source": "Joshua 16 Oct 2026: explicitly approved adding Paulett Byrd as a new pastor under Bishop Aundrae George Wood, using Paulett Byrd.jpeg from Bishop Aundrae Wood.zip. Other personal details were not supplied."
+   "source": "Joshua 16 Oct 2026: explicitly approved adding Paulett Byrd as a new pastor under Bishop Aundrae George Wood, using Paulett Byrd.jpeg from Bishop Aundrae Wood.zip. Other personal details were not supplied.",
+   "city": "Portmore",
+   "country": "Jamaica",
+   "branch": "Portmore",
+   "locationSource": "Joshua 19 Oct 2026: people without locations should use their bishop’s location; copied from Aundrae George Wood (BO181)."
   }
  ]
 }
