@@ -20,6 +20,32 @@ export function submissionDate(sheet) {
 }
 export const newerSubmission = (previous, incoming) => !previous || submissionDate(incoming) >= submissionDate(previous) ? incoming : previous;
 
+const ownerWords = value => String(value || '').toLowerCase().replace(/\b(?:bishop|mother|episcopal sister|rev|reverend)\b/g, ' ').match(/\p{L}+/gu) || [];
+export function submittedFileOwner(file) {
+  return String(file).replace(/\.xlsx$/i, '').replace(/_/g, ' ').replace(/\s+(?:first love|flc|pastors)\b.*$/i, '')
+    .replace(/[-_ ]*(?:updated|completed|filled|fiilled|copy|data|\(\d+\)).*$/i, '');
+}
+export function selectSubmittedBishop(rows, owner) {
+  const wanted = ownerWords(owner);
+  const matches = rows.filter(row => {
+    const actual = ownerWords(row.name);
+    return Math.min(wanted.length, actual.length) >= 2 &&
+      (wanted.every(word => actual.includes(word)) || actual.every(word => wanted.includes(word)));
+  });
+  // A copied bishop row must never replace a uniquely identified owner's row.
+  return matches.length === 1 ? matches[0] : rows.length === 1 ? rows[0] : null;
+}
+
+export function joinSplitBishopDetails(row, next, map) {
+  if (!map || !next || map.name === undefined || map.rank === undefined) return null;
+  if (!/^full\s*name$/i.test(String(row[map.name] || '').trim()) ||
+      !/^(?:bishop|mother|episcopal sister)$/i.test(String(row[map.rank] || '').trim())) return null;
+  const name = String(next[map.name] || '').trim();
+  if (ownerWords(name).length < 2 || next.some((value, column) => column !== map.name && String(value || '').trim())) return null;
+  // Some submissions put the name alone immediately below the personal details.
+  return row.map((value, column) => column === map.name ? name : value);
+}
+
 export function submittedBirthKeys(value) {
   const text = String(value || '').toLowerCase().trim();
   const numbers = (text.match(/\d+/g) || []).map(Number);

@@ -79,20 +79,7 @@
  },
  "noSheet": [],
  "sheetsNotOnList": [],
- "rowBelongsToAnother": [
-  {
-   "file": "Bishop Benjamin Kwapong Lokko.xlsx",
-   "bishopRowNames": "Wisdom Ahiagah"
-  },
-  {
-   "file": "Bishop Isaac Agyeman. -  Fiilled.xlsx",
-   "bishopRowNames": "Edwin Ogoe"
-  },
-  {
-   "file": "Nii Nortey Quist Therson First_Love_North_America_Pastors_Updated.xlsx",
-   "bishopRowNames": "Henrietta Ariel Orleans-Lindsay"
-  }
- ],
+ "rowBelongsToAnother": [],
  "bishopRankRows": [
   {
    "name": "Emmanuel Yeboah",
@@ -5840,5 +5827,12 @@
   "fromFolders": 1,
   "converted": 0,
   "looseMatches": []
+ },
+ "locationRecovery": {
+  "date": "2026-10-19",
+  "sourceWorkbooksRecovered": 4,
+  "peopleWithCorrectedLocationFields": 64,
+  "locationFieldsRecovered": 71,
+  "copiedRowsRetainedAsAdditionalRows": 3
  }
 }

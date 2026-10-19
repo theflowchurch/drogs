@@ -43,10 +43,18 @@ test("Joy Bruce's updated sheet keeps all 29 pastors, including the two formerly
 });
 test("copied bishop rows do not rename the bishop or supply another person's contacts", () => {
   const contacts = JSON.parse(readFileSync(new URL('../../data/reference-contacts.json', import.meta.url), 'utf8'));
+  const sheets = JSON.parse(readFileSync(new URL('../../data/bishop-submissions.json', import.meta.url), 'utf8'));
   assert.equal(people.find(p => p.id === 'B218').name, 'Isaac Agyeman');
-  assert.equal(contacts.B218, undefined);
-  assert.equal(contacts.B16, undefined);
-  assert.ok(report.rowBelongsToAnother.some(s => s.file === 'Bishop Isaac Agyeman. -  Fiilled.xlsx' && s.bishopRowNames === 'Edwin Ogoe'));
+  for (const [id, file] of [['B218', 'Bishop Isaac Agyeman. -  Fiilled.xlsx'], ['B16', 'Bishop Benjamin Kwapong Lokko.xlsx']]) {
+    const own = sheets.find(s => s.file === file).bishopRow;
+    if (contacts[id]?.phone) assert.equal(contacts[id].phone, own.phone);
+    if (contacts[id]?.email) assert.equal(contacts[id].email, own.email);
+  }
+  const source = sheets.find(s => s.file === 'Bishop Isaac Agyeman. -  Fiilled.xlsx');
+  assert.equal(source.bishopRow.name, 'Isaac Agyeman');
+  assert.equal(source.bishopRow.city, 'Accra');
+  assert.ok(source.additionalBishopRows.some(row => row.name === 'Edwin Ogoe'));
+  assert.ok(!report.rowBelongsToAnother.some(s => s.file === source.file));
 });
 test('a pastor is under one bishop or Unclaimed with a reason, never both', () => {
   for (const p of pastors) assert.equal(Boolean(p.unclaimed), !p.bishop, p.name);
