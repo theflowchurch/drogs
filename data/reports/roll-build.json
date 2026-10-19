@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-18T07:19:27.215Z",
+ "generated": "2026-10-19T07:51:19.286Z",
  "sourceAuthority": {
   "personalDetails": "latest submitted spreadsheets and explicit office additions",
   "bishopMembership": "current Bishops List and explicit office corrections",
@@ -72,7 +72,7 @@
   "pastors": 5063,
   "assigned": 5063,
   "unclaimed": 0,
-  "withPhoto": 5034,
+  "withPhoto": 5037,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -5636,14 +5636,6 @@
    "place": "Lusaka, Zambia"
   },
   {
-   "id": "S45729b62",
-   "name": "Mwenda Machima",
-   "bishop": "Clement Asante",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Lusaka, Zambia"
-  },
-  {
    "id": "S54c6000b",
    "name": "Herbert Aidoo",
    "bishop": "Joshua Heward-Mills",
@@ -5826,22 +5818,6 @@
    "group": "UD North America",
    "denomination": "American Missionary Church",
    "place": "Colorado Springs, United States"
-  },
-  {
-   "id": "PN74070dffb7a6",
-   "name": "Barbara Darling-Ampofo",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Gaborone, Botswana"
-  },
-  {
-   "id": "S848eccd7",
-   "name": "Kefilwe Esther Gopadile",
-   "bishop": "Patrick Inkoom",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Francistown, Botswana"
   },
   {
    "id": "S7b0ade02-1c64",
