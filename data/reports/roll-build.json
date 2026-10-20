@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-19T07:51:19.286Z",
+ "generated": "2026-10-20T07:39:54.092Z",
  "sourceAuthority": {
   "personalDetails": "latest submitted spreadsheets and explicit office additions",
   "bishopMembership": "current Bishops List and explicit office corrections",
@@ -72,7 +72,7 @@
   "pastors": 5063,
   "assigned": 5063,
   "unclaimed": 0,
-  "withPhoto": 5037,
+  "withPhoto": 5056,
   "sheets": 286,
   "bishopsWithSheet": 283,
   "noPastorsSheets": 75
@@ -2372,7 +2372,7 @@
    "extra": []
   },
   {
-   "bishop": "Benjamin Lokko",
+   "bishop": "Benjamin Kwapong Lokko",
    "lay": false,
    "file": "Bishop Benjamin Kwapong Lokko.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -5220,7 +5220,7 @@
    ]
   },
   {
-   "bishop": "Nii Nortey Quist Therson",
+   "bishop": "James Quist-Therson (Nii Nortey)",
    "lay": false,
    "file": "Nii Nortey Quist Therson First_Love_North_America_Pastors_Updated.xlsx",
    "folder": "Bishop submitted sheets (9 Oct 2026)",
@@ -5623,142 +5623,6 @@
    "place": "Lusaka, Zambia"
   },
   {
-   "id": "S54c6000b",
-   "name": "Herbert Aidoo",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN865f9c967990",
-   "name": "Enoch Bentil",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN1362b5bd1b63",
-   "name": "Prince Forson",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "Sf562bdd9",
-   "name": "Ishmael Oplerm",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P4625",
-   "name": "Tibu Anaman",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P4551",
-   "name": "Emmanuel Nterful Jnr",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P4552",
-   "name": "Emmanuel Koduah",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P4523",
-   "name": "Clement Lahenor",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P4529",
-   "name": "David Mantey",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "P4521",
-   "name": "Charlene Tonugble",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN579968ebd015",
-   "name": "Clara Aggrey",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PNa16b3287028d",
-   "name": "Elijah Ofosu",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "Sad25c82f",
-   "name": "Festus Frimpong",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PNa5bd9a876b8d",
-   "name": "Lily Opoku",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN483e83bd344d",
-   "name": "Samuel Atiemoh",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "PN6d50e1617e38",
-   "name": "Samuel Muiruri",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "S80f8bf87",
-   "name": "Upjohn Sangmor",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
    "id": "P4437",
    "name": "Williams Ms Dap Aah Adjei",
    "bishop": "Kofi Hene Asare",
@@ -5805,34 +5669,11 @@
    "group": "UD North America",
    "denomination": "American Missionary Church",
    "place": "Colorado Springs, United States"
-  },
-  {
-   "id": "S7b0ade02-1c64",
-   "name": "Zenas Adarkwah Yiadom",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
-  },
-  {
-   "id": "S893cce89-1c64",
-   "name": "Jayson Quarshie",
-   "bishop": "Joshua Heward-Mills",
-   "group": "First Love",
-   "denomination": "First Love Church",
-   "place": "Accra, Ghana"
   }
  ],
  "photos": {
   "fromFolders": 1,
   "converted": 0,
   "looseMatches": []
- },
- "locationRecovery": {
-  "date": "2026-10-19",
-  "sourceWorkbooksRecovered": 4,
-  "peopleWithCorrectedLocationFields": 64,
-  "locationFieldsRecovered": 71,
-  "copiedRowsRetainedAsAdditionalRows": 3
  }
 }
