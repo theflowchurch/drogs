@@ -2710,19 +2710,63 @@ p {
   font-size: 12px;
   padding: 8px 12px;
   color: var(--muted);
-  max-width: 760px;
+  max-width: 1100px;
   margin: 0 auto;
   line-height: 1.5;
 }
 .reg-legal a {
   color: inherit;
 }
+.reg-legal nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 22px;
+}
+.reg-legal a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .reg-app:has(.reg-hero-page) .reg-legal {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  color: rgba(255, 255, 255, 0.75);
+  z-index: 1;
+  padding: 22px 20px;
+  color: #fff;
+  text-shadow: 0 1px 8px #000;
+}
+.reg-hero-description { max-width: 600px; margin: -14px 0 0; color: #f0f2f8; text-align: center; text-wrap: balance; font-size: clamp(15px, 1.4vw, 19px); }
+.reg-app:has(.reg-hero-page) .reg-hero-page { padding-bottom: 115px; }
+.reg-payment-policy a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Public information uses the site's existing castle mark and navy palette. */
+.reg-information-page { background: var(--panel); }
+.reg-information-layout { width: min(1180px, 100%); display: grid; grid-template-columns: 235px minmax(0, 1fr); gap: 70px; margin: 0 auto; padding: 64px 32px 80px; flex: 1; }
+.reg-information-sidebar { align-self: start; position: sticky; top: 124px; }
+.reg-information-sidebar nav { display: grid; gap: 5px; }
+.reg-information-sidebar nav a { padding: 11px 14px; border-left: 2px solid transparent; color: var(--muted); font-size: 14px; }
+.reg-information-sidebar nav a:hover { color: var(--ink); background: var(--panel-soft); }
+.reg-information-sidebar nav a[aria-current="page"] { border-color: var(--accent); color: var(--accent); background: var(--panel-soft); font-weight: 600; }
+.reg-information-date { padding: 28px 14px 0; font-size: 12px; line-height: 1.7; }
+.reg-information-content { width: 100%; min-width: 0; margin: 0; padding: 0; max-width: 740px; }
+.reg-information-content h1 { font-size: clamp(32px, 4vw, 46px); line-height: 1.15; letter-spacing: -1.3px; margin-bottom: 24px; text-wrap: balance; }
+.reg-information-content h2 { font-size: 21px; line-height: 1.35; margin: 36px 0 13px; letter-spacing: -.3px; }
+.reg-information-content p { font-size: 16px; line-height: 1.8; }
+.reg-information-content p:first-of-type { color: var(--ink); }
+.reg-information-content a { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.reg-information-back { display: inline-block; margin-top: 36px; font-size: 14px; }
+.reg-information-page > .reg-legal { padding: 24px; }
+@media (max-width: 760px) {
+  .reg-information-layout { display: flex; flex-direction: column; gap: 32px; padding: 25px 22px 48px; }
+  .reg-information-sidebar { position: static; width: 100%; }
+  .reg-information-sidebar .reg-eyebrow, .reg-information-date { display: none; }
+  .reg-information-sidebar nav { display: flex; flex-wrap: wrap; gap: 6px; }
+  .reg-information-sidebar nav a { font-size: 12px; padding: 8px 10px; border-left: 0; border-bottom: 2px solid transparent; }
+  .reg-information-page .reg-header { padding: 0 22px; gap: 12px; height: 78px; }
+  .reg-information-page .reg-brand { gap: 9px; letter-spacing: 1px; font-size: 13px; }
+  .reg-information-page .reg-brand-mark { width: 34px; }
+  .reg-information-page .reg-header > .reg-text { font-size: 12px; white-space: nowrap; }
+  .reg-legal nav { gap: 8px 16px; }
+  .reg-app:has(.reg-hero-page) .reg-legal { font-size: 11px; padding: 16px 18px; }
 }
 
 .reg-dialog-nav {

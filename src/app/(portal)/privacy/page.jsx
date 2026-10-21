@@ -1,4 +1,3 @@
-import Docs from '../../../registration/Docs';
-import { PRIVACY } from '../../../registration/legal.mjs';
+import PublicInformation from '../../../registration/PublicInformation';
 export const metadata={title:'Kuriake Castle · Privacy policy'};
-export default function Page(){return <Docs markdown={PRIVACY} office={false}/>}
+export default function Page(){return <PublicInformation slug="privacy"/>}

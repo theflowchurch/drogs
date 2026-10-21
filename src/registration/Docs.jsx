@@ -1,12 +1,14 @@
 import docs from "./api-docs.json";
+import { LEGAL_PAGES } from "./legal.mjs";
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
-// Public pages carry nothing; the policy and terms are linked only where
-// members register and consent.
+// Public information must remain reachable before registration or payment.
 export function LegalFooter({ hidden = false }) {
   if (hidden) return null;
   return (
     <footer className="reg-legal">
-      <a href={`${base}/privacy/`}>Privacy policy</a> · <a href={`${base}/terms/`}>Terms and conditions</a>
+      <nav aria-label="Website information">
+        {LEGAL_PAGES.map(page => <a key={page.slug} href={`${base}/${page.slug}/`}>{page.label}</a>)}
+      </nav>
     </footer>
   );
 }
@@ -18,7 +20,7 @@ const inline = (s) =>
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
     .replace(/(https?:\/\/[^\s<]+[^\s<.,)])/g, (m) => (m.includes("<a") ? m : `<a href="${m}">${m}</a>`));
 // Enough Markdown for API.md: headings, paragraphs, lists, tables and fenced code.
-function render(md) {
+export function renderMarkdown(md) {
   const out = [];
   const lines = md.split("\n");
   for (let i = 0; i < lines.length; i++) {
@@ -57,7 +59,7 @@ export default function Docs({ markdown = docs.markdown, office = true }) {
         </a>
         <div className="reg-header-right">{office ? <a className="reg-text" href={`${base}/admin/`}>Office ↗</a> : <a className="reg-text" href={`${base}/directory/`}>Directory ↗</a>}</div>
       </header>
-      <main className="reg-docs" dangerouslySetInnerHTML={{ __html: render(markdown) }} />
+      <main className="reg-docs" dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }} />
       <LegalFooter />
     </div>
   );

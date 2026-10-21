@@ -873,6 +873,7 @@ export default function RegistrationApp({
             <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${siteConfig?.heroLogo || siteConfig?.logo || "assets/brand/castle-white.png"}`} alt={site === "flow" ? siteConfig.name : ""} />
             {site !== "flow" && (siteConfig?.name || "Kuriake Castle")}
           </h1>
+          {!site && <p className="reg-hero-description">The ministry directory and annual registration platform for bishops and pastors.</p>}
           <a className="reg-enter" href={sitePath(site, "directory", base)}>
             <span className="reg-shimmer">View All Bishops and Pastors in Good Standing</span>
             <span className="reg-enter-arrow" aria-hidden="true">→</span>
@@ -1151,7 +1152,7 @@ export default function RegistrationApp({
           <HelpButton actor={actor} run={run} />
         </div>
       )}
-      <LegalFooter hidden={hero || browse} />
+      <LegalFooter />
     </div>
     </RosterContext.Provider>
     </OrganizationSiteContext.Provider>
@@ -2195,6 +2196,7 @@ function RegistrationForm({
                   <p>Annual Good Standing Renewal Fee · {titleCase(data.role)} • {state.year} · Non-refundable.</p>
                 </div>
               </div>
+              <PaymentPolicyNotice />
               {mine?.payment === "verified" ? (
                 <div className="reg-status-message confirmed">
                   <h3>Thank you for your commitment.</h3>
@@ -2334,7 +2336,7 @@ function RegistrationForm({
               </label>
               <p className="reg-small">
                 The Annual Good Standing Renewal Fee is ${fees[data.role]} USD and is
-                non-refundable.
+                generally non-refundable, subject to the <a href={`${base}/refunds/`} target="_blank" rel="noreferrer">Refund Policy</a> and applicable law.
               </p>
               <div className="reg-form-actions">
                 <button
@@ -2394,6 +2396,9 @@ function CommitmentPreview({ role, country }) {
 // Card or mobile money through Paystack's inline checkout. The amount is charged
 // in GHS at the same indicative rate the member sees; the server confirms the
 // reference with Paystack before the payment is recorded.
+function PaymentPolicyNotice() {
+  return <p className="reg-small reg-payment-policy">Payments are received by Kuriake Castle for annual Good Standing renewal. Read our <a href={`${base}/payments/`} target="_blank" rel="noreferrer">payment information</a> and <a href={`${base}/refunds/`} target="_blank" rel="noreferrer">refund policy</a>, including payment-error exceptions.</p>;
+}
 function PaystackButton({ current, actor, run, refresh, paystackKey, beforePay, label }) {
   const [ready, setReady] = useState(Boolean(globalThis.PaystackPop));
   // Paystack Ghana accounts settle in cedis only, so every member is charged
@@ -2474,6 +2479,7 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
         </p>
       )}
       <b>Non-refundable</b>
+      <PaymentPolicyNotice />
       <p>
         {titleCase(current.data.role)} • {current.year}
       </p>
