@@ -6,11 +6,29 @@ const effective = 'Effective date: 21 September 2026.';
 
 export const ABOUT = `# About Kuriake Castle
 
-Kuriake Castle supports the work of Christian churches through a shared ministry directory, annual registration and administration of the Roll of Good Standing for bishops and pastors.
+Kuriake Castle is a Christian ministry organisation whose registered activities support preaching the gospel of Jesus Christ, training church members and ministry leaders, developing church facilities and responsibly managing resources for this work worldwide.
 
 ## Our organisation
 
-Kuriake Castle is the organisation responsible for operating kuriakecastle.org, administering registrations and receiving the annual commitments made through this website. Our work helps the church maintain an organised record of ministry leadership, confirm current details and manage annual renewal.
+Our purpose extends beyond the directory and registration services on this website. Our registered principal activities and objects cover the following areas of ministry.
+
+## Our registered ministry activities
+
+**Preaching the gospel.** To preach the gospel of Jesus Christ to all nations of the world using all available means, including media, literature and digital tools.
+
+**Equipping church members.** To raise, train, equip and mobilise church members to become effective workers in the house of God through structured teaching and ministry exposure worldwide.
+
+**Training ministry leaders.** To raise, train and equip bishops, pastors, leaders and shepherds to care for souls, plant churches and sustain healthy Christian communities throughout the world.
+
+**Supporting church facilities.** To assist with land acquisition and ensure the maintenance and development of church buildings, training centres and cathedrals worldwide to support worship, training, missions and ministry activities.
+
+**Stewarding resources.** To raise, manage and apply financial and material resources responsibly and transparently in pursuit of these objectives, ensuring the long-term sustainability of the ministry and its global impact.
+
+## How this website serves our work
+
+Kuriake Castle operates kuriakecastle.org as one administrative function supporting this wider ministry purpose. The website provides a shared ministry directory, annual registration and administration of the Roll of Good Standing for bishops and pastors. It helps the church maintain an organised record of ministry leadership, confirm current details and manage annual renewal.
+
+Kuriake Castle is responsible for operating the website, administering registrations and receiving the annual commitments made through it.
 
 ## The directory and the church
 
@@ -68,11 +86,11 @@ export const FAQ = `# Frequently asked questions
 
 ## What is Kuriake Castle?
 
-Kuriake Castle operates a ministry directory and annual registration platform for participating bishops and pastors. It supports church administration and the Roll of Good Standing.
+Kuriake Castle is a Christian ministry organisation whose registered activities include preaching the gospel, equipping church members, training ministry leaders, supporting church facilities and responsibly managing ministry resources worldwide. Its directory and annual registration platform are one administrative function supporting this wider work. Read [About Kuriake Castle](/about/) for details.
 
 ## How is the directory connected to the organisation?
 
-Kuriake Castle operates the directory as part of its ministry administration. It presents church leaders, their denominations and ministry locations. Annual registration and payments are managed through the same platform.
+Kuriake Castle operates the directory as part of its ministry administration in support of its wider Christian ministry objectives. It presents church leaders, their denominations and ministry locations. Annual registration and payments are managed through the same platform.
 
 ## Who can use the directory and who can register?
 
@@ -290,7 +308,7 @@ Email ${email} with questions. We update this page if storage practices change. 
 `;
 
 export const LEGAL_PAGES = [
-  { slug: 'about', label: 'About', title: 'About Kuriake Castle', description: 'Our organisation, ministry directory and annual registration services.', markdown: ABOUT },
+  { slug: 'about', label: 'About', title: 'About Kuriake Castle', description: 'Our registered Christian ministry activities and how the directory and annual registration support our work.', markdown: ABOUT },
   { slug: 'payments', label: 'Payments', title: 'Payments and annual commitments', description: 'What annual commitments support, who receives them and how payment is confirmed.', markdown: PAYMENTS },
   { slug: 'faq', label: 'FAQs', title: 'Frequently asked questions', description: 'Answers about the directory, registration, payments and personal information.', markdown: FAQ },
   { slug: 'privacy', label: 'Privacy policy', title: 'Privacy policy', description: 'How Kuriake Castle collects, uses and protects personal information.', markdown: PRIVACY },
