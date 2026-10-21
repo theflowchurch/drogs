@@ -873,7 +873,6 @@ export default function RegistrationApp({
             <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${siteConfig?.heroLogo || siteConfig?.logo || "assets/brand/castle-white.png"}`} alt={site === "flow" ? siteConfig.name : ""} />
             {site !== "flow" && (siteConfig?.name || "Kuriake Castle")}
           </h1>
-          {!site && <p className="reg-hero-description">The ministry directory and annual registration platform for bishops and pastors.</p>}
           <a className="reg-enter" href={sitePath(site, "directory", base)}>
             <span className="reg-shimmer">View All Bishops and Pastors in Good Standing</span>
             <span className="reg-enter-arrow" aria-hidden="true">→</span>

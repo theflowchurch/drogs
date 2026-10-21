@@ -2734,7 +2734,6 @@ p {
   color: #fff;
   text-shadow: 0 1px 8px #000;
 }
-.reg-hero-description { max-width: 600px; margin: -14px 0 0; color: #f0f2f8; text-align: center; text-wrap: balance; font-size: clamp(15px, 1.4vw, 19px); }
 .reg-app:has(.reg-hero-page) .reg-hero-page { padding-bottom: 115px; }
 .reg-payment-policy a { text-decoration: underline; text-underline-offset: 3px; }
 
