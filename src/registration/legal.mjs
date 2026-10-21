@@ -14,15 +14,11 @@ Our purpose extends beyond the directory and registration services on this websi
 
 ## Our registered ministry activities
 
-**Preaching the gospel.** To preach the gospel of Jesus Christ to all nations of the world using all available means, including media, literature and digital tools.
-
-**Equipping church members.** To raise, train, equip and mobilise church members to become effective workers in the house of God through structured teaching and ministry exposure worldwide.
-
-**Training ministry leaders.** To raise, train and equip bishops, pastors, leaders and shepherds to care for souls, plant churches and sustain healthy Christian communities throughout the world.
-
-**Supporting church facilities.** To assist with land acquisition and ensure the maintenance and development of church buildings, training centres and cathedrals worldwide to support worship, training, missions and ministry activities.
-
-**Stewarding resources.** To raise, manage and apply financial and material resources responsibly and transparently in pursuit of these objectives, ensuring the long-term sustainability of the ministry and its global impact.
+1. To preach the Gospel of Jesus Christ to all nations of the world using all means available, including but not limited to media, literature, and digital tools.
+2. To raise, train, equip, and mobilise church members to become effective workers in the house of God through structured teaching and ministry exposure worldwide.
+3. To raise, train, and equip bishops, pastors, leaders, and shepherds to care for souls, plant churches, and sustain healthy Christian communities in the whole world.
+4. To assist and ensure acquisitions of land, maintenance, and development of church buildings, training centres, and cathedrals worldwide to support worship, training, missions, and ministry activities.
+5. To raise, manage, and apply financial and material resources responsibly and transparently in pursuit of the above objectives, ensuring the long-term sustainability of the ministry and its global impacts.
 
 ## How this website serves our work
 
