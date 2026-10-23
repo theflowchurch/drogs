@@ -9,6 +9,8 @@ test('FLOW offers only Mother Nina Masuku before her own annual registration', (
   assert.equal(choices.length, 1);
   assert.equal(choices[0].id, 'B334');
   assert.equal(choices[0].label, 'Mother Nely Nina Masuku');
+  assert.equal(choices[0].photo, '', 'directory assets are not private uploaded media');
+  assert.equal(choices[0].image, people.find(p => p.id === 'B334').image);
   const actor = { id: 'flow-pastor', email: 'flow-pastor@example.com' };
   const data = { role: 'pastor', firstName: 'Joshua', lastName: 'Example', name: 'Joshua Example', email: actor.email,
     organization: 'FLOW', country: 'Ghana', city: 'Online', phone: '+233201234567', dob: '1990-01-01', gender: 'male',

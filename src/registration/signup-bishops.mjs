@@ -6,7 +6,7 @@ export function signupBishopChoices(bishops, references, organization) {
     const nina = references.find(p => p.id === 'B334' && p.role === 'bishop' && p.organization === 'FLOW');
     if (!nina) return [];
     const registered = bishops.find(b => b.id === nina.id);
-    return [{ ...nina, ...registered, id: nina.id, name: nina.name, label: `Mother ${nina.name}`, photo: registered?.photo || nina.image || '' }];
+    return [{ ...nina, ...registered, id: nina.id, name: nina.name, label: `Mother ${nina.name}`, photo: registered?.photo || '' }];
   }
   return bishops.filter(b => b.approved && (!organization || b.organization === organization))
     .sort((a, b) => a.name.localeCompare(b.name));
