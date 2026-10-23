@@ -1,2 +1,4 @@
 import RegistrationApp from '../../../registration/RegistrationApp';
-export default async function Page({ params }) { const { organizationSite } = await params; return <RegistrationApp organizationSite={organizationSite} />; }
+import DenominationApp from '../../../registration/DenominationApp';
+import { denominationSite } from '../../../registration/denomination-sites.mjs';
+export default async function Page({ params }) { const { organizationSite } = await params; return denominationSite(organizationSite) ? <DenominationApp site={organizationSite} /> : <RegistrationApp organizationSite={organizationSite} />; }

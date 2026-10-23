@@ -14,7 +14,7 @@ export function createRosterLoader(fetchRoster) {
     if (!version) return snapshot; // offline previews / older server
     if (cached?.rosterVersion !== version) {
       if (!pending) {
-        pending = Promise.resolve().then(fetchRoster).then(result => {
+        pending = Promise.resolve().then(() => fetchRoster(version)).then(result => {
           if (!Array.isArray(result.referencePeople) || !result.rosterVersion)
             throw Error('The current directory could not be loaded. Please try again shortly.');
           cached = result;

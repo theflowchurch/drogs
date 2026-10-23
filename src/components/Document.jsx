@@ -8,6 +8,6 @@ export const siteViewport={themeColor:'#0d242b'};
 export default function Document({children,surface}){
   return <html lang="en"><body data-surface={surface}>
     {children}
-    <noscript><p>Please enable JavaScript to use Kuriake Castle.</p></noscript>
+    <noscript><p>Please enable JavaScript to use this website.</p></noscript>
   </body></html>;
 }

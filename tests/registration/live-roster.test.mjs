@@ -48,3 +48,8 @@ test('previews retain their local roster and public views exclude unclaimed entr
   assert.equal(rosterFrom(snapshot, bundled), bundled);
   assert.deepEqual(publicRosterFrom(snapshot, bundled), [{ id: 'a' }]);
 });
+
+test('roster requests use the revision as their cache key, including after a deployment', async()=>{
+ const requested=[];const load=createRosterLoader(async version=>{requested.push(version);return {rosterVersion:version,referencePeople:[]};});
+ await load({rosterVersion:'first'});await load({rosterVersion:'first'});await load({rosterVersion:'second'});assert.deepEqual(requested,['first','second']);
+});

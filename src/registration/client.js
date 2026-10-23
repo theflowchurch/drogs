@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import people from "./reference-people.json";
 import { photoProgress } from './photo-progress.mjs';
+import { createRegistrationRequest } from './request.mjs';
 import { createRosterLoader } from './live-roster.mjs';
 const references = people.filter((p) => p.role === "bishop");
 import {
@@ -19,29 +20,8 @@ export const live = mysqlBackend || Boolean(url && key);
 // request so the server reads the matching session cookie.
 let door = "member";
 export const setDoor = (office) => { door = office ? "office" : "member"; };
-async function server(path, body, options = {}, attempt = 0) {
-  let response;
-  try {
-    response = await fetch(`/api/registration/${path}`, {
-      credentials: "same-origin", cache: "no-store", headers: { "X-Kc-Door": door, ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
-      ...(body === undefined ? {} : { method: "POST", body: JSON.stringify(body) }),
-      ...options,
-      ...(options.headers ? { headers: { "X-Kc-Door": door, ...options.headers } } : {}),
-    });
-  } catch (e) { response = null; }
-  let data;
-  try { data = await response.json(); } catch { data = undefined; }
-  // The host's CDN sometimes answers the first request after a page load with its
-  // bot-check page instead of JSON (seen on Safari especially). Reads are safe to
-  // repeat, so try again a few times before giving up.
-  if (data === undefined) {
-    if (body === undefined && attempt < 3) { await new Promise((r) => setTimeout(r, 700 * (attempt + 1))); return server(path, body, options, attempt + 1); }
-    throw Error("The registration server is unavailable. Please try again shortly.");
-  }
-  if (!response.ok) throw Error(data.error || "Unable to complete the request.");
-  return data;
-}
-const withCurrentRoster = createRosterLoader(() => server('references'));
+const server = createRegistrationRequest({ getDoor: () => door });
+const withCurrentRoster = createRosterLoader(version => server(`references?version=${encodeURIComponent(version)}`, undefined, { cache: 'default', timeoutMs: 20000 }));
 export const configError = Boolean(url) !== Boolean(key) || (mode === "supabase" && !url);
 let client;
 const supabase = () =>
@@ -92,15 +72,7 @@ function check(error) {
 // check intercepting the first call after a refresh) is not "signed out", so
 // the check is retried before giving up.
 export async function currentActor(office = false) {
-  if (mysqlBackend) {
-    for (let attempt = 0; ; attempt++) {
-      try { return await server("auth/me"); }
-      catch (e) {
-        if (attempt >= 3) throw e;
-        await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
-      }
-    }
-  }
+  if (mysqlBackend) return server('auth/me', undefined, { timeoutMs: 3500 });
   if (configError)
     throw Error("Both Supabase URL and public key must be configured.");
   if (!live)
@@ -238,6 +210,8 @@ export const logins = (user, before = '') => server(`logins?user=${encodeURIComp
 
 export const supportAvailable = mysqlBackend;
 // The public directory needs no account. Locally it is the saved roll.
+// Checking whether registration is open must not download the whole roster.
+export const publicSignupStatus = () => mysqlBackend ? server('public-directory') : publicDirectory();
 export async function publicDirectory() {
   if (mysqlBackend) return withCurrentRoster(await server("public-directory"));
   const v = visibleState(read(), { id: "public", email: "", office: false }, references, people);

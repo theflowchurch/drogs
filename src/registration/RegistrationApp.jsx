@@ -577,7 +577,7 @@ export default function RegistrationApp({
     api
       .currentActor(office)
       .then((current) => {
-        setActor(current);
+        setActor(previous => previous || current);
         // A signed-in member does not pass the office gate, and neither does a
         // remembered office session: the access code is typed once per browser
         // session (the stamp below), whoever is signed in.
@@ -585,7 +585,7 @@ export default function RegistrationApp({
       })
       // A failed session check (e.g. the server restarting after a deploy)
       // just means "not signed in"; visitors should not see a fetch error.
-      .catch(() => setActor(null))
+      .catch(() => {}) // A late failed read must not sign out a newly verified account.
       .finally(() => setChecking(false));
     const until = Number(
       sessionStorage.getItem("drogs-registration-gate") || 0,
@@ -904,7 +904,7 @@ export default function RegistrationApp({
             Opening the directory…
           </div>
         )
-      ) : !actor && checking ? (
+      ) : office && !actor && checking ? (
         <div className="reg-loading" role="status">
           Checking your sign-in…
         </div>
@@ -922,8 +922,8 @@ export default function RegistrationApp({
           onClose={() => setSigninOpen(false)}
         />
       ) : !state ? (
-        <div className="reg-loading" role="status">
-          Opening your workspace…
+        <div className="reg-loading" role={error ? "alert" : "status"}>
+          {error ? <><p>Your workspace could not be opened.</p><button type="button" className="reg-primary" onClick={() => run(refresh)}>Try again</button></> : "Opening your workspace…"}
         </div>
       ) : office && !isOffice ? (
         <Empty title="Office access is required">
@@ -1279,7 +1279,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
   useEffect(() => {
     if (mode !== "signup") return;
     let live = true;
-    api.publicDirectory().then((d) => { const flag = entrance === "appointments" ? d?.signup?.appointments : d?.signup; if (live && flag?.closed) setPaused(flag.notice || SIGNUP_PAUSED); }).catch(() => {});
+    api.publicSignupStatus().then((d) => { const flag = entrance === "appointments" ? d?.signup?.appointments : d?.signup; if (live && flag?.closed) setPaused(flag.notice || SIGNUP_PAUSED); }).catch(() => {});
     return () => { live = false; };
   }, [mode, entrance]);
   const [email, setEmail] = useState(""),

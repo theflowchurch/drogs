@@ -1,3 +1,4 @@
+import { gzipSync } from 'node:zlib';
 import { Readable } from 'node:stream';
 import { canonicalSiteRedirect } from '../registration/organization-sites.mjs';
 export function requestHandler({ origin, api, nextHandler }) {
@@ -38,8 +39,23 @@ export function requestHandler({ origin, api, nextHandler }) {
         ...(!['GET', 'HEAD'].includes(req.method) ? { body: Readable.toWeb(req), duplex: 'half' } : {}),
       });
       const response = await api(request);
-      res.writeHead(response.status, Object.fromEntries(response.headers));
-      res.end(Buffer.from(await response.arrayBuffer()));
+      const headers = Object.fromEntries(response.headers);
+      let bytes = Buffer.from(await response.arrayBuffer());
+      // The contact-free roster is ~2 MB as JSON. Compress large API replies
+      // for browsers as well as the usual static assets (roughly 90% smaller).
+      const acceptsGzip = String(req.headers['accept-encoding'] || '').split(',').some(part => {
+        const [name, ...parameters] = part.trim().split(';');
+        const quality = parameters.find(p => p.trim().startsWith('q='));
+        return name.trim() === 'gzip' && (!quality || Number(quality.trim().slice(2)) > 0);
+      });
+      if (bytes.length > 1024 && !headers['content-encoding']) headers.vary = headers.vary ? `${headers.vary}, Accept-Encoding` : 'Accept-Encoding';
+      if (bytes.length > 1024 && acceptsGzip && !headers['content-encoding']) {
+        bytes = gzipSync(bytes, { level: 4 });
+        headers['content-encoding'] = 'gzip';
+        headers['content-length'] = String(bytes.length);
+      }
+      res.writeHead(response.status, headers);
+      res.end(bytes);
     } catch {
       res.writeHead(500, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
       res.end(JSON.stringify({ error: 'Unable to complete the request.' }));

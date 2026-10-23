@@ -73,7 +73,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (path === '/api/registration/references' && method === 'GET') {
         // Only the contact-free published sheet data, never the server's
         // contact-enriched matching records. No account is needed to read it.
-        return json({ rosterVersion, referencePeople });
+        return json({ rosterVersion, referencePeople }, 200, url.searchParams.get('version') === rosterVersion ? { 'Cache-Control': 'public, max-age=31536000, immutable' } : {});
       }
       if (path === '/api/registration/public-directory' && method === 'GET') {
         // Open to everyone: the roll carries no contact details. Cached briefly and
