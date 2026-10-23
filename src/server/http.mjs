@@ -48,8 +48,9 @@ export function requestHandler({ origin, api, nextHandler }) {
         const quality = parameters.find(p => p.trim().startsWith('q='));
         return name.trim() === 'gzip' && (!quality || Number(quality.trim().slice(2)) > 0);
       });
-      if (bytes.length > 1024 && !headers['content-encoding']) headers.vary = headers.vary ? `${headers.vary}, Accept-Encoding` : 'Accept-Encoding';
-      if (bytes.length > 1024 && acceptsGzip && !headers['content-encoding']) {
+      const compressible = /\bjson\b/i.test(headers['content-type'] || '') && bytes.length > 1024;
+      if (compressible && !headers['content-encoding']) headers.vary = headers.vary ? `${headers.vary}, Accept-Encoding` : 'Accept-Encoding';
+      if (compressible && acceptsGzip && !headers['content-encoding']) {
         bytes = gzipSync(bytes, { level: 4 });
         headers['content-encoding'] = 'gzip';
         headers['content-length'] = String(bytes.length);
