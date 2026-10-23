@@ -21,7 +21,8 @@ with sync_playwright() as p:
     page.on('pageerror', lambda error: errors.append(str(error)))
     def login(admin=False):
         page.goto(BASE + ('/admin' if admin else '/signup/bishop/'))  # sign-up lives only on the role pages
-        page.wait_for_load_state('networkidle')
+        # Wait for the controls below: video and quiet background refreshes
+        # do not define whether the member's form is ready to use.
         expect(page.get_by_text('Demo ·', exact=False)).not_to_be_visible()
         if admin:
             page.get_by_label('Access code', exact=True).fill('admin-test-code')
@@ -53,7 +54,7 @@ with sync_playwright() as p:
         expect(page.get_by_text('Photo uploaded · tap to replace it')).to_be_visible()
         page.get_by_role('button',name='Save draft').click()
         expect(page.get_by_text('Draft saved. You can return to finish it.')).to_be_visible()
-        page.reload();page.wait_for_load_state('networkidle')
+        page.reload()
         expect(page.get_by_label('First name',exact=True)).to_have_value('Browser')
         page.set_viewport_size({'width':390,'height':844})
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
@@ -106,7 +107,7 @@ with sync_playwright() as p:
         assert key.startswith('drogs_live_')
         page.get_by_role('button',name='I’ve saved this key',exact=True).click()
         expect(page.get_by_label('New API key',exact=True)).not_to_be_visible()
-        page.reload();page.wait_for_load_state('networkidle')
+        page.reload()
         page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Settings')).click(); page.get_by_role('button',name='API Keys',exact=True).click()
         expect(page.get_by_role('heading',name='Browser integration',exact=True)).to_be_visible()
         page.get_by_role('button',name='Revoke access for Browser integration',exact=True).click()

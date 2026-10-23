@@ -914,6 +914,7 @@ export default function RegistrationApp({
           signup={signup}
           run={run}
           busy={busy}
+          showVideo={!checking}
           onActor={(a) => {
             setSigninOpen(false);
             setActor(a);
@@ -1388,13 +1389,13 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
 }
 // The landing page is only the castle and its name over the photograph; the
 // green Sign in button in the header opens the email form.
-function Account({ office, signup = false, run, busy, onActor, open = false, onClose }) {
+function Account({ office, signup = false, run, busy, onActor, open = false, onClose, showVideo = true }) {
   const site = useContext(OrganizationSiteContext);
   const config = ORGANIZATION_SITES[site];
   const [sent] = useState(false);
   return (
     <section className={`reg-account ${office ? "signup" : "signin"}`}>
-      <HeroVideo src={`${base}/assets/brand/castle-hero-night-b-{size}.mp4`} />
+      {showVideo && <HeroVideo src={`${base}/assets/brand/castle-hero-night-b-{size}.mp4`} />}
       {office ? (
         <>
           <div>
