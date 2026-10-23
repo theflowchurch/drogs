@@ -40,7 +40,7 @@ export const ORGANIZATIONS = [
 export const STORAGE_KEY = "drogs-registration-v1";
 export const splitName = (name) => { const parts = String(name || "").trim().split(/\s+/); return parts.length > 1 ? { given: parts.slice(0, -1).join(" "), surname: parts.at(-1) } : { given: "", surname: parts[0] || "" }; };
 export const bySurname = (a, b) => splitName(a.name).surname.localeCompare(splitName(b.name).surname) || a.name.localeCompare(b.name);
-export const AMOUNTS = { bishop: 100, pastor: 50 };
+export const AMOUNTS = { bishop: 100, pastor: 25 };
 // What a member types as the reference on their mobile-money transfer, so the
 // line on the office's statement points back to one registration.
 export const paymentReference = (r) =>
@@ -846,6 +846,9 @@ export function applyAction(
       };
       state.registrations.push(r);
     }
+    // An unpaid draft follows the displayed fee if the office changed it since
+    // the draft was created. A verified payment keeps its original amount.
+    if (r.payment === "unpaid") r.amount = feesOf(state)[data.role];
     r.data = data;
     r.updatedAt = now;
     r.status =

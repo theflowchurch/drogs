@@ -20,6 +20,7 @@ const EntranceContext = createContext("general");
 const OrganizationSiteContext = createContext("");
 import { ORGANIZATION_SITES, FLOW_GROUPS, peopleForSite, siteCatalog, siteOfOrganization, sitePath, organizationSiteKey } from "./organization-sites.mjs";
 import * as api from "./client";
+import { signupBishopChoices } from './signup-bishops.mjs';
 import { LegalFooter } from "./Docs";
 import { DENOMINATIONS } from "./denominations.mjs";
 import {
@@ -1762,8 +1763,8 @@ function RegistrationForm({
       }
       return next;
     });
-  // Pastors pick their bishop from a list of those who have already registered.
-  const registeredBishops = [...(state.bishops || [])].filter((b) => b.approved && (!siteConfig || siteConfig.organizations.includes(b.organization)) && (!data.organization || b.organization === data.organization)).sort((a, b) => a.name.localeCompare(b.name));
+  const registeredBishops = signupBishopChoices(state.bishops || [], overlayReferences(rosterFrom(state, people), state), data.organization)
+    .filter(b => !siteConfig || siteConfig.organizations.includes(b.organization));
   const chosenBishop = registeredBishops.find((b) => b.id === data.bishopId) || null;
   const pickBishop = (b) =>
     setData((d) => {
@@ -2092,9 +2093,11 @@ function RegistrationForm({
                     autoComplete="address-level2"
                   />
                 </Field>
-                <CommitmentPreview role={data.role} country={data.country} />
+                <CommitmentPreview amount={fees[data.role]} country={data.country} />
                 {data.role === "pastor" && (
-                  <Field label="Your bishop" wide hint={registeredBishops.length
+                  <Field label="Your bishop" wide hint={data.organization === "FLOW"
+                    ? "Mother Nina Masuku is currently the available bishop for FLOW."
+                    : registeredBishops.length
                     ? `Only bishops who have already registered appear here. If yours is missing, ask them to sign up first at ${sitePath(site, "signup/bishop", base)}.`
                     : `No bishop has registered yet. Ask your bishop to sign up first at ${sitePath(site, "signup/bishop", base)}.`}>
                     <select
@@ -2103,7 +2106,7 @@ function RegistrationForm({
                     >
                       <option value="">Choose your bishop…</option>
                       {registeredBishops.map((b) => (
-                        <option key={b.id} value={b.id}>{[b.name, caps(b.denomination)].filter(Boolean).join(" · ")}</option>
+                        <option key={b.id} value={b.id}>{[b.label || b.name, caps(b.denomination)].filter(Boolean).join(" · ")}</option>
                       ))}
                     </select>
                     {chosenBishop && (
@@ -2361,10 +2364,9 @@ function RegistrationForm({
 }
 // Shown as soon as a country is typed, so the amount to send is clear before
 // anyone reaches payment. Same indicative-rate rules as the payment card.
-function CommitmentPreview({ role, country }) {
+function CommitmentPreview({ amount, country }) {
   const [rates, setRates] = useState(null);
-  const currency = currencyFor(country),
-    amount = AMOUNTS[role] || AMOUNTS.pastor;
+  const currency = currencyFor(country);
   useEffect(() => {
     if (!currency || currency === "USD") return;
     let live = true;
@@ -2418,7 +2420,7 @@ function PaystackButton({ current, actor, run, refresh, paystackKey, beforePay, 
     return () => { live = false; };
   }, []);
   const rate = rateFor(rates, "GHS");
-  const ghs = rate ? Math.ceil(current.amount * rate) : 0;
+  const ghs = rate ? Math.round(current.amount * rate * 100) / 100 : 0;
   return (
     <div className="reg-paystack">
       <button
@@ -2432,7 +2434,7 @@ function PaystackButton({ current, actor, run, refresh, paystackKey, beforePay, 
               const handler = globalThis.PaystackPop.setup({
                 key: paystackKey,
                 email: actor.email,
-                amount: ghs * 100,
+                amount: Math.round(ghs * 100),
                 currency: "GHS",
                 channels: ["card", "mobile_money", "bank", "bank_transfer"],
                 metadata: { custom_fields: [{ display_name: "Kuriake Castle", variable_name: "registration", value: `${current.year} ${current.data.role} ${current.data.name}` }] },

@@ -115,7 +115,7 @@ test("unmatched pastor is Unclaimed but can already send payment proof; linked p
     rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }],
   });
   assert.equal(s.registrations.at(-1).status, "confirmed");
-  assert.equal(s.registrations.at(-1).amount, 50);
+  assert.equal(s.registrations.at(-1).amount, 25);
   s = applyAction(s, pastor, "payment", { proof: "p1/receipt/a.jpg", nonrefundable: true, transactionId: "TX-TEST-0001" });
   assert.equal(s.registrations.at(-1).payment, "pending");
   assert.throws(
@@ -374,6 +374,15 @@ test("a pastor must pick a registered bishop and is matched or left for that bis
   s = applyAction(s, bishop, "claim", { userId: lone.id });
   assert.equal(s.registrations.find((r) => r.userId === lone.id).status, "confirmed");
 });
+test("saving an unpaid draft updates its amount to the current fee", () => {
+  let s = setup();
+  s.fees = { bishop: 100, pastor: 50 };
+  s = applyAction(s, pastor, "save", profile(pastor));
+  s = applyAction(s, office, "setFees", { bishop: 100, pastor: 25 });
+  s = applyAction(s, pastor, "save", profile(pastor));
+  assert.equal(s.registrations.find(r => r.userId === pastor.id).amount, 25);
+});
+
 test("a Paystack payment is recorded only once, only when enough was paid", () => {
   let s = setup();
   s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }] });
