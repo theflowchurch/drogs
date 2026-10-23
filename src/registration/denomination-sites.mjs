@@ -8,11 +8,11 @@ export const DENOMINATION_SITES = {
   },
   pleasantsurprise: {
     name: 'Pleasant Surprise Church International', shortName: 'Pleasant Surprise', subtitle: 'Church International',
-    denominations: ['Pleasant Surprise', 'Pleasant Surprise Church International'], logo: 'assets/denominations/pleasant-surprise-cleaned.png', accent: '#49305b',
+    denominations: ['Pleasant Surprise', 'Pleasant Surprise Church International'], logo: 'assets/denominations/pleasant-surprise-cleaned.webp', accent: '#49305b',
   },
   gochurch: {
     name: 'Go Church', shortName: 'Go Church', subtitle: '',
-    denominations: ['Go Church'], logo: 'assets/denominations/go-church-cleaned.png', accent: '#292b28',
+    denominations: ['Go Church'], logo: 'assets/denominations/go-church-cleaned.webp', accent: '#292b28',
   },
 };
 export const denominationSite = key => DENOMINATION_SITES[key] || null;
