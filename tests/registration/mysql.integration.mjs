@@ -291,6 +291,44 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
 
     assert.equal((await call('paystack/verify', bishop.cookie, { reference: 'abc123' })).status, 503, 'Paystack is off until the secret key is configured');
 
+    // Hosted Paystack flow against an isolated database and a fake provider.
+    // No live key, checkout or charge is used by this test.
+    const payer = await login('payment@example.com'), payerPhoto = await upload(payer);
+    assert.equal((await call('action', payer.cookie, { name: 'save', payload: profile(payerPhoto, 'pastor') })).status, 200);
+    let paymentBody, paidAmount, rateCalls = 0;
+    const paymentApi = createApi({ pool, config: { ...config, sourceEnv: undefined, paystack: 'sk_test_fake_only' }, auth, storage, mailer, fetcher: async (url, init) => {
+      if (url.includes('open.er-api')) { rateCalls++; return Response.json({result:'success',rates:{GHS:10}}); }
+      if (url.endsWith('/initialize')) {
+        paymentBody = JSON.parse(init.body); paidAmount = paymentBody.amount;
+        return Response.json({status:true,data:{reference:paymentBody.reference,authorization_url:'https://checkout.paystack.com/fake-test-only'}});
+      }
+      if (url.includes('/verify/')) return Response.json({status:true,data:{status:'success',reference:paymentBody.reference,amount:paidAmount,currency:'GHS',customer:{email:'payment@example.com'},metadata:paymentBody.metadata}});
+      throw Error('Unexpected provider request');
+    } });
+    const payCall = async (path, body, cookie = payer.cookie) => {
+      const response = await paymentApi(new Request(`${config.origin}/api/registration/paystack/${path}`, {method:'POST',headers:{origin:config.origin,cookie,'content-type':'application/json'},body:JSON.stringify(body)}));
+      return {status:response.status,data:await response.json()};
+    };
+    assert.equal((await payCall('quote',{role:'pastor'},'')).status,401);
+    const paymentQuote = await payCall('quote',{role:'pastor'});
+    assert.equal(paymentQuote.status,200); assert.equal(paymentQuote.data.amount,25000);
+    assert.equal((await payCall('initialize',{token:paymentQuote.data.token,returnUrl:'https://evil.example/signup/'})).status,400);
+    assert.equal((await payCall('initialize',{token:'tampered',returnUrl:`${config.origin}/signup/pastor/`})).status,400);
+    const initialized = await payCall('initialize',{token:paymentQuote.data.token,returnUrl:`${config.origin}/signup/pastor/`,amount:1,currency:'USD'});
+    assert.equal(initialized.status,200,JSON.stringify(initialized.data));
+    assert.equal(paymentBody.amount,25000,'client amount/currency cannot override the signed cedi quote'); assert.equal(paymentBody.currency,'GHS');
+    assert.equal(paymentBody.callback_url,`${config.origin}/signup/pastor/?paystack_return=1`);
+    paidAmount--;
+    assert.equal((await payCall('verify',{reference:initialized.data.reference})).status,400,'underpayment is rejected');
+    paidAmount++;
+    assert.equal((await payCall('verify',{reference:initialized.data.reference})).status,200);
+    assert.equal((await payCall('verify',{reference:initialized.data.reference})).status,200,'a repeated callback is idempotent');
+    assert.equal((await payCall('verify',{reference:initialized.data.reference},bishop.cookie)).status,400,'another account cannot use the reference');
+    assert.equal(rateCalls,1,'verification never recalculates the frozen rate');
+    const paymentSnapshot = await call('snapshot',payer.cookie);
+    assert.equal(paymentSnapshot.data.registrations.find(r=>r.userId===payer.data.id).paystackAmount,25000);
+    assert.equal((await payCall('initialize',{token:paymentQuote.data.token,returnUrl:`${config.origin}/signup/pastor/`})).status,409,'verified members cannot pay again');
+
     assert.equal((await call('settings/telegram-test', bishop.cookie, {})).status, 403);
     // First-time setup: one secret, one use.
     assert.equal((await call('settings/bootstrap', '', { token: 'wrong', values: { SMTP_FROM: 'x@example.com' } })).status, 403);

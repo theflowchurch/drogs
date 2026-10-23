@@ -1,6 +1,5 @@
-// Indicative local-currency amounts on the payment screen. The office is paid
-// in USD; the converted figure only helps someone recognise roughly what their
-// bank or mobile-money provider will move, and is always labelled as indicative.
+// Indicative local-currency previews. Paystack Ghana charges in GHS; the
+// server creates a signed, exact cedi quote separately before checkout.
 export const RATES_URL = "https://open.er-api.com/v6/latest/USD";
 export const RATES_KEY = "drogs-registration-rates";
 export const RATES_MAX_AGE = 12 * 60 * 60 * 1000;
@@ -249,7 +248,7 @@ export async function loadRates(fetcher = fetch, store = globalThis.localStorage
     if (cached && Date.now() - cached.fetchedAt < RATES_MAX_AGE) return cached;
   } catch {}
   try {
-    const response = await fetcher(RATES_URL, { cache: "no-store" });
+    const response = await fetcher(RATES_URL, { cache: "no-store", signal: AbortSignal.timeout(6000) });
     const data = await response.json();
     if (data?.result !== "success" || !data.rates) throw Error("no rates");
     const value = {

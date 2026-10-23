@@ -1464,7 +1464,8 @@ export const PASTOR_TITLES = ["Pastor", "Rev.", "Lady Rev."];
 export const BISHOP_TITLES_FEMALE = ["Mother", "Episcopal Sister"];
 // Lay Presidents (office, 9 Oct 2026): not bishops, but they have pastors under them, so they sit with the bishops — last.
 export const isLay = (p) => p?.title === "Lay President";
-export const byRank = (a, b) => (isLay(a) ? 1 : 0) - (isLay(b) ? 1 : 0) || bySurname(a, b); // bishops first, lay presidents last
+export const byMinisterTitle = (a, b) => Number(!['Rev.', 'Lady Rev.'].includes(a.title)) - Number(!['Rev.', 'Lady Rev.'].includes(b.title)) || bySurname(a, b);
+export const byRank = (a, b) => (isLay(a) ? 1 : 0) - (isLay(b) ? 1 : 0) || byMinisterTitle(a, b); // bishops first, lay presidents last
 export const byOversight = (a, b) => (isLay(b) ? 1 : 0) - (isLay(a) ? 1 : 0) || bySurname(a, b); // lay presidents first: they oversee pastors too
 export function titleFor({ role, gender, organization, title }) {
   if (title === "Lay President") return title;
@@ -1576,12 +1577,15 @@ export function referenceIndex(references) {
   return { byId, byName, all: references };
 }
 // People DROGS already holds who may be the same person as an annual-list entry. The
-// name must match exactly once normalized; a matching email or phone makes it
+// exact name is preferred; close names are suggestions. A matching email or phone makes it
 // near certain. A person still confirms from the photo before any record
 // changes, so a close spelling is never linked automatically.
 export function referenceMatches(index, row, role = "pastor") {
-  return (index.byName.get(normalName(row.name)) || [])
-    .filter((p) => p.role === role)
+  const exact = (index.byName.get(normalName(row.name)) || []).filter(p => p.role === role);
+  // Suggestions only: omitted middle names and spelling variations still need
+  // the member's explicit photo confirmation. Never silently claim a record.
+  const candidates = exact.length ? exact : index.all.filter(p => p.role === role && namesAlike(p.name, row.name));
+  return candidates
     .map((p) => ({
       reference: p,
       emailMatch: Boolean(

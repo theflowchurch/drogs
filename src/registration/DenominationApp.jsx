@@ -4,6 +4,7 @@ import * as api from './client';
 import { denominationSite, denominationPeople, ministerSections } from './denomination-sites.mjs';
 import { placeOf, titleFor } from './model.mjs';
 import PortraitImage from './PortraitImage';
+import DenominationTexture from './DenominationTexture';
 import { portraitStyle } from '../runtime/portrait-framing';
 import people from './reference-people.json';
 import './denomination-sites.css';
@@ -28,16 +29,21 @@ function MinisterPortrait({ person, full = false }) {
   const style = Object.fromEntries(portraitStyle(media).split(';').filter(Boolean).map(pair => pair.split(':')));
   return <PortraitImage media={media} src={source} alt={person.name} className="denom-portrait" style={style} fallbackSrc={!full && !person.photo && person.image ? `${base}/${person.image}` : undefined} />;
 }
-function MinisterDialog({ person, onClose }) {
+function MinisterDialog({ person, onClose, onPrevious, onNext, position, total }) {
   const ref = useRef(null);
   useEffect(() => { ref.current?.showModal(); }, []);
-  return <dialog className="denom-dialog" ref={ref} onCancel={onClose} onClick={e => { if (e.target === e.currentTarget) onClose(); }} aria-labelledby="denom-person-name">
-    <button type="button" className="denom-close" onClick={onClose} aria-label="Close profile">×</button>
-    <div className="denom-profile-photo"><MinisterPortrait person={person} full /></div>
-    <p className="denom-kicker">{titleFor(person)}</p><h2 id="denom-person-name">{person.name}</h2><span className="denom-approved"><span aria-hidden="true">✓</span> Approved</span>
+  return <dialog className="denom-dialog" ref={ref} onCancel={onClose} onClick={e => { if (e.target === e.currentTarget) onClose(); }} onKeyDown={e => {
+    if (e.key === 'ArrowLeft' && onPrevious) { e.preventDefault(); onPrevious(); }
+    if (e.key === 'ArrowRight' && onNext) { e.preventDefault(); onNext(); }
+  }} aria-labelledby="denom-person-name">
+    <div className="denom-profile-toolbar"><span>PASTORAL DIRECTORY · {position} / {total}</span><button type="button" className="denom-close" onClick={onClose} aria-label="Close profile">×</button></div>
+    <div className="denom-profile-layout"><div className="denom-profile-photo"><MinisterPortrait person={person} full /></div>
+    <div className="denom-profile-copy"><p className="denom-kicker">{titleFor(person)}</p><h2 id="denom-person-name">{person.name}</h2><span className="denom-approved"><span aria-hidden="true">✓</span> Approved</span>
     {placeOf(person) && <p>{placeOf(person)}</p>}
     {person.branch && <p className="denom-profile-detail">Branch · {person.branch}</p>}
     {person.role === 'pastor' && person.bishop && <p className="denom-profile-detail">Bishop · {person.bishop}</p>}
+    </div></div>
+    <nav className="denom-profile-navigation" aria-label="Minister profiles"><button type="button" className="reg-secondary" onClick={onPrevious} disabled={!onPrevious} aria-label="Previous minister">← Previous</button><span>{position} of {total}</span><button type="button" className="reg-secondary" onClick={onNext} disabled={!onNext} aria-label="Next minister">Next →</button></nav>
   </dialog>;
 }
 function MinisterGrid({ list, onOpen }) {
@@ -66,7 +72,9 @@ function DenominationDirectory({ site }) {
   const list = useMemo(() => data ? denominationPeople(data,site,people) : [],[data,site]);
   const sections = useMemo(() => ministerSections(list,filter),[list,filter]);
   const cities = useMemo(() => [...new Set(list.map(p=>p.city).filter(Boolean))].sort((a,b)=>a.localeCompare(b)),[list]);
-  const selected = list.find(p=>p.id===selectedId) || null;
+  const ordered = [...sections.bishops, ...sections.pastors];
+  const selectedIndex = ordered.findIndex(p=>p.id===selectedId);
+  const selected = ordered[selectedIndex] || null;
   const update = (key,value) => { setFilter(f=>({...f,[key]:value}));setLimit(48); };
   return <main className="denom-directory">
     <div className="denom-directory-heading"><div><p className="denom-kicker">THE PASTORAL DIRECTORY</p><h1>Licensed ministers</h1><p>{denominationSite(site).name}</p></div>{data && <span className="denom-total">{(sections.bishops.length+sections.pastors.length).toLocaleString()} ministers</span>}</div>
@@ -78,7 +86,7 @@ function DenominationDirectory({ site }) {
       {sections.pastors.length>0 && <section className="denom-minister-section" aria-label="Pastors"><h2>Pastors <span>{sections.pastors.length}</span></h2><MinisterGrid list={sections.pastors.slice(0,limit)} onOpen={setSelectedId}/>{sections.pastors.length>limit && <button type="button" className="reg-secondary denom-more" onClick={()=>setLimit(n=>n+48)}>Show more pastors <Arrow/></button>}</section>}
       {!sections.bishops.length&&!sections.pastors.length && <div className="denom-loading"><h2>No ministers match</h2><p>Try another name or clear the filters.</p><button type="button" className="reg-secondary" onClick={()=>setFilter({q:'',city:'',gender:''})}>Clear filters</button></div>}
     </>}
-    {selected && selected.standing!==false && <MinisterDialog person={selected} onClose={()=>setSelectedId(null)}/>}
+    {selected && selected.standing!==false && <MinisterDialog person={selected} onClose={()=>setSelectedId(null)} position={selectedIndex+1} total={ordered.length} onPrevious={selectedIndex>0 ? ()=>setSelectedId(ordered[selectedIndex-1].id) : null} onNext={selectedIndex<ordered.length-1 ? ()=>setSelectedId(ordered[selectedIndex+1].id) : null}/>}
   </main>;
 }
 export default function DenominationApp({ site, browse = false }) {
@@ -87,6 +95,7 @@ export default function DenominationApp({ site, browse = false }) {
   useEffect(()=>{setPaused(matchMedia('(prefers-reduced-motion: reduce)').matches);},[]);
   if (!config) return null;
   return <div className={`denom-site denom-${site} ${paused?'denom-motion-paused':''}`} style={{'--denom-accent':config.accent}}>
+    <DenominationTexture site={site} paused={paused}/>
     <div className="denom-watermark" aria-hidden="true"><img className="denom-watermark-main" src={`${base}/${config.logo}`} alt=""/><img className="denom-watermark-secondary" src={`${base}/${config.logo}`} alt=""/></div>
     <header className="denom-header"><a href={`${base}/${site}/`} className="denom-brand" aria-label={`${config.name} home`}><img src={`${base}/${config.logo}`} alt=""/><span>{config.shortName}{config.subtitle && <small>{config.subtitle}</small>}</span></a></header>
     {browse ? <DenominationDirectory site={site}/> : <main className="denom-home"><div className="denom-home-content"><img className="denom-hero-logo" src={`${base}/${config.logo}`} alt={`${config.name} logo`} fetchPriority="high"/><p className="denom-kicker">THE PASTORAL DIRECTORY</p><h1>{config.shortName}</h1>{config.subtitle && <p className="denom-subtitle">{config.subtitle}</p>}<p className="denom-home-description">Pastors and bishops licensed to minister<br/> within {config.name}.</p><a className="reg-primary denom-enter" href={`${base}/${site}/directory/`}>View all licensed ministers <Arrow/></a></div></main>}

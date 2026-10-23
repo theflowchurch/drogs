@@ -5,10 +5,11 @@ import { createKeyService } from './api-keys.mjs';
 import { createSupport } from './support.mjs';
 import { applySettings, bootstrapSettings, describeSettings, officeMembers, readSettings, writeSettings } from './settings.mjs';
 import { readFile } from 'node:fs/promises';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
+import { paymentJson, createQuote, readQuote, checkoutReturnUrl, validateQuotedPayment } from './paystack.mjs';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
-import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, assignedPortrait, canReadMedia } from './storage.mjs';
@@ -30,7 +31,7 @@ async function paystackMinimum(state, actor, currency, fetcher) {
   const usd = r?.amount || 0;
   if (currency === 'USD') return usd * 100;
   if (currency !== 'GHS') throw new HttpError(400, 'Only GHS or USD payments are accepted.');
-  const rates = await (await fetcher('https://open.er-api.com/v6/latest/USD')).json().catch(() => null);
+  const rates = await paymentJson(fetcher, 'https://open.er-api.com/v6/latest/USD');
   const rate = Number(rates?.rates?.GHS);
   if (!Number.isFinite(rate) || rate <= 0) throw new HttpError(503, 'The exchange rate is unavailable; please try again shortly.');
   return Math.floor(usd * rate * 0.97 * 100);
@@ -38,6 +39,7 @@ async function paystackMinimum(state, actor, currency, fetcher) {
 const json = (value, status = 200, headers = {}) => Response.json(value, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...headers } });
 export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch, logger = console }) {
   let publicCache = { at: 0, value: null };
+  let paymentRate = { at: 0, value: 0 };
   const keys = createKeyService({ pool, config, storage });
   const management = createManagementApi({ pool, config, storage, keys, people, invalidate: () => { publicCache.at = 0; } });
   const support = createSupport({ config, mailer, fetcher, logger });
@@ -271,26 +273,84 @@ ${others.length ? `<p><b>${photoIssue ? 'Other Updates' : 'Updates Needed'}</b><
         }
         return json({ url: await storage.url(key) });
       }
+      if (path === '/api/registration/paystack/quote' && method === 'POST') {
+        if (!config.paystack) throw new HttpError(503, 'Card and mobile-money payments are not switched on yet.');
+        await rateLimit(pool, config, `paystack-quote:${actor.id}`, 60, 600000);
+        const { role } = await jsonBody(request);
+        if (!['bishop', 'pastor'].includes(role)) throw new HttpError(400, 'Choose bishop or pastor before paying.');
+        const state = await transaction(pool, conn => readState(conn));
+        if (!paymentRate.value || Date.now() - paymentRate.at > 5 * 60000) {
+          const rates = await paymentJson(fetcher, 'https://open.er-api.com/v6/latest/USD');
+          const value = Number(rates?.rates?.GHS);
+          if (rates.result !== 'success' || !Number.isFinite(value) || value <= 0) throw new HttpError(503, 'Today’s cedi exchange rate is unavailable. Please try again shortly.');
+          paymentRate = { at: Date.now(), value };
+        }
+        const quote = createQuote({ actor, role, year: state.year, usd: feesOf(state)[role], rate: paymentRate.value, secret: config.secret });
+        return json({ token: quote.token, amount: quote.amount, currency: quote.currency, usd: quote.usd, expiresAt: quote.expiresAt });
+      }
+      if (path === '/api/registration/paystack/initialize' && method === 'POST') {
+        if (!config.paystack) throw new HttpError(503, 'Card and mobile-money payments are not switched on yet.');
+        await rateLimit(pool, config, `paystack-initialize:${actor.id}`, 20, 600000);
+        const { token, returnUrl } = await jsonBody(request);
+        const callback = checkoutReturnUrl(returnUrl, config.origin);
+        // Freeze the signed amount before contacting Paystack. Network requests
+        // never run inside the state lock. A later rate change cannot alter it.
+        const reference = `KC-${randomUUID()}`;
+        const quote = await transaction(pool, async conn => {
+          const before = await readState(conn, true), after = structuredClone(before);
+          const r = after.registrations.find(r => r.userId === actor.id && r.year === after.year);
+          if (!r || r.status === 'denied') throw new HttpError(400, 'Save your registration before paying.');
+          if (r.payment === 'verified') throw new HttpError(409, 'Your payment is already verified. Refresh your profile.');
+          const q = readQuote(token, { actor, registration: r, year: after.year, secret: config.secret });
+          r.paystackQuotes = [...(r.paystackQuotes || []), { ...q, reference }].slice(-50);
+          await persistState(conn, before, after);
+          return q;
+        });
+        const result = await paymentJson(fetcher, 'https://api.paystack.co/transaction/initialize', {
+          method: 'POST', headers: { Authorization: `Bearer ${config.paystack}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: actor.email, amount: quote.amount, currency: 'GHS', reference, callback_url: callback,
+            channels: ['card', 'mobile_money', 'bank', 'bank_transfer'],
+            metadata: { registrationUser: actor.id, registrationYear: quote.year, quoteReference: reference,
+              custom_fields: [{ display_name: 'Kuriake Castle', variable_name: 'registration', value: `${quote.year} ${quote.role}` }] } }),
+        });
+        const checkout = result?.data;
+        if (!result.status || checkout?.reference !== reference || !/^https:\/\/checkout\.paystack\.com\/[A-Za-z0-9_-]+$/.test(checkout?.authorization_url || ''))
+          throw new HttpError(503, 'Paystack could not open checkout. Please try again shortly.');
+        return json({ reference, url: checkout.authorization_url, amount: quote.amount, currency: quote.currency });
+      }
       if (path === '/api/registration/paystack/verify' && method === 'POST') {
         if (!config.paystack) throw new HttpError(503, 'Card and mobile-money payments are not switched on yet.');
         await rateLimit(pool, config, `paystack:${actor.id}`, 20, 600000);
         const { reference } = await jsonBody(request);
         if (typeof reference !== 'string' || !/^[A-Za-z0-9._=-]{6,100}$/.test(reference)) throw new HttpError(400, 'Invalid payment reference.');
-        const response = await fetcher(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, { headers: { Authorization: `Bearer ${config.paystack}` } });
-        const result = await response.json().catch(() => ({}));
+        const result = await paymentJson(fetcher, `https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, { headers: { Authorization: `Bearer ${config.paystack}` } });
         const tx = result?.data;
-        if (!response.ok || !result?.status || tx?.status !== 'success') throw new HttpError(400, 'Paystack has not confirmed this payment yet.');
+        if (!result?.status || tx?.status !== 'success') throw new HttpError(400, 'Paystack has not confirmed this payment yet.');
         // The payment has to belong to this person and this registration, not merely exist.
         if (String(tx.customer?.email || '').toLowerCase() !== actor.email.toLowerCase()) throw new HttpError(400, 'This payment was made under a different email address.');
-        const tag = (tx.metadata?.custom_fields || []).find(f => f.variable_name === 'registration')?.value;
+        const metadata = typeof tx.metadata === 'string' ? JSON.parse(tx.metadata || '{}') : tx.metadata;
+        const tag = (metadata?.custom_fields || []).find(f => f.variable_name === 'registration')?.value;
+        const snapshot = await transaction(pool, conn => readState(conn));
+        const saved = snapshot.registrations.find(r => r.userId === actor.id && r.year === snapshot.year);
+        const storedQuote = saved?.paystackQuotes?.find(q => q.reference === reference);
+        // Old Inline v1 payments can still be verified after deployment. New
+        // hosted payments must match their frozen amount exactly, with no margin.
+        if (!storedQuote && metadata?.quoteReference) throw new HttpError(400, 'This checkout does not belong to this registration.');
+        const legacyMinimum = storedQuote ? null : await paystackMinimum(snapshot, actor, tx.currency, fetcher);
         await transaction(pool, async conn => {
           const before = await readState(conn, true);
           if (!String(tag || '').startsWith(`${before.year} `)) throw new HttpError(400, 'This payment is not for this year’s registration.');
+          const current = before.registrations.find(r => r.userId === actor.id && r.year === before.year);
+          if (current?.payment === 'verified' && current.paystackReference === reference) return;
+          const quote = current?.paystackQuotes?.find(q => q.reference === reference);
+          if (storedQuote && !quote) throw new HttpError(400, 'This checkout is no longer available. Contact the office.');
+          if (quote) validateQuotedPayment(tx, quote, actor, before.year, reference);
           let after;
-          try { after = applyAction(before, actor, 'recordPaystack', { reference, amount: tx.amount, currency: tx.currency, expectedMinor: await paystackMinimum(before, actor, tx.currency, fetcher) }); }
+          try { after = applyAction(before, actor, 'recordPaystack', { reference, amount: tx.amount, currency: tx.currency, expectedMinor: quote?.amount ?? legacyMinimum }); }
           catch (error) { throw new HttpError(400, error.message); }
           await persistState(conn, before, after);
         });
+        publicCache.at = 0;
         return json({ ok: true });
       }
       throw new HttpError(404, 'Not found.');

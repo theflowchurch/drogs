@@ -22,3 +22,9 @@ test('bishops and pastors remain separate sections with city and gender filters 
  assert.equal(ministerSections([b,p],{q:'Anne London'}).pastors.length,1);
  assert.equal(Object.keys(DENOMINATION_SITES).length,3);
 });
+test('reverends precede other pastors while bishops stay in the first section',()=>{
+ const people=[{...p,id:'ordinary',name:'Anna Aardvark',title:'Pastor'},{...p,id:'rev',name:'Zoe Zulu',title:'Rev.'},{...p,id:'lady',name:'Lady Brown',title:'Lady Rev.'},b];
+ const sections=ministerSections(people);
+ assert.deepEqual(sections.bishops.map(p=>p.id),['b']);
+ assert.deepEqual(sections.pastors.map(p=>p.id),['lady','rev','ordinary']);
+});

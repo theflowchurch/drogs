@@ -840,6 +840,7 @@ export default function RegistrationApp({
           </a>
         </div>
       )}
+      {!office && actor && <PaystackReturn actor={actor} run={run} refresh={refresh}/>}
       {error && (
         <div className="reg-alert error" role="alert">
           {error}
@@ -1703,6 +1704,10 @@ function RegistrationForm({
   const siteConfig = ORGANIZATION_SITES[site];
   const catalog = siteCatalog(state.catalog || catalogOf(state), site);
   const matchingIndex = useMemo(() => referenceIndex(peopleForSite(overlayReferences(rosterFrom(state, people), state), site)), [site, state.referencePeople, state.overrides, state.extraReferences, state.hidden]);
+  const checkoutDraftKey = `kc-checkout-draft:${state.year}:${actor.id}`;
+  const [checkoutDraft] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem(checkoutDraftKey) || 'null'); } catch { return null; }
+  });
   const [data, setData] = useState(() => ({
       ...{
         entrance,
@@ -1730,9 +1735,9 @@ function RegistrationForm({
       email: registrationEmail(actor.email, initial?.email),
     })),
     // Onboarding is one guided path: details → (bishops: pastors) → payment → review → confirm.
-    [step, setStep] = useState("details"),
-    [rosterRows, setRosterRows] = useState([]),
-    [slots, setSlots] = useState(() => blankSlots(4)),
+    [step, setStep] = useState(checkoutDraft ? "payment" : "details"),
+    [rosterRows, setRosterRows] = useState(checkoutDraft?.rows || []),
+    [slots, setSlots] = useState(() => checkoutDraft?.slots || blankSlots(4)),
     [rosterError, setRosterError] = useState(""),
     [rates, setRates] = useState(null),
     [accurate, setAccurate] = useState(false),
@@ -1750,7 +1755,8 @@ function RegistrationForm({
   const adopt = (ref) =>
     setData((d) => {
       // Photo and phone are never taken from the old record: both are asked for afresh.
-      const next = { ...d, referenceId: ref.id, photoConfirmed: false };
+      const parts = splitName(ref.name);
+      const next = { ...d, referenceId: ref.id, name: ref.name, firstName: parts.given, lastName: parts.surname, photoConfirmed: false };
       if (!d.country && ref.country) next.country = ref.country;
       if (!d.city && ref.city) next.city = ref.city;
       if ((!d.organization || site) && catalog.organizations.includes(ref.organization)) next.organization = ref.organization;
@@ -1761,6 +1767,8 @@ function RegistrationForm({
         const parts = ref.bishop.trim().split(/\s+/);
         next.bishopFirstName = parts.slice(0, -1).join(" ") || parts[0];
         next.bishopLastName = parts.length > 1 ? parts.at(-1) : "";
+        const bishop = signupBishopChoices(state.bishops || [], matchingIndex.all, next.organization).find(b => normalName(b.name) === normalName(ref.bishop));
+        if (bishop) next.bishopId = bishop.id;
       }
       return next;
     });
@@ -1811,6 +1819,9 @@ function RegistrationForm({
   const rate = rateFor(rates, currency);
   // This year's record for the person (a draft once the payment step saves it).
   const mine = state.registrations.find((r) => r.userId === actor.id && r.year === state.year);
+  useEffect(() => {
+    if (checkoutDraft && mine?.payment === "verified") setStep("review");
+  }, [checkoutDraft, mine?.payment]);
   async function save() {
     await run(async () => {
       await api.action(actor, "save", data);
@@ -1824,6 +1835,7 @@ function RegistrationForm({
       if (!editing && rosterRows.length) await api.action(actor, "addRoster", { rows: rosterRows });
       await refresh();
     }, editing ? "Your details are updated." : "Thank you. Your registration has been received and is being processed.");
+    if (ok) sessionStorage.removeItem(checkoutDraftKey);
     if (ok && editing) onDone?.();
   }
   return (
@@ -2216,7 +2228,10 @@ function RegistrationForm({
                     currency={currency}
                     rate={rate}
                     paystackKey={state.paystackKey}
-                    beforePay={() => api.action(actor, "save", data)}
+                    beforePay={async () => {
+                      await api.action(actor, "save", data);
+                      sessionStorage.setItem(checkoutDraftKey, JSON.stringify({ rows: rosterRows, slots }));
+                    }}
                   />
                 </>
               ) : PREVIEW ? (
@@ -2387,75 +2402,67 @@ function CommitmentPreview({ amount, country }) {
           ? ""
           : currency
             ? " · fetching today’s rate…"
-            : " · we could not match that country to a currency; the amount is charged in USD"}
+            : " · we could not match that country to a currency; checkout shows the exact Ghana cedi amount"}
       <small>
-        The fee is set in US dollars. The Ghana cedi amount shown is an estimate; your
-        bank or mobile-money provider determines the final amount charged.
+        The fee is set in US dollars and paid in Ghana cedis. Your exact cedi total
+        appears before checkout. A card in another currency may use a different conversion rate.
       </small>
     </p>
   );
 }
-// Card or mobile money through Paystack's inline checkout. The amount is charged
-// in GHS at the same indicative rate the member sees; the server confirms the
-// reference with Paystack before the payment is recorded.
+// Paystack Ghana settles in GHS. Checkout uses a signed server quote;
+// only a successful server verification records a payment.
 function PaymentPolicyNotice() {
   return <p className="reg-small reg-payment-policy">Payments are received by Kuriake Castle for annual Good Standing renewal. Read our <a href={`${base}/payments/`} target="_blank" rel="noreferrer">payment information</a> and <a href={`${base}/refunds/`} target="_blank" rel="noreferrer">refund policy</a>, including payment-error exceptions.</p>;
 }
-function PaystackButton({ current, actor, run, refresh, paystackKey, beforePay, label }) {
-  const [ready, setReady] = useState(Boolean(globalThis.PaystackPop));
-  // Paystack Ghana accounts settle in cedis only, so every member is charged
-  // in GHS converted from the USD fee at today's rate. No rate, no charge:
-  // falling back to USD made Paystack refuse the currency.
-  const [rates, setRates] = useState(undefined);
+// Hosted checkout avoids the old embedded iframe's indefinite loading overlay.
+// Its amount is signed by our server and checked exactly when Paystack verifies.
+function PaystackButton({ current, run, beforePay, label }) {
+  const [quote, setQuote] = useState(null), [error, setError] = useState(''), [loading, setLoading] = useState(false), [opening, setOpening] = useState(false), [retry, setRetry] = useState(0);
   useEffect(() => {
     let live = true;
-    loadRates().then((value) => live && setRates(value));
-    if (globalThis.PaystackPop) setReady(true);
-    else {
-      const script = document.createElement("script");
-      script.src = "https://js.paystack.co/v1/inline.js";
-      script.async = true;
-      script.onload = () => setReady(true);
-      document.body.appendChild(script);
-    }
+    setQuote(null); setError(''); setLoading(true);
+    api.paystackQuote(current.data.role).then(q => { if (live) setQuote(q); }).catch(e => { if (live) setError(e.message); }).finally(() => { if (live) setLoading(false); });
     return () => { live = false; };
-  }, []);
-  const rate = rateFor(rates, "GHS");
-  const ghs = rate ? Math.round(current.amount * rate * 100) / 100 : 0;
-  return (
-    <div className="reg-paystack">
-      <button
-        type="button"
-        className="reg-primary full"
-        disabled={!ready || !ghs}
-        onClick={() =>
-          run(async () => {
-            await beforePay?.();
-            const reference = await new Promise((resolve, reject) => {
-              const handler = globalThis.PaystackPop.setup({
-                key: paystackKey,
-                email: actor.email,
-                amount: Math.round(ghs * 100),
-                currency: "GHS",
-                channels: ["card", "mobile_money", "bank", "bank_transfer"],
-                metadata: { custom_fields: [{ display_name: "Kuriake Castle", variable_name: "registration", value: `${current.year} ${current.data.role} ${current.data.name}` }] },
-                callback: (response) => resolve(response.reference),
-                onClose: () => reject(Error("Payment window closed. Nothing was charged; you can pay later from My profile.")),
-              });
-              handler.openIframe();
-            });
-            await api.paystackVerify(reference);
-            await refresh();
-          }, "Payment received. Thank you for your commitment.")
-        }
-      >
-        {ghs ? (label || `Pay GHS ${ghs.toLocaleString()} securely →`) : rates === null ? "Today’s rate is unavailable. Try again in a minute." : "Getting today’s rate…"}
-      </button>
-      <small className="reg-small">
-        Secure payment by Paystack. The ${current.amount} USD fee will be charged in Ghana cedis at the current exchange rate.
-      </small>
-    </div>
-  );
+  }, [current.data.role, current.amount, retry]);
+  const amount = quote ? new Intl.NumberFormat('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(quote.amount / 100) : '';
+  return <div className="reg-paystack">
+    {quote && <p className="reg-local-amount"><strong>Checkout total: GHS {amount}</strong><small>The ${quote.usd} USD fee converted to cedis. This is the exact cedi amount sent to Paystack; no extra fee is added by this site.</small></p>}
+    <button type="button" className="reg-primary full" disabled={!quote || opening || loading} onClick={() => {
+      setOpening(true);
+      run(async () => {
+        if (quote.expiresAt <= Date.now()) { setRetry(n => n + 1); throw Error('The cedi amount has expired. Please check the refreshed amount and pay again.'); }
+        await beforePay?.();
+        const checkout = await api.paystackInitialize(quote.token, location.href);
+        location.assign(checkout.url);
+      }).finally(() => setOpening(false));
+    }}>{opening ? 'Opening secure checkout…' : quote ? label || `Pay GHS ${amount} securely →` : loading ? 'Getting your cedi amount…' : 'Payment amount unavailable'}</button>
+    {error && <p className="reg-small" role="alert">{error}</p>}
+    {!loading && <button className="reg-text" type="button" disabled={opening} onClick={() => setRetry(n => n + 1)}>Refresh cedi amount</button>}
+    <small className="reg-small">Secure checkout by Paystack. If your card uses another currency, your bank or Paystack may offer a conversion at a different rate. International cards require international payments to be enabled on the merchant account.</small>
+  </div>;
+}
+function PaystackReturn({ actor, run, refresh }) {
+  const [reference, setReference] = useState(() => {
+    const query = new URLSearchParams(location.search);
+    return query.get('paystack_return') === '1' ? query.get('reference') || query.get('trxref') || '' : '';
+  });
+  const [status, setStatus] = useState('idle');
+  const started = useRef(false);
+  async function verify() {
+    setStatus('checking');
+    const ok = await run(async () => { await api.paystackVerify(reference); await refresh(actor); }, 'Payment verified. Please review your details and confirm your registration.');
+    setStatus(ok ? 'done' : 'failed');
+    if (ok) {
+      const url = new URL(location.href);
+      for (const key of ['paystack_return', 'reference', 'trxref']) url.searchParams.delete(key);
+      history.replaceState(null, '', url);
+      setReference('');
+    }
+  }
+  useEffect(() => { if (reference && !started.current) { started.current = true; verify(); } }, [reference]);
+  if (!reference) return null;
+  return <div className="reg-alert" role="status">{status === 'checking' ? 'Confirming your payment with Paystack…' : 'Payment has not been verified yet. Please check it before paying again.'}{status === 'failed' && <button type="button" onClick={verify}>Check payment again</button>}</div>;
 }
 function Payment({ current, actor, run, refresh, paystackKey = "" }) {
   const [rates, setRates] = useState(null);
@@ -2477,7 +2484,7 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
       {rate > 0 && (
         <p className="reg-local-amount">
           Approximately {localAmount(current.amount, rate, currency)}
-          <small>Indicative rate. Your bank or mobile-money provider sets the final amount.</small>
+          <small>Estimate only. Your exact Ghana cedi total appears at checkout.</small>
         </p>
       )}
       <b>Non-refundable</b>
@@ -3460,7 +3467,7 @@ function PastorsUnder({ bishop, extra = [], onOpen, dots = false, from }) {
   const flow = useContext(OrganizationSiteContext) === "flow";
   const named = bishopPastors(bishop, from || roster.filter(p => !p.unclaimed));
   const seen = new Set(extra.map((q) => q.id));
-  const list = [...extra, ...named.list.filter((q) => !seen.has(q.id))].sort(bySurname);
+  const list = [...extra, ...named.list.filter((q) => !seen.has(q.id))].sort(byRank);
   if (!list.length) return <section className="reg-record-group"><h3>{flow ? "No pastors listed" : "No pastors under their oversight"}</h3></section>;
   return (
     <section className="reg-record-group">
@@ -3736,7 +3743,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
     const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(byOversight).map((p, i) => ({ ...p, n: i + 1 })); // lay presidents first (they oversee), then the bishops
     const taken = new Set(), blocks = [];
     for (const b of bishopsSorted) {
-      const list = pastorsUnder(b, byBishop).filter((q) => !taken.has(q.id)).sort(bySurname);
+      const list = pastorsUnder(b, byBishop).filter((q) => !taken.has(q.id)).sort(byRank);
       list.forEach((q) => taken.add(q.id));
       blocks.push({ bishop: b, pastors: list });
     }
@@ -3745,7 +3752,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
     // Approved bishops with pastors lead; every other bishop (not yet approved, or without pastors) sits at the very bottom as a circle.
     const withPastors = blocks.filter((x) => x.pastors.length && x.bishop.standing !== false).map((x) => ({ ...x, pastors: x.pastors.map(number) }));
     const alone = blocks.filter((x) => !x.pastors.length || x.bishop.standing === false).map((x) => x.bishop);
-    const rest = roll.filter((q) => q.role === "pastor" && !taken.has(q.id)).sort(bySurname).map(number);
+    const rest = roll.filter((q) => q.role === "pastor" && !taken.has(q.id)).sort(byRank).map(number);
     // The order people appear on screen, so the dialog's arrows move to the neighbour.
     const order = [...withPastors.flatMap((x) => [x.bishop, ...x.pastors]), ...alone, ...rest];
     return { withPastors, alone, rest, order };
@@ -3763,7 +3770,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
   // Which sequence the dialog arrows step through: the grid as shown, or one bishop's pastors.
   const [stepList, setStepList] = useState(null);
   const pick = (seq) => (p) => { setStepList(seq); setSelected(p); };
-  const openUnder = (bishop) => (q) => { setStepList(pastorsOf(bishop, roll).sort(bySurname)); trail.open(q); };
+  const openUnder = (bishop) => (q) => { setStepList(pastorsOf(bishop, roll).sort(byRank)); trail.open(q); };
   const steps = stepList || flowSections?.order || (grouped ? grouped.order : list);
   return (
     <>

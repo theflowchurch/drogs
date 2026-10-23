@@ -1,4 +1,4 @@
-import { normalName, overlayReferences, isLay, bySurname } from './model.mjs';
+import { normalName, overlayReferences, isLay, bySurname, byMinisterTitle } from './model.mjs';
 import { publicRosterFrom } from './live-roster.mjs';
 
 export const DENOMINATION_SITES = {
@@ -34,6 +34,6 @@ export const ministerSections = (people, { q = '', city = '', gender = '' } = {}
   const matches = people.filter(p => (!city || p.city === city) && (!gender || p.gender === gender) && words.every(w => normalName(`${p.name} ${p.city || ''} ${p.country || ''} ${p.branch || ''}`).includes(w)));
   return {
     bishops: matches.filter(p => p.role === 'bishop' && !isLay(p)).sort(bySurname),
-    pastors: matches.filter(p => p.role === 'pastor' || isLay(p)).sort(bySurname),
+    pastors: matches.filter(p => p.role === 'pastor' || isLay(p)).sort(byMinisterTitle),
   };
 };

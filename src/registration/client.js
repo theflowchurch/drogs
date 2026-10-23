@@ -195,6 +195,8 @@ export const referenceImage = (role) =>
   `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/${role === "bishop" ? "assets/brand/bishop-example-2.jpg" : "assets/brand/pastor-example.jpg"}`;
 
 // Card and mobile-money checkout through Paystack; the server confirms every reference with the secret key.
+export const paystackQuote = role => server('paystack/quote', { role });
+export const paystackInitialize = (token, returnUrl) => server('paystack/initialize', { token, returnUrl });
 export const paystackVerify = (reference) => server("paystack/verify", { reference });
 
 export const telegramTest = () => server('settings/telegram-test', {});

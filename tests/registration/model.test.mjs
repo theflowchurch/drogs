@@ -884,3 +884,12 @@ test("public roll helpers: surname order, supplied locations, capitals for denom
   assert.equal(placeOf({ city: "", country: "" }), "");
   assert.equal(caps("First Love Church"), "FIRST LOVE CHURCH");
 });
+test('an omitted middle name suggests the current pastor without claiming or altering the record', () => {
+ const people=[{id:'joshua',role:'pastor',name:'Joshua Korsi Gbafa'},{id:'other',role:'pastor',name:'Joshua Kwame Gbafa'},{id:'bishop',role:'bishop',name:'Joshua Gbafa'}],before=structuredClone(people);
+ const matches=referenceMatches(referenceIndex(people),{name:'Joshua Gbafa'});
+ assert.deepEqual(matches.map(m=>m.reference.id),['joshua','other']);
+ assert.deepEqual(people,before);
+ const exact=referenceMatches(referenceIndex(people),{name:'Joshua Korsi Gbafa'});
+ assert.deepEqual(exact.map(m=>m.reference.id),['joshua']);
+ assert.deepEqual(referenceMatches(referenceIndex(people),{name:'Someone Else'}),[]);
+});
