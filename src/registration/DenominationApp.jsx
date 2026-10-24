@@ -40,7 +40,6 @@ function MinisterDialog({ person, onClose, onPrevious, onNext, position, total }
     <div className="denom-profile-layout"><div className="denom-profile-photo"><MinisterPortrait person={person} full /></div>
     <div className="denom-profile-copy"><p className="denom-kicker">{titleFor(person)}</p><h2 id="denom-person-name">{person.name}</h2>
     {placeOf(person) && <p>{placeOf(person)}</p>}
-    {person.branch && <p className="denom-profile-detail">Branch · {person.branch}</p>}
     {person.role === 'pastor' && person.bishop && <p className="denom-profile-detail">Bishop · {person.bishop}</p>}
     </div></div>
     <nav className="denom-profile-navigation" aria-label="Minister profiles"><button type="button" className="reg-secondary" onClick={onPrevious} disabled={!onPrevious} aria-label="Previous minister">← Previous</button><span>{position} of {total}</span><button type="button" className="reg-secondary" onClick={onNext} disabled={!onNext} aria-label="Next minister">Next →</button></nav>

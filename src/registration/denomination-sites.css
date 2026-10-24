@@ -25,18 +25,18 @@
 .denom-person-copy{flex:1;display:flex;flex-direction:column;width:100%}
 .denom-person h3{min-height:4.35em}
 .denom-person-copy p{min-height:3em}
-.denom-dialog{width:min(1100px,calc(100% - 48px));padding:24px 32px;border-radius:20px;text-align:left;max-height:94svh}
+.denom-dialog{width:min(960px,calc(100% - 48px));padding:24px 28px;border-radius:20px;text-align:left;max-height:94svh}
 .denom-profile-toolbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:20px;color:var(--denom-muted);font-size:10px;letter-spacing:1.5px}
 .denom-profile-toolbar .denom-close{position:static;padding:0 6px;line-height:1}
-.denom-profile-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:center}
-.denom-profile-photo{width:100%;height:min(62svh,570px);min-height:300px;margin:0;border-radius:14px;background:#ebedf1}
-.denom-profile-copy h2{font-size:clamp(28px,3.5vw,48px);letter-spacing:-1px;line-height:1.15;margin:0 0 20px}
-.denom-profile-copy>p{font-size:16px;line-height:1.7}
-.denom-profile-copy .denom-profile-detail{font-size:14px}
-.denom-profile-copy .denom-kicker{font-size:12px}
+.denom-profile-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:32px;align-items:center}
+.denom-profile-photo{width:100%;height:min(52svh,490px);min-height:280px;margin:0;border-radius:14px;background:#ebedf1}
+.denom-profile-copy h2{font-size:clamp(30px,3.5vw,48px);letter-spacing:-1px;line-height:1.12;margin:0 0 18px;overflow-wrap:anywhere}
+.denom-profile-copy>p{font-size:18px;line-height:1.5;margin:0 0 14px}
+.denom-profile-copy .denom-profile-detail{font-size:16px;line-height:1.5;margin:0}
+.denom-profile-copy .denom-kicker{font-size:12px;margin-bottom:12px}
 .denom-profile-navigation{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:24px;padding-top:20px;border-top:1px solid var(--denom-line)}
 .denom-profile-navigation>span{font-size:11px;color:var(--denom-muted)}
 .denom-profile-navigation button{font-size:13px}
 .denom-profile-navigation button:disabled{opacity:.35;cursor:default}
-@media(max-width:700px){.denom-person h3{min-height:4.05em}.denom-dialog{width:calc(100% - 24px);padding:18px}.denom-profile-toolbar{font-size:8px;margin-bottom:14px}.denom-profile-layout{grid-template-columns:1fr;gap:24px}.denom-profile-photo{height:44svh;min-height:240px;max-width:360px;margin:auto}.denom-profile-copy h2{font-size:29px}.denom-profile-copy>p{font-size:14px}.denom-profile-navigation{position:sticky;bottom:-18px;background:#fff;padding-bottom:12px}.denom-profile-navigation button{font-size:11px;padding:10px 14px}}
+@media(max-width:700px){.denom-person h3{min-height:4.05em}.denom-dialog{width:calc(100% - 24px);padding:18px}.denom-profile-toolbar{font-size:8px;margin-bottom:14px}.denom-profile-layout{grid-template-columns:1fr;gap:20px}.denom-profile-photo{height:42svh;min-height:240px;max-width:360px;margin:auto}.denom-profile-copy h2{font-size:29px;margin-bottom:12px}.denom-profile-copy>p{font-size:15px}.denom-profile-copy .denom-profile-detail{font-size:14px}.denom-profile-navigation{position:sticky;bottom:-18px;background:#fff;padding-bottom:12px}.denom-profile-navigation button{font-size:11px;padding:10px 14px}}
 @media(prefers-reduced-motion:reduce){.denom-person{transition:none}.denom-person:hover{transform:none}}
