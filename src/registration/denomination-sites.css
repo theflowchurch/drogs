@@ -10,8 +10,7 @@
 
 .denom-watermark img.denom-watermark-secondary{width:min(760px,78vw);top:auto;bottom:-350px;right:auto;left:-300px;opacity:.04;animation:denom-secondary-drift 64s ease-in-out infinite alternate;transform:rotate(15deg)}
 @keyframes denom-secondary-drift{from{transform:rotate(15deg) translate(0,0)}to{transform:rotate(8deg) translate(20px,-18px)}}
-.denom-approved{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:#326d4b;margin-top:12px}.denom-approved>span{font-size:12px}.denom-dialog>.denom-approved{margin-top:0;margin-bottom:12px}
-@media(max-width:700px){.denom-watermark img.denom-watermark-secondary{width:100vw;left:-60%;bottom:-130px}.denom-approved{font-size:9px;margin-top:10px}}
+@media(max-width:700px){.denom-watermark img.denom-watermark-secondary{width:100vw;left:-60%;bottom:-130px}}
 
 .denom-motion-paused .denom-watermark img{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.denom-site .denom-watermark img{animation:none}}
@@ -26,7 +25,6 @@
 .denom-person-copy{flex:1;display:flex;flex-direction:column;width:100%}
 .denom-person h3{min-height:4.35em}
 .denom-person-copy p{min-height:3em}
-.denom-person-copy .denom-approved{margin-top:auto;padding-top:12px}
 .denom-dialog{width:min(1100px,calc(100% - 48px));padding:24px 32px;border-radius:20px;text-align:left;max-height:94svh}
 .denom-profile-toolbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:20px;color:var(--denom-muted);font-size:10px;letter-spacing:1.5px}
 .denom-profile-toolbar .denom-close{position:static;padding:0 6px;line-height:1}

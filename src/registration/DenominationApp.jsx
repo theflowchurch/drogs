@@ -38,7 +38,7 @@ function MinisterDialog({ person, onClose, onPrevious, onNext, position, total }
   }} aria-labelledby="denom-person-name">
     <div className="denom-profile-toolbar"><span>PASTORAL DIRECTORY · {position} / {total}</span><button type="button" className="denom-close" onClick={onClose} aria-label="Close profile">×</button></div>
     <div className="denom-profile-layout"><div className="denom-profile-photo"><MinisterPortrait person={person} full /></div>
-    <div className="denom-profile-copy"><p className="denom-kicker">{titleFor(person)}</p><h2 id="denom-person-name">{person.name}</h2><span className="denom-approved"><span aria-hidden="true">✓</span> Approved</span>
+    <div className="denom-profile-copy"><p className="denom-kicker">{titleFor(person)}</p><h2 id="denom-person-name">{person.name}</h2>
     {placeOf(person) && <p>{placeOf(person)}</p>}
     {person.branch && <p className="denom-profile-detail">Branch · {person.branch}</p>}
     {person.role === 'pastor' && person.bishop && <p className="denom-profile-detail">Bishop · {person.bishop}</p>}
@@ -49,7 +49,7 @@ function MinisterDialog({ person, onClose, onPrevious, onNext, position, total }
 function MinisterGrid({ list, onOpen }) {
   return <div className="denom-grid">{list.map(person => <button type="button" className="denom-person" key={person.id} onClick={() => onOpen(person.id)} aria-label={person.name}>
     <div className="denom-person-photo"><MinisterPortrait person={person}/></div>
-    <div className="denom-person-copy"><small>{titleFor(person)}</small><h3>{person.name}</h3>{placeOf(person) && <p>{placeOf(person)}</p>}<span className="denom-approved"><span aria-hidden="true">✓</span> Approved</span></div>
+    <div className="denom-person-copy"><small>{titleFor(person)}</small><h3>{person.name}</h3>{placeOf(person) && <p>{placeOf(person)}</p>}</div>
   </button>)}</div>;
 }
 function DenominationDirectory({ site }) {
