@@ -3,14 +3,17 @@ import { publicRosterFrom } from './live-roster.mjs';
 
 export const DENOMINATION_SITES = {
   lighthousechapelinternational: {
+    homeConcept: 2,
     name: 'Lighthouse Chapel International', shortName: 'Lighthouse Chapel', subtitle: 'International',
     denominations: ['Lighthouse Chapel International'], logo: 'assets/denominations/lighthouse-chapel.webp', accent: '#786133', directoryAction: 'Explore our ministers', directoryHeading: 'Find a minister',
   },
   pleasantsurprise: {
+    homeConcept: 1,
     name: 'Pleasant Surprise Church International', shortName: 'Pleasant Surprise', subtitle: 'Church International',
     denominations: ['Pleasant Surprise', 'Pleasant Surprise Church International'], logo: 'assets/denominations/pleasant-surprise-cleaned.webp', accent: '#49305b', directoryAction: 'Meet our bishops & pastors', directoryHeading: 'Meet our ministers.',
   },
   gochurch: {
+    homeConcept: 2,
     name: 'Go Church', shortName: 'Go Church', subtitle: '',
     denominations: ['Go Church'], logo: 'assets/denominations/go-church-cleaned.webp', accent: '#292b28', directoryAction: 'Find a licensed minister', directoryHeading: 'Our people.',
   },

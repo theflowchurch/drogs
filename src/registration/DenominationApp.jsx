@@ -133,7 +133,7 @@ function DenominationDirectory({ site }) {
 }
 export default function DenominationApp({ site, browse = false }) {
   const config = denominationSite(site);
-  const [paused, setPaused] = useState(false), [concept, setConcept] = useState(1);
+  const [paused, setPaused] = useState(false), [concept, setConcept] = useState(config?.homeConcept || 1);
   useEffect(() => { setPaused(matchMedia('(prefers-reduced-motion: reduce)').matches); const choice = Number(new URLSearchParams(window.location.search).get('concept')); if ([1, 2, 3].includes(choice)) setConcept(choice); }, []);
   if (!config) return null;
   return <div className={`denom-site denom-${site} ${browse ? 'denom-is-directory' : `denom-is-home denom-concept-${concept}`} ${paused ? 'denom-motion-paused' : ''}`} style={{ '--denom-accent': !browse && ((site === 'gochurch' && concept !== 2) || (site === 'lighthousechapelinternational' && concept === 3)) ? '#d5b56c' : config.accent }}>
