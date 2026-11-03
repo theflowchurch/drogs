@@ -16,6 +16,7 @@ test('local OCR accepts light, dark and photographed receipts and rejects portra
   assert.equal((await inspectReceipt(await sharp({ create: { width: 500, height: 700, channels: 3, background: '#fff' } }).png().toBuffer())).verdict, 'not_receipt');
   assert.equal(classifyReceipt({ text: 'Our church Sunday programme welcomes everyone to join the choir and weekly services', confidence: 90 }).verdict, 'not_receipt');
   assert.equal(classifyReceipt({ text: 'Montant EUR 25,00 paiement reçu référence ABC123', confidence: 80 }).verdict, 'receipt');
+  assert.equal(classifyReceipt({ text: '', confidence: 0, visual: { verdict: 'receipt' } }).verdict, 'unclear', 'a document whose language cannot be read is left for office review');
   assert.equal((await inspectReceipt(images[0], { recognize: async () => { throw Error('OCR unavailable'); } })).verdict, 'unclear', 'an OCR outage does not falsely reject a receipt');
   if (process.env.RECEIPT_FIXTURES) { await mkdir(process.env.RECEIPT_FIXTURES, { recursive: true }); await writeFile(`${process.env.RECEIPT_FIXTURES}/receipt.png`, images[0]); }
 });
