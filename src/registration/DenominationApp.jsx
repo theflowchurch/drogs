@@ -6,9 +6,11 @@ import { placeOf } from './model.mjs';
 import PortraitImage from './PortraitImage';
 import DenominationTexture from './DenominationTexture';
 import LicensedMinisterNotice from './LicensedMinisterNotice';
+import DenominationHome from './DenominationHome';
 import { portraitStyle } from '../runtime/portrait-framing';
 import people from './reference-people.json';
 import './denomination-sites.css';
+import './landing-concepts.css';
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const Arrow = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
@@ -74,46 +76,6 @@ function ProfileViewer({ list, selectedId, onSelect }) {
   const index = list.findIndex(p => p.id === selectedId), selected = list[index];
   return selected && selected.standing !== false ? <MinisterDialog person={selected} onClose={() => onSelect(null)} position={index + 1} total={list.length} onPrevious={index > 0 ? () => onSelect(list[index - 1].id) : null} onNext={index < list.length - 1 ? () => onSelect(list[index + 1].id) : null}/> : null;
 }
-function GalleryPortrait({ person, onOpen, index }) {
-  return <button type="button" className={`denom-gallery-portrait gallery-${index}`} onClick={() => onOpen(person.id)} aria-label={`View ${person.name}`}>
-    <div className="denom-gallery-image"><MinisterPortrait person={person} full/></div>
-    <span className="denom-gallery-caption"><small>{ministerDisplayTitle(person)}</small><strong>{person.name}</strong></span>
-  </button>;
-}
-function ChurchName({ config }) {
-  return <><h1 className="denom-church-name">{config.shortName}</h1>{config.subtitle && <p className="denom-church-subtitle">{config.subtitle}</p>}</>;
-}
-function HomeGallery({ list, onOpen, className = '' }) {
-  return <div className={`denom-home-gallery ${className}`} aria-label="Photo gallery of ministers">{list.map((person, i) => <GalleryPortrait key={person.id} person={person} index={i} onOpen={onOpen}/>)}</div>;
-}
-function DenominationHome({ site, roster }) {
-  const config = denominationSite(site), [selectedId, onSelect] = useState(null);
-  const sections = useMemo(() => ministerSections(roster.list), [roster.list]);
-  const ordered = [...sections.bishops, ...sections.pastors];
-  // Use current roster portraits, with both women and men represented where available.
-  const portraits = ordered.filter(p => p.photo || p.image);
-  const woman = portraits.find(p => p.gender === 'female');
-  const gallery = [...new Map([portraits[0], woman, ...portraits].filter(Boolean).map(p => [p.id, p])).values()].slice(0, 4);
-  const link = <a className="denom-action" href={`${base}/${site}/directory/`}>{config.directoryAction}<Arrow/></a>;
-  const mark = <img className="denom-hero-logo" src={`${base}/${config.logo}`} alt={`${config.name} logo`} fetchPriority="high"/>;
-  return <main className="denom-home">
-    {site === 'lighthousechapelinternational' && <section className="lighthouse-hero">
-      <div className="denom-home-copy">{mark}<p className="denom-kicker">THE MINISTERIAL DIRECTORY</p><ChurchName config={config}/><p className="denom-home-description">Meet the bishops and pastors licensed to minister within Lighthouse Chapel International.</p>{link}<p className="denom-home-footnote">One church. A worldwide ministry.</p></div>
-      <div className="lighthouse-gallery-wrap"><p className="denom-gallery-heading">FACES OF OUR MINISTRY <span>{gallery.length ? `01 — ${String(Math.min(3, gallery.length)).padStart(2, '0')}` : 'PHOTO GALLERY'}</span></p><HomeGallery list={gallery} onOpen={onSelect}/></div>
-    </section>}
-    {site === 'pleasantsurprise' && <section className="pleasant-hero">
-      <div className="denom-home-copy">{mark}<p className="denom-kicker">PEOPLE AT THE HEART OF MINISTRY</p><ChurchName config={config}/><p className="denom-home-description">Get to know the bishops and pastors of Pleasant Surprise Church International.</p>{link}</div>
-      <HomeGallery list={gallery} onOpen={onSelect}/>
-    </section>}
-    {site === 'gochurch' && <><section className="go-hero">
-      <div className="denom-home-copy">{mark}<p className="denom-kicker">THE CHURCH. THE PEOPLE. THE MINISTRY.</p><ChurchName config={config}/><p className="denom-home-description">The bishops and pastors of Go Church.<br/>Find a minister. Put a face to a name.</p>{link}</div>
-      <HomeGallery list={gallery.slice(0, 3)} onOpen={onSelect}/>
-    </section><div className="go-ministry-strip"><span>THE MINISTRY DIRECTORY <Arrow/></span><span>Bishops & pastors</span><span>{roster.data ? `${ordered.length} ministers` : 'Explore our ministry'}</span></div></>}
-    {!roster.data && <p className="denom-gallery-status" role="status">{roster.error ? 'The photo gallery could not be loaded.' : 'Loading the photo gallery…'}{roster.error && <button type="button" onClick={roster.retry}>Try again</button>}</p>}
-    <LicensedMinisterNotice/>
-    <ProfileViewer list={ordered} selectedId={selectedId} onSelect={onSelect}/>
-  </main>;
-}
 function MinisterGrid({ list, onOpen }) {
   return <div className="denom-grid">{list.map(person => <button type="button" className="denom-person" key={person.id} onClick={() => onOpen(person.id)} aria-label={person.name}>
     <div className="denom-person-photo"><MinisterPortrait person={person}/><span className="denom-card-arrow" aria-hidden="true"><Arrow/></span></div>
@@ -146,8 +108,8 @@ function DirectoryFilters({ site, filter, cities, update, reset }) {
     {active && <button className="denom-clear" type="button" onClick={reset}>Clear filters ×</button>}
   </div>;
 }
-function DenominationDirectory({ site, roster }) {
-  const { data, error, list, retry } = roster;
+function DenominationDirectory({ site }) {
+  const { data, error, list, retry } = useChurchRoster(site);
   const [filter, setFilter] = useState({ q: '', city: '', gender: '' }), [limit, setLimit] = useState(48), [selectedId, setSelectedId] = useState(null);
   const sections = useMemo(() => ministerSections(list, filter), [list, filter]);
   const cities = useMemo(() => [...new Set(list.map(p => p.city).filter(Boolean))].sort((a, b) => a.localeCompare(b)), [list]);
@@ -170,15 +132,15 @@ function DenominationDirectory({ site, roster }) {
   </main>;
 }
 export default function DenominationApp({ site, browse = false }) {
-  const config = denominationSite(site), roster = useChurchRoster(site);
-  const [paused, setPaused] = useState(false);
-  useEffect(() => { setPaused(matchMedia('(prefers-reduced-motion: reduce)').matches); }, []);
+  const config = denominationSite(site);
+  const [paused, setPaused] = useState(false), [concept, setConcept] = useState(1);
+  useEffect(() => { setPaused(matchMedia('(prefers-reduced-motion: reduce)').matches); const choice = Number(new URLSearchParams(window.location.search).get('concept')); if ([1, 2, 3].includes(choice)) setConcept(choice); }, []);
   if (!config) return null;
-  return <div className={`denom-site denom-${site} ${browse ? 'denom-is-directory' : 'denom-is-home'} ${paused ? 'denom-motion-paused' : ''}`} style={{ '--denom-accent': config.accent }}>
-    <DenominationTexture site={site} paused={paused}/>
-    <div className="denom-watermark" aria-hidden="true"><img className="denom-watermark-main" src={`${base}/${config.logo}`} alt=""/><img className="denom-watermark-secondary" src={`${base}/${config.logo}`} alt=""/></div>
+  return <div className={`denom-site denom-${site} ${browse ? 'denom-is-directory' : `denom-is-home denom-concept-${concept}`} ${paused ? 'denom-motion-paused' : ''}`} style={{ '--denom-accent': !browse && ((site === 'gochurch' && concept !== 2) || (site === 'lighthousechapelinternational' && concept === 3)) ? '#d5b56c' : config.accent }}>
+    {browse && <><DenominationTexture site={site} paused={paused}/>
+    <div className="denom-watermark" aria-hidden="true"><img className="denom-watermark-main" src={`${base}/${config.logo}`} alt=""/><img className="denom-watermark-secondary" src={`${base}/${config.logo}`} alt=""/></div></>}
     <header className="denom-header"><a href={`${base}/${site}/`} className="denom-brand" aria-label={`${config.name} home`}><img src={`${base}/${config.logo}`} alt=""/><span>{config.shortName}{config.subtitle && <small>{config.subtitle}</small>}</span></a><span className="denom-header-label">{site === 'gochurch' ? 'PEOPLE / MINISTRY' : site === 'pleasantsurprise' ? 'Our church. Our people.' : 'THE MINISTERIAL DIRECTORY'}</span></header>
-    {browse ? <DenominationDirectory site={site} roster={roster}/> : <DenominationHome site={site} roster={roster}/>}
+    {browse ? <DenominationDirectory site={site}/> : <DenominationHome site={site} concept={concept}/>}
     <footer className="denom-footer"><span>{config.name}</span><div><a href={`${base}/privacy/`}>Privacy</a><a href={`${base}/terms/`}>Terms</a><button type="button" onClick={() => setPaused(p => !p)} aria-pressed={paused} aria-label={paused ? 'Play background animation' : 'Pause background animation'}>{paused ? '▷' : 'Ⅱ'}<span>{paused ? 'Play motion' : 'Pause motion'}</span></button></div></footer>
   </div>;
 }
