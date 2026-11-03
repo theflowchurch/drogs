@@ -1,7 +1,9 @@
 import { normalName, overlayReferences, isLay, bySurname, byMinisterTitle, titleFor } from './model.mjs';
 import { publicRosterFrom } from './live-roster.mjs';
+import denominationCatalog from './denomination-catalog.json' with { type: 'json' };
 
 export const DENOMINATION_SITES = {
+  ...Object.fromEntries(denominationCatalog.map(({ path, ...site }) => [path, site])),
   lighthousechapelinternational: {
     homeConcept: 2,
     name: 'Lighthouse Chapel International', shortName: 'Lighthouse Chapel', subtitle: 'International',
@@ -27,7 +29,7 @@ export function denominationPeople(snapshot, site, fallback = []) {
   if (!config) return [];
   const names = new Set(config.denominations.map(normalName));
   const all = overlayReferences(publicRosterFrom(snapshot, fallback), snapshot);
-  // Office instruction, 23 Oct: everyone on these three denomination rosters
+  // Office instruction, 23 Oct: everyone on the denomination rosters
   // is publicly approved for now. This is a presentation policy only: it does
   // not approve an account, verify a payment, or change the central-site rules.
   return all.filter(p => !p.unclaimed && names.has(normalName(p.denomination))).map(p => ({ ...p, standing: true }));

@@ -20,7 +20,7 @@ test('bishops and pastors remain separate sections with city and gender filters 
  let list=ministerSections([p,lay,b]);assert.deepEqual(list.bishops.map(p=>p.id),['b']);assert.deepEqual(new Set(list.pastors.map(p=>p.id)),new Set(['p','lay']));
  list=ministerSections([p,b],{city:'London',gender:'female'});assert.equal(list.bishops.length,0);assert.deepEqual(list.pastors,[p]);
  assert.equal(ministerSections([b,p],{q:'Anne London'}).pastors.length,1);
- assert.equal(Object.keys(DENOMINATION_SITES).length,3);
+
 });
 test('reverends precede other pastors while bishops stay in the first section',()=>{
  const people=[{...p,id:'ordinary',name:'Anna Aardvark',title:'Pastor'},{...p,id:'rev',name:'Zoe Zulu',title:'Rev.'},{...p,id:'lady',name:'Lady Brown',title:'Lady Rev.'},b];
@@ -37,4 +37,27 @@ test('public titles spell out Reverend while retaining office titles and orderin
  assert.equal(ministerDisplayTitle(b),'Bishop');
  assert.equal(reverend.title,'Rev.');assert.equal(lady.title,'Lady Rev.');
  assert.deepEqual(ministerSections([p,reverend]).pastors,[reverend,p]);
+});
+
+test('all submitted denomination names have a site and every directory is isolated', async()=>{
+ const {DENOMINATIONS}=await import('../../src/registration/denominations.mjs');
+ const {normalName}=await import('../../src/registration/model.mjs');
+ const {organizationSitePaths}=await import('../../src/registration/organization-sites.mjs');
+ const names=new Set(Object.values(DENOMINATION_SITES).flatMap(s=>s.denominations.map(normalName)));
+ for(const name of Object.values(DENOMINATIONS).flat())assert.ok(names.has(normalName(name)),`Missing submitted denomination: ${name}`);
+ const records=Object.entries(DENOMINATION_SITES).map(([path,site],i)=>({...p,id:path,role:i%2?'bishop':'pastor',denomination:site.denominations[0]}));
+ const snapshot={referencePeople:records,overrides:{},hidden:[]};
+ for(const [path,site] of Object.entries(DENOMINATION_SITES)){
+  assert.match(path,/^[a-z0-9]+$/);assert.ok(!organizationSitePaths.includes(path),'Denomination route must not replace an organization umbrella');
+  assert.deepEqual(denominationPeople(snapshot,path).map(p=>p.id),[path],`Cross-denomination records in ${site.name}`);
+ }
+});
+
+test('all denomination artwork exists and missing artwork stays unset',async()=>{
+ const {existsSync}=await import('node:fs');
+ for(const site of Object.values(DENOMINATION_SITES)){
+  if(site.logo)assert.ok(existsSync(site.logo),`Missing logo for ${site.name}`);
+  else assert.equal(site.logo,'');
+  if(site.homeLayout)assert.ok(['folio','panels','seal','columns','frame','banner','ribbon','arch'].includes(site.homeLayout));
+ }
 });

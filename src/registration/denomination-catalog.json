@@ -1,0 +1,1323 @@
+[
+  {
+    "path": "1000microchurchnetworkinternational",
+    "name": "1000 Micro Church Network International",
+    "shortName": "1000 Micro Church",
+    "subtitle": "Network International",
+    "denominations": [
+      "1000 Micro Church Network International"
+    ],
+    "logo": "assets/denominations/1000-micro-church-network-international.png",
+    "homeLayout": "folio",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#707032",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "allosmegachurch",
+    "name": "Allos Mega Church",
+    "shortName": "Allos Mega Church",
+    "subtitle": "",
+    "denominations": [
+      "Allos Mega Church"
+    ],
+    "logo": "assets/denominations/allos-international.webp",
+    "homeLayout": "panels",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#327051",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "americanmissionarychurch",
+    "name": "American Missionary Church",
+    "shortName": "American Missionary Church",
+    "subtitle": "",
+    "denominations": [
+      "American Missionary Church"
+    ],
+    "logo": "assets/denominations/american-missionary-church.webp",
+    "homeLayout": "seal",
+    "visualStyle": "gochurch",
+    "accent": "#324270",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "amourinternationale",
+    "name": "Amour Internationale",
+    "shortName": "Amour Internationale",
+    "subtitle": "",
+    "denominations": [
+      "Amour Internationale"
+    ],
+    "logo": "assets/denominations/amour-internationale.png",
+    "homeLayout": "columns",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#703232",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "anagkazoassemblies",
+    "name": "Anagkazo Assemblies",
+    "shortName": "Anagkazo Assemblies",
+    "subtitle": "",
+    "denominations": [
+      "Anagkazo Assemblies"
+    ],
+    "logo": "assets/denominations/anagkazo-assemblies.png",
+    "homeLayout": "frame",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#326170",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "anointedpeopleinternational",
+    "name": "Anointed People International",
+    "shortName": "Anointed People",
+    "subtitle": "International",
+    "denominations": [
+      "Anointed People International"
+    ],
+    "logo": "assets/denominations/anointed-people-international.png",
+    "homeLayout": "banner",
+    "visualStyle": "gochurch",
+    "accent": "#423270",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "anointedwordchapelint",
+    "name": "Anointed Word Chapel Int",
+    "shortName": "Anointed Word Chapel Int",
+    "subtitle": "",
+    "denominations": [
+      "Anointed Word Chapel Int"
+    ],
+    "logo": "",
+    "homeLayout": "ribbon",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#42554d",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "bemainternationalchurch",
+    "name": "Bema International Church",
+    "shortName": "Bema International Church",
+    "subtitle": "",
+    "denominations": [
+      "Bema International Church"
+    ],
+    "logo": "assets/denominations/bema-international-church.png",
+    "homeLayout": "arch",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#706132",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "candleinthedarkchurch",
+    "name": "Candle In The Dark Church",
+    "shortName": "Candle In The Dark Church",
+    "subtitle": "",
+    "denominations": [
+      "Candle In The Dark Church"
+    ],
+    "logo": "assets/denominations/candle-in-the-dark-church.png",
+    "homeLayout": "folio",
+    "visualStyle": "gochurch",
+    "accent": "#323270",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "castlecitychurch",
+    "name": "Castle City Church",
+    "shortName": "Castle City Church",
+    "subtitle": "",
+    "denominations": [
+      "Castle City Church"
+    ],
+    "logo": "assets/denominations/castle-city-church.png",
+    "homeLayout": "panels",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#325170",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "doublemegamissionarychurch",
+    "name": "Double Mega Missionary Church",
+    "shortName": "Double Mega Missionary Church",
+    "subtitle": "",
+    "denominations": [
+      "Double Mega Missionary Church"
+    ],
+    "logo": "assets/denominations/double-mega-missionary-church.png",
+    "homeLayout": "seal",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#706132",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "eastendcitychurches",
+    "name": "East End City Churches",
+    "shortName": "East End City Churches",
+    "subtitle": "",
+    "denominations": [
+      "East End City Churches"
+    ],
+    "logo": "assets/denominations/east-end-city-church.png",
+    "homeLayout": "columns",
+    "visualStyle": "gochurch",
+    "accent": "#325170",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "eastmountainchurches",
+    "name": "East Mountain Churches",
+    "shortName": "East Mountain Churches",
+    "subtitle": "",
+    "denominations": [
+      "East Mountain Churches"
+    ],
+    "logo": "assets/denominations/east-mountain-church.png",
+    "homeLayout": "frame",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#613270",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "equatorialguinea",
+    "name": "Equatorial Guinea",
+    "shortName": "Equatorial Guinea",
+    "subtitle": "",
+    "denominations": [
+      "Equatorial Guinea"
+    ],
+    "logo": "",
+    "homeLayout": "banner",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#42554d",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "eschatos",
+    "name": "Eschatos",
+    "shortName": "Eschatos",
+    "subtitle": "",
+    "denominations": [
+      "Eschatos"
+    ],
+    "logo": "assets/denominations/eschatos-church.png",
+    "homeLayout": "ribbon",
+    "visualStyle": "gochurch",
+    "accent": "#703232",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "everythingbyprayercenter",
+    "name": "Everything By Prayer Center",
+    "shortName": "Everything By Prayer Center",
+    "subtitle": "",
+    "denominations": [
+      "Everything By Prayer Center"
+    ],
+    "logo": "assets/denominations/everything-by-prayer-church.png",
+    "homeLayout": "arch",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#705132",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "favouritechildchurch",
+    "name": "Favourite Child Church",
+    "shortName": "Favourite Child Church",
+    "subtitle": "",
+    "denominations": [
+      "Favourite Child Church"
+    ],
+    "logo": "assets/denominations/favourite-child-church.png",
+    "homeLayout": "folio",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#327061",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "firstlovechurch",
+    "name": "First Love Church",
+    "shortName": "First Love Church",
+    "subtitle": "",
+    "denominations": [
+      "First Love Church"
+    ],
+    "logo": "assets/denominations/first-love-church.png",
+    "homeLayout": "panels",
+    "visualStyle": "gochurch",
+    "accent": "#703232",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "fruitferosinternacionalguineabissau",
+    "name": "Fruitferos Internacional Guinea Bissau",
+    "shortName": "Fruitferos Internacional Guinea Bissau",
+    "subtitle": "",
+    "denominations": [
+      "Fruitferos Internacional Guinea Bissau"
+    ],
+    "logo": "assets/denominations/frutiferos-internacional.png",
+    "homeLayout": "columns",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#327032",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "fruitiferosinternationale",
+    "name": "Fruitiferos Internationale",
+    "shortName": "Fruitiferos Internationale",
+    "subtitle": "",
+    "denominations": [
+      "Fruitiferos Internationale"
+    ],
+    "logo": "assets/denominations/frutiferos-internacional.png",
+    "homeLayout": "frame",
+    "visualStyle": "gochurch",
+    "accent": "#327032",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "glorylifehopecenter",
+    "name": "Glory Life Hope Center",
+    "shortName": "Glory Life Hope Center",
+    "subtitle": "",
+    "denominations": [
+      "Glory Life Hope Center"
+    ],
+    "logo": "",
+    "homeLayout": "banner",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#42554d",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "gochurch",
+    "name": "Go Church",
+    "shortName": "Go Church",
+    "subtitle": "",
+    "denominations": [
+      "Go Church"
+    ],
+    "logo": "assets/denominations/go-church-cleaned.webp",
+    "homeLayout": "ribbon",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#706132",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "goyechurch",
+    "name": "Go Ye Church",
+    "shortName": "Go Ye Church",
+    "subtitle": "",
+    "denominations": [
+      "Go Ye Church"
+    ],
+    "logo": "assets/denominations/first-love/go-ye-church.jpg",
+    "homeLayout": "arch",
+    "visualStyle": "gochurch",
+    "accent": "#42554d",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "graceinternationalesahelburkinafaso",
+    "name": "Grace Internationale Sahel - Burkina Faso",
+    "shortName": "Grace Internationale Sahel - Burkina Faso",
+    "subtitle": "",
+    "denominations": [
+      "Grace Internationale Sahel - Burkina Faso"
+    ],
+    "logo": "assets/denominations/grace-internationale-sahel.png",
+    "homeLayout": "folio",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#707032",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "graceinternationalesahelchad",
+    "name": "Grace Internationale Sahel - Chad",
+    "shortName": "Grace Internationale Sahel - Chad",
+    "subtitle": "",
+    "denominations": [
+      "Grace Internationale Sahel - Chad"
+    ],
+    "logo": "assets/denominations/grace-internationale-sahel.png",
+    "homeLayout": "panels",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#707032",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "graceinternationalesahelmali",
+    "name": "Grace Internationale Sahel - Mali",
+    "shortName": "Grace Internationale Sahel - Mali",
+    "subtitle": "",
+    "denominations": [
+      "Grace Internationale Sahel - Mali"
+    ],
+    "logo": "assets/denominations/grace-internationale-sahel.png",
+    "homeLayout": "seal",
+    "visualStyle": "gochurch",
+    "accent": "#707032",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "graceinternationalesahelniger",
+    "name": "Grace Internationale Sahel - Niger",
+    "shortName": "Grace Internationale Sahel - Niger",
+    "subtitle": "",
+    "denominations": [
+      "Grace Internationale Sahel - Niger"
+    ],
+    "logo": "assets/denominations/grace-internationale-sahel.png",
+    "homeLayout": "columns",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#707032",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "healingjesuscampaign",
+    "name": "Healing Jesus Campaign",
+    "shortName": "Healing Jesus Campaign",
+    "subtitle": "",
+    "denominations": [
+      "Healing Jesus Campaign"
+    ],
+    "logo": "assets/brand/hjc-logo.png",
+    "homeLayout": "frame",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#42554d",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "itisagreatthingtoservethelord",
+    "name": "It Is A Great Thing To Serve The Lord",
+    "shortName": "It Is A Great Thing To Serve The Lord",
+    "subtitle": "",
+    "denominations": [
+      "It Is A Great Thing To Serve The Lord"
+    ],
+    "logo": "assets/denominations/it-is-a-great-thing-to-serve-the-lord.png",
+    "homeLayout": "banner",
+    "visualStyle": "gochurch",
+    "accent": "#323270",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "jesusgefunden",
+    "name": "Jesus Gefunden",
+    "shortName": "Jesus Gefunden",
+    "subtitle": "",
+    "denominations": [
+      "Jesus Gefunden"
+    ],
+    "logo": "assets/denominations/jesus-gefunden.png",
+    "homeLayout": "ribbon",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#326170",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "jesusistheanswerchurch",
+    "name": "Jesus Is The Answer Church",
+    "shortName": "Jesus Is The Answer Church",
+    "subtitle": "",
+    "denominations": [
+      "Jesus Is The Answer Church"
+    ],
+    "logo": "assets/denominations/jesus-is-the-answer-church.webp",
+    "homeLayout": "arch",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#706132",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "jesusisthedoor",
+    "name": "Jesus Is The Door",
+    "shortName": "Jesus Is The Door",
+    "subtitle": "",
+    "denominations": [
+      "Jesus Is The Door"
+    ],
+    "logo": "assets/denominations/jesus-is-the-door-church.webp",
+    "homeLayout": "folio",
+    "visualStyle": "gochurch",
+    "accent": "#705132",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "jesusisthemaster",
+    "name": "Jesus Is The Master",
+    "shortName": "Jesus Is The Master",
+    "subtitle": "",
+    "denominations": [
+      "Jesus Is The Master"
+    ],
+    "logo": "",
+    "homeLayout": "panels",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#42554d",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "jesusistherockchurch",
+    "name": "Jesus Is The Rock Church",
+    "shortName": "Jesus Is The Rock Church",
+    "subtitle": "",
+    "denominations": [
+      "Jesus Is The Rock Church"
+    ],
+    "logo": "assets/denominations/jesus-is-the-rock.png",
+    "homeLayout": "seal",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#703232",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "jesussaviouroftheworldchurchinternational",
+    "name": "Jesus Saviour Of The World Church International",
+    "shortName": "Jesus Saviour Of The World",
+    "subtitle": "Church International",
+    "denominations": [
+      "Jesus Saviour Of The World Church International"
+    ],
+    "logo": "assets/denominations/jesus-saviour-of-the-world.png",
+    "homeLayout": "columns",
+    "visualStyle": "gochurch",
+    "accent": "#703232",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "keepmywordchapelinternational",
+    "name": "Keep My Word Chapel International",
+    "shortName": "Keep My Word Chapel",
+    "subtitle": "International",
+    "denominations": [
+      "Keep My Word Chapel International"
+    ],
+    "logo": "",
+    "homeLayout": "frame",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#42554d",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "labelleeglisecar",
+    "name": "La Belle Église Car",
+    "shortName": "La Belle Église Car",
+    "subtitle": "",
+    "denominations": [
+      "La Belle Église Car"
+    ],
+    "logo": "assets/denominations/la-belle-eglise-gabon.png",
+    "homeLayout": "banner",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#705132",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "labelleeglisegabon",
+    "name": "La Belle Eglise Gabon",
+    "shortName": "La Belle Eglise Gabon",
+    "subtitle": "",
+    "denominations": [
+      "La Belle Eglise Gabon"
+    ],
+    "logo": "assets/denominations/la-belle-eglise-gabon.png",
+    "homeLayout": "ribbon",
+    "visualStyle": "gochurch",
+    "accent": "#705132",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "laikosinternationalchurch",
+    "name": "Laikos International Church",
+    "shortName": "Laikos International Church",
+    "subtitle": "",
+    "denominations": [
+      "Laikos International Church"
+    ],
+    "logo": "assets/denominations/laikos-international.webp",
+    "homeLayout": "arch",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#327051",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "librevillecitystate",
+    "name": "Libreville City State",
+    "shortName": "Libreville City State",
+    "subtitle": "",
+    "denominations": [
+      "Libreville City State"
+    ],
+    "logo": "",
+    "homeLayout": "folio",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#42554d",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "lighthousechapelinternational",
+    "name": "Lighthouse Chapel International",
+    "shortName": "Lighthouse Chapel",
+    "subtitle": "International",
+    "denominations": [
+      "Lighthouse Chapel International"
+    ],
+    "logo": "assets/denominations/lighthouse-chapel.webp",
+    "homeLayout": "panels",
+    "visualStyle": "gochurch",
+    "accent": "#705132",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "lighthousecitychurches",
+    "name": "Lighthouse City Churches",
+    "shortName": "Lighthouse City Churches",
+    "subtitle": "",
+    "denominations": [
+      "Lighthouse City Churches"
+    ],
+    "logo": "assets/denominations/lighthouse-city-church.png",
+    "homeLayout": "seal",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#706132",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "livingwatersinternational",
+    "name": "Living Waters International",
+    "shortName": "Living Waters International",
+    "subtitle": "",
+    "denominations": [
+      "Living Waters International"
+    ],
+    "logo": "assets/denominations/living-waters-international.png",
+    "homeLayout": "columns",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#703232",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "loyaltyhouseinternational",
+    "name": "Loyalty House International",
+    "shortName": "Loyalty House International",
+    "subtitle": "",
+    "denominations": [
+      "Loyalty House International"
+    ],
+    "logo": "assets/denominations/loyalty-house-international.png",
+    "homeLayout": "frame",
+    "visualStyle": "gochurch",
+    "accent": "#323270",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "makarioscitychurch",
+    "name": "Makarios City Church",
+    "shortName": "Makarios City Church",
+    "subtitle": "",
+    "denominations": [
+      "Makarios City Church"
+    ],
+    "logo": "assets/denominations/makarios-city-church.png",
+    "homeLayout": "banner",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#703232",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "makarioswesternnorth",
+    "name": "Makarios Western North",
+    "shortName": "Makarios Western North",
+    "subtitle": "",
+    "denominations": [
+      "Makarios Western North"
+    ],
+    "logo": "assets/denominations/western-north-makarios-church.png",
+    "homeLayout": "ribbon",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#703242",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "malawi",
+    "name": "Malawi",
+    "shortName": "Malawi",
+    "subtitle": "",
+    "denominations": [
+      "Malawi"
+    ],
+    "logo": "",
+    "homeLayout": "arch",
+    "visualStyle": "gochurch",
+    "accent": "#42554d",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "mustardseedchapelinternational",
+    "name": "Mustard Seed Chapel International",
+    "shortName": "Mustard Seed Chapel",
+    "subtitle": "International",
+    "denominations": [
+      "Mustard Seed Chapel International"
+    ],
+    "logo": "assets/denominations/mustard-seed-chapel-international.png",
+    "homeLayout": "folio",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#705132",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "onctioninternationalebenin",
+    "name": "Onction Internationale Benin",
+    "shortName": "Onction Internationale Benin",
+    "subtitle": "",
+    "denominations": [
+      "Onction Internationale Benin"
+    ],
+    "logo": "assets/denominations/onction-internationale.png",
+    "homeLayout": "panels",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#706132",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "othersinternationalchurch",
+    "name": "Others International Church",
+    "shortName": "Others International Church",
+    "subtitle": "",
+    "denominations": [
+      "Others International Church"
+    ],
+    "logo": "assets/denominations/others-international-church.png",
+    "homeLayout": "seal",
+    "visualStyle": "gochurch",
+    "accent": "#327070",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "pacificislandsmissionarychurch",
+    "name": "Pacific Islands Missionary Church",
+    "shortName": "Pacific Islands Missionary Church",
+    "subtitle": "",
+    "denominations": [
+      "Pacific Islands Missionary Church"
+    ],
+    "logo": "assets/denominations/pacific-islands-missionary-church.png",
+    "homeLayout": "columns",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#703242",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "pleasantsurprise",
+    "name": "Pleasant Surprise",
+    "shortName": "Pleasant Surprise",
+    "subtitle": "",
+    "denominations": [
+      "Pleasant Surprise"
+    ],
+    "logo": "assets/denominations/pleasant-surprise-cleaned.webp",
+    "homeLayout": "frame",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#705132",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "poimenchurchgambia",
+    "name": "Poimen Church Gambia",
+    "shortName": "Poimen Church Gambia",
+    "subtitle": "",
+    "denominations": [
+      "Poimen Church Gambia"
+    ],
+    "logo": "assets/denominations/poimen-church.png",
+    "homeLayout": "banner",
+    "visualStyle": "gochurch",
+    "accent": "#327032",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "poimenchurchsenegalgambia",
+    "name": "Poimen Church Senegal-Gambia",
+    "shortName": "Poimen Church Senegal-Gambia",
+    "subtitle": "",
+    "denominations": [
+      "Poimen Church Senegal-Gambia"
+    ],
+    "logo": "assets/denominations/poimen-church.png",
+    "homeLayout": "ribbon",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#327032",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "praiacitystatechurch",
+    "name": "Praia City State Church",
+    "shortName": "Praia City State Church",
+    "subtitle": "",
+    "denominations": [
+      "Praia City State Church"
+    ],
+    "logo": "",
+    "homeLayout": "arch",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#42554d",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "precioussoulschurcheswatini",
+    "name": "Precious Souls Church – Eswatini",
+    "shortName": "Precious Souls Church – Eswatini",
+    "subtitle": "",
+    "denominations": [
+      "Precious Souls Church – Eswatini"
+    ],
+    "logo": "assets/denominations/precious-souls-church.png",
+    "homeLayout": "folio",
+    "visualStyle": "gochurch",
+    "accent": "#703232",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "precioussoulsnamibia",
+    "name": "Precious Souls Namibia",
+    "shortName": "Precious Souls Namibia",
+    "subtitle": "",
+    "denominations": [
+      "Precious Souls Namibia"
+    ],
+    "logo": "assets/denominations/precious-souls-church.png",
+    "homeLayout": "panels",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#703232",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "precioussoulsswaziland",
+    "name": "Precious Souls Swaziland",
+    "shortName": "Precious Souls Swaziland",
+    "subtitle": "",
+    "denominations": [
+      "Precious Souls Swaziland"
+    ],
+    "logo": "assets/denominations/precious-souls-church.png",
+    "homeLayout": "seal",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#703232",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "primeirasobras",
+    "name": "Primeiras Obras",
+    "shortName": "Primeiras Obras",
+    "subtitle": "",
+    "denominations": [
+      "Primeiras Obras"
+    ],
+    "logo": "assets/denominations/primeiras-obras.png",
+    "homeLayout": "columns",
+    "visualStyle": "gochurch",
+    "accent": "#324270",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "primeroamor",
+    "name": "Primero Amor",
+    "shortName": "Primero Amor",
+    "subtitle": "",
+    "denominations": [
+      "Primero Amor"
+    ],
+    "logo": "assets/denominations/primeiro-amor.png",
+    "homeLayout": "frame",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#703232",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "qodeshcitychurch",
+    "name": "Qodesh City Church",
+    "shortName": "Qodesh City Church",
+    "subtitle": "",
+    "denominations": [
+      "Qodesh City Church"
+    ],
+    "logo": "assets/denominations/qodesh-family-church.png",
+    "homeLayout": "banner",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#513270",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "qodeshfamilychurches",
+    "name": "Qodesh Family Churches",
+    "shortName": "Qodesh Family Churches",
+    "subtitle": "",
+    "denominations": [
+      "Qodesh Family Churches"
+    ],
+    "logo": "assets/denominations/qodesh-family-church.png",
+    "homeLayout": "ribbon",
+    "visualStyle": "gochurch",
+    "accent": "#513270",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "rejoicegreatly",
+    "name": "Rejoice Greatly",
+    "shortName": "Rejoice Greatly",
+    "subtitle": "",
+    "denominations": [
+      "Rejoice Greatly"
+    ],
+    "logo": "",
+    "homeLayout": "arch",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#42554d",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "rencontreprophetiqueinternationale",
+    "name": "Rencontre Prophetique Internationale",
+    "shortName": "Rencontre Prophetique",
+    "subtitle": "Internationale",
+    "denominations": [
+      "Rencontre Prophetique Internationale"
+    ],
+    "logo": "assets/denominations/rencontre-prophetique-internationale.png",
+    "homeLayout": "folio",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#323270",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "revivalinternational",
+    "name": "Revival International",
+    "shortName": "Revival International",
+    "subtitle": "",
+    "denominations": [
+      "Revival International"
+    ],
+    "logo": "assets/denominations/revival-international.webp",
+    "homeLayout": "panels",
+    "visualStyle": "gochurch",
+    "accent": "#703242",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "roseofsharon",
+    "name": "Rose Of Sharon",
+    "shortName": "Rose Of Sharon",
+    "subtitle": "",
+    "denominations": [
+      "Rose Of Sharon",
+      "Rose of Sharon"
+    ],
+    "logo": "",
+    "homeLayout": "seal",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#42554d",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "sagesseinternationaleguinea",
+    "name": "Sagesse Internationale Guinea",
+    "shortName": "Sagesse Internationale Guinea",
+    "subtitle": "",
+    "denominations": [
+      "Sagesse Internationale Guinea"
+    ],
+    "logo": "assets/denominations/sagesse-internationale.png",
+    "homeLayout": "columns",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#706132",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "savioursofmeninternational",
+    "name": "Saviours Of Men International",
+    "shortName": "Saviours Of Men",
+    "subtitle": "International",
+    "denominations": [
+      "Saviours Of Men International"
+    ],
+    "logo": "assets/denominations/saviours-of-men-international.png",
+    "homeLayout": "frame",
+    "visualStyle": "gochurch",
+    "accent": "#703251",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "seriouschristianchurch",
+    "name": "Serious Christian Church",
+    "shortName": "Serious Christian Church",
+    "subtitle": "",
+    "denominations": [
+      "Serious Christian Church"
+    ],
+    "logo": "assets/denominations/serious-christian-church.png",
+    "homeLayout": "banner",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#706132",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "seriouschristianchurchlesotho",
+    "name": "Serious Christian Church Lesotho",
+    "shortName": "Serious Christian Church Lesotho",
+    "subtitle": "",
+    "denominations": [
+      "Serious Christian Church Lesotho"
+    ],
+    "logo": "assets/denominations/serious-christian-church.png",
+    "homeLayout": "ribbon",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#706132",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "seychelles",
+    "name": "Seychelles",
+    "shortName": "Seychelles",
+    "subtitle": "",
+    "denominations": [
+      "Seychelles"
+    ],
+    "logo": "",
+    "homeLayout": "arch",
+    "visualStyle": "gochurch",
+    "accent": "#42554d",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "straitgatechurchliberia",
+    "name": "Strait Gate Church Liberia",
+    "shortName": "Strait Gate Church Liberia",
+    "subtitle": "",
+    "denominations": [
+      "Strait Gate Church Liberia"
+    ],
+    "logo": "assets/denominations/strait-gate-church.png",
+    "homeLayout": "folio",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#325170",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "strongchristianchurch",
+    "name": "Strong Christian Church",
+    "shortName": "Strong Christian Church",
+    "subtitle": "",
+    "denominations": [
+      "Strong Christian Church"
+    ],
+    "logo": "assets/denominations/strong-christian-church.png",
+    "homeLayout": "panels",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#706132",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "strongchristianchurchsouthafrica",
+    "name": "Strong Christian Church South Africa",
+    "shortName": "Strong Christian Church South Africa",
+    "subtitle": "",
+    "denominations": [
+      "Strong Christian Church South Africa"
+    ],
+    "logo": "assets/denominations/strong-christian-church.png",
+    "homeLayout": "seal",
+    "visualStyle": "gochurch",
+    "accent": "#706132",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "talantainternationaltanzania",
+    "name": "Talanta International Tanzania",
+    "shortName": "Talanta International Tanzania",
+    "subtitle": "",
+    "denominations": [
+      "Talanta International Tanzania"
+    ],
+    "logo": "assets/denominations/talanta-international-tanzania.png",
+    "homeLayout": "columns",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#325170",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "tellthem",
+    "name": "Tell Them",
+    "shortName": "Tell Them",
+    "subtitle": "",
+    "denominations": [
+      "Tell Them"
+    ],
+    "logo": "",
+    "homeLayout": "frame",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#42554d",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "tellthemchurch",
+    "name": "Tell Them Church",
+    "shortName": "Tell Them Church",
+    "subtitle": "",
+    "denominations": [
+      "Tell Them Church"
+    ],
+    "logo": "",
+    "homeLayout": "banner",
+    "visualStyle": "gochurch",
+    "accent": "#42554d",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "thegloriousmegachurch",
+    "name": "The Glorious Mega Church",
+    "shortName": "The Glorious Mega Church",
+    "subtitle": "",
+    "denominations": [
+      "The Glorious Mega Church"
+    ],
+    "logo": "assets/denominations/the-glorious-mega-church.png",
+    "homeLayout": "ribbon",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#703232",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "themachanehchurchinternational",
+    "name": "The Machaneh Church International",
+    "shortName": "The Machaneh",
+    "subtitle": "Church International",
+    "denominations": [
+      "The Machaneh Church International"
+    ],
+    "logo": "assets/denominations/machaneh-church-international.png",
+    "homeLayout": "arch",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#707032",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "themakarioschurch",
+    "name": "The Makarios Church",
+    "shortName": "The Makarios Church",
+    "subtitle": "",
+    "denominations": [
+      "The Makarios Church"
+    ],
+    "logo": "assets/denominations/the-makarios-church.png",
+    "homeLayout": "folio",
+    "visualStyle": "gochurch",
+    "accent": "#703242",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "themegachurch",
+    "name": "The Mega Church",
+    "shortName": "The Mega Church",
+    "subtitle": "",
+    "denominations": [
+      "The Mega Church"
+    ],
+    "logo": "assets/denominations/the-mega-church.png",
+    "homeLayout": "panels",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#706132",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "themegachurchgracechapel",
+    "name": "The Mega Church – Grace Chapel",
+    "shortName": "The Mega Church – Grace Chapel",
+    "subtitle": "",
+    "denominations": [
+      "The Mega Church – Grace Chapel"
+    ],
+    "logo": "assets/denominations/the-mega-church.png",
+    "homeLayout": "seal",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#706132",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "themegachurchnachalcathedral",
+    "name": "The Mega Church – Nachal Cathedral",
+    "shortName": "The Mega Church – Nachal Cathedral",
+    "subtitle": "",
+    "denominations": [
+      "The Mega Church – Nachal Cathedral"
+    ],
+    "logo": "assets/denominations/the-mega-church.png",
+    "homeLayout": "columns",
+    "visualStyle": "gochurch",
+    "accent": "#706132",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "truesonchapelinternational",
+    "name": "True Son Chapel International",
+    "shortName": "True Son Chapel",
+    "subtitle": "International",
+    "denominations": [
+      "True Son Chapel International"
+    ],
+    "logo": "",
+    "homeLayout": "frame",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#42554d",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "unitedcities",
+    "name": "United Cities",
+    "shortName": "United Cities",
+    "subtitle": "",
+    "denominations": [
+      "United Cities"
+    ],
+    "logo": "",
+    "homeLayout": "banner",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#42554d",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "unitedislands",
+    "name": "United Islands",
+    "shortName": "United Islands",
+    "subtitle": "",
+    "denominations": [
+      "United Islands"
+    ],
+    "logo": "",
+    "homeLayout": "ribbon",
+    "visualStyle": "gochurch",
+    "accent": "#42554d",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "victoireinternationale",
+    "name": "Victoire Internationale",
+    "shortName": "Victoire Internationale",
+    "subtitle": "",
+    "denominations": [
+      "Victoire Internationale"
+    ],
+    "logo": "assets/denominations/victoire-internationale.png",
+    "homeLayout": "arch",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#517032",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "westendcitychurches",
+    "name": "West End City Churches",
+    "shortName": "West End City Churches",
+    "subtitle": "",
+    "denominations": [
+      "West End City Churches"
+    ],
+    "logo": "assets/denominations/west-end-city-church.png",
+    "homeLayout": "folio",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#703232",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  }
+]

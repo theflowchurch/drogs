@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import * as api from './client';
 import { denominationSite, denominationPeople, ministerSections, ministerDisplayTitle } from './denomination-sites.mjs';
 import { placeOf } from './model.mjs';
 import PortraitImage from './PortraitImage';
@@ -8,9 +7,9 @@ import DenominationTexture from './DenominationTexture';
 import LicensedMinisterNotice from './LicensedMinisterNotice';
 import DenominationHome from './DenominationHome';
 import { portraitStyle } from '../runtime/portrait-framing';
-import people from './reference-people.json';
 import './denomination-sites.css';
 import './landing-concepts.css';
+import './denomination-catalog.css';
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const Arrow = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
@@ -23,7 +22,17 @@ function useChurchRoster(site) {
   async function load() {
     if (inFlight.current) return;
     inFlight.current = true;
-    try { const snapshot = await api.publicDirectory(); if (mounted.current) { setData(snapshot); setError(''); } }
+    try {
+      // Landing pages need only their branding. Load the roster client when
+      // the directory opens; the connected server remains authoritative.
+      const api = await import('./client');
+      const snapshot = await api.publicDirectory();
+      if (!Array.isArray(snapshot.referencePeople)) {
+        if (process.env.NEXT_PUBLIC_REGISTRATION_BACKEND === 'mysql') throw Error('The current directory could not be loaded. Please try again shortly.');
+        snapshot.referencePeople = (await import('./reference-people.json')).default;
+      }
+      if (mounted.current) { setData(snapshot); setError(''); }
+    }
     catch (e) { if (mounted.current) setError(e.message); }
     finally { inFlight.current = false; }
   }
@@ -34,7 +43,7 @@ function useChurchRoster(site) {
     window.addEventListener('focus', load);
     return () => { mounted.current = false; clearInterval(timer); window.removeEventListener('focus', load); };
   }, []);
-  const list = useMemo(() => data ? denominationPeople(data, site, people) : [], [data, site]);
+  const list = useMemo(() => data ? denominationPeople(data, site) : [], [data, site]);
   return { data, error, list, retry: load };
 }
 
@@ -44,7 +53,7 @@ function MinisterPortrait({ person, full = false }) {
     let live = true;
     setUrl('');
     if (!person.photo || person.standing === false) return;
-    const load = () => api.mediaUrl(person.photo).then(value => { if (live) setUrl(value); }).catch(() => {});
+    const load = () => import('./client').then(api => api.mediaUrl(person.photo)).then(value => { if (live) setUrl(value); }).catch(() => {});
     load();
     const refresh = setInterval(load, 50 * 60 * 1000);
     return () => { live = false; clearInterval(refresh); };
@@ -119,13 +128,13 @@ function DenominationDirectory({ site }) {
   const reset = () => { setFilter({ q: '', city: '', gender: '' }); setLimit(48); };
   return <main className="denom-directory">
     <div className="denom-directory-heading"><div><a className="denom-back" href={`${base}/${site}/`}>← {config.shortName}</a><p className="denom-kicker">LICENSED BISHOPS & PASTORS</p><h1>{config.directoryHeading}</h1></div>{data && <span className="denom-total"><strong>{ordered.length}</strong> ministers{(filter.q || filter.city || filter.gender) ? ' found' : ''}</span>}</div>
-    <DirectoryFilters site={site} filter={filter} cities={cities} update={update} reset={reset}/>
+    <DirectoryFilters site={config.visualStyle || site} filter={filter} cities={cities} update={update} reset={reset}/>
     {error && <div className="denom-load-error" role="alert"><p>{data ? 'The latest update could not be loaded. ' : ''}{error}</p><button className="denom-nav-button" type="button" onClick={retry}>Try again</button></div>}
     {!data && !error && <div className="denom-loading" role="status">Loading ministers…</div>}
     {data && <>
       {sections.bishops.length > 0 && <section className={`denom-minister-section ${sections.bishops.length === 1 ? 'denom-single-bishop' : ''}`} aria-label="Bishops"><h2>Bishops <span>{sections.bishops.length}</span></h2><MinisterGrid list={sections.bishops} onOpen={setSelectedId}/></section>}
       {sections.pastors.length > 0 && <section className="denom-minister-section" aria-label="Pastors"><h2>Pastors <span>{sections.pastors.length}</span></h2><MinisterGrid list={sections.pastors.slice(0, limit)} onOpen={setSelectedId}/>{sections.pastors.length > limit && <button type="button" className="denom-nav-button denom-more" onClick={() => setLimit(n => n + 48)}>Show more pastors <Arrow/></button>}</section>}
-      {!ordered.length && <div className="denom-loading"><h2>No ministers match</h2><p>Try another name or clear the filters.</p><button type="button" className="denom-nav-button" onClick={reset}>Clear filters</button></div>}
+      {!ordered.length && <div className="denom-loading"><h2>{filter.q || filter.city || filter.gender ? 'No ministers match' : 'No ministers listed'}</h2><p>{filter.q || filter.city || filter.gender ? 'Try another name or clear the filters.' : 'There are currently no ministers listed for this denomination.'}</p>{(filter.q || filter.city || filter.gender) && <button type="button" className="denom-nav-button" onClick={reset}>Clear filters</button>}</div>}
     </>}
     <LicensedMinisterNotice/>
     <ProfileViewer list={ordered} selectedId={selectedId} onSelect={setSelectedId}/>
@@ -136,10 +145,10 @@ export default function DenominationApp({ site, browse = false }) {
   const [paused, setPaused] = useState(false), [concept, setConcept] = useState(config?.homeConcept || 1);
   useEffect(() => { setPaused(matchMedia('(prefers-reduced-motion: reduce)').matches); const choice = Number(new URLSearchParams(window.location.search).get('concept')); if ([1, 2, 3].includes(choice)) setConcept(choice); }, []);
   if (!config) return null;
-  return <div className={`denom-site denom-${site} ${browse ? 'denom-is-directory' : `denom-is-home denom-concept-${concept}`} ${paused ? 'denom-motion-paused' : ''}`} style={{ '--denom-accent': !browse && ((site === 'gochurch' && concept !== 2) || (site === 'lighthousechapelinternational' && concept === 3)) ? '#d5b56c' : config.accent }}>
-    {browse && <><DenominationTexture site={site} paused={paused}/>
-    <div className="denom-watermark" aria-hidden="true"><img className="denom-watermark-main" src={`${base}/${config.logo}`} alt=""/><img className="denom-watermark-secondary" src={`${base}/${config.logo}`} alt=""/></div></>}
-    <header className="denom-header"><a href={`${base}/${site}/`} className="denom-brand" aria-label={`${config.name} home`}><img src={`${base}/${config.logo}`} alt=""/><span>{config.shortName}{config.subtitle && <small>{config.subtitle}</small>}</span></a><span className="denom-header-label">{site === 'gochurch' ? 'PEOPLE / MINISTRY' : site === 'pleasantsurprise' ? 'Our church. Our people.' : 'THE MINISTERIAL DIRECTORY'}</span></header>
+  return <div className={`denom-site denom-${config.visualStyle || site} ${config.homeLayout ? 'denom-catalog-site' : ''} ${browse ? 'denom-is-directory' : `denom-is-home denom-concept-${concept}`} ${paused ? 'denom-motion-paused' : ''}`} style={{ '--brand': config.accent, '--denom-accent': !browse && ((site === 'gochurch' && concept !== 2) || (site === 'lighthousechapelinternational' && concept === 3)) ? '#d5b56c' : config.accent }}>
+    {browse && <><DenominationTexture site={config.visualStyle || site} paused={paused}/>
+    {config.logo && <div className="denom-watermark" aria-hidden="true"><img className="denom-watermark-main" src={`${base}/${config.logo}`} alt=""/><img className="denom-watermark-secondary" src={`${base}/${config.logo}`} alt=""/></div>}</>}
+    <header className="denom-header"><a href={`${base}/${site}/`} className="denom-brand" aria-label={`${config.name} home`}>{config.logo && <img src={`${base}/${config.logo}`} alt=""/>}<span>{config.shortName}{config.subtitle && <small>{config.subtitle}</small>}</span></a><span className="denom-header-label">MINISTERIAL DIRECTORY</span></header>
     {browse ? <DenominationDirectory site={site}/> : <DenominationHome site={site} concept={concept}/>}
     <footer className="denom-footer"><span>{config.name}</span><div><a href={`${base}/privacy/`}>Privacy</a><a href={`${base}/terms/`}>Terms</a><button type="button" onClick={() => setPaused(p => !p)} aria-pressed={paused} aria-label={paused ? 'Play background animation' : 'Pause background animation'}>{paused ? '▷' : 'Ⅱ'}<span>{paused ? 'Play motion' : 'Pause motion'}</span></button></div></footer>
   </div>;
