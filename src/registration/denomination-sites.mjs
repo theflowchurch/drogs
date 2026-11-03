@@ -1,18 +1,18 @@
-import { normalName, overlayReferences, isLay, bySurname, byMinisterTitle } from './model.mjs';
+import { normalName, overlayReferences, isLay, bySurname, byMinisterTitle, titleFor } from './model.mjs';
 import { publicRosterFrom } from './live-roster.mjs';
 
 export const DENOMINATION_SITES = {
   lighthousechapelinternational: {
     name: 'Lighthouse Chapel International', shortName: 'Lighthouse Chapel', subtitle: 'International',
-    denominations: ['Lighthouse Chapel International'], logo: 'assets/denominations/lighthouse-chapel.webp', accent: '#786133',
+    denominations: ['Lighthouse Chapel International'], logo: 'assets/denominations/lighthouse-chapel.webp', accent: '#786133', directoryAction: 'Explore our ministers', directoryHeading: 'Find a minister',
   },
   pleasantsurprise: {
     name: 'Pleasant Surprise Church International', shortName: 'Pleasant Surprise', subtitle: 'Church International',
-    denominations: ['Pleasant Surprise', 'Pleasant Surprise Church International'], logo: 'assets/denominations/pleasant-surprise-cleaned.webp', accent: '#49305b',
+    denominations: ['Pleasant Surprise', 'Pleasant Surprise Church International'], logo: 'assets/denominations/pleasant-surprise-cleaned.webp', accent: '#49305b', directoryAction: 'Meet our bishops & pastors', directoryHeading: 'Meet our ministers.',
   },
   gochurch: {
     name: 'Go Church', shortName: 'Go Church', subtitle: '',
-    denominations: ['Go Church'], logo: 'assets/denominations/go-church-cleaned.webp', accent: '#292b28',
+    denominations: ['Go Church'], logo: 'assets/denominations/go-church-cleaned.webp', accent: '#292b28', directoryAction: 'Find a licensed minister', directoryHeading: 'Our people.',
   },
 };
 export const denominationSite = key => DENOMINATION_SITES[key] || null;
@@ -37,3 +37,6 @@ export const ministerSections = (people, { q = '', city = '', gender = '' } = {}
     pastors: matches.filter(p => p.role === 'pastor' || isLay(p)).sort(byMinisterTitle),
   };
 };
+
+// Expand the public label without rewriting the office's saved title or rank.
+export const ministerDisplayTitle = person => titleFor(person).replace(/\bRev\.(?=\s|$)/g, 'Reverend');

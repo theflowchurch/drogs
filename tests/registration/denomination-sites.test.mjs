@@ -28,3 +28,13 @@ test('reverends precede other pastors while bishops stay in the first section',(
  assert.deepEqual(sections.bishops.map(p=>p.id),['b']);
  assert.deepEqual(sections.pastors.map(p=>p.id),['lady','rev','ordinary']);
 });
+
+test('public titles spell out Reverend while retaining office titles and ordering',async()=>{
+ const {ministerDisplayTitle}=await import('../../src/registration/denomination-sites.mjs');
+ const reverend={...p,title:'Rev.'},lady={...p,title:'Lady Rev.',gender:'female'};
+ assert.equal(ministerDisplayTitle(reverend),'Reverend');
+ assert.equal(ministerDisplayTitle(lady),'Lady Reverend');
+ assert.equal(ministerDisplayTitle(b),'Bishop');
+ assert.equal(reverend.title,'Rev.');assert.equal(lady.title,'Lady Rev.');
+ assert.deepEqual(ministerSections([p,reverend]).pastors,[reverend,p]);
+});
