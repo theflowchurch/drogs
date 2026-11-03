@@ -434,6 +434,9 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('auth/me', office.cookie)).data.office, true, 'the office stays signed in');
     assert.equal(await launchReset(pool, config), false, 'runs once only');
     if (process.env.TEST_BROWSER === '1') {
+      // The browser must complete the actual receipt workflow; it cannot skip
+      // the payment step now that a paid or submitted receipt is required.
+      await writeFile(`${mediaDir}/browser-receipt.png`, await sharp(Buffer.from('<svg width="700" height="900" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="white"/><g fill="black" font-family="sans-serif"><text x="40" y="90" font-size="32">TEST TRANSFER RECEIPT</text><text x="40" y="180" font-size="30">Transfer successful</text><text x="40" y="270" font-size="28">Amount: GHS 1560.00</text><text x="40" y="360" font-size="28">Date: 2026-11-03</text><text x="40" y="450" font-size="28">Recipient: Kuriake Castle</text><text x="40" y="540" font-size="26">Reference: BROWSER-TRANSFER-001</text></g></svg>')).png().toBuffer());
       const { default: next } = await import('next');
       config.origin = 'http://127.0.0.1:4208'; config.secure = false;
       const app = next({ dev: false, hostname: '127.0.0.1', port: 4208 });

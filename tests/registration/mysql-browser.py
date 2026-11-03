@@ -64,7 +64,16 @@ with sync_playwright() as p:
         page.get_by_label('Pastor 1 date of birth',exact=True).fill('1988-07-14')
         expect(page.get_by_text('1 pastor ready to submit',exact=False)).to_be_visible()
         page.get_by_role('button',name='Continue →').click()
-        page.get_by_role('button',name='Continue →').click()
+        # Complete payment submission without marking the transfer as verified.
+        expect(page.get_by_role('button',name='Review your details →')).not_to_be_visible()
+        page.get_by_role('radio',name='Bank transfer',exact=True).check()
+        page.get_by_label('Payment receipt',exact=True).set_input_files(str(MEDIA/'browser-receipt.png'))
+        expect(page.get_by_text('Receipt uploaded.',exact=False)).to_be_visible(timeout=20000)
+        page.get_by_label('Transaction ID or transfer reference',exact=True).fill('BROWSER-TRANSFER-001')
+        page.get_by_label('I confirm that this receipt is for my annual commitment',exact=False).check()
+        page.get_by_role('button',name='Submit receipt for review',exact=True).click()
+        expect(page.get_by_role('heading',name='Receipt submitted',exact=True)).to_be_visible()
+        page.get_by_role('button',name='Review your details →',exact=True).click()
         expect(page.get_by_alt_text('Your uploaded photo for confirmation')).to_be_visible()
         expect(page.get_by_role('cell',name='Jon Demo',exact=True)).to_be_visible()  # review page repeats the pastors table
         assert page.get_by_alt_text('Your uploaded photo for confirmation').evaluate('(img) => img.complete && img.naturalWidth > 0')
