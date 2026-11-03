@@ -58,6 +58,15 @@ test('all denomination artwork exists and missing artwork stays unset',async()=>
  for(const site of Object.values(DENOMINATION_SITES)){
   if(site.logo)assert.ok(existsSync(site.logo),`Missing logo for ${site.name}`);
   else assert.equal(site.logo,'');
-  if(site.homeLayout)assert.ok(['folio','panels','seal','columns','frame','banner','ribbon','arch'].includes(site.homeLayout));
+  if(site.homeLayout){const {landingStyle}=await import('../../src/registration/denomination-landing-styles.mjs');assert.ok(landingStyle(site.homeLayout));}
  }
+});
+
+
+test('at least 35 landing compositions are spread across the denomination sites',async()=>{
+ const {LANDING_STYLES}=await import('../../src/registration/denomination-landing-styles.mjs');
+ assert.ok(LANDING_STYLES.length>=35);assert.equal(new Set(LANDING_STYLES.map(s=>s.id)).size,LANDING_STYLES.length);
+ const counts=new Map(LANDING_STYLES.map(s=>[s.id,0]));
+ for(const config of Object.values(DENOMINATION_SITES))if(config.homeLayout)counts.set(config.homeLayout,counts.get(config.homeLayout)+1);
+ for(const [id,count] of counts){assert.ok(count>=1,`Unused style ${id}`);assert.ok(count<=3,`Too many sites repeat ${id}`);}
 });

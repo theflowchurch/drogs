@@ -6,6 +6,7 @@ import PortraitImage from './PortraitImage';
 import DenominationTexture from './DenominationTexture';
 import LicensedMinisterNotice from './LicensedMinisterNotice';
 import DenominationHome from './DenominationHome';
+import { landingStyle } from './denomination-landing-styles.mjs';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './denomination-sites.css';
 import './landing-concepts.css';
@@ -142,10 +143,11 @@ function DenominationDirectory({ site }) {
 }
 export default function DenominationApp({ site, browse = false }) {
   const config = denominationSite(site);
+  const landing = landingStyle(config?.homeLayout);
   const [paused, setPaused] = useState(false), [concept, setConcept] = useState(config?.homeConcept || 1);
   useEffect(() => { setPaused(matchMedia('(prefers-reduced-motion: reduce)').matches); const choice = Number(new URLSearchParams(window.location.search).get('concept')); if ([1, 2, 3].includes(choice)) setConcept(choice); }, []);
   if (!config) return null;
-  return <div className={`denom-site denom-${config.visualStyle || site} ${config.homeLayout ? 'denom-catalog-site' : ''} ${browse ? 'denom-is-directory' : `denom-is-home denom-concept-${concept}`} ${paused ? 'denom-motion-paused' : ''}`} style={{ '--brand': config.accent, '--denom-accent': !browse && ((site === 'gochurch' && concept !== 2) || (site === 'lighthousechapelinternational' && concept === 3)) ? '#d5b56c' : config.accent }}>
+  return <div data-landing-style={!browse ? landing?.id : undefined} data-landing-tone={!browse && landing?.dark ? 'dark' : undefined} className={`denom-site denom-${config.visualStyle || site} ${config.homeLayout ? 'denom-catalog-site' : ''} ${browse ? 'denom-is-directory' : `denom-is-home denom-concept-${concept}`} ${paused ? 'denom-motion-paused' : ''}`} style={{ '--brand': config.accent, '--denom-accent': !browse && (landing?.dark || (site === 'gochurch' && concept !== 2) || (site === 'lighthousechapelinternational' && concept === 3)) ? '#d5b56c' : config.accent }}>
     {browse && <><DenominationTexture site={config.visualStyle || site} paused={paused}/>
     {config.logo && <div className="denom-watermark" aria-hidden="true"><img className="denom-watermark-main" src={`${base}/${config.logo}`} alt=""/><img className="denom-watermark-secondary" src={`${base}/${config.logo}`} alt=""/></div>}</>}
     <header className="denom-header"><a href={`${base}/${site}/`} className="denom-brand" aria-label={`${config.name} home`}>{config.logo && <img src={`${base}/${config.logo}`} alt=""/>}<span>{config.shortName}{config.subtitle && <small>{config.subtitle}</small>}</span></a><span className="denom-header-label">MINISTERIAL DIRECTORY</span></header>
