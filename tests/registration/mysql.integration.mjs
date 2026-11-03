@@ -64,7 +64,8 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   }
   const image = await sharp({ create: { width: 60, height: 80, channels: 3, background: 'red' } }).png().toBuffer();
   async function upload(who, kind = 'portrait') {
-    const result = await call(`upload?kind=${kind}`, who.cookie, undefined, { method: 'POST', headers: { origin: config.origin, cookie: who.cookie, 'content-type': 'image/png' }, body: image });
+    const receipt = kind === 'receipt' ? await sharp(Buffer.from('<svg width="600" height="800" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="white"/><text x="30" y="100" font-size="30">Transfer successful</text><text x="30" y="180" font-size="28">GHS 300.00</text><text x="30" y="260" font-size="28">Reference TEST-123456</text></svg>')).png().toBuffer() : image;
+    const result = await call(`upload?kind=${kind}`, who.cookie, undefined, { method: 'POST', headers: { origin: config.origin, cookie: who.cookie, 'content-type': 'image/png' }, body: receipt });
     assert.equal(result.status, 201, JSON.stringify(result.data));
     return result.data.path;
   }
@@ -121,6 +122,8 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('action', office.cookie, { name: 'approveBishop', payload: { userId: bishop.data.id, referenceId: 'B1' } })).status, 200);
     assert.equal((await call('action', pastor.cookie, { name: 'save', payload: profile(bishopPhoto, 'pastor') })).status, 400, 'cannot save another account photo');
     assert.equal((await call('action', pastor.cookie, { name: 'save', payload: profile(pastorPhoto, 'pastor') })).status, 200);
+    assert.equal((await call('action', pastor.cookie, { name: 'submit', payload: { ...profile(pastorPhoto, 'pastor'), country: 'United States' } })).status, 400, 'international registration cannot bypass the required payment receipt');
+    assert.equal((await call('upload?kind=receipt', pastor.cookie, undefined, { method: 'POST', headers: { origin: config.origin, cookie: pastor.cookie, 'content-type': 'image/png' }, body: image })).status, 400, 'blank images cannot be uploaded as payment receipts');
     assert.equal((await call(`media?path=${pastorPhoto}`, bishop.cookie)).status, 403, 'draft stays private');
     assert.equal((await call('action', pastor.cookie, { name: 'submit', payload: profile(pastorPhoto, 'pastor') })).status, 200);
     assert.equal((await call(`media?path=${pastorPhoto}`, bishop.cookie)).status, 200);

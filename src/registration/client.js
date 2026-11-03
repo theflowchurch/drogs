@@ -152,7 +152,7 @@ export async function action(actor, name, payload) {
   if (navigator.locks) await navigator.locks.request(STORAGE_KEY, write);
   else write();
 }
-export async function upload(actor, file, kind = "portrait") {
+export async function upload(actor, file, kind = "portrait", withDetails = false) {
   if (!file || !["image/jpeg", "image/png", "image/webp"].includes(file.type))
     throw Error("Choose a JPG, PNG or WebP image.");
   if (file.size > 5 * 1024 * 1024)
@@ -163,9 +163,9 @@ export async function upload(actor, file, kind = "portrait") {
   image.close();
   if (mysqlBackend) {
     const result = await server(`upload?kind=${encodeURIComponent(kind)}`, undefined, {
-      method: "POST", headers: { "Content-Type": file.type }, body: file,
+      method: "POST", headers: { "Content-Type": file.type }, body: file, timeoutMs: kind === 'receipt' ? 45000 : 30000,
     });
-    return result.path;
+    return withDetails ? result : result.path;
   }
   const path = `${actor.id}/${kind}/${crypto.randomUUID()}.${file.type.split("/")[1]}`;
   if (live) {
@@ -174,7 +174,7 @@ export async function upload(actor, file, kind = "portrait") {
       .upload(path, file, { contentType: file.type, upsert: false });
     check(error);
   } else await fileOperation("readwrite", (store) => store.put(file, path));
-  return path;
+  return withDetails ? { path } : path;
 }
 export async function mediaUrl(path) {
   if (!path) return "";

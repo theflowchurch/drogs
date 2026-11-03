@@ -68,7 +68,8 @@ import {
   localAmount,
   rateFor,
 } from "./exchange.mjs";
-import { checkReceiptImage } from "./receipt-check.mjs";
+import PaymentOptions from './PaymentOptions';
+import { paymentReady, inGhana } from './manual-payments.mjs';
 import { portraitStyle } from "../runtime/portrait-framing";
 import PortraitImage from './PortraitImage';
 import { shortDateTime, longDate } from "./format.mjs";
@@ -1830,6 +1831,7 @@ function RegistrationForm({
   }
   async function send() {
     const ok = await run(async () => {
+      if (!editing && !paymentReady(mine)) throw Error("Complete payment or submit your transfer receipt before confirming your registration.");
       await api.action(actor, editing ? "update" : "submit", { ...data, consentedAt: data.consentedAt || new Date().toISOString() });
       // The pastors and the payment proof gathered on the way are sent right after.
       if (!editing && rosterRows.length) await api.action(actor, "addRoster", { rows: rosterRows });
@@ -1859,7 +1861,7 @@ function RegistrationForm({
               : step === "pastors"
                 ? "Add the pastors under your oversight. When they register, they will automatically be linked to you."
                 : step === "payment"
-                  ? "Pay your Annual Good Standing Renewal Fee securely by card or mobile money."
+                  ? inGhana(data.country) ? "Pay securely through Paystack, or make a bank transfer and upload your receipt." : "Make a bank transfer and upload your payment receipt to continue."
                   : `Complete your ${state.year} annual renewal to remain on the Roll of Good Standing.`}
           </p>
         </div>
@@ -2199,7 +2201,7 @@ function RegistrationForm({
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                next();
+                if (paymentReady(mine)) next();
               }}
             >
               <div className="reg-section-head">
@@ -2213,45 +2215,16 @@ function RegistrationForm({
               </div>
               <PaymentPolicyNotice />
               {mine?.payment === "verified" ? (
-                <div className="reg-status-message confirmed">
-                  <h3>Thank you for your commitment.</h3>
-                  <p>${fees[data.role]} USD received by card or mobile money. Next, look over your profile{data.role === "bishop" ? " and your pastors" : ""} and confirm.</p>
-                </div>
-              ) : state.paystackKey ? (
-                <>
-                  <p>Pay securely by card or mobile money (MTN, Telecel, AT). Once your payment is successful, you will automatically return to this page.</p>
-                  <PaystackButton
-                    current={{ amount: fees[data.role], year: state.year, data }}
-                    actor={actor}
-                    run={run}
-                    refresh={refresh}
-                    currency={currency}
-                    rate={rate}
-                    paystackKey={state.paystackKey}
-                    beforePay={async () => {
-                      await api.action(actor, "save", data);
-                      sessionStorage.setItem(checkoutDraftKey, JSON.stringify({ rows: rosterRows, slots }));
-                    }}
-                  />
-                </>
-              ) : PREVIEW ? (
-                <div className="reg-payment-instructions">
-                  <p>Pay securely by card or mobile money (MTN, Telecel, AT). This walkthrough simulates the payment.</p>
-                  <button type="button" className="reg-primary reg-paystack" disabled={busy} onClick={() => run(async () => { await api.action(actor, "save", data); await api.action(actor, "recordPaystack", { reference: `SIM-${Date.now()}`, amount: fees[data.role] * 100, expectedMinor: fees[data.role] * 100, currency: "USD" }); await refresh(); }, "Payment received. Thank you.")}>Pay ${fees[data.role]} by card →</button>
-                </div>
-              ) : (
-                <p className="reg-payment-instructions">Card and mobile-money payment is not switched on yet. Continue for now; the office will let you know when to pay.</p>
-              )}
+                <div className="reg-status-message confirmed"><h3>Thank you for your commitment.</h3><p>Your ${fees[data.role]} USD annual commitment has been received. Review your profile and confirm your registration.</p></div>
+              ) : <PaymentOptions
+                current={{ ...mine, amount: fees[data.role], year: state.year, data }} actor={actor} run={run} refresh={refresh}
+                beforeSave={async () => { await api.action(actor, "save", data); }}
+                paystack={state.paystackKey ? <PaystackButton current={{ amount: fees[data.role], year: state.year, data }} run={run}
+                  beforePay={async () => { await api.action(actor, "save", data); sessionStorage.setItem(checkoutDraftKey, JSON.stringify({ rows: rosterRows, slots })); }} /> : null}
+              />}
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
-                {/* Payment comes first: with checkout available, the only way forward is to pay. */}
-                {mine?.payment === "verified" ? (
-                  <button className="reg-primary" disabled={busy}>View your profile →</button>
-                ) : state.paystackKey ? (
-                  <span className="reg-small">Complete your payment to continue.</span>
-                ) : (
-                  <button className="reg-primary" disabled={busy}>Continue →</button>
-                )}
+                {paymentReady(mine) ? <button className="reg-primary" disabled={busy}>Review your details →</button> : <span className="reg-small">Complete Paystack payment or upload and submit your transfer receipt to continue.</span>}
               </div>
             </form>
           ) : (
@@ -2321,9 +2294,7 @@ function RegistrationForm({
                   <h3>Payment</h3>
                   {mine?.payment === "verified" ? (
                     <p>${fees[data.role]} USD paid by card or mobile money. <Badge status="verified" /></p>
-                  ) : (
-                    <p className="reg-small">Payment is not switched on yet; the office will let you know when to pay.</p>
-                  )}
+                  ) : mine?.proof && mine?.payment === "pending" ? <p>Receipt submitted. Payment is awaiting office verification. <Badge status="pending" /></p> : <p className="reg-small">Submit your payment receipt before continuing.</p>}
                   <button type="button" className="reg-text" onClick={() => setStep("payment")}>Change</button>
                 </section>
               )}
@@ -2498,12 +2469,9 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
           <h3>Thank you for your commitment.</h3>
           <p>Your payment has been received.</p>
         </div>
-      ) : ["draft", "denied"].includes(current.status) ? (
-        <p className="reg-small">Payment opens once your registration has been submitted.</p>
-      ) : paystackKey ? (
-        <PaystackButton current={current} actor={actor} run={run} refresh={refresh} currency={currency} rate={rate} paystackKey={paystackKey} />
-      ) : (
-        <p className="reg-small">Card and mobile-money payment opens shortly. You will be able to pay here.</p>
+      ) : current.status === "denied" ? <p className="reg-small">Contact the office about your registration before paying.</p> : (
+        <PaymentOptions current={current} actor={actor} run={run} refresh={refresh}
+          paystack={paystackKey ? <PaystackButton current={current} run={run} /> : null} />
       )}
     </section>
   );
@@ -4390,10 +4358,11 @@ function Payments({ records, perform, canEdit }) {
           <dl className="reg-details">
             <div><dt>Transaction ID</dt><dd><b>{selected.transactionId || "Not given"}</b></dd></div>
             <div><dt>Reference</dt><dd>{paymentReference(selected)}</dd></div>
+            <div><dt>Payment method</dt><dd>{selected.paymentMethod === 'bank' ? 'Bank transfer' : 'Mobile money'}</dd></div>
+            <div><dt>Receipt check</dt><dd>{selected.receiptCheck?.verdict === 'receipt' ? 'Receipt details detected · payment still needs verification' : 'Manual review required'}</dd></div>
           </dl>
           <p>
-            Find this Transaction ID on the mobile-money statement and compare the amount and date with the screenshot. Compare the screenshot with the payment received in your account
-            before verifying.
+            Find this reference on the bank or mobile-money statement. Compare the amount, date and recipient with the receipt and confirm that the funds reached the account before verifying.
           </p>
           <Media
             path={selected.proof}

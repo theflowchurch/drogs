@@ -4148,3 +4148,18 @@ input[type="date"] {
 @media (prefers-reduced-motion: reduce) {
   .reg-standing-arrow svg { transition: none; }
 }
+.reg-manual-payment { margin-top: 1.2rem; }
+.reg-payment-methods { border: 0; padding: 0; margin: 1.4rem 0; display: grid; gap: .7rem; }
+.reg-payment-methods legend { font-weight: 700; margin-bottom: .8rem; }
+.reg-payment-methods label { display: flex; align-items: center; gap: .7rem; padding: 1rem; border: 1px solid var(--line, #d9deeb); border-radius: 12px; cursor: pointer; }
+.reg-payment-methods input { width: 18px; height: 18px; flex: 0 0 auto; accent-color: #283d88; }
+.reg-transfer-details { padding: 1.25rem 0; border-block: 1px solid var(--line, #d9deeb); }
+.reg-transfer-number { font-variant-numeric: tabular-nums; font-size: 1.35rem; font-weight: 750; letter-spacing: .025em; overflow-wrap: anywhere; }
+.reg-remittance-apps { display: flex; flex-wrap: wrap; gap: .65rem; margin: 1rem 0; }
+.reg-remittance-apps a { display: inline-flex; align-items: center; gap: .55rem; padding: .65rem .85rem; border: 1px solid var(--line, #d9deeb); border-radius: 10px; text-decoration: none; color: inherit; font-weight: 600; }
+.reg-remittance-apps img { width: 28px; height: 28px; object-fit: contain; border-radius: 5px; }
+.reg-receipt-upload { margin-top: 1.6rem; }
+.reg-receipt-upload .reg-field { display: grid; gap: .55rem; margin: 1rem 0; }
+.reg-receipt-upload input[type=file] { max-width: 100%; padding: .8rem; border: 1px solid var(--line, #d9deeb); border-radius: 10px; }
+.reg-receipt-preview { display: block; max-height: 280px; max-width: 100%; object-fit: contain; margin: 1rem 0; border: 1px solid var(--line, #d9deeb); border-radius: 8px; }
+.reg-receipt-error { color: #b32431; font-weight: 600; }

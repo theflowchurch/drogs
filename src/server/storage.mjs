@@ -4,6 +4,7 @@ import sharp from 'sharp';
 import { randomUUID } from 'node:crypto';
 import { HttpError, rateLimit } from './auth.mjs';
 import { submittedBishop } from '../registration/model.mjs';
+import { inspectReceipt } from './receipt-check.mjs';
 export async function prepareImage(bytes, contentType) {
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(contentType) || bytes.length > 5 * 1024 * 1024 || !bytes.length)
     throw new HttpError(400, 'Choose a JPG, PNG or WebP image smaller than 5 MB.');
@@ -43,6 +44,7 @@ export async function assertOwnedMedia(conn, actor, path, kind) {
   if (!media || media.owner_id !== actor.id || media.kind !== kind) throw new HttpError(400, 'Upload your own image before continuing.');
 }
 export function createStorage({ config, pool, client, logger = console }) {
+  const receiptReports = new Map();
   // Built per call so settings saved in /admin/ take effect without a restart.
   const s3 = () => client || new S3Client({ region: 'auto', endpoint: `https://${config.r2.account}.r2.cloudflarestorage.com`,
     credentials: { accessKeyId: config.r2.accessKeyId, secretAccessKey: config.r2.secretAccessKey, ...(config.r2.sessionToken ? { sessionToken: config.r2.sessionToken } : {}) },
@@ -53,6 +55,8 @@ export function createStorage({ config, pool, client, logger = console }) {
       if (kind === 'logo' && !actor.office) throw new HttpError(403, 'Only the office uploads logos.');
       await rateLimit(pool, config, `upload:${actor.apiKeyId || actor.id}`, actor.apiKeyId ? 500 : 30, 3600000);
       let body = await prepareImage(bytes, contentType);
+      const receiptCheck = kind === 'receipt' ? await inspectReceipt(body) : null;
+      if (receiptCheck?.verdict === 'not_receipt') throw new HttpError(400, receiptCheck.reason);
       let Key = `${actor.id}/${kind}/${randomUUID()}.webp`;
       try {
         await s3().send(new PutObjectCommand({ Bucket: config.r2.bucket, Key, Body: body, ContentType: 'image/webp', CacheControl: 'private, max-age=300' }));
@@ -68,7 +72,16 @@ export function createStorage({ config, pool, client, logger = console }) {
       }
       // A failed metadata insert leaves an unreferenced object; nothing here ever deletes it.
       await pool.execute('INSERT INTO dr_media (object_key,owner_id,kind,content_type,size_bytes,created_at) VALUES (?,?,?,?,?,?)', [Key, actor.id, kind, 'image/webp', body.length, Date.now()]);
+      if (receiptCheck) { if (receiptReports.size >= 250) receiptReports.delete(receiptReports.keys().next().value); receiptReports.set(Key, receiptCheck); }
       return Key;
+    },
+    async receiptReport(key) {
+      if (receiptReports.has(key)) return receiptReports.get(key);
+      const bytes = await this.bytes(key);
+      if (!bytes) throw new HttpError(400, 'Your receipt could not be read. Please upload it again.');
+      const report = await inspectReceipt(bytes);
+      if (report.verdict === 'not_receipt') throw new HttpError(400, report.reason);
+      return report;
     },
     url(key) {
       if (key.startsWith('db/')) return `/api/registration/media/blob?path=${encodeURIComponent(key)}`;

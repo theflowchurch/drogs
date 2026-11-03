@@ -14,6 +14,7 @@ import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, assignedPortrait, canReadMedia } from './storage.mjs';
 import { photoProgress, photoProgressGroups } from '../registration/photo-progress.mjs';
+import { inGhana, paymentReady } from '../registration/manual-payments.mjs';
 // The roster the browser gets has no contact details; the server merges them back for its own use (office views, broadcasts, matching).
 const contacts = JSON.parse(await readFile(new URL('../../data/reference-contacts.json', import.meta.url), 'utf8'));
 const rosterFile = await readFile(new URL('../registration/reference-people.json', import.meta.url), 'utf8');
@@ -190,11 +191,23 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         const { name, payload = {} } = await jsonBody(request);
         if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new HttpError(400, 'Invalid action data.');
         if (name === 'recordPaystack') throw new HttpError(400, 'Payments are recorded after Paystack confirms them.');
+        // Read the receipt before taking the global state lock: OCR can take a
+        // few seconds, and must not block unrelated registrations.
+        if (name === 'payment') {
+          await assertOwnedMedia(pool, actor, payload.proof, 'receipt');
+          payload.receiptCheck = await storage.receiptReport(payload.proof);
+        }
         let reviewed = null;
         await transaction(pool, async conn => {
           const before = await readState(conn, true);
           if (['save', 'submit', 'update'].includes(name) && payload.photo && !assignedPortrait(before, actor, payload.photo)) await assertOwnedMedia(conn, actor, payload.photo, 'portrait');
-          if (name === 'payment') await assertOwnedMedia(conn, actor, payload.proof, 'receipt');
+          if (name === 'payment') {
+            await assertOwnedMedia(conn, actor, payload.proof, 'receipt');
+          }
+          if (name === 'submit' && !inGhana(payload.country)) {
+            const registration = before.registrations.find(r => r.userId === actor.id && r.year === before.year);
+            if (!paymentReady(registration)) throw new HttpError(400, 'Upload and submit your payment receipt before continuing.');
+          }
           if (name === 'approveBishop' && payload.referenceId && !references.some(r => r.id === payload.referenceId))
             throw new HttpError(400, 'Choose a listed bishop reference.');
           let after;
@@ -257,7 +270,7 @@ ${others.length ? `<p><b>${photoIssue ? 'Other Updates' : 'Updates Needed'}</b><
           logger.error('Image storage failed', { type: error.name, code: error.code || error.$metadata?.httpStatusCode || 'INTERNAL' });
           throw new HttpError(503, 'Photo storage is not reachable at the moment. Your details are safe; please try again later, or tell the office with “Any issues?”.');
         }
-        return json({ path: key }, 201);
+        return json({ path: key, ...(url.searchParams.get('kind') === 'receipt' ? { receiptCheck: await storage.receiptReport(key) } : {}) }, 201);
       }
       if ((path === '/api/registration/media' || path === '/api/registration/media/blob') && method === 'GET') {
         const key = url.searchParams.get('path');

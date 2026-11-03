@@ -76,6 +76,14 @@ If you are debited but payment is not showing, email ${email} with your transact
 ## Refunds and payment support
 
 Annual commitments are generally non-refundable, subject to the exceptions in our [refund policy](/refunds/) and applicable law. Send payment enquiries and refund requests to ${email}.
+
+## Bank transfers and receipt uploads
+
+Members in Ghana can use supported Paystack mobile-money or local-card checkout, or pay by bank transfer. Members registering from outside Ghana should use the bank-transfer instructions shown in their account. The annual fee is $25 USD for pastors and $100 USD for bishops, unless a different applicable fee is displayed before payment.
+
+Bank transfers are payable to KURIAKE CASTLE LBG, account 1441005268161 at Ecobank, St Johns branch, Ghana. Send the equivalent of the displayed annual fee and account for any transfer-provider charges. If your bank needs further routing information, request it from the office before sending.
+
+Upload a clear screenshot or photo of the actual transfer confirmation and enter its transaction reference before continuing. Automated image and text checks help identify unrelated uploads; they do not establish that a receipt is genuine or that funds arrived. Unclear receipts are referred for manual review. A submitted receipt remains pending until the office checks it against the receiving account.
 `;
 
 export const FAQ = `# Frequently asked questions

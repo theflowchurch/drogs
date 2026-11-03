@@ -1124,7 +1124,7 @@ export function applyAction(
       (r) => r.userId === actor.id && r.year === state.year,
     );
     // Proof is sent during onboarding, before the office confirms anyone.
-    if (!r || ["draft", "denied"].includes(r.status))
+    if (!r || r.status === "denied")
       throw Error("Submit your registration before sending payment.");
     if (r.payment === "verified")
       throw Error("This payment has already been verified.");
@@ -1135,8 +1135,8 @@ export function applyAction(
     // The mobile-money Transaction ID ties the screenshot to a line on the
     // office's MoMo statement; one ID can only ever pay for one person.
     const transactionId = String(payload.transactionId || "").trim().toUpperCase();
-    if (!/^[A-Z0-9.-]{6,40}$/.test(transactionId))
-      throw Error("Enter the Transaction ID from your mobile-money confirmation (letters and numbers, at least 6).");
+    if (!/^[A-Z0-9][A-Z0-9 ./_-]{3,79}$/.test(transactionId))
+      throw Error("Enter the Transaction ID or bank transfer reference from your receipt (at least 4 characters).");
     if (
       state.registrations.some(
         (x) => x.userId !== r.userId && x.transactionId === transactionId,
@@ -1146,7 +1146,8 @@ export function applyAction(
     r.payment = "pending";
     r.proof = payload.proof;
     r.transactionId = transactionId;
-    r.paymentMethod = "momo";
+    r.paymentMethod = payload.method === 'bank' ? 'bank' : 'momo';
+    r.receiptCheck = payload.receiptCheck && ['receipt', 'unclear'].includes(payload.receiptCheck.verdict) ? { verdict: payload.receiptCheck.verdict, reason: String(payload.receiptCheck.reason || '').slice(0, 300) } : null;
     r.nonrefundableAt = now;
     r.paymentSubmittedAt = now;
   } else if (action === "recordPaystack") {
