@@ -1,0 +1,320 @@
+/* Set 3: halftone, tickertape, notebook, invitation, stack, catalogcard, topo, sunburst, azulejo, weave. */
+
+/* Halftone: a pop-art comic page with ink-bordered panels, Ben-Day dots and a starburst. */
+.church-hero.church-style-halftone{--h-font:'Church Poster',Impact,sans-serif;--h-ink:#141414;--pop:#ffd84a;background:#fff3d1;padding:28px;min-height:650px}
+.church-style-halftone .halftone-page{display:grid;grid-template-columns:1.6fr 1fr;grid-template-rows:1.15fr 1fr;gap:16px;min-height:594px}
+.church-style-halftone .halftone-panel{position:relative;isolation:isolate;overflow:hidden;border:4px solid #141414;background:#fffdf4;box-shadow:7px 7px 0 #141414}
+.church-style-halftone .halftone-hero-panel{grid-row:1/3;padding:110px 7% 46px;display:flex;flex-direction:column;justify-content:flex-end}
+.church-style-halftone .halftone-dots{position:absolute;inset:0;z-index:-1;background:var(--brand);isolation:isolate;mix-blend-mode:multiply}
+.church-style-halftone .halftone-dots i{position:absolute;inset:0;background:radial-gradient(closest-side,#555,#fff) 0 0/15px 15px,linear-gradient(to bottom left,#000 0%,#fff 72%);background-blend-mode:multiply;filter:contrast(18);mix-blend-mode:lighten}
+.church-style-halftone .halftone-caption{position:absolute;top:28px;left:28px}
+.church-hero.church-style-halftone .denom-kicker{display:inline-block;margin:0;padding:9px 15px;background:var(--pop);border:3px solid #141414;font-family:'Church Mono',monospace;font-size:11px;letter-spacing:1.5px;opacity:1;transform:rotate(-2deg);box-shadow:4px 4px 0 #141414}
+.church-style-halftone .halftone-hero-panel{container-type:inline-size}
+.church-hero.church-style-halftone .denom-church-name{font-size:min(clamp(46px,5.4vw,94px),calc(118cqi / var(--word)));font-weight:400;line-height:.94;letter-spacing:-1px;text-transform:uppercase;color:#141414;text-shadow:5px 5px 0 var(--pop),-2px -2px 0 #fffdf4}
+.church-hero.church-style-halftone .denom-church-subtitle{font-family:'Church Mono',monospace;font-size:13px;margin-top:14px;opacity:1;background:#fffdf4;display:inline-block;padding:2px 6px}
+.church-style-halftone .halftone-burst-panel{display:grid;place-items:center;padding:20px;background:var(--pop) repeating-conic-gradient(from 0deg at 50% 50%,#14141422 0 3deg,#0000 3deg 15deg)}
+.church-style-halftone .halftone-burst{width:min(250px,100%);aspect-ratio:1;display:grid;place-items:center;padding:20%;background:#fffdf4;clip-path:polygon(50.0% 0.0%,58.5% 13.0%,71.7% 5.0%,73.7% 20.3%,89.1% 18.8%,84.2% 33.5%,98.7% 38.9%,88.0% 50.0%,98.7% 61.1%,84.2% 66.5%,89.1% 81.2%,73.7% 79.7%,71.7% 95.0%,58.5% 87.0%,50.0% 100.0%,41.5% 87.0%,28.3% 95.0%,26.3% 79.7%,10.9% 81.2%,15.8% 66.5%,1.3% 61.1%,12.0% 50.0%,1.3% 38.9%,15.8% 33.5%,10.9% 18.8%,26.3% 20.3%,28.3% 5.0%,41.5% 13.0%);filter:drop-shadow(0 0 0 #141414)}
+.church-style-halftone .halftone-burst{padding:16%}.church-style-halftone .halftone-burst .church-landing-logo{width:100%;height:auto;aspect-ratio:1}
+.church-style-halftone .halftone-burst .church-text-mark{font-family:'Church Poster',sans-serif;font-weight:400;font-size:20px;line-height:1.05;text-transform:uppercase;text-align:center;color:var(--brand)}
+.church-style-halftone .halftone-copy-panel{background:var(--brand);color:#fff;padding:30px 9%;display:flex;flex-direction:column;justify-content:center}
+.church-hero.church-style-halftone .halftone-copy-panel .denom-home-description{color:#fff;margin:0 0 22px;font-size:15px;line-height:1.65}
+.church-hero.church-style-halftone .denom-action{align-self:flex-start;background:var(--pop);border:3px solid #141414;color:#141414!important;font-family:'Church Poster',sans-serif;font-weight:400;letter-spacing:.5px;text-transform:uppercase;box-shadow:5px 5px 0 #141414}
+
+/* Tickertape: crawling market tickers frame a trading-floor headline. */
+.church-hero.church-style-tickertape{--h-font:'Church Space',sans-serif;--h-ink:#151515;--h-muted:#4d4d4a;background:#f3f0e8 linear-gradient(90deg,#15151508 1px,#0000 1px) 0 0/48px 100%;padding:0;min-height:600px;display:flex;flex-direction:column}
+.church-style-tickertape .tickertape-band{overflow:hidden;white-space:nowrap;font-family:'Church Mono',monospace;font-size:13px;letter-spacing:2.5px;line-height:1;padding:14px 0;background:var(--brand);color:#fff}
+.church-style-tickertape .tickertape-track{display:flex;width:max-content;animation:tickertape-run 70s linear infinite}
+.church-style-tickertape .tickertape-track span{white-space:pre}
+@keyframes tickertape-run{to{transform:translateX(-50%)}}
+.denom-motion-paused .church-style-tickertape .tickertape-track{animation-play-state:paused!important}
+.church-style-tickertape .tickertape-body{flex:1;display:grid;grid-template-columns:1.45fr 1fr;gap:6%;align-items:center;padding:56px 6% 30px}
+.church-hero.church-style-tickertape .denom-kicker{font-family:'Church Mono',monospace;font-size:11px;opacity:1;margin-bottom:20px;color:var(--brand)}
+.church-hero.church-style-tickertape .denom-kicker::before{content:'▲ +12.4  ';color:#1f8a4c}
+.church-style-tickertape .tickertape-head{container-type:inline-size}
+.church-hero.church-style-tickertape .denom-church-name{font-size:min(clamp(50px,6.8vw,120px),calc(140cqi / var(--word)));font-weight:700;line-height:.93;letter-spacing:-.045em;text-transform:uppercase}
+.church-hero.church-style-tickertape .denom-church-subtitle{font-family:'Church Mono',monospace;margin-top:14px}
+.church-style-tickertape .tickertape-side{border-left:3px solid #151515;padding:4px 0 4px 32px}
+.church-style-tickertape .tickertape-mark .church-landing-logo{width:84px;height:84px}
+.church-style-tickertape .tickertape-mark .church-text-mark{font-family:'Church Mono',monospace;font-size:16px;letter-spacing:1px;text-transform:uppercase}
+.church-hero.church-style-tickertape .denom-home-description{margin:20px 0 24px;color:#3b3b38}
+.church-hero.church-style-tickertape .denom-action{background:#151515;border-color:#151515;font-family:'Church Mono',monospace;letter-spacing:1px}
+.church-style-tickertape .tickertape-cross{position:relative;height:140px}
+.church-style-tickertape .tickertape-cross .tickertape-band{position:absolute;left:-10%;width:120%}
+.church-style-tickertape .tickertape-a{top:28px;transform:rotate(-2.6deg);background:#151515;color:#f3f0e8}
+.church-style-tickertape .tickertape-b{top:62px;transform:rotate(2.2deg);background:#f3f0e8;color:var(--brand);box-shadow:0 0 0 2px var(--brand)}
+.church-style-tickertape .tickertape-b .tickertape-track{animation-direction:reverse;animation-duration:85s}
+
+/* Notebook: a ruled exercise-book page with margin line, punch holes and a taped photo. */
+.church-hero.church-style-notebook{--h-font:'Church Fraunces',Georgia,serif;--h-ink:#1d2236;--h-muted:#4c5163;--rule:34px;--margin:112px;min-height:0;padding:0 6% calc(var(--rule)*2) calc(var(--margin) + 42px);background:linear-gradient(90deg,#0000 var(--margin),#e58f8f var(--margin) calc(var(--margin) + 2px),#0000 0 calc(var(--margin) + 5px),#e58f8f 0 calc(var(--margin) + 6px),#0000 0),linear-gradient(#fffef8 0 calc(var(--rule)*3 - 1px),#0000 0),repeating-linear-gradient(#0000 0 calc(var(--rule) - 1px),#b9cde6 0 var(--rule)),#fffef8;box-shadow:inset 0 0 0 1px #e7e2d3}
+.church-style-notebook .notebook-holes{animation:none}
+.church-style-notebook .notebook-holes i{left:calc(var(--margin)/2 - 13px);top:calc(16% + var(--piece)*32%);width:26px;height:26px;border-radius:50%;background:#e9e5da;box-shadow:inset 2px 3px 4px #00000026}
+.church-style-notebook .notebook-header{height:calc(var(--rule)*3);display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding-bottom:9px;font-family:'Church Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#8a8f9c}
+.church-style-notebook .notebook-header span:first-child{border-bottom:1px dotted #8a8f9c;padding-right:30px;overflow-wrap:anywhere}
+.church-style-notebook .notebook-page{display:grid;grid-template-columns:1fr 300px;gap:6%;align-items:start}
+.church-hero.church-style-notebook .denom-kicker{font-family:'Church Mono',monospace;font-size:10px;line-height:var(--rule);margin:0;opacity:1;color:var(--brand)}
+.church-hero.church-style-notebook .denom-church-name{font-size:clamp(46px,4.6vw,66px);font-style:italic;font-weight:600;line-height:calc(var(--rule)*2);letter-spacing:-1.5px;color:color-mix(in srgb,var(--brand) 70%,#141a3a)}
+.church-hero.church-style-notebook .denom-church-subtitle{line-height:var(--rule);font-style:italic}
+.church-style-notebook .notebook-scribble{display:block;width:min(360px,80%);height:14px;margin:-6px 0 6px;fill:none;stroke:var(--brand);stroke-width:3;stroke-linecap:round;opacity:.75}
+.church-hero.church-style-notebook .denom-home-description{font-size:15px;line-height:var(--rule);margin:var(--rule) 0;max-width:540px;color:#30354a}
+.church-hero.church-style-notebook .denom-action{transform:rotate(-1deg);border-radius:3px;box-shadow:3px 4px 0 #1d223622}
+.church-style-notebook .notebook-photo{position:relative;margin-top:30px;background:#fff;padding:14px 14px 0;box-shadow:0 14px 28px #1d22361f,0 1px 2px #1d223626;transform:rotate(3.5deg)}
+.church-style-notebook .notebook-photo::before{content:'';position:absolute;top:-14px;left:50%;width:120px;height:30px;translate:-50%;rotate:-4deg;background:#f3dc8acc;box-shadow:0 1px 2px #0001}
+.church-style-notebook .notebook-photo>div{aspect-ratio:1;display:grid;place-items:center;background:var(--pale);padding:18px}
+.church-style-notebook .notebook-photo .church-landing-logo{width:160px;height:160px}
+.church-style-notebook .notebook-photo .church-text-mark{font-family:'Church Fraunces',serif;font-style:italic;font-size:28px;text-align:center;color:var(--brand)}
+.church-style-notebook .notebook-photo>span{display:block;padding:12px 0 16px;text-align:center;font-family:'Church Fraunces',serif;font-style:italic;font-size:16px;color:#4c5163}
+
+/* Invitation: a formal card slides out of an opened envelope sealed with wax. */
+.church-hero.church-style-invitation{--h-font:'Church Bodoni',Georgia,serif;--env:color-mix(in srgb,var(--brand) 88%,#000);background:var(--pale) repeating-linear-gradient(45deg,#0000 0 9px,color-mix(in srgb,var(--brand) 5%,#0000) 9px 10px);padding:46px 6% 0;min-height:680px}
+.church-style-invitation .invitation-env{position:relative;width:min(900px,100%);margin:0 auto}
+.church-style-invitation .invitation-back{position:absolute;inset:190px 0 0;background:var(--env)}
+.church-style-invitation .invitation-back::before{content:'';position:absolute;bottom:100%;left:0;right:0;height:170px;background:color-mix(in srgb,var(--brand) 72%,#000);clip-path:polygon(0 100%,50% 0,100% 100%)}
+.church-style-invitation .invitation-card{position:relative;z-index:2;width:84%;margin:0 auto;padding:52px 9% 150px;text-align:center;background:#fffdf7;outline:1px solid color-mix(in srgb,var(--brand) 45%,#fff);outline-offset:-16px;box-shadow:0 22px 45px #0000002b}
+.church-hero.church-style-invitation .denom-kicker{font-family:'Church Bodoni',serif;font-size:12px;letter-spacing:5px;margin:0;opacity:.85;color:var(--brand)}
+.church-style-invitation .invitation-ornament{display:block;margin:10px 0 14px;font-size:28px;line-height:1;color:var(--brand)}
+.church-hero.church-style-invitation .denom-church-name{max-width:none;font-size:clamp(44px,4.8vw,78px);font-weight:500;line-height:1.02;letter-spacing:-1px;color:#20221f}
+.church-hero.church-style-invitation .denom-church-subtitle{font-style:italic;letter-spacing:4px;margin-top:10px}
+.church-hero.church-style-invitation .denom-home-description{margin:20px auto 0;max-width:470px;font-family:'Church Bodoni',serif;font-size:17px;font-style:italic;line-height:1.6}
+.church-style-invitation .invitation-pocket{position:relative;z-index:3;isolation:isolate;margin-top:-125px;min-height:270px;display:flex;flex-direction:column;align-items:center;padding:52px 20px 40px}
+.church-style-invitation .invitation-pocket::before{content:'';position:absolute;inset:0;z-index:-1;clip-path:polygon(0 0,50% 48%,100% 0,100% 100%,0 100%);background:linear-gradient(to top right,#0000 calc(50% - 1px),#0000002e 50%,#0000 calc(50% + 1px)) 0 0/50% 100% no-repeat,linear-gradient(to top left,#0000 calc(50% - 1px),#0000002e 50%,#0000 calc(50% + 1px)) 100% 0/50% 100% no-repeat,var(--brand)}
+.church-style-invitation .invitation-seal{width:126px;height:126px;display:grid;place-items:center;padding:16px;border-radius:50%;background:#fffdf7;box-shadow:0 0 0 5px color-mix(in srgb,var(--brand) 60%,#7a1d1d),0 0 0 9px #fffdf7,0 10px 22px #0004;text-align:center}
+.church-style-invitation .invitation-seal .church-landing-logo{width:88px;height:88px}
+.church-style-invitation .invitation-seal .church-text-mark{font-family:'Church Bodoni',serif;font-size:14px;line-height:1.15;color:var(--brand)}
+.church-hero.church-style-invitation .denom-action{margin-top:26px;background:#fffdf7;border-color:#fffdf7;color:var(--brand)!important;font-family:'Church Bodoni',serif;font-size:14px;letter-spacing:2px;text-transform:uppercase}
+
+/* Stack: a hand of playing cards fans out beside the headline. */
+.church-hero.church-style-stack{--h-font:'Church Fraunces',Georgia,serif;--cw:250px;--ch:350px;background:radial-gradient(ellipse at 76% 55%,var(--soft),var(--pale) 62%);display:grid;grid-template-columns:1.05fr 1fr;gap:5%;align-items:center;padding:55px 6%;min-height:650px}
+.church-hero.church-style-stack .denom-kicker{font-family:'Church Mono',monospace;font-size:10px;color:var(--brand);opacity:1}
+.church-style-stack .stack-copy,.church-style-stack .stack-face{container-type:inline-size}
+.church-hero.church-style-stack .denom-church-name{font-size:min(clamp(50px,5.6vw,92px),calc(170cqi / var(--word)));font-weight:800;line-height:.98;letter-spacing:-.04em;color:var(--deep)}
+.church-hero.church-style-stack .denom-action{border-radius:12px;box-shadow:0 10px 22px color-mix(in srgb,var(--brand) 30%,#0000)}
+.church-style-stack .stack-fan{position:relative;isolation:isolate;height:calc(var(--ch) + 120px)}
+.church-style-stack .stack-backs{animation:none}
+.church-style-stack .stack-backs i,.church-style-stack .stack-front{left:50%;top:50%;width:var(--cw);height:var(--ch);margin:calc(var(--ch)/-2 + 20px) 0 0 calc(var(--cw)/-2);border-radius:16px;transform-origin:50% 125%;box-shadow:0 14px 30px #0000002a}
+.church-style-stack .stack-backs i{rotate:calc(var(--piece)*11deg - 36deg);background:repeating-linear-gradient(45deg,#ffffff2e 0 5px,#0000 5px 13px),repeating-linear-gradient(-45deg,#ffffff2e 0 5px,#0000 5px 13px),var(--brand);border:10px solid #fffdf8;outline:1.5px solid #00000014}
+.church-style-stack .stack-backs i:nth-child(2){background-color:var(--deep)}
+.church-style-stack .stack-backs i:nth-child(3){background-color:color-mix(in srgb,var(--brand) 60%,#c99a3a)}
+.church-style-stack .stack-front{position:absolute;rotate:9deg;background:#fffdf8;display:grid;grid-template-rows:auto 1fr auto;padding:16px 18px;outline:1.5px solid #00000014}
+.church-style-stack .stack-index{font-family:'Church Fraunces',serif;font-weight:800;font-size:30px;line-height:.9;color:var(--brand);display:flex;flex-direction:column;align-items:center;width:max-content}
+.church-style-stack .stack-index small{font-size:16px;margin-top:4px}
+.church-style-stack .stack-index-flip{justify-self:end;rotate:180deg}
+.church-style-stack .stack-face{display:grid;place-items:center;margin:6px 8px;border:1.5px solid color-mix(in srgb,var(--brand) 45%,#fff);border-radius:10px;padding:12px;text-align:center}
+.church-style-stack .stack-face .church-landing-logo{width:130px;height:130px}
+.church-style-stack .stack-face .church-text-mark{font-family:'Church Fraunces',serif;font-size:min(32px,calc(180cqi / var(--word)));font-weight:800;line-height:1;letter-spacing:-1px;color:var(--brand)}
+
+/* Catalogue card: a typed library index card pulled from an oak drawer. */
+.church-hero.church-style-catalogcard{--h-font:'Church Mono',monospace;--h-ink:#1f2430;--h-muted:#454a55;--oak:#d9bf93;background:repeating-linear-gradient(90deg,#0000 0 7px,#7a4d1f0c 7px 8px),repeating-linear-gradient(90deg,#0000 0 23px,#7a4d1f12 23px 25px,#0000 25px 61px),repeating-linear-gradient(90deg,#fff0 0 41px,#ffffff1a 41px 47px),var(--oak);padding:55px 5%;min-height:650px;display:grid;align-items:center}
+.church-style-catalogcard .catalogcard-drawer{display:grid;grid-template-columns:1fr 210px;gap:5%;align-items:center}
+.church-style-catalogcard .catalogcard-card{position:relative;padding:28px 6% 54px;border-radius:5px;background:linear-gradient(#fffcf3 0 136px,#0000 0),repeating-linear-gradient(#0000 0 27px,#c4d6ea 27px 28px),#fffcf3;box-shadow:9px 9px 0 -1px #f4ecd8,9px 9px 0 0 #c5a978,18px 18px 0 -1px #efe5cc,18px 18px 0 0 #bb9e6c,0 26px 40px #4a32172e;transform:rotate(-.8deg)}
+.church-style-catalogcard .catalogcard-card::after{content:'';position:absolute;bottom:14px;left:50%;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:var(--oak);box-shadow:inset 2px 3px 4px #0003}
+.church-style-catalogcard .catalogcard-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:26px;padding-bottom:14px;border-bottom:2px solid #d5504a;font-size:13px;letter-spacing:1px;color:#5b6070}
+.church-style-catalogcard .catalogcard-head>span:first-child{font-weight:700;color:var(--brand);font-size:16px}
+.church-style-catalogcard .catalogcard-stamp{width:96px;height:96px;display:grid;place-items:center;border-radius:50%;border:3px double var(--brand);padding:8px;transform:rotate(8deg);text-align:center}
+.church-style-catalogcard .catalogcard-stamp .church-landing-logo{width:72px;height:72px}
+.church-style-catalogcard .catalogcard-stamp .church-text-mark{font-family:'Church Mono',monospace;font-size:10px;line-height:1.2;text-transform:uppercase;color:var(--brand)}
+.church-hero.church-style-catalogcard .denom-kicker{font-size:11px;line-height:28px;margin:14px 0 0;opacity:1;color:#d5504a}
+.church-hero.church-style-catalogcard .denom-church-name{font-size:clamp(36px,3.9vw,60px);font-weight:500;line-height:1.1;letter-spacing:-.05em;color:#1f2430}
+.church-hero.church-style-catalogcard .denom-church-subtitle{font-size:13px;letter-spacing:3px;margin-top:6px}
+.church-hero.church-style-catalogcard .denom-home-description{font-family:'Church Mono',monospace;font-size:13px;line-height:28px;margin:20px 0 6px;max-width:640px;text-indent:3ch;color:#30353f}
+.church-style-catalogcard .catalogcard-tracing{font-family:'Church Mono',monospace;font-size:11px;line-height:28px;color:#6b7080;margin:0 0 10px;text-indent:3ch}
+.church-style-catalogcard .catalogcard-foot{display:flex;justify-content:flex-end}
+.church-hero.church-style-catalogcard .denom-action{font-family:'Church Mono',monospace;letter-spacing:1px}
+.church-style-catalogcard .catalogcard-front{height:330px;border-radius:6px;background:linear-gradient(90deg,#0000 0 30%,#ffffff14 30% 34%,#0000 34%),repeating-linear-gradient(90deg,#0000 0 9px,#5a36141a 9px 10px),linear-gradient(#b98e58,#a87d48);box-shadow:inset 0 2px 0 #ffffff40,inset 0 -6px 0 #0000001f,0 20px 30px #4a321733;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px}
+.church-style-catalogcard .catalogcard-label{width:72%;padding:7px;border-radius:3px;background:linear-gradient(135deg,#f3dc9b,#b88a35 45%,#f0d48a 70%,#9c7228);box-shadow:0 2px 3px #0004}
+.church-style-catalogcard .catalogcard-label b,.church-style-catalogcard .catalogcard-label span{display:block;background:#fffcf3;text-align:center;font-family:'Church Bodoni',serif;font-size:17px;padding:6px 0 0;color:#2a2a2a}
+.church-style-catalogcard .catalogcard-label span{font-family:'Church Mono',monospace;font-size:11px;padding:2px 0 6px;color:var(--brand)}
+.church-style-catalogcard .catalogcard-front i{width:96px;height:36px;border-radius:4px 4px 48px 48px;background:linear-gradient(#f6e0a0,#b4863a 55%,#7d5a20);box-shadow:inset 0 -10px 10px #0003,0 4px 6px #0004}
+
+/* Topo: a survey map with contour lines, grid references and a summit pin. */
+.church-hero.church-style-topo{--h-font:'Church Sans',sans-serif;--h-ink:#1f2a24;background:#f1efe4;padding:60px 7% 40px;min-height:660px;display:flex;flex-direction:column;justify-content:space-between;gap:30px}
+.church-style-topo .topo-map{position:absolute;inset:0;width:100%;height:100%;z-index:-2;fill:none;stroke:var(--brand);stroke-width:1;opacity:.42}
+.church-style-topo .topo-map .topo-index{stroke-width:2.4;opacity:.9}
+.church-style-topo .topo-frame{position:absolute;inset:16px;z-index:-1;border:1px solid #1f2a2466;background:linear-gradient(90deg,#1f2a2414 1px,#0000 1px) -1px 0/25% 100%,linear-gradient(#1f2a2414 1px,#0000 1px) 0 -1px/100% 33.34%;display:grid;grid-template-columns:repeat(4,1fr);font-family:'Church Mono',monospace;font-size:10px;color:#1f2a2499}
+.church-style-topo .topo-frame span{text-align:center;padding-top:5px}
+.church-style-topo .topo-body{display:grid;grid-template-columns:1.25fr 1fr;gap:6%;align-items:center}
+.church-hero.church-style-topo .denom-kicker{font-family:'Church Mono',monospace;font-size:10px;opacity:1;display:inline-block;background:#f1efe4;padding:3px 8px 3px 0}
+.church-hero.church-style-topo .denom-kicker::before{content:'◎ ';color:var(--brand)}
+.church-hero.church-style-topo .denom-church-name{font-size:clamp(48px,5.3vw,88px);font-weight:700;line-height:.98;letter-spacing:-.045em}
+.church-hero.church-style-topo .denom-church-subtitle{font-family:'Church Mono',monospace}
+.church-hero.church-style-topo .denom-home-description{width:fit-content;background:#f1efe4e6;box-shadow:0 0 0 8px #f1efe4e6;color:#3d4842;font-size:15px}
+.church-hero.church-style-topo .denom-action{border-radius:40px;padding-inline:26px}
+.church-style-topo .topo-pin{display:flex;flex-direction:column;align-items:center;gap:26px}
+.church-style-topo .topo-pin-head{position:relative;width:170px;height:170px;display:grid;place-items:center;padding:22px;border-radius:50% 50% 50% 0;rotate:-45deg;background:#fff;border:4px solid var(--brand);box-shadow:10px 10px 0 #1f2a2414}
+.church-style-topo .topo-pin-head>*{rotate:45deg}
+.church-style-topo .topo-pin-head .church-landing-logo{width:110px;height:110px}
+.church-style-topo .topo-pin-head .church-text-mark{font-size:19px;text-align:center;color:var(--brand)}
+.church-style-topo .topo-pin>span{font-family:'Church Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;background:#1f2a24;color:#f1efe4;padding:6px 10px}
+.church-style-topo .topo-legend{display:flex;align-items:center;gap:22px;font-family:'Church Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#1f2a24b3}
+.church-style-topo .topo-north{display:grid;place-items:center;width:30px;height:30px;border:1.5px solid currentColor;border-radius:50%;font-weight:700;background:linear-gradient(currentColor,currentColor) 50% 0/1.5px 6px no-repeat}
+.church-style-topo .topo-scale{display:flex;border:1.5px solid #1f2a24}
+.church-style-topo .topo-scale i{width:36px;height:7px}
+.church-style-topo .topo-scale i:nth-child(odd){background:#1f2a24}
+
+/* Sunburst: a seventies sunrise of rays and striped sun under a soft serif headline. */
+.church-hero.church-style-sunburst{--h-font:'Church Fraunces',Georgia,serif;background:#fbf2e2;padding:60px 6% 0;min-height:0;display:flex;flex-direction:column;align-items:center;text-align:center}
+.church-style-sunburst .sunburst-rays{animation:none}
+.church-style-sunburst .sunburst-rays i{left:50%;top:100%;width:2600px;height:2600px;margin:-1300px 0 0 -1300px;border-radius:50%;background:repeating-conic-gradient(from 0deg,color-mix(in srgb,var(--brand) 13%,#0000) 0 5deg,#0000 5deg 10deg);-webkit-mask:radial-gradient(circle,#000 12%,#0000 48%);mask:radial-gradient(circle,#000 12%,#0000 48%);animation:sunburst-spin 260s linear infinite}
+@keyframes sunburst-spin{to{rotate:360deg}}
+.church-style-sunburst .sunburst-copy{display:flex;flex-direction:column;align-items:center;max-width:980px}
+.church-hero.church-style-sunburst .denom-kicker{font-size:10px;letter-spacing:5px;color:var(--brand);opacity:1;margin-bottom:18px}
+.church-hero.church-style-sunburst .denom-church-name{font-size:clamp(54px,6.4vw,108px);font-weight:800;line-height:.95;letter-spacing:-.04em;font-variation-settings:'SOFT' 100,'WONK' 1;color:var(--deep)}
+.church-hero.church-style-sunburst .denom-church-subtitle{letter-spacing:5px;margin-top:12px}
+.church-hero.church-style-sunburst .denom-home-description{margin:22px auto 26px;font-size:16px;color:#5b5145}
+.church-hero.church-style-sunburst .denom-action{border-radius:60px;padding-inline:30px;gap:24px}
+.church-style-sunburst .sunburst-sun{position:relative;isolation:isolate;margin-top:46px;width:min(560px,100%);aspect-ratio:2/1;display:grid;place-items:start center;padding-top:9%}
+.church-style-sunburst .sunburst-sun::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:999px 999px 0 0;background:linear-gradient(color-mix(in srgb,var(--brand) 30%,#f0a35a),color-mix(in srgb,var(--brand) 70%,#d0603a) 60%,var(--brand));-webkit-mask:linear-gradient(#000 0 54%,#0000 0 59%,#000 0 70%,#0000 0 75%,#000 0 84%,#0000 0 89%,#000 0);mask:linear-gradient(#000 0 54%,#0000 0 59%,#000 0 70%,#0000 0 75%,#000 0 84%,#0000 0 89%,#000 0)}
+.church-style-sunburst .sunburst-mark{position:absolute;top:24%;left:50%;translate:-50% -50%;max-width:62%;display:grid;place-items:center}
+.church-style-sunburst .sunburst-mark .church-landing-logo{width:120px;height:120px;padding:12px;border-radius:50%;background:#fbf2e2}
+.church-style-sunburst .sunburst-mark .church-text-mark{max-width:none;font-family:'Church Fraunces',serif;font-style:italic;font-weight:600;font-size:clamp(22px,2.6vw,34px);color:#fffaf0}
+
+/* Azulejo: a wall of glazed ceramic tiles with a plaster panel and a diamond medallion. */
+.church-hero.church-style-azulejo{--h-font:'Church Bodoni',Georgia,serif;--tile:var(--brand);--tile2:var(--deep);background:linear-gradient(90deg,#d8d2c2 1.5px,#0000 0) 0 0/96px 96px,linear-gradient(#d8d2c2 1.5px,#0000 0) 0 0/96px 96px,radial-gradient(circle at 50% 50%,var(--tile) 0 7px,#0000 7.5px) 0 0/96px 96px,radial-gradient(circle at 50% 50%,#0000 0 15px,var(--tile) 15.5px 18px,#0000 18.5px) 0 0/96px 96px,radial-gradient(circle at 50% 0,var(--tile) 0 11px,#0000 11.5px) 0 0/96px 96px,radial-gradient(circle at 50% 100%,var(--tile) 0 11px,#0000 11.5px) 0 0/96px 96px,radial-gradient(circle at 0 50%,var(--tile) 0 11px,#0000 11.5px) 0 0/96px 96px,radial-gradient(circle at 100% 50%,var(--tile) 0 11px,#0000 11.5px) 0 0/96px 96px,radial-gradient(circle at 0 0,#0000 0 25px,var(--tile2) 25.5px 29px,#0000 29.5px) 0 0/96px 96px,radial-gradient(circle at 100% 0,#0000 0 25px,var(--tile2) 25.5px 29px,#0000 29.5px) 0 0/96px 96px,radial-gradient(circle at 0 100%,#0000 0 25px,var(--tile2) 25.5px 29px,#0000 29.5px) 0 0/96px 96px,radial-gradient(circle at 100% 100%,#0000 0 25px,var(--tile2) 25.5px 29px,#0000 29.5px) 0 0/96px 96px,linear-gradient(45deg,#0000 calc(50% - 1px),var(--soft) 0 calc(50% + 1px),#0000 0) 0 0/96px 96px,linear-gradient(-45deg,#0000 calc(50% - 1px),var(--soft) 0 calc(50% + 1px),#0000 0) 0 0/96px 96px,#f8f6ef;padding:68px 5%;min-height:650px;display:grid;align-items:center}
+.church-style-azulejo .azulejo-wall{position:relative;padding-left:15%}
+.church-style-azulejo .azulejo-panel{position:relative;padding:58px 7% 56px 170px;background:#fbfaf5;border:12px solid #fbfaf5;outline:2px solid var(--tile);outline-offset:-20px;box-shadow:0 0 0 3px var(--tile2),0 24px 50px #0000002e}
+.church-style-azulejo .azulejo-medallion{position:absolute;z-index:2;left:calc(15% - 115px);top:50%;width:230px;height:230px;margin-top:-115px;display:grid;place-items:center;rotate:45deg;background:radial-gradient(circle,#fbfaf5 0 52%,var(--tile) 52.5% 55%,#fbfaf5 55.5% 60%,var(--tile2) 60.5% 63%,#0000 63.5%),repeating-conic-gradient(var(--tile) 0 10deg,#fbfaf5 10deg 20deg);border:10px solid #fbfaf5;box-shadow:0 0 0 4px var(--tile2),0 18px 36px #0000003d}
+.church-style-azulejo .azulejo-medallion>*{rotate:-45deg}
+.church-style-azulejo .azulejo-medallion .church-landing-logo{width:118px;height:118px}
+.church-style-azulejo .azulejo-medallion .church-text-mark{max-width:120px;font-family:'Church Bodoni',serif;font-size:17px;text-align:center;color:var(--tile2)}
+.church-hero.church-style-azulejo .denom-kicker{font-size:10px;letter-spacing:4px;color:var(--tile);opacity:1;margin-bottom:18px}
+.church-hero.church-style-azulejo .denom-church-name{font-size:clamp(44px,4.8vw,80px);font-weight:600;line-height:1.02;letter-spacing:-1.5px;color:var(--tile2)}
+.church-hero.church-style-azulejo .denom-church-subtitle{font-style:italic;letter-spacing:3px}
+.church-style-azulejo .azulejo-rule{display:block;width:190px;height:14px;margin-top:24px;background:radial-gradient(circle,var(--tile) 0 3px,#0000 3.5px) 0 50%/19px 14px,linear-gradient(var(--tile),var(--tile)) 0 0/100% 1.5px no-repeat,linear-gradient(var(--tile),var(--tile)) 0 100%/100% 1.5px no-repeat}
+.church-hero.church-style-azulejo .denom-home-description{font-size:15px;margin:22px 0 26px}
+.church-hero.church-style-azulejo .denom-action{background:var(--tile2);border-color:var(--tile2)}
+
+/* Weave: a liturgical stole of woven warp and weft hangs beside the headline. */
+.church-hero.church-style-weave{--h-font:'Church Fraunces',Georgia,serif;--weft:#efe0c2;background:repeating-linear-gradient(0deg,#0000 0 2px,#6b4a2a0a 2px 3px),repeating-linear-gradient(90deg,#0000 0 2px,#6b4a2a0a 2px 3px),#f6f1e7;display:grid;grid-template-columns:1fr 340px;gap:7%;padding:0 6% 0 7%;min-height:680px}
+.church-style-weave .weave-copy{align-self:center;padding:60px 0}
+.church-hero.church-style-weave .denom-kicker{font-family:'Church Mono',monospace;font-size:10px;color:var(--brand);opacity:1;display:flex;align-items:center;gap:14px}
+.church-hero.church-style-weave .denom-kicker::before{content:'';width:46px;height:6px;background:repeating-linear-gradient(90deg,var(--brand) 0 6px,#0000 6px 9px)}
+.church-hero.church-style-weave .denom-church-name{font-size:clamp(50px,5.6vw,96px);font-weight:350;line-height:1;letter-spacing:-.035em;color:#231d19}
+.church-hero.church-style-weave .denom-church-subtitle{font-family:'Church Mono',monospace;letter-spacing:4px;margin-top:14px;color:var(--brand);opacity:1}
+.church-hero.church-style-weave .denom-home-description{font-size:16px;color:#5c5249}
+.church-hero.church-style-weave .denom-action{border-radius:2px;box-shadow:0 0 0 4px #f6f1e7,0 0 0 5.5px var(--brand)}
+.church-style-weave .weave-stole{position:relative;min-height:500px}
+.church-style-weave .weave-cloth{position:absolute;inset:0 0 64px;width:100%;height:calc(100% - 64px);-webkit-mask:linear-gradient(90deg,#000 0 45%,#0000 0 55%,#000 0);mask:linear-gradient(90deg,#000 0 45%,#0000 0 55%,#000 0);filter:drop-shadow(0 12px 14px #0003)}
+.church-style-weave .weave-stole::before{content:'';position:absolute;z-index:1;inset:0 0 64px;pointer-events:none;background:repeating-linear-gradient(180deg,#0000 0 150px,#c99a3acc 150px 158px,#0000 158px 166px,#c99a3acc 166px 170px,#0000 170px 240px);-webkit-mask:linear-gradient(90deg,#000 0 45%,#0000 0 55%,#000 0);mask:linear-gradient(90deg,#000 0 45%,#0000 0 55%,#000 0)}
+.church-style-weave .weave-stole::after{content:'';position:absolute;bottom:0;left:0;right:0;height:64px;background:repeating-linear-gradient(90deg,var(--brand) 0 2px,#0000 2px 6px);-webkit-mask:linear-gradient(90deg,#000 0 45%,#0000 0 55%,#000 0),linear-gradient(#000 40%,#0000);-webkit-mask-composite:source-in;mask:linear-gradient(90deg,#000 0 45%,#0000 0 55%,#000 0) intersect,linear-gradient(#000 40%,#0000)}
+.church-style-weave .weave-gap{fill:color-mix(in srgb,var(--brand) 55%,#000)}
+.church-style-weave .weave-warp{fill:var(--brand)}
+.church-style-weave .weave-weft{fill:var(--weft)}
+.church-style-weave .weave-label{position:absolute;z-index:2;left:50%;bottom:130px;translate:-50%;width:210px;padding:18px 16px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;background:#fbf7ee;outline:1.5px dashed var(--brand);outline-offset:-7px;box-shadow:0 10px 24px #0000003d;text-align:center}
+.church-style-weave .weave-label .church-landing-logo{width:110px;height:110px}
+.church-style-weave .weave-label .church-text-mark{font-family:'Church Fraunces',serif;font-size:22px;color:var(--brand)}
+.church-style-weave .weave-label>span{font-family:'Church Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#6a5f55}
+
+@media(max-width:1050px){
+  .church-style-halftone .halftone-page{grid-template-columns:1.3fr 1fr}
+  .church-style-tickertape .tickertape-body{grid-template-columns:1fr;gap:34px}
+  .church-style-notebook .notebook-page{grid-template-columns:1fr 210px}
+  .church-hero.church-style-stack{grid-template-columns:1fr;gap:20px}
+  .church-style-catalogcard .catalogcard-drawer{grid-template-columns:1fr}
+  .church-style-catalogcard .catalogcard-front{display:none}
+  .church-style-topo .topo-body{grid-template-columns:1fr 220px}
+  .church-hero.church-style-weave{grid-template-columns:1fr 240px;gap:5%}
+}
+
+@media(max-width:700px){
+  .church-hero:is(.church-style-tickertape,.church-style-invitation,.church-style-stack,.church-style-catalogcard,.church-style-topo,.church-style-azulejo,.church-style-weave,.church-style-halftone){min-height:0}
+  .church-hero.church-style-halftone{padding:16px}
+  .church-style-halftone .halftone-page{grid-template-columns:1fr;grid-template-rows:auto;min-height:0;gap:14px}
+  .church-style-halftone .halftone-hero-panel{grid-row:auto;padding:90px 7% 34px;min-height:330px}
+  .church-style-halftone .halftone-caption{top:20px;left:18px}
+  .church-hero.church-style-halftone .denom-kicker{font-size:9px}
+  .church-hero.church-style-halftone .denom-church-name{font-size:min(40px,calc(118cqi / var(--word)))!important;letter-spacing:-.5px;line-height:.98}
+  .church-style-halftone .halftone-burst{width:190px}
+  .church-style-halftone .halftone-burst .church-landing-logo{width:95px;height:95px}
+  .church-style-halftone .halftone-copy-panel{padding:26px 7%}
+  .church-hero.church-style-halftone .halftone-copy-panel .denom-home-description{font-size:13px}
+
+  .church-style-tickertape .tickertape-band{font-size:11px;padding:11px 0}
+  .church-style-tickertape .tickertape-body{padding:40px 7% 20px}
+  .church-hero.church-style-tickertape .denom-church-name{font-size:min(44px,calc(140cqi / var(--word)))!important;letter-spacing:-.04em;line-height:.95}
+  .church-style-tickertape .tickertape-side{padding-left:20px}
+  .church-style-tickertape .tickertape-mark .church-landing-logo{width:64px;height:64px}
+  .church-style-tickertape .tickertape-cross{height:110px}
+  .church-style-tickertape .tickertape-a{top:20px}.church-style-tickertape .tickertape-b{top:52px}
+
+  .church-hero.church-style-notebook{--rule:30px;--margin:46px;padding:0 7% var(--rule) calc(var(--margin) + 22px)}
+  .church-style-notebook .notebook-holes i{width:16px;height:16px;left:calc(var(--margin)/2 - 8px)}
+  .church-style-notebook .notebook-header{font-size:8px;letter-spacing:1px;padding-bottom:7px}
+  .church-style-notebook .notebook-page{grid-template-columns:1fr;gap:20px}
+  .church-hero.church-style-notebook .denom-kicker{font-size:8px}
+  .church-hero.church-style-notebook .denom-church-name{font-size:38px!important;line-height:calc(var(--rule)*1.5);letter-spacing:-1px}
+  .church-hero.church-style-notebook .denom-home-description{font-size:13px}
+  .church-style-notebook .notebook-photo{width:190px;margin:10px 0 10px 20px}
+  .church-style-notebook .notebook-photo .church-landing-logo{width:110px;height:110px}
+
+  .church-hero.church-style-invitation{padding:28px 5% 0}
+  .church-style-invitation .invitation-back{inset:130px 0 0}
+  .church-style-invitation .invitation-back::before{height:110px}
+  .church-style-invitation .invitation-card{width:92%;padding:38px 9% 130px;outline-offset:-10px}
+  .church-hero.church-style-invitation .denom-kicker{font-size:8px;letter-spacing:3px}
+  .church-hero.church-style-invitation .denom-church-name{font-size:36px!important;letter-spacing:-.5px}
+  .church-hero.church-style-invitation .denom-home-description{font-size:14px}
+  .church-style-invitation .invitation-pocket{margin-top:-110px;min-height:230px;padding-top:30px}
+  .church-style-invitation .invitation-seal{width:104px;height:104px}
+  .church-style-invitation .invitation-seal .church-landing-logo{width:72px;height:72px}
+  .church-hero.church-style-invitation .denom-action{font-size:11px}
+
+  .church-hero.church-style-stack{--cw:180px;--ch:252px;padding:40px 7% 20px}
+  .church-style-stack .stack-backs i{rotate:calc(var(--piece)*8deg - 27deg)}
+  .church-style-stack .stack-front{rotate:6deg}
+  .church-hero.church-style-stack .denom-church-name{font-size:min(46px,calc(170cqi / var(--word)))!important;line-height:.98}
+  .church-style-stack .stack-fan{height:360px}
+  .church-style-stack .stack-index{font-size:22px}
+  .church-style-stack .stack-face .church-landing-logo{width:90px;height:90px}
+  .church-style-stack .stack-face .church-text-mark{font-size:min(24px,calc(180cqi / var(--word)))}
+
+  .church-hero.church-style-catalogcard{padding:34px 5%}
+  .church-style-catalogcard .catalogcard-card{padding:20px 6% 48px;box-shadow:5px 5px 0 -1px #f4ecd8,5px 5px 0 0 #c5a978,0 18px 30px #4a32172e;background:linear-gradient(#fffcf3 0 66px,#0000 0),repeating-linear-gradient(#0000 0 25px,#c4d6ea 25px 26px),#fffcf3}
+  .church-style-catalogcard .catalogcard-head{gap:12px;font-size:10px}
+  .church-style-catalogcard .catalogcard-head>span:first-child{font-size:12px}
+  .church-style-catalogcard .catalogcard-stamp{width:70px;height:70px}
+  .church-style-catalogcard .catalogcard-stamp .church-landing-logo{width:50px;height:50px}
+  .church-hero.church-style-catalogcard .denom-church-name{font-size:32px!important;letter-spacing:-.06em}
+  .church-hero.church-style-catalogcard .denom-home-description{font-size:12px;line-height:26px}
+  .church-style-catalogcard .catalogcard-tracing{font-size:9px;line-height:20px}
+  .church-style-catalogcard .catalogcard-foot{justify-content:flex-start}
+
+  .church-hero.church-style-topo{padding:40px 8% 30px}
+  .church-style-topo .topo-frame{inset:10px}
+  .church-style-topo .topo-body{grid-template-columns:1fr;gap:34px}
+  .church-hero.church-style-topo .denom-church-name{font-size:44px!important;line-height:1}
+  .church-hero.church-style-topo .denom-home-description{width:fit-content;font-size:13px}
+  .church-style-topo .topo-pin{order:-1;align-items:flex-start;flex-direction:row;gap:22px;align-items:center}
+  .church-style-topo .topo-pin-head{width:100px;height:100px;padding:14px;border-width:3px}
+  .church-style-topo .topo-pin-head .church-landing-logo{width:62px;height:62px}
+  .church-style-topo .topo-pin>span{font-size:8px}
+  .church-style-topo .topo-legend{gap:12px;font-size:7px}
+  .church-style-topo .topo-scale i{width:20px}
+
+  .church-hero.church-style-sunburst{padding:44px 7% 0}
+  .church-hero.church-style-sunburst .denom-kicker{font-size:8px;letter-spacing:3px}
+  .church-hero.church-style-sunburst .denom-church-name{font-size:46px!important;line-height:.98}
+  .church-hero.church-style-sunburst .denom-home-description{font-size:13px}
+  .church-style-sunburst .sunburst-sun{margin-top:34px;width:100%}
+  .church-style-sunburst .sunburst-mark .church-landing-logo{width:84px;height:84px;padding:8px}
+  .church-style-sunburst .sunburst-mark .church-text-mark{font-size:20px}
+
+  .church-hero.church-style-azulejo{padding:40px 5%}
+  .church-style-azulejo .azulejo-wall{padding:75px 0 0}
+  .church-style-azulejo .azulejo-medallion{left:50%;top:0;width:140px;height:140px;margin:0 0 0 -70px;border-width:7px}
+  .church-style-azulejo .azulejo-medallion .church-landing-logo{width:70px;height:70px}
+  .church-style-azulejo .azulejo-medallion .church-text-mark{font-size:12px;max-width:80px}
+  .church-style-azulejo .azulejo-panel{padding:90px 8% 36px;border-width:8px;outline-offset:-14px;text-align:center}
+  .church-hero.church-style-azulejo .denom-church-name{font-size:38px!important;letter-spacing:-.5px}
+  .church-style-azulejo .azulejo-rule{margin:20px auto 0}
+  .church-hero.church-style-azulejo .denom-home-description{font-size:13px}
+
+  .church-hero.church-style-weave{grid-template-columns:1fr;gap:0;padding:0 7%}
+  .church-style-weave .weave-stole{order:-1;min-height:210px;margin:0 -8%}
+  .church-style-weave .weave-cloth,.church-style-weave .weave-stole::before{-webkit-mask:none;mask:none;inset:0 0 40px;height:calc(100% - 40px)}
+  .church-style-weave .weave-stole::before{background:repeating-linear-gradient(90deg,#0000 0 70px,#c99a3acc 70px 76px,#0000 76px 82px,#c99a3acc 82px 85px,#0000 85px 150px)}
+  .church-style-weave .weave-stole::after{height:40px;-webkit-mask:linear-gradient(#000 40%,#0000);mask:linear-gradient(#000 40%,#0000)}
+  .church-style-weave .weave-label{bottom:auto;top:50%;translate:-50% -60%;width:170px;padding:12px}
+  .church-style-weave .weave-label .church-landing-logo{width:70px;height:70px}
+  .church-style-weave .weave-copy{padding:34px 0 40px}
+  .church-hero.church-style-weave .denom-church-name{font-size:44px!important}
+  .church-hero.church-style-weave .denom-home-description{font-size:13px}
+}

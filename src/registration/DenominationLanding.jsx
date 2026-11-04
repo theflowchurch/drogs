@@ -1,4 +1,9 @@
 import LicensedMinisterNotice from './LicensedMinisterNotice';
+import set1 from './landings/set1';
+import set2 from './landings/set2';
+import set3 from './landings/set3';
+import set4 from './landings/set4';
+import set5 from './landings/set5';
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 export default function DenominationLanding({ site, config }) {
@@ -49,10 +54,11 @@ export default function DenominationLanding({ site, config }) {
     diagonal: () => <><Art count={2}/><div className="diagonal-mark">{mark}<span>MINISTERIAL DIRECTORY</span></div><div className="diagonal-copy">{label}{title}{description}{action}</div></>,
     letter: () => <><div className="letter-heading">{mark}<span>{config.name}</span></div><div className="letter-body">{label}{title}{description}</div><div className="letter-signoff">{action}<span>Licensed bishops and pastors</span></div></>,
     mosaic: () => <><Art count={9}/><div className="mosaic-top">{label}{mark}</div><div className="mosaic-bottom"><div>{title}</div><div>{description}{action}</div></div></>,
+    ...set1, ...set2, ...set3, ...set4, ...set5,
   };
   return <main className="denom-home denom-new-landing church-landing">
     <section className={`church-hero church-style-${style} ${config.logo ? '' : 'church-wordmark-only'}`} aria-label={`${config.name} ministerial directory`}>
-      {pages[style]?.() || <Copy logo/>}
+      {pages[style]?.({ config, mark, title, description, action, label, Art, masthead }) || <Copy logo/>}
     </section>
     <LicensedMinisterNotice/>
   </main>;

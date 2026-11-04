@@ -98,7 +98,7 @@
       "Anointed Word Chapel Int"
     ],
     "logo": "",
-    "homeLayout": "quiet",
+    "homeLayout": "splitscreen",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#42554d",
     "directoryAction": "View licensed ministers",
@@ -203,7 +203,7 @@
       "Equatorial Guinea"
     ],
     "logo": "",
-    "homeLayout": "terminal",
+    "homeLayout": "passport",
     "visualStyle": "pleasantsurprise",
     "accent": "#42554d",
     "directoryAction": "View bishops and pastors",
@@ -308,7 +308,7 @@
       "Glory Life Hope Center"
     ],
     "logo": "",
-    "homeLayout": "newsprint",
+    "homeLayout": "ticket",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#42554d",
     "directoryAction": "View licensed ministers",
@@ -488,7 +488,7 @@
       "Jesus Is The Master"
     ],
     "logo": "",
-    "homeLayout": "index",
+    "homeLayout": "vertical",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#42554d",
     "directoryAction": "View licensed ministers",
@@ -533,7 +533,7 @@
       "Keep My Word Chapel International"
     ],
     "logo": "",
-    "homeLayout": "brutalist",
+    "homeLayout": "magazine",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#42554d",
     "directoryAction": "View licensed ministers",
@@ -593,7 +593,7 @@
       "Libreville City State"
     ],
     "logo": "",
-    "homeLayout": "ledger",
+    "homeLayout": "bento",
     "visualStyle": "pleasantsurprise",
     "accent": "#42554d",
     "directoryAction": "View bishops and pastors",
@@ -653,7 +653,7 @@
       "Loyalty House International"
     ],
     "logo": "assets/denominations/loyalty-house-international.png",
-    "homeLayout": "cinema",
+    "homeLayout": "seal",
     "visualStyle": "gochurch",
     "accent": "#323270",
     "directoryAction": "Search the directory",
@@ -668,7 +668,7 @@
       "Makarios City Church"
     ],
     "logo": "assets/denominations/makarios-city-church.png",
-    "homeLayout": "gallerydark",
+    "homeLayout": "stainedglass",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#703232",
     "directoryAction": "View licensed ministers",
@@ -683,7 +683,7 @@
       "Makarios Western North"
     ],
     "logo": "assets/denominations/western-north-makarios-church.png",
-    "homeLayout": "monolith",
+    "homeLayout": "scroll",
     "visualStyle": "pleasantsurprise",
     "accent": "#703242",
     "directoryAction": "View bishops and pastors",
@@ -698,7 +698,7 @@
       "Malawi"
     ],
     "logo": "",
-    "homeLayout": "typographic",
+    "homeLayout": "arch",
     "visualStyle": "gochurch",
     "accent": "#42554d",
     "directoryAction": "Search the directory",
@@ -713,7 +713,7 @@
       "Mustard Seed Chapel International"
     ],
     "logo": "assets/denominations/mustard-seed-chapel-international.png",
-    "homeLayout": "glass",
+    "homeLayout": "console",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#705132",
     "directoryAction": "View licensed ministers",
@@ -728,7 +728,7 @@
       "Onction Internationale Benin"
     ],
     "logo": "assets/denominations/onction-internationale.png",
-    "homeLayout": "noir",
+    "homeLayout": "chalk",
     "visualStyle": "pleasantsurprise",
     "accent": "#706132",
     "directoryAction": "View bishops and pastors",
@@ -743,7 +743,7 @@
       "Others International Church"
     ],
     "logo": "assets/denominations/others-international-church.png",
-    "homeLayout": "marquee",
+    "homeLayout": "neon",
     "visualStyle": "gochurch",
     "accent": "#327070",
     "directoryAction": "Search the directory",
@@ -758,7 +758,7 @@
       "Pacific Islands Missionary Church"
     ],
     "logo": "assets/denominations/pacific-islands-missionary-church.png",
-    "homeLayout": "orbit",
+    "homeLayout": "folder",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#703242",
     "directoryAction": "View licensed ministers",
@@ -788,7 +788,7 @@
       "Poimen Church Gambia"
     ],
     "logo": "assets/denominations/poimen-church.png",
-    "homeLayout": "ribbonfold",
+    "homeLayout": "timeline",
     "visualStyle": "gochurch",
     "accent": "#327032",
     "directoryAction": "Search the directory",
@@ -803,7 +803,7 @@
       "Poimen Church Senegal-Gambia"
     ],
     "logo": "assets/denominations/poimen-church.png",
-    "homeLayout": "letterpress",
+    "homeLayout": "corkboard",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#327032",
     "directoryAction": "View licensed ministers",
@@ -818,7 +818,7 @@
       "Praia City State Church"
     ],
     "logo": "",
-    "homeLayout": "letter",
+    "homeLayout": "hardcover",
     "visualStyle": "pleasantsurprise",
     "accent": "#42554d",
     "directoryAction": "View bishops and pastors",
@@ -833,7 +833,7 @@
       "Precious Souls Church – Eswatini"
     ],
     "logo": "assets/denominations/precious-souls-church.png",
-    "homeLayout": "poster",
+    "homeLayout": "certificate",
     "visualStyle": "gochurch",
     "accent": "#703232",
     "directoryAction": "Search the directory",
@@ -848,7 +848,7 @@
       "Precious Souls Namibia"
     ],
     "logo": "assets/denominations/precious-souls-church.png",
-    "homeLayout": "swiss",
+    "homeLayout": "plaque",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#703232",
     "directoryAction": "View licensed ministers",
@@ -863,7 +863,7 @@
       "Precious Souls Swaziland"
     ],
     "logo": "assets/denominations/precious-souls-church.png",
-    "homeLayout": "sandstone",
+    "homeLayout": "aurora",
     "visualStyle": "pleasantsurprise",
     "accent": "#703232",
     "directoryAction": "View bishops and pastors",
@@ -878,7 +878,7 @@
       "Primeiras Obras"
     ],
     "logo": "assets/denominations/primeiras-obras.png",
-    "homeLayout": "columnar",
+    "homeLayout": "halftone",
     "visualStyle": "gochurch",
     "accent": "#324270",
     "directoryAction": "Search the directory",
@@ -893,7 +893,7 @@
       "Primero Amor"
     ],
     "logo": "assets/denominations/primeiro-amor.png",
-    "homeLayout": "spotlight",
+    "homeLayout": "tickertape",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#703232",
     "directoryAction": "View licensed ministers",
@@ -908,7 +908,7 @@
       "Qodesh City Church"
     ],
     "logo": "assets/denominations/qodesh-family-church.png",
-    "homeLayout": "horizon",
+    "homeLayout": "notebook",
     "visualStyle": "pleasantsurprise",
     "accent": "#513270",
     "directoryAction": "View bishops and pastors",
@@ -923,7 +923,7 @@
       "Qodesh Family Churches"
     ],
     "logo": "assets/denominations/qodesh-family-church.png",
-    "homeLayout": "deco",
+    "homeLayout": "invitation",
     "visualStyle": "gochurch",
     "accent": "#513270",
     "directoryAction": "Search the directory",
@@ -938,7 +938,7 @@
       "Rejoice Greatly"
     ],
     "logo": "",
-    "homeLayout": "quiet",
+    "homeLayout": "stack",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#42554d",
     "directoryAction": "View licensed ministers",
@@ -953,7 +953,7 @@
       "Rencontre Prophetique Internationale"
     ],
     "logo": "assets/denominations/rencontre-prophetique-internationale.png",
-    "homeLayout": "diagonal",
+    "homeLayout": "catalogcard",
     "visualStyle": "pleasantsurprise",
     "accent": "#323270",
     "directoryAction": "View bishops and pastors",
@@ -968,7 +968,7 @@
       "Revival International"
     ],
     "logo": "assets/denominations/revival-international.webp",
-    "homeLayout": "signal",
+    "homeLayout": "topo",
     "visualStyle": "gochurch",
     "accent": "#703242",
     "directoryAction": "Search the directory",
@@ -984,7 +984,7 @@
       "Rose of Sharon"
     ],
     "logo": "",
-    "homeLayout": "terminal",
+    "homeLayout": "sunburst",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#42554d",
     "directoryAction": "View licensed ministers",
@@ -999,7 +999,7 @@
       "Sagesse Internationale Guinea"
     ],
     "logo": "assets/denominations/sagesse-internationale.png",
-    "homeLayout": "panorama",
+    "homeLayout": "azulejo",
     "visualStyle": "pleasantsurprise",
     "accent": "#706132",
     "directoryAction": "View bishops and pastors",
@@ -1014,7 +1014,7 @@
       "Saviours Of Men International"
     ],
     "logo": "assets/denominations/saviours-of-men-international.png",
-    "homeLayout": "riso",
+    "homeLayout": "weave",
     "visualStyle": "gochurch",
     "accent": "#703251",
     "directoryAction": "Search the directory",
@@ -1029,7 +1029,7 @@
       "Serious Christian Church"
     ],
     "logo": "assets/denominations/serious-christian-church.png",
-    "homeLayout": "bauhaus",
+    "homeLayout": "origami",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#706132",
     "directoryAction": "View licensed ministers",
@@ -1044,7 +1044,7 @@
       "Serious Christian Church Lesotho"
     ],
     "logo": "assets/denominations/serious-christian-church.png",
-    "homeLayout": "mosaic",
+    "homeLayout": "louvre",
     "visualStyle": "pleasantsurprise",
     "accent": "#706132",
     "directoryAction": "View bishops and pastors",
@@ -1059,7 +1059,7 @@
       "Seychelles"
     ],
     "logo": "",
-    "homeLayout": "newsprint",
+    "homeLayout": "record",
     "visualStyle": "gochurch",
     "accent": "#42554d",
     "directoryAction": "Search the directory",
@@ -1074,7 +1074,7 @@
       "Strait Gate Church Liberia"
     ],
     "logo": "assets/denominations/strait-gate-church.png",
-    "homeLayout": "chrome",
+    "homeLayout": "filmstrip",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#325170",
     "directoryAction": "View licensed ministers",
@@ -1089,7 +1089,7 @@
       "Strong Christian Church"
     ],
     "logo": "assets/denominations/strong-christian-church.png",
-    "homeLayout": "memphis",
+    "homeLayout": "transit",
     "visualStyle": "pleasantsurprise",
     "accent": "#706132",
     "directoryAction": "View bishops and pastors",
@@ -1104,7 +1104,7 @@
       "Strong Christian Church South Africa"
     ],
     "logo": "assets/denominations/strong-christian-church.png",
-    "homeLayout": "gallery",
+    "homeLayout": "pennant",
     "visualStyle": "gochurch",
     "accent": "#706132",
     "directoryAction": "Search the directory",
@@ -1119,7 +1119,7 @@
       "Talanta International Tanzania"
     ],
     "logo": "assets/denominations/talanta-international-tanzania.png",
-    "homeLayout": "blueprint",
+    "homeLayout": "initial",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#325170",
     "directoryAction": "View licensed ministers",
@@ -1134,7 +1134,7 @@
       "Tell Them"
     ],
     "logo": "",
-    "homeLayout": "index",
+    "homeLayout": "ripple",
     "visualStyle": "pleasantsurprise",
     "accent": "#42554d",
     "directoryAction": "View bishops and pastors",
@@ -1149,7 +1149,7 @@
       "Tell Them Church"
     ],
     "logo": "",
-    "homeLayout": "brutalist",
+    "homeLayout": "zigzag",
     "visualStyle": "gochurch",
     "accent": "#42554d",
     "directoryAction": "Search the directory",
@@ -1164,7 +1164,7 @@
       "The Glorious Mega Church"
     ],
     "logo": "assets/denominations/the-glorious-mega-church.png",
-    "homeLayout": "quilt",
+    "homeLayout": "tapestry",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#703232",
     "directoryAction": "View licensed ministers",
@@ -1179,7 +1179,7 @@
       "The Machaneh Church International"
     ],
     "logo": "assets/denominations/machaneh-church-international.png",
-    "homeLayout": "monolith",
+    "homeLayout": "eclipse",
     "visualStyle": "pleasantsurprise",
     "accent": "#707032",
     "directoryAction": "View bishops and pastors",
@@ -1194,7 +1194,7 @@
       "The Makarios Church"
     ],
     "logo": "assets/denominations/the-makarios-church.png",
-    "homeLayout": "glass",
+    "homeLayout": "constellation",
     "visualStyle": "gochurch",
     "accent": "#703242",
     "directoryAction": "Search the directory",
@@ -1209,7 +1209,7 @@
       "The Mega Church"
     ],
     "logo": "assets/denominations/the-mega-church.png",
-    "homeLayout": "noir",
+    "homeLayout": "watercolor",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#706132",
     "directoryAction": "View licensed ministers",
@@ -1224,7 +1224,7 @@
       "The Mega Church – Grace Chapel"
     ],
     "logo": "assets/denominations/the-mega-church.png",
-    "homeLayout": "cinema",
+    "homeLayout": "postcard",
     "visualStyle": "pleasantsurprise",
     "accent": "#706132",
     "directoryAction": "View bishops and pastors",
@@ -1239,7 +1239,7 @@
       "The Mega Church – Nachal Cathedral"
     ],
     "logo": "assets/denominations/the-mega-church.png",
-    "homeLayout": "gallerydark",
+    "homeLayout": "heraldry",
     "visualStyle": "gochurch",
     "accent": "#706132",
     "directoryAction": "Search the directory",
@@ -1254,7 +1254,7 @@
       "True Son Chapel International"
     ],
     "logo": "",
-    "homeLayout": "ledger",
+    "homeLayout": "triptych",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#42554d",
     "directoryAction": "View licensed ministers",
@@ -1269,7 +1269,7 @@
       "United Cities"
     ],
     "logo": "",
-    "homeLayout": "typographic",
+    "homeLayout": "vigil",
     "visualStyle": "pleasantsurprise",
     "accent": "#42554d",
     "directoryAction": "View bishops and pastors",
@@ -1284,7 +1284,7 @@
       "United Islands"
     ],
     "logo": "",
-    "homeLayout": "letter",
+    "homeLayout": "zen",
     "visualStyle": "gochurch",
     "accent": "#42554d",
     "directoryAction": "Search the directory",
@@ -1299,7 +1299,7 @@
       "Victoire Internationale"
     ],
     "logo": "assets/denominations/victoire-internationale.png",
-    "homeLayout": "ribbonfold",
+    "homeLayout": "billboard",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#517032",
     "directoryAction": "View licensed ministers",
@@ -1314,7 +1314,7 @@
       "West End City Churches"
     ],
     "logo": "assets/denominations/west-end-city-church.png",
-    "homeLayout": "letterpress",
+    "homeLayout": "echo",
     "visualStyle": "pleasantsurprise",
     "accent": "#703232",
     "directoryAction": "View bishops and pastors",
