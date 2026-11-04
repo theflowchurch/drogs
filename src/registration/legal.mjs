@@ -57,13 +57,13 @@ The commitment applies to the role and registration year shown in the member's a
 
 ## Who receives your payment
 
-The receiving organisation and website operator is **Kuriake Castle**. Paystack processes supported card and mobile-money checkout payments on its behalf. Office-provided bank or mobile-money transfer instructions, where offered, appear in the member's account.
+The receiving organisation and website operator is **Kuriake Castle**. Members pay by mobile money (MoMo) or bank transfer using the instructions shown in their account.
 
 A payment is not automatically a payment to an individual bishop, pastor or denomination appearing in the directory. Use only instructions displayed in your account or confirmed by the Kuriake Castle office.
 
 ## Amount and currency
 
-The annual commitment is stated in US dollars. Paystack checkout for the Ghana account charges in Ghana cedis and displays the cedi amount before authorisation. Other local-currency estimates are indicative; your bank or mobile-money provider may apply its own exchange rate or charges.
+The annual commitment is stated in US dollars. Local-currency estimates are indicative; your bank or mobile-money provider may apply its own exchange rate or charges.
 
 Check the recipient, amount, currency and registration year before confirming. Payment is recorded as received only after verification. Uploading a transfer receipt does not by itself confirm receipt of funds.
 
@@ -77,13 +77,13 @@ If you are debited but payment is not showing, email ${email} with your transact
 
 Annual commitments are generally non-refundable, subject to the exceptions in our [refund policy](/refunds/) and applicable law. Send payment enquiries and refund requests to ${email}.
 
-## Bank transfers and receipt uploads
+## MoMo, bank transfers and receipt uploads
 
-Members in Ghana can use supported Paystack mobile-money or local-card checkout, or pay by bank transfer. Members registering from outside Ghana should use the bank-transfer instructions shown in their account. The annual fee is $25 USD for pastors and $100 USD for bishops, unless a different applicable fee is displayed before payment.
+Members can pay by mobile money (MoMo) or by bank transfer. MoMo payments are sent to KURIAKE CASTLE LBG on +233 59 202 4923. The annual fee is $25 USD for pastors and $100 USD for bishops, unless a different applicable fee is displayed before payment.
 
 Bank transfers are payable to KURIAKE CASTLE LBG, account 1441005268161 at Ecobank, St Johns branch, Ghana. Send the equivalent of the displayed annual fee and account for any transfer-provider charges. If your bank needs further routing information, request it from the office before sending.
 
-Upload a clear screenshot or photo of the actual transfer confirmation and enter its transaction reference before continuing. Automated image and text checks help identify unrelated uploads; they do not establish that a receipt is genuine or that funds arrived. Unclear receipts are referred for manual review. A submitted receipt remains pending until the office checks it against the receiving account.
+Upload a clear screenshot or photo of the actual MoMo or bank payment confirmation and enter its transaction reference before continuing. Automated image and text checks help identify unrelated uploads; they do not establish that a receipt is genuine or that funds arrived. Unclear receipts are referred for manual review. A submitted receipt remains pending until the office checks it against the receiving account.
 `;
 
 export const FAQ = `# Frequently asked questions
@@ -110,7 +110,7 @@ It supports registration and renewal administration, verification of ministry re
 
 ## Who receives the money?
 
-Kuriake Castle receives the annual commitments. Paystack processes supported checkout payments on its behalf. A pastor's or bishop's listing is not a personal payment destination.
+Kuriake Castle receives the annual commitments. A pastor's or bishop's listing is not a personal payment destination.
 
 ## Does paying automatically approve my registration?
 
@@ -141,7 +141,7 @@ Registration information includes your name, email address, telephone number, da
 
 We maintain ministry records provided by participating churches and the office, annual lists, registration decisions, corrections, account activity and support correspondence.
 
-Payment records include the payer's account identity, amount, currency, transaction reference, purpose, status and any uploaded receipt. Card credentials are entered through Paystack checkout. Never send us a card PIN, password or one-time payment code.
+Payment records include the payer's account identity, amount, currency, transaction reference, purpose, status and any uploaded receipt. Never send us a card PIN, MoMo PIN, password or one-time payment code.
 
 Sign-in and security records include session identifiers, login times and technical request information used to protect accounts and investigate misuse. Our [cookie policy](/cookies/) explains browser storage.
 
@@ -161,7 +161,7 @@ Personal email addresses, telephone numbers, dates of birth, receipts and privat
 
 ## Providers and disclosures
 
-We use Hostinger for hosting and database services, Cloudflare R2 for image storage, email providers including Resend where configured, and Paystack for supported payment processing. Support reports may also be delivered to an office notification service. Providers receive information needed for their functions and have their own applicable privacy terms.
+We use Hostinger for hosting and database services, Cloudflare R2 for image storage, and email providers including Resend where configured. Support reports may also be delivered to an office notification service. Providers receive information needed for their functions and have their own applicable privacy terms.
 
 We may disclose information where required by law or necessary to investigate fraud, protect accounts or resolve a payment dispute. We do not sell personal information or use directory records for unsolicited advertising.
 
@@ -300,7 +300,7 @@ The website does not add advertising cookies, advertising pixels or behavioural 
 
 ## Third-party services
 
-Paystack checkout may use its own cookies and security technologies when you choose to pay. Hosting and network security services may also use necessary technologies to deliver the website and prevent abuse. Their processing is governed by their own privacy and cookie information.
+Hosting and network security services may also use necessary technologies to deliver the website and prevent abuse. Their processing is governed by their own privacy and cookie information.
 
 ## Your controls
 

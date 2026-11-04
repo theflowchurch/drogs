@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
 import { inspectReceipt, classifyReceipt } from '../../src/server/receipt-check.mjs';
-import { REGISTRATION_BANK, inGhana, paymentReady } from '../../src/registration/manual-payments.mjs';
+import { REGISTRATION_BANK, REGISTRATION_MOMO, inGhana, paymentReady } from '../../src/registration/manual-payments.mjs';
 import { emptyState, applyAction } from '../../src/registration/model.mjs';
 import { writeFile, mkdir } from 'node:fs/promises';
 
@@ -34,4 +34,7 @@ test('bank receipts can be submitted on a draft and remain pending until office 
   assert.equal(paymentReady({ payment: 'rejected', proof: 'old' }), false);
   assert.equal(inGhana(' Ghana '), true); assert.equal(inGhana('United States'), false);
   assert.equal(REGISTRATION_BANK.accountNumber, '1441005268161');
+  assert.equal(REGISTRATION_MOMO.number, '+233 59 202 4923');
+  const momo = applyAction(state, actor, 'payment', { proof: 'own/receipt/momo.webp', transactionId: 'MOMO-5678', method: 'momo', nonrefundable: true });
+  assert.equal(momo.registrations[0].paymentMethod, 'momo');
 });

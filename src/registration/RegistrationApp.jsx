@@ -69,7 +69,7 @@ import {
   rateFor,
 } from "./exchange.mjs";
 import PaymentOptions from './PaymentOptions';
-import { paymentReady, inGhana } from './manual-payments.mjs';
+import { paymentReady } from './manual-payments.mjs';
 import { portraitStyle } from "../runtime/portrait-framing";
 import PortraitImage from './PortraitImage';
 import { shortDateTime, longDate } from "./format.mjs";
@@ -841,7 +841,6 @@ export default function RegistrationApp({
           </a>
         </div>
       )}
-      {!office && actor && <PaystackReturn actor={actor} run={run} refresh={refresh}/>}
       {error && (
         <div className="reg-alert error" role="alert">
           {error}
@@ -1682,7 +1681,6 @@ function Participant({
           actor={actor}
           run={run}
           refresh={refresh}
-          paystackKey={state.paystackKey || ""}
         />
       </div>
     </>
@@ -1705,10 +1703,6 @@ function RegistrationForm({
   const siteConfig = ORGANIZATION_SITES[site];
   const catalog = siteCatalog(state.catalog || catalogOf(state), site);
   const matchingIndex = useMemo(() => referenceIndex(peopleForSite(overlayReferences(rosterFrom(state, people), state), site)), [site, state.referencePeople, state.overrides, state.extraReferences, state.hidden]);
-  const checkoutDraftKey = `kc-checkout-draft:${state.year}:${actor.id}`;
-  const [checkoutDraft] = useState(() => {
-    try { return JSON.parse(sessionStorage.getItem(checkoutDraftKey) || 'null'); } catch { return null; }
-  });
   const [data, setData] = useState(() => ({
       ...{
         entrance,
@@ -1736,9 +1730,9 @@ function RegistrationForm({
       email: registrationEmail(actor.email, initial?.email),
     })),
     // Onboarding is one guided path: details → (bishops: pastors) → payment → review → confirm.
-    [step, setStep] = useState(checkoutDraft ? "payment" : "details"),
-    [rosterRows, setRosterRows] = useState(checkoutDraft?.rows || []),
-    [slots, setSlots] = useState(() => checkoutDraft?.slots || blankSlots(4)),
+    [step, setStep] = useState("details"),
+    [rosterRows, setRosterRows] = useState([]),
+    [slots, setSlots] = useState(() => blankSlots(4)),
     [rosterError, setRosterError] = useState(""),
     [rates, setRates] = useState(null),
     [accurate, setAccurate] = useState(false),
@@ -1820,9 +1814,6 @@ function RegistrationForm({
   const rate = rateFor(rates, currency);
   // This year's record for the person (a draft once the payment step saves it).
   const mine = state.registrations.find((r) => r.userId === actor.id && r.year === state.year);
-  useEffect(() => {
-    if (checkoutDraft && mine?.payment === "verified") setStep("review");
-  }, [checkoutDraft, mine?.payment]);
   async function save() {
     await run(async () => {
       await api.action(actor, "save", data);
@@ -1837,7 +1828,6 @@ function RegistrationForm({
       if (!editing && rosterRows.length) await api.action(actor, "addRoster", { rows: rosterRows });
       await refresh();
     }, editing ? "Your details are updated." : "Thank you. Your registration has been received and is being processed.");
-    if (ok) sessionStorage.removeItem(checkoutDraftKey);
     if (ok && editing) onDone?.();
   }
   return (
@@ -1861,7 +1851,7 @@ function RegistrationForm({
               : step === "pastors"
                 ? "Add the pastors under your oversight. When they register, they will automatically be linked to you."
                 : step === "payment"
-                  ? inGhana(data.country) ? "Pay securely through Paystack, or make a bank transfer and upload your receipt." : "Make a bank transfer and upload your payment receipt to continue."
+                  ? "Pay by MoMo or bank transfer, then upload your payment receipt to continue."
                   : `Complete your ${state.year} annual renewal to remain on the Roll of Good Standing.`}
           </p>
         </div>
@@ -2219,12 +2209,10 @@ function RegistrationForm({
               ) : <PaymentOptions
                 current={{ ...mine, amount: fees[data.role], year: state.year, data }} actor={actor} run={run} refresh={refresh}
                 beforeSave={async () => { await api.action(actor, "save", data); }}
-                paystack={state.paystackKey ? <PaystackButton current={{ amount: fees[data.role], year: state.year, data }} run={run}
-                  beforePay={async () => { await api.action(actor, "save", data); sessionStorage.setItem(checkoutDraftKey, JSON.stringify({ rows: rosterRows, slots })); }} /> : null}
               />}
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
-                {paymentReady(mine) ? <button className="reg-primary" disabled={busy}>Review your details →</button> : <span className="reg-small">Complete Paystack payment or upload and submit your transfer receipt to continue.</span>}
+                {paymentReady(mine) ? <button className="reg-primary" disabled={busy}>Review your details →</button> : <span className="reg-small">Upload and submit your MoMo or bank receipt to continue.</span>}
               </div>
             </form>
           ) : (
@@ -2381,61 +2369,10 @@ function CommitmentPreview({ amount, country }) {
     </p>
   );
 }
-// Paystack Ghana settles in GHS. Checkout uses a signed server quote;
-// only a successful server verification records a payment.
 function PaymentPolicyNotice() {
   return <p className="reg-small reg-payment-policy">Payments are received by Kuriake Castle for annual Good Standing renewal. Read our <a href={`${base}/payments/`} target="_blank" rel="noreferrer">payment information</a> and <a href={`${base}/refunds/`} target="_blank" rel="noreferrer">refund policy</a>, including payment-error exceptions.</p>;
 }
-// Hosted checkout avoids the old embedded iframe's indefinite loading overlay.
-// Its amount is signed by our server and checked exactly when Paystack verifies.
-function PaystackButton({ current, run, beforePay, label }) {
-  const [quote, setQuote] = useState(null), [error, setError] = useState(''), [loading, setLoading] = useState(false), [opening, setOpening] = useState(false), [retry, setRetry] = useState(0);
-  useEffect(() => {
-    let live = true;
-    setQuote(null); setError(''); setLoading(true);
-    api.paystackQuote(current.data.role).then(q => { if (live) setQuote(q); }).catch(e => { if (live) setError(e.message); }).finally(() => { if (live) setLoading(false); });
-    return () => { live = false; };
-  }, [current.data.role, current.amount, retry]);
-  const amount = quote ? new Intl.NumberFormat('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(quote.amount / 100) : '';
-  return <div className="reg-paystack">
-    {quote && <p className="reg-local-amount"><strong>Checkout total: GHS {amount}</strong><small>The ${quote.usd} USD fee converted to cedis. This is the exact cedi amount sent to Paystack; no extra fee is added by this site.</small></p>}
-    <button type="button" className="reg-primary full" disabled={!quote || opening || loading} onClick={() => {
-      setOpening(true);
-      run(async () => {
-        if (quote.expiresAt <= Date.now()) { setRetry(n => n + 1); throw Error('The cedi amount has expired. Please check the refreshed amount and pay again.'); }
-        await beforePay?.();
-        const checkout = await api.paystackInitialize(quote.token, location.href);
-        location.assign(checkout.url);
-      }).finally(() => setOpening(false));
-    }}>{opening ? 'Opening secure checkout…' : quote ? label || `Pay GHS ${amount} securely →` : loading ? 'Getting your cedi amount…' : 'Payment amount unavailable'}</button>
-    {error && <p className="reg-small" role="alert">{error}</p>}
-    {!loading && <button className="reg-text" type="button" disabled={opening} onClick={() => setRetry(n => n + 1)}>Refresh cedi amount</button>}
-    <small className="reg-small">Secure checkout by Paystack. If your card uses another currency, your bank or Paystack may offer a conversion at a different rate. International cards require international payments to be enabled on the merchant account.</small>
-  </div>;
-}
-function PaystackReturn({ actor, run, refresh }) {
-  const [reference, setReference] = useState(() => {
-    const query = new URLSearchParams(location.search);
-    return query.get('paystack_return') === '1' ? query.get('reference') || query.get('trxref') || '' : '';
-  });
-  const [status, setStatus] = useState('idle');
-  const started = useRef(false);
-  async function verify() {
-    setStatus('checking');
-    const ok = await run(async () => { await api.paystackVerify(reference); await refresh(actor); }, 'Payment verified. Please review your details and confirm your registration.');
-    setStatus(ok ? 'done' : 'failed');
-    if (ok) {
-      const url = new URL(location.href);
-      for (const key of ['paystack_return', 'reference', 'trxref']) url.searchParams.delete(key);
-      history.replaceState(null, '', url);
-      setReference('');
-    }
-  }
-  useEffect(() => { if (reference && !started.current) { started.current = true; verify(); } }, [reference]);
-  if (!reference) return null;
-  return <div className="reg-alert" role="status">{status === 'checking' ? 'Confirming your payment with Paystack…' : 'Payment has not been verified yet. Please check it before paying again.'}{status === 'failed' && <button type="button" onClick={verify}>Check payment again</button>}</div>;
-}
-function Payment({ current, actor, run, refresh, paystackKey = "" }) {
+function Payment({ current, actor, run, refresh }) {
   const [rates, setRates] = useState(null);
   const currency = currencyFor(current.data.country);
   useEffect(() => {
@@ -2455,7 +2392,7 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
       {rate > 0 && (
         <p className="reg-local-amount">
           Approximately {localAmount(current.amount, rate, currency)}
-          <small>Estimate only. Your exact Ghana cedi total appears at checkout.</small>
+          <small>Estimate only.</small>
         </p>
       )}
       <b>Non-refundable</b>
@@ -2470,8 +2407,7 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
           <p>Your payment has been received.</p>
         </div>
       ) : current.status === "denied" ? <p className="reg-small">Contact the office about your registration before paying.</p> : (
-        <PaymentOptions current={current} actor={actor} run={run} refresh={refresh}
-          paystack={paystackKey ? <PaystackButton current={current} run={run} /> : null} />
+        <PaymentOptions current={current} actor={actor} run={run} refresh={refresh} />
       )}
     </section>
   );

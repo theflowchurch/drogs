@@ -1,5 +1,4 @@
-// Indicative local-currency previews. Paystack Ghana charges in GHS; the
-// server creates a signed, exact cedi quote separately before checkout.
+// Indicative local-currency previews.
 export const RATES_URL = "https://open.er-api.com/v6/latest/USD";
 export const RATES_KEY = "drogs-registration-rates";
 export const RATES_MAX_AGE = 12 * 60 * 60 * 1000;
