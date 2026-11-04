@@ -4155,3 +4155,18 @@ input[type="date"] {
 .reg-receipt-upload input[type=file] { max-width: 100%; padding: .8rem; border: 1px solid var(--line, #d9deeb); border-radius: 10px; }
 .reg-receipt-preview { display: block; max-height: 280px; max-width: 100%; object-fit: contain; margin: 1rem 0; border: 1px solid var(--line, #d9deeb); border-radius: 8px; }
 .reg-receipt-error { color: #b32431; font-weight: 600; }
+/* Church sites: the central signup and workspace dressed in the church's colour. */
+.reg-church-app { --accent: var(--brand); --teal: var(--brand); --accent-strong: color-mix(in srgb, var(--brand) 78%, #000); --accent-soft: color-mix(in srgb, var(--brand) 35%, #fff); --bg: color-mix(in srgb, var(--brand) 5%, #faf9f6); background: var(--bg); }
+:root[data-theme="dark"] .reg-church-app { --accent: color-mix(in srgb, var(--brand) 55%, #fff); --teal: color-mix(in srgb, var(--brand) 70%, #fff); --accent-strong: color-mix(in srgb, var(--brand) 45%, #fff); --bg: color-mix(in srgb, var(--brand) 12%, #0b0f12); }
+.reg-church-app .reg-header { background: color-mix(in srgb, var(--bg) 92%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--brand) 18%, transparent); }
+.reg-church-app .reg-brand strong { font-family: Georgia, "Times New Roman", serif; letter-spacing: 0; font-size: 19px; }
+.reg-app.reg-church-app .reg-brand-mark { background: none; width: 46px; height: 46px; border-radius: 0; }
+.reg-app.reg-church-app .reg-brand-mark img { width: 100%; height: 100%; object-fit: contain; }
+.reg-church-app .reg-account.signin { background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--brand) 22%, #fff) 0%, color-mix(in srgb, var(--brand) 6%, #faf9f6) 55%, #faf9f6 100%); color: var(--ink); }
+:root[data-theme="dark"] .reg-church-app .reg-account.signin { background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--brand) 45%, #0b0f12) 0%, color-mix(in srgb, var(--brand) 14%, #0b0f12) 60%, #0b0f12 100%); color: #f3f1ea; }
+.reg-church-app .reg-account.signin::before { content: ""; position: absolute; inset: 28px; border: 1px solid color-mix(in srgb, var(--brand) 30%, transparent); pointer-events: none; z-index: -1; }
+.reg-church-title { flex-direction: column; gap: 18px; text-align: center; font-family: Georgia, "Times New Roman", serif; font-weight: 700; color: color-mix(in srgb, var(--brand) 55%, #10141c) !important; text-shadow: none !important; text-wrap: balance; max-width: 900px; }
+.reg-church-title img { width: clamp(96px, 12vw, 150px) !important; height: clamp(96px, 12vw, 150px) !important; object-fit: contain; filter: none !important; }
+.reg-church-kicker { font: 700 11px/1.4 -apple-system, sans-serif; letter-spacing: 3px; color: var(--brand); }
+:root[data-theme="dark"] .reg-church-kicker { color: var(--accent); }
+:root[data-theme="dark"] .reg-church-title { color: #f3f1ea !important; }

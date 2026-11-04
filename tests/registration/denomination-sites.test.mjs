@@ -70,3 +70,17 @@ test('every denomination site has its own landing composition',async()=>{
  for(const config of Object.values(DENOMINATION_SITES))if(config.homeLayout)counts.set(config.homeLayout,counts.get(config.homeLayout)+1);
  for(const [id,count] of counts){assert.ok(count>=1,`Unused style ${id}`);assert.ok(count<=1,`More than one site uses ${id}`);}
 });
+
+test('a church site locks sign-up to its own organization and denomination and only shows its people',async()=>{
+ const {churchPlacement,inChurch,churchOfDenomination}=await import('../../src/registration/denomination-sites.mjs');
+ const {catalogOf}=await import('../../src/registration/model.mjs');
+ const {FLOW_GROUPS}=await import('../../src/registration/organization-sites.mjs');
+ const allos=churchPlacement(catalogOf(null),'allosmegachurch',FLOW_GROUPS);
+ assert.equal(allos.organization,'United Denominations');assert.equal(allos.denomination,'Allos Mega Church');
+ assert.ok(inChurch(allos,{denomination:'ALLOS MEGA CHURCH'}));assert.ok(!inChurch(allos,{denomination:'Go Church'}));
+ assert.ok(inChurch(null,{denomination:'Go Church'}),'outside a church site nothing is filtered');
+ const hjc=churchPlacement(catalogOf(null),'healingjesuscampaign',FLOW_GROUPS);
+ assert.equal(hjc.organization,'HJC');assert.ok(inChurch(hjc,{organization:'HJC',denomination:''}));assert.ok(!inChurch(hjc,{organization:'FLOW'}));
+ assert.equal(churchPlacement({organizations:[],denominations:{}},'allosmegachurch').organization,'','a church missing from the catalog stays closed');
+ assert.equal(churchOfDenomination('Allos Mega Church'),'allosmegachurch');
+});

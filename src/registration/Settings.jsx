@@ -4,6 +4,7 @@ import * as api from './client';
 // Office-managed integration settings. Saved values are never shown back; the
 // office sees only whether each one is set.
 import { catalogOf, feesOf, orgLabel, signupOf, SIGNUP_PAUSED } from './model.mjs';
+import { DENOMINATION_SITES } from './denomination-sites.mjs';
 // Organizations, their denominations and the fees: editable lists saved as one action each.
 // Pause or reopen sign-up. Paused: new people cannot request a code or submit;
 // everyone already registered keeps signing in, paying and editing.
@@ -202,14 +203,20 @@ export default function Settings({ run, state, perform, actor }) {
     {s.hint && <small>{s.hint}</small>}
   </label>;
   const setCount = keys => { const mine = settings.filter(s => keys.includes(s.key)); if (!mine.length) return ''; const n = mine.filter(s => s.set).length; return n === 0 ? 'Not set up' : n === mine.length ? 'Set up' : 'Partly set up'; };
-  const sections = [['signup', 'registration sign-up signup pause open close notice'], ['fees', 'fees fee amount price payment bishop pastor'], ['links', 'registration links share copy ' + links.map(([l]) => l).join(' ')], ...CATEGORIES.map(([title, blurb, keys]) => [title, `${title} ${blurb} ${settings.filter(s => keys.includes(s.key)).map(s => `${s.label} ${s.hint || ''}`).join(' ')}`])];
+  // Each church site runs the same sign-up, locked to that church; the office shares these links.
+  const churches = Object.entries(DENOMINATION_SITES).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+  const sections = [['signup', 'registration sign-up signup pause open close notice'], ['fees', 'fees fee amount price payment bishop pastor'], ['links', 'registration links share copy ' + links.map(([l]) => l).join(' ')], ['church-links', 'church denomination sign-up signup links share copy bishop pastor ' + churches.map(([, c]) => c.name).join(' ')], ...CATEGORIES.map(([title, blurb, keys]) => [title, `${title} ${blurb} ${settings.filter(s => keys.includes(s.key)).map(s => `${s.label} ${s.hint || ''}`).join(' ')}`])];
   const visible = (id) => matches(sections.find(([k]) => k === id)[1]);
+  const copy = path => <button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button>;
   return <div className="reg-settings-list">
   <input type="search" className="reg-settings-search" aria-label="Search Settings" placeholder="Search Settings" value={query} onChange={e => setQuery(e.target.value)} />
   {state && perform && visible('signup') && <SignupControl state={state} perform={perform} />}
   {state && perform && visible('fees') && <Structure state={state} perform={perform} actor={actor} show={['fees']} />}
   {visible('links') && <Category title="Registration links" summary={`${links.length} links`} open={Boolean(query.trim())}>
     <ul className="reg-admin-list">{links.map(([label, path]) => <li key={path}><span><b>{label}</b><br /><a href={origin + path}>{origin + path}</a></span><button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button></li>)}</ul>
+  </Category>}
+  {visible('church-links') && <Category title="Church sign-up links" summary={`${churches.length} churches`} open={Boolean(query.trim())}>
+    <ul className="reg-admin-list">{churches.filter(([, c]) => !query.trim() || matches(c.name)).map(([path, c]) => <li key={path}><span><b>{c.name}</b><br />Bishops: <a href={`${origin}/${path}/signup/bishop/`}>{`${origin}/${path}/signup/bishop/`}</a> {copy(`/${path}/signup/bishop/`)}<br />Pastors: <a href={`${origin}/${path}/signup/pastor/`}>{`${origin}/${path}/signup/pastor/`}</a> {copy(`/${path}/signup/pastor/`)}</span></li>)}</ul>
   </Category>}
   <form className="reg-settings-form" onSubmit={event => {
     event.preventDefault();

@@ -1,3 +1,4 @@
+import { denominationSite } from '../registration/denomination-sites.mjs';
 import { readBody, jsonBody } from './api-body.mjs';
 import { createManagementApi } from './management-api.mjs';
 import { readAccounts, readLogins, removeAccounts } from './accounts.mjs';
@@ -44,7 +45,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         return json(await auth.checkOfficeCode((await jsonBody(request)).code));
       }
       if (path === '/api/registration/auth/request' && method === 'POST') {
-        const { email, mode, entrance } = await jsonBody(request);
+        const { email, mode, entrance, church } = await jsonBody(request);
         const address = emailAddress(email);
         if (!['signin', 'office'].includes(mode)) {
           // Paused sign-up turns new people away at the first step; existing accounts still sign in.
@@ -54,7 +55,9 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
             if (pause.closed) throw new HttpError(403, pause.notice || SIGNUP_PAUSED);
           }
         }
-        await auth.requestCode(address, url.origin, ['signin', 'office'].includes(mode) ? mode : 'signup');
+        // A church site's code email carries the church's name and its own address.
+        const site = mode !== 'office' && typeof church === 'string' ? denominationSite(church) : null;
+        await auth.requestCode(address, site ? `${url.origin}/${church}/signup/` : url.origin, ['signin', 'office'].includes(mode) ? mode : 'signup', site?.name);
         return json({ ok: true, codeRequired: true });
       }
       if (path === '/api/registration/references' && method === 'GET') {

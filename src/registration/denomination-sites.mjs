@@ -45,3 +45,25 @@ export const ministerSections = (people, { q = '', city = '', gender = '' } = {}
 
 // Expand the public label without rewriting the office's saved title or rank.
 export const ministerDisplayTitle = person => titleFor(person).replace(/\bRev\.(?=\s|$)/g, 'Reverend');
+// A church site's signup is the central signup locked to that church. The
+// organization and listed denomination come from the office's live catalog,
+// so the server's catalog validation accepts the record. An organization with
+// no denomination list (HJC) matches by its own or its group's name.
+export function churchPlacement(catalog, site, groupNames = {}) {
+  const config = denominationSite(site);
+  if (!config) return null;
+  const names = new Set(config.denominations.map(normalName));
+  const church = { path: site, config, names, organization: '', denomination: '' };
+  for (const organization of catalog?.organizations || []) {
+    if (names.has(normalName(organization)) || names.has(normalName(groupNames[organization] || ''))) return { ...church, organization };
+    const denomination = (catalog.denominations?.[organization] || []).find(d => names.has(normalName(d)));
+    if (denomination) return { ...church, organization, denomination };
+  }
+  return church;
+}
+// Members on a church site only ever see that church's people.
+export const inChurch = (church, p) => !church || (church.denomination || !church.organization
+  ? church.names.has(normalName(p.denomination))
+  : normalName(p.organization) === normalName(church.organization));
+export const churchOfDenomination = denomination => Object.keys(DENOMINATION_SITES)
+  .find(key => DENOMINATION_SITES[key].denominations.some(d => normalName(d) === normalName(denomination))) || '';

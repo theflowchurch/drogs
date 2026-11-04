@@ -18,9 +18,16 @@ import {
 // Which door the person came through: the general sign-up or pastoral appointments.
 const EntranceContext = createContext("general");
 const OrganizationSiteContext = createContext("");
+// A church site: the central workspace locked to one denomination (null elsewhere).
+const ChurchContext = createContext(null);
+// Church sites name the church, never the central site, in what members read.
+const useBrandName = () => useContext(ChurchContext)?.config.name || "Kuriake Castle";
+// Links stay on the church site when there is one.
+const usePagePath = () => { const site = useContext(OrganizationSiteContext), church = useContext(ChurchContext); return (path) => church ? `${base}/${church.path}/${path}/` : sitePath(site, path, base); };
 import { ORGANIZATION_SITES, FLOW_GROUPS, peopleForSite, siteCatalog, siteOfOrganization, sitePath, organizationSiteKey } from "./organization-sites.mjs";
 import * as api from "./client";
 import { signupBishopChoices } from './signup-bishops.mjs';
+import { denominationSite, churchPlacement, inChurch, churchOfDenomination } from './denomination-sites.mjs';
 import { LegalFooter } from "./Docs";
 import { DENOMINATIONS } from "./denominations.mjs";
 import {
@@ -240,6 +247,7 @@ const stepper = (list, selected, setSelected) => {
 function ProfileEditor({ current, state, actor, perform, onDone }) {
   const d = current.data;
   const site = useContext(OrganizationSiteContext);
+  const church = useContext(ChurchContext);
   const catalog = siteCatalog(state.catalog || catalogOf(state), site);
   const [f, setF] = useState({ gender: d.gender || "", title: d.title || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "" });
   const [busyPhoto, setBusyPhoto] = useState(false), [problem, setProblem] = useState("");
@@ -253,8 +261,8 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
       <p className="reg-field wide reg-small">Name: <b>{d.name}</b> · Date of birth: <b>{longDate(d.dob)}</b> · Gender: <b>{d.gender === "female" ? "Female" : "Male"}</b>. These were set when you registered. If any of them is incorrect, please let the office know.</p>
       {d.role === "pastor" && <Field label="Title"><select value={titleFor({ ...d, ...f })} onChange={(e) => set("title", e.target.value)}>{PASTOR_TITLES.filter((t) => t !== "Lady Rev." || f.gender === "female").map((t) => <option key={t}>{t}</option>)}</select></Field>}
       <Field label="WhatsApp number"><input value={f.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
-      {(!site || site === "flow") && <Field label={site === "flow" ? "Group" : "Organization"}><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{site === "flow" ? FLOW_GROUPS[o] : orgLabel(o)}</option>)}</select></Field>}
-      {denominations.length > 0 && (
+      {(!site || site === "flow") && !church && <Field label={site === "flow" ? "Group" : "Organization"}><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{site === "flow" ? FLOW_GROUPS[o] : orgLabel(o)}</option>)}</select></Field>}
+      {!church && denominations.length > 0 && (
         <Field label="Denomination"><select value={f.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{denominations.map((x) => <option key={x} value={x}>{caps(x)}</option>)}</select></Field>
       )}
       <Field label="Country where you currently serve"><Choice value={f.country} options={countries} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
@@ -511,12 +519,9 @@ export default function RegistrationApp({
   signup = false,
   entrance = "general",
   organizationSite = "",
+  church: churchPath = "",
 }) {
-  // Office always remains global, even if called with an organization scope.
-  const site = office ? "" : organizationSiteKey(organizationSite);
-  const siteConfig = ORGANIZATION_SITES[site];
-  const home = sitePath(site, "", base);
-  const signupPath = sitePath(site, "signup", base);
+  const churchConfig = office ? null : denominationSite(churchPath);
   // Members sign in with their email; only the office and the browse-only
   // directory sit behind an access code.
   const gated = office;
@@ -537,6 +542,14 @@ export default function RegistrationApp({
     [notice, setNotice] = useState(""),
     [tab, setTab] = useState(() => { const wanted = typeof sessionStorage !== "undefined" && sessionStorage.getItem("kc-open-tab"); if (wanted) sessionStorage.removeItem("kc-open-tab"); return wanted || (office ? "Directory" : "Registration"); }),
     [year, setYear] = useState(null);
+  // Office always remains global, even if called with an organization scope.
+  // A church site takes its organization from the office's live catalog.
+  const church = useMemo(() => churchConfig ? churchPlacement(catalogOf(state), churchPath, FLOW_GROUPS) : null, [churchConfig, churchPath, state?.catalog]);
+  const site = church ? siteOfOrganization(church.organization) : office ? "" : organizationSiteKey(organizationSite);
+  const siteConfig = ORGANIZATION_SITES[site];
+  const brand = churchConfig || siteConfig;
+  const home = churchConfig ? `${base}/${churchPath}/` : sitePath(site, "", base);
+  const signupPath = churchConfig ? `${home}signup/` : sitePath(site, "signup", base);
   const snapshots = useRef(null), publicSnapshots = useRef(null), saving = useRef(0);
   if (!snapshots.current) snapshots.current = snapshotSync(api.snapshot, data => {
     setState(data);
@@ -725,7 +738,7 @@ export default function RegistrationApp({
           : []),
       ];
   const view = SUBS[tab] ? sub[tab] || SUBS[tab][0] : tab;
-  const everyone = rosterFrom(state || pub, people);
+  const everyone = useMemo(() => rosterFrom(state || pub, people).filter(p => inChurch(church, p)), [state, pub, church]);
   const unclaimedPeople = everyone.filter(p => p.unclaimed);
   const photos = useMemo(() => office && state ? state.photoProgress || photoProgress(state, rosterFrom(state, people)) : null, [office, state]);
   const [photoFilter, setPhotoFilter] = useState('all');
@@ -759,9 +772,10 @@ export default function RegistrationApp({
   return (
     <EntranceContext.Provider value={entrance}>
     <OrganizationSiteContext.Provider value={site}>
+    <ChurchContext.Provider value={church}>
     <RosterContext.Provider value={everyone}>
-    <div className={`reg-app ${site ? `reg-organization-app organization-${site}` : ""}`}>
-      {!hero && (
+    <div className={`reg-app ${site ? `reg-organization-app organization-${site}` : ""} ${churchConfig ? "reg-church-app" : ""}`} style={churchConfig ? { "--brand": churchConfig.accent } : undefined}>
+      {!hero && !churchConfig && (
         <div
           className="reg-app-bg"
           style={{ backgroundImage: `url(${base}/assets/brand/castle-night.webp)` }}
@@ -783,11 +797,11 @@ export default function RegistrationApp({
             </svg>
           </button>
         )}
-        <a className="reg-brand" href={actor ? (office ? `${base}/admin/` : signupPath) : home} aria-label={siteConfig?.shortName || "Kuriake Castle"}>
-          <span className="reg-brand-mark">
-            <img src={`${base}/${siteConfig?.logo || "assets/brand/castle-blue.png"}`} alt="" />
-          </span>
-          {site !== "flow" && <strong>{siteConfig?.shortName || "Kuriake Castle"}</strong>}
+        <a className="reg-brand" href={actor ? (office ? `${base}/admin/` : signupPath) : home} aria-label={brand?.shortName || "Kuriake Castle"}>
+          {(!churchConfig || churchConfig.logo) && <span className="reg-brand-mark">
+            <img src={`${base}/${brand?.logo || "assets/brand/castle-blue.png"}`} alt="" />
+          </span>}
+          {(site !== "flow" || churchConfig) && <strong>{brand?.shortName || "Kuriake Castle"}</strong>}
         </a>
         <div className="reg-header-right">
           {gate && actor ? (
@@ -932,6 +946,10 @@ export default function RegistrationApp({
           This account has not been assigned office access.
         </Empty>
       ) : (
+        churchConfig && !church.organization ?
+        <Empty title="Registration is not open on this site yet">Please contact the office to register with {churchConfig.name}.</Empty> :
+        churchConfig && current?.data?.organization && !inChurch(church, current.data) ?
+        <Empty title="Open your church’s site"><a className="reg-primary" href={churchOfDenomination(current.data.denomination) ? `${base}/${churchOfDenomination(current.data.denomination)}/signup/` : sitePath(siteOfOrganization(current.data.organization), "signup", base)}>Continue to your church’s site →</a></Empty> :
         site && memberOrganization && siteOfOrganization(memberOrganization) !== site ?
         <Empty title="Open your organization’s site"><a className="reg-primary" href={sitePath(siteOfOrganization(memberOrganization), "signup", base)}>Continue to {ORGANIZATION_SITES[siteOfOrganization(memberOrganization)]?.name || "Kuriake Castle"} →</a></Empty> :
         <div className={`reg-shell ${sidebarHidden ? "sidebar-collapsed" : ""}`}>
@@ -967,7 +985,7 @@ export default function RegistrationApp({
               <b>
                 {office
                   ? "Every bishop and pastor. Every year."
-                  : profile?.name || "Welcome to Kuriake Castle"}
+                  : profile?.name || `Welcome to ${churchConfig?.name || "Kuriake Castle"}`}
               </b>
               <p>
                 {office
@@ -1157,6 +1175,7 @@ export default function RegistrationApp({
       <LegalFooter />
     </div>
     </RosterContext.Provider>
+    </ChurchContext.Provider>
     </OrganizationSiteContext.Provider>
     </EntranceContext.Provider>
   );
@@ -1277,6 +1296,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
   // New sign-ups check whether registration is paused; the notice replaces the form.
   const [paused, setPaused] = useState(null);
   const site = useContext(OrganizationSiteContext);
+  const church = useContext(ChurchContext);
   const entrance = useContext(EntranceContext);
   useEffect(() => {
     if (mode !== "signup") return;
@@ -1310,7 +1330,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
         onActor(await api.verifyCode(email, token, mode, remember));
       }
       else {
-        await api.requestCode(email, mode, entrance);
+        await api.requestCode(email, mode, entrance, church?.path || "");
         setSent(true);
       }
     });
@@ -1382,7 +1402,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
   )}
   {signup && (
     <p className="reg-small">
-      Already registered? <a href={`${sitePath(site, "signup", base)}#signin`}>Sign in</a>
+      Already registered? <a href={`${church ? `${base}/${church.path}/signup/` : sitePath(site, "signup", base)}#signin`}>Sign in</a>
     </p>
   )}
 </form>
@@ -1392,11 +1412,12 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
 // green Sign in button in the header opens the email form.
 function Account({ office, signup = false, run, busy, onActor, open = false, onClose, showVideo = true }) {
   const site = useContext(OrganizationSiteContext);
-  const config = ORGANIZATION_SITES[site];
+  const church = useContext(ChurchContext);
+  const config = church?.config || ORGANIZATION_SITES[site];
   const [sent] = useState(false);
   return (
     <section className={`reg-account ${office ? "signup" : "signin"}`}>
-      {showVideo && <HeroVideo src={`${base}/assets/brand/castle-hero-night-b-{size}.mp4`} />}
+      {showVideo && !church && <HeroVideo src={`${base}/assets/brand/castle-hero-night-b-{size}.mp4`} />}
       {office ? (
         <>
           <div>
@@ -1413,10 +1434,14 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
         </>
       ) : (
         <>
-          <h1 className="reg-hero-title">
+          {church ? <h1 className="reg-hero-title reg-church-title">
+            {config.logo && <img className="reg-organization-hero-logo" src={`${base}/${config.logo}`} alt="" />}
+            <span className="reg-church-kicker">MINISTERIAL DIRECTORY</span>
+            {config.name}
+          </h1> : <h1 className="reg-hero-title">
             <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${config?.heroLogo || config?.logo || "assets/brand/castle-white.png"}`} alt={site === "flow" ? config.name : ""} />
             {site !== "flow" && (config?.name || "Kuriake Castle")}
-          </h1>
+          </h1>}
           {open && (
             <Dialog title={open === "signin" ? "Sign in" : "Sign up"} onClose={onClose}>
               <AccountForm office={office} signup={open === "signup"} mode={open} run={run} busy={busy} onActor={onActor} />
@@ -1527,7 +1552,7 @@ function Participant({
   busy,
   refresh,
 }) {
-  const site = useContext(OrganizationSiteContext);
+  const site = useContext(OrganizationSiteContext), pagePath = usePagePath();
   const previous = state.registrations
     .filter((r) => r.userId === actor.id && r.year < state.year)
     .sort((a, b) => b.year - a.year)[0];
@@ -1569,7 +1594,7 @@ function Participant({
           </p>
           <button className="reg-primary" onClick={() => setViewedProfile(true)}>View my profile →</button>
           {PREVIEW && current.data.role === "bishop" && (
-            <button className="reg-secondary" style={{ marginLeft: 10 }} onClick={() => Promise.resolve(api.signOut(false, true)).finally(() => location.assign(sitePath(site, "signup/pastor", base)))}>Sign up as one of your pastors →</button>
+            <button className="reg-secondary" style={{ marginLeft: 10 }} onClick={() => Promise.resolve(api.signOut(false, true)).finally(() => location.assign(pagePath("signup/pastor")))}>Sign up as one of your pastors →</button>
           )}
           {PREVIEW && current.data.role === "pastor" && bishop && (
             <button className="reg-secondary" style={{ marginLeft: 10 }} onClick={() => { const all = [...(state.profiles || []), ...((JSON.parse(localStorage.getItem("drogs-registration-v1") || "{}").profiles) || [])]; const b = all.find((x) => x.id === bishop.accountId || x.referenceId === bishop.id || x.id === bishop.id); if (!b?.email) return; sessionStorage.setItem("kc-open-tab", "My pastors"); api.demoSignIn(b.email, false, "signin"); location.assign(sitePath(site, "signup", base)); }}>Open your bishop’s account →</button>
@@ -1700,9 +1725,10 @@ function RegistrationForm({
 }) {
   const entrance = useContext(EntranceContext);
   const site = useContext(OrganizationSiteContext);
+  const church = useContext(ChurchContext), brandName = useBrandName(), pagePath = usePagePath();
   const siteConfig = ORGANIZATION_SITES[site];
   const catalog = siteCatalog(state.catalog || catalogOf(state), site);
-  const matchingIndex = useMemo(() => referenceIndex(peopleForSite(overlayReferences(rosterFrom(state, people), state), site)), [site, state.referencePeople, state.overrides, state.extraReferences, state.hidden]);
+  const matchingIndex = useMemo(() => referenceIndex(peopleForSite(overlayReferences(rosterFrom(state, people), state), site).filter(p => inChurch(church, p))), [site, church, state.referencePeople, state.overrides, state.extraReferences, state.hidden]);
   const [data, setData] = useState(() => ({
       ...{
         entrance,
@@ -1712,14 +1738,14 @@ function RegistrationForm({
         name: "",
         firstName: "",
         lastName: "",
-        denomination: "",
+        denomination: church?.denomination || "",
         country: "",
         city: "",
         photoConfirmed: false,
         phone: "",
         dob: "",
         church: "",
-        organization: site === "flow" ? "" : siteConfig?.organizations[0] || "",
+        organization: church ? church.organization : site === "flow" ? "" : siteConfig?.organizations[0] || "",
         photo: "",
         bishopId: "",
         referenceId: "",
@@ -1754,7 +1780,7 @@ function RegistrationForm({
       const next = { ...d, referenceId: ref.id, name: ref.name, firstName: parts.given, lastName: parts.surname, photoConfirmed: false };
       if (!d.country && ref.country) next.country = ref.country;
       if (!d.city && ref.city) next.city = ref.city;
-      if ((!d.organization || site) && catalog.organizations.includes(ref.organization)) next.organization = ref.organization;
+      if (!church && (!d.organization || site) && catalog.organizations.includes(ref.organization)) next.organization = ref.organization;
       // Older records shout their denomination in capitals; match it to the list by normalised name.
       const listed = (catalog.denominations[next.organization] || []).find((d) => normalName(d) === normalName(ref.denomination));
       if (!next.denomination && listed) next.denomination = listed;
@@ -1768,7 +1794,8 @@ function RegistrationForm({
       return next;
     });
   const registeredBishops = signupBishopChoices(state.bishops || [], overlayReferences(rosterFrom(state, people), state), data.organization)
-    .filter(b => !siteConfig || siteConfig.organizations.includes(b.organization));
+    .filter(b => !siteConfig || siteConfig.organizations.includes(b.organization))
+    .filter(b => !church?.denomination || church.names.has(normalName(b.denomination)));
   const chosenBishop = registeredBishops.find((b) => b.id === data.bishopId) || null;
   const pickBishop = (b) =>
     setData((d) => {
@@ -1958,7 +1985,7 @@ function RegistrationForm({
                     {(profile?.role || fixedRole) !== "pastor" && (data.gender === "female" ? BISHOP_TITLES_FEMALE : ["Bishop"]).map((t) => <option key={t} value={`bishop|${t}`}>{t}</option>)}
                   </select>
                 </Field>
-                {(!site || site === "flow") && <Field label={site === "flow" ? "Group" : "Organization"}>
+                {(!site || site === "flow") && !church && <Field label={site === "flow" ? "Group" : "Organization"}>
                   <select
                     value={data.organization}
                     onChange={(e) => set("organization", e.target.value)}
@@ -2068,7 +2095,8 @@ function RegistrationForm({
                     autoComplete="bday"
                   />
                 </Field>
-                {(catalog.denominations[data.organization] || []).length > 0 && (
+                {church && <Field label="Denomination"><input value={caps(data.denomination || church.config.name)} readOnly /></Field>}
+                {!church && (catalog.denominations[data.organization] || []).length > 0 && (
                   <Field label="Denomination">
                     <select
                       value={data.denomination}
@@ -2103,8 +2131,8 @@ function RegistrationForm({
                   <Field label="Your bishop" wide hint={data.organization === "FLOW"
                     ? "Mother Nina Masuku is currently the available bishop for FLOW."
                     : registeredBishops.length
-                    ? `Only bishops who have already registered appear here. If yours is missing, ask them to sign up first at ${sitePath(site, "signup/bishop", base)}.`
-                    : `No bishop has registered yet. Ask your bishop to sign up first at ${sitePath(site, "signup/bishop", base)}.`}>
+                    ? `Only bishops who have already registered appear here. If yours is missing, ask them to sign up first at ${pagePath("signup/bishop")}.`
+                    : `No bishop has registered yet. Ask your bishop to sign up first at ${pagePath("signup/bishop")}.`}>
                     <select
                       value={data.bishopId}
                       onChange={(e) => pickBishop(registeredBishops.find((b) => b.id === e.target.value))}
@@ -2302,7 +2330,7 @@ function RegistrationForm({
                   onChange={(e) => setConsent(e.target.checked)}
                 />
                 <span>
-                  I consent to Kuriake Castle displaying my name, title, photograph,
+                  I consent to {brandName} displaying my name, title, photograph,
                   organization, denomination, city and country on the public Roll
                   of Good Standing. My email address, phone number and date of
                   birth will remain private and will only be used by the office
@@ -2370,7 +2398,8 @@ function CommitmentPreview({ amount, country }) {
   );
 }
 function PaymentPolicyNotice() {
-  return <p className="reg-small reg-payment-policy">Payments are received by Kuriake Castle for annual Good Standing renewal. Read our <a href={`${base}/payments/`} target="_blank" rel="noreferrer">payment information</a> and <a href={`${base}/refunds/`} target="_blank" rel="noreferrer">refund policy</a>, including payment-error exceptions.</p>;
+  const church = useContext(ChurchContext);
+  return <p className="reg-small reg-payment-policy">Payments are received{church ? "" : " by Kuriake Castle"} for annual Good Standing renewal. Read our <a href={`${base}/payments/`} target="_blank" rel="noreferrer">payment information</a> and <a href={`${base}/refunds/`} target="_blank" rel="noreferrer">refund policy</a>, including payment-error exceptions.</p>;
 }
 function Payment({ current, actor, run, refresh }) {
   const [rates, setRates] = useState(null);
@@ -3467,14 +3496,15 @@ function PublicRecord({ person: p, onOpen, from, pastors = true, catalog = null,
 function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
   const fallback = useContext(RosterContext);
   const site = useContext(OrganizationSiteContext);
+  const church = useContext(ChurchContext);
   // Built once per data load, not per render: the people, then the bishop → pastor index (the
   // expensive matching), then the lit/dark flags which are the only part the face switch changes.
   const people = useMemo(() => (data.source === "roll" ? data.roll : overlayReferences(publicRosterFrom(data, fallback), data)), [data.referencePeople, fallback, data.source, data.roll, data.catalog, data.year, data.hidden, data.overrides, data.extraReferences]);
-  const index = useMemo(() => new Map([...pastorsByBishop(peopleForSite(people, site))].map(([id, qs]) => [id, qs.map((q) => q.id)])), [people, site]);
+  const index = useMemo(() => new Map([...pastorsByBishop(peopleForSite(people, site).filter(p => inChurch(church, p)))].map(([id, qs]) => [id, qs.map((q) => q.id)])), [people, site, church]);
   const list = useMemo(() => {
     const base = data.source !== "roll" && data.photos === "confirmed" ? withStanding(people, data.roll || []) : people;
-    return peopleForSite(base, site).map((p) => ({ ...p, denomination: caps(p.denomination), ...(data.catalog ? { denominationListed: denominationListed(data.catalog, p) } : {}) }));
-  }, [people, data.source, data.photos, data.roll, data.catalog, site]);
+    return peopleForSite(base, site).filter(p => inChurch(church, p)).map((p) => ({ ...p, denomination: caps(p.denomination), ...(data.catalog ? { denominationListed: denominationListed(data.catalog, p) } : {}) }));
+  }, [people, data.source, data.photos, data.roll, data.catalog, site, church]);
   const [role, setRole] = useState(fixedRole || (site && !embedded ? "pastor" : null)),
     [q, setQ] = useState("");
   const legend = data.photos === "confirmed" && (
@@ -4350,6 +4380,7 @@ function Payments({ records, perform, canEdit }) {
 // it is the same pastor; confirming links the record and makes the list's
 // contact details the current ones.
 function ReferenceReview({ rows, perform, canEdit }) {
+  const church = useContext(ChurchContext), brandName = useBrandName();
   const [openId, setOpenId] = useState(null),
     [pick, setPick] = useState(""),
     [same, setSame] = useState(false);
@@ -4357,9 +4388,9 @@ function ReferenceReview({ rows, perform, canEdit }) {
     () =>
       rows
         .filter((r) => r.status === "active" && !r.referenceId)
-        .map((row) => ({ row, matches: referenceMatches(index, row) }))
+        .map((row) => ({ row, matches: referenceMatches(index, row).filter((m) => inChurch(church, m.reference)) }))
         .filter((m) => m.matches.length),
-    [rows],
+    [rows, church],
   );
   const entry = pending.find((m) => m.row.id === openId);
   const chosen =
@@ -4377,10 +4408,10 @@ function ReferenceReview({ rows, perform, canEdit }) {
     <section className="reg-card reg-reference-review">
       <div className="reg-section-head">
         <div>
-          <h2>Pastors already in Kuriake Castle</h2>
+          <h2>Pastors already in {brandName}</h2>
           <p>
             {pending.length.toLocaleString()} on this list already appear in
-            Kuriake Castle. Confirm each person so their information is updated instead
+            {brandName}. Confirm each person so their information is updated instead
             of a second entry being created.
           </p>
         </div>
@@ -4491,7 +4522,7 @@ function ReferenceReview({ rows, perform, canEdit }) {
                 await perform(
                   "linkReference",
                   { rosterId: row.id, referenceId: reference.id },
-                  `${reference.name} confirmed. Kuriake Castle now shows the details on your list.`,
+                  `${reference.name} confirmed. ${brandName} now shows the details on your list.`,
                 )
               )
                 setOpenId(null);
