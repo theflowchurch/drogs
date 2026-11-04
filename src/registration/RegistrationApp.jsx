@@ -522,6 +522,8 @@ export default function RegistrationApp({
   church: churchPath = "",
 }) {
   const churchConfig = office ? null : denominationSite(churchPath);
+  // A church has one sign-up link for bishops and pastors; the form asks which.
+  const openSignup = typeof signup === "string" || Boolean(churchConfig && signup);
   // Members sign in with their email; only the office and the browse-only
   // directory sit behind an access code.
   const gated = office;
@@ -640,7 +642,7 @@ export default function RegistrationApp({
     if (signup && location.hash === "#signin") setSigninOpen("signin");
     // The bishop / pastor links open straight onto the email box: email first,
     // then the code, then the form with that email locked in.
-    else if (typeof signup === "string") setSigninOpen("signup");
+    else if (openSignup) setSigninOpen("signup");
   }, [signup]);
   const toggleSidebar = () => {
     const next = !sidebarHidden;
@@ -810,10 +812,10 @@ export default function RegistrationApp({
             </button>
           ) : signup ? (
             <>
-              <button className={typeof signup === "string" ? "reg-text" : "reg-primary reg-signin-button"} onClick={() => setSigninOpen("signin")}>
+              <button className={openSignup ? "reg-text" : "reg-primary reg-signin-button"} onClick={() => setSigninOpen("signin")}>
                 Sign in
               </button>
-              {typeof signup === "string" && (
+              {openSignup && (
                 // Sign-up exists only on the bishop and pastor pages the office shares; the plain page is for signing in.
                 <button className="reg-primary reg-signin-button" onClick={() => setSigninOpen("signup")}>
                   Sign up

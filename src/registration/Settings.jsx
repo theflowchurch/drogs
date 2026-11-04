@@ -205,7 +205,7 @@ export default function Settings({ run, state, perform, actor }) {
   const setCount = keys => { const mine = settings.filter(s => keys.includes(s.key)); if (!mine.length) return ''; const n = mine.filter(s => s.set).length; return n === 0 ? 'Not set up' : n === mine.length ? 'Set up' : 'Partly set up'; };
   // Each church site runs the same sign-up, locked to that church; the office shares these links.
   const churches = Object.entries(DENOMINATION_SITES).sort(([, a], [, b]) => a.name.localeCompare(b.name));
-  const sections = [['signup', 'registration sign-up signup pause open close notice'], ['fees', 'fees fee amount price payment bishop pastor'], ['links', 'registration links share copy ' + links.map(([l]) => l).join(' ')], ['church-links', 'church denomination sign-up signup links share copy bishop pastor ' + churches.map(([, c]) => c.name).join(' ')], ...CATEGORIES.map(([title, blurb, keys]) => [title, `${title} ${blurb} ${settings.filter(s => keys.includes(s.key)).map(s => `${s.label} ${s.hint || ''}`).join(' ')}`])];
+  const sections = [['signup', 'registration sign-up signup pause open close notice'], ['fees', 'fees fee amount price payment bishop pastor'], ['links', 'registration links share copy ' + links.map(([l]) => l).join(' ')], ['church-links', 'church denomination sign-up signup links share copy ' + churches.map(([, c]) => c.name).join(' ')], ...CATEGORIES.map(([title, blurb, keys]) => [title, `${title} ${blurb} ${settings.filter(s => keys.includes(s.key)).map(s => `${s.label} ${s.hint || ''}`).join(' ')}`])];
   const visible = (id) => matches(sections.find(([k]) => k === id)[1]);
   const copy = path => <button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button>;
   return <div className="reg-settings-list">
@@ -216,7 +216,7 @@ export default function Settings({ run, state, perform, actor }) {
     <ul className="reg-admin-list">{links.map(([label, path]) => <li key={path}><span><b>{label}</b><br /><a href={origin + path}>{origin + path}</a></span><button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button></li>)}</ul>
   </Category>}
   {visible('church-links') && <Category title="Church sign-up links" summary={`${churches.length} churches`} open={Boolean(query.trim())}>
-    <ul className="reg-admin-list">{churches.filter(([, c]) => !query.trim() || matches(c.name)).map(([path, c]) => <li key={path}><span><b>{c.name}</b><br />Bishops: <a href={`${origin}/${path}/signup/bishop/`}>{`${origin}/${path}/signup/bishop/`}</a> {copy(`/${path}/signup/bishop/`)}<br />Pastors: <a href={`${origin}/${path}/signup/pastor/`}>{`${origin}/${path}/signup/pastor/`}</a> {copy(`/${path}/signup/pastor/`)}</span></li>)}</ul>
+    <ul className="reg-admin-list">{churches.filter(([, c]) => !query.trim() || matches(c.name)).map(([path, c]) => <li key={path}><span><b>{c.name}</b><br /><a href={`${origin}/${path}/signup/`}>{`${origin}/${path}/signup/`}</a></span>{copy(`/${path}/signup/`)}</li>)}</ul>
   </Category>}
   <form className="reg-settings-form" onSubmit={event => {
     event.preventDefault();
