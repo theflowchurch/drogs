@@ -1865,14 +1865,14 @@ function RegistrationForm({
         <div>
           <h1>
             {step === "review"
-              ? "Review your details."
+              ? "Review your details"
               : step === "pastors"
-                ? "Pastors Under Your Oversight."
+                ? "Pastors Under Your Oversight"
                 : step === "payment"
-                  ? "Annual Good Standing Renewal Fee."
+                  ? "Annual Good Standing Renewal Fee"
                   : editing
-                    ? "Update my details."
-                    : "Roll of Good Standing."}
+                    ? "Update my details"
+                    : "Roll of Good Standing"}
           </h1>
           <p>
             {step === "review"
@@ -2229,14 +2229,16 @@ function RegistrationForm({
             >
               <div className="reg-section-head">
                 <div>
-                  <h2>
-                    ${fees[data.role]} <small>USD</small>
-                    {rate > 0 ? <small> · approximately {localAmount(fees[data.role], rate, currency)} in {data.country.trim()}</small> : null}
-                  </h2>
-                  <p>Annual Good Standing Renewal Fee · {titleCase(data.role)} • {state.year} · Non-refundable.</p>
+                  <h2>Annual Good Standing Renewal</h2>
+                  <p>To renew your Good Standing for {state.year}, please pay the annual fee and upload your payment receipt.</p>
                 </div>
               </div>
-              <PaymentPolicyNotice />
+              <div className="reg-fee-box">
+                <small>Your annual fee</small>
+                <strong>${fees[data.role]} USD</strong>
+                {rate > 0 ? <span>Approximately {localAmount(fees[data.role], rate, currency)} in {data.country.trim()}</span> : null}
+                <em>{titleCase(data.role)} · {state.year}</em>
+              </div>
               {mine?.payment === "verified" ? (
                 <div className="reg-status-message confirmed"><h3>Thank you for your commitment.</h3><p>Your ${fees[data.role]} USD annual commitment has been received. Review your profile and confirm your registration.</p></div>
               ) : <PaymentOptions
@@ -2402,10 +2404,6 @@ function CommitmentPreview({ amount, country }) {
     </p>
   );
 }
-function PaymentPolicyNotice() {
-  const church = useContext(ChurchContext);
-  return <p className="reg-small reg-payment-policy">Payments are received{church ? "" : " by Kuriake Castle"} for annual Good Standing renewal. Read our <a href={`${base}/payments/`} target="_blank" rel="noreferrer">payment information</a> and <a href={`${base}/refunds/`} target="_blank" rel="noreferrer">refund policy</a>, including payment-error exceptions.</p>;
-}
 function Payment({ current, actor, run, refresh }) {
   const [rates, setRates] = useState(null);
   const currency = currencyFor(current.data.country);
@@ -2429,8 +2427,6 @@ function Payment({ current, actor, run, refresh }) {
           <small>Estimate only.</small>
         </p>
       )}
-      <b>Non-refundable</b>
-      <PaymentPolicyNotice />
       <p>
         {titleCase(current.data.role)} • {current.year}
       </p>
