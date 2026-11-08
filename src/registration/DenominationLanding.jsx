@@ -60,6 +60,6 @@ export default function DenominationLanding({ site, config }) {
     <section className={`church-hero church-style-${style} ${config.logo ? '' : 'church-wordmark-only'}`} aria-label={`${config.name} ministerial directory`}>
       {pages[style]?.({ config, mark, title, description, action, label, Art, masthead }) || <Copy logo/>}
     </section>
-    <LicensedMinisterNotice/>
+    <LicensedMinisterNotice open={config.openLicenseNotice}/>
   </main>;
 }

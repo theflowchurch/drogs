@@ -66,6 +66,6 @@ export default function DenominationHome({ site, concept = 1 }) {
       <div className="go-frame-card"><div className="frame-logo">{mark}<span>LICENSED TO MINISTER</span></div><div className="denom-home-copy"><p className="denom-kicker">MINISTERIAL DIRECTORY</p><ChurchName config={config}/><p className="denom-home-description">Directory of licensed bishops and pastors.</p>{link}</div></div>
       <div className="frame-bottom"><span>DIRECTORY OF LICENSED MINISTERS</span><span>↗</span></div>
     </section>}
-    <LicensedMinisterNotice/>
+    <LicensedMinisterNotice open={config.openLicenseNotice}/>
   </main>;
 }

@@ -53,3 +53,10 @@
   .denom-directory h1.denom-named-heading{gap:4px;letter-spacing:-1px;padding-bottom:20px}
   .denom-named-heading span{font-size:34px}
 }
+/* openLicenseNotice: the licensing text is shown in full, at the footer's
+   reading size, with its headings a step larger. */
+.denom-license-open .denom-license-preview{display:block;-webkit-line-clamp:unset;overflow:visible;max-width:1050px}
+.denom-license-open .denom-license-full{padding-top:4px}
+.denom-large-text .denom-license-open :is(p,li){font-size:15px!important;line-height:1.75!important}
+.denom-large-text .denom-license-open h2{font-size:24px!important;margin:0 0 12px}
+.denom-large-text .denom-license-open h3{font-size:19px!important}

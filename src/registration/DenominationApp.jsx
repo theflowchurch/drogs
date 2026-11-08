@@ -143,7 +143,7 @@ function DenominationDirectory({ site }) {
       {sections.pastors.length > 0 && <section className="denom-minister-section" aria-label="Pastors"><h2>Pastors {count(sections.pastors.length)}</h2><MinisterGrid list={sections.pastors.slice(0, limit)} onOpen={setSelectedId}/>{sections.pastors.length > limit && <button type="button" className="denom-nav-button denom-more" onClick={() => setLimit(n => n + 48)}>Show more pastors <Arrow/></button>}</section>}
       {!ordered.length && <div className="denom-loading"><h2>{filter.q || filter.city || filter.gender ? 'No ministers match' : 'No ministers listed'}</h2><p>{filter.q || filter.city || filter.gender ? 'Try another name or clear the filters.' : 'There are currently no ministers listed for this denomination.'}</p>{(filter.q || filter.city || filter.gender) && <button type="button" className="denom-nav-button" onClick={reset}>Clear filters</button>}</div>}
     </>}
-    <LicensedMinisterNotice/>
+    <LicensedMinisterNotice open={config.openLicenseNotice}/>
     <ProfileViewer list={ordered} selectedId={selectedId} onSelect={setSelectedId} counted={!simple}/>
   </main>;
 }
