@@ -2118,7 +2118,9 @@ function RegistrationForm({
                     required
                     value={data.country}
                     onChange={(e) => set("country", e.target.value)}
-                    autoComplete="country-name"
+                    // Not filled from the browser's saved address: where someone serves is often not
+                    // where they live, and a silent change would show the wrong currency at payment.
+                    autoComplete="off"
                   />
                 </Field>
                 <Field label="City">
@@ -2126,7 +2128,7 @@ function RegistrationForm({
                     required
                     value={data.city}
                     onChange={(e) => set("city", e.target.value)}
-                    autoComplete="address-level2"
+                    autoComplete="off"
                   />
                 </Field>
                 <CommitmentPreview amount={fees[data.role]} country={data.country} />
@@ -2229,7 +2231,7 @@ function RegistrationForm({
                 <div>
                   <h2>
                     ${fees[data.role]} <small>USD</small>
-                    {rate > 0 ? <small> · approximately {localAmount(fees[data.role], rate, currency)}</small> : null}
+                    {rate > 0 ? <small> · approximately {localAmount(fees[data.role], rate, currency)} in {data.country.trim()}</small> : null}
                   </h2>
                   <p>Annual Good Standing Renewal Fee · {titleCase(data.role)} • {state.year} · Non-refundable.</p>
                 </div>
