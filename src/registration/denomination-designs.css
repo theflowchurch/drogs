@@ -1,0 +1,54 @@
+/* Alternative looks for church directories (data-design). Each keeps the
+   large-text sizes and simple directory; only layout, colour and type change. */
+
+/* Banner: the heading sits on a full-width band of the church colour. */
+[data-design=banner] .denom-directory{padding-top:0}
+[data-design=banner] .denom-directory-heading{position:relative;margin:0 0 44px;padding:46px 0 50px;background:var(--brand);box-shadow:0 0 0 100vmax var(--brand);clip-path:inset(0 -100vmax)}
+[data-design=banner] .denom-named-heading span,[data-design=banner] .denom-named-heading span:last-child{color:#fff}
+[data-design=banner] .denom-named-heading span:last-child{opacity:.82}
+[data-design=banner] .denom-named-heading:after{background:#fff;opacity:.7}
+[data-design=banner] .denom-named-logo{box-shadow:0 10px 30px #0004}
+[data-design=banner] .denom-header-minimal .denom-signin{background:#fff!important;color:var(--brand)!important}
+[data-design=banner] .denom-header.denom-header-minimal{background:var(--brand);margin:0;padding:0 5%;height:60px}
+[data-design=banner] .denom-minister-section>h2{display:inline-flex;align-items:center;gap:12px;padding:6px 18px;border-radius:999px;background:color-mix(in srgb,var(--brand) 12%,#fff);color:var(--brand)}
+[data-design=banner] .denom-person{border:0;border-bottom:5px solid var(--brand);box-shadow:0 8px 24px #0000001a}
+[data-design=banner] .denom-watermark{display:none}
+
+/* Rows: one wide row per minister (photo left, details right), two columns on
+   desktop and one on phones; the easiest layout to read down. */
+[data-design=rows] .denom-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+[data-design=rows] .denom-person{flex-direction:row!important;height:auto!important;align-items:stretch;border-radius:16px}
+[data-design=rows] .denom-person-photo{width:150px!important;aspect-ratio:4/5!important;height:auto!important;flex-shrink:0}
+[data-design=rows] .denom-person-copy{justify-content:center;padding:18px 22px!important}
+[data-design=rows] .denom-card-arrow{display:none}
+[data-design=rows] .denom-person:after{content:'›';align-self:center;padding:0 20px 0 4px;font-size:34px;line-height:1;color:var(--brand)}
+[data-design=rows] .denom-minister-section>h2{padding-bottom:10px;border-bottom:2px solid var(--brand)}
+@media(max-width:800px){
+  [data-design=rows] .denom-grid{grid-template-columns:1fr}
+  [data-design=rows] .denom-person-photo{width:112px!important}
+  [data-design=rows] .denom-person-copy{padding:14px 16px!important}
+}
+
+/* Split: an app-like layout. On wide screens the church's logo and name stay
+   fixed in a coloured panel on the left while the ministers scroll on the right. */
+@media(min-width:1000px){
+  [data-design=split] .denom-directory{display:grid;grid-template-columns:minmax(300px,30%) minmax(0,1fr);column-gap:48px;align-items:start;padding-top:8px}
+  [data-design=split] .denom-directory>*{grid-column:2}
+  [data-design=split] .denom-directory-heading{grid-column:1;grid-row:1/span 20;position:sticky;top:24px;margin:0;padding:40px 34px 44px;border-radius:26px;background:var(--brand);color:#fff;min-height:calc(100vh - 120px);align-items:flex-start}
+  [data-design=split] .denom-named-title{flex-direction:column;align-items:flex-start;gap:28px}
+  [data-design=split] .denom-named-heading span{font-size:clamp(34px,3vw,46px)!important;color:#fff!important}
+  [data-design=split] .denom-named-heading span:last-child{opacity:.8}
+  [data-design=split] .denom-named-heading:after{background:#fff;opacity:.7}
+  [data-design=split] .denom-named-logo{width:120px}
+  [data-design=split] .denom-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  [data-design=split] .denom-minister-section:first-of-type{margin-top:0}
+}
+@media(max-width:999px){
+  [data-design=split] .denom-directory-heading{margin:0 0 34px;padding:28px 22px 30px;border-radius:22px;background:var(--brand)}
+  [data-design=split] .denom-named-heading span,[data-design=split] .denom-named-heading span:last-child{color:#fff}
+  [data-design=split] .denom-named-heading:after{background:#fff;opacity:.7}
+}
+[data-design=split] .denom-person{border-radius:20px;border:0;box-shadow:0 1px 2px #0000000f,0 10px 28px #00000012}
+[data-design=split] .denom-person-photo{margin:10px 10px 0;width:calc(100% - 20px)!important;border-radius:14px}
+[data-design=split] .denom-minister-section>h2{font-weight:700}
+[data-design=split] .denom-watermark{display:none}
