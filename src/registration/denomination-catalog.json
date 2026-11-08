@@ -766,7 +766,8 @@
     "largeText": true,
     "simpleDirectory": true,
     "namedHeading": true,
-    "openLicenseNotice": true
+    "openLicenseNotice": true,
+    "logoHeading": true
   },
   {
     "path": "pleasantsurprise",
