@@ -79,7 +79,7 @@ Annual commitments are generally non-refundable, subject to the exceptions in ou
 
 ## MoMo, bank transfers and receipt uploads
 
-Members can pay by mobile money (MoMo) or by bank transfer. MoMo payments are sent to KURIAKE CASTLE LBG on +233 59 202 4923. The annual fee is $25 USD for pastors and $100 USD for bishops, unless a different applicable fee is displayed before payment.
+Members can pay by mobile money (MoMo) or by bank transfer. MoMo payments are sent to KURIAKE CASTLE LBG on +233 59 202 4923 (MTN Mobile Money, Ghana). The annual fee is $25 USD for pastors and $100 USD for bishops, unless a different applicable fee is displayed before payment.
 
 Bank transfers are payable to KURIAKE CASTLE LBG, account 1441005268161 at Ecobank, St Johns branch, Ghana. Send the equivalent of the displayed annual fee and account for any transfer-provider charges. If your bank needs further routing information, request it from the office before sending.
 
