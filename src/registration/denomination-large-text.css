@@ -1,0 +1,45 @@
+/* Larger reading sizes for church sites that ask for them (largeText in the
+   catalog), so older members can read the directory comfortably. The site and
+   landing styles set many small sizes at several breakpoints; these overrides
+   use !important so one rule holds at every width. */
+.denom-large-text .denom-brand>span{font-size:19px!important}
+.denom-large-text .denom-brand small{font-size:12px!important}
+.denom-large-text .denom-header-label{font-size:13px!important;letter-spacing:1.5px!important}
+.denom-large-text .denom-signin{font-size:16px!important;min-height:44px!important;padding:10px 20px!important}
+.denom-large-text .denom-kicker{font-size:14px!important;letter-spacing:1.5px!important}
+.denom-large-text .denom-back{font-size:17px!important}
+.denom-large-text .denom-home-description{font-size:20px!important;line-height:1.6!important}
+.denom-large-text .denom-action{font-size:18px!important}
+.denom-large-text .church-hero .folder-tabs{font-size:15px!important}
+.denom-large-text .church-hero .folder-index{font-size:15px!important}
+.denom-large-text .church-hero .folder-index div{grid-template-columns:100px 1fr}
+.denom-large-text .denom-minister-section>h2{font-size:28px!important}
+.denom-large-text .denom-person-copy small{font-size:15px!important;letter-spacing:.5px!important}
+.denom-large-text .denom-person-copy h3{font-size:22px!important;line-height:1.25!important}
+.denom-large-text .denom-person-copy p{font-size:17px!important;line-height:1.45!important}
+.denom-large-text .denom-more,.denom-large-text .denom-nav-button{font-size:17px!important}
+.denom-large-text .denom-profile-toolbar{font-size:14px!important}
+.denom-large-text .denom-profile-copy p{font-size:20px!important}
+.denom-large-text .denom-profile-copy .denom-kicker{font-size:15px!important}
+.denom-large-text .denom-profile-navigation{font-size:16px!important}
+.denom-large-text .denom-license small{font-size:13px!important}
+.denom-large-text .denom-license h2{font-size:26px!important}
+.denom-large-text .denom-license h3{font-size:21px!important}
+.denom-large-text .denom-license :is(p,li){font-size:18px!important;line-height:1.6!important}
+.denom-large-text .denom-footer{font-size:15px!important}
+.denom-large-text .denom-footer :is(a,button,span){font-size:15px!important}
+@media(max-width:700px){
+  .denom-large-text .denom-brand>span{font-size:16px!important}
+  .denom-large-text .denom-signin{font-size:15px!important}
+  .denom-large-text .denom-kicker{font-size:13px!important}
+  .denom-large-text .denom-home-description{font-size:18px!important}
+  .denom-large-text .denom-action{font-size:17px!important}
+  .denom-large-text .church-hero .folder-tabs{font-size:12px!important}
+  .denom-large-text .church-hero .folder-index{font-size:14px!important}
+  .denom-large-text .denom-minister-section>h2{font-size:25px!important}
+  .denom-large-text .denom-person-copy small{font-size:14px!important}
+  .denom-large-text .denom-person-copy h3{font-size:19px!important}
+  .denom-large-text .denom-person-copy p{font-size:16px!important}
+  .denom-large-text .denom-license h2{font-size:23px!important}
+  .denom-large-text .denom-license :is(p,li){font-size:17px!important}
+}

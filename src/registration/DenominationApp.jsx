@@ -11,6 +11,7 @@ import { portraitStyle } from '../runtime/portrait-framing';
 import './denomination-sites.css';
 import './landing-concepts.css';
 import './denomination-catalog.css';
+import './denomination-large-text.css';
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const Arrow = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
@@ -65,26 +66,26 @@ function MinisterPortrait({ person, full = false }) {
   const style = Object.fromEntries(portraitStyle(media).split(';').filter(Boolean).map(pair => pair.split(':')));
   return <PortraitImage media={media} src={source} alt={person.name} className="denom-portrait" style={style} fallbackSrc={!full && !person.photo && person.image ? `${base}/${person.image}` : undefined} />;
 }
-function MinisterDialog({ person, onClose, onPrevious, onNext, position, total }) {
+function MinisterDialog({ person, onClose, onPrevious, onNext, position, total, counted = true }) {
   const ref = useRef(null);
   useEffect(() => { ref.current?.showModal(); }, []);
   return <dialog className="denom-dialog" ref={ref} onCancel={onClose} onClick={e => { if (e.target === e.currentTarget) onClose(); }} onKeyDown={e => {
     if (e.key === 'ArrowLeft' && onPrevious) { e.preventDefault(); onPrevious(); }
     if (e.key === 'ArrowRight' && onNext) { e.preventDefault(); onNext(); }
   }} aria-labelledby="denom-person-name">
-    <div className="denom-profile-toolbar"><span>MINISTER PROFILE · {position} / {total}</span><button type="button" className="denom-close" onClick={onClose} aria-label="Close profile">×</button></div>
+    <div className="denom-profile-toolbar"><span>MINISTER PROFILE{counted && ` · ${position} / ${total}`}</span><button type="button" className="denom-close" onClick={onClose} aria-label="Close profile">×</button></div>
     <div className="denom-profile-layout"><div className="denom-profile-photo"><MinisterPortrait person={person} full /></div>
       <div className="denom-profile-copy"><p className="denom-kicker">{ministerDisplayTitle(person)}</p><h2 id="denom-person-name">{person.name}</h2>
         {placeOf(person) && <p>{placeOf(person)}</p>}
         {person.role === 'pastor' && person.bishop && <p className="denom-profile-detail">Bishop · {person.bishop}</p>}
       </div>
     </div>
-    <nav className="denom-profile-navigation" aria-label="Minister profiles"><button type="button" className="denom-nav-button" onClick={onPrevious} disabled={!onPrevious} aria-label="Previous minister">← Previous</button><span>{position} of {total}</span><button type="button" className="denom-nav-button" onClick={onNext} disabled={!onNext} aria-label="Next minister">Next →</button></nav>
+    <nav className="denom-profile-navigation" aria-label="Minister profiles"><button type="button" className="denom-nav-button" onClick={onPrevious} disabled={!onPrevious} aria-label="Previous minister">← Previous</button><span>{counted && `${position} of ${total}`}</span><button type="button" className="denom-nav-button" onClick={onNext} disabled={!onNext} aria-label="Next minister">Next →</button></nav>
   </dialog>;
 }
-function ProfileViewer({ list, selectedId, onSelect }) {
+function ProfileViewer({ list, selectedId, onSelect, counted }) {
   const index = list.findIndex(p => p.id === selectedId), selected = list[index];
-  return selected && selected.standing !== false ? <MinisterDialog person={selected} onClose={() => onSelect(null)} position={index + 1} total={list.length} onPrevious={index > 0 ? () => onSelect(list[index - 1].id) : null} onNext={index < list.length - 1 ? () => onSelect(list[index + 1].id) : null}/> : null;
+  return selected && selected.standing !== false ? <MinisterDialog person={selected} onClose={() => onSelect(null)} position={index + 1} total={list.length} counted={counted} onPrevious={index > 0 ? () => onSelect(list[index - 1].id) : null} onNext={index < list.length - 1 ? () => onSelect(list[index + 1].id) : null}/> : null;
 }
 function MinisterGrid({ list, onOpen }) {
   return <div className="denom-grid">{list.map(person => <button type="button" className="denom-person" key={person.id} onClick={() => onOpen(person.id)} aria-label={person.name}>
@@ -125,20 +126,23 @@ function DenominationDirectory({ site }) {
   const cities = useMemo(() => [...new Set(list.map(p => p.city).filter(Boolean))].sort((a, b) => a.localeCompare(b)), [list]);
   const ordered = [...sections.bishops, ...sections.pastors];
   const config = denominationSite(site);
+  // A simple directory (asked for by the church) lists everyone with no search, filters or counts.
+  const simple = Boolean(config.simpleDirectory);
+  const count = n => simple ? null : <span>{n}</span>;
   const update = (key, value) => { setFilter(f => ({ ...f, [key]: value })); setLimit(48); };
   const reset = () => { setFilter({ q: '', city: '', gender: '' }); setLimit(48); };
   return <main className="denom-directory">
-    <div className="denom-directory-heading"><div><a className="denom-back" href={`${base}/${site}/`}>← {config.shortName}</a><p className="denom-kicker">LICENSED BISHOPS & PASTORS</p><h1>{config.directoryHeading}</h1></div>{data && <span className="denom-total"><strong>{ordered.length}</strong> ministers{(filter.q || filter.city || filter.gender) ? ' found' : ''}</span>}</div>
-    <DirectoryFilters site={config.visualStyle || site} filter={filter} cities={cities} update={update} reset={reset}/>
+    <div className="denom-directory-heading"><div><a className="denom-back" href={`${base}/${site}/`}>← {config.shortName}</a><p className="denom-kicker">LICENSED BISHOPS & PASTORS</p><h1>{config.directoryHeading}</h1></div>{data && !simple && <span className="denom-total"><strong>{ordered.length}</strong> ministers{(filter.q || filter.city || filter.gender) ? ' found' : ''}</span>}</div>
+    {!simple && <DirectoryFilters site={config.visualStyle || site} filter={filter} cities={cities} update={update} reset={reset}/>}
     {error && <div className="denom-load-error" role="alert"><p>{data ? 'The latest update could not be loaded. ' : ''}{error}</p><button className="denom-nav-button" type="button" onClick={retry}>Try again</button></div>}
     {!data && !error && <div className="denom-loading" role="status">Loading ministers…</div>}
     {data && <>
-      {sections.bishops.length > 0 && <section className={`denom-minister-section ${sections.bishops.length === 1 ? 'denom-single-bishop' : ''}`} aria-label="Bishops"><h2>Bishops <span>{sections.bishops.length}</span></h2><MinisterGrid list={sections.bishops} onOpen={setSelectedId}/></section>}
-      {sections.pastors.length > 0 && <section className="denom-minister-section" aria-label="Pastors"><h2>Pastors <span>{sections.pastors.length}</span></h2><MinisterGrid list={sections.pastors.slice(0, limit)} onOpen={setSelectedId}/>{sections.pastors.length > limit && <button type="button" className="denom-nav-button denom-more" onClick={() => setLimit(n => n + 48)}>Show more pastors <Arrow/></button>}</section>}
+      {sections.bishops.length > 0 && <section className={`denom-minister-section ${sections.bishops.length === 1 ? 'denom-single-bishop' : ''}`} aria-label="Bishops"><h2>Bishops {count(sections.bishops.length)}</h2><MinisterGrid list={sections.bishops} onOpen={setSelectedId}/></section>}
+      {sections.pastors.length > 0 && <section className="denom-minister-section" aria-label="Pastors"><h2>Pastors {count(sections.pastors.length)}</h2><MinisterGrid list={sections.pastors.slice(0, limit)} onOpen={setSelectedId}/>{sections.pastors.length > limit && <button type="button" className="denom-nav-button denom-more" onClick={() => setLimit(n => n + 48)}>Show more pastors <Arrow/></button>}</section>}
       {!ordered.length && <div className="denom-loading"><h2>{filter.q || filter.city || filter.gender ? 'No ministers match' : 'No ministers listed'}</h2><p>{filter.q || filter.city || filter.gender ? 'Try another name or clear the filters.' : 'There are currently no ministers listed for this denomination.'}</p>{(filter.q || filter.city || filter.gender) && <button type="button" className="denom-nav-button" onClick={reset}>Clear filters</button>}</div>}
     </>}
     <LicensedMinisterNotice/>
-    <ProfileViewer list={ordered} selectedId={selectedId} onSelect={setSelectedId}/>
+    <ProfileViewer list={ordered} selectedId={selectedId} onSelect={setSelectedId} counted={!simple}/>
   </main>;
 }
 export default function DenominationApp({ site, browse = false }) {
@@ -147,7 +151,7 @@ export default function DenominationApp({ site, browse = false }) {
   const [paused, setPaused] = useState(false), [concept, setConcept] = useState(config?.homeConcept || 1);
   useEffect(() => { setPaused(matchMedia('(prefers-reduced-motion: reduce)').matches); const choice = Number(new URLSearchParams(window.location.search).get('concept')); if ([1, 2, 3].includes(choice)) setConcept(choice); }, []);
   if (!config) return null;
-  return <div data-landing-style={!browse ? landing?.id : undefined} data-landing-tone={!browse && landing?.dark ? 'dark' : undefined} className={`denom-site denom-${config.visualStyle || site} ${config.homeLayout ? 'denom-catalog-site' : ''} ${browse ? 'denom-is-directory' : `denom-is-home denom-concept-${concept}`} ${paused ? 'denom-motion-paused' : ''}`} style={{ '--brand': config.accent, '--denom-accent': !browse && (landing?.dark || (site === 'gochurch' && concept !== 2) || (site === 'lighthousechapelinternational' && concept === 3)) ? '#d5b56c' : config.accent }}>
+  return <div data-landing-style={!browse ? landing?.id : undefined} data-landing-tone={!browse && landing?.dark ? 'dark' : undefined} className={`denom-site denom-${config.visualStyle || site} ${config.homeLayout ? 'denom-catalog-site' : ''} ${browse ? 'denom-is-directory' : `denom-is-home denom-concept-${concept}`} ${paused ? 'denom-motion-paused' : ''} ${config.largeText ? 'denom-large-text' : ''}`} style={{ '--brand': config.accent, '--denom-accent': !browse && (landing?.dark || (site === 'gochurch' && concept !== 2) || (site === 'lighthousechapelinternational' && concept === 3)) ? '#d5b56c' : config.accent }}>
     {browse && <><DenominationTexture site={config.visualStyle || site} paused={paused}/>
     {config.logo && <div className="denom-watermark" aria-hidden="true"><img className="denom-watermark-main" src={`${base}/${config.logo}`} alt=""/><img className="denom-watermark-secondary" src={`${base}/${config.logo}`} alt=""/></div>}</>}
     <header className="denom-header"><a href={`${base}/${site}/`} className="denom-brand" aria-label={`${config.name} home`}>{config.logo && <img src={`${base}/${config.logo}`} alt=""/>}<span>{config.shortName}{config.subtitle && <small>{config.subtitle}</small>}</span></a><div className="denom-header-actions"><span className="denom-header-label">MINISTERIAL DIRECTORY</span><a className="denom-signin" href={`${base}/${site}/signup/#signin`}>Sign in</a></div></header>
