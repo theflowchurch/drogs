@@ -52,18 +52,19 @@ export default function PaymentOptions({ current, actor, run, refresh, beforeSav
     <section className="reg-pay-step" aria-labelledby="pay-step-1">
       <h3 id="pay-step-1"><span>1</span>Choose how to pay</h3>
       <fieldset className="reg-payment-methods"><legend className="reg-visually-hidden">How would you like to pay?</legend>
-        <label><input type="radio" name="payment-method" value="momo" checked={app} onChange={() => setMethod('momo')} />{domestic ? 'Mobile Money (MoMo)' : 'Send money using an app (Remitly, WorldRemit, Taptap Send and others)'}</label>
+        <label><input type="radio" name="payment-method" value="momo" checked={app} onChange={() => setMethod('momo')} />{domestic ? 'Mobile Money (MTN MoMo)' : 'Send money using an app (Remitly, WorldRemit, Taptap Send and others)'}</label>
         <label><input type="radio" name="payment-method" value="bank" checked={!app} onChange={() => setMethod('bank')} />Pay directly to our bank account (Ecobank Ghana)</label>
       </fieldset>
     </section>
     <section className="reg-pay-step" aria-labelledby="pay-step-2">
       <h3 id="pay-step-2"><span>2</span>Make your payment</h3>
       <p>{app
-        ? domestic ? <>Send the equivalent of <strong>${current.amount} USD</strong> to the Mobile Money account below.</> : <>Use your money transfer app to send the equivalent of <strong>${current.amount} USD</strong> to the Mobile Money account below. In the app, choose <strong>Ghana</strong>, then <strong>Mobile Money</strong>.</>
+        ? domestic ? <>Send the equivalent of <strong>${current.amount} USD</strong> to the Mobile Money account below.</> : <>Use your money transfer app to send the equivalent of <strong>${current.amount} USD</strong> to the Mobile Money account below. In the app, choose <strong>Ghana</strong>, then <strong>Mobile Money</strong>, then <strong>MTN</strong>.</>
         : <>Send the equivalent of <strong>${current.amount} USD</strong> to the bank account below, from your bank or a money transfer app that offers bank deposits to Ghana.</>}</p>
       <dl className="reg-details reg-pay-details">
         <div><dt>Country</dt><dd>Ghana</dd></div>
         {app ? <>
+          <div><dt>Mobile Money network</dt><dd>{REGISTRATION_MOMO.network}</dd></div>
           <div><dt>Recipient name</dt><dd>{REGISTRATION_MOMO.name}</dd></div>
           <div><dt>Mobile Money number</dt><dd><CopyValue value={REGISTRATION_MOMO.number} /></dd></div>
         </> : <>
