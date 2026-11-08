@@ -1951,6 +1951,7 @@ function RegistrationForm({
               ${fees[data.role]}
               <small>USD</small>
             </strong>
+            {step === "payment" && rate > 0 ? <em className="reg-amount-local">Approximately {localAmount(fees[data.role], rate, currency)} in {data.country.trim().replace(/(^|\s)\S/g, (c) => c.toUpperCase())}</em> : null}
             <p>
               {titleCase(data.role)} · {state.year}
             </p>
@@ -2226,18 +2227,6 @@ function RegistrationForm({
                 if (paymentReady(mine)) next();
               }}
             >
-              <div className="reg-section-head">
-                <div>
-                  <h2>Annual Good Standing Renewal</h2>
-                  <p>To renew your Good Standing for {state.year}, please pay the annual fee and upload your payment receipt.</p>
-                </div>
-              </div>
-              <div className="reg-fee-box">
-                <small>Your annual fee</small>
-                <strong>${fees[data.role]} USD</strong>
-                {rate > 0 ? <span>Approximately {localAmount(fees[data.role], rate, currency)} in {data.country.trim()}</span> : null}
-                <em>{titleCase(data.role)} · {state.year}</em>
-              </div>
               {mine?.payment === "verified" ? (
                 <div className="reg-status-message confirmed"><h3>Thank you for your commitment.</h3><p>Your ${fees[data.role]} USD annual commitment has been received. Review your profile and confirm your registration.</p></div>
               ) : <PaymentOptions
