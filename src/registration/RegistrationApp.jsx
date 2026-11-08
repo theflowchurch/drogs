@@ -2131,7 +2131,6 @@ function RegistrationForm({
                     autoComplete="off"
                   />
                 </Field>
-                <CommitmentPreview amount={fees[data.role]} country={data.country} />
                 {data.role === "pastor" && (
                   <Field label="Your bishop" wide hint={data.organization === "FLOW"
                     ? "Mother Nina Masuku is currently the available bishop for FLOW."
@@ -2370,38 +2369,6 @@ function RegistrationForm({
         </section>
       </div>
     </>
-  );
-}
-// Shown as soon as a country is typed, so the amount to send is clear before
-// anyone reaches payment. Same indicative-rate rules as the payment card.
-function CommitmentPreview({ amount, country }) {
-  const [rates, setRates] = useState(null);
-  const currency = currencyFor(country);
-  useEffect(() => {
-    if (!currency || currency === "USD") return;
-    let live = true;
-    loadRates().then((value) => live && setRates(value));
-    return () => {
-      live = false;
-    };
-  }, [currency]);
-  if (!String(country || "").trim()) return null;
-  const rate = rateFor(rates, currency);
-  return (
-    <p className="reg-local-amount reg-field wide">
-      Annual Good Standing Renewal Fee: ${amount} USD
-      {rate > 0
-        ? ` · approximately ${localAmount(amount, rate, currency)}`
-        : currency === "USD"
-          ? ""
-          : currency
-            ? " · fetching today’s rate…"
-            : " · we could not match that country to a currency; checkout shows the exact Ghana cedi amount"}
-      <small>
-        The fee is set in US dollars and paid in Ghana cedis. Your exact cedi total
-        appears before checkout. A card in another currency may use a different conversion rate.
-      </small>
-    </p>
   );
 }
 function Payment({ current, actor, run, refresh }) {
