@@ -1935,14 +1935,15 @@ function RegistrationForm({
               </span>
             </label>
             <AttireNotice check={data.photoCheck} onChoose={() => document.querySelector('input[aria-label="Photo in official attire"]')?.click()} />
-            <figure className="reg-attire-example">
+            {/* The photo instructions belong to the details step; later steps just show the photo. */}
+            {step === "details" && <figure className="reg-attire-example">
               <img src={`${base}/${attireExample(data).file}`} alt={attireExample(data).alt} />
               <figcaption>
                 <b>{attireExample(data).caption}</b>
                 Face the camera against a plain white background, with your face fully visible. You must be wearing {expectedAttire(data).words}.
                 {titleFor(data) === "Rev." ? " Selfies, casual clothing or photos showing only the collar will not be accepted." : " Selfies and casual clothing will not be accepted."}
               </figcaption>
-            </figure>
+            </figure>}
           </div>
           <div className="reg-amount">
             <span>Annual Good Standing Renewal Fee</span>
