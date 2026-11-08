@@ -6,7 +6,7 @@
 // expand button; otherwise the summary expands to the full requirements.
 export default function LicensedMinisterNotice({ open = false }) {
   const heading = <h2>What It Means To Be A Licensed Minister</h2>;
-  const intro = <p className="denom-license-preview">A bishop or pastor is a licensed minister when he or she fulfills the requirements, expectations, and responsibilities of the office as determined. A licensed minister is entitled to exercise the rights, privileges, titles, and functions attached to that ministerial office.</p>;
+  const intro = <p className="denom-license-preview">A bishop, reverend or pastor is a licensed minister when he or she fulfills the requirements, expectations, and responsibilities of the office as determined. A licensed minister is entitled to exercise the rights, privileges, titles, and functions attached to that ministerial office.</p>;
   const full = <div className="denom-license-full">
         <h3>When A Minister Is Not Licensed</h3>
         <p>A bishop or pastor who is not licensed is not entitled to exercise the rights, privileges, titles, or functions attached to that ministerial office for the period in which they remain unlicensed.</p>
