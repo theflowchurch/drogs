@@ -132,7 +132,9 @@ function DenominationDirectory({ site }) {
   const update = (key, value) => { setFilter(f => ({ ...f, [key]: value })); setLimit(48); };
   const reset = () => { setFilter({ q: '', city: '', gender: '' }); setLimit(48); };
   return <main className="denom-directory">
-    <div className="denom-directory-heading"><div><a className="denom-back" href={`${base}/${site}/`}>← {config.shortName}</a><p className="denom-kicker">LICENSED BISHOPS & PASTORS</p><h1>{config.directoryHeading}</h1></div>{data && !simple && <span className="denom-total"><strong>{ordered.length}</strong> ministers{(filter.q || filter.city || filter.gender) ? ' found' : ''}</span>}</div>
+    <div className="denom-directory-heading"><div>{config.namedHeading
+      ? <h1 className="denom-named-heading"><span>{config.name}</span><span>{config.directoryHeading}</span></h1>
+      : <><a className="denom-back" href={`${base}/${site}/`}>← {config.shortName}</a><p className="denom-kicker">LICENSED BISHOPS & PASTORS</p><h1>{config.directoryHeading}</h1></>}</div>{data && !simple && <span className="denom-total"><strong>{ordered.length}</strong> ministers{(filter.q || filter.city || filter.gender) ? ' found' : ''}</span>}</div>
     {!simple && <DirectoryFilters site={config.visualStyle || site} filter={filter} cities={cities} update={update} reset={reset}/>}
     {error && <div className="denom-load-error" role="alert"><p>{data ? 'The latest update could not be loaded. ' : ''}{error}</p><button className="denom-nav-button" type="button" onClick={retry}>Try again</button></div>}
     {!data && !error && <div className="denom-loading" role="status">Loading ministers…</div>}

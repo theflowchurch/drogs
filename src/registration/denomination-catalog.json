@@ -764,7 +764,8 @@
     "directoryAction": "View licensed ministers",
     "directoryHeading": "Licensed ministers",
     "largeText": true,
-    "simpleDirectory": true
+    "simpleDirectory": true,
+    "namedHeading": true
   },
   {
     "path": "pleasantsurprise",
