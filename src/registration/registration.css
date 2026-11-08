@@ -4186,3 +4186,46 @@ input[type="date"] {
 .reg-church-app .reg-gate { background: var(--dark); }
 .reg-church-app .reg-account.signup { background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--brand) 22%, #fff) 0%, color-mix(in srgb, var(--brand) 6%, #faf9f6) 55%, #faf9f6 100%); color: var(--ink); }
 .reg-church-app .reg-side-note small, .reg-church-app .reg-side-note span, .reg-church-app .reg-side-note p { color: color-mix(in srgb, var(--brand) 25%, #fff); }
+/* Payment in three plain steps: choose how, pay, upload the receipt. Larger
+   type and targets throughout, so it is easy to follow on any phone. */
+.reg-fee-box { display: grid; gap: .25rem; margin: 1.2rem 0 .4rem; padding: 1.2rem 1.4rem; border-radius: 14px; background: color-mix(in srgb, var(--accent) 8%, #fff); border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); }
+.reg-fee-box small { font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted, #687084); }
+.reg-fee-box strong { font-size: 2rem; line-height: 1.1; }
+.reg-fee-box span { font-size: 1.05rem; color: var(--ink); }
+.reg-fee-box em { font-style: normal; font-size: .95rem; color: var(--muted, #687084); }
+:root[data-theme="dark"] .reg-fee-box { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.reg-pay-steps { font-size: 1.05rem; }
+.reg-pay-step { padding: 1.6rem 0; border-top: 1px solid var(--line, #d9deeb); }
+.reg-pay-step:first-child { border-top: 0; padding-top: .6rem; }
+.reg-pay-step h3 { display: flex; align-items: center; gap: .7rem; margin: 0 0 1rem; font-size: 1.3rem; }
+.reg-pay-step h3 span { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--accent); color: #fff; font-size: 1rem; flex: 0 0 auto; }
+.reg-pay-step > p { line-height: 1.6; margin: 0 0 1rem; }
+.reg-pay-steps .reg-payment-methods { margin: 0; }
+.reg-pay-steps .reg-payment-methods label { padding: 1.1rem 1.2rem; font-size: 1.05rem; }
+.reg-pay-steps .reg-payment-methods label:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.reg-pay-steps .reg-payment-methods input { width: 22px; height: 22px; accent-color: var(--accent); }
+.reg-pay-details { margin: 0; }
+.reg-pay-details > div { display: grid; grid-template-columns: minmax(130px, 34%) 1fr; gap: .4rem 1rem; align-items: center; padding: .9rem 0; border-bottom: 1px solid var(--line, #d9deeb); }
+.reg-pay-details dt { font-size: .82rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted, #687084); }
+.reg-pay-details dd { margin: 0; font-size: 1.1rem; font-weight: 600; overflow-wrap: anywhere; }
+.reg-pay-details dd small { display: block; font-size: .85rem; font-weight: 400; color: var(--muted, #687084); margin-top: .3rem; }
+.reg-copy-value { display: flex; align-items: center; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
+.reg-copy { flex: 0 0 auto; min-height: 40px; padding: .45rem 1rem; border: 1px solid var(--line, #d9deeb); border-radius: 999px; background: #fff; color: var(--ink); font-size: .9rem; font-weight: 700; cursor: pointer; }
+.reg-copy:hover { border-color: var(--accent); color: var(--accent); }
+:root[data-theme="dark"] .reg-copy { background: transparent; }
+.reg-pay-note { margin-top: 1rem !important; font-size: .98rem; color: var(--muted, #687084); }
+.reg-receipt-drop { position: relative; display: grid; justify-items: center; gap: .35rem; padding: 1.8rem 1rem; border: 2px dashed color-mix(in srgb, var(--accent) 45%, var(--line, #d9deeb)); border-radius: 14px; text-align: center; cursor: pointer; color: var(--ink); background: color-mix(in srgb, var(--accent) 4%, transparent); }
+.reg-receipt-drop:hover { border-color: var(--accent); }
+.reg-receipt-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.reg-receipt-drop svg { color: var(--accent); }
+.reg-receipt-drop strong { font-size: 1.1rem; }
+.reg-receipt-drop small { color: var(--muted, #687084); }
+.reg-pay-steps .reg-field span { font-size: 1rem; font-weight: 700; }
+.reg-pay-steps .reg-field input { min-height: 52px; font-size: 1.05rem; }
+.reg-pay-steps .reg-check { font-size: 1rem; line-height: 1.55; align-items: flex-start; }
+.reg-pay-submit { width: 100%; min-height: 56px; margin-top: 1rem; font-size: 1.1rem; }
+.reg-pay-after { text-align: center; margin-top: .8rem; }
+@media (max-width: 640px) {
+  .reg-pay-details > div { grid-template-columns: 1fr; gap: .3rem; }
+}
+.reg-pay-steps .reg-check a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
