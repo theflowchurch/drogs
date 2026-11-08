@@ -152,9 +152,9 @@ export default function DenominationApp({ site, browse = false }) {
   const config = denominationSite(site);
   const landing = landingStyle(config?.homeLayout);
   const [paused, setPaused] = useState(false), [concept, setConcept] = useState(config?.homeConcept || 1), [design, setDesign] = useState(config?.directoryDesign || '');
-  useEffect(() => { setPaused(matchMedia('(prefers-reduced-motion: reduce)').matches); const choice = Number(new URLSearchParams(window.location.search).get('concept')); if ([1, 2, 3].includes(choice)) setConcept(choice); const look = new URLSearchParams(window.location.search).get('design'); if (['banner', 'rows', 'split'].includes(look)) setDesign(look); }, []);
+  useEffect(() => { setPaused(matchMedia('(prefers-reduced-motion: reduce)').matches); const choice = Number(new URLSearchParams(window.location.search).get('concept')); if ([1, 2, 3].includes(choice)) setConcept(choice); const look = new URLSearchParams(window.location.search).get('design'); if (['night', 'portrait', 'glass'].includes(look)) setDesign(look); }, []);
   if (!config) return null;
-  // directoryDesign (or ?design= for previews) gives a large-text church its own look: banner, rows or split.
+  // directoryDesign (or ?design= for previews) gives a large-text church its own look: night, portrait or glass.
   return <div data-design={design || undefined} data-landing-style={!browse ? landing?.id : undefined} data-landing-tone={!browse && landing?.dark ? 'dark' : undefined} className={`denom-site denom-${config.visualStyle || site} ${config.homeLayout ? 'denom-catalog-site' : ''} ${browse ? 'denom-is-directory' : `denom-is-home denom-concept-${concept}`} ${paused ? 'denom-motion-paused' : ''} ${config.largeText ? 'denom-large-text' : ''}`} style={{ '--brand': config.accent, '--denom-accent': !browse && (landing?.dark || (site === 'gochurch' && concept !== 2) || (site === 'lighthousechapelinternational' && concept === 3)) ? '#d5b56c' : config.accent }}>
     {browse && <><DenominationTexture site={config.visualStyle || site} paused={paused}/>
     {config.logo && <div className="denom-watermark" aria-hidden="true"><img className="denom-watermark-main" src={`${base}/${config.logo}`} alt=""/><img className="denom-watermark-secondary" src={`${base}/${config.logo}`} alt=""/></div>}</>}

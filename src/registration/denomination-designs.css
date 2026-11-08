@@ -1,54 +1,49 @@
 /* Alternative looks for church directories (data-design). Each keeps the
-   large-text sizes and simple directory; only layout, colour and type change. */
+   large-text sizes, simple directory and photo size; the page's colours,
+   backgrounds and card style change. */
 
-/* Banner: the heading sits on a full-width band of the church colour. */
-[data-design=banner] .denom-directory{padding-top:0}
-[data-design=banner] .denom-directory-heading{position:relative;margin:0 0 44px;padding:46px 0 50px;background:var(--brand);box-shadow:0 0 0 100vmax var(--brand);clip-path:inset(0 -100vmax)}
-[data-design=banner] .denom-named-heading span,[data-design=banner] .denom-named-heading span:last-child{color:#fff}
-[data-design=banner] .denom-named-heading span:last-child{opacity:.82}
-[data-design=banner] .denom-named-heading:after{background:#fff;opacity:.7}
-[data-design=banner] .denom-named-logo{box-shadow:0 10px 30px #0004}
-[data-design=banner] .denom-header-minimal .denom-signin{background:#fff!important;color:var(--brand)!important}
-[data-design=banner] .denom-header.denom-header-minimal{background:var(--brand);margin:0;padding:0 5%;height:60px}
-[data-design=banner] .denom-minister-section>h2{display:inline-flex;align-items:center;gap:12px;padding:6px 18px;border-radius:999px;background:color-mix(in srgb,var(--brand) 12%,#fff);color:var(--brand)}
-[data-design=banner] .denom-person{border:0;border-bottom:5px solid var(--brand);box-shadow:0 8px 24px #0000001a}
-[data-design=banner] .denom-watermark{display:none}
+/* Night: a dark page in charcoal with the church colour as a glow. */
+.denom-site[data-design=night]{--denom-paper:#121212;--denom-ink:#f5f2ea;--denom-muted:#b9b4a8;--denom-line:#ffffff1f;color-scheme:dark;background:radial-gradient(1200px 600px at 15% -10%,color-mix(in srgb,var(--brand) 55%,transparent),transparent 70%),#121212}
+[data-design=night] :is(.denom-texture,.denom-watermark){display:none}
+[data-design=night] .denom-named-heading span{color:#fff!important}
+[data-design=night] .denom-named-heading span:last-child{color:color-mix(in srgb,var(--brand) 45%,#fff)!important}
+[data-design=night] .denom-named-heading:after{background:color-mix(in srgb,var(--brand) 45%,#fff)}
+[data-design=night] .denom-named-logo{background:#1e1e1e;box-shadow:0 0 0 1px #ffffff26,0 20px 50px #000}
+[data-design=night] .denom-minister-section>h2{color:#fff;font-weight:700}
+[data-design=night] .denom-person{background:#1d1d1d!important;border:1px solid #ffffff14!important;box-shadow:none!important}
+[data-design=night] .denom-person:hover{box-shadow:0 0 0 2px color-mix(in srgb,var(--brand) 60%,#fff)}
+[data-design=night] .denom-person h3{color:#fff!important}
+[data-design=night] .denom-person-copy small{color:color-mix(in srgb,var(--brand) 40%,#fff)!important}
+[data-design=night] .denom-person-copy p{color:#c9c4b8!important}
+[data-design=night] .denom-person-copy p:before{background:color-mix(in srgb,var(--brand) 40%,#fff)!important}
+[data-design=night] .denom-signin{background:#fff!important;color:#121212!important}
+[data-design=night] .denom-license{border-top-color:#ffffff1f}
+[data-design=night] .denom-license h2,[data-design=night] .denom-license h3{color:#fff}
+[data-design=night] .denom-license :is(p,li){color:#c9c4b8!important}
 
-/* Rows: one wide row per minister (photo left, details right), two columns on
-   desktop and one on phones; the easiest layout to read down. */
-[data-design=rows] .denom-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-[data-design=rows] .denom-person{flex-direction:row!important;height:auto!important;align-items:stretch;border-radius:16px}
-[data-design=rows] .denom-person-photo{width:150px!important;aspect-ratio:4/5!important;height:auto!important;flex-shrink:0}
-[data-design=rows] .denom-person-copy{justify-content:center;padding:18px 22px!important}
-[data-design=rows] .denom-card-arrow{display:none}
-[data-design=rows] .denom-person:after{content:'›';align-self:center;padding:0 20px 0 4px;font-size:34px;line-height:1;color:var(--brand)}
-[data-design=rows] .denom-minister-section>h2{padding-bottom:10px;border-bottom:2px solid var(--brand)}
-@media(max-width:800px){
-  [data-design=rows] .denom-grid{grid-template-columns:1fr}
-  [data-design=rows] .denom-person-photo{width:112px!important}
-  [data-design=rows] .denom-person-copy{padding:14px 16px!important}
-}
+/* Portrait: the photo fills the whole card and the name and place sit on it,
+   like a magazine cover. Cards keep the same width, so photos are as large. */
+[data-design=portrait] .denom-person{position:relative;border:0;border-radius:18px;background:#222;box-shadow:0 14px 34px #0000002e}
+[data-design=portrait] .denom-person-photo{aspect-ratio:4/5!important}
+[data-design=portrait] .denom-person-copy{position:absolute;inset:auto 0 0 0;padding:70px 18px 18px!important;background:linear-gradient(transparent,#000000d9 55%)}
+[data-design=portrait] .denom-person h3{color:#fff;margin-bottom:6px!important}
+[data-design=portrait] .denom-person-copy small{color:#fff!important;opacity:.85;text-transform:uppercase;letter-spacing:1.5px!important;font-weight:700}
+[data-design=portrait] .denom-person-copy p{color:#f1ede4!important}
+[data-design=portrait] .denom-person-copy p:before{background:#fff!important}
+[data-design=portrait] .denom-card-arrow{display:none}
+[data-design=portrait] .denom-minister-section>h2{font-size:clamp(34px,4vw,54px)!important;font-weight:800;letter-spacing:-1.5px;color:var(--brand)}
+[data-design=portrait] .denom-single-bishop .denom-person-copy{position:static;background:none;padding:20px 25px!important}
 
-/* Split: an app-like layout. On wide screens the church's logo and name stay
-   fixed in a coloured panel on the left while the ministers scroll on the right. */
-@media(min-width:1000px){
-  [data-design=split] .denom-directory{display:grid;grid-template-columns:minmax(300px,30%) minmax(0,1fr);column-gap:48px;align-items:start;padding-top:8px}
-  [data-design=split] .denom-directory>*{grid-column:2}
-  [data-design=split] .denom-directory-heading{grid-column:1;grid-row:1/span 20;position:sticky;top:24px;margin:0;padding:40px 34px 44px;border-radius:26px;background:var(--brand);color:#fff;min-height:calc(100vh - 120px);align-items:flex-start}
-  [data-design=split] .denom-named-title{flex-direction:column;align-items:flex-start;gap:28px}
-  [data-design=split] .denom-named-heading span{font-size:clamp(34px,3vw,46px)!important;color:#fff!important}
-  [data-design=split] .denom-named-heading span:last-child{opacity:.8}
-  [data-design=split] .denom-named-heading:after{background:#fff;opacity:.7}
-  [data-design=split] .denom-named-logo{width:120px}
-  [data-design=split] .denom-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-  [data-design=split] .denom-minister-section:first-of-type{margin-top:0}
+/* Glass: a soft gradient of the church colour behind frosted-glass cards. */
+.denom-site[data-design=glass]{background:radial-gradient(800px 520px at 5% 0%,color-mix(in srgb,var(--brand) 75%,#fff),transparent 72%),radial-gradient(900px 640px at 100% 35%,color-mix(in srgb,var(--brand) 45%,#9fc3e8),transparent 70%),radial-gradient(900px 600px at 25% 100%,color-mix(in srgb,var(--brand) 40%,#e7b8d8),transparent 70%),color-mix(in srgb,var(--brand) 18%,#f4f2ee);background-attachment:fixed}
+[data-design=glass] :is(.denom-texture,.denom-watermark){display:none}
+[data-design=glass] .denom-person{border:1px solid #ffffffb3!important;border-radius:24px!important;background:#ffffff8c!important;backdrop-filter:blur(18px) saturate(1.4);box-shadow:0 10px 40px #0000000f;padding:10px 10px 0}
+[data-design=glass] .denom-person-photo{border-radius:16px}
+[data-design=glass] .denom-card-arrow{display:none}
+[data-design=glass] .denom-minister-section>h2{display:inline-block;padding:8px 22px;border-radius:999px;background:#ffffff99;border:1px solid #ffffffcc;backdrop-filter:blur(12px);font-weight:700}
+[data-design=glass] .denom-named-logo{background:#ffffffb3;backdrop-filter:blur(10px)}
+[data-design=glass] .denom-license{border-radius:24px;padding:30px 34px;background:#ffffff80;border:1px solid #ffffffb3;backdrop-filter:blur(14px)}
+@media(max-width:700px){
+  [data-design=portrait] .denom-person-copy{position:static;padding:12px 14px 14px!important;background:#1d1d1d}
+  [data-design=portrait] .denom-person-photo{aspect-ratio:4/4.3!important}
 }
-@media(max-width:999px){
-  [data-design=split] .denom-directory-heading{margin:0 0 34px;padding:28px 22px 30px;border-radius:22px;background:var(--brand)}
-  [data-design=split] .denom-named-heading span,[data-design=split] .denom-named-heading span:last-child{color:#fff}
-  [data-design=split] .denom-named-heading:after{background:#fff;opacity:.7}
-}
-[data-design=split] .denom-person{border-radius:20px;border:0;box-shadow:0 1px 2px #0000000f,0 10px 28px #00000012}
-[data-design=split] .denom-person-photo{margin:10px 10px 0;width:calc(100% - 20px)!important;border-radius:14px}
-[data-design=split] .denom-minister-section>h2{font-weight:700}
-[data-design=split] .denom-watermark{display:none}
