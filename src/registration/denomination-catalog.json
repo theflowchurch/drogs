@@ -717,7 +717,12 @@
     "visualStyle": "lighthousechapelinternational",
     "accent": "#705132",
     "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "largeText": true,
+    "simpleDirectory": true,
+    "namedHeading": true,
+    "openLicenseNotice": true,
+    "logoHeading": true
   },
   {
     "path": "onctioninternationalebenin",
