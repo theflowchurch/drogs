@@ -4170,3 +4170,19 @@ input[type="date"] {
 .reg-church-kicker { font: 700 11px/1.4 -apple-system, sans-serif; letter-spacing: 3px; color: var(--brand); }
 :root[data-theme="dark"] .reg-church-kicker { color: var(--accent); }
 :root[data-theme="dark"] .reg-church-title { color: #f3f1ea !important; }
+/* Church sign-up pages take the church's colour instead of the Kuriake navy:
+   the side panel, the fee card, the selected menu item and browser-filled fields. */
+.reg-church-app { --dark: color-mix(in srgb, var(--brand) 82%, #000); }
+:root[data-theme="dark"] .reg-church-app { --dark: color-mix(in srgb, var(--brand) 38%, #0b0f12); }
+.reg-church-app .reg-sidebar .reg-eyebrow { color: color-mix(in srgb, var(--brand) 35%, #fff); }
+.reg-church-app .reg-nav button { color: color-mix(in srgb, var(--brand) 18%, #fff); }
+.reg-church-app .reg-nav button.active { background: color-mix(in srgb, var(--brand) 14%, #fff); color: var(--dark); }
+.reg-church-app .reg-nav button.active b { background: color-mix(in srgb, var(--brand) 15%, transparent); }
+.reg-church-app .reg-amount { background: var(--dark); }
+.reg-church-app .reg-amount > span { color: color-mix(in srgb, var(--brand) 30%, #fff); }
+.reg-church-app input:-webkit-autofill,
+.reg-church-app input:-webkit-autofill:hover,
+.reg-church-app input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 1000px color-mix(in srgb, var(--brand) 7%, #fff) inset; -webkit-text-fill-color: var(--ink); caret-color: var(--ink); }
+.reg-church-app .reg-gate { background: var(--dark); }
+.reg-church-app .reg-account.signup { background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--brand) 22%, #fff) 0%, color-mix(in srgb, var(--brand) 6%, #faf9f6) 55%, #faf9f6 100%); color: var(--ink); }
+.reg-church-app .reg-side-note small, .reg-church-app .reg-side-note span, .reg-church-app .reg-side-note p { color: color-mix(in srgb, var(--brand) 25%, #fff); }
