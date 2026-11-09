@@ -1,23 +1,15 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { ORGANISATIONS as data, sectionsOf, PAGE_ALIASES } from './ministry-organisations.mjs';
+import { ORGANISATIONS as data, DIRECTORY_GROUPS, PAGE_ALIASES } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
-import useSectionFocus from './useSectionFocus';
+import useGroupFocus from './useGroupFocus';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './denomination-sites.css';
 import './organisations.css';
 
-// The organisations, from the THREE.ORG documentary, on one page to scroll
-// through like the church directories: each category (Church, Outreach,
-// Para-Church), then each of its councils with the people in charge shown
-// large and the bishops under that council listed beneath. Deep navy, ivory
-// and muted gold, with large type for older readers.
+// The organisations, from the THREE.ORG documentary: a contents page of
+// coloured boxes, one per group, and each group's bishops on their own once
+// chosen. Ivory and navy, with large type for older readers.
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
-// The host tells browsers to keep these files for a year; bump MEDIA_VERSION
-// whenever a picture or clip is replaced so visitors fetch the new one.
-const MEDIA_VERSION = 3;
-const media = name => `${base}/assets/organisations/${name}?v=${MEDIA_VERSION}`;
-const shortName = name => name.replace(/^The /, '');
 
 function Photo({ person, large = false }) {
   if (!person?.image) return <span className="org-photo-empty" aria-hidden="true"><svg viewBox="0 0 80 96" fill="currentColor"><circle cx="40" cy="27" r="18"/><path d="M7 91V76c0-20 14-30 33-30s33 10 33 30v15Z"/></svg></span>;
@@ -27,16 +19,6 @@ function Photo({ person, large = false }) {
   const style = edited ? { '--portrait-x': '50%', '--portrait-y': '0%' } : Object.fromEntries(portraitStyle(person.image).split(';').filter(Boolean).map(pair => pair.split(':')));
   const thumb = person.image.replace(/^(assets\/portraits)\/([^/]+)\.[^.]+$/, '$1/thumbs/$2.webp');
   return <PortraitImage media={person.image} src={`${base}/${large ? person.image : thumb}`} fallbackSrc={`${base}/${person.image}`} alt={person.name} className="denom-portrait" style={style}/>;
-}
-
-// A short, silent part of the documentary, faded behind a heading. People who
-// ask their device for reduced motion see a still picture instead.
-function Backdrop({ name }) {
-  const [still, setStill] = useState(true);
-  useEffect(() => { setStill(matchMedia('(prefers-reduced-motion: reduce)').matches); }, []);
-  return <div className="org-backdrop" aria-hidden="true">
-    {still ? <img src={media(`${name}.jpg`)} alt=""/> : <video src={media(`${name}.mp4`)} poster={media(`${name}.jpg`)} autoPlay muted loop playsInline preload="auto"/>}
-  </div>;
 }
 
 function Bishop({ person }) {
@@ -51,86 +33,37 @@ function Bishop({ person }) {
   </article>;
 }
 
-function Council({ organisation, group, open }) {
-  // A chosen group (office, 9 Nov) is shown on its own, without the others.
-  const groups = (organisation.directoryGroups || []).filter(g => !group || g.slug === group);
-  // An untitled group (office, 9 Nov) lists bishops with no council given.
-  return <section className={`org-council ${organisation.untitled ? 'org-council-untitled' : ''}`} id={organisation.slug} aria-labelledby={organisation.untitled ? undefined : `${organisation.slug}-heading`} aria-label={organisation.untitled ? 'More bishops' : undefined}>
-    {!organisation.untitled && <h3 id={`${organisation.slug}-heading`} style={organisation.accent ? { '--section-accent': organisation.accent } : undefined}>{organisation.name}</h3>}
-    {/* The subsections of this section, as chips right under its banner. */}
-    {(organisation.directoryGroups || []).some(g => g.slug && g.name) && <nav className="org-chips" aria-label={`${shortName(organisation.name)} subsections`}>
-      {organisation.directoryGroups.filter(g => g.slug && g.name && g.people.length).map(g => <a key={g.slug} href={`#${g.slug}`} className="org-chip" aria-current={g.slug === group ? 'true' : undefined} onClick={open(g.slug)}>{shortName(g.name)}</a>)}
-    </nav>}
-    {!group && organisation.summary && <p className="org-council-summary">{organisation.summary}</p>}
-    {!group && organisation.places && <ul className="org-places">{organisation.places.map(place => <li key={place}>{place}</li>)}</ul>}
-    {!group && sectionsOf(organisation).map(section => section.people.length > 0 && <div className="org-council-part" key={section.name || 'people'}>
-      <div className="org-members">{section.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
-    </div>)}
-    {/* The Kuriake Council also lists the bishops of each directory group (office, 9 Nov). */}
-    {groups.map(g => g.people.length > 0 && <div className="org-council-part org-directory-group" key={g.slug || g.name} id={g.slug}>
-      {g.name ? <h5 className="org-under org-group-name">{g.name} <span className="org-count">{g.people.length} {g.people.length === 1 ? 'bishop' : 'bishops'}</span></h5> : <hr className="org-group-rule"/>}
-      <div className="org-members">{g.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
-    </div>)}
+// One group's heading, in the shape of the section banners, in its own colour.
+function GroupBox({ group, as: Tag = 'a' }) {
+  const props = Tag === 'a' ? { href: `#${group.slug}` } : { id: `${group.slug}-heading` };
+  return <Tag className="org-group-box" style={{ '--box': group.colour }} {...props}>{group.name}</Tag>;
+}
+
+function Contents() {
+  return <nav id="contents" className="org-contents" aria-label="Contents">
+    {DIRECTORY_GROUPS.map(g => <GroupBox key={g.slug} group={g}/>)}
+  </nav>;
+}
+
+function Group({ group }) {
+  return <section className="org-council" id={group.slug} aria-labelledby={`${group.slug}-heading`}>
+    <GroupBox group={group} as="h2"/>
+    <p className="org-group-total"><span className="org-count">{group.people.length} {group.people.length === 1 ? 'bishop' : 'bishops'}</span></p>
+    <div className="org-members">{group.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
   </section>;
 }
 
-const councils = data.groups.flatMap(group => group.organisations);
-const tabs = councils.filter(o => !o.untitled);
-
-// Office, 9 Nov: tabs in place of the Church / Para-Church banners, so a
-// reader can jump to any council. The bar stays at the top while scrolling and
-// marks the council being read.
-const subsOf = o => (o.directoryGroups || []).filter(g => g.slug && g.name && g.people.length);
-const subName = g => g.tabName || shortName(g.name);
-
-// The "↑ Sections" button shows only once the section boxes are off screen.
-function ToSections({ onClick }) {
-  const [show, setShow] = useState(false);
-  useEffect(() => {
-    const el = document.getElementById('sections'); if (!el) return;
-    const seen = new IntersectionObserver(([e]) => setShow(!e.isIntersecting && e.boundingClientRect.top < 0));
-    seen.observe(el); return () => seen.disconnect();
-  }, []);
-  return show ? <a className="org-to-sections" href="#sections" onClick={onClick}>↑ Sections</a> : null;
-}
-
-function CouncilTabs({ open, close }) {
-  // Office, 9 Nov: a few large tiles for the main sections; each section's
-  // subsections sit as chips under its own banner.
-  return <><nav id="sections" className="org-tiles-nav" aria-label="Sections">
-    {tabs.map(o => <a key={o.slug} href={`#${o.slug}`} className="org-section-tile" onClick={open(o.slug)} style={{ '--tile': o.accent || '#14223d' }}>
-      <span>{o.tabName || shortName(o.name)}</span>
-    </a>)}
-  </nav>
-  <ToSections onClick={close('sections')}/></>;
-}
-
 export default function OrganisationsApp({ slug = '' }) {
-  // An older address for one category or council opens this page at that part.
-  useEffect(() => { if (slug) document.getElementById(PAGE_ALIASES[slug] || slug)?.scrollIntoView(); }, [slug]);
-  const { focus, open, close } = useSectionFocus();
-  // The focus is a whole section (from the boxes) or one group (from its chips).
-  const holder = councils.find(o => (o.directoryGroups || []).some(g => g.slug && g.slug === focus));
-  const group = holder ? focus : null;
-  const shown = focus ? councils.filter(o => o.slug === focus || o === holder) : councils;
-  // The page opens straight on the Church Organisations (office, 9 Nov).
+  // An older address for a section opens the contents; one for a group opens it.
+  const group = useGroupFocus(PAGE_ALIASES[slug] ? '' : slug);
+  // No title for now (office, 9 Nov): the page opens on the contents.
   return <div className="denom-site org-site" id="top">
-    <main>
-      {/* The page heading (office, 9 Nov); the corner logo and name are gone. */}
-      <header className="org-masthead">
-        <h1>{data.heading}</h1>
-        <span className="org-masthead-rule" aria-hidden="true"/>
-        <p>{data.subheading}</p>
-      </header>
-      <CouncilTabs open={open} close={close}/>
-      <div className="org-main">
-        {shown.map(organisation => <Council key={organisation.slug} organisation={organisation} group={group} open={open}/>)}
-        <div className="org-end-links">
-          {focus && <a className="org-top" href="#sections" onClick={close('sections')}>↑ Back to sections</a>}
-          <a className="org-top" href="#top" onClick={close('top')}>↑ Back to the top</a>
-        </div>
-      </div>
+    <main className="org-main">
+      {group ? <>
+        <Group group={group}/>
+        <div className="org-end-links"><a className="org-top" href="#contents">↑ Back to contents</a></div>
+      </> : <Contents/>}
     </main>
-    <footer className="org-footer"><span>{data.name}</span><span>Updated {data.updated}</span></footer>
+    <footer className="org-footer"><span>Updated {data.updated}</span></footer>
   </div>;
 }

@@ -1,4 +1,4 @@
 import CouncilsApp from '../../../registration/CouncilsApp';
-// A second design of the Bishop's Directory, alongside /organisations/.
-export const metadata = { title: "The Bishop's Directory", description: 'The Central Directory of Bishops Across All Denominations.' };
+// A second design alongside /organisations/. No title yet (office, 9 Nov).
+export const metadata = { title: 'Councils', description: 'Bishops by group.' };
 export default function Page() { return <CouncilsApp/>; }

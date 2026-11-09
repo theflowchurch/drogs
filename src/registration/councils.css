@@ -94,3 +94,21 @@
 @media(max-width:700px){.cz-to-sections{right:16px;bottom:18px;padding:12px 20px}}
 @media(max-width:700px){.cz-footer{padding-bottom:96px}}
 .cz-bar{justify-content:flex-end}
+
+/* Office, 9 Nov: no title; the contents are one coloured box per group, in
+   the shape of the section banners with a gold edge. */
+.cz-hero{padding:56px 5% 110px}
+.cz-hero-small{padding:0;height:120px}
+.cz-hero-small .cz-earth{top:-40px;width:min(40%,520px);opacity:.7}
+.cz-contents{position:relative;z-index:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:1240px;margin:0 auto;scroll-margin-top:0}
+.cz-box{display:flex;align-items:center;min-height:100px;margin:0;padding:20px 28px;border-radius:18px;border-left:10px solid var(--gold);background:linear-gradient(100deg,var(--box) 0%,color-mix(in srgb,var(--box) 82%,#fff) 100%);box-shadow:0 12px 28px #0006;font-size:clamp(23px,2.2vw,30px);font-weight:800;line-height:1.15;color:#fff!important;text-wrap:balance;transition:transform .15s}
+a.cz-box:hover{transform:translateY(-3px)}
+a.cz-box:focus-visible{outline:4px solid var(--gold);outline-offset:3px}
+.cz-section h2.cz-box{padding:24px 32px;border-left:10px solid var(--gold);font-size:clamp(30px,3.6vw,44px);color:#fff;box-shadow:0 12px 28px #0f164030}
+.cz-group-head{margin:18px 0 22px}
+@media(max-width:700px){
+  .cz-hero{padding:30px 5% 80px}.cz-hero-small{padding:0;height:80px}
+  .cz-contents{grid-template-columns:1fr;gap:12px}
+  .cz-box{min-height:80px;padding:16px 20px;border-left-width:8px;border-radius:14px;font-size:22px}
+  .cz-section h2.cz-box{padding:18px 20px;border-left-width:8px;font-size:28px}
+}
