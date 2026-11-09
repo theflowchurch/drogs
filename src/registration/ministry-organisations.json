@@ -1,0 +1,1091 @@
+{
+  "name": "The Organisations of Dag Heward-Mills",
+  "shortName": "The Organisations",
+  "updated": "August 2026",
+  "source": "THREE.ORG documentary (Final Cut project 'NEW INTRO'), on-screen titles",
+  "founder": {
+    "name": "Dag Heward-Mills",
+    "title": "Bishop"
+  },
+  "groups": [
+    {
+      "slug": "church",
+      "name": "The Church Organisations",
+      "summary": "The councils and committees that oversee the churches.",
+      "organisations": [
+        {
+          "slug": "kuriake-council",
+          "name": "The Kuriake Council",
+          "summary": "First Love Church and the United Denominations (UD-OLGC).",
+          "sections": [
+            {
+              "name": "First Love Church",
+              "people": [
+                {
+                  "name": "Joshua Heward-Mills",
+                  "role": "First Love Church Principal Chairman",
+                  "detail": "Only Jesus",
+                  "leader": true,
+                  "image": "assets/bishops/matched-194.webp",
+                  "rosterId": "B194"
+                },
+                {
+                  "name": "Glen Kwame Opoku",
+                  "role": "Jesus First",
+                  "image": "assets/bishops/matched-74.webp",
+                  "rosterId": "B74"
+                },
+                {
+                  "name": "Roger Hiltbrunner",
+                  "role": "Serve Jesus",
+                  "image": "assets/bishops/matched-235.webp",
+                  "rosterId": "B235"
+                },
+                {
+                  "name": "Kent Njeru",
+                  "role": "Choose Jesus",
+                  "image": "assets/bishops/matched-222.webp",
+                  "rosterId": "B222"
+                },
+                {
+                  "name": "James Quist-Therson",
+                  "role": "Jesus Forever",
+                  "image": "assets/bishops/matched-141.webp",
+                  "rosterId": "B141"
+                },
+                {
+                  "name": "Rutendo Mantiziba",
+                  "role": "Jesus Now",
+                  "image": "assets/bishops/matched-237.webp",
+                  "rosterId": "B237"
+                },
+                {
+                  "name": "Clement Asante",
+                  "role": "King Jesus",
+                  "image": "assets/bishops/matched-205.webp",
+                  "rosterId": "B205"
+                }
+              ]
+            },
+            {
+              "name": "United Denominations (UD-OLGC)",
+              "people": [
+                {
+                  "name": "Frank Otchere",
+                  "role": "UD-OLGC Principal Chairman",
+                  "detail": "UD Africa",
+                  "leader": true,
+                  "image": "assets/portraits/B69-a99a5559.webp",
+                  "rosterId": "B69"
+                },
+                {
+                  "name": "Ernest Addai-Duah",
+                  "role": "Eschatos Chairman",
+                  "image": "assets/bishops/matched-60.webp",
+                  "rosterId": "B60"
+                },
+                {
+                  "name": "Kodwo Orleans-Lindsay",
+                  "role": "UD North America Chairman",
+                  "image": "assets/bishops/111.jpg",
+                  "rosterId": "B111"
+                },
+                {
+                  "name": "Steve Poku",
+                  "role": "UD Europe Chairman"
+                },
+                {
+                  "name": "Toss Mills-Odoi",
+                  "role": "United Jesus Chairman",
+                  "image": "assets/portraits/B321-8a4be011.webp",
+                  "rosterId": "B321"
+                },
+                {
+                  "name": "Samuel Baidoo",
+                  "role": "UD Ghana Chairman",
+                  "image": "assets/bishops/matched-54.webp",
+                  "rosterId": "B54"
+                },
+                {
+                  "name": "Joel Obuobisa",
+                  "role": "United Islands Chairman",
+                  "image": "assets/portraits/B92-0a6b24f7.webp",
+                  "rosterId": "B92"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "adjutancy",
+          "name": "The Adjutancy",
+          "people": [
+            {
+              "name": "Eddie Fabin",
+              "role": "Chairman & Ceremonial Archbishop",
+              "leader": true,
+              "image": "assets/bishops/eddie-fabin-white.png",
+              "rosterId": "B41"
+            },
+            {
+              "name": "Jacob Godwyll",
+              "role": "Archbishop & Adjutant General",
+              "image": "assets/portraits/B86-6b2fb6de.webp",
+              "rosterId": "B86"
+            },
+            {
+              "name": "Yoku Amonoo-Neizer",
+              "role": "Ceremonial Archbishop"
+            },
+            {
+              "name": "Emmanuel Sakyi",
+              "role": "Ceremonial Archbishop",
+              "image": "assets/bishops/matched-49.webp",
+              "rosterId": "B49"
+            },
+            {
+              "name": "Mary-Chloe Rea",
+              "role": "Secretary"
+            },
+            {
+              "name": "Rebecca Addae",
+              "role": "Administrator",
+              "image": "assets/portraits/B164-2d1cec82.webp",
+              "rosterId": "B164"
+            }
+          ]
+        },
+        {
+          "slug": "ud-senex-council",
+          "name": "The UD Senex Council",
+          "people": [
+            {
+              "name": "Richard Aryee",
+              "role": "Senex Council Chairman",
+              "leader": true,
+              "image": "assets/portraits/B167-0d862f44.webp",
+              "rosterId": "B167"
+            },
+            {
+              "name": "Edwin Morgan Ogoe",
+              "image": "assets/bishops/matched-45.webp",
+              "rosterId": "B45"
+            },
+            {
+              "name": "Emmanuel Klufio",
+              "image": "assets/portraits/B51-1aae12ed.webp",
+              "rosterId": "B51"
+            },
+            {
+              "name": "Isaac O. B. Commey",
+              "image": "assets/portraits/B326-998235f2.webp",
+              "rosterId": "B326"
+            },
+            {
+              "name": "Nii Adjeidu Armar",
+              "image": "assets/bishops/confirmed-325.jpeg",
+              "rosterId": "B325"
+            },
+            {
+              "name": "Prince Addae",
+              "image": "assets/portraits/B157-fa0d26d2.webp",
+              "rosterId": "B157"
+            },
+            {
+              "name": "Joel Obuobisa",
+              "image": "assets/portraits/B92-0a6b24f7.webp",
+              "rosterId": "B92"
+            },
+            {
+              "name": "Emmanuel Nterful",
+              "image": "assets/portraits/B324-dbb560ba.webp",
+              "rosterId": "B324"
+            },
+            {
+              "name": "Ishmael Sam",
+              "image": "assets/bishops/confirmed-327.png",
+              "rosterId": "B327"
+            },
+            {
+              "name": "Steve Asare",
+              "image": "assets/bishops/official-steve-asare.webp",
+              "rosterId": "BO202"
+            }
+          ]
+        },
+        {
+          "slug": "first-love-senex-council",
+          "name": "The First Love Senex Council",
+          "people": [
+            {
+              "name": "Vivaldi Aboagye",
+              "role": "Dean of Bishops & Chairperson",
+              "leader": true,
+              "image": "assets/bishops/matched-187.webp",
+              "rosterId": "B187"
+            },
+            {
+              "name": "Louisa Mills-Odoi",
+              "role": "1st Vice Dean of Bishops",
+              "image": "assets/bishops/matched-127.webp",
+              "rosterId": "B127"
+            },
+            {
+              "name": "Henrietta Ariel Orleans-Lindsay",
+              "role": "2nd Vice Dean of Bishops",
+              "image": "assets/portraits/B79-fc7a04ab.webp",
+              "rosterId": "B79"
+            },
+            {
+              "name": "Paula Mills-Thompson",
+              "image": "assets/bishops/matched-231.webp",
+              "rosterId": "BO221"
+            },
+            {
+              "name": "Serena Ariana Ababio",
+              "image": "assets/bishops/matched-239.webp",
+              "rosterId": "BO265"
+            },
+            {
+              "name": "Mary-Chloe Rea"
+            },
+            {
+              "name": "Renata Obaka"
+            },
+            {
+              "name": "Erica Luca Aryee",
+              "image": "assets/bishops/matched-59.webp",
+              "rosterId": "B59"
+            },
+            {
+              "name": "Zoe Andrea Asamoah",
+              "image": "assets/bishops/matched-193.webp",
+              "rosterId": "B193"
+            },
+            {
+              "name": "Aida Asiedu Owusu",
+              "image": "assets/portraits/BO251-54e4808c.webp",
+              "rosterId": "BO251"
+            }
+          ]
+        },
+        {
+          "slug": "1965-committee",
+          "name": "The 1965 Committee",
+          "people": [
+            {
+              "name": "E. A. T. Sackey",
+              "role": "1965 Committee Chairman",
+              "leader": true,
+              "image": "assets/bishops/matched-39.webp",
+              "rosterId": "B39"
+            },
+            {
+              "name": "Adelaide Heward-Mills",
+              "image": "assets/portraits/B4-377cc31f.webp",
+              "rosterId": "B4"
+            },
+            {
+              "name": "Ameila Aidoo"
+            },
+            {
+              "name": "Charles Amoo",
+              "image": "assets/bishops/matched-20.webp",
+              "rosterId": "B20"
+            },
+            {
+              "name": "David Asomani",
+              "image": "assets/bishops/matched-32.webp",
+              "rosterId": "B32"
+            },
+            {
+              "name": "Ato Wilson",
+              "image": "assets/bishops/matched-188.webp",
+              "rosterId": "B188"
+            },
+            {
+              "name": "Robert Dodoo",
+              "image": "assets/portraits/B171-6752efc1.webp",
+              "rosterId": "B171"
+            },
+            {
+              "name": "Eddy Addy",
+              "image": "assets/bishops/confirmed-322.jpeg",
+              "rosterId": "B322"
+            },
+            {
+              "name": "Kingsley Gyasi",
+              "image": "assets/portraits/B110-b24f0f2c.webp",
+              "rosterId": "B110"
+            },
+            {
+              "name": "Leonora Hyde",
+              "image": "assets/bishops/124.jpg",
+              "rosterId": "B124"
+            },
+            {
+              "name": "Ebenezer Barnor",
+              "image": "assets/bishops/matched-40.webp",
+              "rosterId": "B40"
+            },
+            {
+              "name": "Nassib Hage",
+              "image": "assets/bishops/matched-138.webp",
+              "rosterId": "B138"
+            },
+            {
+              "name": "Hamish Odi"
+            },
+            {
+              "name": "Simone Ademola",
+              "image": "assets/bishops/matched-182.webp",
+              "rosterId": "B182"
+            },
+            {
+              "name": "Kate Allotey"
+            },
+            {
+              "name": "Patrick Bruce",
+              "image": "assets/bishops/matched-152.webp",
+              "rosterId": "B152"
+            },
+            {
+              "name": "Joy Bruce",
+              "image": "assets/portraits/B323-a0aedd3a.webp",
+              "rosterId": "B323"
+            }
+          ]
+        },
+        {
+          "slug": "lay-presidents-council",
+          "name": "The Lay Presidents Council",
+          "people": [
+            {
+              "name": "Kodwo Orleans-Lindsay",
+              "role": "Lay Presidents Chairman",
+              "leader": true,
+              "image": "assets/bishops/111.jpg",
+              "rosterId": "B111"
+            },
+            {
+              "name": "John Frimpong",
+              "image": "assets/portraits/B95-377f4306.webp",
+              "rosterId": "B95"
+            },
+            {
+              "name": "Kobina Efraim"
+            },
+            {
+              "name": "Kobina Taylor"
+            },
+            {
+              "name": "Kwadwo Frempong"
+            },
+            {
+              "name": "Louis Josiah"
+            },
+            {
+              "name": "Maranatha John"
+            },
+            {
+              "name": "Joseph Nyamekye Adams"
+            },
+            {
+              "name": "Louisa Danquah"
+            },
+            {
+              "name": "Henry Obaka"
+            },
+            {
+              "name": "Justice Hagan",
+              "image": "assets/portraits/P2499.webp",
+              "rosterId": "P2499"
+            },
+            {
+              "name": "Charles Osei"
+            },
+            {
+              "name": "Eben Johnson"
+            },
+            {
+              "name": "Titus Codjoe"
+            },
+            {
+              "name": "Victor Annor"
+            },
+            {
+              "name": "Vincent Avornyo"
+            },
+            {
+              "name": "William Sasu"
+            },
+            {
+              "name": "Senyo Makumator"
+            },
+            {
+              "name": "Sonny Quaye"
+            },
+            {
+              "name": "Richard Ewool"
+            },
+            {
+              "name": "Samuel Gyawu-Amoateng"
+            },
+            {
+              "name": "Luke Frimpong-Mensah",
+              "image": "assets/bishops/129.jpg",
+              "rosterId": "B129"
+            },
+            {
+              "name": "Moses Okine"
+            },
+            {
+              "name": "Rasmus Adjaye"
+            },
+            {
+              "name": "Michael Opoku"
+            },
+            {
+              "name": "Ben Johnson"
+            },
+            {
+              "name": "Joyce Djabatey"
+            },
+            {
+              "name": "Kobby Quansah"
+            },
+            {
+              "name": "Norman Darkwa",
+              "image": "assets/portraits/B143-a9fb52d1.webp",
+              "rosterId": "B143"
+            },
+            {
+              "name": "Godfried Osei Boakye"
+            },
+            {
+              "name": "Jude Baiden"
+            },
+            {
+              "name": "Franklin Gbologah"
+            },
+            {
+              "name": "George Obeng",
+              "image": "assets/bishops/matched-73.webp",
+              "rosterId": "B73"
+            },
+            {
+              "name": "Grace Krobo-Edusei"
+            },
+            {
+              "name": "Gilbert Fleischer"
+            },
+            {
+              "name": "Emmanuel Sampah"
+            },
+            {
+              "name": "Frank Yeboah"
+            },
+            {
+              "name": "Francis Banfro"
+            },
+            {
+              "name": "Foriwa Eshun"
+            },
+            {
+              "name": "Edmund Martin-Lawson"
+            },
+            {
+              "name": "Eddy Adiamah"
+            },
+            {
+              "name": "Emmanuel Quansah"
+            },
+            {
+              "name": "Edith Ephraim"
+            },
+            {
+              "name": "Archibald Tannor"
+            },
+            {
+              "name": "Daniel Tsidi Adagbe"
+            },
+            {
+              "name": "Danson Nganga"
+            },
+            {
+              "name": "Caroline Banfro"
+            },
+            {
+              "name": "Aaron Opoku-Ahene"
+            },
+            {
+              "name": "Anita Blavo"
+            },
+            {
+              "name": "Andrew Lutugerah"
+            },
+            {
+              "name": "Alphonse Asare"
+            },
+            {
+              "name": "Rebecca Siyolwe"
+            },
+            {
+              "name": "Rosemary Mahama"
+            },
+            {
+              "name": "Pearl Antwi-Boasiako"
+            },
+            {
+              "name": "Marie Amaning"
+            },
+            {
+              "name": "John Adeyemo"
+            },
+            {
+              "name": "Lydia Boateng"
+            },
+            {
+              "name": "Rosalyn Latse"
+            },
+            {
+              "name": "Harriet Darkwa"
+            },
+            {
+              "name": "Hans Kwaku"
+            },
+            {
+              "name": "Henry Hadjor"
+            },
+            {
+              "name": "Happy Kumah"
+            }
+          ]
+        },
+        {
+          "slug": "bishops-conference",
+          "name": "The Bishops' Conference",
+          "summary": "204 bishops.",
+          "link": {
+            "label": "See the bishops in the ministers' directory",
+            "href": "/directory/"
+          },
+          "people": []
+        }
+      ]
+    },
+    {
+      "slug": "outreach",
+      "name": "The Outreach Organisations",
+      "summary": "The councils and boards that carry the gospel outward.",
+      "organisations": [
+        {
+          "slug": "dhmm-council",
+          "name": "The DHMM Council",
+          "people": [
+            {
+              "name": "Serena Ababio",
+              "role": "DHMM Council Chairperson",
+              "leader": true,
+              "image": "assets/bishops/matched-239.webp",
+              "rosterId": "BO265"
+            },
+            {
+              "name": "Mary-Chloe Rea",
+              "role": "DHMM Council Chairperson",
+              "leader": true
+            },
+            {
+              "name": "Rebecca Joana Addae",
+              "image": "assets/portraits/B164-2d1cec82.webp",
+              "rosterId": "B164"
+            },
+            {
+              "name": "Maya Asiedu Owusu",
+              "image": "assets/portraits/BO251-54e4808c.webp",
+              "rosterId": "BO251"
+            },
+            {
+              "name": "Nina Masuku",
+              "image": "assets/portraits/B334-d43cd0d7.webp",
+              "rosterId": "B334"
+            },
+            {
+              "name": "Louisa Timothea Mills-Odoi",
+              "image": "assets/bishops/matched-127.webp",
+              "rosterId": "B127"
+            },
+            {
+              "name": "Vivaldi Aboagye",
+              "image": "assets/bishops/matched-187.webp",
+              "rosterId": "B187"
+            },
+            {
+              "name": "Linda Aryee",
+              "image": "assets/bishops/126.jpg",
+              "rosterId": "B126"
+            },
+            {
+              "name": "Zoe Asamoah",
+              "image": "assets/bishops/matched-193.webp",
+              "rosterId": "B193"
+            },
+            {
+              "name": "Bonnie Thomas"
+            },
+            {
+              "name": "Ruthie Jani Appiah-Denkyira",
+              "image": "assets/portraits/BO264.webp",
+              "rosterId": "BO264"
+            },
+            {
+              "name": "Jane Adara Hyde"
+            }
+          ]
+        },
+        {
+          "slug": "healing-jesus-council",
+          "name": "The Healing Jesus Council",
+          "people": [
+            {
+              "name": "Prince Addae",
+              "role": "HJC Council Chairman",
+              "leader": true,
+              "image": "assets/portraits/B157-fa0d26d2.webp",
+              "rosterId": "B157"
+            },
+            {
+              "name": "Ebo Ankrah"
+            },
+            {
+              "name": "Randy Mills-Thompson",
+              "image": "assets/portraits/B330-8b95bf41.webp",
+              "rosterId": "B330"
+            },
+            {
+              "name": "Miranda Asher Siweya",
+              "image": "assets/portraits/B333-cb8f5657.webp",
+              "rosterId": "B333"
+            },
+            {
+              "name": "Faustina Carla Boateng",
+              "image": "assets/portraits/B332-ec9de0fd.webp",
+              "rosterId": "B332"
+            },
+            {
+              "name": "Lovell Nii Ankrah",
+              "image": "assets/portraits/BL1-5498c0c9.webp",
+              "rosterId": "BL1"
+            },
+            {
+              "name": "George Antwi",
+              "image": "assets/outreach/confirmed-331.jpeg",
+              "rosterId": "B331"
+            },
+            {
+              "name": "Marcel Aboagye",
+              "image": "assets/portraits/B130-91345d25.webp",
+              "rosterId": "B130"
+            }
+          ]
+        },
+        {
+          "slug": "flow-council",
+          "name": "The FLOW Council",
+          "people": [
+            {
+              "name": "Nina Masuku",
+              "role": "FLOW Council Chairperson",
+              "leader": true,
+              "image": "assets/portraits/B334-d43cd0d7.webp",
+              "rosterId": "B334"
+            },
+            {
+              "name": "Walter Woelle"
+            },
+            {
+              "name": "Joel Obuobisa Jr"
+            },
+            {
+              "name": "Pius Worlano"
+            },
+            {
+              "name": "Darius Phiri"
+            },
+            {
+              "name": "Eniola Ajiga"
+            },
+            {
+              "name": "Joshua Gbafa"
+            },
+            {
+              "name": "Brian Masuku",
+              "image": "assets/outreach/brian-masuku.png",
+              "rosterId": "B319"
+            },
+            {
+              "name": "Leonard Hyde",
+              "image": "assets/outreach/leonard-hyde-red-edited.png",
+              "rosterId": "B320"
+            }
+          ]
+        },
+        {
+          "slug": "give-thyself-wholly-board",
+          "name": "The Give Thyself Wholly Board",
+          "people": [
+            {
+              "name": "Eben Johnson",
+              "role": "Give Thyself Wholly Board Chairman",
+              "leader": true
+            }
+          ]
+        },
+        {
+          "slug": "makarios-council",
+          "name": "The Makarios Council",
+          "people": [
+            {
+              "name": "Toss Mills-Odoi",
+              "role": "Makarios Council Chairperson",
+              "leader": true,
+              "image": "assets/portraits/B321-8a4be011.webp",
+              "rosterId": "B321"
+            },
+            {
+              "name": "Rita Biney"
+            },
+            {
+              "name": "Paul Kobi-Fordah"
+            },
+            {
+              "name": "Benedictus Annan"
+            },
+            {
+              "name": "Felix Bediako",
+              "image": "assets/bishops/matched-62.webp",
+              "rosterId": "B62"
+            },
+            {
+              "name": "Robert Dodoo",
+              "image": "assets/portraits/B171-6752efc1.webp",
+              "rosterId": "B171"
+            },
+            {
+              "name": "Joy Bruce",
+              "image": "assets/portraits/B323-a0aedd3a.webp",
+              "rosterId": "B323"
+            },
+            {
+              "name": "Elaine Klufio",
+              "image": "assets/bishops/matched-46.webp",
+              "rosterId": "B46"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "para-church",
+      "name": "The Para-Church Organisations",
+      "summary": "The boards that run the schools, hospitals, homes, radio and buildings.",
+      "organisations": [
+        {
+          "slug": "general-schools-board",
+          "name": "The General Schools Board",
+          "people": [
+            {
+              "name": "Adelaide Heward-Mills",
+              "role": "School Board Chairperson",
+              "leader": true,
+              "image": "assets/portraits/B4-377cc31f.webp",
+              "rosterId": "B4"
+            },
+            {
+              "name": "Pamela Dickson",
+              "image": "assets/bishops/matched-149.webp",
+              "rosterId": "B149"
+            },
+            {
+              "name": "Gideon Anyidoho"
+            },
+            {
+              "name": "Oko Nerquaye-Tetteh"
+            },
+            {
+              "name": "Peter Kwapong"
+            },
+            {
+              "name": "Victoria Owusu-Ansah"
+            },
+            {
+              "name": "Eurydice Eyiah"
+            },
+            {
+              "name": "Annabel Quansah"
+            },
+            {
+              "name": "Adina Addy"
+            },
+            {
+              "name": "Adelaide Adu-Armah"
+            }
+          ]
+        },
+        {
+          "slug": "general-hospitals-board",
+          "name": "The General Hospitals Board",
+          "summary": "3 hospitals: St. Kathryn's, St. Gamaliel's and St. Nathaniel's.",
+          "places": [
+            "St. Kathryn's Hospital",
+            "St. Gamaliel's Hospital",
+            "St. Nathaniel's Hospital"
+          ],
+          "people": [
+            {
+              "name": "Dr. Annika Dwimoh",
+              "role": "Hospital Board Chairperson",
+              "leader": true,
+              "image": "assets/bishops/matched-200.webp",
+              "rosterId": "B200"
+            },
+            {
+              "name": "Dr. Joyce Wilson"
+            },
+            {
+              "name": "Dr. Natasha Godwyll Saah"
+            },
+            {
+              "name": "Dr. Stella Boame"
+            },
+            {
+              "name": "Dr. Christian Amenuveve"
+            },
+            {
+              "name": "Dr. Henry Obaka"
+            },
+            {
+              "name": "Dr. Ama Bortei-Doku"
+            }
+          ]
+        },
+        {
+          "slug": "general-orphanage-board",
+          "name": "The General Orphanage Board",
+          "people": [
+            {
+              "name": "Adelaide Heward-Mills",
+              "role": "Orphanage Board Chairperson",
+              "leader": true,
+              "image": "assets/portraits/B4-377cc31f.webp",
+              "rosterId": "B4"
+            },
+            {
+              "name": "Godfred Osei-Boakye"
+            },
+            {
+              "name": "Irene Akrofi"
+            },
+            {
+              "name": "Gloria Kwarteng"
+            },
+            {
+              "name": "Grace Edusei"
+            },
+            {
+              "name": "Laud Nartey"
+            },
+            {
+              "name": "Shirley Ntim"
+            },
+            {
+              "name": "Vivian Tay-Agbozo"
+            },
+            {
+              "name": "Pamela Zormelo"
+            },
+            {
+              "name": "Wilhemina Appiah"
+            },
+            {
+              "name": "Yaw Ayesu Djan"
+            },
+            {
+              "name": "Marnette Dickson",
+              "image": "assets/bishops/matched-149.webp",
+              "rosterId": "B149"
+            },
+            {
+              "name": "Bridgette Ogoe",
+              "image": "assets/bishops/matched-19.webp",
+              "rosterId": "B19"
+            },
+            {
+              "name": "Edwin Aryitey"
+            },
+            {
+              "name": "Fanny Peters"
+            }
+          ]
+        },
+        {
+          "slug": "radio-ministry",
+          "name": "The Radio Ministry",
+          "summary": "9 radio stations.",
+          "people": [
+            {
+              "name": "Erica Luca Aryee",
+              "role": "Radio Ministry Chairperson",
+              "leader": true,
+              "image": "assets/bishops/matched-59.webp",
+              "rosterId": "B59"
+            },
+            {
+              "name": "Manette Pamela Dickson"
+            },
+            {
+              "name": "Louis Josiah"
+            },
+            {
+              "name": "Akosua Busia"
+            },
+            {
+              "name": "Eddie Fabin",
+              "image": "assets/bishops/eddie-fabin-white.png",
+              "rosterId": "B41"
+            },
+            {
+              "name": "Annika Dwimoh",
+              "image": "assets/bishops/matched-200.webp",
+              "rosterId": "B200"
+            },
+            {
+              "name": "Ato Dickson",
+              "image": "assets/bishops/093.jpg",
+              "rosterId": "B93"
+            }
+          ]
+        },
+        {
+          "slug": "construction-estate-management-board",
+          "name": "The Construction & Estate Management Board",
+          "people": [
+            {
+              "name": "Renata Obaka",
+              "role": "Construction Board Chairperson",
+              "leader": true
+            },
+            {
+              "name": "Robert Nunoo",
+              "image": "assets/bishops/matched-172.webp",
+              "rosterId": "B172"
+            },
+            {
+              "name": "Jude Tetteh"
+            },
+            {
+              "name": "Calah Krofuah",
+              "image": "assets/portraits/B328-46b745f4.webp",
+              "rosterId": "B328"
+            },
+            {
+              "name": "Kwabena Appiah-Denkyira",
+              "image": "assets/bishops/matched-115.webp",
+              "rosterId": "B115"
+            },
+            {
+              "name": "Catherine Johnson"
+            }
+          ]
+        },
+        {
+          "slug": "abmtc-board",
+          "name": "The ABMTC Board",
+          "people": [
+            {
+              "name": "Ruthie Jani Appiah-Denkyira",
+              "role": "ABMTC Chairperson",
+              "leader": true,
+              "image": "assets/portraits/BO264.webp",
+              "rosterId": "BO264"
+            },
+            {
+              "name": "Kwame Asiedu Owusu",
+              "image": "assets/portraits/B120-aeab032c.webp",
+              "rosterId": "B120"
+            },
+            {
+              "name": "Carlos Ballestero"
+            },
+            {
+              "name": "Kumah Agyeman"
+            },
+            {
+              "name": "David Asomani",
+              "image": "assets/bishops/matched-32.webp",
+              "rosterId": "B32"
+            },
+            {
+              "name": "Emmanuel Amartey",
+              "image": "assets/bishops/matched-209.webp",
+              "rosterId": "B209"
+            },
+            {
+              "name": "Kwabena Appiah-Denkyira",
+              "image": "assets/bishops/matched-115.webp",
+              "rosterId": "B115"
+            },
+            {
+              "name": "Sendy Shibambo"
+            },
+            {
+              "name": "Michaela Sowah"
+            }
+          ]
+        },
+        {
+          "slug": "ghana-charismatic-bishops-conference",
+          "name": "The Ghana Charismatic Bishops' Conference",
+          "people": [
+            {
+              "name": "Eddie Fabin",
+              "role": "GCBC Chairman",
+              "leader": true,
+              "image": "assets/bishops/eddie-fabin-white.png",
+              "rosterId": "B41"
+            },
+            {
+              "name": "Kwesi Deh",
+              "role": "Secretary General"
+            }
+          ]
+        },
+        {
+          "slug": "affiliated-denominations",
+          "name": "The Affiliated Denominations",
+          "people": [
+            {
+              "name": "Eddie Fabin",
+              "role": "Affiliated Denominations Chairman",
+              "leader": true,
+              "image": "assets/bishops/eddie-fabin-white.png",
+              "rosterId": "B41"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "mission": {
+    "heading": "The mission continues",
+    "quotes": [
+      "If you love the Lord, there is nothing you can't do for Him. We must be losing, suffering, sacrificing and dying for Jesus!",
+      "Let us give ourselves wholly, that our profiting may appear to all.",
+      "We must go deeper and do more! We must attempt great things for God! We must build a thousand micro churches!",
+      "You must catch the anointing, flow in the anointing and amplify your ministry with miracles, signs and wonders.",
+      "The church must send or it will end.",
+      "Awake, O sleeper! Surely it is worthwhile to push ourselves with all our might in promoting the gospel and the kingdom of our Christ.",
+      "Can't you do just a little bit more? Do everything by prayer and nothing without prayer. Let us labour to be blessed!"
+    ]
+  }
+}
