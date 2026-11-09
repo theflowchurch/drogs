@@ -200,3 +200,11 @@
   .org-tabs-list-group{display:contents!important}.org-tabs-list-subs{display:contents!important}
   .org-tabs .org-tabs-list{gap:10px}
 }
+
+/* Computers (office, 9 Nov): one tidy row per part, separated by thin lines. */
+@media(min-width:701px){
+  .org-tabs .org-tabs-list{display:block;max-width:1240px;margin:0 auto;padding:12px 5% 16px}
+  .org-tabs .org-tabs-list-group{display:flex!important;flex-wrap:wrap;align-items:center;gap:10px;padding:14px 0;border-top:1px solid #c9a95c40}
+  .org-tabs .org-tabs-list-group:first-child{border-top:0}
+  .org-tabs .org-tabs-list-subs{display:contents!important}
+}

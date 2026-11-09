@@ -109,9 +109,15 @@ function CouncilTabs() {
     <div className="org-tabs-row">{tabs.map(o => <a key={o.slug} href={`#${o.slug}`} onClick={() => { setPicked(subsOf(o).length ? o.slug : ''); setOpen(false); }} className={`org-tab ${active === o.slug ? 'is-active' : ''}`} aria-current={active === o.slug ? 'true' : undefined}>{o.tabName || shortName(o.name)}</a>)}</div>
     {subs.length > 0 && <div className="org-subtabs-row" aria-label={`${shown.tabName || shortName(shown.name)} subsections`}>{subs.map(g => <a key={g.slug} href={`#${g.slug}`} onClick={go} className={`org-subtab ${activeSub === g.slug ? 'is-active' : ''}`}>{subName(g)}</a>)}</div>}
     {/* Phone: one list of every section with its subsections beneath. */}
-    <div className="org-tabs-list">{tabs.map(o => <div key={o.slug} className="org-tabs-list-group">
-      <a href={`#${o.slug}`} onClick={go} className={`org-tab ${active === o.slug ? 'is-active' : ''}`}>{o.tabName || shortName(o.name)}</a>
-      {subsOf(o).length > 0 && <div className="org-tabs-list-subs">{subsOf(o).map(g => <a key={g.slug} href={`#${g.slug}`} onClick={go} className={`org-subtab ${activeSub === g.slug ? 'is-active' : ''}`}>{subName(g)}</a>)}</div>}
+    {/* One row per part, in page order: a section with subsections gets its own
+        row; sections in a run without subsections share one. */}
+    <div className="org-tabs-list">{tabs.reduce((rows, o) => {
+      const last = rows[rows.length - 1];
+      if (!subsOf(o).length && last && !last.withSubs) last.items.push(o); else rows.push({ withSubs: subsOf(o).length > 0, items: [o] });
+      return rows;
+    }, []).map(row => <div key={row.items[0].slug} className={`org-tabs-list-group ${row.withSubs ? 'has-subs' : ''}`}>
+      {row.items.map(o => <a key={o.slug} href={`#${o.slug}`} onClick={go} className="org-tab">{o.tabName || shortName(o.name)}</a>)}
+      {row.withSubs && <div className="org-tabs-list-subs">{subsOf(row.items[0]).map(g => <a key={g.slug} href={`#${g.slug}`} onClick={go} className="org-subtab">{subName(g)}</a>)}</div>}
     </div>)}</div>
   </nav>
   {/* Phone: the full list sits in the page; this button returns to it. */}
