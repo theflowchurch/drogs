@@ -57,7 +57,8 @@
     "visualStyle": "lighthousechapelinternational",
     "accent": "#703232",
     "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.91
   },
   {
     "path": "anagkazoassemblies",
@@ -72,7 +73,8 @@
     "visualStyle": "pleasantsurprise",
     "accent": "#326170",
     "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.9
   },
   {
     "path": "anointedpeopleinternational",
@@ -87,7 +89,8 @@
     "visualStyle": "gochurch",
     "accent": "#423270",
     "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.93
   },
   {
     "path": "anointedwordchapelint",
@@ -342,7 +345,8 @@
     "visualStyle": "gochurch",
     "accent": "#42554d",
     "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.68
   },
   {
     "path": "graceinternationalesahelburkinafaso",
@@ -417,7 +421,8 @@
     "visualStyle": "pleasantsurprise",
     "accent": "#42554d",
     "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.84
   },
   {
     "path": "itisagreatthingtoservethelord",
@@ -447,7 +452,8 @@
     "visualStyle": "lighthousechapelinternational",
     "accent": "#326170",
     "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.87
   },
   {
     "path": "jesusistheanswerchurch",
@@ -522,7 +528,8 @@
     "visualStyle": "gochurch",
     "accent": "#703232",
     "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.87
   },
   {
     "path": "keepmywordchapelinternational",
@@ -627,7 +634,8 @@
     "visualStyle": "lighthousechapelinternational",
     "accent": "#706132",
     "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.85
   },
   {
     "path": "livingwatersinternational",
@@ -747,7 +755,8 @@
     "visualStyle": "gochurch",
     "accent": "#327070",
     "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.89
   },
   {
     "path": "pacificislandsmissionarychurch",
@@ -882,7 +891,8 @@
     "visualStyle": "gochurch",
     "accent": "#324270",
     "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.92
   },
   {
     "path": "primeroamor",
@@ -897,7 +907,8 @@
     "visualStyle": "lighthousechapelinternational",
     "accent": "#703232",
     "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.91
   },
   {
     "path": "qodeshcitychurch",
@@ -912,7 +923,8 @@
     "visualStyle": "pleasantsurprise",
     "accent": "#513270",
     "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.76
   },
   {
     "path": "qodeshfamilychurches",
@@ -927,7 +939,8 @@
     "visualStyle": "gochurch",
     "accent": "#513270",
     "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
+    "directoryHeading": "Licensed ministers",
+    "logoScale": 0.76
   },
   {
     "path": "rejoicegreatly",

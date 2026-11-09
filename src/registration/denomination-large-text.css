@@ -84,3 +84,4 @@
 .denom-site .denom-directory .denom-directory-heading:has(.denom-named-title){display:block;text-align:left}
 .denom-site .denom-directory .denom-named-title{justify-content:flex-start;text-align:left}
 .denom-site .denom-directory h1.denom-named-heading{align-items:flex-start;text-align:left}
+.denom-named-logo{display:flex!important;align-items:center;justify-content:center;overflow:hidden}
