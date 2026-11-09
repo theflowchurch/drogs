@@ -31,7 +31,10 @@
 
 /* Category band: Church, Outreach, Para-Church */
 .org-group{scroll-margin-top:0}
-.org-group-band{position:relative;overflow:hidden;background:var(--org-navy);color:#fff;text-align:center;padding:64px 5% 56px;margin-top:10px}
+.org-group-band{position:relative;overflow:hidden;background:var(--org-navy);color:#fff;text-align:center;padding:64px 5% 56px;margin-top:10px;min-height:clamp(240px,24vw,400px);display:flex;align-items:center;justify-content:center}
+.org-group-band .org-backdrop video,.org-group-band .org-backdrop img{object-position:center 55%;opacity:.78}
+.org-group-band .org-backdrop:after{background:radial-gradient(ellipse at center,#14223dc7 0%,#14223d8c 45%,#14223d59 100%)}
+.org-group-band h2{text-shadow:0 2px 18px #0009}
 .org-group-band-inner{position:relative;z-index:1}
 .org-group-band :is(h1,h2){font-family:var(--denom-display);font-size:clamp(40px,5.4vw,66px);font-weight:700;letter-spacing:-.8px;line-height:1.08;margin:0}
 .org-group-band p{font-size:22px;letter-spacing:2px;text-transform:uppercase;color:var(--org-gold);margin:12px 0 0}

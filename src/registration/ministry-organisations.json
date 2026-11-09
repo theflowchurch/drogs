@@ -2772,7 +2772,8 @@
             }
           ]
         }
-      ]
+      ],
+      "backdrop": "church-band"
     },
     {
       "slug": "outreach",
@@ -2849,7 +2850,8 @@
             }
           ]
         }
-      ]
+      ],
+      "backdrop": "outreach-band"
     },
     {
       "slug": "para-church",
@@ -3582,7 +3584,8 @@
             }
           ]
         }
-      ]
+      ],
+      "backdrop": "para-church-band"
     },
     {
       "slug": "councils",
