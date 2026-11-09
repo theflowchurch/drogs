@@ -1830,6 +1830,22 @@
               "church": "Jesus Is The Door",
               "title": "Bishop",
               "image": "assets/portraits/B174-10dca5e8.webp"
+            },
+            {
+              "name": "Daniel Darku",
+              "rosterId": "BO177",
+              "bishop": true,
+              "church": "Eschatos",
+              "title": "Bishop",
+              "image": "assets/portraits/BO177-998c5fe9.webp"
+            },
+            {
+              "name": "Allan David Opiyo",
+              "rosterId": "PN2177b36054d9",
+              "bishop": true,
+              "church": "Eschatos",
+              "title": "Bishop",
+              "image": "assets/portraits/PN2177b36054d9-a5efbe1a.webp"
             }
           ]
         }
