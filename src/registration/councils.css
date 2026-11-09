@@ -112,3 +112,15 @@ a.cz-box:focus-visible{outline:4px solid var(--gold);outline-offset:3px}
   .cz-box{min-height:80px;padding:16px 20px;border-left-width:8px;border-radius:14px;font-size:22px}
   .cz-section h2.cz-box{padding:18px 20px;border-left-width:8px;font-size:28px}
 }
+
+/* Office, 9 Nov: one box per line across the page, larger and bolder
+   lettering, and a calmer, flat finish. */
+.cz-contents{grid-template-columns:1fr;gap:16px}
+.cz-box{min-height:108px;padding:22px 34px;background:linear-gradient(100deg,var(--box) 0%,color-mix(in srgb,var(--box) 90%,#fff) 100%);font-size:clamp(32px,3.4vw,44px);font-weight:900;letter-spacing:.2px}
+.cz-section h2.cz-box{font-size:clamp(36px,4.2vw,52px)}
+.cz-group{margin-top:40px}
+.cz-group-head h3{font-size:clamp(28px,3vw,36px)}
+@media(max-width:700px){
+  .cz-box{min-height:86px;padding:18px 22px;font-size:28px}
+  .cz-section h2.cz-box{font-size:32px}
+}

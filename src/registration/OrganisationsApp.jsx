@@ -45,11 +45,18 @@ function Contents() {
   </nav>;
 }
 
+const Count = ({ n }) => <span className="org-count">{n} {n === 1 ? 'bishop' : 'bishops'}</span>;
+
 function Group({ group }) {
   return <section className="org-council" id={group.slug} aria-labelledby={`${group.slug}-heading`}>
     <GroupBox group={group} as="h2"/>
-    <p className="org-group-total"><span className="org-count">{group.people.length} {group.people.length === 1 ? 'bishop' : 'bishops'}</span></p>
-    <div className="org-members">{group.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
+    {group.parts ? group.parts.map(part => <div className="org-group-part" key={part.slug} id={part.slug}>
+      <h3 className="org-part-heading">{part.name} <Count n={part.people.length}/></h3>
+      <div className="org-members">{part.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
+    </div>) : <>
+      <p className="org-group-total"><Count n={group.people.length}/></p>
+      <div className="org-members">{group.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
+    </>}
   </section>;
 }
 

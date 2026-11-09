@@ -30,11 +30,18 @@ function Card({ person }) {
   </article>;
 }
 
+const Pill = ({ n }) => <span className="cz-pill">{n} {n === 1 ? 'Bishop' : 'Bishops'}</span>;
+
 function Group({ group }) {
   return <section className="cz-section" id={group.slug} aria-labelledby={`${group.slug}-title`}>
     <h2 id={`${group.slug}-title`} className="cz-box" style={{ '--box': group.colour }}>{group.name}</h2>
-    <div className="cz-group-head"><span className="cz-pill">{group.people.length} {group.people.length === 1 ? 'Bishop' : 'Bishops'}</span></div>
-    <div className="cz-cards">{group.people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div>
+    {group.parts ? group.parts.map(part => <div className="cz-group" key={part.slug} id={part.slug}>
+      <div className="cz-group-head"><h3>{part.name}</h3><Pill n={part.people.length}/></div>
+      <div className="cz-cards">{part.people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div>
+    </div>) : <>
+      <div className="cz-group-head"><Pill n={group.people.length}/></div>
+      <div className="cz-cards">{group.people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div>
+    </>}
   </section>;
 }
 

@@ -11,8 +11,11 @@ export default function useGroupFocus(initial = '') {
   useEffect(() => {
     const read = () => {
       const slug = decodeURIComponent(location.hash.slice(1)) || initial;
-      setFocus(directoryGroupBySlug(slug) ? slug : null);
+      const group = directoryGroupBySlug(slug);
+      setFocus(group ? group.slug : null);
       window.scrollTo(0, 0);
+      // One Para-Church council's address opens Para-Church at that council.
+      if (group && group.slug !== slug) setTimeout(() => document.getElementById(slug)?.scrollIntoView(), 50);
     };
     read();
     addEventListener('hashchange', read);

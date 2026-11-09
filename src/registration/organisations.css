@@ -254,3 +254,16 @@ a.org-group-box:focus-visible{outline:4px solid var(--org-gold);outline-offset:3
   .org-group-box{min-height:84px;padding:18px 22px;border-left-width:8px;border-radius:14px;font-size:24px}
   .org-council>h2.org-group-box{padding:20px 22px;font-size:29px}
 }
+
+/* Office, 9 Nov: one box per line across the page, larger and bolder
+   lettering, and a calmer, flat finish. */
+.org-contents{grid-template-columns:1fr;gap:16px}
+.org-group-box{min-height:112px;padding:24px 36px;background:linear-gradient(100deg,var(--box) 0%,color-mix(in srgb,var(--box) 90%,#fff) 100%);font-size:clamp(32px,3.4vw,44px);font-weight:800;letter-spacing:.2px}
+.org-council>h2.org-group-box{font-size:clamp(36px,4.2vw,52px)}
+.org-group-part{margin-top:44px;scroll-margin-top:20px}
+.org-part-heading{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 20px;padding-bottom:12px;border-bottom:3px solid var(--org-gold);font-family:var(--denom-display);font-size:clamp(28px,3vw,36px);font-weight:800;color:var(--org-navy)}
+@media(max-width:700px){
+  .org-group-box{min-height:88px;padding:18px 22px;font-size:28px}
+  .org-council>h2.org-group-box{font-size:32px}
+  .org-part-heading{font-size:26px}
+}
