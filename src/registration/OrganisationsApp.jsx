@@ -58,8 +58,9 @@ function Bishop({ person }) {
 }
 
 function Council({ organisation }) {
-  return <section className="org-council" id={organisation.slug} aria-labelledby={`${organisation.slug}-heading`}>
-    <h3 id={`${organisation.slug}-heading`}>{organisation.name}</h3>
+  // An untitled group (office, 9 Nov) lists bishops with no council given.
+  return <section className={`org-council ${organisation.untitled ? 'org-council-untitled' : ''}`} id={organisation.slug} aria-labelledby={organisation.untitled ? undefined : `${organisation.slug}-heading`} aria-label={organisation.untitled ? 'More bishops' : undefined}>
+    {!organisation.untitled && <h3 id={`${organisation.slug}-heading`}>{organisation.name}</h3>}
     {organisation.summary && <p className="org-council-summary">{organisation.summary}</p>}
     {organisation.places && <ul className="org-places">{organisation.places.map(place => <li key={place}>{place}</li>)}</ul>}
     {sectionsOf(organisation).map(section => <div className="org-council-part" key={section.name || 'people'}>
@@ -83,7 +84,7 @@ export default function OrganisationsApp({ slug = '' }) {
       {data.groups.map((group, index) => { const Heading = index === 0 ? 'h1' : 'h2'; return <section className="org-group" id={group.slug} key={group.slug} aria-labelledby={`${group.slug}-title`}>
         <div className="org-group-band">
           <Backdrop name={index === 0 ? 'home' : group.slug}/>
-          <div className="org-group-band-inner"><Heading id={`${group.slug}-title`}>{group.name}</Heading><p>{group.organisations.length} councils</p></div>
+          <div className="org-group-band-inner"><Heading id={`${group.slug}-title`}>{group.name}</Heading><p>{group.organisations.filter(o => !o.untitled).length} councils</p></div>
         </div>
         <div className="org-main">
           {group.organisations.map(organisation => <Council key={organisation.slug} organisation={organisation}/>)}

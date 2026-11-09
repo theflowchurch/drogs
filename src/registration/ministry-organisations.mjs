@@ -10,7 +10,7 @@ export const organisationBySlug = slug => ALL_ORGANISATIONS.find(o => o.slug ===
 export const groupBySlug = slug => data.groups.find(g => g.slug === slug) || null;
 // Older addresses (one per category and per council) still open the one page,
 // scrolled to that part of it.
-export const ORGANISATION_PAGES = [...data.groups.map(g => g.slug), ...ALL_ORGANISATIONS.map(o => o.slug)];
+export const ORGANISATION_PAGES = [...data.groups.map(g => g.slug), ...ALL_ORGANISATIONS.filter(o => !o.untitled).map(o => o.slug)];
 // Office instruction, 9 Nov: under each council's leaders the site lists only
 // the members who are bishops in the directory (bishop: true, set from the
 // roster: titles Bishop, Mother and Episcopal Sister, never lay presidents).

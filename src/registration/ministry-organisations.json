@@ -983,7 +983,12 @@
               "title": "Bishop"
             },
             {
-              "name": "Ebo Ankrah"
+              "name": "Ebo Ankrah",
+              "rosterId": "B329",
+              "bishop": true,
+              "church": "Healing Jesus Campaign",
+              "title": "Bishop",
+              "image": "assets/portraits/B329-df032a7f.webp"
             },
             {
               "name": "Randy Mills-Thompson",
@@ -1538,6 +1543,29 @@
               "bishop": true,
               "church": "Qodesh City Church",
               "title": "Bishop"
+            }
+          ]
+        },
+        {
+          "slug": "para-church-others",
+          "name": "",
+          "untitled": true,
+          "people": [
+            {
+              "name": "Mcivin Afetseng Mafora",
+              "rosterId": "B131",
+              "bishop": true,
+              "church": "Strong Christian Church",
+              "title": "Bishop",
+              "image": "assets/bishops/131.jpg"
+            },
+            {
+              "name": "Elaine Klufio",
+              "rosterId": "B46",
+              "bishop": true,
+              "church": "Strong Christian Church",
+              "title": "Episcopal Sister",
+              "image": "assets/organisations/people/elaine-klufio.webp"
             }
           ]
         }

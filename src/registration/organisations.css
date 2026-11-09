@@ -39,6 +39,7 @@
 .org-council{padding:70px 0 10px;scroll-margin-top:20px}
 .org-council>h3{font-family:var(--denom-display);font-size:clamp(32px,3.8vw,46px);font-weight:700;line-height:1.15;color:#fff;margin:0;padding:26px 34px;border-radius:18px;border-left:10px solid var(--org-gold);background:linear-gradient(100deg,var(--org-navy) 0%,var(--org-navy-2) 100%);box-shadow:0 12px 28px #14223d30}
 
+.org-council-untitled .org-council-part{margin-top:0}.org-council-untitled .org-under{display:none}
 .org-council-summary{font-size:22px;color:#3c3c35;margin:18px 0 0}
 .org-council-part{margin-top:30px}
 .org-part-name{font-family:var(--denom-display);font-size:30px;font-weight:700;color:var(--org-gold-ink);margin:12px 0 18px}
