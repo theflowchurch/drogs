@@ -37,18 +37,13 @@ export const sectionsOf = organisation => {
 };
 export const leadersOf = organisation => sectionsOf(organisation).flatMap(section => section.leaders);
 
-// Office, 9 Nov (contents page): one full-width box per group, on both
-// /organisations/ and /councils/. A bishop listed under Change of Status
-// appears there only, never in any other group. First Love (its groups and its
-// Senex Council) is left out for now. The Para-Church councils share one box,
-// which opens all of them on one page, each council under its own heading.
-const CHANGE_OF_STATUS = 'change-of-status';
+// Office, 9 Nov (contents page): one box per group, on both /organisations/
+// and /councils/. First Love (its groups and its Senex Council) is left out
+// for now. The Para-Church councils share one box, which opens all of them on
+// one page, each council under its own heading.
 const PARA_CHURCH = 'para-church';
 const LEFT_OUT_SECTIONS = ['first-love-church'];
 const LEFT_OUT_GROUPS = ['first-love-senex-council'];
-const sameBishop = (a, b) => (a.rosterId && a.rosterId === b.rosterId) || a.name === b.name;
-const statusChanged = (organisationBySlug(CHANGE_OF_STATUS)?.people || []).filter(p => p.bishop || p.leader);
-const withoutStatusChanged = people => people.filter(p => !statusChanged.some(c => sameBishop(c, p)));
 const groupsOfSection = o => o.directoryGroups?.length
   ? o.directoryGroups.filter(g => g.slug && g.name && !LEFT_OUT_GROUPS.includes(g.slug))
   : [{ slug: o.slug, name: o.name, people: sectionsOf(o).flatMap(s => s.people) }];
@@ -57,13 +52,10 @@ const groupsOfSection = o => o.directoryGroups?.length
 const COLOURS = ['#1f3a5f', '#6b2737', '#2f5233', '#4a3f6b', '#1f5357', '#5a2846', '#3a3d42', '#7a5a2e', '#2e3566', '#5c3a2a', '#2c4a40', '#34495e', '#6a3045', '#3f4a2c', '#43365a', '#24505f', '#5a4632'];
 export const DIRECTORY_GROUPS = ALL_ORGANISATIONS
   .filter(o => !o.untitled && !LEFT_OUT_SECTIONS.includes(o.slug))
-  .flatMap(o => {
-    if (o.slug === PARA_CHURCH) {
-      const parts = groupsOfSection(o).map(g => ({ slug: g.slug, name: g.name, people: withoutStatusChanged(g.people) })).filter(g => g.people.length);
-      return [{ slug: PARA_CHURCH, name: 'Para-Church', section: o.slug, parts, people: [] }];
-    }
-    return groupsOfSection(o).map(g => ({ slug: g.slug, name: g.name, section: o.slug, people: o.slug === CHANGE_OF_STATUS ? g.people : withoutStatusChanged(g.people) }));
-  })
+  .flatMap(o => o.slug === PARA_CHURCH
+    ? [{ slug: PARA_CHURCH, name: 'Para-Church Bishops', section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length), people: [] }]
+    : groupsOfSection(o).map(g => ({ slug: g.slug, name: g.name, section: o.slug, people: g.people }))
+  )
   .filter(g => g.people.length || g.parts?.length)
   .map((g, i) => ({ ...g, colour: COLOURS[i % COLOURS.length] }));
 // A group's address, or one Para-Church council's (#flow-council), opens it.

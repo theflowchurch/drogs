@@ -124,3 +124,14 @@ a.cz-box:focus-visible{outline:4px solid var(--gold);outline-offset:3px}
   .cz-box{min-height:86px;padding:18px 22px;font-size:28px}
   .cz-section h2.cz-box{font-size:32px}
 }
+
+/* Office, 9 Nov: slimmer boxes so every one fits on a computer screen
+   without scrolling, each with an arrow to show it can be clicked. */
+.cz-hero:not(.cz-hero-small){padding:22px 5% 40px}
+.cz-contents{gap:8px}
+a.cz-box{justify-content:space-between;gap:16px;min-height:0;padding:7px 22px 7px 26px;border-left-width:8px;border-radius:12px;font-size:clamp(20px,1.9vw,24px);font-weight:800;line-height:1.25;box-shadow:0 4px 12px #0005}
+a.cz-box::after{content:'›';flex-shrink:0;font-size:1.5em;font-weight:400;line-height:1;opacity:.85;transition:transform .15s}
+a.cz-box:hover::after{transform:translateX(4px)}
+a.cz-box:hover{transform:none;filter:brightness(1.15)}
+@media(max-width:700px){a.cz-box{padding:10px 16px 10px 18px;font-size:20px}}
+@media(min-width:701px){.cz-hero:not(.cz-hero-small){padding:18px 5% 30px}.cz-contents{gap:6px}a.cz-box{padding:6px 22px 6px 26px;font-size:21px;line-height:1.2}}

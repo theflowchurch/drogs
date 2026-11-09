@@ -267,3 +267,13 @@ a.org-group-box:focus-visible{outline:4px solid var(--org-gold);outline-offset:3
   .org-council>h2.org-group-box{font-size:32px}
   .org-part-heading{font-size:26px}
 }
+
+/* Office, 9 Nov: slimmer boxes so every one fits on a computer screen
+   without scrolling, each with an arrow to show it can be clicked. */
+.org-contents{gap:8px;padding:24px 0 16px}
+a.org-group-box{justify-content:space-between;gap:16px;min-height:0;padding:7px 22px 7px 26px;border-left-width:8px;border-radius:12px;font-size:clamp(20px,1.9vw,24px);font-weight:800;line-height:1.25;box-shadow:0 4px 12px #14223d26}
+a.org-group-box::after{content:'›';flex-shrink:0;font-family:system-ui,sans-serif;font-size:1.5em;font-weight:400;line-height:1;opacity:.85;transition:transform .15s}
+a.org-group-box:hover::after{transform:translateX(4px)}
+a.org-group-box:hover{transform:none;box-shadow:0 6px 16px #14223d40;filter:brightness(1.12)}
+@media(max-width:700px){.org-contents{gap:8px;padding:16px 0 10px}a.org-group-box{padding:10px 16px 10px 18px;font-size:20px}}
+@media(min-width:701px){.org-contents{gap:6px;padding:18px 0 12px}a.org-group-box{padding:6px 22px 6px 26px;font-size:21px;line-height:1.2}}
