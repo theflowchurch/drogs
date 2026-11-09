@@ -64,7 +64,7 @@ function OrganisationsHome() {
       <h2 id="choose-heading">Choose a category</h2>
       <div className="org-categories">{data.groups.map(group => <a className="org-category" key={group.slug} href={pageOf(group.slug)}>
         <img src={media(`${group.slug}.jpg`)} alt="" loading="lazy"/>
-        <span className="org-category-text"><strong>{shortName(group.name)}</strong><span>{group.organisations.length} organisations</span><span className="org-category-go">Open →</span></span>
+        <span className="org-category-text"><strong>{shortName(group.name)}</strong><span>{group.organisations.length} councils</span><span className="org-category-go">Open →</span></span>
       </a>)}</div>
     </section>
   </main>;
@@ -86,7 +86,7 @@ function Tile({ organisation }) {
 function CategoryPage({ group }) {
   const index = data.groups.findIndex(g => g.slug === group.slug), next = data.groups[(index + 1) % data.groups.length];
   return <main>
-    <Hero backdrop={group.slug} kicker="Category" title={group.name} text={`${group.organisations.length} organisations. Tap one to see who is in charge.`}>
+    <Hero backdrop={group.slug} kicker="Category" title={group.name} text={`${group.organisations.length} councils. Tap one to see who leads it.`}>
       <a className="org-button org-button-light" href={home}>← All categories</a>
     </Hero>
     <section className="org-main org-tiles-wrap"><div className="org-tiles">{group.organisations.map(o => <Tile key={o.slug} organisation={o}/>)}</div>
