@@ -73,26 +73,46 @@ const tabs = councils.filter(o => !o.untitled);
 // Office, 9 Nov: tabs in place of the Church / Para-Church banners, so a
 // reader can jump to any council. The bar stays at the top while scrolling and
 // marks the council being read.
+const subsOf = o => (o.directoryGroups || []).filter(g => g.slug && g.name && g.people.length);
+const subName = g => g.tabName || shortName(g.name);
+
 function CouncilTabs() {
-  const [active, setActive] = useState(tabs[0]?.slug);
-  useEffect(() => {
-    const seen = new IntersectionObserver(entries => {
-      const top = entries.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-      if (top) setActive(top.target.id);
-    }, { rootMargin: '-140px 0px -60% 0px' });
-    tabs.forEach(o => { const el = document.getElementById(o.slug); if (el) seen.observe(el); });
-    return () => seen.disconnect();
-  }, []);
-  // Every button is visible: they wrap onto rows on wide screens; on a phone a
-  // single "Go to a council" button opens the full list.
+  const [active, setActive] = useState(tabs[0]?.slug);      // section being read
+  const [activeSub, setActiveSub] = useState('');           // subsection being read
+  const [picked, setPicked] = useState('');                 // section whose subsections are shown
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    // The section and subsection whose heading has most recently passed the tab bar.
+    const ids = tabs.flatMap(o => [[o.slug, ''], ...subsOf(o).map(g => [o.slug, g.slug])]);
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      const line = (document.querySelector('.org-tabs')?.getBoundingClientRect().bottom || 0) + 40;
+      let found = ids[0];
+      for (const pair of ids) { const el = document.getElementById(pair[1] || pair[0]); if (el && el.getBoundingClientRect().top <= line) found = pair; }
+      setActive(found[0]); setActiveSub(found[1]);
+    };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(check); };
+    const onUserScroll = () => setPicked('');
+    check(); addEventListener('scroll', onScroll, { passive: true }); addEventListener('wheel', onUserScroll, { passive: true }); addEventListener('touchmove', onUserScroll, { passive: true });
+    return () => { removeEventListener('scroll', onScroll); removeEventListener('wheel', onUserScroll); removeEventListener('touchmove', onUserScroll); };
+  }, []);
+  const shown = tabs.find(o => o.slug === (picked || active));
+  const subs = shown ? subsOf(shown) : [];
   const current = tabs.find(o => o.slug === active);
-  const link = o => <a key={o.slug} data-slug={o.slug} href={`#${o.slug}`} onClick={() => setOpen(false)} className={`org-tab ${active === o.slug ? 'is-active' : ''}`} aria-current={active === o.slug ? 'true' : undefined}>{o.tabName || shortName(o.name)}</a>;
-  return <nav className={`org-tabs ${open ? 'is-open' : ''}`} aria-label="Councils">
+  const go = () => { setOpen(false); setPicked(''); };
+  return <nav className={`org-tabs ${open ? 'is-open' : ''}`} aria-label="Sections">
     <button type="button" className="org-tabs-toggle" aria-expanded={open} onClick={() => setOpen(v => !v)}>
-      <span><small>Go to a council</small>{current ? (current.tabName || shortName(current.name)) : 'Councils'}</span><span aria-hidden="true">{open ? '✕' : '▾'}</span>
+      <span><small>Go to a section</small>{current ? (current.tabName || shortName(current.name)) : 'Sections'}{activeSub && current ? <em> · {subName(subsOf(current).find(g => g.slug === activeSub) || { name: '' })}</em> : null}</span><span aria-hidden="true">{open ? '✕' : '▾'}</span>
     </button>
-    <div className="org-tabs-row">{tabs.map(link)}</div>
+    {/* Wide screens: sections, then the subsections of the section in view (or tapped). */}
+    <div className="org-tabs-row">{tabs.map(o => <a key={o.slug} href={`#${o.slug}`} onClick={() => { setPicked(subsOf(o).length ? o.slug : ''); setOpen(false); }} className={`org-tab ${active === o.slug ? 'is-active' : ''}`} aria-current={active === o.slug ? 'true' : undefined}>{o.tabName || shortName(o.name)}</a>)}</div>
+    {subs.length > 0 && <div className="org-subtabs-row" aria-label={`${shown.tabName || shortName(shown.name)} subsections`}>{subs.map(g => <a key={g.slug} href={`#${g.slug}`} onClick={go} className={`org-subtab ${activeSub === g.slug ? 'is-active' : ''}`}>{subName(g)}</a>)}</div>}
+    {/* Phone: one list of every section with its subsections beneath. */}
+    <div className="org-tabs-list">{tabs.map(o => <div key={o.slug} className="org-tabs-list-group">
+      <a href={`#${o.slug}`} onClick={go} className={`org-tab ${active === o.slug ? 'is-active' : ''}`}>{o.tabName || shortName(o.name)}</a>
+      {subsOf(o).length > 0 && <div className="org-tabs-list-subs">{subsOf(o).map(g => <a key={g.slug} href={`#${g.slug}`} onClick={go} className={`org-subtab ${activeSub === g.slug ? 'is-active' : ''}`}>{subName(g)}</a>)}</div>}
+    </div>)}</div>
   </nav>;
 }
 

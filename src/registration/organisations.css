@@ -147,3 +147,20 @@
 
 .org-group-rule{border:0;border-top:3px solid var(--org-gold);margin:46px 0 30px}
 .org-directory-group{scroll-margin-top:100px}
+
+/* Subsection tabs: a lighter second row under the sections. */
+.org-subtabs-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:0 5% 14px}
+.org-subtab{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid #ffffff40;color:#e9e4d6!important;font-size:17px;font-weight:700;background:transparent}
+.org-subtab:hover{background:#ffffff14}
+.org-subtab.is-active{background:#ffffff;color:var(--org-navy)!important;border-color:#fff}
+.org-tabs-list{display:none}
+.org-directory-group{scroll-margin-top:290px}.org-council{scroll-margin-top:270px}
+.org-tabs-toggle em{font-style:normal;color:#e3c780}
+@media(max-width:700px){
+  .org-tabs-row,.org-tabs.is-open .org-tabs-row,.org-subtabs-row{display:none}
+  .org-tabs.is-open .org-tabs-list{display:flex;flex-direction:column;gap:10px;padding:4px 6% 18px;max-height:72vh;overflow-y:auto}
+  .org-tabs-list .org-tab{width:100%}
+  .org-tabs-list-subs{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0 4px 14px;border-left:3px solid #c9a95c80;margin:6px 0 4px 10px}
+  .org-tabs-list .org-subtab{font-size:17px;min-height:46px}
+  .org-directory-group,.org-council{scroll-margin-top:110px}
+}

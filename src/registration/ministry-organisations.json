@@ -645,7 +645,8 @@
                   "image": "assets/organisations/people/emmanuel-kofi-yeboah-66decd18.webp",
                   "consecrated": "2019"
                 }
-              ]
+              ],
+              "slug": "ud-africa"
             },
             {
               "name": "UD Ghana West",
@@ -864,7 +865,8 @@
                   "image": "assets/portraits/B166-5b962336.webp",
                   "consecrated": "2024"
                 }
-              ]
+              ],
+              "slug": "ud-ghana-west"
             },
             {
               "name": "UD Ghana East",
@@ -933,7 +935,8 @@
                   "image": "assets/organisations/people/raymond-mensah-30ca041a.webp",
                   "consecrated": "2024"
                 }
-              ]
+              ],
+              "slug": "ud-ghana-east"
             },
             {
               "name": "UD Ghana Central",
@@ -1226,7 +1229,8 @@
                   "image": "assets/organisations/people/david-asomani.webp",
                   "consecrated": "2018"
                 }
-              ]
+              ],
+              "slug": "ud-ghana-central"
             },
             {
               "name": "UD Europe",
@@ -1322,7 +1326,8 @@
                   "image": "assets/organisations/people/immanuel-obeng-919d8ef7.webp",
                   "consecrated": "2022"
                 }
-              ]
+              ],
+              "slug": "ud-europe"
             },
             {
               "name": "UD North America",
@@ -1364,7 +1369,8 @@
                   "image": "assets/organisations/people/luke-akwasi-frimpong-mensah-2eb1740e.webp",
                   "consecrated": "2024"
                 }
-              ]
+              ],
+              "slug": "ud-north-america"
             },
             {
               "name": "United Islands",
@@ -1442,7 +1448,8 @@
                   "image": "assets/organisations/people/kristoffer-odoi-yemoh-57d10fe1.webp",
                   "consecrated": "2017"
                 }
-              ]
+              ],
+              "slug": "united-islands"
             },
             {
               "name": "United Jesus",
@@ -1574,7 +1581,8 @@
                   "image": "assets/organisations/people/nelson-tika-8a6930d9.webp",
                   "consecrated": "2025"
                 }
-              ]
+              ],
+              "slug": "united-jesus"
             },
             {
               "name": "Eschatos",
@@ -1750,7 +1758,8 @@
                   "image": "assets/organisations/people/aundrae-george-wood-2793a274.webp",
                   "consecrated": "2026"
                 }
-              ]
+              ],
+              "slug": "eschatos"
             }
           ],
           "tabName": "United Denominations"
@@ -2042,7 +2051,8 @@
                   "image": "assets/organisations/people/enoch-boakye-yiadom-e5b75081.webp",
                   "consecrated": "2025"
                 }
-              ]
+              ],
+              "slug": "only-jesus"
             },
             {
               "name": "Jesus First",
@@ -2066,7 +2076,8 @@
                   "image": "assets/organisations/people/jojo-stephens-ofori-addo-f762d6cd.webp",
                   "consecrated": "2025"
                 }
-              ]
+              ],
+              "slug": "jesus-first"
             },
             {
               "name": "Serve Jesus",
@@ -2117,7 +2128,8 @@
                   "image": "assets/organisations/people/henri-fogwe-7b65baa9.webp",
                   "consecrated": "2023"
                 }
-              ]
+              ],
+              "slug": "serve-jesus"
             },
             {
               "name": "Choose Jesus",
@@ -2186,7 +2198,8 @@
                   "image": "assets/organisations/people/adara-hyde.webp",
                   "consecrated": "2001"
                 }
-              ]
+              ],
+              "slug": "choose-jesus"
             },
             {
               "name": "Jesus Now",
@@ -2209,7 +2222,8 @@
                   "image": "assets/organisations/people/esme-asha-mantiziba-a0529108.webp",
                   "consecrated": "2026"
                 }
-              ]
+              ],
+              "slug": "jesus-now"
             },
             {
               "name": "Jesus Forever",
@@ -2224,7 +2238,8 @@
                   "role": "Jesus Forever",
                   "consecrated": "2024"
                 }
-              ]
+              ],
+              "slug": "jesus-forever"
             },
             {
               "name": "King Jesus",
@@ -2408,7 +2423,8 @@
                   "image": "assets/organisations/people/maxwell-agyei-manu-4739cc02.webp",
                   "consecrated": "2025"
                 }
-              ]
+              ],
+              "slug": "king-jesus"
             }
           ]
         },
