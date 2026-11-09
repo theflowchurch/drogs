@@ -96,7 +96,7 @@ export default function OrganisationsApp({ slug = '' }) {
         return <section className="org-group" id={group.slug} key={group.slug} aria-labelledby={group.untitled ? undefined : `${group.slug}-title`} aria-label={group.untitled ? 'More councils' : undefined}>
         {!group.untitled && <div className="org-group-band">
           <Backdrop name={index === 0 ? 'home' : (group.backdrop || group.slug)}/>
-          <div className="org-group-band-inner"><Heading id={`${group.slug}-title`}>{group.name}</Heading><p>{group.organisations.filter(o => !o.untitled).length} councils</p></div>
+          <div className="org-group-band-inner"><Heading id={`${group.slug}-title`}>{group.name}</Heading></div>
         </div>}
         <div className="org-main">
           {group.organisations.map(organisation => <Council key={organisation.slug} organisation={organisation}/>)}

@@ -12,7 +12,6 @@
         {
           "slug": "kuriake-council",
           "name": "The Kuriake Council",
-          "summary": "First Love Church and the United Denominations (UD-OLGC).",
           "sections": [
             {
               "name": "First Love Church",
@@ -22,7 +21,7 @@
                   "role": "First Love Church Principal Chairman",
                   "detail": "Only Jesus",
                   "leader": true,
-                  "image": "assets/organisations/people/joshua-heward-mills.webp",
+                  "image": "assets/organisations/people/joshua-heward-mills-2.webp",
                   "rosterId": "B194",
                   "bishop": true,
                   "church": "First Love Church",

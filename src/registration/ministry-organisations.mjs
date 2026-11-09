@@ -18,14 +18,14 @@ export const ORGANISATION_PAGES = [...data.groups.filter(g => !g.untitled).map(g
 // A council with parts (the Kuriake Council: First Love Church and UD-OLGC)
 // shows its chairmen together, then all its bishops.
 // bishopSectionOrder (Kuriake: UD-OLGC before First Love Church) orders the
-// bishops by part without changing the order of the chairmen.
+// chairmen and the bishops by part: Bishop Frank first, then Bishop Joshua.
 export const sectionsOf = organisation => {
   const parts = organisation.sections || [{ name: '', people: organisation.people }];
   const order = organisation.bishopSectionOrder;
   const ordered = order ? [...parts].sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name)) : parts;
   return [{
     name: '',
-    leaders: parts.flatMap(section => section.people).filter(p => p.leader),
+    leaders: ordered.flatMap(section => section.people).filter(p => p.leader),
     bishops: ordered.flatMap(section => section.people).filter(p => !p.leader && p.bishop),
   }];
 };
