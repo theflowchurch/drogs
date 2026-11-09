@@ -18,7 +18,7 @@
 .org-hero h1{font-family:var(--denom-display);font-size:clamp(44px,6.2vw,80px);font-weight:700;letter-spacing:-1px;line-height:1.06;color:#fff;margin:0;text-wrap:balance}
 .org-hero-text{font-size:24px;line-height:1.5;color:#e9e4d6;max-width:780px;margin:20px auto 0}
 .org-hero .org-button{margin-top:30px}
-.org-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:760px;margin:40px auto 0}
+.org-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:520px;margin:40px auto 0}
 .org-stats span{display:flex;flex-direction:column;padding:18px 10px;border:1px solid #c9a95c80;border-radius:16px;background:#14223d80;font-size:17px;letter-spacing:1px;text-transform:uppercase;color:#e9e4d6}
 .org-stats strong{font-family:var(--denom-display);font-size:44px;line-height:1.1;letter-spacing:0;color:#fff;text-transform:none}
 
