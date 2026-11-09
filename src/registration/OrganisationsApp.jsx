@@ -45,7 +45,7 @@ function Bishop({ person }) {
       <small>{person.title || 'Bishop'}</small>
       <strong>{person.name}</strong>
       {person.role ? <span>{person.role}</span> : person.church && <span className="org-member-church">{person.church}</span>}
-      {person.consecrated && <span className="org-consecrated"><span aria-hidden="true">✝</span> Consecrated {person.consecrated}</span>}
+      {person.consecrated && <span className="org-consecrated">Consecrated {person.consecrated}</span>}
     </div>
   </article>;
 }
@@ -83,10 +83,17 @@ function CouncilTabs() {
     tabs.forEach(o => { const el = document.getElementById(o.slug); if (el) seen.observe(el); });
     return () => seen.disconnect();
   }, []);
-  useEffect(() => { document.querySelector(`.org-tab[data-slug="${active}"]`)?.scrollIntoView({ block: 'nearest', inline: 'center' }); }, [active]);
-  return <nav className="org-tabs" aria-label="Councils"><div className="org-tabs-row">
-    {tabs.map(o => <a key={o.slug} data-slug={o.slug} href={`#${o.slug}`} className={`org-tab ${active === o.slug ? 'is-active' : ''}`} aria-current={active === o.slug ? 'true' : undefined}>{o.tabName || shortName(o.name)}</a>)}
-  </div></nav>;
+  // Every button is visible: they wrap onto rows on wide screens; on a phone a
+  // single "Go to a council" button opens the full list.
+  const [open, setOpen] = useState(false);
+  const current = tabs.find(o => o.slug === active);
+  const link = o => <a key={o.slug} data-slug={o.slug} href={`#${o.slug}`} onClick={() => setOpen(false)} className={`org-tab ${active === o.slug ? 'is-active' : ''}`} aria-current={active === o.slug ? 'true' : undefined}>{o.tabName || shortName(o.name)}</a>;
+  return <nav className={`org-tabs ${open ? 'is-open' : ''}`} aria-label="Councils">
+    <button type="button" className="org-tabs-toggle" aria-expanded={open} onClick={() => setOpen(v => !v)}>
+      <span><small>Go to a council</small>{current ? (current.tabName || shortName(current.name)) : 'Councils'}</span><span aria-hidden="true">{open ? '✕' : '▾'}</span>
+    </button>
+    <div className="org-tabs-row">{tabs.map(link)}</div>
+  </nav>;
 }
 
 export default function OrganisationsApp({ slug = '' }) {

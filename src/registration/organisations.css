@@ -128,14 +128,22 @@
 /* Council tabs (office, 9 Nov): a bar of large buttons, one per council, that
    stays at the top of the screen and scrolls sideways when it is full. */
 .org-tabs{position:sticky;top:0;z-index:30;background:var(--org-navy);box-shadow:0 6px 18px #14223d33}
-.org-tabs-row{display:flex;gap:10px;overflow-x:auto;padding:14px 5%;scrollbar-width:thin;scroll-snap-type:x proximity}
+.org-tabs-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding:14px 5%}
+.org-tabs-toggle{display:none}
 .org-tab{flex:0 0 auto;scroll-snap-align:center;display:inline-flex;align-items:center;min-height:52px;padding:10px 20px;border:2px solid #c9a95c80;border-radius:14px;color:#fff!important;font-size:19px;font-weight:700;white-space:nowrap;background:#ffffff0d}
 .org-tab:hover{background:#ffffff1f}
 .org-tab.is-active{background:var(--org-gold);border-color:var(--org-gold);color:var(--org-navy)!important}
 .org-council{scroll-margin-top:100px}
 .org-consecrated{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;max-width:100%;margin-top:10px;padding:5px 12px;border-radius:999px;background:#f3ecd9;color:var(--org-gold-ink)!important;font-size:16px!important;font-weight:700;align-self:flex-start}
 .org-consecrated span{font-size:14px}
-@media(max-width:700px){.org-tabs-row{padding:12px 5%;gap:8px}.org-tab{font-size:17px;min-height:48px;padding:8px 16px}.org-consecrated{font-size:13px!important;padding:4px 10px;gap:4px}}
+@media(max-width:700px){
+  .org-tabs-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:12px 6%;border:0;background:transparent;color:#fff;font:inherit;text-align:left;cursor:pointer}
+  .org-tabs-toggle small{display:block;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--org-gold)}
+  .org-tabs-toggle>span:first-child{font-size:21px;font-weight:700;line-height:1.25}
+  .org-tabs-toggle>span:last-child{display:flex;align-items:center;justify-content:center;width:46px;height:46px;flex-shrink:0;border:2px solid var(--org-gold);border-radius:12px;font-size:22px;color:var(--org-gold)}
+  .org-tabs-row{display:none;padding:4px 6% 16px;gap:8px;max-height:70vh;overflow-y:auto}
+  .org-tabs.is-open .org-tabs-row{display:grid;grid-template-columns:1fr}
+  .org-tab{font-size:19px;min-height:54px;padding:10px 16px;justify-content:flex-start;white-space:normal}.org-consecrated{font-size:13px!important;padding:4px 10px;gap:4px}}
 
 .org-group-rule{border:0;border-top:3px solid var(--org-gold);margin:46px 0 30px}
 .org-directory-group{scroll-margin-top:100px}
