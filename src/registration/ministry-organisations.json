@@ -1573,7 +1573,7 @@
     },
     {
       "slug": "councils",
-      "name": "Councils",
+      "name": "",
       "organisations": [
         {
           "slug": "emeritus",
@@ -1850,7 +1850,7 @@
           ]
         }
       ],
-      "backdrop": "church"
+      "untitled": true
     }
   ]
 }
