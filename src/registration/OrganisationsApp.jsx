@@ -43,13 +43,13 @@ function GroupBox({ group, as: Tag = 'a' }) {
   </Tag>;
 }
 
-// The title (office, 9 Nov): the DHMM logo in white on navy, "Worldwide
+// The title (office, 9 Nov): the DHMM logo in white on navy, "Worldwide Fellowship of
 // Bishops" in gold, and every bishop on the page counted once.
 function Masthead() {
   return <header className="org-dhmm-head">
     <a href="#contents" className="org-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
     <div className="org-dhmm-text">
-      <p className="org-dhmm-sub">Worldwide Bishops</p>
+      <p className="org-dhmm-sub">Worldwide Fellowship of Bishops</p>
       <p className="org-dhmm-total"><strong>{DIRECTORY_TOTAL}</strong> Bishops</p>
     </div>
   </header>;

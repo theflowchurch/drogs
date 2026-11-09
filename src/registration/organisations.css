@@ -300,3 +300,9 @@ a.org-group-box{gap:14px}
   .org-box-count{font-size:.7em;padding:2px 10px}
 }
 @media(min-width:701px){.org-contents{gap:3px;padding:8px 0 8px}a.org-group-box::after{font-size:1.2em;line-height:.9}.org-box-count{line-height:1.25;padding:1px 12px}}
+/* Office, 9 Nov: "Worldwide Fellowship of Bishops", a little larger. */
+.org-dhmm-head{padding:16px 5%}
+.org-dhmm-logo img{height:72px}
+.org-dhmm-sub{font-size:26px;letter-spacing:4px}
+.org-dhmm-total{font-size:18px}.org-dhmm-total strong{font-size:30px}
+@media(max-width:700px){.org-dhmm-logo img{height:60px}.org-dhmm-sub{font-size:19px;letter-spacing:2.5px;text-align:center}}

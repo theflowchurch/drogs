@@ -1,7 +1,7 @@
 {
   "name": "The Bishop's Directory",
   "shortName": "The Bishop's Directory",
-  "updated": "August 2026",
+  "updated": "November 2026",
   "source": "THREE.ORG documentary (Final Cut project 'NEW INTRO'), on-screen titles",
   "groups": [
     {
@@ -3065,7 +3065,8 @@
                   "rosterId": "BO264",
                   "bishop": true,
                   "church": "First Love Church",
-                  "title": "Mother"
+                  "title": "Mother",
+                  "consecrated": "2023"
                 },
                 {
                   "name": "Adara Hyde",
@@ -3182,7 +3183,7 @@
                   "consecrated": "2021"
                 },
                 {
-                  "name": "Marnette Dickson",
+                  "name": "Pamela Dickson",
                   "image": "assets/organisations/people/pamela-dickson.webp",
                   "rosterId": "B149",
                   "bishop": true,
@@ -3327,7 +3328,8 @@
                   "rosterId": "BO264",
                   "bishop": true,
                   "church": "First Love Church",
-                  "title": "Mother"
+                  "title": "Mother",
+                  "consecrated": "2023"
                 },
                 {
                   "name": "Kwame Asiedu Owusu",

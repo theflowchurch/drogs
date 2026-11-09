@@ -59,7 +59,7 @@ const groupsOfSection = o => o.directoryGroups?.length
 // enough for white lettering and calm beside the gold edge.
 const COLOURS = ['#1f3a5f', '#6b2737', '#2f5233', '#4a3f6b', '#1f5357', '#5a2846', '#3a3d42', '#7a5a2e', '#2e3566', '#5c3a2a', '#2c4a40', '#34495e', '#6a3045', '#3f4a2c', '#43365a', '#24505f', '#5a4632', '#2b4257', '#5e2f3c', '#35503f', '#4d3b5e', '#3b4f5a', '#664a2b'];
 const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => o.slug === PARA_CHURCH
-  ? [{ slug: PARA_CHURCH, name: 'The Para-Church Bishops', section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length), people: [] }]
+  ? [{ slug: PARA_CHURCH, name: 'The Para-Church Bishops', section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length).map(g => ({ ...g, name: formalName(o, g) })), people: [] }]
   : groupsOfSection(o).map(g => ({ slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people })));
 export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === slug))
   .filter(g => g && (g.people.length || g.parts?.length))

@@ -50,12 +50,12 @@ export default function CouncilsApp() {
   return <div className="cz-site" id="top">
     <header className={`cz-hero ${group ? 'cz-hero-small' : ''}`}>
       <img className="cz-earth" src={`${base}/assets/organisations/earth.webp`} alt="" aria-hidden="true"/>
-      {/* The title (office, 9 Nov): the DHMM logo in white, "Worldwide
+      {/* The title (office, 9 Nov): the DHMM logo in white, "Worldwide Fellowship of
           Bishops" in gold, and every bishop counted once. */}
       <div className="cz-dhmm-head">
         <a href="#contents" className="cz-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
         <div className="cz-dhmm-text">
-          <p className="cz-dhmm-sub">Worldwide Bishops</p>
+          <p className="cz-dhmm-sub">Worldwide Fellowship of Bishops</p>
           <p className="cz-dhmm-total"><strong>{DIRECTORY_TOTAL}</strong> Bishops</p>
         </div>
       </div>
