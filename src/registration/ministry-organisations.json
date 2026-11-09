@@ -22,43 +22,43 @@
                   "role": "First Love Church Principal Chairman",
                   "detail": "Only Jesus",
                   "leader": true,
-                  "image": "assets/bishops/matched-194.webp",
+                  "image": "assets/organisations/people/joshua-heward-mills.webp",
                   "rosterId": "B194"
                 },
                 {
                   "name": "Glen Kwame Opoku",
                   "role": "Jesus First",
-                  "image": "assets/bishops/matched-74.webp",
+                  "image": "assets/organisations/people/glen-kwame-opoku.webp",
                   "rosterId": "B74"
                 },
                 {
                   "name": "Roger Hiltbrunner",
                   "role": "Serve Jesus",
-                  "image": "assets/bishops/matched-235.webp",
+                  "image": "assets/organisations/people/roger-hiltbrunner.webp",
                   "rosterId": "B235"
                 },
                 {
                   "name": "Kent Njeru",
                   "role": "Choose Jesus",
-                  "image": "assets/bishops/matched-222.webp",
+                  "image": "assets/organisations/people/kent-njeru.webp",
                   "rosterId": "B222"
                 },
                 {
                   "name": "James Quist-Therson",
                   "role": "Jesus Forever",
-                  "image": "assets/bishops/matched-141.webp",
+                  "image": "assets/organisations/people/james-quist-therson.webp",
                   "rosterId": "B141"
                 },
                 {
                   "name": "Rutendo Mantiziba",
                   "role": "Jesus Now",
-                  "image": "assets/bishops/matched-237.webp",
+                  "image": "assets/organisations/people/rutendo-mantiziba.webp",
                   "rosterId": "B237"
                 },
                 {
                   "name": "Clement Asante",
                   "role": "King Jesus",
-                  "image": "assets/bishops/matched-205.webp",
+                  "image": "assets/organisations/people/clement-asante.webp",
                   "rosterId": "B205"
                 }
               ]
@@ -71,43 +71,43 @@
                   "role": "UD-OLGC Principal Chairman",
                   "detail": "UD Africa",
                   "leader": true,
-                  "image": "assets/portraits/B69-a99a5559.webp",
+                  "image": "assets/organisations/people/frank-otchere.webp",
                   "rosterId": "B69"
                 },
                 {
                   "name": "Ernest Addai-Duah",
                   "role": "Eschatos Chairman",
-                  "image": "assets/bishops/matched-60.webp",
+                  "image": "assets/organisations/people/ernest-addai-duah.webp",
                   "rosterId": "B60"
                 },
                 {
                   "name": "Kodwo Orleans-Lindsay",
                   "role": "UD North America Chairman",
-                  "image": "assets/bishops/111.jpg",
+                  "image": "assets/organisations/people/kodwo-orleans-lindsay.webp",
                   "rosterId": "B111"
                 },
                 {
                   "name": "Steve Poku",
                   "role": "UD Europe Chairman",
-                  "image": "assets/bishops/matched-184.webp",
+                  "image": "assets/organisations/people/steve-poku.webp",
                   "rosterId": "B184"
                 },
                 {
                   "name": "Toss Mills-Odoi",
                   "role": "United Jesus Chairman",
-                  "image": "assets/portraits/B321-8a4be011.webp",
+                  "image": "assets/organisations/people/toss-mills-odoi.webp",
                   "rosterId": "B321"
                 },
                 {
                   "name": "Samuel Baidoo",
                   "role": "UD Ghana Chairman",
-                  "image": "assets/bishops/matched-54.webp",
+                  "image": "assets/organisations/people/samuel-baidoo.webp",
                   "rosterId": "B54"
                 },
                 {
                   "name": "Joel Obuobisa",
                   "role": "United Islands Chairman",
-                  "image": "assets/portraits/B92-0a6b24f7.webp",
+                  "image": "assets/organisations/people/joel-obuobisa.webp",
                   "rosterId": "B92"
                 }
               ]
@@ -123,7 +123,7 @@
               "name": "Eddie Fabin",
               "role": "Chairman & Ceremonial Archbishop",
               "leader": true,
-              "image": "assets/bishops/eddie-fabin-white.png",
+              "image": "assets/organisations/people/eddie-fabin.webp",
               "rosterId": "B41"
             },
             {
@@ -145,7 +145,7 @@
             {
               "name": "Mary-Chloe Rea",
               "role": "Secretary",
-              "image": "assets/portraits/BO250-2d13899a.webp",
+              "image": "assets/organisations/people/mary-chloe-rea.webp",
               "rosterId": "BO250"
             },
             {
@@ -164,7 +164,7 @@
               "name": "Richard Aryee",
               "role": "Senex Council Chairman",
               "leader": true,
-              "image": "assets/portraits/B167-0d862f44.webp",
+              "image": "assets/organisations/people/richard-aryee.webp",
               "rosterId": "B167"
             },
             {
@@ -189,12 +189,12 @@
             },
             {
               "name": "Prince Addae",
-              "image": "assets/portraits/B157-fa0d26d2.webp",
+              "image": "assets/organisations/people/prince-addae.webp",
               "rosterId": "B157"
             },
             {
               "name": "Joel Obuobisa",
-              "image": "assets/portraits/B92-0a6b24f7.webp",
+              "image": "assets/organisations/people/joel-obuobisa.webp",
               "rosterId": "B92"
             },
             {
@@ -222,7 +222,7 @@
               "name": "Vivaldi Aboagye",
               "role": "Dean of Bishops & Chairperson",
               "leader": true,
-              "image": "assets/bishops/matched-187.webp",
+              "image": "assets/organisations/people/vivaldi-aboagye.webp",
               "rosterId": "B187"
             },
             {
@@ -249,17 +249,17 @@
             },
             {
               "name": "Mary-Chloe Rea",
-              "image": "assets/portraits/BO250-2d13899a.webp",
+              "image": "assets/organisations/people/mary-chloe-rea.webp",
               "rosterId": "BO250"
             },
             {
               "name": "Renata Obaka",
-              "image": "assets/portraits/BO215.webp",
+              "image": "assets/organisations/people/renata-obaka.webp",
               "rosterId": "BO215"
             },
             {
               "name": "Erica Luca Aryee",
-              "image": "assets/bishops/matched-59.webp",
+              "image": "assets/organisations/people/erica-luca-aryee.webp",
               "rosterId": "B59"
             },
             {
@@ -282,12 +282,12 @@
               "name": "E. A. T. Sackey",
               "role": "1965 Committee Chairman",
               "leader": true,
-              "image": "assets/bishops/matched-39.webp",
+              "image": "assets/organisations/people/e-a-t-sackey.webp",
               "rosterId": "B39"
             },
             {
               "name": "Adelaide Heward-Mills",
-              "image": "assets/portraits/B4-377cc31f.webp",
+              "image": "assets/organisations/people/adelaide-heward-mills.webp",
               "rosterId": "B4"
             },
             {
@@ -369,7 +369,7 @@
               "name": "Kodwo Orleans-Lindsay",
               "role": "Lay Presidents Chairman",
               "leader": true,
-              "image": "assets/bishops/111.jpg",
+              "image": "assets/organisations/people/kodwo-orleans-lindsay.webp",
               "rosterId": "B111"
             },
             {
@@ -411,7 +411,7 @@
             },
             {
               "name": "Eben Johnson",
-              "image": "assets/portraits/P1062.webp",
+              "image": "assets/organisations/people/eben-johnson.webp",
               "rosterId": "P1062"
             },
             {
@@ -584,14 +584,14 @@
               "name": "Serena Ababio",
               "role": "DHMM Council Chairperson",
               "leader": true,
-              "image": "assets/bishops/matched-239.webp",
+              "image": "assets/organisations/people/serena-ababio.webp",
               "rosterId": "BO265"
             },
             {
               "name": "Mary-Chloe Rea",
               "role": "DHMM Council Chairperson",
               "leader": true,
-              "image": "assets/portraits/BO250-2d13899a.webp",
+              "image": "assets/organisations/people/mary-chloe-rea.webp",
               "rosterId": "BO250"
             },
             {
@@ -606,7 +606,7 @@
             },
             {
               "name": "Nina Masuku",
-              "image": "assets/portraits/B334-d43cd0d7.webp",
+              "image": "assets/organisations/people/nina-masuku.webp",
               "rosterId": "B334"
             },
             {
@@ -616,7 +616,7 @@
             },
             {
               "name": "Vivaldi Aboagye",
-              "image": "assets/bishops/matched-187.webp",
+              "image": "assets/organisations/people/vivaldi-aboagye.webp",
               "rosterId": "B187"
             },
             {
@@ -634,7 +634,7 @@
             },
             {
               "name": "Ruthie Jani Appiah-Denkyira",
-              "image": "assets/portraits/BO264.webp",
+              "image": "assets/organisations/people/ruthie-jani-appiah-denkyira.webp",
               "rosterId": "BO264"
             },
             {
@@ -647,12 +647,12 @@
             },
             {
               "name": "Erica Luca Aryee",
-              "image": "assets/bishops/matched-59.webp",
+              "image": "assets/organisations/people/erica-luca-aryee.webp",
               "rosterId": "B59"
             },
             {
               "name": "Renata Obaka",
-              "image": "assets/portraits/BO215.webp",
+              "image": "assets/organisations/people/renata-obaka.webp",
               "rosterId": "BO215"
             }
           ]
@@ -665,7 +665,7 @@
               "name": "Prince Addae",
               "role": "HJC Council Chairman",
               "leader": true,
-              "image": "assets/portraits/B157-fa0d26d2.webp",
+              "image": "assets/organisations/people/prince-addae.webp",
               "rosterId": "B157"
             },
             {
@@ -711,7 +711,7 @@
               "name": "Nina Masuku",
               "role": "FLOW Council Chairperson",
               "leader": true,
-              "image": "assets/portraits/B334-d43cd0d7.webp",
+              "image": "assets/organisations/people/nina-masuku.webp",
               "rosterId": "B334"
             },
             {
@@ -752,7 +752,7 @@
               "name": "Eben Johnson",
               "role": "Give Thyself Wholly Board Chairman",
               "leader": true,
-              "image": "assets/portraits/P1062.webp",
+              "image": "assets/organisations/people/eben-johnson.webp",
               "rosterId": "P1062"
             }
           ]
@@ -765,7 +765,7 @@
               "name": "Toss Mills-Odoi",
               "role": "Makarios Council Chairperson",
               "leader": true,
-              "image": "assets/portraits/B321-8a4be011.webp",
+              "image": "assets/organisations/people/toss-mills-odoi.webp",
               "rosterId": "B321"
             },
             {
@@ -814,7 +814,7 @@
               "name": "Adelaide Heward-Mills",
               "role": "School Board Chairperson",
               "leader": true,
-              "image": "assets/portraits/B4-377cc31f.webp",
+              "image": "assets/organisations/people/adelaide-heward-mills.webp",
               "rosterId": "B4"
             },
             {
@@ -881,7 +881,7 @@
               "name": "Dr. Annika Dwimoh",
               "role": "Hospital Board Chairperson",
               "leader": true,
-              "image": "assets/bishops/matched-200.webp",
+              "image": "assets/organisations/people/dr-annika-dwimoh.webp",
               "rosterId": "B200"
             },
             {
@@ -912,7 +912,7 @@
               "name": "Adelaide Heward-Mills",
               "role": "Orphanage Board Chairperson",
               "leader": true,
-              "image": "assets/portraits/B4-377cc31f.webp",
+              "image": "assets/organisations/people/adelaide-heward-mills.webp",
               "rosterId": "B4"
             },
             {
@@ -972,7 +972,7 @@
               "name": "Erica Luca Aryee",
               "role": "Radio Ministry Chairperson",
               "leader": true,
-              "image": "assets/bishops/matched-59.webp",
+              "image": "assets/organisations/people/erica-luca-aryee.webp",
               "rosterId": "B59"
             },
             {
@@ -986,7 +986,7 @@
             },
             {
               "name": "Eddie Fabin",
-              "image": "assets/bishops/eddie-fabin-white.png",
+              "image": "assets/organisations/people/eddie-fabin.webp",
               "rosterId": "B41"
             },
             {
@@ -1020,7 +1020,7 @@
               "name": "Renata Obaka",
               "role": "Construction Board Chairperson",
               "leader": true,
-              "image": "assets/portraits/BO215.webp",
+              "image": "assets/organisations/people/renata-obaka.webp",
               "rosterId": "BO215"
             },
             {
@@ -1046,7 +1046,7 @@
             },
             {
               "name": "Erica Luca Aryee",
-              "image": "assets/bishops/matched-59.webp",
+              "image": "assets/organisations/people/erica-luca-aryee.webp",
               "rosterId": "B59"
             }
           ]
@@ -1059,7 +1059,7 @@
               "name": "Ruthie Jani Appiah-Denkyira",
               "role": "ABMTC Chairperson",
               "leader": true,
-              "image": "assets/portraits/BO264.webp",
+              "image": "assets/organisations/people/ruthie-jani-appiah-denkyira.webp",
               "rosterId": "BO264"
             },
             {
@@ -1109,7 +1109,7 @@
               "name": "Eddie Fabin",
               "role": "GCBC Chairman",
               "leader": true,
-              "image": "assets/bishops/eddie-fabin-white.png",
+              "image": "assets/organisations/people/eddie-fabin.webp",
               "rosterId": "B41"
             },
             {
@@ -1126,7 +1126,7 @@
               "name": "Eddie Fabin",
               "role": "Affiliated Denominations Chairman",
               "leader": true,
-              "image": "assets/bishops/eddie-fabin-white.png",
+              "image": "assets/organisations/people/eddie-fabin.webp",
               "rosterId": "B41"
             }
           ]
