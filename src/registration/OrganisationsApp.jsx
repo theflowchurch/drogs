@@ -38,17 +38,6 @@ function Backdrop({ name }) {
   </div>;
 }
 
-function Leader({ person }) {
-  return <article className="org-leader">
-    <div className="org-leader-photo"><Photo person={person} large/></div>
-    <div className="org-leader-text">
-      <h4>{person.name}</h4>
-      {person.role && <p>{person.role}</p>}
-      {person.detail && <p className="org-leader-detail">{person.detail}</p>}
-    </div>
-  </article>;
-}
-
 function Bishop({ person }) {
   return <article className="org-member">
     <div className="org-member-photo"><Photo person={person}/></div>
@@ -66,13 +55,8 @@ function Council({ organisation }) {
     {!organisation.untitled && <h3 id={`${organisation.slug}-heading`}>{organisation.name}</h3>}
     {organisation.summary && <p className="org-council-summary">{organisation.summary}</p>}
     {organisation.places && <ul className="org-places">{organisation.places.map(place => <li key={place}>{place}</li>)}</ul>}
-    {sectionsOf(organisation).map(section => <div className="org-council-part" key={section.name || 'people'}>
-      {section.name && <p className="org-part-name">{section.name}</p>}
-      {section.leaders.length > 0 && <div className={`org-leaders org-leaders-${Math.min(section.leaders.length, 2)}`}>{section.leaders.map(p => <Leader key={p.name} person={p}/>)}</div>}
-      {section.bishops.length > 0 && <>
-        <h5 className="org-under">Bishops</h5>
-        <div className="org-members">{section.bishops.map(p => <Bishop key={p.name} person={p}/>)}</div>
-      </>}
+    {sectionsOf(organisation).map(section => section.people.length > 0 && <div className="org-council-part" key="people">
+      <div className="org-members">{section.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
     </div>)}
     {/* The Kuriake Council also lists the bishops of each directory group (office, 9 Nov). */}
     {(organisation.directoryGroups || []).map(group => group.people.length > 0 && <div className="org-council-part org-directory-group" key={group.name}>

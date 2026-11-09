@@ -2789,7 +2789,8 @@
               "role": "Give Thyself Wholly Board Chairman",
               "leader": true,
               "image": "assets/organisations/people/eben-johnson.webp",
-              "rosterId": "P1062"
+              "rosterId": "P1062",
+              "title": "Lay President"
             }
           ]
         },
