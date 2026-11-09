@@ -2,7 +2,7 @@ import { normalName, overlayReferences, isLay, bySurname, byMinisterTitle, title
 import { publicRosterFrom } from './live-roster.mjs';
 import denominationCatalog from './denomination-catalog.json' with { type: 'json' };
 
-export const DENOMINATION_SITES = {
+const CHURCH_SITES = {
   ...Object.fromEntries(denominationCatalog.map(({ path, ...site }) => [path, site])),
   lighthousechapelinternational: {
     homeConcept: 2,
@@ -20,6 +20,14 @@ export const DENOMINATION_SITES = {
     denominations: ['Go Church'], logo: 'assets/denominations/go-church-cleaned.webp', accent: '#292b28', directoryAction: 'Find a licensed minister', directoryHeading: 'Our people.',
   },
 };
+// Every church site shares the accessible presentation first made for Pacific
+// Islands Missionary Church: larger text, no search, filters or counts, the
+// logo beside the church name and the standard heading, a slim header and the
+// licensing notice in full. A site can still opt out of any one with false.
+const STANDARD_PRESENTATION = { largeText: true, simpleDirectory: true, namedHeading: true, openLicenseNotice: true, logoHeading: true };
+export const STANDARD_DIRECTORY_HEADING = 'Licensed Ministers in Good Standing';
+export const DENOMINATION_SITES = Object.fromEntries(Object.entries(CHURCH_SITES)
+  .map(([path, site]) => [path, { ...STANDARD_PRESENTATION, ...site, directoryHeading: STANDARD_DIRECTORY_HEADING }]));
 export const denominationSite = key => DENOMINATION_SITES[key] || null;
 // Scope the saved, current public fields; never infer a church from somebody's
 // name, country, or a similar-looking denomination (Go Ye and Lighthouse City
