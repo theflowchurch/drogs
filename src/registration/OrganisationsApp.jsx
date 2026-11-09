@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { ORGANISATIONS as data, ALL_ORGANISATIONS, sectionsOf } from './ministry-organisations.mjs';
+import { ORGANISATIONS as data, sectionsOf } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './denomination-sites.css';
@@ -74,32 +74,22 @@ function Council({ organisation }) {
 }
 
 export default function OrganisationsApp({ slug = '' }) {
-  const councils = ALL_ORGANISATIONS.length;
   // An older address for one category or council opens this page at that part.
   useEffect(() => { if (slug) document.getElementById(slug)?.scrollIntoView(); }, [slug]);
+  // The page opens straight on the Church Organisations (office, 9 Nov).
   return <div className="denom-site org-site" id="top">
     <header className="org-header"><a href={`${base}/organisations/`} className="org-brand"><span className="org-brand-mark" aria-hidden="true">✦</span><span>{data.shortName}</span></a></header>
     <main>
-      <section className="org-hero">
-        <Backdrop name="home"/>
-        <div className="org-hero-inner">
-          <p className="org-kicker">Updated {data.updated}</p>
-          <h1>The Organisations</h1>
-          <p className="org-hero-text">The councils, boards and committees that serve the churches, the outreaches and the institutions.</p>
-          <div className="org-stats"><span><strong>{data.groups.length}</strong>Organisations</span><span><strong>{councils}</strong>Councils</span></div>
-          <nav className="org-jump" aria-label="Go to">{data.groups.map(group => <a key={group.slug} href={`#${group.slug}`}>{shortName(group.name)} ↓</a>)}</nav>
-        </div>
-      </section>
-      {data.groups.map(group => <section className="org-group" id={group.slug} key={group.slug} aria-labelledby={`${group.slug}-title`}>
+      {data.groups.map((group, index) => { const Heading = index === 0 ? 'h1' : 'h2'; return <section className="org-group" id={group.slug} key={group.slug} aria-labelledby={`${group.slug}-title`}>
         <div className="org-group-band">
-          <Backdrop name={group.slug}/>
-          <div className="org-group-band-inner"><h2 id={`${group.slug}-title`}>{group.name}</h2><p>{group.organisations.length} councils</p></div>
+          <Backdrop name={index === 0 ? 'home' : group.slug}/>
+          <div className="org-group-band-inner"><Heading id={`${group.slug}-title`}>{group.name}</Heading><p>{group.organisations.length} councils</p></div>
         </div>
         <div className="org-main">
           {group.organisations.map(organisation => <Council key={organisation.slug} organisation={organisation}/>)}
           <a className="org-top" href="#top">↑ Back to the top</a>
         </div>
-      </section>)}
+      </section>; })}
     </main>
     <footer className="org-footer"><span>{data.name}</span><span>Updated {data.updated}</span></footer>
   </div>;
