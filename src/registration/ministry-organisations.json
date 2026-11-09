@@ -151,6 +151,22 @@
                   "bishop": true,
                   "church": "United Islands",
                   "title": "Bishop"
+                },
+                {
+                  "name": "Kwabena Asare Asamoa",
+                  "rosterId": "B116",
+                  "bishop": true,
+                  "church": "The Machaneh Church International",
+                  "title": "Bishop",
+                  "image": "assets/bishops/reconciled-116.webp"
+                },
+                {
+                  "name": "Fred Ansah Quartey",
+                  "rosterId": "B71",
+                  "bishop": true,
+                  "church": "East End City Churches",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-71.webp"
                 }
               ]
             }
