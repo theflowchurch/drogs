@@ -31,7 +31,7 @@ function Backdrop({ name }) {
   const [still, setStill] = useState(true);
   useEffect(() => { setStill(matchMedia('(prefers-reduced-motion: reduce)').matches); }, []);
   return <div className="org-backdrop" aria-hidden="true">
-    {still ? <img src={media(`${name}.jpg`)} alt=""/> : <video src={media(`${name}.mp4`)} poster={media(`${name}.jpg`)} autoPlay muted loop playsInline preload="metadata"/>}
+    {still ? <img src={media(`${name}.jpg`)} alt=""/> : <video src={media(`${name}.mp4`)} poster={media(`${name}.jpg`)} autoPlay muted loop playsInline preload="auto"/>}
   </div>;
 }
 
