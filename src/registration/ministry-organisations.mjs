@@ -11,8 +11,11 @@ export const groupBySlug = slug => data.groups.find(g => g.slug === slug) || nul
 // Older addresses (one per category and per council) still open the one page,
 // scrolled to that part of it.
 // Addresses from earlier layouts open the page at the matching council.
-export const PAGE_ALIASES = { 'kuriake-council': 'united-denominations', church: 'united-denominations', outreach: 'give-thyself-wholly-board', 'para-church': 'dhmm-council' };
-export const ORGANISATION_PAGES = [...ALL_ORGANISATIONS.filter(o => !o.untitled).map(o => o.slug), ...Object.keys(PAGE_ALIASES)];
+export const PAGE_ALIASES = { 'kuriake-council': 'united-denominations', church: 'united-denominations', outreach: 'give-thyself-wholly-board' };
+// Councils shown as subsections (the Para-Church councils) keep their addresses.
+const SUBSECTIONS = ALL_ORGANISATIONS.flatMap(o => (o.directoryGroups || []).filter(g => g.slug && g.name).map(g => g.slug));
+export const ORGANISATION_PAGES = [...ALL_ORGANISATIONS.filter(o => !o.untitled).map(o => o.slug), ...SUBSECTIONS, ...Object.keys(PAGE_ALIASES)];
+export const subsectionBySlug = slug => ALL_ORGANISATIONS.flatMap(o => o.directoryGroups || []).find(g => g.slug === slug) || null;
 // Office instruction, 9 Nov: under each council's leaders the site lists only
 // the members who are bishops in the directory (bishop: true, set from the
 // roster: titles Bishop, Mother and Episcopal Sister, never lay presidents).

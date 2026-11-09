@@ -136,3 +136,6 @@
 .org-consecrated{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;max-width:100%;margin-top:10px;padding:5px 12px;border-radius:999px;background:#f3ecd9;color:var(--org-gold-ink)!important;font-size:16px!important;font-weight:700;align-self:flex-start}
 .org-consecrated span{font-size:14px}
 @media(max-width:700px){.org-tabs-row{padding:12px 5%;gap:8px}.org-tab{font-size:17px;min-height:48px;padding:8px 16px}.org-consecrated{font-size:13px!important;padding:4px 10px;gap:4px}}
+
+.org-group-rule{border:0;border-top:3px solid var(--org-gold);margin:46px 0 30px}
+.org-directory-group{scroll-margin-top:100px}

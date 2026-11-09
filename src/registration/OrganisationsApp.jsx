@@ -60,8 +60,8 @@ function Council({ organisation }) {
       <div className="org-members">{section.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
     </div>)}
     {/* The Kuriake Council also lists the bishops of each directory group (office, 9 Nov). */}
-    {(organisation.directoryGroups || []).map(group => group.people.length > 0 && <div className="org-council-part org-directory-group" key={group.name}>
-      <h5 className="org-under org-group-name">{group.name}</h5>
+    {(organisation.directoryGroups || []).map(group => group.people.length > 0 && <div className="org-council-part org-directory-group" key={group.slug || group.name} id={group.slug}>
+      {group.name ? <h5 className="org-under org-group-name">{group.name}</h5> : <hr className="org-group-rule"/>}
       <div className="org-members">{group.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
     </div>)}
   </section>;
