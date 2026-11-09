@@ -1056,6 +1056,38 @@
               "church": "United Cities",
               "title": "Bishop",
               "image": "assets/organisations/people/christian-assi-adoupo.webp"
+            },
+            {
+              "name": "Paa Kwesi Nyarkoh",
+              "rosterId": "B148",
+              "bishop": true,
+              "church": "Keep My Word Chapel International",
+              "title": "Bishop",
+              "image": "assets/portraits/B148-aabb7cb4.webp"
+            },
+            {
+              "name": "Joseph Aboagye",
+              "rosterId": "B96",
+              "bishop": true,
+              "church": "Victoire Internationale",
+              "title": "Bishop",
+              "image": "assets/portraits/B96-b139c4d9.webp"
+            },
+            {
+              "name": "Olivia Kofi-Opata",
+              "rosterId": "B145",
+              "bishop": true,
+              "church": "Everything By Prayer Center",
+              "title": "Episcopal Sister",
+              "image": "assets/bishops/matched-145.webp"
+            },
+            {
+              "name": "Henrietta Ariel Orleans-Lindsay",
+              "rosterId": "B79",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Mother",
+              "image": "assets/organisations/people/henrietta-ariel-orleans-lindsay.webp"
             }
           ]
         },
