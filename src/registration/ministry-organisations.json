@@ -92,7 +92,9 @@
                 },
                 {
                   "name": "Steve Poku",
-                  "role": "UD Europe Chairman"
+                  "role": "UD Europe Chairman",
+                  "image": "assets/bishops/matched-184.webp",
+                  "rosterId": "B184"
                 },
                 {
                   "name": "Toss Mills-Odoi",
