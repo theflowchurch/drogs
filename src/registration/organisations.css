@@ -190,3 +190,13 @@
   .org-tabs-list-group{display:block}
   .org-tabs-list-subs{display:flex}
 }
+
+/* Office, 9 Nov: every tab the same shape and colour, none highlighted. */
+.org-tabs .org-tabs-list .org-tab,.org-tabs .org-tabs-list .org-subtab,
+.org-tabs .org-tabs-list .org-tab.is-active,.org-tabs .org-tabs-list .org-subtab.is-active{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 18px;border-radius:14px;border:2px solid #c9a95c80;background:#ffffff0d;color:#fff!important;font-size:18px;font-weight:700;white-space:nowrap}
+.org-tabs .org-tabs-list .org-tab:hover,.org-tabs .org-tabs-list .org-subtab:hover{background:#ffffff1f}
+@media(max-width:700px){
+  .org-tabs .org-tabs-list .org-tab,.org-tabs .org-tabs-list .org-subtab,.org-tabs .org-tabs-list .org-tab.is-active,.org-tabs .org-tabs-list .org-subtab.is-active{width:100%;justify-content:flex-start;white-space:normal;font-size:18px;min-height:52px}
+  .org-tabs-list-group{display:contents!important}.org-tabs-list-subs{display:contents!important}
+  .org-tabs .org-tabs-list{gap:10px}
+}
