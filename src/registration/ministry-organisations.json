@@ -114,7 +114,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "showMembers": true
         },
         {
           "slug": "adjutancy",
@@ -145,7 +146,9 @@
             },
             {
               "name": "Mary-Chloe Rea",
-              "role": "Secretary"
+              "role": "Secretary",
+              "image": "assets/portraits/BO250-2d13899a.webp",
+              "rosterId": "BO250"
             },
             {
               "name": "Rebecca Addae",
@@ -247,10 +250,14 @@
               "rosterId": "BO265"
             },
             {
-              "name": "Mary-Chloe Rea"
+              "name": "Mary-Chloe Rea",
+              "image": "assets/portraits/BO250-2d13899a.webp",
+              "rosterId": "BO250"
             },
             {
-              "name": "Renata Obaka"
+              "name": "Renata Obaka",
+              "image": "assets/portraits/BO215.webp",
+              "rosterId": "BO215"
             },
             {
               "name": "Erica Luca Aryee",
@@ -405,7 +412,9 @@
               "name": "Charles Osei"
             },
             {
-              "name": "Eben Johnson"
+              "name": "Eben Johnson",
+              "image": "assets/portraits/P1062.webp",
+              "rosterId": "P1062"
             },
             {
               "name": "Titus Codjoe"
@@ -593,7 +602,9 @@
             {
               "name": "Mary-Chloe Rea",
               "role": "DHMM Council Chairperson",
-              "leader": true
+              "leader": true,
+              "image": "assets/portraits/BO250-2d13899a.webp",
+              "rosterId": "BO250"
             },
             {
               "name": "Rebecca Joana Addae",
@@ -640,6 +651,21 @@
             },
             {
               "name": "Jane Adara Hyde"
+            },
+            {
+              "name": "Paula Mills-Thompson",
+              "image": "assets/bishops/matched-231.webp",
+              "rosterId": "BO221"
+            },
+            {
+              "name": "Erica Luca Aryee",
+              "image": "assets/bishops/matched-59.webp",
+              "rosterId": "B59"
+            },
+            {
+              "name": "Renata Obaka",
+              "image": "assets/portraits/BO215.webp",
+              "rosterId": "BO215"
             }
           ]
         },
@@ -737,7 +763,9 @@
             {
               "name": "Eben Johnson",
               "role": "Give Thyself Wholly Board Chairman",
-              "leader": true
+              "leader": true,
+              "image": "assets/portraits/P1062.webp",
+              "rosterId": "P1062"
             }
           ]
         },
@@ -829,6 +857,25 @@
             },
             {
               "name": "Adelaide Adu-Armah"
+            },
+            {
+              "name": "Marcel Aboagye",
+              "image": "assets/portraits/B130-91345d25.webp",
+              "rosterId": "B130"
+            },
+            {
+              "name": "Grace Edusei"
+            },
+            {
+              "name": "Shirley Ntim"
+            },
+            {
+              "name": "Bridgette Ogoe",
+              "image": "assets/bishops/matched-19.webp",
+              "rosterId": "B19"
+            },
+            {
+              "name": "Catherine Johnson"
             }
           ]
         },
@@ -964,6 +1011,17 @@
               "image": "assets/bishops/093.jpg",
               "rosterId": "B93"
             }
+          ],
+          "places": [
+            "Sweet Melodies, Accra",
+            "Sweet Moments, Takoradi",
+            "Sweet Memories, Cape Coast",
+            "Sweet Dreams, Goaso",
+            "Sweet Hearts, Bolgatanga",
+            "Sweet Harmony, Wa",
+            "Sweet Flow, Tamale",
+            "Sweet Aroma, Sefwi Wiawso",
+            "Sweet Reflections, Sunyani"
           ]
         },
         {
@@ -973,7 +1031,9 @@
             {
               "name": "Renata Obaka",
               "role": "Construction Board Chairperson",
-              "leader": true
+              "leader": true,
+              "image": "assets/portraits/BO215.webp",
+              "rosterId": "BO215"
             },
             {
               "name": "Robert Nunoo",
@@ -995,6 +1055,11 @@
             },
             {
               "name": "Catherine Johnson"
+            },
+            {
+              "name": "Erica Luca Aryee",
+              "image": "assets/bishops/matched-59.webp",
+              "rosterId": "B59"
             }
           ]
         },
@@ -1040,6 +1105,11 @@
             },
             {
               "name": "Michaela Sowah"
+            },
+            {
+              "name": "Emmanuel Nterful",
+              "image": "assets/portraits/B324-dbb560ba.webp",
+              "rosterId": "B324"
             }
           ]
         },
