@@ -54,7 +54,8 @@
 .org-leaders-2{grid-template-columns:1fr 1fr}
 .org-leader{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);border:2px solid var(--org-line);border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 10px 26px #14223d18}
 .org-leaders-1 .org-leader{max-width:860px}
-.org-leaders-2 .org-leader{grid-template-columns:1fr}
+.org-leaders-2 .org-leader{grid-template-columns:1fr;grid-template-rows:auto 1fr;align-content:start}
+.org-leaders-2 .org-leader-text{justify-content:flex-start}
 .org-leader-photo{display:flex;aspect-ratio:4/4.6;overflow:hidden;background:#e6e4df}
 .org-leaders-2 .org-leader-photo{aspect-ratio:1/1}
 .org-leader-text{display:flex;flex-direction:column;justify-content:center;padding:30px;border-left:4px solid var(--org-gold)}
