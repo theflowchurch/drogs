@@ -57,7 +57,7 @@ function Hero({ backdrop, kicker, title, text, children }) {
 function OrganisationsHome() {
   const total = data.groups.reduce((n, g) => n + g.organisations.length, 0);
   return <main>
-    <Hero backdrop="home" kicker={`Updated ${data.updated}`} title="The Organisations of Dag Heward-Mills" text="The councils, boards and committees that serve the churches, the outreaches and the institutions.">
+    <Hero backdrop="home" kicker={`Updated ${data.updated}`} title="The Organisations" text="The councils, boards and committees that serve the churches, the outreaches and the institutions.">
       <div className="org-stats"><span><strong>{data.groups.length}</strong>Organisations</span><span><strong>{total}</strong>Councils</span></div>
     </Hero>
     <section className="org-main org-choose" aria-labelledby="choose-heading">
