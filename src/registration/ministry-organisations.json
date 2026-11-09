@@ -572,16 +572,6 @@
               "name": "Happy Kumah"
             }
           ]
-        },
-        {
-          "slug": "bishops-conference",
-          "name": "The Bishops' Conference",
-          "summary": "204 bishops.",
-          "link": {
-            "label": "See the bishops in the ministers' directory",
-            "href": "/directory/"
-          },
-          "people": []
         }
       ]
     },

@@ -55,7 +55,7 @@ function OrganisationsHome() {
   const total = data.groups.reduce((n, g) => n + g.organisations.length, 0);
   return <main>
     <Hero backdrop="home" kicker={`Updated ${data.updated}`} title="The Organisations of Dag Heward-Mills" text="The councils, boards and committees that serve the churches, the outreaches and the institutions.">
-      <div className="org-stats"><span><strong>{total}</strong>Organisations</span><span><strong>{data.groups.length}</strong>Categories</span></div>
+      <div className="org-stats"><span><strong>{data.groups.length}</strong>Organisations</span><span><strong>{total}</strong>Councils</span></div>
     </Hero>
     <section className="org-main org-choose" aria-labelledby="choose-heading">
       <h2 id="choose-heading">Choose a category</h2>
