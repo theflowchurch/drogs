@@ -1,0 +1,87 @@
+/* The second design of the Bishop's Directory (/councils/), after the office's
+   mockup: a deep blue night-sky header with the earth, bright section tiles,
+   and a white panel with tabs and gold-edged cards. */
+@font-face{font-family:Council Sans;src:url('./fonts/InstrumentSans-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Council Sans;src:url('./fonts/InstrumentSans-Bold.ttf') format('truetype');font-weight:600 900;font-display:swap}
+.cz-site{--ink:#0f1640;--muted:#4b5275;--gold:#f2c14e;--gold-deep:#b98a1f;--line:#e3e6f2;min-height:100vh;background:#0a0f3a;color:#fff;font-family:'Council Sans',system-ui,sans-serif;font-size:18px;line-height:1.5}
+.cz-site *{box-sizing:border-box}.cz-site a{color:inherit;text-decoration:none}.cz-site button{font:inherit;cursor:pointer}
+
+/* Header */
+.cz-hero{position:relative;overflow:hidden;padding:26px 5% 120px;background:radial-gradient(ellipse 60% 70% at 0% 40%,#5a1fb588 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 100% 85%,#8a22a866 0%,transparent 60%),linear-gradient(170deg,#0d1a6b 0%,#0a1150 45%,#120b4a 100%)}
+.cz-earth{position:absolute;right:-4%;top:40px;width:min(62%,880px);height:auto;pointer-events:none;opacity:.95;-webkit-mask-image:radial-gradient(closest-side at 56% 52%,#000 62%,transparent 100%);mask-image:radial-gradient(closest-side at 56% 52%,#000 62%,transparent 100%)}
+.cz-bar{position:relative;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;max-width:1240px;margin:0 auto}
+.cz-brand{font-size:26px;font-weight:800;line-height:1.05;letter-spacing:.5px;padding-right:22px;border-right:3px solid var(--gold)}
+.cz-menu{position:relative}
+.cz-menu>button{display:inline-flex;align-items:center;gap:12px;min-height:50px;padding:8px 28px;border-radius:999px;border:2px solid var(--gold);background:#0a1150cc;color:#fff;font-size:19px;font-weight:600}
+.cz-menu nav{position:absolute;right:0;top:calc(100% + 10px);z-index:10;display:flex;flex-direction:column;min-width:260px;padding:8px;border-radius:16px;background:#0d1660;border:1px solid #f2c14e66;box-shadow:0 20px 40px #0008}
+.cz-menu nav a{padding:12px 16px;border-radius:10px;font-size:18px;font-weight:600}
+.cz-menu nav a:hover{background:#ffffff14}
+.cz-hero-text{position:relative;z-index:2;max-width:1240px;margin:70px auto 0}
+.cz-kicker{margin:0;color:#fff!important;font-size:clamp(22px,2.6vw,34px);font-weight:600;letter-spacing:2px;text-transform:uppercase}
+.cz-hero h1{margin:0;font-size:clamp(72px,11vw,170px);font-weight:900;line-height:.95;letter-spacing:-2px;text-transform:uppercase;text-shadow:0 6px 30px #0007}
+.cz-sub{margin:10px 0 0;font-size:clamp(20px,2.4vw,32px);font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--gold)}
+.cz-stats{position:relative;z-index:2;display:flex;justify-content:center;max-width:1000px;margin:60px auto 0}
+.cz-stats span{flex:1;display:flex;flex-direction:column;align-items:center;font-size:20px;text-align:center}
+.cz-stats span+span{border-left:2px solid #f2c14e99}
+.cz-stats strong{font-size:clamp(44px,5vw,64px);font-weight:800;line-height:1.05;color:var(--gold)}
+.cz-tiles{position:relative;z-index:2;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;max-width:1240px;margin:46px auto 0}
+.cz-tile{display:flex;align-items:center;justify-content:center;min-height:120px;padding:14px;border-radius:18px;text-align:center;font-size:22px;font-weight:700;line-height:1.2;border:2px solid;box-shadow:0 0 22px var(--glow),inset 0 0 18px #ffffff14;transition:transform .15s}
+.cz-tile:hover{transform:translateY(-3px)}
+.cz-purple{--c1:#6b32e0;--c2:#3b148f;--glow:#7c4dff88;--edge:#a98bff}
+.cz-blue{--c1:#2564e8;--c2:#0f2f9c;--glow:#3d7bff88;--edge:#7fa8ff}
+.cz-teal{--c1:#0fa59a;--c2:#085f63;--glow:#22d3c488;--edge:#6ee6dc}
+.cz-magenta{--c1:#c3207a;--c2:#6e0f45;--glow:#ff3d9a77;--edge:#ff8cc4}
+.cz-gold{--c1:#e0a321;--c2:#8f5d07;--glow:#ffc24a88;--edge:#ffd77a}
+.cz-tile{background:linear-gradient(160deg,var(--c1),var(--c2));border-color:var(--edge)}
+
+/* White panel */
+.cz-panel{position:relative;z-index:3;margin:-60px auto 0;max-width:1320px;padding:50px 5% 50px;background:#f7f8fc;color:var(--ink);border-radius:36px 36px 0 0}
+.cz-section{padding:30px 0 40px;scroll-margin-top:20px}
+.cz-section+.cz-section{border-top:2px solid var(--line)}
+.cz-section h2{margin:0 0 22px;padding-left:18px;border-left:8px solid var(--c1);font-size:clamp(32px,3.6vw,48px);font-weight:800;line-height:1.15;color:var(--ink)}
+.cz-tabs{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:30px}
+.cz-tabs button{min-height:52px;padding:10px 24px;border-radius:14px;border:2px solid var(--line);background:#fff;color:var(--ink);font-size:18px;font-weight:600;box-shadow:0 2px 6px #0f16400d}
+.cz-tabs button:hover{border-color:#b7bdd8}
+.cz-tabs button.is-on{background:var(--ink);border-color:var(--ink);color:#fff}
+.cz-group{margin-bottom:34px;scroll-margin-top:20px}
+.cz-group-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-bottom:20px}
+.cz-group-head h3{margin:0;font-size:clamp(26px,2.6vw,34px);font-weight:800;color:var(--ink)}
+.cz-pill{padding:6px 16px;border-radius:999px;background:#f8dc8f;color:#4a3608;font-size:17px;font-weight:700}
+.cz-viewall{margin-left:auto;display:inline-flex;align-items:center;gap:8px;border:0;background:none;color:#4b2bb0;font-size:20px;font-weight:700;padding:8px 0}
+.cz-viewall span{font-size:26px;line-height:1}
+.cz-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+.cz-card{display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 8px 22px #0f164019;border-bottom:4px solid var(--gold-deep)}
+.cz-card-photo{display:flex;aspect-ratio:1/1.02;overflow:hidden;background:#eef0f7}
+.cz-card-photo>*{width:100%!important;height:100%!important;aspect-ratio:auto!important;object-fit:cover;object-position:var(--portrait-x,50%) var(--portrait-y,20%)}
+.cz-photo-empty{width:100%;height:100%;background:linear-gradient(160deg,#dfe3f0,#c9cfe3)}
+.cz-card-text{display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 14px 18px;text-align:center}
+.cz-card-text strong{font-size:20px;font-weight:700;line-height:1.25;color:var(--ink)}
+.cz-card-text span{font-size:14px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.cz-card-text small{margin-top:4px;font-size:14px;font-weight:700;color:var(--gold-deep)}
+.cz-top{display:block;width:max-content;margin:30px auto 0;padding:14px 26px;border-radius:999px;background:var(--ink);color:#fff!important;font-size:18px;font-weight:700}
+.cz-footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 20px;max-width:1320px;margin:0 auto;padding:24px 5%;background:#f7f8fc;color:var(--muted);font-size:16px;border-top:2px solid var(--line)}
+
+@media(max-width:1000px){.cz-cards{grid-template-columns:repeat(3,minmax(0,1fr))}.cz-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){
+  .cz-site{font-size:17px}
+  .cz-hero{padding:20px 5% 90px}
+  .cz-earth{right:-30%;top:70px;width:95%}
+  .cz-brand{font-size:20px;padding-right:14px}
+  .cz-menu>button{min-height:44px;padding:6px 20px;font-size:17px}
+  .cz-hero-text{margin-top:40px}
+  .cz-kicker{font-size:18px;letter-spacing:1px}
+  .cz-hero h1{font-size:76px}
+  .cz-sub{font-size:17px;letter-spacing:1.5px}
+  .cz-stats{margin-top:34px}
+  .cz-stats span{font-size:14px}.cz-stats strong{font-size:38px}
+  .cz-tiles{grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}
+  .cz-tile{min-height:92px;font-size:19px}
+  .cz-tile:last-child:nth-child(odd){grid-column:1/-1}
+  .cz-panel{margin-top:-40px;padding:34px 5% 40px;border-radius:28px 28px 0 0}
+  .cz-section h2{font-size:30px;border-left-width:6px;padding-left:14px}
+  .cz-tabs{gap:8px}.cz-tabs button{min-height:46px;padding:8px 16px;font-size:16px}
+  .cz-group-head h3{font-size:24px}
+  .cz-viewall{margin-left:0;font-size:18px}
+  .cz-cards{grid-template-columns:1fr 1fr;gap:14px}
+  .cz-card-text strong{font-size:17px}.cz-card-text span{font-size:12px}
+}
