@@ -1570,6 +1570,263 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "more",
+      "name": "",
+      "untitled": true,
+      "organisations": [
+        {
+          "slug": "emeritus",
+          "name": "Emeritus",
+          "people": [
+            {
+              "name": "Kwabena Amoako-Doku",
+              "rosterId": "B118",
+              "bishop": true,
+              "church": "Makarios City Church",
+              "title": "Bishop",
+              "image": "assets/bishops/118.jpg"
+            },
+            {
+              "name": "David Yalleh",
+              "rosterId": "B35",
+              "bishop": true,
+              "church": "Jesus Is The Rock Church",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-35.webp"
+            },
+            {
+              "name": "Kathleen-Sarah Parker-Allotey",
+              "rosterId": "B104",
+              "bishop": true,
+              "church": "The Glorious Mega Church",
+              "title": "Episcopal Sister",
+              "image": "assets/organisations/people/kathleen-sarah-parker-allotey.webp"
+            },
+            {
+              "name": "Charles Amoo",
+              "rosterId": "B20",
+              "bishop": true,
+              "church": "East Mountain Churches",
+              "title": "Bishop",
+              "image": "assets/organisations/people/charles-amoo.webp"
+            },
+            {
+              "name": "Ebenezer Barnor",
+              "rosterId": "B40",
+              "bishop": true,
+              "church": "The Makarios Church",
+              "title": "Bishop",
+              "image": "assets/organisations/people/ebenezer-barnor.webp"
+            },
+            {
+              "name": "Hamish Oddoye",
+              "rosterId": "B76",
+              "bishop": true,
+              "church": "Jesus Saviour Of The World Church International",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-76.webp"
+            },
+            {
+              "name": "Emmanuel Ankrah",
+              "rosterId": "B48",
+              "bishop": true,
+              "church": "Jesus Saviour Of The World Church International",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-48.webp"
+            },
+            {
+              "name": "Sampson Kwaku Kissi",
+              "rosterId": "B176",
+              "bishop": true,
+              "church": "The Mega Church",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-176.webp"
+            },
+            {
+              "name": "Paschal Kow Dadzie Godwyll",
+              "rosterId": "B151",
+              "bishop": true,
+              "church": "Castle City Church",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-151.webp"
+            },
+            {
+              "name": "Leonora Hyde",
+              "rosterId": "B124",
+              "bishop": true,
+              "church": "Mustard Seed Chapel International",
+              "title": "Episcopal Sister",
+              "image": "assets/organisations/people/leonora-hyde.webp"
+            },
+            {
+              "name": "Emmanuel Klufio",
+              "rosterId": "B51",
+              "bishop": true,
+              "church": "Strong Christian Church",
+              "title": "Bishop",
+              "image": "assets/organisations/people/emmanuel-klufio.webp"
+            },
+            {
+              "name": "Samuel B Sawyerr",
+              "rosterId": "BO200",
+              "bishop": true,
+              "church": "Anointed People International",
+              "title": "Bishop",
+              "image": "assets/portraits/BO200-81e96156.webp"
+            },
+            {
+              "name": "Amelia Aidoo",
+              "rosterId": "B9",
+              "bishop": true,
+              "church": "Qodesh City Church",
+              "title": "Mother",
+              "image": "assets/organisations/people/amelia-aidoo.webp"
+            },
+            {
+              "name": "Ato Wilson",
+              "rosterId": "B188",
+              "bishop": true,
+              "church": "Glory Life Hope Center",
+              "title": "Bishop",
+              "image": "assets/organisations/people/ato-wilson.webp"
+            },
+            {
+              "name": "George Aferi Obeng",
+              "rosterId": "B73",
+              "bishop": true,
+              "church": "Precious Souls Swaziland",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-73.webp"
+            },
+            {
+              "name": "Solomon Boateng",
+              "rosterId": "B183",
+              "bishop": true,
+              "church": "The Machaneh Church International",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-183.webp"
+            }
+          ]
+        },
+        {
+          "slug": "ursc",
+          "name": "URSC",
+          "people": [
+            {
+              "name": "Kweku Amonoo-Neizer",
+              "rosterId": "B121",
+              "bishop": true,
+              "church": "The Machaneh Church International",
+              "title": "Bishop",
+              "image": "assets/organisations/people/kweku-amonoo-neizer.webp"
+            },
+            {
+              "name": "Kingsley Gyasi",
+              "rosterId": "B110",
+              "bishop": true,
+              "church": "Makarios City Church",
+              "title": "Bishop",
+              "image": "assets/organisations/people/kingsley-gyasi.webp"
+            }
+          ]
+        },
+        {
+          "slug": "change-of-status",
+          "name": "Change of Status",
+          "people": [
+            {
+              "name": "Bernard Koranteng",
+              "rosterId": "B17",
+              "bishop": true,
+              "church": "1000 Micro Church Network International",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-17.webp"
+            },
+            {
+              "name": "Xola Mpupu",
+              "rosterId": "B192",
+              "bishop": true,
+              "church": "Strong Christian Church",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-192.webp"
+            },
+            {
+              "name": "Baffour Kwaku Kyei",
+              "rosterId": "B15",
+              "bishop": true,
+              "church": "Amour Internationale",
+              "title": "Bishop",
+              "image": "assets/bishops/015.jpg"
+            },
+            {
+              "name": "Eric Kobina Asare",
+              "rosterId": "B57",
+              "bishop": true,
+              "church": "The Glorious Mega Church",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-57.webp"
+            },
+            {
+              "name": "Kenneth Antwi Agyei",
+              "rosterId": "B105",
+              "bishop": true,
+              "church": "The Machaneh Church International",
+              "title": "Bishop",
+              "image": "assets/bishops/105.jpg"
+            },
+            {
+              "name": "Paul Anaba Mbah",
+              "rosterId": "B153",
+              "bishop": true,
+              "church": "United Cities",
+              "title": "Bishop",
+              "image": "assets/bishops/reconciled-153.webp"
+            },
+            {
+              "name": "David Afreh",
+              "rosterId": "B31",
+              "bishop": true,
+              "church": "Jesus Saviour Of The World Church International",
+              "title": "Bishop",
+              "image": "assets/portraits/B31-665a5d18.webp"
+            },
+            {
+              "name": "Raymond Mensah",
+              "rosterId": "B162",
+              "bishop": true,
+              "church": "Loyalty House International",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-162.webp"
+            },
+            {
+              "name": "Wisdom Felix Ahiagah",
+              "rosterId": "B189",
+              "bishop": true,
+              "church": "Lighthouse City Churches",
+              "title": "Bishop",
+              "image": "assets/bishops/189.jpg"
+            },
+            {
+              "name": "Raphael Mendes Essien",
+              "rosterId": "B160",
+              "bishop": true,
+              "church": "Jesus Is The Answer Church",
+              "title": "Bishop",
+              "image": "assets/bishops/160.jpg"
+            },
+            {
+              "name": "Romeo Sosu",
+              "rosterId": "B174",
+              "bishop": true,
+              "church": "Jesus Is The Door",
+              "title": "Bishop",
+              "image": "assets/portraits/B174-10dca5e8.webp"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
