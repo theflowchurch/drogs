@@ -82,7 +82,7 @@ export default function PaymentOptions({ current, actor, run, refresh, beforeSav
       <p>After making your payment, upload a screenshot or photo of your payment confirmation.</p>
       {current.payment === 'rejected' && <p role="alert">{current.paymentNote || 'The office requested replacement proof. Please upload a new receipt.'}</p>}
       <label className="reg-receipt-drop">
-        <input type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading || saving} onChange={e => { const file = e.target.files?.[0]; e.target.value = ''; upload(file); }} />
+        <input type="file" aria-label="Payment receipt" accept="image/jpeg,image/png,image/webp" disabled={uploading || saving} onChange={e => { const file = e.target.files?.[0]; e.target.value = ''; upload(file); }} />
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 16V4m0 0-5 5m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
         <strong>{proof ? 'Choose a different receipt' : 'Choose receipt'}</strong>
         <small>JPG, PNG or WebP · up to 5 MB</small>
