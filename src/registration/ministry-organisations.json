@@ -509,7 +509,12 @@
               "title": "Mother"
             },
             {
-              "name": "Kate Allotey"
+              "name": "Kathleen-Sarah Parker-Allotey",
+              "rosterId": "B104",
+              "bishop": true,
+              "church": "The Glorious Mega Church",
+              "title": "Episcopal Sister",
+              "image": "assets/bishops/matched-104.webp"
             },
             {
               "name": "Patrick Bruce",
@@ -835,7 +840,12 @@
               "title": "Mother"
             },
             {
-              "name": "Jane Adara Hyde"
+              "name": "Adara Hyde",
+              "rosterId": "BO214",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Mother",
+              "image": "assets/portraits/BO214.webp"
             },
             {
               "name": "Paula Mills-Thompson",
@@ -927,6 +937,30 @@
               "bishop": true,
               "church": "Healing Jesus Campaign",
               "title": "Bishop"
+            },
+            {
+              "name": "Khauhelo Mokobocho",
+              "rosterId": "B108",
+              "bishop": true,
+              "church": "Serious Christian Church Lesotho",
+              "title": "Bishop",
+              "image": "assets/portraits/B108-51271806.webp"
+            },
+            {
+              "name": "Abednego Nyarkoh Mensah",
+              "rosterId": "B1",
+              "bishop": true,
+              "church": "Praia City State Church",
+              "title": "Bishop",
+              "image": "assets/portraits/B1-9defffb7.webp"
+            },
+            {
+              "name": "Christian Assi Adoupo",
+              "rosterId": "B22",
+              "bishop": true,
+              "church": "United Cities",
+              "title": "Bishop",
+              "image": "assets/bishops/022.jpg"
             }
           ]
         },
@@ -1410,6 +1444,14 @@
               "bishop": true,
               "church": "Keep My Word Chapel International",
               "title": "Bishop"
+            },
+            {
+              "name": "Clarence Welds",
+              "rosterId": "B24",
+              "bishop": true,
+              "church": "East Mountain Churches",
+              "title": "Bishop",
+              "image": "assets/portraits/B24-160ef5c7.webp"
             }
           ]
         },
