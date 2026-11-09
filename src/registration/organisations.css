@@ -18,6 +18,9 @@
 .org-hero h1{font-family:var(--denom-display);font-size:clamp(44px,6.2vw,80px);font-weight:700;letter-spacing:-1px;line-height:1.06;color:#fff;margin:0;text-wrap:balance}
 .org-hero-text{font-size:24px;line-height:1.5;color:#e9e4d6;max-width:780px;margin:20px auto 0}
 .org-hero .org-button{margin-top:30px}
+.org-directory-hero{padding:96px 5% 84px}
+.org-directory-hero+.org-group .org-group-band{margin-top:0;border-top:1px solid #c9a95c55}
+.org-directory-hero h1{text-transform:uppercase;letter-spacing:1px}
 .org-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:520px;margin:40px auto 0}
 .org-stats span{display:flex;flex-direction:column;padding:18px 10px;border:1px solid #c9a95c80;border-radius:16px;background:#14223d80;font-size:17px;letter-spacing:1px;text-transform:uppercase;color:#e9e4d6}
 .org-stats strong{font-family:var(--denom-display);font-size:44px;line-height:1.1;letter-spacing:0;color:#fff;text-transform:none}
@@ -31,7 +34,6 @@
 .org-group{scroll-margin-top:0}
 .org-group-band{position:relative;overflow:hidden;background:var(--org-navy);color:#fff;text-align:center;padding:64px 5% 56px;margin-top:10px}
 .org-group-band-inner{position:relative;z-index:1}
-.org-group:first-of-type .org-group-band{padding-top:140px;margin-top:0}
 .org-group-band :is(h1,h2){font-family:var(--denom-display);font-size:clamp(40px,5.4vw,66px);font-weight:700;letter-spacing:-.8px;line-height:1.08;margin:0}
 .org-group-band p{font-size:22px;letter-spacing:2px;text-transform:uppercase;color:var(--org-gold);margin:12px 0 0}
 
@@ -92,12 +94,12 @@
 @media(max-width:700px){
   .org-site{font-size:19px}
   .org-header{min-height:72px}.org-brand{font-size:22px}.org-brand-mark{width:42px;height:42px;font-size:18px}
-  .org-hero{padding:118px 6% 48px}
+  .org-hero{padding:118px 6% 48px}.org-directory-hero{padding:64px 6% 56px}
   .org-kicker{font-size:15px;letter-spacing:2px}
   .org-hero-text{font-size:20px}
   .org-stats{gap:8px}.org-stats span{font-size:13px;padding:14px 4px}.org-stats strong{font-size:34px}
   .org-jump{flex-direction:column;align-items:stretch}.org-jump a{justify-content:center;font-size:20px}
-  .org-group-band{padding:46px 6% 40px}.org-group:first-of-type .org-group-band{padding-top:112px}.org-group-band p{font-size:18px}
+  .org-group-band{padding:46px 6% 40px}.org-group-band p{font-size:18px}
   .org-council{padding-top:52px}.org-council>h3{font-size:29px;padding:20px 22px;border-left-width:8px;border-radius:14px}
   .org-council-summary{font-size:20px}
   .org-leaders-2{grid-template-columns:1fr}

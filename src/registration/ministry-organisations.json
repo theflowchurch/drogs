@@ -1,6 +1,6 @@
 {
-  "name": "The Organisations",
-  "shortName": "The Organisations",
+  "name": "The Bishop's Directory",
+  "shortName": "The Bishop's Directory",
   "updated": "August 2026",
   "source": "THREE.ORG documentary (Final Cut project 'NEW INTRO'), on-screen titles",
   "groups": [
@@ -1680,6 +1680,14 @@
                   "image": "assets/portraits/BO224.webp"
                 },
                 {
+                  "name": "Thaddeus Gyabaah Boadi",
+                  "rosterId": "B247",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B247.webp"
+                },
+                {
                   "name": "Frank Opoku",
                   "rosterId": "B216",
                   "bishop": true,
@@ -1710,6 +1718,14 @@
                   "church": "First Love Church",
                   "title": "Bishop",
                   "image": "assets/bishops/matched-220.webp"
+                },
+                {
+                  "name": "Edwin Morgan Ogoe Jr",
+                  "rosterId": "B196",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-196.webp"
                 },
                 {
                   "name": "Michael Oddoye",
@@ -1752,6 +1768,14 @@
                   "image": "assets/bishops/matched-242.webp"
                 },
                 {
+                  "name": "John Ross Thomas",
+                  "rosterId": "B244",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-244.webp"
+                },
+                {
                   "name": "Emmanuel Amartey",
                   "rosterId": "B209",
                   "bishop": true,
@@ -1774,6 +1798,14 @@
                   "church": "First Love Church",
                   "title": "Mother",
                   "image": "assets/organisations/people/dr-annika-dwimoh.webp"
+                },
+                {
+                  "name": "Latisha Freda Appiah Kubi",
+                  "rosterId": "PNbe7a66dcebe6",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/PNbe7a66dcebe6.webp"
                 },
                 {
                   "name": "Kiki Heward-Mills",
@@ -2058,6 +2090,14 @@
                   "church": "First Love Church",
                   "title": "Bishop",
                   "image": "assets/portraits/B204-badf7c8c.webp"
+                },
+                {
+                  "name": "Farrell N K A Bruce",
+                  "rosterId": "B215",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-215.webp"
                 },
                 {
                   "name": "Kojo Yeboah Atiemo",
@@ -3825,5 +3865,7 @@
       ],
       "untitled": true
     }
-  ]
+  ],
+  "heading": "The Bishop's Directory",
+  "subheading": "The Central Directory of Bishops Across All Denominations."
 }

@@ -87,15 +87,22 @@ export default function OrganisationsApp({ slug = '' }) {
   useEffect(() => { if (slug) document.getElementById(slug)?.scrollIntoView(); }, [slug]);
   // The page opens straight on the Church Organisations (office, 9 Nov).
   return <div className="denom-site org-site" id="top">
-    <header className="org-header"><a href={`${base}/organisations/`} className="org-brand"><span className="org-brand-mark" aria-hidden="true">✦</span><span>{data.shortName}</span></a></header>
     <main>
-      {data.groups.map((group, index) => { const Heading = index === 0 ? 'h1' : 'h2';
+      {/* The page heading (office, 9 Nov); the corner logo and name are gone. */}
+      <section className="org-hero org-directory-hero">
+        <Backdrop name="home"/>
+        <div className="org-hero-inner">
+          <h1>{data.heading}</h1>
+          <p className="org-hero-text">{data.subheading}</p>
+        </div>
+      </section>
+      {data.groups.map((group, index) => { const Heading = 'h2';
         // An untitled group (Emeritus, URSC, Change of Status) follows on at the
         // end of the page with no band of its own.
         const followedOn = data.groups[index + 1]?.untitled;
         return <section className="org-group" id={group.slug} key={group.slug} aria-labelledby={group.untitled ? undefined : `${group.slug}-title`} aria-label={group.untitled ? 'More councils' : undefined}>
         {!group.untitled && <div className="org-group-band">
-          <Backdrop name={index === 0 ? 'home' : (group.backdrop || group.slug)}/>
+          <Backdrop name={group.backdrop || group.slug}/>
           <div className="org-group-band-inner"><Heading id={`${group.slug}-title`}>{group.name}</Heading></div>
         </div>}
         <div className="org-main">
