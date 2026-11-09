@@ -180,8 +180,13 @@
               "title": "Bishop"
             },
             {
-              "name": "Yoku Amonoo-Neizer",
-              "role": "Ceremonial Archbishop"
+              "name": "Kweku Amonoo-Neizer",
+              "role": "Ceremonial Archbishop",
+              "rosterId": "B121",
+              "bishop": true,
+              "church": "The Machaneh Church International",
+              "title": "Bishop",
+              "image": "assets/portraits/B121-0bfed7be.webp"
             },
             {
               "name": "Emmanuel Sakyi",
