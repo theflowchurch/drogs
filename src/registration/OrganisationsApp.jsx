@@ -53,7 +53,11 @@ function Bishop({ person }) {
 function Council({ organisation }) {
   // An untitled group (office, 9 Nov) lists bishops with no council given.
   return <section className={`org-council ${organisation.untitled ? 'org-council-untitled' : ''}`} id={organisation.slug} aria-labelledby={organisation.untitled ? undefined : `${organisation.slug}-heading`} aria-label={organisation.untitled ? 'More bishops' : undefined}>
-    {!organisation.untitled && <h3 id={`${organisation.slug}-heading`}>{organisation.name}</h3>}
+    {!organisation.untitled && <h3 id={`${organisation.slug}-heading`} style={organisation.accent ? { '--section-accent': organisation.accent } : undefined}>{organisation.name}</h3>}
+    {/* The subsections of this section, as chips right under its banner. */}
+    {(organisation.directoryGroups || []).some(g => g.slug && g.name) && <nav className="org-chips" aria-label={`${shortName(organisation.name)} subsections`}>
+      {organisation.directoryGroups.filter(g => g.slug && g.name && g.people.length).map(g => <a key={g.slug} href={`#${g.slug}`} className="org-chip">{shortName(g.name)}</a>)}
+    </nav>}
     {organisation.summary && <p className="org-council-summary">{organisation.summary}</p>}
     {organisation.places && <ul className="org-places">{organisation.places.map(place => <li key={place}>{place}</li>)}</ul>}
     {sectionsOf(organisation).map(section => section.people.length > 0 && <div className="org-council-part" key={section.name || 'people'}>
@@ -61,7 +65,7 @@ function Council({ organisation }) {
     </div>)}
     {/* The Kuriake Council also lists the bishops of each directory group (office, 9 Nov). */}
     {(organisation.directoryGroups || []).map(group => group.people.length > 0 && <div className="org-council-part org-directory-group" key={group.slug || group.name} id={group.slug}>
-      {group.name ? <h5 className="org-under org-group-name">{group.name}</h5> : <hr className="org-group-rule"/>}
+      {group.name ? <h5 className="org-under org-group-name">{group.name} <span className="org-count">{group.people.length} {group.people.length === 1 ? 'bishop' : 'bishops'}</span></h5> : <hr className="org-group-rule"/>}
       <div className="org-members">{group.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
     </div>)}
   </section>;
@@ -77,50 +81,14 @@ const subsOf = o => (o.directoryGroups || []).filter(g => g.slug && g.name && g.
 const subName = g => g.tabName || shortName(g.name);
 
 function CouncilTabs() {
-  const [active, setActive] = useState(tabs[0]?.slug);      // section being read
-  const [activeSub, setActiveSub] = useState('');           // subsection being read
-  const [picked, setPicked] = useState('');                 // section whose subsections are shown
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    // The section and subsection whose heading has most recently passed the tab bar.
-    const ids = tabs.flatMap(o => [[o.slug, ''], ...subsOf(o).map(g => [o.slug, g.slug])]);
-    let frame = 0;
-    const check = () => {
-      frame = 0;
-      const line = (document.querySelector('.org-tabs')?.getBoundingClientRect().bottom || 0) + 40;
-      let found = ids[0];
-      for (const pair of ids) { const el = document.getElementById(pair[1] || pair[0]); if (el && el.getBoundingClientRect().top <= line) found = pair; }
-      setActive(found[0]); setActiveSub(found[1]);
-    };
-    const onScroll = () => { if (!frame) frame = requestAnimationFrame(check); };
-    const onUserScroll = () => setPicked('');
-    check(); addEventListener('scroll', onScroll, { passive: true }); addEventListener('wheel', onUserScroll, { passive: true }); addEventListener('touchmove', onUserScroll, { passive: true });
-    return () => { removeEventListener('scroll', onScroll); removeEventListener('wheel', onUserScroll); removeEventListener('touchmove', onUserScroll); };
-  }, []);
-  const shown = tabs.find(o => o.slug === (picked || active));
-  const subs = shown ? subsOf(shown) : [];
-  const current = tabs.find(o => o.slug === active);
-  const go = () => { setOpen(false); setPicked(''); };
-  return <><nav id="sections" className={`org-tabs ${open ? 'is-open' : ''}`} aria-label="Sections">
-    <button type="button" className="org-tabs-toggle" aria-expanded={open} onClick={() => setOpen(v => !v)}>
-      <span><small>Go to a section</small>{current ? (current.tabName || shortName(current.name)) : 'Sections'}{activeSub && current ? <em> · {subName(subsOf(current).find(g => g.slug === activeSub) || { name: '' })}</em> : null}</span><span aria-hidden="true">{open ? '✕' : '▾'}</span>
-    </button>
-    {/* Wide screens: sections, then the subsections of the section in view (or tapped). */}
-    <div className="org-tabs-row">{tabs.map(o => <a key={o.slug} href={`#${o.slug}`} onClick={() => { setPicked(subsOf(o).length ? o.slug : ''); setOpen(false); }} className={`org-tab ${active === o.slug ? 'is-active' : ''}`} aria-current={active === o.slug ? 'true' : undefined}>{o.tabName || shortName(o.name)}</a>)}</div>
-    {subs.length > 0 && <div className="org-subtabs-row" aria-label={`${shown.tabName || shortName(shown.name)} subsections`}>{subs.map(g => <a key={g.slug} href={`#${g.slug}`} onClick={go} className={`org-subtab ${activeSub === g.slug ? 'is-active' : ''}`}>{subName(g)}</a>)}</div>}
-    {/* Phone: one list of every section with its subsections beneath. */}
-    {/* One row per part, in page order: a section with subsections gets its own
-        row; sections in a run without subsections share one. */}
-    <div className="org-tabs-list">{tabs.reduce((rows, o) => {
-      const last = rows[rows.length - 1];
-      if (!subsOf(o).length && last && !last.withSubs) last.items.push(o); else rows.push({ withSubs: subsOf(o).length > 0, items: [o] });
-      return rows;
-    }, []).map(row => <div key={row.items[0].slug} className={`org-tabs-list-group ${row.withSubs ? 'has-subs' : ''}`}>
-      {row.items.map(o => <a key={o.slug} href={`#${o.slug}`} onClick={go} className="org-tab">{o.tabName || shortName(o.name)}</a>)}
-      {row.withSubs && <div className="org-tabs-list-subs">{subsOf(row.items[0]).map(g => <a key={g.slug} href={`#${g.slug}`} onClick={go} className="org-subtab">{subName(g)}</a>)}</div>}
-    </div>)}</div>
+  // Office, 9 Nov: a few large tiles for the main sections; each section's
+  // subsections sit as chips under its own banner.
+  return <><nav id="sections" className="org-tiles-nav" aria-label="Sections">
+    {tabs.map(o => <a key={o.slug} href={`#${o.slug}`} className="org-section-tile" style={{ '--tile': o.accent || '#14223d' }}>
+      <span>{o.tabName || shortName(o.name)}</span>
+      {subsOf(o).length > 0 && <small>{subsOf(o).length} {o.slug === 'councils' ? 'councils' : 'groups'}</small>}
+    </a>)}
   </nav>
-  {/* Phone: the full list sits in the page; this button returns to it. */}
   <a className="org-to-sections" href="#sections">↑ Sections</a></>;
 }
 
