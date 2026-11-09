@@ -12,98 +12,7 @@
         {
           "slug": "united-denominations",
           "name": "United Denominations of Lighthouse Group of Churches",
-          "people": [
-            {
-              "name": "Frank Otchere",
-              "role": "UD Africa Chairman",
-              "leader": true,
-              "image": "assets/organisations/people/frank-otchere.webp",
-              "rosterId": "B69",
-              "bishop": true,
-              "church": "Primeiras Obras",
-              "title": "Bishop",
-              "consecrated": "2017"
-            },
-            {
-              "name": "Samuel Baidoo",
-              "role": "UD Ghana West",
-              "image": "assets/organisations/people/samuel-baidoo.webp",
-              "rosterId": "B54",
-              "bishop": true,
-              "church": "The Makarios Church",
-              "title": "Bishop"
-            },
-            {
-              "name": "Fred Ansah Quartey",
-              "rosterId": "B71",
-              "bishop": true,
-              "church": "East End City Churches",
-              "title": "Bishop",
-              "image": "assets/organisations/people/fred-ansah-quartey.webp",
-              "role": "UD Ghana East",
-              "consecrated": "2019"
-            },
-            {
-              "name": "Kwabena Asare Asamoa",
-              "rosterId": "B116",
-              "bishop": true,
-              "church": "The Machaneh Church International",
-              "title": "Bishop",
-              "image": "assets/organisations/people/kwabena-asare-asamoa.webp",
-              "role": "UD Ghana Central",
-              "consecrated": "2019"
-            },
-            {
-              "name": "Steve Poku",
-              "role": "UD Europe Chairman",
-              "image": "assets/organisations/people/steve-poku.webp",
-              "rosterId": "B184",
-              "bishop": true,
-              "church": "Pleasant Surprise",
-              "title": "Bishop",
-              "consecrated": "2022"
-            },
-            {
-              "name": "Kodwo Orleans-Lindsay",
-              "role": "UD North America Chairman",
-              "image": "assets/organisations/people/kodwo-orleans-lindsay.webp",
-              "rosterId": "B111",
-              "bishop": true,
-              "church": "Revival International",
-              "title": "Bishop",
-              "consecrated": "2024"
-            },
-            {
-              "name": "Joel Obuobisa",
-              "role": "United Islands Chairman",
-              "image": "assets/organisations/people/joel-obuobisa.webp",
-              "rosterId": "B92",
-              "bishop": true,
-              "church": "United Islands",
-              "title": "Bishop",
-              "consecrated": "2012"
-            },
-            {
-              "name": "Toss Mills-Odoi",
-              "role": "United Jesus Chairman",
-              "image": "assets/organisations/people/toss-mills-odoi.webp",
-              "rosterId": "B321",
-              "bishop": true,
-              "church": "Jesus Is The Master",
-              "title": "Bishop",
-              "consecrated": "2017"
-            },
-            {
-              "name": "Ernest Addai-Duah",
-              "role": "Eschatos Chairman",
-              "image": "assets/organisations/people/ernest-addai-duah.webp",
-              "rosterId": "B60",
-              "bishop": true,
-              "church": "Eschatos",
-              "title": "Bishop",
-              "consecrated": "2020"
-            }
-          ],
+          "people": [],
           "directoryGroups": [
             {
               "name": "UD Africa",
@@ -389,15 +298,6 @@
                   "consecrated": "2022"
                 },
                 {
-                  "name": "Emmanuel Klufio",
-                  "rosterId": "B51",
-                  "bishop": true,
-                  "church": "Strong Christian Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/emmanuel-klufio.webp",
-                  "consecrated": "2012"
-                },
-                {
                   "name": "Alex Tetteh Kofi-Opata",
                   "rosterId": "B7",
                   "bishop": true,
@@ -547,15 +447,6 @@
                   "consecrated": "2026"
                 },
                 {
-                  "name": "George Aferi Obeng",
-                  "rosterId": "B73",
-                  "bishop": true,
-                  "church": "Precious Souls Swaziland",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/george-aferi-obeng-3b5379d5.webp",
-                  "consecrated": "2020"
-                },
-                {
                   "name": "Jeffrey Kwame Ocran",
                   "rosterId": "B89",
                   "bishop": true,
@@ -661,14 +552,6 @@
                   "role": "UD Ghana West"
                 },
                 {
-                  "name": "Ebenezer Barnor",
-                  "rosterId": "B40",
-                  "bishop": true,
-                  "church": "The Makarios Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/ebenezer-barnor.webp"
-                },
-                {
                   "name": "Abraham Nii Ayi Aryee",
                   "rosterId": "B2",
                   "bishop": true,
@@ -722,24 +605,6 @@
                   "consecrated": "2017"
                 },
                 {
-                  "name": "Hamish Oddoye",
-                  "rosterId": "B76",
-                  "bishop": true,
-                  "church": "Jesus Saviour Of The World Church International",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/hamish-oddoye-a3ef339d.webp",
-                  "consecrated": "2012"
-                },
-                {
-                  "name": "Emmanuel Ankrah",
-                  "rosterId": "B48",
-                  "bishop": true,
-                  "church": "Jesus Saviour Of The World Church International",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/emmanuel-ankrah-66951da6.webp",
-                  "consecrated": "2021"
-                },
-                {
                   "name": "David Afreh",
                   "rosterId": "B31",
                   "bishop": true,
@@ -747,15 +612,6 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/david-afreh-c9189ff8.webp",
                   "consecrated": "2023"
-                },
-                {
-                  "name": "Sampson Kwaku Kissi",
-                  "rosterId": "B176",
-                  "bishop": true,
-                  "church": "The Mega Church",
-                  "title": "Bishop",
-                  "image": "assets/bishops/matched-176.webp",
-                  "consecrated": "2019"
                 },
                 {
                   "name": "Henry Oti-Frimpong",
@@ -810,15 +666,6 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/charles-kwame-bonsu-dcd16a03.webp",
                   "consecrated": "2026"
-                },
-                {
-                  "name": "Paschal Kow Dadzie Godwyll",
-                  "rosterId": "B151",
-                  "bishop": true,
-                  "church": "Castle City Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/paschal-kow-dadzie-godwyll-6ddd2b5c.webp",
-                  "consecrated": "2021"
                 },
                 {
                   "name": "Raymond Amarkyne",
@@ -1015,15 +862,6 @@
                   "consecrated": "2024"
                 },
                 {
-                  "name": "Solomon Boateng",
-                  "rosterId": "B183",
-                  "bishop": true,
-                  "church": "The Machaneh Church International",
-                  "title": "Bishop",
-                  "image": "assets/bishops/matched-183.webp",
-                  "consecrated": "2019"
-                },
-                {
                   "name": "Emmanuel Tetteh",
                   "rosterId": "B55",
                   "bishop": true,
@@ -1069,15 +907,6 @@
                   "consecrated": "2025"
                 },
                 {
-                  "name": "Kwabena Amoako-Doku",
-                  "rosterId": "B118",
-                  "bishop": true,
-                  "church": "Makarios City Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/kwabena-amoako-doku-055317aa.webp",
-                  "consecrated": "2021"
-                },
-                {
                   "name": "Kingsley Gyasi",
                   "rosterId": "B110",
                   "bishop": true,
@@ -1105,15 +934,6 @@
                   "consecrated": "2022"
                 },
                 {
-                  "name": "David Yalleh",
-                  "rosterId": "B35",
-                  "bishop": true,
-                  "church": "Jesus Is The Rock Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/david-yalleh-a88a1737.webp",
-                  "consecrated": "2015"
-                },
-                {
                   "name": "Benjamin Kwapong Lokko",
                   "rosterId": "B16",
                   "bishop": true,
@@ -1138,15 +958,6 @@
                   "church": "The Glorious Mega Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/jude-tetteh.webp"
-                },
-                {
-                  "name": "Kathleen-Sarah Parker-Allotey",
-                  "rosterId": "B104",
-                  "bishop": true,
-                  "church": "The Glorious Mega Church",
-                  "title": "Episcopal Sister",
-                  "image": "assets/organisations/people/kathleen-sarah-parker-allotey.webp",
-                  "consecrated": "2019"
                 },
                 {
                   "name": "Eric Kobina Asare",
@@ -1210,15 +1021,6 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/kwabena-appiah-denkyira.webp",
                   "consecrated": "2021"
-                },
-                {
-                  "name": "Charles Amoo",
-                  "rosterId": "B20",
-                  "bishop": true,
-                  "church": "East Mountain Churches",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/charles-amoo.webp",
-                  "consecrated": "2015"
                 },
                 {
                   "name": "David Asomani",
@@ -1306,15 +1108,6 @@
                   "church": "Rose of Sharon",
                   "title": "Episcopal Sister",
                   "image": "assets/organisations/people/phillippa-marka-coker-aecccab8.webp",
-                  "consecrated": "2015"
-                },
-                {
-                  "name": "Leonora Hyde",
-                  "rosterId": "B124",
-                  "bishop": true,
-                  "church": "Mustard Seed Chapel International",
-                  "title": "Episcopal Sister",
-                  "image": "assets/organisations/people/leonora-hyde.webp",
                   "consecrated": "2015"
                 },
                 {
@@ -1490,15 +1283,6 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/daniel-kwaku-atiemoh-c6663e5c.webp",
                   "consecrated": "2015"
-                },
-                {
-                  "name": "Dennis Djagbletey",
-                  "rosterId": "B38",
-                  "bishop": true,
-                  "church": "Jesus Is The Answer Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/dennis-djagbletey-c44089e1.webp",
-                  "consecrated": "2021"
                 },
                 {
                   "name": "Michael Dotsey-Dzokoto",
@@ -1767,76 +1551,7 @@
         {
           "slug": "first-love-church",
           "name": "First Love Church",
-          "people": [
-            {
-              "name": "Joshua Heward-Mills",
-              "role": "Only Jesus",
-              "leader": true,
-              "image": "assets/organisations/people/joshua-heward-mills-2.webp",
-              "rosterId": "B194",
-              "bishop": true,
-              "church": "First Love Church",
-              "title": "Bishop"
-            },
-            {
-              "name": "Glen Kwame Opoku",
-              "role": "Jesus First",
-              "image": "assets/organisations/people/glen-kwame-opoku.webp",
-              "rosterId": "B74",
-              "bishop": true,
-              "church": "Qodesh City Church",
-              "title": "Bishop",
-              "consecrated": "2025"
-            },
-            {
-              "name": "Roger Hiltbrunner",
-              "role": "Serve Jesus",
-              "image": "assets/organisations/people/roger-hiltbrunner.webp",
-              "rosterId": "B235",
-              "bishop": true,
-              "church": "First Love Church",
-              "title": "Bishop",
-              "consecrated": "2021"
-            },
-            {
-              "name": "Kent Njeru",
-              "role": "Choose Jesus",
-              "image": "assets/organisations/people/kent-njeru.webp",
-              "rosterId": "B222",
-              "bishop": true,
-              "church": "First Love Church",
-              "title": "Bishop",
-              "consecrated": "2017"
-            },
-            {
-              "name": "James Quist-Therson",
-              "role": "Jesus Forever",
-              "image": "assets/organisations/people/james-quist-therson.webp",
-              "rosterId": "B141",
-              "bishop": true,
-              "church": "First Love Church",
-              "title": "Bishop",
-              "consecrated": "2024"
-            },
-            {
-              "name": "Rutendo Mantiziba",
-              "role": "Jesus Now",
-              "image": "assets/organisations/people/rutendo-mantiziba.webp",
-              "rosterId": "B237",
-              "bishop": true,
-              "church": "First Love Church",
-              "title": "Bishop"
-            },
-            {
-              "name": "Clement Asante",
-              "role": "King Jesus",
-              "image": "assets/organisations/people/clement-asante.webp",
-              "rosterId": "B205",
-              "bishop": true,
-              "church": "First Love Church",
-              "title": "Bishop"
-            }
-          ],
+          "people": [],
           "directoryGroups": [
             {
               "name": "Only Jesus",
@@ -2520,15 +2235,6 @@
               "consecrated": "2012"
             },
             {
-              "name": "Emmanuel Klufio",
-              "image": "assets/organisations/people/emmanuel-klufio.webp",
-              "rosterId": "B51",
-              "bishop": true,
-              "church": "Strong Christian Church",
-              "title": "Bishop",
-              "consecrated": "2012"
-            },
-            {
               "name": "Isaac O. B. Commey",
               "image": "assets/portraits/B326-998235f2.webp",
               "rosterId": "B326",
@@ -2718,24 +2424,6 @@
               "consecrated": "2021"
             },
             {
-              "name": "Amelia Aidoo",
-              "rosterId": "B9",
-              "bishop": true,
-              "church": "Qodesh City Church",
-              "title": "Mother",
-              "image": "assets/organisations/people/amelia-aidoo.webp",
-              "consecrated": "2022"
-            },
-            {
-              "name": "Charles Amoo",
-              "image": "assets/organisations/people/charles-amoo.webp",
-              "rosterId": "B20",
-              "bishop": true,
-              "church": "East Mountain Churches",
-              "title": "Bishop",
-              "consecrated": "2015"
-            },
-            {
               "name": "David Asomani",
               "image": "assets/organisations/people/david-asomani.webp",
               "rosterId": "B32",
@@ -2743,15 +2431,6 @@
               "church": "East Mountain Churches",
               "title": "Bishop",
               "consecrated": "2018"
-            },
-            {
-              "name": "Ato Wilson",
-              "image": "assets/organisations/people/ato-wilson.webp",
-              "rosterId": "B188",
-              "bishop": true,
-              "church": "Glory Life Hope Center",
-              "title": "Bishop",
-              "consecrated": "2020"
             },
             {
               "name": "Robert Dodoo",
@@ -2781,23 +2460,6 @@
               "consecrated": "2010"
             },
             {
-              "name": "Leonora Hyde",
-              "image": "assets/organisations/people/leonora-hyde.webp",
-              "rosterId": "B124",
-              "bishop": true,
-              "church": "Mustard Seed Chapel International",
-              "title": "Episcopal Sister",
-              "consecrated": "2015"
-            },
-            {
-              "name": "Ebenezer Barnor",
-              "image": "assets/organisations/people/ebenezer-barnor.webp",
-              "rosterId": "B40",
-              "bishop": true,
-              "church": "The Makarios Church",
-              "title": "Bishop"
-            },
-            {
               "name": "Nassib Hage",
               "image": "assets/organisations/people/nassib-hage.webp",
               "rosterId": "B138",
@@ -2819,15 +2481,6 @@
               "consecrated": "2016"
             },
             {
-              "name": "Kathleen-Sarah Parker-Allotey",
-              "rosterId": "B104",
-              "bishop": true,
-              "church": "The Glorious Mega Church",
-              "title": "Episcopal Sister",
-              "image": "assets/organisations/people/kathleen-sarah-parker-allotey.webp",
-              "consecrated": "2019"
-            },
-            {
               "name": "Patrick Bruce",
               "image": "assets/organisations/people/patrick-bruce.webp",
               "rosterId": "B152",
@@ -2844,214 +2497,6 @@
               "church": "First Love Church",
               "title": "Mother",
               "consecrated": "2018"
-            }
-          ]
-        },
-        {
-          "slug": "lay-presidents-council",
-          "name": "The Lay Presidents Council",
-          "people": [
-            {
-              "name": "Kodwo Orleans-Lindsay",
-              "role": "Lay Presidents Chairman",
-              "leader": true,
-              "image": "assets/organisations/people/kodwo-orleans-lindsay.webp",
-              "rosterId": "B111",
-              "bishop": true,
-              "church": "Revival International",
-              "title": "Bishop",
-              "consecrated": "2024"
-            },
-            {
-              "name": "John Frimpong",
-              "image": "assets/portraits/B95-377f4306.webp"
-            },
-            {
-              "name": "Kobina Efraim"
-            },
-            {
-              "name": "Kobina Taylor"
-            },
-            {
-              "name": "Kwadwo Frempong"
-            },
-            {
-              "name": "Louis Josiah"
-            },
-            {
-              "name": "Maranatha John"
-            },
-            {
-              "name": "Joseph Nyamekye Adams"
-            },
-            {
-              "name": "Louisa Danquah"
-            },
-            {
-              "name": "Henry Obaka"
-            },
-            {
-              "name": "Justice Hagan",
-              "image": "assets/portraits/P2499.webp",
-              "rosterId": "P2499"
-            },
-            {
-              "name": "Charles Osei"
-            },
-            {
-              "name": "Eben Johnson",
-              "image": "assets/organisations/people/eben-johnson.webp",
-              "rosterId": "P1062"
-            },
-            {
-              "name": "Titus Codjoe"
-            },
-            {
-              "name": "Victor Annor"
-            },
-            {
-              "name": "Vincent Avornyo"
-            },
-            {
-              "name": "William Sasu"
-            },
-            {
-              "name": "Senyo Makumator"
-            },
-            {
-              "name": "Sonny Quaye"
-            },
-            {
-              "name": "Richard Ewool"
-            },
-            {
-              "name": "Samuel Gyawu-Amoateng"
-            },
-            {
-              "name": "Luke Frimpong-Mensah",
-              "image": "assets/bishops/129.jpg"
-            },
-            {
-              "name": "Moses Okine"
-            },
-            {
-              "name": "Rasmus Adjaye"
-            },
-            {
-              "name": "Michael Opoku"
-            },
-            {
-              "name": "Ben Johnson"
-            },
-            {
-              "name": "Joyce Djabatey"
-            },
-            {
-              "name": "Kobby Quansah"
-            },
-            {
-              "name": "Norman Darkwa",
-              "image": "assets/portraits/B143-a9fb52d1.webp"
-            },
-            {
-              "name": "Godfried Osei Boakye"
-            },
-            {
-              "name": "Jude Baiden"
-            },
-            {
-              "name": "Franklin Gbologah"
-            },
-            {
-              "name": "George Obeng",
-              "image": "assets/bishops/matched-73.webp"
-            },
-            {
-              "name": "Grace Krobo-Edusei"
-            },
-            {
-              "name": "Gilbert Fleischer"
-            },
-            {
-              "name": "Emmanuel Sampah"
-            },
-            {
-              "name": "Frank Yeboah"
-            },
-            {
-              "name": "Francis Banfro"
-            },
-            {
-              "name": "Foriwa Eshun"
-            },
-            {
-              "name": "Edmund Martin-Lawson"
-            },
-            {
-              "name": "Eddy Adiamah"
-            },
-            {
-              "name": "Emmanuel Quansah"
-            },
-            {
-              "name": "Edith Ephraim"
-            },
-            {
-              "name": "Archibald Tannor"
-            },
-            {
-              "name": "Daniel Tsidi Adagbe"
-            },
-            {
-              "name": "Danson Nganga"
-            },
-            {
-              "name": "Caroline Banfro"
-            },
-            {
-              "name": "Aaron Opoku-Ahene"
-            },
-            {
-              "name": "Anita Blavo"
-            },
-            {
-              "name": "Andrew Lutugerah"
-            },
-            {
-              "name": "Alphonse Asare"
-            },
-            {
-              "name": "Rebecca Siyolwe"
-            },
-            {
-              "name": "Rosemary Mahama"
-            },
-            {
-              "name": "Pearl Antwi-Boasiako"
-            },
-            {
-              "name": "Marie Amaning"
-            },
-            {
-              "name": "John Adeyemo"
-            },
-            {
-              "name": "Lydia Boateng"
-            },
-            {
-              "name": "Rosalyn Latse"
-            },
-            {
-              "name": "Harriet Darkwa"
-            },
-            {
-              "name": "Hans Kwaku"
-            },
-            {
-              "name": "Henry Hadjor"
-            },
-            {
-              "name": "Happy Kumah"
             }
           ]
         },
@@ -3244,141 +2689,6 @@
           "people": [],
           "directoryGroups": [
             {
-              "slug": "dhmm-council",
-              "name": "The DHMM Council",
-              "people": [
-                {
-                  "name": "Serena Ababio",
-                  "role": "DHMM Council Chairperson",
-                  "leader": true,
-                  "image": "assets/organisations/people/serena-ababio.webp",
-                  "rosterId": "BO265",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "consecrated": "2020"
-                },
-                {
-                  "name": "Mary-Chloe Rea",
-                  "role": "DHMM Council Chairperson",
-                  "leader": true,
-                  "image": "assets/organisations/people/mary-chloe-rea.webp",
-                  "rosterId": "BO250",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "consecrated": "2020"
-                },
-                {
-                  "name": "Rebecca Joana Addae",
-                  "image": "assets/organisations/people/rebecca-addae.webp",
-                  "rosterId": "B164",
-                  "bishop": true,
-                  "church": "Qodesh Family Churches",
-                  "title": "Episcopal Sister",
-                  "consecrated": "2019"
-                },
-                {
-                  "name": "Maya Asiedu Owusu",
-                  "image": "assets/organisations/people/aida-asiedu-owusu.webp",
-                  "rosterId": "BO251",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "consecrated": "2021"
-                },
-                {
-                  "name": "Nina Masuku",
-                  "image": "assets/organisations/people/nina-masuku.webp",
-                  "rosterId": "B334",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "consecrated": "2025"
-                },
-                {
-                  "name": "Louisa Timothea Mills-Odoi",
-                  "image": "assets/organisations/people/louisa-mills-odoi.webp",
-                  "rosterId": "B127",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "consecrated": "2018"
-                },
-                {
-                  "name": "Vivaldi Aboagye",
-                  "image": "assets/organisations/people/vivaldi-aboagye.webp",
-                  "rosterId": "B187",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "consecrated": "2018"
-                },
-                {
-                  "name": "Linda Aryee",
-                  "image": "assets/organisations/people/linda-aryee.webp",
-                  "rosterId": "B126",
-                  "bishop": true,
-                  "church": "Mustard Seed Chapel International",
-                  "title": "Episcopal Sister",
-                  "consecrated": "2022"
-                },
-                {
-                  "name": "Zoe Asamoah",
-                  "image": "assets/organisations/people/zoe-andrea-asamoah.webp",
-                  "rosterId": "B193",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "consecrated": "2018"
-                },
-                {
-                  "name": "Ruthie Jani Appiah-Denkyira",
-                  "image": "assets/organisations/people/ruthie-jani-appiah-denkyira.webp",
-                  "rosterId": "BO264",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Mother"
-                },
-                {
-                  "name": "Adara Hyde",
-                  "rosterId": "BO214",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Mother",
-                  "image": "assets/organisations/people/adara-hyde.webp",
-                  "consecrated": "2001"
-                },
-                {
-                  "name": "Paula Mills-Thompson",
-                  "image": "assets/organisations/people/paula-mills-thompson.webp",
-                  "rosterId": "BO221",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "consecrated": "2021"
-                },
-                {
-                  "name": "Erica Luca Aryee",
-                  "image": "assets/organisations/people/erica-luca-aryee.webp",
-                  "rosterId": "B59",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "consecrated": "2018"
-                },
-                {
-                  "name": "Renata Obaka",
-                  "image": "assets/organisations/people/renata-obaka.webp",
-                  "rosterId": "BO215",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "consecrated": "2020"
-                }
-              ]
-            },
-            {
               "slug": "healing-jesus-council",
               "name": "The Healing Jesus Council",
               "people": [
@@ -3517,6 +2827,15 @@
                   "title": "Mother",
                   "image": "assets/organisations/people/henrietta-ariel-orleans-lindsay.webp",
                   "consecrated": "2019"
+                },
+                {
+                  "name": "Mcivin Afetseng Mafora",
+                  "rosterId": "B131",
+                  "bishop": true,
+                  "church": "Strong Christian Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/mcivin-afetseng-mafora-8a7e4b71.webp",
+                  "consecrated": "2022"
                 }
               ]
             },
@@ -3551,6 +2870,96 @@
                   "bishop": true,
                   "church": "FLOW",
                   "title": "Bishop",
+                  "consecrated": "2021"
+                },
+                {
+                  "name": "Serena Ariana Ababio",
+                  "rosterId": "BO265",
+                  "bishop": true,
+                  "church": "FLOW",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/serena-ababio.webp",
+                  "consecrated": "2020"
+                },
+                {
+                  "name": "Vivaldi Aboagye",
+                  "rosterId": "B187",
+                  "bishop": true,
+                  "church": "FLOW",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/vivaldi-aboagye.webp",
+                  "consecrated": "2018"
+                },
+                {
+                  "name": "Erica Luca Aryee",
+                  "rosterId": "B59",
+                  "bishop": true,
+                  "church": "FLOW",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/erica-luca-aryee.webp",
+                  "consecrated": "2018"
+                },
+                {
+                  "name": "Zoe Andrea Asamoah",
+                  "rosterId": "B193",
+                  "bishop": true,
+                  "church": "FLOW",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/zoe-andrea-asamoah.webp",
+                  "consecrated": "2018"
+                },
+                {
+                  "name": "Mary-Chloe Rea",
+                  "rosterId": "BO250",
+                  "bishop": true,
+                  "church": "FLOW",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/mary-chloe-rea.webp",
+                  "consecrated": "2020"
+                },
+                {
+                  "name": "Calah Krofuah",
+                  "rosterId": "B328",
+                  "bishop": true,
+                  "church": "FLOW",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/calah-krofuah.webp",
+                  "consecrated": "2023"
+                },
+                {
+                  "name": "Louisa Mills-Odoi",
+                  "rosterId": "B127",
+                  "bishop": true,
+                  "church": "FLOW",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/louisa-mills-odoi.webp",
+                  "consecrated": "2018"
+                },
+                {
+                  "name": "Renata Obaka",
+                  "rosterId": "BO215",
+                  "bishop": true,
+                  "church": "FLOW",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/renata-obaka.webp",
+                  "consecrated": "2020"
+                },
+                {
+                  "name": "Aida Asiedu Owusu",
+                  "rosterId": "BO251",
+                  "bishop": true,
+                  "church": "FLOW",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/aida-asiedu-owusu.webp",
+                  "consecrated": "2021"
+                },
+                {
+                  "name": "Paula Mills-Thompson",
+                  "rosterId": "BO221",
+                  "bishop": true,
+                  "church": "FLOW",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/paula-mills-thompson.webp",
                   "consecrated": "2021"
                 }
               ]
@@ -3836,54 +3245,6 @@
               ]
             },
             {
-              "slug": "ghana-charismatic-bishops-conference",
-              "name": "The Ghana Charismatic Bishops' Conference",
-              "people": [
-                {
-                  "name": "Eddie Fabin",
-                  "role": "GCBC Chairman",
-                  "leader": true,
-                  "image": "assets/organisations/people/eddie-fabin.webp",
-                  "rosterId": "B41",
-                  "bishop": true,
-                  "church": "Qodesh City Church",
-                  "title": "Bishop",
-                  "consecrated": "2014"
-                }
-              ]
-            },
-            {
-              "slug": "affiliated-denominations",
-              "name": "The Affiliated Denominations",
-              "people": [
-                {
-                  "name": "Eddie Fabin",
-                  "role": "Affiliated Denominations Chairman",
-                  "leader": true,
-                  "image": "assets/organisations/people/eddie-fabin.webp",
-                  "rosterId": "B41",
-                  "bishop": true,
-                  "church": "Qodesh City Church",
-                  "title": "Bishop",
-                  "consecrated": "2014"
-                }
-              ]
-            },
-            {
-              "slug": "give-thyself-wholly-board",
-              "name": "The Give Thyself Wholly Board",
-              "people": [
-                {
-                  "name": "Eben Johnson",
-                  "role": "Give Thyself Wholly Board Chairman",
-                  "leader": true,
-                  "image": "assets/organisations/people/eben-johnson.webp",
-                  "rosterId": "P1062",
-                  "title": "Lay President"
-                }
-              ]
-            },
-            {
               "slug": "makarios-council",
               "name": "The Makarios Council",
               "people": [
@@ -3932,30 +3293,6 @@
                   "bishop": true,
                   "church": "Strong Christian Church",
                   "title": "Episcopal Sister",
-                  "consecrated": "2022"
-                }
-              ]
-            },
-            {
-              "slug": "para-church-others",
-              "name": "",
-              "people": [
-                {
-                  "name": "Mcivin Afetseng Mafora",
-                  "rosterId": "B131",
-                  "bishop": true,
-                  "church": "Strong Christian Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/mcivin-afetseng-mafora-8a7e4b71.webp",
-                  "consecrated": "2022"
-                },
-                {
-                  "name": "Elaine Klufio",
-                  "rosterId": "B46",
-                  "bishop": true,
-                  "church": "Strong Christian Church",
-                  "title": "Episcopal Sister",
-                  "image": "assets/organisations/people/elaine-klufio.webp",
                   "consecrated": "2022"
                 }
               ]

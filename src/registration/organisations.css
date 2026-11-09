@@ -175,3 +175,18 @@
   .org-to-sections{display:flex;align-items:center;position:fixed;right:16px;bottom:18px;z-index:40;min-height:54px;padding:12px 20px;border-radius:999px;background:var(--org-navy);color:#fff!important;font-size:18px;font-weight:700;border:2px solid var(--org-gold);box-shadow:0 8px 22px #14223d55}
   .org-directory-group,.org-council{scroll-margin-top:16px}
 }
+
+/* Office, 9 Nov: on every screen the tabs follow the page order (each section
+   then its subsections), listed openly; the Sections button returns to them. */
+.org-tabs{position:static;box-shadow:none}
+.org-tabs-toggle,.org-tabs-row,.org-subtabs-row{display:none!important}
+.org-tabs .org-tabs-list{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;padding:22px 5% 26px}
+.org-tabs-list-group{display:contents}
+.org-tabs-list-subs{display:contents}
+.org-to-sections{display:flex;align-items:center;position:fixed;right:22px;bottom:22px;z-index:40;min-height:54px;padding:12px 22px;border-radius:999px;background:var(--org-navy);color:#fff!important;font-size:18px;font-weight:700;border:2px solid var(--org-gold);box-shadow:0 8px 22px #14223d55}
+.org-directory-group,.org-council{scroll-margin-top:20px}
+@media(max-width:700px){
+  .org-tabs .org-tabs-list{flex-direction:column;align-items:stretch;flex-wrap:nowrap}
+  .org-tabs-list-group{display:block}
+  .org-tabs-list-subs{display:flex}
+}
