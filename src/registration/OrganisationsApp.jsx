@@ -51,23 +51,25 @@ function Bishop({ person }) {
   </article>;
 }
 
-function Council({ organisation }) {
+function Council({ organisation, group, open }) {
+  // A chosen group (office, 9 Nov) is shown on its own, without the others.
+  const groups = (organisation.directoryGroups || []).filter(g => !group || g.slug === group);
   // An untitled group (office, 9 Nov) lists bishops with no council given.
   return <section className={`org-council ${organisation.untitled ? 'org-council-untitled' : ''}`} id={organisation.slug} aria-labelledby={organisation.untitled ? undefined : `${organisation.slug}-heading`} aria-label={organisation.untitled ? 'More bishops' : undefined}>
     {!organisation.untitled && <h3 id={`${organisation.slug}-heading`} style={organisation.accent ? { '--section-accent': organisation.accent } : undefined}>{organisation.name}</h3>}
     {/* The subsections of this section, as chips right under its banner. */}
     {(organisation.directoryGroups || []).some(g => g.slug && g.name) && <nav className="org-chips" aria-label={`${shortName(organisation.name)} subsections`}>
-      {organisation.directoryGroups.filter(g => g.slug && g.name && g.people.length).map(g => <a key={g.slug} href={`#${g.slug}`} className="org-chip">{shortName(g.name)}</a>)}
+      {organisation.directoryGroups.filter(g => g.slug && g.name && g.people.length).map(g => <a key={g.slug} href={`#${g.slug}`} className="org-chip" aria-current={g.slug === group ? 'true' : undefined} onClick={open(g.slug)}>{shortName(g.name)}</a>)}
     </nav>}
-    {organisation.summary && <p className="org-council-summary">{organisation.summary}</p>}
-    {organisation.places && <ul className="org-places">{organisation.places.map(place => <li key={place}>{place}</li>)}</ul>}
-    {sectionsOf(organisation).map(section => section.people.length > 0 && <div className="org-council-part" key={section.name || 'people'}>
+    {!group && organisation.summary && <p className="org-council-summary">{organisation.summary}</p>}
+    {!group && organisation.places && <ul className="org-places">{organisation.places.map(place => <li key={place}>{place}</li>)}</ul>}
+    {!group && sectionsOf(organisation).map(section => section.people.length > 0 && <div className="org-council-part" key={section.name || 'people'}>
       <div className="org-members">{section.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
     </div>)}
     {/* The Kuriake Council also lists the bishops of each directory group (office, 9 Nov). */}
-    {(organisation.directoryGroups || []).map(group => group.people.length > 0 && <div className="org-council-part org-directory-group" key={group.slug || group.name} id={group.slug}>
-      {group.name ? <h5 className="org-under org-group-name">{group.name} <span className="org-count">{group.people.length} {group.people.length === 1 ? 'bishop' : 'bishops'}</span></h5> : <hr className="org-group-rule"/>}
-      <div className="org-members">{group.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
+    {groups.map(g => g.people.length > 0 && <div className="org-council-part org-directory-group" key={g.slug || g.name} id={g.slug}>
+      {g.name ? <h5 className="org-under org-group-name">{g.name} <span className="org-count">{g.people.length} {g.people.length === 1 ? 'bishop' : 'bishops'}</span></h5> : <hr className="org-group-rule"/>}
+      <div className="org-members">{g.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
     </div>)}
   </section>;
 }
@@ -107,7 +109,10 @@ export default function OrganisationsApp({ slug = '' }) {
   // An older address for one category or council opens this page at that part.
   useEffect(() => { if (slug) document.getElementById(PAGE_ALIASES[slug] || slug)?.scrollIntoView(); }, [slug]);
   const { focus, open, close } = useSectionFocus();
-  const shown = focus ? councils.filter(o => o.slug === focus) : councils;
+  // The focus is a whole section (from the boxes) or one group (from its chips).
+  const holder = councils.find(o => (o.directoryGroups || []).some(g => g.slug && g.slug === focus));
+  const group = holder ? focus : null;
+  const shown = focus ? councils.filter(o => o.slug === focus || o === holder) : councils;
   // The page opens straight on the Church Organisations (office, 9 Nov).
   return <div className="denom-site org-site" id="top">
     <main>
@@ -119,7 +124,7 @@ export default function OrganisationsApp({ slug = '' }) {
       </header>
       <CouncilTabs open={open} close={close}/>
       <div className="org-main">
-        {shown.map(organisation => <Council key={organisation.slug} organisation={organisation}/>)}
+        {shown.map(organisation => <Council key={organisation.slug} organisation={organisation} group={group} open={open}/>)}
         <div className="org-end-links">
           {focus && <a className="org-top" href="#sections" onClick={close('sections')}>↑ Back to sections</a>}
           <a className="org-top" href="#top" onClick={close('top')}>↑ Back to the top</a>

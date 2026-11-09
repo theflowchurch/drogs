@@ -38,25 +38,22 @@ function Card({ person }) {
 function Section({ section }) {
   const groups = groupsOf(section);
   const [active, setActive] = useState(groups[0]?.slug);
-  const [all, setAll] = useState(false);
   // A link to a group (#ud-ghana-east) opens that group's tab.
   useEffect(() => {
-    const open = () => { const id = location.hash.slice(1); if (groups.some(g => g.slug === id)) { setActive(id); setAll(false); document.getElementById(section.slug)?.scrollIntoView(); } };
+    const open = () => { const id = location.hash.slice(1); if (groups.some(g => g.slug === id)) { setActive(id); document.getElementById(section.slug)?.scrollIntoView(); } };
     open(); addEventListener('hashchange', open); return () => removeEventListener('hashchange', open);
   }, []);
-  const shown = all ? groups : groups.filter(g => g.slug === active);
+  const shown = groups.filter(g => g.slug === active);
   const single = groups.length === 1;
   return <section className={`cz-section cz-${COLOURS[section.slug] || 'blue'}`} id={section.slug} aria-labelledby={`${section.slug}-title`}>
     <h2 id={`${section.slug}-title`}>{section.name}</h2>
     {!single && <div className="cz-tabs" role="tablist" aria-label={`${shortName(section.name)} groups`}>
-      {groups.map(g => <button key={g.slug} type="button" role="tab" aria-selected={!all && active === g.slug} className={!all && active === g.slug ? 'is-on' : ''} onClick={() => { setActive(g.slug); setAll(false); }}>{shortName(g.name)}</button>)}
+      {groups.map(g => <button key={g.slug} type="button" role="tab" aria-selected={active === g.slug} className={active === g.slug ? 'is-on' : ''} onClick={() => setActive(g.slug)}>{shortName(g.name)}</button>)}
     </div>}
-    {shown.map(g => <div className="cz-group" key={g.slug} id={all ? g.slug : undefined}>
+    {shown.map(g => <div className="cz-group" key={g.slug}>
       <div className="cz-group-head">
         <h3>{single ? 'Bishops' : `${shortName(g.name)} Bishops`}</h3>
         <span className="cz-pill">{g.people.length} {g.people.length === 1 ? 'Bishop' : 'Bishops'}</span>
-        {!single && !all && <button type="button" className="cz-viewall" onClick={() => setAll(true)}>View All <span aria-hidden="true">›</span></button>}
-        {!single && all && g === shown[0] && <button type="button" className="cz-viewall" onClick={() => setAll(false)}>Show one group <span aria-hidden="true">›</span></button>}
       </div>
       <div className="cz-cards">{g.people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div>
     </div>)}
