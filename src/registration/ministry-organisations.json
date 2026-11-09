@@ -1312,7 +1312,12 @@
               "title": "Bishop"
             },
             {
-              "name": "Jude Tetteh"
+              "name": "Jude Tetteh",
+              "rosterId": "B102",
+              "bishop": true,
+              "church": "The Glorious Mega Church",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-102.webp"
             },
             {
               "name": "Calah Krofuah",
