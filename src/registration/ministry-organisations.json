@@ -1650,6 +1650,496 @@
                   "image": "assets/organisations/people/david-asomani.webp"
                 }
               ]
+            },
+            {
+              "name": "Only Jesus",
+              "people": [
+                {
+                  "name": "Joshua Heward-Mills",
+                  "rosterId": "B194",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/joshua-heward-mills-2.webp",
+                  "role": "First Love Church Principal Chairman"
+                },
+                {
+                  "name": "Benjamin Fiadonu",
+                  "rosterId": "B202",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-202.webp"
+                },
+                {
+                  "name": "Daniel Adjei",
+                  "rosterId": "BO224",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/BO224.webp"
+                },
+                {
+                  "name": "Frank Opoku",
+                  "rosterId": "B216",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-216.webp"
+                },
+                {
+                  "name": "Isaac Agyeman",
+                  "rosterId": "B218",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-218.webp"
+                },
+                {
+                  "name": "Isaac Koranteng",
+                  "rosterId": "B219",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B219-9f0dc8f698a9.webp"
+                },
+                {
+                  "name": "Isaac Nakoja",
+                  "rosterId": "B220",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-220.webp"
+                },
+                {
+                  "name": "Michael Oddoye",
+                  "rosterId": "B225",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-225.webp"
+                },
+                {
+                  "name": "Paul Baidoo",
+                  "rosterId": "B230",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-230.webp"
+                },
+                {
+                  "name": "Peter Onasis",
+                  "rosterId": "B249",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-249.webp"
+                },
+                {
+                  "name": "Solomon Tay",
+                  "rosterId": "B240",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B240-16a0109f.webp"
+                },
+                {
+                  "name": "Terry Bartels",
+                  "rosterId": "B242",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-242.webp"
+                },
+                {
+                  "name": "Emmanuel Amartey",
+                  "rosterId": "B209",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/emmanuel-amartey.webp"
+                },
+                {
+                  "name": "Joseph Odarkwei Mills",
+                  "rosterId": "B252",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B252-debceb18.webp"
+                },
+                {
+                  "name": "Annika Dwimoh",
+                  "rosterId": "B200",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/dr-annika-dwimoh.webp"
+                },
+                {
+                  "name": "Kiki Heward-Mills",
+                  "rosterId": "B195",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Mother",
+                  "image": "assets/bishops/matched-195.webp"
+                },
+                {
+                  "name": "Paul Ackuaku",
+                  "rosterId": "B229",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B229-fa7de638b627.webp"
+                },
+                {
+                  "name": "Christian Agbosu-Agorvor",
+                  "rosterId": "B203",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-203.webp"
+                },
+                {
+                  "name": "Nana Kwasi Mensah",
+                  "rosterId": "B227",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-227.webp"
+                },
+                {
+                  "name": "Enoch Boakye-Yiadom",
+                  "rosterId": "B254",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B254-dda12d86.webp"
+                }
+              ]
+            },
+            {
+              "name": "Jesus First",
+              "people": [
+                {
+                  "name": "Glen Kwame Opoku",
+                  "rosterId": "B74",
+                  "bishop": true,
+                  "church": "Qodesh City Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/glen-kwame-opoku.webp",
+                  "role": "Jesus First"
+                },
+                {
+                  "name": "Jojo Stephens Ofori-Addo",
+                  "rosterId": "B246",
+                  "bishop": true,
+                  "church": "Qodesh City Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-246.webp"
+                }
+              ]
+            },
+            {
+              "name": "Serve Jesus",
+              "people": [
+                {
+                  "name": "Roger Hiltbrunner",
+                  "rosterId": "B235",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/roger-hiltbrunner.webp",
+                  "role": "Serve Jesus"
+                },
+                {
+                  "name": "Daniel Fiifi Gyamerah",
+                  "rosterId": "B207",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-207.webp"
+                },
+                {
+                  "name": "Emmanuel Fosu",
+                  "rosterId": "B210",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-210.webp"
+                },
+                {
+                  "name": "Reginald Agyir Dadzie",
+                  "rosterId": "B165",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B165-c6caee26.webp"
+                },
+                {
+                  "name": "Henri Fogwe",
+                  "rosterId": "B78",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B78-92bd5571.webp"
+                }
+              ]
+            },
+            {
+              "name": "Choose Jesus",
+              "people": [
+                {
+                  "name": "Kent Njeru",
+                  "rosterId": "B222",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/kent-njeru.webp",
+                  "role": "Choose Jesus"
+                },
+                {
+                  "name": "Andrew Gyamfi",
+                  "rosterId": "B199",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B199-16839a45.webp"
+                },
+                {
+                  "name": "Stephen Jaiden Asamoah",
+                  "rosterId": "B241",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-241.webp"
+                },
+                {
+                  "name": "Danniella Hart",
+                  "rosterId": "B208",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Mother",
+                  "image": "assets/bishops/matched-208.webp"
+                },
+                {
+                  "name": "Edwin Adu-Tutu",
+                  "rosterId": "B44",
+                  "bishop": true,
+                  "church": "Jesus Gefunden",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B44-1138161c.webp"
+                },
+                {
+                  "name": "Sena Agyepong",
+                  "rosterId": "B181",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-181.webp"
+                },
+                {
+                  "name": "Adara Hyde",
+                  "rosterId": "BO214",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/adara-hyde.webp"
+                }
+              ]
+            },
+            {
+              "name": "Jesus Now",
+              "people": [
+                {
+                  "name": "Rutendo Mantiziba",
+                  "rosterId": "B237",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/rutendo-mantiziba.webp",
+                  "role": "Jesus Now"
+                },
+                {
+                  "name": "Esme Asha Mantiziba",
+                  "rosterId": "B214",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Mother",
+                  "image": "assets/bishops/matched-214.webp"
+                }
+              ]
+            },
+            {
+              "name": "Jesus Forever",
+              "people": [
+                {
+                  "name": "James Quist-Therson",
+                  "rosterId": "B141",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/james-quist-therson.webp",
+                  "role": "Jesus Forever"
+                }
+              ]
+            },
+            {
+              "name": "King Jesus",
+              "people": [
+                {
+                  "name": "Clement Asante",
+                  "rosterId": "B205",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/clement-asante.webp",
+                  "role": "King Jesus"
+                },
+                {
+                  "name": "Augustine Kunituo",
+                  "rosterId": "B201",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-201.webp"
+                },
+                {
+                  "name": "Emmanuel Opoku Baah",
+                  "rosterId": "B211",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-211.webp"
+                },
+                {
+                  "name": "Enock Lamptey",
+                  "rosterId": "B212",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-212.webp"
+                },
+                {
+                  "name": "Rudy Vaye",
+                  "rosterId": "B236",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B236-ef4d1ce9.webp"
+                },
+                {
+                  "name": "Patrick Inkoom",
+                  "rosterId": "B228",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B228-697951c35058.webp"
+                },
+                {
+                  "name": "Daniel Amofah",
+                  "rosterId": "B206",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-206.webp"
+                },
+                {
+                  "name": "Enoch Tettey-Angmor",
+                  "rosterId": "B213",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-213.webp"
+                },
+                {
+                  "name": "Cleland Cofie Bruce",
+                  "rosterId": "B204",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B204-badf7c8c.webp"
+                },
+                {
+                  "name": "Kojo Yeboah Atiemo",
+                  "rosterId": "B223",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B223-18995ce2.webp"
+                },
+                {
+                  "name": "Jennis Opoku",
+                  "rosterId": "B221",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-221.webp"
+                },
+                {
+                  "name": "Geraldo Amoa",
+                  "rosterId": "B217",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-217.webp"
+                },
+                {
+                  "name": "Reginald Opoku Sarkodie",
+                  "rosterId": "B250",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B250-89b6edd1.webp"
+                },
+                {
+                  "name": "Michael Asare",
+                  "rosterId": "B251",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-251.webp"
+                },
+                {
+                  "name": "Prince Samuel Osei",
+                  "rosterId": "B158",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-158.webp"
+                },
+                {
+                  "name": "Joseph Papa Wachirah Kabiro",
+                  "rosterId": "B99",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B99-42de7207258a.webp"
+                },
+                {
+                  "name": "Daniel Marcus Annan Jnr",
+                  "rosterId": "B253",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-253.webp"
+                },
+                {
+                  "name": "Eric Lamptey",
+                  "rosterId": "B58",
+                  "bishop": true,
+                  "church": "Primero Amor",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B58.webp"
+                },
+                {
+                  "name": "Maxwell Agyei-Manu",
+                  "rosterId": "B226",
+                  "bishop": true,
+                  "church": "Eschatos",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-226.webp"
+                }
+              ]
             }
           ],
           "bishopSectionOrder": [
