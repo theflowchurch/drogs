@@ -216,21 +216,3 @@
   .org-tabs .org-tabs-list-group:first-of-type{border-top:0;padding-top:10px}
   .org-tabs .org-tabs-list-subs{display:contents!important}
 }
-
-/* Office preview, 9 Nov: section tiles at the top, chips under each section. */
-.org-tiles-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;max-width:1240px;margin:0 auto;padding:30px 5% 34px;background:var(--org-navy)}
-.org-section-tile{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;min-height:118px;padding:18px 14px;border-radius:18px;text-align:center;color:#fff!important;background:#1f2f4d;border:2px solid var(--org-gold);box-shadow:0 10px 24px #0004;transition:transform .15s,background .15s}
-.org-section-tile:hover{background:#2a3d61}
-.org-section-tile:hover{transform:translateY(-3px)}
-.org-section-tile span{font-size:22px;font-weight:700;line-height:1.2}
-.org-section-tile small{font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--org-gold)}
-.org-chips{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 4px}
-.org-chip{display:inline-flex;align-items:center;min-height:46px;padding:9px 18px;border-radius:999px;border:2px solid var(--org-line);background:#fff;color:var(--org-navy)!important;font-size:17px;font-weight:700}
-.org-chip:hover{border-color:var(--org-navy)}
-.org-count{display:inline-flex;align-items:center;margin-left:10px;padding:4px 12px;border-radius:999px;background:#f3ecd9;color:var(--org-gold-ink);font-family:'Church Sans',sans-serif;font-size:15px;font-weight:700;vertical-align:middle}
-@media(max-width:700px){
-  .org-tiles-nav{grid-template-columns:1fr 1fr;gap:12px;padding:22px 5% 26px}
-  .org-section-tile{min-height:104px}.org-section-tile span{font-size:20px}.org-section-tile small{font-size:13px}
-  .org-chip{font-size:16px;min-height:44px;padding:8px 14px}
-  .org-count{font-size:13px;margin-left:6px}
-}
