@@ -208,3 +208,11 @@
   .org-tabs .org-tabs-list-group:first-child{border-top:0}
   .org-tabs .org-tabs-list-subs{display:contents!important}
 }
+
+/* Phones (office, 9 Nov): the same breaks between parts as on computers. */
+@media(max-width:700px){
+  .org-tabs .org-tabs-list{gap:0}
+  .org-tabs .org-tabs-list-group{display:flex!important;flex-direction:column;gap:10px;padding:18px 0;border-top:1px solid #c9a95c66}
+  .org-tabs .org-tabs-list-group:first-of-type{border-top:0;padding-top:10px}
+  .org-tabs .org-tabs-list-subs{display:contents!important}
+}
