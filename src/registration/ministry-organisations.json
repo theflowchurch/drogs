@@ -23,43 +23,64 @@
                   "detail": "Only Jesus",
                   "leader": true,
                   "image": "assets/organisations/people/joshua-heward-mills.webp",
-                  "rosterId": "B194"
+                  "rosterId": "B194",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop"
                 },
                 {
                   "name": "Glen Kwame Opoku",
                   "role": "Jesus First",
                   "image": "assets/organisations/people/glen-kwame-opoku.webp",
-                  "rosterId": "B74"
+                  "rosterId": "B74",
+                  "bishop": true,
+                  "church": "Qodesh City Church",
+                  "title": "Bishop"
                 },
                 {
                   "name": "Roger Hiltbrunner",
                   "role": "Serve Jesus",
                   "image": "assets/organisations/people/roger-hiltbrunner.webp",
-                  "rosterId": "B235"
+                  "rosterId": "B235",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop"
                 },
                 {
                   "name": "Kent Njeru",
                   "role": "Choose Jesus",
                   "image": "assets/organisations/people/kent-njeru.webp",
-                  "rosterId": "B222"
+                  "rosterId": "B222",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop"
                 },
                 {
                   "name": "James Quist-Therson",
                   "role": "Jesus Forever",
                   "image": "assets/organisations/people/james-quist-therson.webp",
-                  "rosterId": "B141"
+                  "rosterId": "B141",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop"
                 },
                 {
                   "name": "Rutendo Mantiziba",
                   "role": "Jesus Now",
                   "image": "assets/organisations/people/rutendo-mantiziba.webp",
-                  "rosterId": "B237"
+                  "rosterId": "B237",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop"
                 },
                 {
                   "name": "Clement Asante",
                   "role": "King Jesus",
                   "image": "assets/organisations/people/clement-asante.webp",
-                  "rosterId": "B205"
+                  "rosterId": "B205",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop"
                 }
               ]
             },
@@ -72,48 +93,68 @@
                   "detail": "UD Africa",
                   "leader": true,
                   "image": "assets/organisations/people/frank-otchere.webp",
-                  "rosterId": "B69"
+                  "rosterId": "B69",
+                  "bishop": true,
+                  "church": "Primeiras Obras",
+                  "title": "Bishop"
                 },
                 {
                   "name": "Ernest Addai-Duah",
                   "role": "Eschatos Chairman",
                   "image": "assets/organisations/people/ernest-addai-duah.webp",
-                  "rosterId": "B60"
+                  "rosterId": "B60",
+                  "bishop": true,
+                  "church": "Eschatos",
+                  "title": "Bishop"
                 },
                 {
                   "name": "Kodwo Orleans-Lindsay",
                   "role": "UD North America Chairman",
                   "image": "assets/organisations/people/kodwo-orleans-lindsay.webp",
-                  "rosterId": "B111"
+                  "rosterId": "B111",
+                  "bishop": true,
+                  "church": "Revival International",
+                  "title": "Bishop"
                 },
                 {
                   "name": "Steve Poku",
                   "role": "UD Europe Chairman",
                   "image": "assets/organisations/people/steve-poku.webp",
-                  "rosterId": "B184"
+                  "rosterId": "B184",
+                  "bishop": true,
+                  "church": "Pleasant Surprise",
+                  "title": "Bishop"
                 },
                 {
                   "name": "Toss Mills-Odoi",
                   "role": "United Jesus Chairman",
                   "image": "assets/organisations/people/toss-mills-odoi.webp",
-                  "rosterId": "B321"
+                  "rosterId": "B321",
+                  "bishop": true,
+                  "church": "Jesus Is The Master",
+                  "title": "Bishop"
                 },
                 {
                   "name": "Samuel Baidoo",
                   "role": "UD Ghana Chairman",
                   "image": "assets/organisations/people/samuel-baidoo.webp",
-                  "rosterId": "B54"
+                  "rosterId": "B54",
+                  "bishop": true,
+                  "church": "The Makarios Church",
+                  "title": "Bishop"
                 },
                 {
                   "name": "Joel Obuobisa",
                   "role": "United Islands Chairman",
                   "image": "assets/organisations/people/joel-obuobisa.webp",
-                  "rosterId": "B92"
+                  "rosterId": "B92",
+                  "bishop": true,
+                  "church": "United Islands",
+                  "title": "Bishop"
                 }
               ]
             }
-          ],
-          "showMembers": true
+          ]
         },
         {
           "slug": "adjutancy",
@@ -124,13 +165,19 @@
               "role": "Chairman & Ceremonial Archbishop",
               "leader": true,
               "image": "assets/organisations/people/eddie-fabin.webp",
-              "rosterId": "B41"
+              "rosterId": "B41",
+              "bishop": true,
+              "church": "Qodesh City Church",
+              "title": "Bishop"
             },
             {
               "name": "Jacob Godwyll",
               "role": "Archbishop & Adjutant General",
               "image": "assets/portraits/B86-6b2fb6de.webp",
-              "rosterId": "B86"
+              "rosterId": "B86",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Bishop"
             },
             {
               "name": "Yoku Amonoo-Neizer",
@@ -140,19 +187,28 @@
               "name": "Emmanuel Sakyi",
               "role": "Ceremonial Archbishop",
               "image": "assets/bishops/matched-49.webp",
-              "rosterId": "B49"
+              "rosterId": "B49",
+              "bishop": true,
+              "church": "East Mountain Churches",
+              "title": "Bishop"
             },
             {
               "name": "Mary-Chloe Rea",
               "role": "Secretary",
               "image": "assets/organisations/people/mary-chloe-rea.webp",
-              "rosterId": "BO250"
+              "rosterId": "BO250",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Rebecca Addae",
               "role": "Administrator",
               "image": "assets/portraits/B164-2d1cec82.webp",
-              "rosterId": "B164"
+              "rosterId": "B164",
+              "bishop": true,
+              "church": "Qodesh Family Churches",
+              "title": "Episcopal Sister"
             }
           ]
         },
@@ -165,52 +221,82 @@
               "role": "Senex Council Chairman",
               "leader": true,
               "image": "assets/organisations/people/richard-aryee.webp",
-              "rosterId": "B167"
+              "rosterId": "B167",
+              "bishop": true,
+              "church": "It Is A Great Thing To Serve The Lord",
+              "title": "Bishop"
             },
             {
               "name": "Edwin Morgan Ogoe",
               "image": "assets/bishops/matched-45.webp",
-              "rosterId": "B45"
+              "rosterId": "B45",
+              "bishop": true,
+              "church": "Anointed People International",
+              "title": "Bishop"
             },
             {
               "name": "Emmanuel Klufio",
               "image": "assets/portraits/B51-1aae12ed.webp",
-              "rosterId": "B51"
+              "rosterId": "B51",
+              "bishop": true,
+              "church": "Strong Christian Church",
+              "title": "Bishop"
             },
             {
               "name": "Isaac O. B. Commey",
               "image": "assets/portraits/B326-998235f2.webp",
-              "rosterId": "B326"
+              "rosterId": "B326",
+              "bishop": true,
+              "church": "Eschatos",
+              "title": "Bishop"
             },
             {
               "name": "Nii Adjeidu Armar",
               "image": "assets/bishops/confirmed-325.jpeg",
-              "rosterId": "B325"
+              "rosterId": "B325",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Bishop"
             },
             {
               "name": "Prince Addae",
               "image": "assets/organisations/people/prince-addae.webp",
-              "rosterId": "B157"
+              "rosterId": "B157",
+              "bishop": true,
+              "church": "Healing Jesus Campaign",
+              "title": "Bishop"
             },
             {
               "name": "Joel Obuobisa",
               "image": "assets/organisations/people/joel-obuobisa.webp",
-              "rosterId": "B92"
+              "rosterId": "B92",
+              "bishop": true,
+              "church": "United Islands",
+              "title": "Bishop"
             },
             {
               "name": "Emmanuel Nterful",
               "image": "assets/portraits/B324-dbb560ba.webp",
-              "rosterId": "B324"
+              "rosterId": "B324",
+              "bishop": true,
+              "church": "Keep My Word Chapel International",
+              "title": "Bishop"
             },
             {
               "name": "Ishmael Sam",
               "image": "assets/bishops/confirmed-327.png",
-              "rosterId": "B327"
+              "rosterId": "B327",
+              "bishop": true,
+              "church": "True Son Chapel International",
+              "title": "Bishop"
             },
             {
               "name": "Steve Asare",
               "image": "assets/bishops/official-steve-asare.webp",
-              "rosterId": "BO202"
+              "rosterId": "BO202",
+              "bishop": true,
+              "church": "Allos Mega Church",
+              "title": "Bishop"
             }
           ]
         },
@@ -223,54 +309,84 @@
               "role": "Dean of Bishops & Chairperson",
               "leader": true,
               "image": "assets/organisations/people/vivaldi-aboagye.webp",
-              "rosterId": "B187"
+              "rosterId": "B187",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Louisa Mills-Odoi",
               "role": "1st Vice Dean of Bishops",
               "image": "assets/bishops/matched-127.webp",
-              "rosterId": "B127"
+              "rosterId": "B127",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Henrietta Ariel Orleans-Lindsay",
               "role": "2nd Vice Dean of Bishops",
               "image": "assets/portraits/B79-fc7a04ab.webp",
-              "rosterId": "B79"
+              "rosterId": "B79",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Mother"
             },
             {
               "name": "Paula Mills-Thompson",
               "image": "assets/bishops/matched-231.webp",
-              "rosterId": "BO221"
+              "rosterId": "BO221",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Serena Ariana Ababio",
               "image": "assets/bishops/matched-239.webp",
-              "rosterId": "BO265"
+              "rosterId": "BO265",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Mary-Chloe Rea",
               "image": "assets/organisations/people/mary-chloe-rea.webp",
-              "rosterId": "BO250"
+              "rosterId": "BO250",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Renata Obaka",
               "image": "assets/organisations/people/renata-obaka.webp",
-              "rosterId": "BO215"
+              "rosterId": "BO215",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Erica Luca Aryee",
               "image": "assets/organisations/people/erica-luca-aryee.webp",
-              "rosterId": "B59"
+              "rosterId": "B59",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Zoe Andrea Asamoah",
               "image": "assets/bishops/matched-193.webp",
-              "rosterId": "B193"
+              "rosterId": "B193",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Aida Asiedu Owusu",
               "image": "assets/portraits/BO251-54e4808c.webp",
-              "rosterId": "BO251"
+              "rosterId": "BO251",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             }
           ]
         },
@@ -283,12 +399,18 @@
               "role": "1965 Committee Chairman",
               "leader": true,
               "image": "assets/organisations/people/e-a-t-sackey.webp",
-              "rosterId": "B39"
+              "rosterId": "B39",
+              "bishop": true,
+              "church": "Glory Life Hope Center",
+              "title": "Bishop"
             },
             {
               "name": "Adelaide Heward-Mills",
               "image": "assets/organisations/people/adelaide-heward-mills.webp",
-              "rosterId": "B4"
+              "rosterId": "B4",
+              "bishop": true,
+              "church": "Qodesh City Church",
+              "title": "Mother"
             },
             {
               "name": "Ameila Aidoo"
@@ -296,47 +418,74 @@
             {
               "name": "Charles Amoo",
               "image": "assets/bishops/matched-20.webp",
-              "rosterId": "B20"
+              "rosterId": "B20",
+              "bishop": true,
+              "church": "East Mountain Churches",
+              "title": "Bishop"
             },
             {
               "name": "David Asomani",
               "image": "assets/bishops/matched-32.webp",
-              "rosterId": "B32"
+              "rosterId": "B32",
+              "bishop": true,
+              "church": "East Mountain Churches",
+              "title": "Bishop"
             },
             {
               "name": "Ato Wilson",
               "image": "assets/bishops/matched-188.webp",
-              "rosterId": "B188"
+              "rosterId": "B188",
+              "bishop": true,
+              "church": "Glory Life Hope Center",
+              "title": "Bishop"
             },
             {
               "name": "Robert Dodoo",
               "image": "assets/portraits/B171-6752efc1.webp",
-              "rosterId": "B171"
+              "rosterId": "B171",
+              "bishop": true,
+              "church": "Eschatos",
+              "title": "Bishop"
             },
             {
               "name": "Eddy Addy",
               "image": "assets/bishops/confirmed-322.jpeg",
-              "rosterId": "B322"
+              "rosterId": "B322",
+              "bishop": true,
+              "church": "Anointed Word Chapel Int",
+              "title": "Bishop"
             },
             {
               "name": "Kingsley Gyasi",
               "image": "assets/portraits/B110-b24f0f2c.webp",
-              "rosterId": "B110"
+              "rosterId": "B110",
+              "bishop": true,
+              "church": "Makarios City Church",
+              "title": "Bishop"
             },
             {
               "name": "Leonora Hyde",
               "image": "assets/bishops/124.jpg",
-              "rosterId": "B124"
+              "rosterId": "B124",
+              "bishop": true,
+              "church": "Mustard Seed Chapel International",
+              "title": "Episcopal Sister"
             },
             {
               "name": "Ebenezer Barnor",
               "image": "assets/bishops/matched-40.webp",
-              "rosterId": "B40"
+              "rosterId": "B40",
+              "bishop": true,
+              "church": "The Makarios Church",
+              "title": "Bishop"
             },
             {
               "name": "Nassib Hage",
               "image": "assets/bishops/matched-138.webp",
-              "rosterId": "B138"
+              "rosterId": "B138",
+              "bishop": true,
+              "church": "The Mega Church – Nachal Cathedral",
+              "title": "Bishop"
             },
             {
               "name": "Hamish Odi"
@@ -344,7 +493,10 @@
             {
               "name": "Simone Ademola",
               "image": "assets/bishops/matched-182.webp",
-              "rosterId": "B182"
+              "rosterId": "B182",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Mother"
             },
             {
               "name": "Kate Allotey"
@@ -352,12 +504,18 @@
             {
               "name": "Patrick Bruce",
               "image": "assets/bishops/matched-152.webp",
-              "rosterId": "B152"
+              "rosterId": "B152",
+              "bishop": true,
+              "church": "The Mega Church – Grace Chapel",
+              "title": "Bishop"
             },
             {
               "name": "Joy Bruce",
               "image": "assets/portraits/B323-a0aedd3a.webp",
-              "rosterId": "B323"
+              "rosterId": "B323",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Mother"
             }
           ]
         },
@@ -370,12 +528,14 @@
               "role": "Lay Presidents Chairman",
               "leader": true,
               "image": "assets/organisations/people/kodwo-orleans-lindsay.webp",
-              "rosterId": "B111"
+              "rosterId": "B111",
+              "bishop": true,
+              "church": "Revival International",
+              "title": "Bishop"
             },
             {
               "name": "John Frimpong",
-              "image": "assets/portraits/B95-377f4306.webp",
-              "rosterId": "B95"
+              "image": "assets/portraits/B95-377f4306.webp"
             },
             {
               "name": "Kobina Efraim"
@@ -440,8 +600,7 @@
             },
             {
               "name": "Luke Frimpong-Mensah",
-              "image": "assets/bishops/129.jpg",
-              "rosterId": "B129"
+              "image": "assets/bishops/129.jpg"
             },
             {
               "name": "Moses Okine"
@@ -463,8 +622,7 @@
             },
             {
               "name": "Norman Darkwa",
-              "image": "assets/portraits/B143-a9fb52d1.webp",
-              "rosterId": "B143"
+              "image": "assets/portraits/B143-a9fb52d1.webp"
             },
             {
               "name": "Godfried Osei Boakye"
@@ -477,8 +635,7 @@
             },
             {
               "name": "George Obeng",
-              "image": "assets/bishops/matched-73.webp",
-              "rosterId": "B73"
+              "image": "assets/bishops/matched-73.webp"
             },
             {
               "name": "Grace Krobo-Edusei"
@@ -585,49 +742,76 @@
               "role": "DHMM Council Chairperson",
               "leader": true,
               "image": "assets/organisations/people/serena-ababio.webp",
-              "rosterId": "BO265"
+              "rosterId": "BO265",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Mary-Chloe Rea",
               "role": "DHMM Council Chairperson",
               "leader": true,
               "image": "assets/organisations/people/mary-chloe-rea.webp",
-              "rosterId": "BO250"
+              "rosterId": "BO250",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Rebecca Joana Addae",
               "image": "assets/portraits/B164-2d1cec82.webp",
-              "rosterId": "B164"
+              "rosterId": "B164",
+              "bishop": true,
+              "church": "Qodesh Family Churches",
+              "title": "Episcopal Sister"
             },
             {
               "name": "Maya Asiedu Owusu",
               "image": "assets/portraits/BO251-54e4808c.webp",
-              "rosterId": "BO251"
+              "rosterId": "BO251",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Nina Masuku",
               "image": "assets/organisations/people/nina-masuku.webp",
-              "rosterId": "B334"
+              "rosterId": "B334",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Louisa Timothea Mills-Odoi",
               "image": "assets/bishops/matched-127.webp",
-              "rosterId": "B127"
+              "rosterId": "B127",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Vivaldi Aboagye",
               "image": "assets/organisations/people/vivaldi-aboagye.webp",
-              "rosterId": "B187"
+              "rosterId": "B187",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Linda Aryee",
               "image": "assets/bishops/126.jpg",
-              "rosterId": "B126"
+              "rosterId": "B126",
+              "bishop": true,
+              "church": "Mustard Seed Chapel International",
+              "title": "Episcopal Sister"
             },
             {
               "name": "Zoe Asamoah",
               "image": "assets/bishops/matched-193.webp",
-              "rosterId": "B193"
+              "rosterId": "B193",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Bonnie Thomas"
@@ -635,7 +819,10 @@
             {
               "name": "Ruthie Jani Appiah-Denkyira",
               "image": "assets/organisations/people/ruthie-jani-appiah-denkyira.webp",
-              "rosterId": "BO264"
+              "rosterId": "BO264",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Mother"
             },
             {
               "name": "Jane Adara Hyde"
@@ -643,17 +830,26 @@
             {
               "name": "Paula Mills-Thompson",
               "image": "assets/bishops/matched-231.webp",
-              "rosterId": "BO221"
+              "rosterId": "BO221",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Erica Luca Aryee",
               "image": "assets/organisations/people/erica-luca-aryee.webp",
-              "rosterId": "B59"
+              "rosterId": "B59",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Renata Obaka",
               "image": "assets/organisations/people/renata-obaka.webp",
-              "rosterId": "BO215"
+              "rosterId": "BO215",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             }
           ]
         },
@@ -666,7 +862,10 @@
               "role": "HJC Council Chairman",
               "leader": true,
               "image": "assets/organisations/people/prince-addae.webp",
-              "rosterId": "B157"
+              "rosterId": "B157",
+              "bishop": true,
+              "church": "Healing Jesus Campaign",
+              "title": "Bishop"
             },
             {
               "name": "Ebo Ankrah"
@@ -674,32 +873,50 @@
             {
               "name": "Randy Mills-Thompson",
               "image": "assets/portraits/B330-8b95bf41.webp",
-              "rosterId": "B330"
+              "rosterId": "B330",
+              "bishop": true,
+              "church": "Healing Jesus Campaign",
+              "title": "Bishop"
             },
             {
               "name": "Miranda Asher Siweya",
               "image": "assets/portraits/B333-cb8f5657.webp",
-              "rosterId": "B333"
+              "rosterId": "B333",
+              "bishop": true,
+              "church": "Healing Jesus Campaign",
+              "title": "Mother"
             },
             {
               "name": "Faustina Carla Boateng",
               "image": "assets/portraits/B332-ec9de0fd.webp",
-              "rosterId": "B332"
+              "rosterId": "B332",
+              "bishop": true,
+              "church": "Healing Jesus Campaign",
+              "title": "Mother"
             },
             {
               "name": "Lovell Nii Ankrah",
               "image": "assets/portraits/BL1-5498c0c9.webp",
-              "rosterId": "BL1"
+              "rosterId": "BL1",
+              "bishop": true,
+              "church": "Healing Jesus Campaign",
+              "title": "Bishop"
             },
             {
               "name": "George Antwi",
               "image": "assets/outreach/confirmed-331.jpeg",
-              "rosterId": "B331"
+              "rosterId": "B331",
+              "bishop": true,
+              "church": "Healing Jesus Campaign",
+              "title": "Bishop"
             },
             {
               "name": "Marcel Aboagye",
               "image": "assets/portraits/B130-91345d25.webp",
-              "rosterId": "B130"
+              "rosterId": "B130",
+              "bishop": true,
+              "church": "Healing Jesus Campaign",
+              "title": "Bishop"
             }
           ]
         },
@@ -712,7 +929,10 @@
               "role": "FLOW Council Chairperson",
               "leader": true,
               "image": "assets/organisations/people/nina-masuku.webp",
-              "rosterId": "B334"
+              "rosterId": "B334",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Walter Woelle"
@@ -735,12 +955,18 @@
             {
               "name": "Brian Masuku",
               "image": "assets/outreach/brian-masuku.png",
-              "rosterId": "B319"
+              "rosterId": "B319",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Bishop"
             },
             {
               "name": "Leonard Hyde",
               "image": "assets/outreach/leonard-hyde-red-edited.png",
-              "rosterId": "B320"
+              "rosterId": "B320",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Bishop"
             }
           ]
         },
@@ -766,7 +992,10 @@
               "role": "Makarios Council Chairperson",
               "leader": true,
               "image": "assets/organisations/people/toss-mills-odoi.webp",
-              "rosterId": "B321"
+              "rosterId": "B321",
+              "bishop": true,
+              "church": "Jesus Is The Master",
+              "title": "Bishop"
             },
             {
               "name": "Rita Biney"
@@ -780,22 +1009,34 @@
             {
               "name": "Felix Bediako",
               "image": "assets/bishops/matched-62.webp",
-              "rosterId": "B62"
+              "rosterId": "B62",
+              "bishop": true,
+              "church": "Everything By Prayer Center",
+              "title": "Bishop"
             },
             {
               "name": "Robert Dodoo",
               "image": "assets/portraits/B171-6752efc1.webp",
-              "rosterId": "B171"
+              "rosterId": "B171",
+              "bishop": true,
+              "church": "Eschatos",
+              "title": "Bishop"
             },
             {
               "name": "Joy Bruce",
               "image": "assets/portraits/B323-a0aedd3a.webp",
-              "rosterId": "B323"
+              "rosterId": "B323",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Mother"
             },
             {
               "name": "Elaine Klufio",
               "image": "assets/bishops/matched-46.webp",
-              "rosterId": "B46"
+              "rosterId": "B46",
+              "bishop": true,
+              "church": "Strong Christian Church",
+              "title": "Episcopal Sister"
             }
           ]
         }
@@ -815,12 +1056,18 @@
               "role": "School Board Chairperson",
               "leader": true,
               "image": "assets/organisations/people/adelaide-heward-mills.webp",
-              "rosterId": "B4"
+              "rosterId": "B4",
+              "bishop": true,
+              "church": "Qodesh City Church",
+              "title": "Mother"
             },
             {
               "name": "Pamela Dickson",
               "image": "assets/bishops/matched-149.webp",
-              "rosterId": "B149"
+              "rosterId": "B149",
+              "bishop": true,
+              "church": "Jesus Is The Rock Church",
+              "title": "Episcopal Sister"
             },
             {
               "name": "Gideon Anyidoho"
@@ -849,7 +1096,10 @@
             {
               "name": "Marcel Aboagye",
               "image": "assets/portraits/B130-91345d25.webp",
-              "rosterId": "B130"
+              "rosterId": "B130",
+              "bishop": true,
+              "church": "Healing Jesus Campaign",
+              "title": "Bishop"
             },
             {
               "name": "Grace Edusei"
@@ -860,7 +1110,10 @@
             {
               "name": "Bridgette Ogoe",
               "image": "assets/bishops/matched-19.webp",
-              "rosterId": "B19"
+              "rosterId": "B19",
+              "bishop": true,
+              "church": "Anointed People International",
+              "title": "Episcopal Sister"
             },
             {
               "name": "Catherine Johnson"
@@ -882,7 +1135,10 @@
               "role": "Hospital Board Chairperson",
               "leader": true,
               "image": "assets/organisations/people/dr-annika-dwimoh.webp",
-              "rosterId": "B200"
+              "rosterId": "B200",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Dr. Joyce Wilson"
@@ -913,7 +1169,10 @@
               "role": "Orphanage Board Chairperson",
               "leader": true,
               "image": "assets/organisations/people/adelaide-heward-mills.webp",
-              "rosterId": "B4"
+              "rosterId": "B4",
+              "bishop": true,
+              "church": "Qodesh City Church",
+              "title": "Mother"
             },
             {
               "name": "Godfred Osei-Boakye"
@@ -948,12 +1207,18 @@
             {
               "name": "Marnette Dickson",
               "image": "assets/bishops/matched-149.webp",
-              "rosterId": "B149"
+              "rosterId": "B149",
+              "bishop": true,
+              "church": "Jesus Is The Rock Church",
+              "title": "Episcopal Sister"
             },
             {
               "name": "Bridgette Ogoe",
               "image": "assets/bishops/matched-19.webp",
-              "rosterId": "B19"
+              "rosterId": "B19",
+              "bishop": true,
+              "church": "Anointed People International",
+              "title": "Episcopal Sister"
             },
             {
               "name": "Edwin Aryitey"
@@ -973,7 +1238,10 @@
               "role": "Radio Ministry Chairperson",
               "leader": true,
               "image": "assets/organisations/people/erica-luca-aryee.webp",
-              "rosterId": "B59"
+              "rosterId": "B59",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Manette Pamela Dickson"
@@ -987,17 +1255,26 @@
             {
               "name": "Eddie Fabin",
               "image": "assets/organisations/people/eddie-fabin.webp",
-              "rosterId": "B41"
+              "rosterId": "B41",
+              "bishop": true,
+              "church": "Qodesh City Church",
+              "title": "Bishop"
             },
             {
               "name": "Annika Dwimoh",
               "image": "assets/bishops/matched-200.webp",
-              "rosterId": "B200"
+              "rosterId": "B200",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Ato Dickson",
               "image": "assets/bishops/093.jpg",
-              "rosterId": "B93"
+              "rosterId": "B93",
+              "bishop": true,
+              "church": "Jesus Is The Rock Church",
+              "title": "Bishop"
             }
           ],
           "places": [
@@ -1021,12 +1298,18 @@
               "role": "Construction Board Chairperson",
               "leader": true,
               "image": "assets/organisations/people/renata-obaka.webp",
-              "rosterId": "BO215"
+              "rosterId": "BO215",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Robert Nunoo",
               "image": "assets/bishops/matched-172.webp",
-              "rosterId": "B172"
+              "rosterId": "B172",
+              "bishop": true,
+              "church": "East Mountain Churches",
+              "title": "Bishop"
             },
             {
               "name": "Jude Tetteh"
@@ -1034,12 +1317,18 @@
             {
               "name": "Calah Krofuah",
               "image": "assets/portraits/B328-46b745f4.webp",
-              "rosterId": "B328"
+              "rosterId": "B328",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             },
             {
               "name": "Kwabena Appiah-Denkyira",
               "image": "assets/bishops/matched-115.webp",
-              "rosterId": "B115"
+              "rosterId": "B115",
+              "bishop": true,
+              "church": "East Mountain Churches",
+              "title": "Bishop"
             },
             {
               "name": "Catherine Johnson"
@@ -1047,7 +1336,10 @@
             {
               "name": "Erica Luca Aryee",
               "image": "assets/organisations/people/erica-luca-aryee.webp",
-              "rosterId": "B59"
+              "rosterId": "B59",
+              "bishop": true,
+              "church": "FLOW",
+              "title": "Mother"
             }
           ]
         },
@@ -1060,12 +1352,18 @@
               "role": "ABMTC Chairperson",
               "leader": true,
               "image": "assets/organisations/people/ruthie-jani-appiah-denkyira.webp",
-              "rosterId": "BO264"
+              "rosterId": "BO264",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Mother"
             },
             {
               "name": "Kwame Asiedu Owusu",
               "image": "assets/portraits/B120-aeab032c.webp",
-              "rosterId": "B120"
+              "rosterId": "B120",
+              "bishop": true,
+              "church": "The Machaneh Church International",
+              "title": "Bishop"
             },
             {
               "name": "Carlos Ballestero"
@@ -1076,17 +1374,26 @@
             {
               "name": "David Asomani",
               "image": "assets/bishops/matched-32.webp",
-              "rosterId": "B32"
+              "rosterId": "B32",
+              "bishop": true,
+              "church": "East Mountain Churches",
+              "title": "Bishop"
             },
             {
               "name": "Emmanuel Amartey",
               "image": "assets/bishops/matched-209.webp",
-              "rosterId": "B209"
+              "rosterId": "B209",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Bishop"
             },
             {
               "name": "Kwabena Appiah-Denkyira",
               "image": "assets/bishops/matched-115.webp",
-              "rosterId": "B115"
+              "rosterId": "B115",
+              "bishop": true,
+              "church": "East Mountain Churches",
+              "title": "Bishop"
             },
             {
               "name": "Sendy Shibambo"
@@ -1097,7 +1404,10 @@
             {
               "name": "Emmanuel Nterful",
               "image": "assets/portraits/B324-dbb560ba.webp",
-              "rosterId": "B324"
+              "rosterId": "B324",
+              "bishop": true,
+              "church": "Keep My Word Chapel International",
+              "title": "Bishop"
             }
           ]
         },
@@ -1110,7 +1420,10 @@
               "role": "GCBC Chairman",
               "leader": true,
               "image": "assets/organisations/people/eddie-fabin.webp",
-              "rosterId": "B41"
+              "rosterId": "B41",
+              "bishop": true,
+              "church": "Qodesh City Church",
+              "title": "Bishop"
             },
             {
               "name": "Kwesi Deh",
@@ -1127,7 +1440,10 @@
               "role": "Affiliated Denominations Chairman",
               "leader": true,
               "image": "assets/organisations/people/eddie-fabin.webp",
-              "rosterId": "B41"
+              "rosterId": "B41",
+              "bishop": true,
+              "church": "Qodesh City Church",
+              "title": "Bishop"
             }
           ]
         }
