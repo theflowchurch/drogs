@@ -172,6 +172,805 @@
                 }
               ]
             }
+          ],
+          "directoryGroups": [
+            {
+              "name": "UD Africa",
+              "people": [
+                {
+                  "name": "Christos Isaac Abbey",
+                  "rosterId": "B23",
+                  "bishop": true,
+                  "church": "Double Mega Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B23-e8771c89.webp"
+                },
+                {
+                  "name": "Joseph Aboagye",
+                  "rosterId": "B96",
+                  "bishop": true,
+                  "church": "Victoire Internationale",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B96-b139c4d9.webp"
+                },
+                {
+                  "name": "Wisdom Nii Lartey Adams",
+                  "rosterId": "B191",
+                  "bishop": true,
+                  "church": "Talanta International Tanzania",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-191.webp"
+                },
+                {
+                  "name": "Adedayo Adeyemi Adeniji",
+                  "rosterId": "B3",
+                  "bishop": true,
+                  "church": "Everything By Prayer Center",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-3.webp"
+                },
+                {
+                  "name": "Adeolu Adepoju",
+                  "rosterId": "B5",
+                  "bishop": true,
+                  "church": "Everything By Prayer Center",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-5.webp"
+                },
+                {
+                  "name": "Alfred Adigbo",
+                  "rosterId": "B8",
+                  "bishop": true,
+                  "church": "Rencontre Prophetique Internationale",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-8.webp"
+                },
+                {
+                  "name": "Frank Ofori Adjei",
+                  "rosterId": "B68",
+                  "bishop": true,
+                  "church": "Strait Gate Church Liberia",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-68.webp"
+                },
+                {
+                  "name": "Christian Assi Adoupo",
+                  "rosterId": "B22",
+                  "bishop": true,
+                  "church": "La Belle Église Car",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/christian-assi-adoupo.webp"
+                },
+                {
+                  "name": "Nelson Agbemava",
+                  "rosterId": "B139",
+                  "bishop": true,
+                  "church": "Primeiras Obras",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B139-8ba0a9b7.webp"
+                },
+                {
+                  "name": "Joseph Kofi Amable",
+                  "rosterId": "B98",
+                  "bishop": true,
+                  "church": "Double Mega Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-98.webp"
+                },
+                {
+                  "name": "Augustine Frantz Appiah",
+                  "rosterId": "B14",
+                  "bishop": true,
+                  "church": "Double Mega Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B14-af668f78.webp"
+                },
+                {
+                  "name": "Nii Adjeidu Armar",
+                  "rosterId": "B325",
+                  "bishop": true,
+                  "church": "Others International Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/nii-adjeidu-armar.webp"
+                },
+                {
+                  "name": "Daniel Arthur-Baidoo",
+                  "rosterId": "B26",
+                  "bishop": true,
+                  "church": "Double Mega Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-26.webp"
+                },
+                {
+                  "name": "Joseph Aryee",
+                  "rosterId": "B97",
+                  "bishop": true,
+                  "church": "Precious Souls Church – Eswatini",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-97.webp"
+                },
+                {
+                  "name": "Josie Marie Asamoah",
+                  "rosterId": "B101",
+                  "bishop": true,
+                  "church": "Equatorial Guinea",
+                  "title": "Episcopal Sister",
+                  "image": "assets/bishops/matched-101.webp"
+                },
+                {
+                  "name": "Kenneth Oswald Awutey",
+                  "rosterId": "B107",
+                  "bishop": true,
+                  "church": "Victoire Internationale",
+                  "title": "Bishop",
+                  "image": "assets/bishops/107.jpg"
+                },
+                {
+                  "name": "Felix Bediako",
+                  "rosterId": "B62",
+                  "bishop": true,
+                  "church": "Everything By Prayer Center",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/felix-bediako.webp"
+                },
+                {
+                  "name": "Edward Botwe",
+                  "rosterId": "B43",
+                  "bishop": true,
+                  "church": "Poimen Church Senegal-Gambia",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-43.webp"
+                },
+                {
+                  "name": "Okereke Peter Chibuzor",
+                  "rosterId": "B144",
+                  "bishop": true,
+                  "church": "Everything By Prayer Center",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B144-50a5d44f.webp"
+                },
+                {
+                  "name": "Eddy Cofie",
+                  "rosterId": "B42",
+                  "bishop": true,
+                  "church": "Sagesse Internationale Guinea",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B42-4329c31c.webp"
+                },
+                {
+                  "name": "Dennis Ampofo Cudjoe",
+                  "rosterId": "B37",
+                  "bishop": true,
+                  "church": "Double Mega Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/037.jpg"
+                },
+                {
+                  "name": "Joshua Dormediame",
+                  "rosterId": "B100",
+                  "bishop": true,
+                  "church": "Poimen Church Senegal-Gambia",
+                  "title": "Bishop",
+                  "image": "assets/bishops/100.jpg"
+                },
+                {
+                  "name": "Otonye Alba Bassey Ekefre",
+                  "rosterId": "B147",
+                  "bishop": true,
+                  "church": "Everything By Prayer Center",
+                  "title": "Episcopal Sister",
+                  "image": "assets/bishops/matched-147.webp"
+                },
+                {
+                  "name": "Napoleon Essien",
+                  "rosterId": "B137",
+                  "bishop": true,
+                  "church": "Serious Christian Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-137.webp"
+                },
+                {
+                  "name": "Samuel Kwame Gasper",
+                  "rosterId": "B177",
+                  "bishop": true,
+                  "church": "Grace Internationale Sahel - Burkina Faso",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-177.webp"
+                },
+                {
+                  "name": "Daniel Harlley",
+                  "rosterId": "B27",
+                  "bishop": true,
+                  "church": "Serious Christian Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B27-fbd13e53.webp"
+                },
+                {
+                  "name": "Daniel Marcus Annan Jnr",
+                  "rosterId": "B253",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-253.webp"
+                },
+                {
+                  "name": "Kwabena Asamoah Jnr",
+                  "rosterId": "B117",
+                  "bishop": true,
+                  "church": "Equatorial Guinea",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B117-cf9bdc60.webp"
+                },
+                {
+                  "name": "Andy Agyemang Jumah",
+                  "rosterId": "B12",
+                  "bishop": true,
+                  "church": "Precious Souls Namibia",
+                  "title": "Bishop",
+                  "image": "assets/bishops/012.jpg"
+                },
+                {
+                  "name": "Elaine Klufio",
+                  "rosterId": "B46",
+                  "bishop": true,
+                  "church": "Strong Christian Church",
+                  "title": "Episcopal Sister",
+                  "image": "assets/organisations/people/elaine-klufio.webp"
+                },
+                {
+                  "name": "Emmanuel Klufio",
+                  "rosterId": "B51",
+                  "bishop": true,
+                  "church": "Strong Christian Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/emmanuel-klufio.webp"
+                },
+                {
+                  "name": "Alex Tetteh Kofi-Opata",
+                  "rosterId": "B7",
+                  "bishop": true,
+                  "church": "Everything By Prayer Center",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-7.webp"
+                },
+                {
+                  "name": "Olivia Kofi-Opata",
+                  "rosterId": "B145",
+                  "bishop": true,
+                  "church": "Everything By Prayer Center",
+                  "title": "Episcopal Sister",
+                  "image": "assets/bishops/matched-145.webp"
+                },
+                {
+                  "name": "Bernard Koranteng",
+                  "rosterId": "B17",
+                  "bishop": true,
+                  "church": "1000 Micro Church Network International",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-17.webp"
+                },
+                {
+                  "name": "Baffour Kwaku Kyei",
+                  "rosterId": "B15",
+                  "bishop": true,
+                  "church": "Amour Internationale",
+                  "title": "Bishop",
+                  "image": "assets/bishops/015.jpg"
+                },
+                {
+                  "name": "Eric Lamptey",
+                  "rosterId": "B58",
+                  "bishop": true,
+                  "church": "Primero Amor",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B58.webp"
+                },
+                {
+                  "name": "Oreal Valerius Lartey",
+                  "rosterId": "B146",
+                  "bishop": true,
+                  "church": "Equatorial Guinea",
+                  "title": "Bishop",
+                  "image": "assets/bishops/146.jpg"
+                },
+                {
+                  "name": "Mcivin Afetseng Mafora",
+                  "rosterId": "B131",
+                  "bishop": true,
+                  "church": "Strong Christian Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/131.jpg"
+                },
+                {
+                  "name": "Paul Anaba Mbah",
+                  "rosterId": "B153",
+                  "bishop": true,
+                  "church": "Malawi",
+                  "title": "Bishop",
+                  "image": "assets/bishops/reconciled-153.webp"
+                },
+                {
+                  "name": "Abednego Nyarkoh Mensah",
+                  "rosterId": "B1",
+                  "bishop": true,
+                  "church": "Praia City State Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/abednego-nyarkoh-mensah.webp"
+                },
+                {
+                  "name": "Erasmus Pascal Mensah",
+                  "rosterId": "B56",
+                  "bishop": true,
+                  "church": "La Belle Eglise Gabon",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-56.webp"
+                },
+                {
+                  "name": "Jeremy Menyisse",
+                  "rosterId": "B90",
+                  "bishop": true,
+                  "church": "Onction Internationale Benin",
+                  "title": "Bishop",
+                  "image": "assets/bishops/090.jpg"
+                },
+                {
+                  "name": "Peter Mokganya",
+                  "rosterId": "B154",
+                  "bishop": true,
+                  "church": "Strong Christian Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-154.webp"
+                },
+                {
+                  "name": "Khauhelo Mokobocho",
+                  "rosterId": "B108",
+                  "bishop": true,
+                  "church": "Serious Christian Church Lesotho",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/khauhelo-mokobocho.webp"
+                },
+                {
+                  "name": "Xola Mpupu",
+                  "rosterId": "B192",
+                  "bishop": true,
+                  "church": "Strong Christian Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-192.webp"
+                },
+                {
+                  "name": "Armstrong Simpson Nartey",
+                  "rosterId": "B13",
+                  "bishop": true,
+                  "church": "Onction Internationale Benin",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-13.webp"
+                },
+                {
+                  "name": "Rodino Daniel Nhabanga",
+                  "rosterId": "B173",
+                  "bishop": true,
+                  "church": "Primeiras Obras",
+                  "title": "Bishop",
+                  "image": "assets/bishops/reconciled-173.webp"
+                },
+                {
+                  "name": "Nee Nunoo",
+                  "rosterId": "BO128",
+                  "bishop": true,
+                  "church": "Seychelles",
+                  "title": "Bishop",
+                  "image": "assets/pastors/matched-3269.webp"
+                },
+                {
+                  "name": "George Aferi Obeng",
+                  "rosterId": "B73",
+                  "bishop": true,
+                  "church": "Precious Souls Swaziland",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-73.webp"
+                },
+                {
+                  "name": "Jeffrey Kwame Ocran",
+                  "rosterId": "B89",
+                  "bishop": true,
+                  "church": "Fruitiferos Internationale",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-89.webp"
+                },
+                {
+                  "name": "Gustav Offei-Manu",
+                  "rosterId": "B75",
+                  "bishop": true,
+                  "church": "1000 Micro Church Network International",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B75-72a7fe8a.webp"
+                },
+                {
+                  "name": "Tennyson Ojeisekhoba",
+                  "rosterId": "B185",
+                  "bishop": true,
+                  "church": "Everything By Prayer Center",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-185.webp"
+                },
+                {
+                  "name": "Moro Martin-Luther Okoh",
+                  "rosterId": "B135",
+                  "bishop": true,
+                  "church": "Everything By Prayer Center",
+                  "title": "Bishop",
+                  "image": "assets/bishops/135.jpg"
+                },
+                {
+                  "name": "Jason Kofi Opata",
+                  "rosterId": "B88",
+                  "bishop": true,
+                  "church": "Everything By Prayer Center",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-88.webp"
+                },
+                {
+                  "name": "Frank Otchere",
+                  "rosterId": "B69",
+                  "bishop": true,
+                  "church": "Primeiras Obras",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/frank-otchere.webp"
+                },
+                {
+                  "name": "Joe Owusu-Adjei",
+                  "rosterId": "B91",
+                  "bishop": true,
+                  "church": "Bema International Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/091.jpg"
+                },
+                {
+                  "name": "Francis Tsikata-Akatto",
+                  "rosterId": "B67",
+                  "bishop": true,
+                  "church": "Rencontre Prophetique Internationale",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-67.webp"
+                },
+                {
+                  "name": "Baara Woode",
+                  "rosterId": "BO104",
+                  "bishop": true,
+                  "church": "Malawi",
+                  "title": "Episcopal Sister",
+                  "image": "assets/portraits/BO104.webp"
+                },
+                {
+                  "name": "Kwesi Woode",
+                  "rosterId": "B123",
+                  "bishop": true,
+                  "church": "Malawi",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-123.webp"
+                },
+                {
+                  "name": "Emmanuel Kofi Yeboah",
+                  "rosterId": "B52",
+                  "bishop": true,
+                  "church": "Libreville City State",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B52-55b6124bc2c9.webp"
+                }
+              ]
+            },
+            {
+              "name": "UD Europe",
+              "people": [
+                {
+                  "name": "Kwame Adu-Gyamfi",
+                  "rosterId": "B119",
+                  "bishop": true,
+                  "church": "Mustard Seed Chapel International",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-119.webp"
+                },
+                {
+                  "name": "Michael Amoh",
+                  "rosterId": "B132",
+                  "bishop": true,
+                  "church": "Tell Them",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-132.webp"
+                },
+                {
+                  "name": "Kweku Amponsah",
+                  "rosterId": "B122",
+                  "bishop": true,
+                  "church": "Candle In The Dark Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B122-63336813.webp"
+                },
+                {
+                  "name": "Linda Aryee",
+                  "rosterId": "B126",
+                  "bishop": true,
+                  "church": "Mustard Seed Chapel International",
+                  "title": "Episcopal Sister",
+                  "image": "assets/organisations/people/linda-aryee.webp"
+                },
+                {
+                  "name": "Richard Aryee",
+                  "rosterId": "B167",
+                  "bishop": true,
+                  "church": "It Is A Great Thing To Serve The Lord",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/richard-aryee.webp"
+                },
+                {
+                  "name": "Richard Nii Okai Aryee",
+                  "rosterId": "B169",
+                  "bishop": true,
+                  "church": "It Is A Great Thing To Serve The Lord",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-169.webp"
+                },
+                {
+                  "name": "Phillippa-Marka Coker",
+                  "rosterId": "B156",
+                  "bishop": true,
+                  "church": "Rose of Sharon",
+                  "title": "Episcopal Sister",
+                  "image": "assets/portraits/B156-1c17f1e3.webp"
+                },
+                {
+                  "name": "Leonora Hyde",
+                  "rosterId": "B124",
+                  "bishop": true,
+                  "church": "Mustard Seed Chapel International",
+                  "title": "Episcopal Sister",
+                  "image": "assets/organisations/people/leonora-hyde.webp"
+                },
+                {
+                  "name": "Immanuel Obeng",
+                  "rosterId": "B82",
+                  "bishop": true,
+                  "church": "Candle In The Dark Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-82.webp"
+                },
+                {
+                  "name": "Steve Poku",
+                  "rosterId": "B184",
+                  "bishop": true,
+                  "church": "Pleasant Surprise",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/steve-poku.webp"
+                }
+              ]
+            },
+            {
+              "name": "UD North America",
+              "people": [
+                {
+                  "name": "Norman Kwadwo Darkwa",
+                  "rosterId": "B143",
+                  "bishop": true,
+                  "church": "Rejoice Greatly",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B143-a9fb52d1.webp"
+                },
+                {
+                  "name": "Akwele Ivanna Kiruja",
+                  "rosterId": "B6",
+                  "bishop": true,
+                  "church": "Laikos International Church",
+                  "title": "Episcopal Sister",
+                  "image": "assets/bishops/matched-6.webp"
+                },
+                {
+                  "name": "Luke Akwasi Frimpong Mensah",
+                  "rosterId": "B129",
+                  "bishop": true,
+                  "church": "American Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/129.jpg"
+                },
+                {
+                  "name": "Kodwo Orleans-Lindsay",
+                  "rosterId": "B111",
+                  "bishop": true,
+                  "church": "Revival International",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/kodwo-orleans-lindsay.webp"
+                }
+              ]
+            },
+            {
+              "name": "United Islands",
+              "people": [
+                {
+                  "name": "Victor Collins Asabere",
+                  "rosterId": "B186",
+                  "bishop": true,
+                  "church": "United Islands",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-186.webp"
+                },
+                {
+                  "name": "Philip Asante",
+                  "rosterId": "B155",
+                  "bishop": true,
+                  "church": "Pacific Islands Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B155-225b5a52.webp"
+                },
+                {
+                  "name": "John Boffah",
+                  "rosterId": "B94",
+                  "bishop": true,
+                  "church": "Pacific Islands Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B94-c661521c.webp"
+                },
+                {
+                  "name": "John Yaw Frimpong",
+                  "rosterId": "B95",
+                  "bishop": true,
+                  "church": "Favourite Child Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B95-377f4306.webp"
+                },
+                {
+                  "name": "Joel Obuobisa",
+                  "rosterId": "B92",
+                  "bishop": true,
+                  "church": "United Islands",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/joel-obuobisa.webp"
+                },
+                {
+                  "name": "Sara Lanita Obuobisa",
+                  "rosterId": "B179",
+                  "bishop": true,
+                  "church": "United Islands",
+                  "title": "Episcopal Sister",
+                  "image": "assets/bishops/matched-179.webp"
+                },
+                {
+                  "name": "Andrew Kwaku Osei",
+                  "rosterId": "B10",
+                  "bishop": true,
+                  "church": "Pacific Islands Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B10-1e083d67.webp"
+                },
+                {
+                  "name": "Kristoffer Odoi Yemoh",
+                  "rosterId": "B113",
+                  "bishop": true,
+                  "church": "Pacific Islands Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B113-f288d946.webp"
+                }
+              ]
+            },
+            {
+              "name": "United Jesus",
+              "people": [
+                {
+                  "name": "Courage Kwami Ahedor",
+                  "rosterId": "BO282",
+                  "bishop": true,
+                  "church": "Jesus Is The Master",
+                  "title": "Bishop",
+                  "image": "assets/portraits/BO282.webp"
+                },
+                {
+                  "name": "Ernest Aryee",
+                  "rosterId": "B61",
+                  "bishop": true,
+                  "church": "Jesus Is The Master",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-61.webp"
+                },
+                {
+                  "name": "Daniel Kwaku Atiemoh",
+                  "rosterId": "B28",
+                  "bishop": true,
+                  "church": "Jesus Is The Answer Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-28.webp"
+                },
+                {
+                  "name": "Dennis Djagbletey",
+                  "rosterId": "B38",
+                  "bishop": true,
+                  "church": "Jesus Is The Answer Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-38.webp"
+                },
+                {
+                  "name": "Michael Dotsey-Dzokoto",
+                  "rosterId": "B133",
+                  "bishop": true,
+                  "church": "Jesus Is The Door",
+                  "title": "Bishop",
+                  "image": "assets/bishops/133.jpg"
+                },
+                {
+                  "name": "Raphael Mendes Essien",
+                  "rosterId": "B160",
+                  "bishop": true,
+                  "church": "Jesus Is The Answer Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/160.jpg"
+                },
+                {
+                  "name": "Toss Mills-Odoi",
+                  "rosterId": "B321",
+                  "bishop": true,
+                  "church": "Jesus Is The Master",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/toss-mills-odoi.webp"
+                },
+                {
+                  "name": "Frederick Nortey",
+                  "rosterId": "B72",
+                  "bishop": true,
+                  "church": "Jesus Is The Answer Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B72-6a3b2936.webp"
+                },
+                {
+                  "name": "Philip Obeng-Asamoah",
+                  "rosterId": "BO165",
+                  "bishop": true,
+                  "church": "Jesus Is The Answer Church",
+                  "title": "Bishop",
+                  "image": "assets/portraits/BO165-6c43aff9.webp"
+                },
+                {
+                  "name": "Andrews Osei",
+                  "rosterId": "B11",
+                  "bishop": true,
+                  "church": "Jesus Is The Door",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-11.webp"
+                },
+                {
+                  "name": "Romeo Sosu",
+                  "rosterId": "B174",
+                  "bishop": true,
+                  "church": "Jesus Is The Door",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B174-10dca5e8.webp"
+                },
+                {
+                  "name": "Raymond Stephens",
+                  "rosterId": "B163",
+                  "bishop": true,
+                  "church": "Jesus Is The Master",
+                  "title": "Bishop",
+                  "image": "assets/portraits/B163-f1ced1e4.webp"
+                },
+                {
+                  "name": "Frank Tawiah-Amissah",
+                  "rosterId": "B70",
+                  "bishop": true,
+                  "church": "Jesus Is The Door",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-70.webp"
+                },
+                {
+                  "name": "Nelson Tika",
+                  "rosterId": "B140",
+                  "bishop": true,
+                  "church": "Jesus Is The Answer Church",
+                  "title": "Bishop",
+                  "image": "assets/bishops/matched-140.webp"
+                }
+              ]
+            }
+          ],
+          "bishopSectionOrder": [
+            "United Denominations (UD-OLGC)",
+            "First Love Church"
           ]
         },
         {

@@ -17,8 +17,16 @@ export const ORGANISATION_PAGES = [...data.groups.filter(g => !g.untitled).map(g
 // Everyone else named in the documentary stays in the data file, unshown.
 // A council with parts (the Kuriake Council: First Love Church and UD-OLGC)
 // shows its chairmen together, then all its bishops.
+// bishopSectionOrder (Kuriake: UD-OLGC before First Love Church) orders the
+// bishops by part without changing the order of the chairmen.
 export const sectionsOf = organisation => {
-  const people = (organisation.sections || [{ people: organisation.people }]).flatMap(section => section.people);
-  return [{ name: '', leaders: people.filter(p => p.leader), bishops: people.filter(p => !p.leader && p.bishop) }];
+  const parts = organisation.sections || [{ name: '', people: organisation.people }];
+  const order = organisation.bishopSectionOrder;
+  const ordered = order ? [...parts].sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name)) : parts;
+  return [{
+    name: '',
+    leaders: parts.flatMap(section => section.people).filter(p => p.leader),
+    bishops: ordered.flatMap(section => section.people).filter(p => !p.leader && p.bishop),
+  }];
 };
 export const leadersOf = organisation => sectionsOf(organisation).flatMap(section => section.leaders);

@@ -63,6 +63,7 @@
 
 /* Bishops under the council */
 .org-under{font-family:var(--denom-display);font-size:30px;font-weight:700;color:var(--org-navy);margin:38px 0 18px}
+.org-directory-group .org-group-name{display:block;padding-top:22px;border-top:3px solid var(--org-gold);margin-top:46px}
 .org-members{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
 .org-member{display:flex;flex-direction:column;border:2px solid var(--org-line);border-radius:18px;overflow:hidden;background:#fff}
 .org-member-photo{display:flex;aspect-ratio:4/4.4;overflow:hidden;background:#e6e4df}
