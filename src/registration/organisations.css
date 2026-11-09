@@ -124,3 +124,15 @@
 .org-masthead-rule{display:block;width:110px;height:4px;border-radius:2px;background:var(--org-gold);margin:28px auto 26px}
 .org-masthead p{font-size:24px;line-height:1.5;color:#4a4a42;margin:0 auto;max-width:760px}
 @media(max-width:700px){.org-masthead{padding:56px 6% 46px}.org-masthead h1{font-size:40px;letter-spacing:1px}.org-masthead p{font-size:20px}.org-masthead-rule{margin:22px auto 20px}}
+
+/* Council tabs (office, 9 Nov): a bar of large buttons, one per council, that
+   stays at the top of the screen and scrolls sideways when it is full. */
+.org-tabs{position:sticky;top:0;z-index:30;background:var(--org-navy);box-shadow:0 6px 18px #14223d33}
+.org-tabs-row{display:flex;gap:10px;overflow-x:auto;padding:14px 5%;scrollbar-width:thin;scroll-snap-type:x proximity}
+.org-tab{flex:0 0 auto;scroll-snap-align:center;display:inline-flex;align-items:center;min-height:52px;padding:10px 20px;border:2px solid #c9a95c80;border-radius:14px;color:#fff!important;font-size:19px;font-weight:700;white-space:nowrap;background:#ffffff0d}
+.org-tab:hover{background:#ffffff1f}
+.org-tab.is-active{background:var(--org-gold);border-color:var(--org-gold);color:var(--org-navy)!important}
+.org-council{scroll-margin-top:100px}
+.org-consecrated{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;max-width:100%;margin-top:10px;padding:5px 12px;border-radius:999px;background:#f3ecd9;color:var(--org-gold-ink)!important;font-size:16px!important;font-weight:700;align-self:flex-start}
+.org-consecrated span{font-size:14px}
+@media(max-width:700px){.org-tabs-row{padding:12px 5%;gap:8px}.org-tab{font-size:17px;min-height:48px;padding:8px 16px}.org-consecrated{font-size:13px!important;padding:4px 10px;gap:4px}}

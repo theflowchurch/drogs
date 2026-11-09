@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { ORGANISATIONS as data, sectionsOf } from './ministry-organisations.mjs';
+import { ORGANISATIONS as data, sectionsOf, PAGE_ALIASES } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './denomination-sites.css';
@@ -45,6 +45,7 @@ function Bishop({ person }) {
       <small>{person.title || 'Bishop'}</small>
       <strong>{person.name}</strong>
       {person.role ? <span>{person.role}</span> : person.church && <span className="org-member-church">{person.church}</span>}
+      {person.consecrated && <span className="org-consecrated"><span aria-hidden="true">✝</span> Consecrated {person.consecrated}</span>}
     </div>
   </article>;
 }
@@ -66,9 +67,31 @@ function Council({ organisation }) {
   </section>;
 }
 
+const councils = data.groups.flatMap(group => group.organisations);
+const tabs = councils.filter(o => !o.untitled);
+
+// Office, 9 Nov: tabs in place of the Church / Para-Church banners, so a
+// reader can jump to any council. The bar stays at the top while scrolling and
+// marks the council being read.
+function CouncilTabs() {
+  const [active, setActive] = useState(tabs[0]?.slug);
+  useEffect(() => {
+    const seen = new IntersectionObserver(entries => {
+      const top = entries.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+      if (top) setActive(top.target.id);
+    }, { rootMargin: '-140px 0px -60% 0px' });
+    tabs.forEach(o => { const el = document.getElementById(o.slug); if (el) seen.observe(el); });
+    return () => seen.disconnect();
+  }, []);
+  useEffect(() => { document.querySelector(`.org-tab[data-slug="${active}"]`)?.scrollIntoView({ block: 'nearest', inline: 'center' }); }, [active]);
+  return <nav className="org-tabs" aria-label="Councils"><div className="org-tabs-row">
+    {tabs.map(o => <a key={o.slug} data-slug={o.slug} href={`#${o.slug}`} className={`org-tab ${active === o.slug ? 'is-active' : ''}`} aria-current={active === o.slug ? 'true' : undefined}>{o.tabName || shortName(o.name)}</a>)}
+  </div></nav>;
+}
+
 export default function OrganisationsApp({ slug = '' }) {
   // An older address for one category or council opens this page at that part.
-  useEffect(() => { if (slug) document.getElementById(slug)?.scrollIntoView(); }, [slug]);
+  useEffect(() => { if (slug) document.getElementById(PAGE_ALIASES[slug] || slug)?.scrollIntoView(); }, [slug]);
   // The page opens straight on the Church Organisations (office, 9 Nov).
   return <div className="denom-site org-site" id="top">
     <main>
@@ -78,20 +101,11 @@ export default function OrganisationsApp({ slug = '' }) {
         <span className="org-masthead-rule" aria-hidden="true"/>
         <p>{data.subheading}</p>
       </header>
-      {data.groups.map((group, index) => { const Heading = 'h2';
-        // An untitled group (Emeritus, URSC, Change of Status) follows on at the
-        // end of the page with no band of its own.
-        const followedOn = data.groups[index + 1]?.untitled;
-        return <section className="org-group" id={group.slug} key={group.slug} aria-labelledby={group.untitled ? undefined : `${group.slug}-title`} aria-label={group.untitled ? 'More councils' : undefined}>
-        {!group.untitled && <div className="org-group-band">
-          <Backdrop name={group.backdrop || group.slug}/>
-          <div className="org-group-band-inner"><Heading id={`${group.slug}-title`}>{group.name}</Heading></div>
-        </div>}
-        <div className="org-main">
-          {group.organisations.map(organisation => <Council key={organisation.slug} organisation={organisation}/>)}
-          {!followedOn && <a className="org-top" href="#top">↑ Back to the top</a>}
-        </div>
-      </section>; })}
+      <CouncilTabs/>
+      <div className="org-main">
+        {councils.map(organisation => <Council key={organisation.slug} organisation={organisation}/>)}
+        <a className="org-top" href="#top">↑ Back to the top</a>
+      </div>
     </main>
     <footer className="org-footer"><span>{data.name}</span><span>Updated {data.updated}</span></footer>
   </div>;
