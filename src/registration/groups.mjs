@@ -41,6 +41,7 @@ export const GROUPS = {
       "La Belle Eglise Gabon",
       "La Belle Église Car",
       "Libreville City State",
+      "Malawi",
       "Onction Internationale Benin",
       "Poimen Church Gambia",
       "Poimen Church Senegal-Gambia",
