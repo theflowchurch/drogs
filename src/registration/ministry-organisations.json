@@ -418,7 +418,12 @@
               "title": "Mother"
             },
             {
-              "name": "Ameila Aidoo"
+              "name": "Amelia Aidoo",
+              "rosterId": "B9",
+              "bishop": true,
+              "church": "Qodesh City Church",
+              "title": "Mother",
+              "image": "assets/bishops/matched-9.webp"
             },
             {
               "name": "Charles Amoo",
@@ -1249,7 +1254,12 @@
               "title": "Mother"
             },
             {
-              "name": "Manette Pamela Dickson"
+              "name": "Pamela Dickson",
+              "rosterId": "B149",
+              "bishop": true,
+              "church": "Jesus Is The Rock Church",
+              "title": "Episcopal Sister",
+              "image": "assets/bishops/matched-149.webp"
             },
             {
               "name": "Louis Josiah"
