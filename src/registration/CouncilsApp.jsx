@@ -1,75 +1,143 @@
 'use client';
+import { useEffect, useRef, useState } from 'react';
 import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './councils.css';
 
-// A second design (office, 9 Nov), at /councils/: the same groups and people
-// as /organisations/, after the office's mockup. A night-sky header with the
-// earth holds the contents, one coloured box per group; a chosen group is
-// shown on its own on the white panel.
+// The modern design (office, 9 Nov), at /councils/: the same title, contents
+// and groups as /organisations/, in a dark glass theme. Numbered rows, a
+// search box ("/" to jump to it), arrow keys between rows, a count that runs
+// up to the total, and a filter on each group's page.
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const pad = n => String(n).padStart(2, '0');
+const plural = n => `${n} ${n === 1 ? 'Bishop' : 'Bishops'}`;
+const matches = (text, query) => text.toLowerCase().includes(query.trim().toLowerCase());
+const stillMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function Photo({ person }) {
-  if (!person?.image) return <span className="cz-photo-empty" aria-hidden="true"/>;
+  if (!person?.image) return <span className="tx-photo-empty" aria-hidden="true"/>;
   const edited = person.image.startsWith('assets/organisations/people/');
   const style = edited ? { '--portrait-x': '50%', '--portrait-y': '0%' } : Object.fromEntries(portraitStyle(person.image).split(';').filter(Boolean).map(pair => pair.split(':')));
   const thumb = person.image.replace(/^(assets\/portraits)\/([^/]+)\.[^.]+$/, '$1/thumbs/$2.webp');
-  return <PortraitImage media={person.image} src={`${base}/${thumb}`} fallbackSrc={`${base}/${person.image}`} alt={person.name} className="cz-portrait" style={style}/>;
+  return <PortraitImage media={person.image} src={`${base}/${thumb}`} fallbackSrc={`${base}/${person.image}`} alt={person.name} className="tx-portrait" style={style}/>;
 }
 
 function Card({ person }) {
-  return <article className="cz-card">
-    <div className="cz-card-photo"><Photo person={person}/></div>
-    <div className="cz-card-text">
-      <strong>{person.title || 'Bishop'} {person.name}</strong>
+  return <article className="tx-card">
+    <div className="tx-card-photo"><Photo person={person}/></div>
+    <div className="tx-card-text">
+      <small className="tx-card-title">{person.title || 'Bishop'}</small>
+      <strong>{person.name}</strong>
       <span>{person.role || person.church}</span>
-      {person.consecrated && <small>Consecrated {person.consecrated}</small>}
+      {person.consecrated && <em>Consecrated {person.consecrated}</em>}
     </div>
   </article>;
 }
 
-const Pill = ({ n }) => <span className="cz-pill">{n} {n === 1 ? 'Bishop' : 'Bishops'}</span>;
+// The total runs up from zero when the page opens (still for reduced motion).
+function CountUp({ to }) {
+  const [n, setN] = useState(to);
+  useEffect(() => {
+    if (stillMotion()) return;
+    let frame; const start = performance.now();
+    const step = now => { const t = Math.min(1, (now - start) / 1100); setN(Math.round(to * (1 - (1 - t) ** 3))); if (t < 1) frame = requestAnimationFrame(step); };
+    setN(0); frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [to]);
+  return <>{n}</>;
+}
+
+function Title({ compact, children }) {
+  return <div className={`tx-head ${compact ? 'is-compact' : ''}`}>
+    <a href="#contents" className="tx-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
+    <div className="tx-title">
+      <p className="tx-sub">Worldwide Fellowship of Bishops</p>
+      <p className="tx-total"><span className="tx-dot" aria-hidden="true"/><strong><CountUp to={DIRECTORY_TOTAL}/></strong> Bishops <span className="tx-sep">/</span> {DIRECTORY_GROUPS.length} groups</p>
+    </div>
+    {children && <div className="tx-head-tools">{children}</div>}
+  </div>;
+}
+
+function Search({ value, onChange, label, inputRef }) {
+  return <label className="tx-search">
+    <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.8"/><path d="m13 13 4.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+    <input ref={inputRef} type="search" value={value} onChange={e => onChange(e.target.value)} placeholder={label} aria-label={label}/>
+    {inputRef && <kbd aria-hidden="true">/</kbd>}
+  </label>;
+}
+
+function Contents({ query, search }) {
+  const list = useRef(null);
+  const shown = DIRECTORY_GROUPS.filter(g => !query || matches(g.name, query));
+  // "/" jumps to the search box; ↑ and ↓ move between the rows.
+  useEffect(() => {
+    const keys = e => {
+      if (e.key === '/' && document.activeElement !== search.current) { e.preventDefault(); search.current?.focus(); return; }
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      const rows = [...(list.current?.querySelectorAll('a') || [])]; if (!rows.length) return;
+      const at = rows.indexOf(document.activeElement);
+      if (at < 0 && document.activeElement !== search.current) return;
+      e.preventDefault();
+      rows[Math.max(0, Math.min(rows.length - 1, at + (e.key === 'ArrowDown' ? 1 : -1)))].focus();
+    };
+    addEventListener('keydown', keys); return () => removeEventListener('keydown', keys);
+  }, []);
+  return <>
+    <nav className="tx-contents" id="contents" aria-label="Contents" ref={list}>
+      {shown.map(g => <a key={g.slug} href={`#${g.slug}`} className="tx-row" style={{ '--box': g.colour, '--i': DIRECTORY_GROUPS.indexOf(g) }}>
+        <span className="tx-index">{pad(DIRECTORY_GROUPS.indexOf(g) + 1)}</span>
+        <span className="tx-row-name">{g.name}</span>
+        <span className="tx-row-count"><i aria-hidden="true"/>{plural(g.count)}</span>
+        <span className="tx-arrow" aria-hidden="true">→</span>
+      </a>)}
+      {!shown.length && <p className="tx-empty">No group matches “{query}”.</p>}
+    </nav>
+  </>;
+}
 
 function Group({ group }) {
-  return <section className="cz-section" id={group.slug} aria-labelledby={`${group.slug}-title`}>
-    <h2 id={`${group.slug}-title`} className="cz-box" style={{ '--box': group.colour }}>{group.name}</h2>
-    {group.parts ? group.parts.map(part => <div className="cz-group" key={part.slug} id={part.slug}>
-      <div className="cz-group-head"><h3>{part.name}</h3><Pill n={part.people.length}/></div>
-      <div className="cz-cards">{part.people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div>
-    </div>) : <>
-      <div className="cz-group-head"><Pill n={group.people.length}/></div>
-      <div className="cz-cards">{group.people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div>
-    </>}
+  const [query, setQuery] = useState('');
+  const keep = people => people.filter(p => !query || matches(`${p.title || ''} ${p.name} ${p.role || ''} ${p.church || ''}`, query));
+  const parts = (group.parts || [{ slug: group.slug, name: '', people: group.people }]).map(part => ({ ...part, people: keep(part.people) }));
+  const found = parts.reduce((n, part) => n + part.people.length, 0);
+  const number = DIRECTORY_GROUPS.indexOf(group) + 1;
+  return <section className="tx-group" id={group.slug} aria-labelledby={`${group.slug}-title`} style={{ '--box': group.colour }}>
+    <div className="tx-crumbs">
+      <a href="#contents" className="tx-back">← Contents</a>
+      <span className="tx-path">DHMM <b>/</b> {pad(number)}</span>
+    </div>
+    <div className="tx-group-head">
+      <h2 id={`${group.slug}-title`}>{group.name}</h2>
+      <span className="tx-chip">{plural(group.count)}</span>
+    </div>
+    <Search value={query} onChange={setQuery} label="Find a bishop in this group"/>
+    {parts.map((part, i) => part.people.length > 0 && <div className="tx-part" key={part.slug} id={part.slug}>
+      {part.name && <h3><span className="tx-index">{pad(number)}.{i + 1}</span>{part.name}<span className="tx-chip">{plural(part.people.length)}</span></h3>}
+      <div className="tx-cards">{part.people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div>
+    </div>)}
+    {!found && <p className="tx-empty">No bishop in this group matches “{query}”.</p>}
   </section>;
 }
 
 export default function CouncilsApp() {
   const group = useGroupFocus();
-  return <div className="cz-site" id="top">
-    <header className={`cz-hero ${group ? 'cz-hero-small' : ''}`}>
-      <img className="cz-earth" src={`${base}/assets/organisations/earth.webp`} alt="" aria-hidden="true"/>
-      {/* The title (office, 9 Nov): the DHMM logo in white, "Worldwide Fellowship of
-          Bishops" in gold, and every bishop counted once. */}
-      <div className="cz-dhmm-head">
-        <a href="#contents" className="cz-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
-        <div className="cz-dhmm-text">
-          <p className="cz-dhmm-sub">Worldwide Fellowship of Bishops</p>
-          <p className="cz-dhmm-total"><strong>{DIRECTORY_TOTAL}</strong> Bishops</p>
-        </div>
-      </div>
-      {!group && <nav className="cz-contents" id="contents" aria-label="Contents">
-        {DIRECTORY_GROUPS.map(g => <a key={g.slug} href={`#${g.slug}`} className="cz-box" style={{ '--box': g.colour }}>
-          <span className="cz-box-name">{g.name}</span>
-          <span className="cz-box-count">{g.count} {g.count === 1 ? 'Bishop' : 'Bishops'}</span>
-        </a>)}
-      </nav>}
-    </header>
-    {group && <main className="cz-panel">
-      <Group group={group}/>
-      <div className="cz-end-links"><a className="cz-top" href="#contents">↑ Back to contents</a></div>
-    </main>}
-    <footer className="cz-footer"><span>Updated {data.updated}</span></footer>
+  const [query, setQuery] = useState('');
+  const search = useRef(null);
+  return <div className="tx-site" id="top">
+    <div className="tx-backdrop" aria-hidden="true">
+      <img src={`${base}/assets/organisations/earth.webp`} alt=""/>
+    </div>
+    <header className="tx-header"><Title compact={Boolean(group)}>
+      {!group && <Search value={query} onChange={setQuery} label="Search the groups" inputRef={search}/>}
+    </Title></header>
+    <main className="tx-main">
+      {group ? <>
+        <Group key={group.slug} group={group}/>
+        <div className="tx-end"><a className="tx-back" href="#contents">← Back to contents</a></div>
+      </> : <Contents query={query} search={search}/>}
+    </main>
+    <footer className="tx-footer"><span>Updated {data.updated}</span><span className="tx-mono">{DIRECTORY_TOTAL} bishops · {DIRECTORY_GROUPS.length} groups</span></footer>
   </div>;
 }
