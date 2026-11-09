@@ -47,7 +47,7 @@ function OrganisationCard({ organisation }) {
       <span className="org-card-face"><Portrait person={leader}/></span>
       <span><small>In charge</small><strong>{leader.name}</strong></span>
     </div>)}</div>}
-    <span className="org-card-foot"><span>{count > 0 ? `${count} ${count === 1 ? 'member' : 'members'}` : leaders.length ? 'See details' : 'Open'}</span><Arrow/></span>
+    <span className="org-card-foot"><span>{count > 0 ? `${count} ${count === 1 ? 'member' : 'members'}` : 'Open'}</span><Arrow/></span>
   </a>;
 }
 
@@ -72,7 +72,7 @@ function OrganisationsHome() {
     <section className="org-hero">
       <p className="denom-kicker">Dag Heward-Mills · Updated {data.updated}</p>
       <h1>The Organisations</h1>
-      <p className="org-hero-text">The councils, boards and committees that carry the ministry forward, and the people who serve in them.</p>
+      <p className="org-hero-text">The councils, boards and committees that carry the ministry forward, and the people in charge of them.</p>
       <nav className="org-jump" aria-label="Groups">{data.groups.map(group => <a key={group.slug} href={`#${group.slug}`}>{group.name.replace(/^The /, '')}<span>{group.organisations.length}</span></a>)}</nav>
     </section>
     <PersonFinder/>
