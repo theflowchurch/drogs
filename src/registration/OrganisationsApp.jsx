@@ -96,7 +96,6 @@ function Leader({ person }) {
   return <article className="org-leader">
     <div className="org-leader-photo"><Photo person={person} large/></div>
     <div className="org-leader-text">
-      <p className="org-leader-label">In charge</p>
       <h3>{person.name}</h3>
       {person.role && <p>{person.role}</p>}
       {person.detail && <p className="org-leader-detail">{person.detail}</p>}
