@@ -178,6 +178,15 @@
               "name": "UD Africa",
               "people": [
                 {
+                  "name": "Frank Otchere",
+                  "rosterId": "B69",
+                  "church": "Primeiras Obras",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/frank-otchere.webp",
+                  "bishop": true,
+                  "role": "UD-OLGC Principal Chairman"
+                },
+                {
                   "name": "Christos Isaac Abbey",
                   "rosterId": "B23",
                   "bishop": true,
@@ -610,14 +619,6 @@
                   "image": "assets/bishops/matched-88.webp"
                 },
                 {
-                  "name": "Frank Otchere",
-                  "rosterId": "B69",
-                  "bishop": true,
-                  "church": "Primeiras Obras",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/frank-otchere.webp"
-                },
-                {
                   "name": "Joe Owusu-Adjei",
                   "rosterId": "B91",
                   "bishop": true,
@@ -662,6 +663,15 @@
             {
               "name": "UD Europe",
               "people": [
+                {
+                  "name": "Steve Poku",
+                  "rosterId": "B184",
+                  "church": "Pleasant Surprise",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/steve-poku.webp",
+                  "bishop": true,
+                  "role": "UD Europe Chairman"
+                },
                 {
                   "name": "Kwame Adu-Gyamfi",
                   "rosterId": "B119",
@@ -733,20 +743,21 @@
                   "church": "Candle In The Dark Church",
                   "title": "Bishop",
                   "image": "assets/bishops/matched-82.webp"
-                },
-                {
-                  "name": "Steve Poku",
-                  "rosterId": "B184",
-                  "bishop": true,
-                  "church": "Pleasant Surprise",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/steve-poku.webp"
                 }
               ]
             },
             {
               "name": "UD North America",
               "people": [
+                {
+                  "name": "Kodwo Orleans-Lindsay",
+                  "rosterId": "B111",
+                  "church": "Revival International",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/kodwo-orleans-lindsay.webp",
+                  "bishop": true,
+                  "role": "UD North America Chairman"
+                },
                 {
                   "name": "Norman Kwadwo Darkwa",
                   "rosterId": "B143",
@@ -770,20 +781,21 @@
                   "church": "American Missionary Church",
                   "title": "Bishop",
                   "image": "assets/bishops/129.jpg"
-                },
-                {
-                  "name": "Kodwo Orleans-Lindsay",
-                  "rosterId": "B111",
-                  "bishop": true,
-                  "church": "Revival International",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/kodwo-orleans-lindsay.webp"
                 }
               ]
             },
             {
               "name": "United Islands",
               "people": [
+                {
+                  "name": "Joel Obuobisa",
+                  "rosterId": "B92",
+                  "church": "United Islands",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/joel-obuobisa.webp",
+                  "bishop": true,
+                  "role": "United Islands Chairman"
+                },
                 {
                   "name": "Victor Collins Asabere",
                   "rosterId": "B186",
@@ -817,14 +829,6 @@
                   "image": "assets/portraits/B95-377f4306.webp"
                 },
                 {
-                  "name": "Joel Obuobisa",
-                  "rosterId": "B92",
-                  "bishop": true,
-                  "church": "United Islands",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/joel-obuobisa.webp"
-                },
-                {
                   "name": "Sara Lanita Obuobisa",
                   "rosterId": "B179",
                   "bishop": true,
@@ -853,6 +857,15 @@
             {
               "name": "United Jesus",
               "people": [
+                {
+                  "name": "Toss Mills-Odoi",
+                  "rosterId": "B321",
+                  "church": "Jesus Is The Master",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/toss-mills-odoi.webp",
+                  "bishop": true,
+                  "role": "United Jesus Chairman"
+                },
                 {
                   "name": "Courage Kwami Ahedor",
                   "rosterId": "BO282",
@@ -900,14 +913,6 @@
                   "church": "Jesus Is The Answer Church",
                   "title": "Bishop",
                   "image": "assets/bishops/160.jpg"
-                },
-                {
-                  "name": "Toss Mills-Odoi",
-                  "rosterId": "B321",
-                  "bishop": true,
-                  "church": "Jesus Is The Master",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/toss-mills-odoi.webp"
                 },
                 {
                   "name": "Frederick Nortey",
@@ -973,10 +978,11 @@
                 {
                   "name": "Ernest Addai-Duah",
                   "rosterId": "B60",
-                  "bishop": true,
                   "church": "Eschatos",
                   "title": "Bishop",
-                  "image": "assets/organisations/people/ernest-addai-duah.webp"
+                  "image": "assets/organisations/people/ernest-addai-duah.webp",
+                  "bishop": true,
+                  "role": "Eschatos Chairman"
                 },
                 {
                   "name": "Maxwell Agyei-Manu",
@@ -1130,10 +1136,11 @@
                 {
                   "name": "Samuel Baidoo",
                   "rosterId": "B54",
-                  "bishop": true,
                   "church": "The Makarios Church",
                   "title": "Bishop",
-                  "image": "assets/organisations/people/samuel-baidoo.webp"
+                  "image": "assets/organisations/people/samuel-baidoo.webp",
+                  "bishop": true,
+                  "role": "UD Ghana West"
                 },
                 {
                   "name": "Ebenezer Barnor",
@@ -1327,10 +1334,11 @@
                 {
                   "name": "Fred Ansah Quartey",
                   "rosterId": "B71",
-                  "bishop": true,
                   "church": "East End City Churches",
                   "title": "Bishop",
-                  "image": "assets/organisations/people/fred-ansah-quartey.webp"
+                  "image": "assets/organisations/people/fred-ansah-quartey.webp",
+                  "bishop": true,
+                  "role": "UD Ghana East"
                 },
                 {
                   "name": "Kudzo Jonathan Sewornuku Bekui",
@@ -1386,6 +1394,15 @@
               "name": "UD Ghana Central",
               "people": [
                 {
+                  "name": "Kwabena Asare Asamoa",
+                  "rosterId": "B116",
+                  "church": "The Machaneh Church International",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/kwabena-asare-asamoa.webp",
+                  "bishop": true,
+                  "role": "UD Ghana Central"
+                },
+                {
                   "name": "Kofi Hene Asare",
                   "rosterId": "B112",
                   "bishop": true,
@@ -1424,14 +1441,6 @@
                   "church": "The Machaneh Church International",
                   "title": "Bishop",
                   "image": "assets/portraits/BO21-2bba96ea.webp"
-                },
-                {
-                  "name": "Kwabena Asare Asamoa",
-                  "rosterId": "B116",
-                  "bishop": true,
-                  "church": "The Machaneh Church International",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/kwabena-asare-asamoa.webp"
                 },
                 {
                   "name": "Kweku Amonoo-Neizer",
