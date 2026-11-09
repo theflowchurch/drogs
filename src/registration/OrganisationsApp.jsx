@@ -15,7 +15,10 @@ import './organisations.css';
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const home = `${base}/${ORGANISATIONS_PATH}/`;
 const pageOf = slug => `${home}${slug}/`;
-const media = name => `${base}/assets/organisations/${name}`;
+// The host tells browsers to keep these files for a year; bump MEDIA_VERSION
+// whenever a picture or clip is replaced so visitors fetch the new one.
+const MEDIA_VERSION = 2;
+const media = name => `${base}/assets/organisations/${name}?v=${MEDIA_VERSION}`;
 const shortName = name => name.replace(/^The /, '');
 
 function Photo({ person, large = false }) {
