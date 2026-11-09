@@ -1,12 +1,8 @@
 {
-  "name": "The Organisations of Dag Heward-Mills",
+  "name": "The Organisations",
   "shortName": "The Organisations",
   "updated": "August 2026",
   "source": "THREE.ORG documentary (Final Cut project 'NEW INTRO'), on-screen titles",
-  "founder": {
-    "name": "Dag Heward-Mills",
-    "title": "Bishop"
-  },
   "groups": [
     {
       "slug": "church",
@@ -1137,17 +1133,5 @@
         }
       ]
     }
-  ],
-  "mission": {
-    "heading": "The mission continues",
-    "quotes": [
-      "If you love the Lord, there is nothing you can't do for Him. We must be losing, suffering, sacrificing and dying for Jesus!",
-      "Let us give ourselves wholly, that our profiting may appear to all.",
-      "We must go deeper and do more! We must attempt great things for God! We must build a thousand micro churches!",
-      "You must catch the anointing, flow in the anointing and amplify your ministry with miracles, signs and wonders.",
-      "The church must send or it will end.",
-      "Awake, O sleeper! Surely it is worthwhile to push ourselves with all our might in promoting the gospel and the kingdom of our Christ.",
-      "Can't you do just a little bit more? Do everything by prayer and nothing without prayer. Let us labour to be blessed!"
-    ]
-  }
+  ]
 }
