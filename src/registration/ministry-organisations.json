@@ -1432,7 +1432,7 @@
                   "bishop": true,
                   "church": "Eschatos",
                   "title": "Bishop",
-                  "image": "assets/portraits/B326-998235f2.webp",
+                  "image": "assets/organisations/people/isaac-o-b-commey-29d39eed.webp",
                   "consecrated": "2012"
                 },
                 {
@@ -2235,7 +2235,7 @@
                 },
                 {
                   "name": "Isaac O. B. Commey",
-                  "image": "assets/portraits/B326-998235f2.webp",
+                  "image": "assets/organisations/people/isaac-o-b-commey-29d39eed.webp",
                   "rosterId": "B326",
                   "bishop": true,
                   "church": "Eschatos",
@@ -2289,7 +2289,7 @@
                 },
                 {
                   "name": "Steve Asare",
-                  "image": "assets/bishops/official-steve-asare.webp",
+                  "image": "assets/organisations/people/steve-asare-bb3945ef.webp",
                   "rosterId": "BO202",
                   "bishop": true,
                   "church": "Allos Mega Church",
