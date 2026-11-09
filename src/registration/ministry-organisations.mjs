@@ -38,25 +38,31 @@ export const sectionsOf = organisation => {
 export const leadersOf = organisation => sectionsOf(organisation).flatMap(section => section.leaders);
 
 // Office, 9 Nov (contents page): one box per group, on both /organisations/
-// and /councils/. First Love (its groups and its Senex Council) is left out
-// for now. The Para-Church councils share one box, which opens all of them on
-// one page, each council under its own heading.
+// and /councils/, in the office's order, each with its number of bishops. The
+// Para-Church councils share one box, which opens all of them on one page,
+// each council under its own heading.
 const PARA_CHURCH = 'para-church';
-const LEFT_OUT_SECTIONS = ['first-love-church'];
-const LEFT_OUT_GROUPS = ['first-love-senex-council'];
+const ORDER = ['1965-committee', 'ud-senex-council', 'adjutancy', 'emeritus', 'ursc', 'eschatos', 'united-jesus', 'united-islands',
+  'ud-africa', 'ud-ghana-west', 'ud-ghana-east', 'ud-ghana-central', 'ud-europe', 'ud-north-america', PARA_CHURCH,
+  'only-jesus', 'jesus-first', 'serve-jesus', 'choose-jesus', 'jesus-now', 'jesus-forever', 'king-jesus', 'first-love-senex-council'];
+// Church groups read "The Bishops of …"; councils and committees keep their own names.
+const FORMAL = new Set(['united-denominations', 'first-love-church']);
+const formalName = (o, g) => FORMAL.has(o.slug) || g.slug === 'ursc' ? `The Bishops of ${g.name}` : g.name;
+const bishopKey = p => p.rosterId || p.name;
+const countOf = people => new Set(people.map(bishopKey)).size;
 const groupsOfSection = o => o.directoryGroups?.length
-  ? o.directoryGroups.filter(g => g.slug && g.name && !LEFT_OUT_GROUPS.includes(g.slug))
+  ? o.directoryGroups.filter(g => g.slug && g.name)
   : [{ slug: o.slug, name: o.name, people: sectionsOf(o).flatMap(s => s.people) }];
 // Muted deep tones (office, 9 Nov), a different one for each box, all dark
 // enough for white lettering and calm beside the gold edge.
-const COLOURS = ['#1f3a5f', '#6b2737', '#2f5233', '#4a3f6b', '#1f5357', '#5a2846', '#3a3d42', '#7a5a2e', '#2e3566', '#5c3a2a', '#2c4a40', '#34495e', '#6a3045', '#3f4a2c', '#43365a', '#24505f', '#5a4632'];
-export const DIRECTORY_GROUPS = ALL_ORGANISATIONS
-  .filter(o => !o.untitled && !LEFT_OUT_SECTIONS.includes(o.slug))
-  .flatMap(o => o.slug === PARA_CHURCH
-    ? [{ slug: PARA_CHURCH, name: 'Para-Church Bishops', section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length), people: [] }]
-    : groupsOfSection(o).map(g => ({ slug: g.slug, name: g.name, section: o.slug, people: g.people }))
-  )
-  .filter(g => g.people.length || g.parts?.length)
-  .map((g, i) => ({ ...g, colour: COLOURS[i % COLOURS.length] }));
+const COLOURS = ['#1f3a5f', '#6b2737', '#2f5233', '#4a3f6b', '#1f5357', '#5a2846', '#3a3d42', '#7a5a2e', '#2e3566', '#5c3a2a', '#2c4a40', '#34495e', '#6a3045', '#3f4a2c', '#43365a', '#24505f', '#5a4632', '#2b4257', '#5e2f3c', '#35503f', '#4d3b5e', '#3b4f5a', '#664a2b'];
+const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => o.slug === PARA_CHURCH
+  ? [{ slug: PARA_CHURCH, name: 'Para-Church Bishops', section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length), people: [] }]
+  : groupsOfSection(o).map(g => ({ slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people })));
+export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === slug))
+  .filter(g => g && (g.people.length || g.parts?.length))
+  .map((g, i) => ({ ...g, count: countOf(g.parts ? g.parts.flatMap(p => p.people) : g.people), colour: COLOURS[i % COLOURS.length] }));
+// Every bishop on the page once, however many councils they sit on.
+export const DIRECTORY_TOTAL = countOf(DIRECTORY_GROUPS.flatMap(g => g.parts ? g.parts.flatMap(p => p.people) : g.people));
 // A group's address, or one Para-Church council's (#flow-council), opens it.
 export const directoryGroupBySlug = slug => DIRECTORY_GROUPS.find(g => g.slug === slug || g.parts?.some(p => p.slug === slug)) || null;

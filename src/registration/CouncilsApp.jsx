@@ -1,5 +1,5 @@
 'use client';
-import { ORGANISATIONS as data, DIRECTORY_GROUPS } from './ministry-organisations.mjs';
+import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
 import { portraitStyle } from '../runtime/portrait-framing';
@@ -47,13 +47,23 @@ function Group({ group }) {
 
 export default function CouncilsApp() {
   const group = useGroupFocus();
-  // No title for now (office, 9 Nov): the night sky and the earth, then the
-  // contents, one coloured box per group.
   return <div className="cz-site" id="top">
     <header className={`cz-hero ${group ? 'cz-hero-small' : ''}`}>
       <img className="cz-earth" src={`${base}/assets/organisations/earth.webp`} alt="" aria-hidden="true"/>
+      {/* The title (office, 9 Nov): the DHMM logo in white, "Worldwide
+          Bishops" in gold, and every bishop counted once. */}
+      <div className="cz-dhmm-head">
+        <a href="#contents" className="cz-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
+        <div className="cz-dhmm-text">
+          <p className="cz-dhmm-sub">Worldwide Bishops</p>
+          <p className="cz-dhmm-total"><strong>{DIRECTORY_TOTAL}</strong> Bishops</p>
+        </div>
+      </div>
       {!group && <nav className="cz-contents" id="contents" aria-label="Contents">
-        {DIRECTORY_GROUPS.map(g => <a key={g.slug} href={`#${g.slug}`} className="cz-box" style={{ '--box': g.colour }}>{g.name}</a>)}
+        {DIRECTORY_GROUPS.map(g => <a key={g.slug} href={`#${g.slug}`} className="cz-box" style={{ '--box': g.colour }}>
+          <span className="cz-box-name">{g.name}</span>
+          <span className="cz-box-count">{g.count} {g.count === 1 ? 'Bishop' : 'Bishops'}</span>
+        </a>)}
       </nav>}
     </header>
     {group && <main className="cz-panel">

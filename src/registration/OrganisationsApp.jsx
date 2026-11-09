@@ -1,5 +1,5 @@
 'use client';
-import { ORGANISATIONS as data, DIRECTORY_GROUPS, PAGE_ALIASES } from './ministry-organisations.mjs';
+import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, PAGE_ALIASES } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
 import { portraitStyle } from '../runtime/portrait-framing';
@@ -35,8 +35,24 @@ function Bishop({ person }) {
 
 // One group's heading, in the shape of the section banners, in its own colour.
 function GroupBox({ group, as: Tag = 'a' }) {
-  const props = Tag === 'a' ? { href: `#${group.slug}` } : { id: `${group.slug}-heading` };
-  return <Tag className="org-group-box" style={{ '--box': group.colour }} {...props}>{group.name}</Tag>;
+  const link = Tag === 'a';
+  const props = link ? { href: `#${group.slug}` } : { id: `${group.slug}-heading` };
+  return <Tag className="org-group-box" style={{ '--box': group.colour }} {...props}>
+    <span className="org-box-name">{group.name}</span>
+    {link && <span className="org-box-count">{group.count} {group.count === 1 ? 'Bishop' : 'Bishops'}</span>}
+  </Tag>;
+}
+
+// The title (office, 9 Nov): the DHMM logo in white on navy, "Worldwide
+// Bishops" in gold, and every bishop on the page counted once.
+function Masthead() {
+  return <header className="org-dhmm-head">
+    <a href="#contents" className="org-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
+    <div className="org-dhmm-text">
+      <p className="org-dhmm-sub">Worldwide Bishops</p>
+      <p className="org-dhmm-total"><strong>{DIRECTORY_TOTAL}</strong> Bishops</p>
+    </div>
+  </header>;
 }
 
 function Contents() {
@@ -63,8 +79,8 @@ function Group({ group }) {
 export default function OrganisationsApp({ slug = '' }) {
   // An older address for a section opens the contents; one for a group opens it.
   const group = useGroupFocus(PAGE_ALIASES[slug] ? '' : slug);
-  // No title for now (office, 9 Nov): the page opens on the contents.
   return <div className="denom-site org-site" id="top">
+    <Masthead/>
     <main className="org-main">
       {group ? <>
         <Group group={group}/>
