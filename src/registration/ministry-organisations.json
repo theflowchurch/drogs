@@ -767,6 +767,83 @@
       "summary": "The councils and boards that carry the gospel outward.",
       "organisations": [
         {
+          "slug": "give-thyself-wholly-board",
+          "name": "The Give Thyself Wholly Board",
+          "people": [
+            {
+              "name": "Eben Johnson",
+              "role": "Give Thyself Wholly Board Chairman",
+              "leader": true,
+              "image": "assets/organisations/people/eben-johnson.webp",
+              "rosterId": "P1062"
+            }
+          ]
+        },
+        {
+          "slug": "makarios-council",
+          "name": "The Makarios Council",
+          "people": [
+            {
+              "name": "Toss Mills-Odoi",
+              "role": "Makarios Council Chairperson",
+              "leader": true,
+              "image": "assets/organisations/people/toss-mills-odoi.webp",
+              "rosterId": "B321",
+              "bishop": true,
+              "church": "Jesus Is The Master",
+              "title": "Bishop"
+            },
+            {
+              "name": "Rita Biney"
+            },
+            {
+              "name": "Paul Kobi-Fordah"
+            },
+            {
+              "name": "Benedictus Annan"
+            },
+            {
+              "name": "Felix Bediako",
+              "image": "assets/bishops/matched-62.webp",
+              "rosterId": "B62",
+              "bishop": true,
+              "church": "Everything By Prayer Center",
+              "title": "Bishop"
+            },
+            {
+              "name": "Robert Dodoo",
+              "image": "assets/portraits/B171-6752efc1.webp",
+              "rosterId": "B171",
+              "bishop": true,
+              "church": "Eschatos",
+              "title": "Bishop"
+            },
+            {
+              "name": "Joy Bruce",
+              "image": "assets/portraits/B323-a0aedd3a.webp",
+              "rosterId": "B323",
+              "bishop": true,
+              "church": "First Love Church",
+              "title": "Mother"
+            },
+            {
+              "name": "Elaine Klufio",
+              "image": "assets/bishops/matched-46.webp",
+              "rosterId": "B46",
+              "bishop": true,
+              "church": "Strong Christian Church",
+              "title": "Episcopal Sister"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "para-church",
+      "name": "The Para-Church Organisations",
+      "summary": "The boards that run the schools, hospitals, homes, radio and buildings.",
+      "organisations": [
+        {
           "slug": "dhmm-council",
           "name": "The DHMM Council",
           "people": [
@@ -1032,83 +1109,6 @@
             }
           ]
         },
-        {
-          "slug": "give-thyself-wholly-board",
-          "name": "The Give Thyself Wholly Board",
-          "people": [
-            {
-              "name": "Eben Johnson",
-              "role": "Give Thyself Wholly Board Chairman",
-              "leader": true,
-              "image": "assets/organisations/people/eben-johnson.webp",
-              "rosterId": "P1062"
-            }
-          ]
-        },
-        {
-          "slug": "makarios-council",
-          "name": "The Makarios Council",
-          "people": [
-            {
-              "name": "Toss Mills-Odoi",
-              "role": "Makarios Council Chairperson",
-              "leader": true,
-              "image": "assets/organisations/people/toss-mills-odoi.webp",
-              "rosterId": "B321",
-              "bishop": true,
-              "church": "Jesus Is The Master",
-              "title": "Bishop"
-            },
-            {
-              "name": "Rita Biney"
-            },
-            {
-              "name": "Paul Kobi-Fordah"
-            },
-            {
-              "name": "Benedictus Annan"
-            },
-            {
-              "name": "Felix Bediako",
-              "image": "assets/bishops/matched-62.webp",
-              "rosterId": "B62",
-              "bishop": true,
-              "church": "Everything By Prayer Center",
-              "title": "Bishop"
-            },
-            {
-              "name": "Robert Dodoo",
-              "image": "assets/portraits/B171-6752efc1.webp",
-              "rosterId": "B171",
-              "bishop": true,
-              "church": "Eschatos",
-              "title": "Bishop"
-            },
-            {
-              "name": "Joy Bruce",
-              "image": "assets/portraits/B323-a0aedd3a.webp",
-              "rosterId": "B323",
-              "bishop": true,
-              "church": "First Love Church",
-              "title": "Mother"
-            },
-            {
-              "name": "Elaine Klufio",
-              "image": "assets/bishops/matched-46.webp",
-              "rosterId": "B46",
-              "bishop": true,
-              "church": "Strong Christian Church",
-              "title": "Episcopal Sister"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "slug": "para-church",
-      "name": "The Para-Church Organisations",
-      "summary": "The boards that run the schools, hospitals, homes, radio and buildings.",
-      "organisations": [
         {
           "slug": "general-schools-board",
           "name": "The General Schools Board",
