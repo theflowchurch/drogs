@@ -55,7 +55,7 @@ function Council({ organisation }) {
     {!organisation.untitled && <h3 id={`${organisation.slug}-heading`}>{organisation.name}</h3>}
     {organisation.summary && <p className="org-council-summary">{organisation.summary}</p>}
     {organisation.places && <ul className="org-places">{organisation.places.map(place => <li key={place}>{place}</li>)}</ul>}
-    {sectionsOf(organisation).map(section => section.people.length > 0 && <div className="org-council-part" key="people">
+    {sectionsOf(organisation).map(section => section.people.length > 0 && <div className="org-council-part" key={section.name || 'people'}>
       <div className="org-members">{section.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
     </div>)}
     {/* The Kuriake Council also lists the bishops of each directory group (office, 9 Nov). */}

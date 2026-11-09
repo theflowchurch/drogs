@@ -25,7 +25,9 @@ export const sectionsOf = organisation => {
   const parts = organisation.sections || [{ name: '', people: organisation.people }];
   const order = organisation.bishopSectionOrder;
   const ordered = order ? [...parts].sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name)) : parts;
-  const people = ordered.flatMap(part => [...part.people.filter(p => p.leader), ...part.people.filter(p => !p.leader && p.bishop)]);
-  return [{ name: '', people }];
+  const list = part => [...part.people.filter(p => p.leader), ...part.people.filter(p => !p.leader && p.bishop)];
+  // A council with parts gives each part its own rows, so Bishop Joshua's
+  // list starts on a new line after Bishop Frank's.
+  return order ? ordered.map(part => ({ name: part.name, people: list(part) })) : [{ name: '', people: ordered.flatMap(list) }];
 };
 export const leadersOf = organisation => sectionsOf(organisation).flatMap(section => section.leaders);
