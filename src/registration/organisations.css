@@ -19,7 +19,6 @@
 .org-hero-text{font-size:24px;line-height:1.5;color:#e9e4d6;max-width:780px;margin:20px auto 0}
 .org-hero .org-button{margin-top:30px}
 .org-directory-hero{padding:96px 5% 84px}
-.org-directory-hero+.org-group .org-group-band{margin-top:0;border-top:1px solid #c9a95c55}
 .org-directory-hero h1{text-transform:uppercase;letter-spacing:1px}
 .org-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:520px;margin:40px auto 0}
 .org-stats span{display:flex;flex-direction:column;padding:18px 10px;border:1px solid #c9a95c80;border-radius:16px;background:#14223d80;font-size:17px;letter-spacing:1px;text-transform:uppercase;color:#e9e4d6}
@@ -114,3 +113,11 @@
   .org-part-name{font-size:25px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Page title: a calm light masthead, so the dark Church band below reads as
+   the start of the first section rather than a second title. */
+.org-masthead{text-align:center;padding:86px 6% 70px;background:var(--org-ivory)}
+.org-masthead h1{font-family:var(--denom-display);font-size:clamp(46px,6vw,84px);font-weight:700;letter-spacing:2px;line-height:1.05;text-transform:uppercase;color:var(--org-navy);margin:0;text-wrap:balance}
+.org-masthead-rule{display:block;width:110px;height:4px;border-radius:2px;background:var(--org-gold);margin:28px auto 26px}
+.org-masthead p{font-size:24px;line-height:1.5;color:#4a4a42;margin:0 auto;max-width:760px}
+@media(max-width:700px){.org-masthead{padding:56px 6% 46px}.org-masthead h1{font-size:40px;letter-spacing:1px}.org-masthead p{font-size:20px}.org-masthead-rule{margin:22px auto 20px}}

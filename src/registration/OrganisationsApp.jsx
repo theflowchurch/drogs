@@ -89,13 +89,11 @@ export default function OrganisationsApp({ slug = '' }) {
   return <div className="denom-site org-site" id="top">
     <main>
       {/* The page heading (office, 9 Nov); the corner logo and name are gone. */}
-      <section className="org-hero org-directory-hero">
-        <Backdrop name="home"/>
-        <div className="org-hero-inner">
-          <h1>{data.heading}</h1>
-          <p className="org-hero-text">{data.subheading}</p>
-        </div>
-      </section>
+      <header className="org-masthead">
+        <h1>{data.heading}</h1>
+        <span className="org-masthead-rule" aria-hidden="true"/>
+        <p>{data.subheading}</p>
+      </header>
       {data.groups.map((group, index) => { const Heading = 'h2';
         // An untitled group (Emeritus, URSC, Change of Status) follows on at the
         // end of the page with no band of its own.
