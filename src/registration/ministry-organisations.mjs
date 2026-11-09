@@ -45,9 +45,11 @@ const PARA_CHURCH = 'para-church';
 const ORDER = ['1965-committee', 'ud-senex-council', 'adjutancy', 'emeritus', 'ursc', 'eschatos', 'united-jesus', 'united-islands',
   'ud-africa', 'ud-ghana-west', 'ud-ghana-east', 'ud-ghana-central', 'ud-europe', 'ud-north-america', PARA_CHURCH,
   'only-jesus', 'jesus-first', 'serve-jesus', 'choose-jesus', 'jesus-now', 'jesus-forever', 'king-jesus', 'first-love-senex-council'];
-// Church groups read "The Bishops of …"; councils and committees keep their own names.
-const FORMAL = new Set(['united-denominations', 'first-love-church']);
-const formalName = (o, g) => FORMAL.has(o.slug) || g.slug === 'ursc' ? `The Bishops of ${g.name}` : g.name;
+// Office, 9 Nov: every box reads "The Bishops of …" (a council keeps its
+// "the": "The Bishops of the Adjutancy"); Emeritus and Para-Church read
+// "The Emeritus Bishops" and "The Para-Church Bishops".
+const OWN_NAMES = { emeritus: 'The Emeritus Bishops' };
+const formalName = (o, g) => OWN_NAMES[g.slug] || `The Bishops of ${g.name.replace(/^The /, 'the ')}`;
 const bishopKey = p => p.rosterId || p.name;
 const countOf = people => new Set(people.map(bishopKey)).size;
 const groupsOfSection = o => o.directoryGroups?.length
@@ -57,7 +59,7 @@ const groupsOfSection = o => o.directoryGroups?.length
 // enough for white lettering and calm beside the gold edge.
 const COLOURS = ['#1f3a5f', '#6b2737', '#2f5233', '#4a3f6b', '#1f5357', '#5a2846', '#3a3d42', '#7a5a2e', '#2e3566', '#5c3a2a', '#2c4a40', '#34495e', '#6a3045', '#3f4a2c', '#43365a', '#24505f', '#5a4632', '#2b4257', '#5e2f3c', '#35503f', '#4d3b5e', '#3b4f5a', '#664a2b'];
 const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => o.slug === PARA_CHURCH
-  ? [{ slug: PARA_CHURCH, name: 'Para-Church Bishops', section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length), people: [] }]
+  ? [{ slug: PARA_CHURCH, name: 'The Para-Church Bishops', section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length), people: [] }]
   : groupsOfSection(o).map(g => ({ slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people })));
 export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === slug))
   .filter(g => g && (g.people.length || g.parts?.length))
