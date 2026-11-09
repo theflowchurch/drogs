@@ -87,7 +87,7 @@ export default function OrganisationsApp({ slug = '' }) {
         const followedOn = data.groups[index + 1]?.untitled;
         return <section className="org-group" id={group.slug} key={group.slug} aria-labelledby={group.untitled ? undefined : `${group.slug}-title`} aria-label={group.untitled ? 'More councils' : undefined}>
         {!group.untitled && <div className="org-group-band">
-          <Backdrop name={index === 0 ? 'home' : group.slug}/>
+          <Backdrop name={index === 0 ? 'home' : (group.backdrop || group.slug)}/>
           <div className="org-group-band-inner"><Heading id={`${group.slug}-title`}>{group.name}</Heading><p>{group.organisations.filter(o => !o.untitled).length} councils</p></div>
         </div>}
         <div className="org-main">

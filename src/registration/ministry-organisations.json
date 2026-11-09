@@ -1572,9 +1572,8 @@
       ]
     },
     {
-      "slug": "more",
-      "name": "",
-      "untitled": true,
+      "slug": "councils",
+      "name": "Councils",
       "organisations": [
         {
           "slug": "emeritus",
@@ -1707,6 +1706,14 @@
               "church": "The Machaneh Church International",
               "title": "Bishop",
               "image": "assets/bishops/matched-183.webp"
+            },
+            {
+              "name": "Dennis Djagbletey",
+              "rosterId": "B38",
+              "bishop": true,
+              "church": "Jesus Is The Answer Church",
+              "title": "Bishop",
+              "image": "assets/bishops/matched-38.webp"
             }
           ]
         },
@@ -1826,7 +1833,8 @@
             }
           ]
         }
-      ]
+      ],
+      "backdrop": "church"
     }
   ]
 }
