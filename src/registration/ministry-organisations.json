@@ -2975,21 +2975,10 @@
               "name": "The DHMM Council",
               "people": [
                 {
-                  "name": "Serena Ariana Ababio",
-                  "rosterId": "BO265",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "image": "assets/organisations/people/serena-ariana-ababio-c30f15a8.webp",
-                  "consecrated": "2020",
-                  "role": "DHMM Council Chairperson",
-                  "leader": true
-                },
-                {
                   "name": "Mary-Chloe Rea",
                   "rosterId": "BO250",
                   "bishop": true,
-                  "church": "FLOW",
+                  "church": "DHMM",
                   "title": "Mother",
                   "image": "assets/organisations/people/mary-chloe-rea-d7dff6de.webp",
                   "consecrated": "2020",
@@ -2997,67 +2986,122 @@
                   "leader": true
                 },
                 {
-                  "name": "Vivaldi Aboagye",
-                  "rosterId": "B187",
+                  "name": "Serena Ariana Ababio",
+                  "rosterId": "BO265",
                   "bishop": true,
-                  "church": "FLOW",
+                  "church": "DHMM",
                   "title": "Mother",
-                  "image": "assets/organisations/people/vivaldi-aboagye-9ece749a.webp",
-                  "consecrated": "2018"
+                  "image": "assets/organisations/people/serena-ariana-ababio-c30f15a8.webp",
+                  "consecrated": "2020",
+                  "role": "DHMM Council Chairperson",
+                  "leader": true
                 },
                 {
-                  "name": "Erica Luca Aryee",
-                  "rosterId": "B59",
+                  "name": "Rebecca Joana Addae",
+                  "image": "assets/organisations/people/rebecca-addae.webp",
+                  "rosterId": "B164",
                   "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "image": "assets/organisations/people/erica-luca-aryee-71448d67.webp",
-                  "consecrated": "2018"
+                  "church": "Qodesh Family Churches",
+                  "title": "Episcopal Sister",
+                  "consecrated": "2019"
                 },
                 {
-                  "name": "Zoe Andrea Asamoah",
-                  "rosterId": "B193",
+                  "name": "Aida Asiedu Owusu",
+                  "rosterId": "BO251",
+                  "bishop": true,
+                  "church": "DHMM",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/aida-asiedu-owusu-6d6d9587.webp",
+                  "consecrated": "2021"
+                },
+                {
+                  "name": "Nina Masuku",
+                  "image": "assets/organisations/people/nina-masuku-e8af9b54.webp",
+                  "rosterId": "B334",
                   "bishop": true,
                   "church": "FLOW",
                   "title": "Mother",
-                  "image": "assets/organisations/people/zoe-andrea-asamoah-a20438ee.webp",
-                  "consecrated": "2018"
+                  "consecrated": "2025"
                 },
                 {
                   "name": "Louisa Mills-Odoi",
                   "rosterId": "B127",
                   "bishop": true,
-                  "church": "FLOW",
+                  "church": "DHMM",
                   "title": "Mother",
                   "image": "assets/organisations/people/louisa-mills-odoi-18fc27b7.webp",
+                  "consecrated": "2018"
+                },
+                {
+                  "name": "Vivaldi Aboagye",
+                  "rosterId": "B187",
+                  "bishop": true,
+                  "church": "DHMM",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/vivaldi-aboagye-9ece749a.webp",
+                  "consecrated": "2018"
+                },
+                {
+                  "name": "Linda Aryee",
+                  "image": "assets/organisations/people/linda-aryee.webp",
+                  "rosterId": "B126",
+                  "bishop": true,
+                  "church": "Mustard Seed Chapel International",
+                  "title": "Episcopal Sister",
+                  "consecrated": "2022"
+                },
+                {
+                  "name": "Zoe Andrea Asamoah",
+                  "rosterId": "B193",
+                  "bishop": true,
+                  "church": "DHMM",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/zoe-andrea-asamoah-a20438ee.webp",
+                  "consecrated": "2018"
+                },
+                {
+                  "name": "Ruthie Jani Appiah-Denkyira",
+                  "image": "assets/organisations/people/ruthie-jani-appiah-denkyira.webp",
+                  "rosterId": "BO264",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Mother"
+                },
+                {
+                  "name": "Adara Hyde",
+                  "rosterId": "BO214",
+                  "bishop": true,
+                  "church": "First Love Church",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/adara-hyde.webp",
+                  "consecrated": "2001"
+                },
+                {
+                  "name": "Paula Mills-Thompson",
+                  "rosterId": "BO221",
+                  "bishop": true,
+                  "church": "DHMM",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/paula-mills-thompson-0db7ba0b.webp",
+                  "consecrated": "2021"
+                },
+                {
+                  "name": "Erica Luca Aryee",
+                  "rosterId": "B59",
+                  "bishop": true,
+                  "church": "DHMM",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/erica-luca-aryee-71448d67.webp",
                   "consecrated": "2018"
                 },
                 {
                   "name": "Renata Obaka",
                   "rosterId": "BO215",
                   "bishop": true,
-                  "church": "FLOW",
+                  "church": "DHMM",
                   "title": "Mother",
                   "image": "assets/organisations/people/renata-obaka-dd12306c.webp",
                   "consecrated": "2020"
-                },
-                {
-                  "name": "Aida Asiedu Owusu",
-                  "rosterId": "BO251",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "image": "assets/organisations/people/aida-asiedu-owusu-6d6d9587.webp",
-                  "consecrated": "2021"
-                },
-                {
-                  "name": "Paula Mills-Thompson",
-                  "rosterId": "BO221",
-                  "bishop": true,
-                  "church": "FLOW",
-                  "title": "Mother",
-                  "image": "assets/organisations/people/paula-mills-thompson-0db7ba0b.webp",
-                  "consecrated": "2021"
                 }
               ]
             },
