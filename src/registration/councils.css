@@ -85,3 +85,12 @@
   .cz-cards{grid-template-columns:1fr 1fr;gap:14px}
   .cz-card-text strong{font-size:17px}.cz-card-text span{font-size:12px}
 }
+
+/* Office, 9 Nov: one section at a time once chosen, and a way back. */
+.cz-tiles{scroll-margin-top:20px}
+.cz-end-links{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin:30px auto 0}
+.cz-end-links .cz-top{margin:0}
+.cz-to-sections{position:fixed;right:22px;bottom:22px;z-index:40;display:flex;align-items:center;min-height:54px;padding:12px 22px;border-radius:999px;background:var(--ink);color:#fff!important;font-size:18px;font-weight:700;border:2px solid var(--gold);box-shadow:0 8px 22px #0f164055}
+@media(max-width:700px){.cz-to-sections{right:16px;bottom:18px;padding:12px 20px}}
+@media(max-width:700px){.cz-footer{padding-bottom:96px}}
+.cz-bar{justify-content:flex-end}

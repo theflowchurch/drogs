@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { ORGANISATIONS as data, sectionsOf, PAGE_ALIASES } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
+import useSectionFocus from './useSectionFocus';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './denomination-sites.css';
 import './organisations.css';
@@ -81,30 +82,32 @@ const subsOf = o => (o.directoryGroups || []).filter(g => g.slug && g.name && g.
 const subName = g => g.tabName || shortName(g.name);
 
 // The "↑ Sections" button shows only once the section boxes are off screen.
-function ToSections() {
+function ToSections({ onClick }) {
   const [show, setShow] = useState(false);
   useEffect(() => {
     const el = document.getElementById('sections'); if (!el) return;
     const seen = new IntersectionObserver(([e]) => setShow(!e.isIntersecting && e.boundingClientRect.top < 0));
     seen.observe(el); return () => seen.disconnect();
   }, []);
-  return show ? <a className="org-to-sections" href="#sections">↑ Sections</a> : null;
+  return show ? <a className="org-to-sections" href="#sections" onClick={onClick}>↑ Sections</a> : null;
 }
 
-function CouncilTabs() {
+function CouncilTabs({ open, close }) {
   // Office, 9 Nov: a few large tiles for the main sections; each section's
   // subsections sit as chips under its own banner.
   return <><nav id="sections" className="org-tiles-nav" aria-label="Sections">
-    {tabs.map(o => <a key={o.slug} href={`#${o.slug}`} className="org-section-tile" style={{ '--tile': o.accent || '#14223d' }}>
+    {tabs.map(o => <a key={o.slug} href={`#${o.slug}`} className="org-section-tile" onClick={open(o.slug)} style={{ '--tile': o.accent || '#14223d' }}>
       <span>{o.tabName || shortName(o.name)}</span>
     </a>)}
   </nav>
-  <ToSections/></>;
+  <ToSections onClick={close('sections')}/></>;
 }
 
 export default function OrganisationsApp({ slug = '' }) {
   // An older address for one category or council opens this page at that part.
   useEffect(() => { if (slug) document.getElementById(PAGE_ALIASES[slug] || slug)?.scrollIntoView(); }, [slug]);
+  const { focus, open, close } = useSectionFocus();
+  const shown = focus ? councils.filter(o => o.slug === focus) : councils;
   // The page opens straight on the Church Organisations (office, 9 Nov).
   return <div className="denom-site org-site" id="top">
     <main>
@@ -114,10 +117,13 @@ export default function OrganisationsApp({ slug = '' }) {
         <span className="org-masthead-rule" aria-hidden="true"/>
         <p>{data.subheading}</p>
       </header>
-      <CouncilTabs/>
+      <CouncilTabs open={open} close={close}/>
       <div className="org-main">
-        {councils.map(organisation => <Council key={organisation.slug} organisation={organisation}/>)}
-        <a className="org-top" href="#top">↑ Back to the top</a>
+        {shown.map(organisation => <Council key={organisation.slug} organisation={organisation}/>)}
+        <div className="org-end-links">
+          {focus && <a className="org-top" href="#sections" onClick={close('sections')}>↑ Back to sections</a>}
+          <a className="org-top" href="#top" onClick={close('top')}>↑ Back to the top</a>
+        </div>
       </div>
     </main>
     <footer className="org-footer"><span>{data.name}</span><span>Updated {data.updated}</span></footer>

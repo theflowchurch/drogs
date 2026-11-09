@@ -236,3 +236,7 @@
 }
 .org-tiles-nav{grid-template-columns:repeat(5,minmax(0,1fr))}
 @media(max-width:700px){.org-tiles-nav{grid-template-columns:1fr 1fr}.org-section-tile:last-child:nth-child(odd){grid-column:1/-1}}
+
+/* Office, 9 Nov: with one section chosen, the way back sits at its end. */
+.org-end-links{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin:40px auto 10px}
+.org-end-links .org-top{margin:0}

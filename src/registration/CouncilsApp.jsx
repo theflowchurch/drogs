@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ORGANISATIONS as data } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
+import useSectionFocus from './useSectionFocus';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './councils.css';
 
@@ -62,21 +63,32 @@ function Section({ section }) {
   </section>;
 }
 
+// The "↑ Sections" button shows once the section tiles are off screen.
+function ToSections({ onClick }) {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const el = document.getElementById('sections'); if (!el) return;
+    const seen = new IntersectionObserver(([e]) => setShow(!e.isIntersecting && e.boundingClientRect.top < 0));
+    seen.observe(el); return () => seen.disconnect();
+  }, []);
+  return show ? <a className="cz-to-sections" href="#sections" onClick={onClick}>↑ Sections</a> : null;
+}
+
 export default function CouncilsApp() {
+  const { focus, open, close } = useSectionFocus();
   const [menu, setMenu] = useState(false);
   const stats = useMemo(() => {
     const people = new Map();
     sections.forEach(s => groupsOf(s).forEach(g => g.people.forEach(p => people.set(p.rosterId || p.name, p))));
-    return { groups: sections.reduce((n, s) => n + groupsOf(s).length, 0), bishops: people.size };
+    return { bishops: people.size };
   }, []);
   return <div className="cz-site" id="top">
     <header className="cz-hero">
       <img className="cz-earth" src={`${base}/assets/organisations/earth.webp`} alt="" aria-hidden="true"/>
       <div className="cz-bar">
-        <a href="#top" className="cz-brand">THE BISHOP'S<br/>DIRECTORY</a>
         <div className="cz-menu">
           <button type="button" aria-expanded={menu} onClick={() => setMenu(v => !v)}>Menu <span aria-hidden="true">⌄</span></button>
-          {menu && <nav aria-label="Sections">{sections.map(s => <a key={s.slug} href={`#${s.slug}`} onClick={() => setMenu(false)}>{s.tabName || shortName(s.name)}</a>)}</nav>}
+          {menu && <nav aria-label="Sections">{sections.map(s => <a key={s.slug} href={`#${s.slug}`} onClick={event => { setMenu(false); open(s.slug)(event); }}>{s.tabName || shortName(s.name)}</a>)}</nav>}
         </div>
       </div>
       <div className="cz-hero-text">
@@ -86,15 +98,17 @@ export default function CouncilsApp() {
       </div>
       <div className="cz-stats">
         <span><strong>{stats.bishops}</strong>Bishops</span>
-        <span><strong>{stats.groups}</strong>Councils</span>
-        <span><strong>{data.countries}</strong>Countries</span>
       </div>
-      <nav className="cz-tiles" aria-label="Sections">{sections.map(s => <a key={s.slug} href={`#${s.slug}`} className={`cz-tile cz-${COLOURS[s.slug] || 'blue'}`}>{s.tabName || shortName(s.name)}</a>)}</nav>
+      <nav className="cz-tiles" id="sections" aria-label="Sections">{sections.map(s => <a key={s.slug} href={`#${s.slug}`} onClick={open(s.slug)} className={`cz-tile cz-${COLOURS[s.slug] || 'blue'}`}>{s.tabName || shortName(s.name)}</a>)}</nav>
     </header>
     <main className="cz-panel">
-      {sections.map(s => <Section key={s.slug} section={s}/>)}
-      <a className="cz-top" href="#top">↑ Back to the top</a>
+      {sections.filter(s => !focus || s.slug === focus).map(s => <Section key={s.slug} section={s}/>)}
+      <div className="cz-end-links">
+        {focus && <a className="cz-top" href="#sections" onClick={close('sections')}>↑ Back to sections</a>}
+        <a className="cz-top" href="#top" onClick={close('top')}>↑ Back to the top</a>
+      </div>
     </main>
+    <ToSections onClick={close('sections')}/>
     <footer className="cz-footer"><span>{data.name}</span><span>Updated {data.updated}</span></footer>
   </div>;
 }
