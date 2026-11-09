@@ -1133,12 +1133,6 @@
         {
           "slug": "general-hospitals-board",
           "name": "The General Hospitals Board",
-          "summary": "3 hospitals: St. Kathryn's, St. Gamaliel's and St. Nathaniel's.",
-          "places": [
-            "St. Kathryn's Hospital",
-            "St. Gamaliel's Hospital",
-            "St. Nathaniel's Hospital"
-          ],
           "people": [
             {
               "name": "Dr. Annika Dwimoh",
@@ -1241,7 +1235,6 @@
         {
           "slug": "radio-ministry",
           "name": "The Radio Ministry",
-          "summary": "9 radio stations.",
           "people": [
             {
               "name": "Erica Luca Aryee",
@@ -1291,17 +1284,6 @@
               "church": "Jesus Is The Rock Church",
               "title": "Bishop"
             }
-          ],
-          "places": [
-            "Sweet Melodies, Accra",
-            "Sweet Moments, Takoradi",
-            "Sweet Memories, Cape Coast",
-            "Sweet Dreams, Goaso",
-            "Sweet Hearts, Bolgatanga",
-            "Sweet Harmony, Wa",
-            "Sweet Flow, Tamale",
-            "Sweet Aroma, Sefwi Wiawso",
-            "Sweet Reflections, Sunyani"
           ]
         },
         {
