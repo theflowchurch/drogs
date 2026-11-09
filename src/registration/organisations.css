@@ -164,3 +164,14 @@
   .org-tabs-list .org-subtab{font-size:17px;min-height:46px}
   .org-directory-group,.org-council{scroll-margin-top:110px}
 }
+
+.org-to-sections{display:none}
+/* Phone (office, 9 Nov): every section and subsection listed openly, no dropdown. */
+@media(max-width:700px){
+  .org-tabs{position:static;box-shadow:none}
+  .org-tabs-toggle{display:none}
+  .org-tabs .org-tabs-list,.org-tabs.is-open .org-tabs-list{display:flex;flex-direction:column;gap:10px;padding:20px 6% 24px;max-height:none;overflow:visible}
+  .org-tabs-list::before{content:'Go to a section';font-size:15px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--org-gold);margin-bottom:2px}
+  .org-to-sections{display:flex;align-items:center;position:fixed;right:16px;bottom:18px;z-index:40;min-height:54px;padding:12px 20px;border-radius:999px;background:var(--org-navy);color:#fff!important;font-size:18px;font-weight:700;border:2px solid var(--org-gold);box-shadow:0 8px 22px #14223d55}
+  .org-directory-group,.org-council{scroll-margin-top:16px}
+}

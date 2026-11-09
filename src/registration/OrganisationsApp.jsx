@@ -101,7 +101,7 @@ function CouncilTabs() {
   const subs = shown ? subsOf(shown) : [];
   const current = tabs.find(o => o.slug === active);
   const go = () => { setOpen(false); setPicked(''); };
-  return <nav className={`org-tabs ${open ? 'is-open' : ''}`} aria-label="Sections">
+  return <><nav id="sections" className={`org-tabs ${open ? 'is-open' : ''}`} aria-label="Sections">
     <button type="button" className="org-tabs-toggle" aria-expanded={open} onClick={() => setOpen(v => !v)}>
       <span><small>Go to a section</small>{current ? (current.tabName || shortName(current.name)) : 'Sections'}{activeSub && current ? <em> · {subName(subsOf(current).find(g => g.slug === activeSub) || { name: '' })}</em> : null}</span><span aria-hidden="true">{open ? '✕' : '▾'}</span>
     </button>
@@ -113,7 +113,9 @@ function CouncilTabs() {
       <a href={`#${o.slug}`} onClick={go} className={`org-tab ${active === o.slug ? 'is-active' : ''}`}>{o.tabName || shortName(o.name)}</a>
       {subsOf(o).length > 0 && <div className="org-tabs-list-subs">{subsOf(o).map(g => <a key={g.slug} href={`#${g.slug}`} onClick={go} className={`org-subtab ${activeSub === g.slug ? 'is-active' : ''}`}>{subName(g)}</a>)}</div>}
     </div>)}</div>
-  </nav>;
+  </nav>
+  {/* Phone: the full list sits in the page; this button returns to it. */}
+  <a className="org-to-sections" href="#sections">↑ Sections</a></>;
 }
 
 export default function OrganisationsApp({ slug = '' }) {
