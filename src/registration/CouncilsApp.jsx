@@ -4,6 +4,7 @@ import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL } from './mini
 import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
 import GoodStandingNotice from './GoodStandingNotice';
+import NightGlobe from './NightGlobe';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './councils.css';
 
@@ -135,11 +136,10 @@ export default function CouncilsApp() {
   return <div className="tx-site" id="top">
     {/* The living backdrop (office, 10 Nov): stars that twinkle, an aurora
         that drifts, and the earth turning slowly with its city lights
-        glowing. All still for reduced motion. */}
+        glowing (NightGlobe). All still for reduced motion. */}
     <div className="tx-sky" aria-hidden="true"><i className="tx-stars tx-stars-1"/><i className="tx-stars tx-stars-2"/><i className="tx-aurora"/></div>
     <div className="tx-backdrop" aria-hidden="true">
-      <img src={`${base}/assets/organisations/earth.webp`} alt=""/>
-      <img className="tx-lights" src={`${base}/assets/organisations/earth.webp`} alt=""/>
+      <NightGlobe src={`${base}/assets/organisations/earth-night-4k.webp`} fallback={`${base}/assets/organisations/earth.webp`}/>
     </div>
     <header className="tx-header"><Title compact={Boolean(group)}>
       {!group && <Search value={query} onChange={setQuery} label="Search the groups" inputRef={search}/>}

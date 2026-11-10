@@ -222,3 +222,21 @@
   .tx-site::after,.tx-stars,.tx-aurora,.tx-backdrop,.tx-backdrop .tx-lights,.tx-backdrop::after,.tx-head::before,.tx-row::after,.tx-row-count i{animation:none}
   .tx-backdrop .tx-lights{opacity:.35}
 }
+
+/* Office, 10 Nov: the sharp, spinning night globe. It sits to the right,
+   partly off the screen, and fades out towards the writing so the rows stay
+   easy to read. */
+.tx-backdrop{right:-26vw;top:50%;width:min(92vh,980px);aspect-ratio:1;height:auto;transform:translateY(-50%);opacity:.78;animation:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 38%);mask-image:linear-gradient(90deg,transparent 0%,#000 38%)}
+.tx-backdrop::after{display:none}
+.tx-globe{display:block;width:100%;height:100%;opacity:0;transition:opacity 1.6s ease}
+.tx-globe.is-ready{opacity:1}
+.tx-globe-fallback{width:100%;height:auto;opacity:.6}
+@media(max-width:1000px){.tx-backdrop{right:-45vw;width:110vw;opacity:.5}}
+@media(max-width:700px){.tx-backdrop{right:-55vw;top:28%;width:130vw;opacity:.4}}
+/* Further in, so the turning earth and its lights are seen, still to the
+   right and fading out behind the writing. */
+.tx-backdrop{right:-12vw;width:min(100vh,1000px);opacity:.92;-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 45%);mask-image:linear-gradient(90deg,transparent 0%,#000 45%)}
+.tx-row{background:linear-gradient(90deg,color-mix(in srgb,var(--box) 82%,transparent) 0%,color-mix(in srgb,var(--box) 42%,transparent) 45%,color-mix(in srgb,var(--box) 10%,transparent) 100%)}
+@media(max-width:1000px){.tx-backdrop{right:-40vw;width:110vw;opacity:.55}}
+@media(max-width:700px){.tx-backdrop{right:-50vw;top:26%;width:130vw;opacity:.45}}
