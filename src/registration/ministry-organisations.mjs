@@ -65,7 +65,9 @@ const groupsOfSection = o => o.directoryGroups?.length
 // enough for white lettering and calm beside the gold edge.
 const COLOURS = ['#1f3a5f', '#6b2737', '#2f5233', '#4a3f6b', '#1f5357', '#5a2846', '#3a3d42', '#7a5a2e', '#2e3566', '#5c3a2a', '#2c4a40', '#34495e', '#6a3045', '#3f4a2c', '#43365a', '#24505f', '#5a4632', '#2b4257', '#5e2f3c', '#35503f', '#4d3b5e', '#3b4f5a', '#664a2b'];
 const ONE_BOX = { [PARA_CHURCH]: 'The Para-Church Bishops', [FIRST_LOVE]: 'The Bishops of First Love Church' };
-const withInitials = g => ({ ...g, initials: INITIALS[g.slug] || '' });
+// "The Bishop of Kenya" when a group has one bishop (office, 10 Nov).
+const singular = g => (g.people?.length && countOf(g.people) === 1 ? { ...g, name: g.name.replace(/^The Bishops of /, 'The Bishop of ') } : g);
+const withInitials = g => singular({ ...g, initials: INITIALS[g.slug] || '' });
 const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => ONE_BOX[o.slug]
   ? [{ slug: o.slug, name: ONE_BOX[o.slug], section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length).map(g => withInitials({ ...g, name: formalName(o, g) })), people: [] }]
   : groupsOfSection(o).map(g => ({ slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people })))
