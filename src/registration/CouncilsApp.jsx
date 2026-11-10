@@ -72,6 +72,9 @@ function Search({ value, onChange, label, inputRef }) {
   </label>;
 }
 
+// A soft light follows the pointer across the rows.
+const spotlight = e => { const row = e.target.closest?.('.tx-row'); if (!row) return; const r = row.getBoundingClientRect(); row.style.setProperty('--mx', `${e.clientX - r.left}px`); };
+
 function Contents({ query, search }) {
   const list = useRef(null);
   const shown = DIRECTORY_GROUPS.filter(g => !query || matches(`${g.name} ${g.initials} ${(g.parts || []).map(p => `${p.name} ${p.initials}`).join(' ')}`, query));
@@ -89,7 +92,7 @@ function Contents({ query, search }) {
     addEventListener('keydown', keys); return () => removeEventListener('keydown', keys);
   }, []);
   return <>
-    <nav className="tx-contents" id="contents" aria-label="Contents" ref={list}>
+    <nav className="tx-contents" id="contents" aria-label="Contents" ref={list} onPointerMove={spotlight}>
       {shown.map(g => <a key={g.slug} href={`#${g.slug}`} className="tx-row" style={{ '--box': g.colour, '--i': DIRECTORY_GROUPS.indexOf(g) }}>
         <span className="tx-index">{pad(DIRECTORY_GROUPS.indexOf(g) + 1)}</span>
         <span className="tx-row-name"><Name group={g}/></span>
@@ -109,7 +112,7 @@ function Group({ group }) {
   const number = DIRECTORY_GROUPS.indexOf(group) + 1;
   return <section className="tx-group" id={group.slug} aria-labelledby={`${group.slug}-title`} style={{ '--box': group.colour }}>
     <div className="tx-crumbs">
-      <a href="#contents" className="tx-back">← Contents</a>
+      <a href="#contents" className="tx-back">← All Groups</a>
       <span className="tx-path">DHMM <b>/</b> {pad(number)}</span>
     </div>
     <div className="tx-group-head">
@@ -130,8 +133,13 @@ export default function CouncilsApp() {
   const [query, setQuery] = useState('');
   const search = useRef(null);
   return <div className="tx-site" id="top">
+    {/* The living backdrop (office, 10 Nov): stars that twinkle, an aurora
+        that drifts, and the earth turning slowly with its city lights
+        glowing. All still for reduced motion. */}
+    <div className="tx-sky" aria-hidden="true"><i className="tx-stars tx-stars-1"/><i className="tx-stars tx-stars-2"/><i className="tx-aurora"/></div>
     <div className="tx-backdrop" aria-hidden="true">
       <img src={`${base}/assets/organisations/earth.webp`} alt=""/>
+      <img className="tx-lights" src={`${base}/assets/organisations/earth.webp`} alt=""/>
     </div>
     <header className="tx-header"><Title compact={Boolean(group)}>
       {!group && <Search value={query} onChange={setQuery} label="Search the groups" inputRef={search}/>}
@@ -139,7 +147,7 @@ export default function CouncilsApp() {
     <main className="tx-main">
       {group ? <>
         <Group key={group.slug} group={group}/>
-        <div className="tx-end"><a className="tx-back" href="#contents">← Back to contents</a></div>
+        <div className="tx-end"><a className="tx-back" href="#contents">← All Groups</a></div>
       </> : <Contents query={query} search={search}/>}
       <GoodStandingNotice className="tx-good-standing"/>
     </main>

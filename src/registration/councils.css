@@ -168,3 +168,57 @@
 .tx-good-standing li{position:relative;margin:8px 0;padding-left:22px;font-size:16px;line-height:1.6;color:#cfd6e6}
 .tx-good-standing li::before{content:'›';position:absolute;left:4px;top:-1px;color:var(--cyan)}
 @media(max-width:700px){.tx-good-standing{margin-top:40px;padding:24px 18px}}
+
+/* Office, 10 Nov: a page with life in it. Twinkling stars, a drifting
+   aurora, the earth turning slowly with glowing city lights, bolder rows
+   with a wave of light passing down them, a spotlight under the pointer,
+   and a glowing ring round the title. Everything is still for reduced
+   motion. */
+@property --tx-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+.tx-site::after{animation:tx-aurora-shift 18s ease-in-out infinite alternate}
+.tx-sky{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+.tx-stars{position:absolute;inset:-50%;display:block;background-repeat:repeat}
+.tx-stars-1{background-image:radial-gradient(1.2px 1.2px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 90px 120px,#cfe9ff,transparent),radial-gradient(1.4px 1.4px at 160px 60px,#fff,transparent),radial-gradient(1px 1px at 230px 190px,#ffe9b0,transparent),radial-gradient(1.2px 1.2px at 300px 90px,#fff,transparent);background-size:340px 240px;opacity:.55;animation:tx-twinkle 4.5s ease-in-out infinite alternate,tx-float 120s linear infinite}
+.tx-stars-2{background-image:radial-gradient(1.6px 1.6px at 60px 80px,#fff,transparent),radial-gradient(1.1px 1.1px at 210px 40px,#9fe8ff,transparent),radial-gradient(1.3px 1.3px at 330px 220px,#fff,transparent),radial-gradient(1px 1px at 420px 150px,#ffd77a,transparent);background-size:480px 300px;opacity:.4;animation:tx-twinkle 6.5s ease-in-out -2s infinite alternate,tx-float 200s linear infinite reverse}
+.tx-aurora{position:absolute;left:-20%;right:-20%;top:-30%;height:80%;display:block;background:conic-gradient(from 200deg at 50% 60%,transparent 0deg,#3b2bff33 60deg,#00d1ff2e 120deg,#f2c14e1f 170deg,transparent 230deg);filter:blur(60px);opacity:.9;animation:tx-aurora 22s ease-in-out infinite alternate}
+.tx-backdrop{opacity:.42;animation:tx-earth 60s ease-in-out infinite alternate}
+.tx-backdrop img{position:relative}
+.tx-backdrop .tx-lights{position:absolute;inset:0;mix-blend-mode:screen;filter:brightness(1.6) saturate(1.8) contrast(1.4) drop-shadow(0 0 14px #ffcf6b);opacity:.0;animation:tx-citylights 5s ease-in-out infinite}
+.tx-backdrop::after{content:'';position:absolute;inset:8%;border-radius:50%;box-shadow:0 0 120px 30px #3d8bff30,inset 0 0 80px #5ee7ff22;animation:tx-halo 7s ease-in-out infinite alternate}
+
+/* Title: a glowing ring that travels round it. */
+.tx-head{position:relative;isolation:isolate}
+.tx-head::before{content:'';position:absolute;inset:-1px;z-index:-1;border-radius:inherit;padding:1px;background:conic-gradient(from var(--tx-angle),transparent 0deg,#f2c14e 40deg,#5ee7ff 90deg,transparent 140deg,transparent 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:tx-spin 6s linear infinite;opacity:.85}
+.tx-sub{text-shadow:0 0 22px #f2c14e40}
+.tx-total strong{color:#fff;text-shadow:0 0 14px #5ee7ff80}
+
+/* Bolder rows. */
+.tx-row{border-color:var(--line-2)}
+.tx-row::before{width:4px}
+.tx-row-name{font-weight:700;letter-spacing:.2px}
+.tx-index{font-weight:700;color:var(--glow);text-shadow:0 0 10px color-mix(in srgb,var(--glow) 70%,transparent)}
+.tx-row-count{border-color:color-mix(in srgb,var(--glow) 45%,transparent);color:#fff}
+.tx-row-count i{animation:tx-dot 2.2s ease-in-out infinite;animation-delay:calc(var(--i) * 130ms)}
+/* A wave of light runs down the list every few seconds. */
+.tx-row::after{transform:none;transition:none;background:linear-gradient(100deg,transparent 35%,#ffffff1c 50%,transparent 65%);background-size:300% 100%;background-position:120% 0;animation:tx-wave 7s ease-in-out infinite;animation-delay:calc(var(--i) * 90ms)}
+/* A soft light under the pointer. */
+.tx-row>span{position:relative;z-index:1}
+.tx-row:hover{background:radial-gradient(260px circle at var(--mx,50%) 50%,color-mix(in srgb,var(--glow) 34%,transparent),transparent 70%),linear-gradient(90deg,color-mix(in srgb,var(--box) 88%,transparent) 0%,color-mix(in srgb,var(--box) 50%,transparent) 50%,color-mix(in srgb,var(--box) 22%,transparent) 100%)}
+.tx-row:hover .tx-row-name{text-shadow:0 0 18px color-mix(in srgb,var(--glow) 60%,transparent)}
+.tx-group-head h2{text-shadow:0 0 30px color-mix(in oklab,var(--box) 40%,#9fe8ff)}
+.tx-card:hover{box-shadow:0 18px 40px #0008,0 0 0 1px color-mix(in srgb,var(--box) 60%,transparent),0 0 34px color-mix(in oklab,var(--box) 35%,#5ee7ff55)}
+
+@keyframes tx-twinkle{0%{opacity:.25}50%{opacity:.7}100%{opacity:.45}}
+@keyframes tx-float{to{transform:translate3d(-340px,-240px,0)}}
+@keyframes tx-aurora{0%{transform:translateX(-6%) rotate(-4deg);opacity:.65}100%{transform:translateX(8%) rotate(5deg);opacity:1}}
+@keyframes tx-aurora-shift{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(35deg)}}
+@keyframes tx-earth{0%{transform:translate3d(0,0,0) scale(1) rotate(0deg)}100%{transform:translate3d(-3%,2%,0) scale(1.08) rotate(4deg)}}
+@keyframes tx-citylights{0%,100%{opacity:.15}50%{opacity:.75}}
+@keyframes tx-halo{from{opacity:.5}to{opacity:1}}
+@keyframes tx-spin{to{--tx-angle:360deg}}
+@keyframes tx-dot{0%,100%{box-shadow:0 0 4px var(--glow);transform:scale(1)}50%{box-shadow:0 0 12px var(--glow),0 0 2px #fff;transform:scale(1.35)}}
+@keyframes tx-wave{0%,70%{background-position:120% 0}100%{background-position:-20% 0}}
+@media(prefers-reduced-motion:reduce){
+  .tx-site::after,.tx-stars,.tx-aurora,.tx-backdrop,.tx-backdrop .tx-lights,.tx-backdrop::after,.tx-head::before,.tx-row::after,.tx-row-count i{animation:none}
+  .tx-backdrop .tx-lights{opacity:.35}
+}

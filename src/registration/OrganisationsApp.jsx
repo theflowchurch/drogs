@@ -69,6 +69,8 @@ const Count = ({ n }) => <span className="org-count">{n} {n === 1 ? 'bishop' : '
 
 function Group({ group }) {
   return <section className="org-council" id={group.slug} aria-labelledby={`${group.slug}-heading`}>
+    {/* The way back, at the top and kept in view while scrolling (office, 10 Nov). */}
+    <a className="org-all-groups" href="#contents">← All Groups</a>
     <GroupBox group={group} as="h2"/>
     {group.parts ? group.parts.map(part => <div className="org-group-part" key={part.slug} id={part.slug}>
       <h3 className="org-part-heading"><Name group={part}/> <Count n={part.people.length}/></h3>
@@ -88,7 +90,7 @@ export default function OrganisationsApp({ slug = '' }) {
     <main className="org-main">
       {group ? <>
         <Group group={group}/>
-        <div className="org-end-links"><a className="org-top" href="#contents">↑ Back to contents</a></div>
+        <div className="org-end-links"><a className="org-top" href="#contents">← All Groups</a></div>
       </> : <Contents/>}
       <GoodStandingNotice className="org-good-standing"/>
     </main>
