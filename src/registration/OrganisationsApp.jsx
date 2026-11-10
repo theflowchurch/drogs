@@ -92,7 +92,7 @@ export default function OrganisationsApp({ slug = '' }) {
         <Group group={group}/>
         <div className="org-end-links"><a className="org-top" href="#contents">← All Groups</a></div>
       </> : <Contents/>}
-      <GoodStandingNotice className="org-good-standing"/>
+      {!group && <GoodStandingNotice className="org-good-standing"/>}
     </main>
     <footer className="org-footer"><span>Updated {data.updated}</span></footer>
   </div>;

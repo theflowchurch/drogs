@@ -164,7 +164,7 @@ export default function CouncilsApp() {
         <Group key={group.slug} group={group}/>
         <div className="tx-end"><a className="tx-back" href="#contents">← All Groups</a></div>
       </> : <Contents query={query} search={search}/>}
-      <GoodStandingNotice className="tx-good-standing"/>
+      {!group && <GoodStandingNotice className="tx-good-standing"/>}
     </main>
     <footer className="tx-footer"><span>Updated {data.updated}</span><span className="tx-mono">{DIRECTORY_TOTAL} bishops · {DIRECTORY_GROUPS.length} groups</span></footer>
   </div>;
