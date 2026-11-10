@@ -123,7 +123,6 @@ function Group({ group }) {
   return <section className="tx-group" id={group.slug} aria-labelledby={`${group.slug}-title`} style={{ '--box': group.colour }}>
     <div className="tx-crumbs">
       <a href="#contents" className="tx-back">← All Groups</a>
-      <span className="tx-path">DHMM <b>/</b> {pad(number)}</span>
     </div>
     <div className="tx-group-head">
       <h2 id={`${group.slug}-title`}><Name group={group}/></h2>
@@ -142,10 +141,10 @@ export default function CouncilsApp() {
   const group = useGroupFocus();
   const [query, setQuery] = useState('');
   const search = useRef(null);
-  // Day or night (office, 10 Nov): night by default; the choice is kept on
-  // this device.
-  const [day, setDay] = useState(false);
-  useEffect(() => { try { setDay(localStorage.getItem(THEME_KEY) === 'day'); } catch {} }, []);
+  // Day or night (office, 10 Nov): day by default, night one tap away; the
+  // choice is kept on this device.
+  const [day, setDay] = useState(true);
+  useEffect(() => { try { setDay(localStorage.getItem(THEME_KEY) !== 'night'); } catch {} }, []);
   const toggle = () => setDay(d => { try { localStorage.setItem(THEME_KEY, d ? 'night' : 'day'); } catch {} return !d; });
   return <div className={`tx-site ${day ? 'tx-day' : ''}`} id="top">
     {/* The living backdrop (office, 10 Nov): stars that twinkle, an aurora
