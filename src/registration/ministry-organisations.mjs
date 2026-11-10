@@ -64,10 +64,18 @@ const groupsOfSection = o => o.directoryGroups?.length
 // Muted deep tones (office, 9 Nov), a different one for each box, all dark
 // enough for white lettering and calm beside the gold edge.
 const COLOURS = ['#1f3a5f', '#6b2737', '#2f5233', '#4a3f6b', '#1f5357', '#5a2846', '#3a3d42', '#7a5a2e', '#2e3566', '#5c3a2a', '#2c4a40', '#34495e', '#6a3045', '#3f4a2c', '#43365a', '#24505f', '#5a4632', '#2b4257', '#5e2f3c', '#35503f', '#4d3b5e', '#3b4f5a', '#664a2b'];
+// On a council's page each card names the council (office, 10 Nov);
+// chairpersons keep their role. Church groups, the 1965 Committee and the
+// Emeritus Bishops still show each bishop's church.
+const COUNCIL_LABEL = { 'ud-senex-council': 'UD Senex Council', 'first-love-senex-council': 'First Love Senex Council', adjutancy: 'Adjutancy',
+  'healing-jesus-council': 'Healing Jesus Council', 'flow-council': 'FLOW', 'dhmm-council': 'DHMM Council', 'general-schools-board': 'General Schools Board',
+  'general-hospitals-board': 'General Hospitals Board', 'general-orphanage-board': 'General Orphanage Board', 'radio-ministry': 'Radio Ministry',
+  'construction-estate-management-board': 'Construction & Estate Management Board', 'abmtc-board': 'ABMTC Board', 'makarios-council': 'Makarios Council' };
+const labelled = g => (COUNCIL_LABEL[g.slug] ? { ...g, people: g.people.map(p => ({ ...p, church: COUNCIL_LABEL[g.slug] })) } : g);
 const ONE_BOX = { [PARA_CHURCH]: 'The Para-Church Bishops', [FIRST_LOVE]: 'The Bishops of First Love Church' };
 // "The Bishop of Kenya" when a group has one bishop (office, 10 Nov).
 const singular = g => (g.people?.length && countOf(g.people) === 1 ? { ...g, name: g.name.replace(/^The Bishops of /, 'The Bishop of ') } : g);
-const withInitials = g => singular({ ...g, initials: INITIALS[g.slug] || '' });
+const withInitials = g => singular(labelled({ ...g, initials: INITIALS[g.slug] || '' }));
 const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => ONE_BOX[o.slug]
   ? [{ slug: o.slug, name: ONE_BOX[o.slug], section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length).map(g => withInitials({ ...g, name: formalName(o, g) })), people: [] }]
   : groupsOfSection(o).map(g => ({ slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people })))

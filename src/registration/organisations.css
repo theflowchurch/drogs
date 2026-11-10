@@ -357,3 +357,5 @@ a.org-group-box{gap:14px}
 .org-site .org-good-standing p,.org-good-standing li{font-size:12px;line-height:1.55}
 .org-site .org-good-standing p{margin:0 0 6px}
 .org-good-standing li{margin:1px 0}
+/* The "← All Groups" button at the foot matches the one at the top. */
+.org-all-groups-end{position:static;margin:0}
