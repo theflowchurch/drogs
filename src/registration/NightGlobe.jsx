@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 
-// The earth at night behind /councils/ (office, 10 Nov): NASA's Black Marble
+// The earth behind /councils/ (office, 10 Nov): by night: NASA's Black Marble
 // map of the city lights (public domain; 4096×2048, from the three-globe
 // examples) wrapped round a real sphere and drawn by the graphics chip at the
 // screen's full sharpness. It turns once every four minutes, the city lights
@@ -12,24 +12,33 @@ const VERTEX = `attribute vec2 p; varying vec2 uv; void main(){ uv = p; gl_Posit
 const FRAGMENT = `precision highp float;
 varying vec2 uv;
 uniform sampler2D map;
-uniform float spin, pulse, aspect;
+uniform float spin, pulse, aspect, day;
 const float PI = 3.14159265;
 void main(){
   vec2 q = uv * vec2(aspect, 1.0) / 0.86;
   float r2 = dot(q, q);
   if (r2 > 1.0) {
     float d = sqrt(r2) - 1.0;
-    float halo = exp(-d * 9.0) * 0.55;
-    gl_FragColor = vec4(vec3(0.25, 0.55, 1.0) * halo, halo);
+    float halo = exp(-d * 9.0) * mix(0.55, 0.7, day);
+    gl_FragColor = vec4(mix(vec3(0.25, 0.55, 1.0), vec3(0.55, 0.78, 1.0), day) * halo, halo);
     return;
   }
   vec3 n = vec3(q, sqrt(1.0 - r2));
+  vec3 view = n;
   float tilt = 0.32;
   n = vec3(n.x, n.y * cos(tilt) - n.z * sin(tilt), n.y * sin(tilt) + n.z * cos(tilt));
   float lon = atan(n.x, n.z) + spin;
   float lat = asin(clamp(n.y, -1.0, 1.0));
   vec2 t = vec2(fract(lon / (2.0 * PI) + 0.5), 0.5 - lat / PI);
   vec3 c = texture2D(map, t).rgb;
+  float rim = pow(1.0 - sqrt(1.0 - r2), 2.5);
+  // Day (office, 10 Nov): the Blue Marble lit by a sun at the upper left.
+  if (day > 0.5) {
+    float sun = max(dot(view, normalize(vec3(-0.55, 0.5, 0.7))), 0.0);
+    vec3 lit = c * (0.42 + 0.9 * sun) * 1.08 + vec3(0.55, 0.78, 1.0) * rim * 0.75;
+    gl_FragColor = vec4(lit, 1.0);
+    return;
+  }
   // City lights: the warm pixels of the map, lifted well above the land and
   // breathing slowly, with a soft bloom from the neighbouring texels.
   vec2 px = vec2(1.0 / 4096.0, 1.0 / 2048.0) * 2.0;
@@ -39,12 +48,11 @@ void main(){
   vec3 lights = vec3(1.0, 0.76, 0.38) * (warm * (2.8 + 1.0 * pulse) + bloom * (0.9 + 0.5 * pulse));
   float limb = mix(0.4, 1.0, pow(n.z, 0.6));
   vec3 col = c * 1.45 * limb + lights * mix(0.55, 1.0, n.z);
-  float rim = pow(1.0 - sqrt(1.0 - r2), 2.5);
   col += vec3(0.25, 0.55, 1.0) * rim * 0.9;
   gl_FragColor = vec4(col, 1.0);
 }`;
 
-export default function NightGlobe({ src, fallback }) {
+export default function NightGlobe({ src, fallback, day = false }) {
   const canvas = useRef(null);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
@@ -83,6 +91,7 @@ export default function NightGlobe({ src, fallback }) {
       gl.uniform1f(u('spin'), still ? 0.4 : 0.4 + seconds * (2 * Math.PI / 240));
       gl.uniform1f(u('pulse'), still ? 0.5 : 0.5 + 0.5 * Math.sin(seconds * 1.3));
       gl.uniform1f(u('aspect'), el.width / el.height);
+      gl.uniform1f(u('day'), day ? 1 : 0);
       gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
@@ -106,6 +115,6 @@ export default function NightGlobe({ src, fallback }) {
     size(); addEventListener('resize', size);
     if (!still) frame = requestAnimationFrame(draw);
     return () => { gone = true; cancelAnimationFrame(frame); removeEventListener('resize', size); };
-  }, [src]);
+  }, [src, day]);
   return failed ? <img className="tx-globe-fallback" src={fallback} alt=""/> : <canvas ref={canvas} className="tx-globe"/>;
 }

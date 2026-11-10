@@ -291,3 +291,111 @@
 @media(min-width:900px){.tx-good-standing{column-count:2;column-gap:44px}.tx-good-standing small,.tx-good-standing h2{column-span:all}}
 @media(max-width:700px){.tx-good-standing{margin-top:44px;padding:18px 2px 0}}
 .tx-good-standing{padding:22px 26px 14px;border-radius:14px;background:linear-gradient(180deg,#05070fcc,#05070fe6);border-top:1px solid var(--line)}
+
+/* Office, 10 Nov: the day/night switch in the title bar. */
+.tx-head-tools{gap:12px}
+.tx-theme{display:inline-flex;align-items:center;gap:2px;height:38px;padding:3px;border:1px solid var(--line-2);border-radius:999px;background:var(--glass);color:var(--muted);cursor:pointer;font:inherit}
+.tx-theme-opt{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:600;letter-spacing:.3px;transition:background .25s,color .25s}
+.tx-theme-opt svg{width:15px;height:15px}
+.tx-theme-opt.is-on{background:linear-gradient(135deg,#f2c14e,#ffe39a);color:#1a1405;box-shadow:0 0 12px #f2c14e66}
+.tx-theme:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(max-width:700px){.tx-head-tools{flex-wrap:wrap;justify-content:center}.tx-head.is-compact .tx-head-tools{width:auto;margin:0 0 0 auto}.tx-head.is-compact .tx-theme-opt{padding:0 9px}}
+
+/* Smaller small print still (office, 10 Nov). */
+.tx-good-standing{padding:18px 24px 10px}
+.tx-good-standing small{font-size:10px}
+.tx-good-standing h2{margin:3px 0 8px;font-size:14px}
+.tx-good-standing h3{margin:10px 0 3px;font-size:12px}
+.tx-good-standing p,.tx-good-standing li{font-size:11.5px;line-height:1.55}
+.tx-good-standing p{margin:0 0 6px}
+.tx-good-standing li{margin:1px 0}
+
+/* ---------- The day look (office, 10 Nov) ---------- */
+.tx-site.tx-day{--bg:#eef4fb;--glass:#ffffffb3;--glass-2:#ffffffd9;--line:#14223d1a;--line-2:#14223d2e;--text:#132038;--muted:#566079;--gold:#a87a12;--gold-2:#8a6309;--cyan:#1f8fd6;background:var(--bg);color:var(--text)}
+.tx-day::before{background:linear-gradient(#14223d0a 1px,transparent 1px) 0 0/44px 44px,linear-gradient(90deg,#14223d0a 1px,transparent 1px) 0 0/44px 44px}
+.tx-day::after{background:radial-gradient(ellipse 45% 40% at 88% 4%,#ffd76a59,transparent 70%),radial-gradient(ellipse 60% 45% at 10% 0%,#8fd3ff4d,transparent 70%),linear-gradient(180deg,#d9ecff 0%,#f4f8fd 55%,#fbf6ec 100%);animation:none}
+.tx-day .tx-stars{display:none}
+.tx-day .tx-aurora{background:radial-gradient(ellipse at 70% 30%,#ffffffcc,transparent 60%),radial-gradient(ellipse at 30% 60%,#ffffff99,transparent 60%);filter:blur(40px);opacity:.7}
+.tx-day .tx-backdrop{opacity:.95}
+.tx-day .tx-head{background:linear-gradient(120deg,#ffffffd9,#ffffffa6);box-shadow:inset 0 1px 0 #fff,0 18px 40px #14223d1f}
+.tx-day .tx-head::before{background:conic-gradient(from var(--tx-angle),transparent 0deg,#d9a520 40deg,#1f8fd6 90deg,transparent 140deg,transparent 360deg);opacity:.7}
+.tx-day .tx-logo img{filter:brightness(0) saturate(100%) invert(11%) sepia(24%) saturate(2230%) hue-rotate(196deg) brightness(92%) contrast(95%)}
+.tx-day .tx-title{border-left-color:var(--line-2)}
+.tx-day .tx-sub{background-image:linear-gradient(100deg,#9a6c0c 0%,#c99520 30%,#e8bf55 45%,#9a6c0c 65%,#9a6c0c 100%);text-shadow:none}
+.tx-day .tx-total{color:var(--muted)}.tx-day .tx-total strong{color:var(--text);text-shadow:none}
+.tx-day .tx-search input::placeholder{color:#7a8499}
+.tx-day .tx-search input::-webkit-search-cancel-button{filter:none}
+.tx-day .tx-theme-opt.is-on{background:linear-gradient(135deg,#f6c445,#ffe7a0);color:#3a2a03;box-shadow:0 2px 10px #d9a52055}
+.tx-day .tx-row{--glow:color-mix(in oklab,var(--box) 80%,#000);--hot:color-mix(in oklab,var(--box) 70%,#1f8fd6);border-color:#14223d1f;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--box) 20%,#fff) 0%,#ffffffcc 55%,#ffffff99 100%);box-shadow:0 2px 8px #14223d0d}
+.tx-day .tx-row::before{background:var(--box);box-shadow:none}
+.tx-day .tx-row::after{background:linear-gradient(100deg,transparent 35%,#ffffff 50%,transparent 65%);background-size:300% 100%;opacity:.7}
+.tx-day .tx-index{color:var(--box);text-shadow:none}
+.tx-day .tx-row-name{color:var(--text)}
+.tx-day .tx-initials{color:var(--gold-2)}
+.tx-day .tx-row-count{background:#ffffffcc;border-color:color-mix(in srgb,var(--box) 35%,transparent);color:var(--text)}
+.tx-day .tx-row-count i{background:var(--box);box-shadow:none;animation:none}
+.tx-day .tx-arrow{color:var(--muted)}
+.tx-day .tx-row:hover,.tx-day .tx-row:focus-visible{border-color:color-mix(in srgb,var(--box) 70%,transparent);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--box) 45%,transparent),0 8px 22px color-mix(in srgb,var(--box) 28%,transparent);
+  background:radial-gradient(300px circle at var(--mx,50%) 50%,color-mix(in srgb,var(--box) 14%,transparent),transparent 70%),linear-gradient(90deg,color-mix(in srgb,var(--box) 30%,#fff) 0%,#fff 60%,#ffffffe6 100%)}
+.tx-day .tx-row:hover::before,.tx-day .tx-row:focus-visible::before{background:var(--box);box-shadow:none}
+.tx-day .tx-row:hover .tx-row-name,.tx-day .tx-row:focus-visible .tx-row-name{color:var(--text)}
+.tx-day .tx-row:hover .tx-index,.tx-day .tx-row:focus-visible .tx-index{color:var(--box);text-shadow:none}
+.tx-day .tx-row:hover .tx-row-count,.tx-day .tx-row:focus-visible .tx-row-count{background:#fff;border-color:var(--box)}
+.tx-day .tx-row:hover .tx-arrow,.tx-day .tx-row:focus-visible .tx-arrow{color:var(--box)}
+.tx-day .tx-group-head{background:linear-gradient(110deg,color-mix(in srgb,var(--box) 22%,#fff),#ffffffcc 70%);border-color:#14223d1f}
+.tx-day .tx-group-head::before{background:var(--box);box-shadow:none}
+.tx-day .tx-group-head h2{text-shadow:none}
+.tx-day .tx-chip{border-color:#a87a1255;background:#fff6dc;color:#7a5607}
+.tx-day .tx-part h3{border-bottom-color:var(--line-2)}
+.tx-day .tx-part h3 .tx-index{color:var(--gold)}
+.tx-day .tx-card{background:#fff;border-color:#14223d17;box-shadow:0 6px 18px #14223d12}
+.tx-day .tx-card:hover{border-color:color-mix(in srgb,var(--box) 50%,transparent);box-shadow:0 14px 30px #14223d24}
+.tx-day .tx-card-photo::after{display:none}
+.tx-day .tx-card em{color:var(--text);border-color:var(--line-2)}
+.tx-day .tx-back{background:#ffffffcc}
+.tx-day .tx-good-standing{background:#ffffffcc;border-top-color:var(--line-2)}
+.tx-day .tx-good-standing small{color:var(--gold)}
+.tx-day .tx-good-standing h2{color:var(--text)}
+.tx-day .tx-good-standing h3{color:#2a3550}
+.tx-day .tx-good-standing p,.tx-day .tx-good-standing li{color:#4a5368}
+.tx-day .tx-good-standing li::before{color:var(--muted)}
+.tx-day .tx-empty{border-color:var(--line-2)}
+/* Room for the whole title: on computers the switch shows just a moon and a
+   sun (their names appear on hover), and the search box is a little
+   narrower. */
+@media(min-width:701px){
+  .tx-theme-opt{padding:0 10px}.tx-theme-opt b{display:none}
+  .tx-head-tools .tx-search{width:min(230px,18vw)}
+  .tx-sub{font-size:clamp(16px,1.6vw,22px)}
+}
+.tx-theme-opt b{font-weight:600}
+/* Day: rows and headings stay white where the globe shows through. */
+.tx-day .tx-row{background:linear-gradient(90deg,color-mix(in srgb,var(--box) 20%,#fff) 0%,#fffffff0 50%,#ffffffe0 100%)}
+.tx-day .tx-group-head{background:linear-gradient(110deg,color-mix(in srgb,var(--box) 22%,#fff),#fffffff0 70%)}
+.tx-day .tx-path{color:var(--muted);background:#ffffffcc;padding:2px 10px;border-radius:999px}
+
+/* Office, 10 Nov: the switch is just the two icons, moon and sun, on every
+   screen. */
+.tx-theme-opt{width:34px;justify-content:center;padding:0}
+.tx-theme-opt svg{width:16px;height:16px}
+
+/* Office, 10 Nov: richer day colours, less pale. A deeper blue sky, each
+   row clearly tinted with its group's colour, stronger gold. */
+.tx-day::after{background:radial-gradient(ellipse 45% 40% at 88% 4%,#ffcf4d73,transparent 70%),radial-gradient(ellipse 60% 45% at 10% 0%,#5fb6ff59,transparent 70%),linear-gradient(180deg,#bfdcff 0%,#dcebff 45%,#f3f0e6 100%)}
+.tx-site.tx-day{--bg:#dcebff;--gold:#946507;--gold-2:#7a5205}
+.tx-day .tx-head{background:linear-gradient(120deg,#ffffffeb,#ffffffc7)}
+.tx-day .tx-sub{background-image:linear-gradient(100deg,#8a5a00 0%,#b8860b 30%,#d9a520 45%,#8a5a00 65%,#8a5a00 100%)}
+.tx-day .tx-row{border-color:color-mix(in srgb,var(--box) 30%,transparent);background:linear-gradient(90deg,color-mix(in srgb,var(--box) 58%,#fff) 0%,color-mix(in srgb,var(--box) 26%,#fff) 50%,color-mix(in srgb,var(--box) 10%,#fff) 100%)}
+.tx-day .tx-row::before{width:5px}
+.tx-day .tx-row-name{color:#0d1730}
+.tx-day .tx-index{color:color-mix(in srgb,var(--box) 85%,#000)}
+.tx-day .tx-initials{color:#7a5205}
+.tx-day .tx-row-count{background:#fff;border-color:color-mix(in srgb,var(--box) 50%,transparent)}
+.tx-day .tx-row:hover,.tx-day .tx-row:focus-visible{background:radial-gradient(300px circle at var(--mx,50%) 50%,#ffffff80,transparent 70%),linear-gradient(90deg,color-mix(in srgb,var(--box) 66%,#fff) 0%,color-mix(in srgb,var(--box) 34%,#fff) 50%,color-mix(in srgb,var(--box) 16%,#fff) 100%)}
+.tx-day .tx-group-head{background:linear-gradient(110deg,color-mix(in srgb,var(--box) 55%,#fff),color-mix(in srgb,var(--box) 14%,#fff) 75%);border-color:color-mix(in srgb,var(--box) 30%,transparent)}
+.tx-day .tx-chip{background:#ffefc2;border-color:#94650766;color:#5c3f03}
+.tx-day .tx-card{border-color:color-mix(in srgb,var(--box) 22%,transparent)}
+.tx-day .tx-card-title{color:var(--gold)}
+.tx-day .tx-good-standing{background:#ffffffe0}

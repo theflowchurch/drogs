@@ -65,6 +65,15 @@ function Title({ compact, children }) {
   </div>;
 }
 
+const THEME_KEY = 'dhmm-councils-theme';
+// The day/night switch in the title bar.
+function ThemeSwitch({ day, onToggle }) {
+  return <button type="button" className="tx-theme" onClick={onToggle} title={day ? 'Night look' : 'Day look'} aria-pressed={day} aria-label={day ? 'Switch to the night look' : 'Switch to the day look'}>
+    <span className={`tx-theme-opt ${!day ? 'is-on' : ''}`}><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 12.2A6.5 6.5 0 0 1 7.8 4.5a6.5 6.5 0 1 0 7.7 7.7Z" fill="currentColor"/></svg></span>
+    <span className={`tx-theme-opt ${day ? 'is-on' : ''}`}><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6" fill="currentColor"/><g stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M10 1.8v2.1M10 16.1v2.1M1.8 10h2.1M16.1 10h2.1M4.2 4.2l1.5 1.5M14.3 14.3l1.5 1.5M4.2 15.8l1.5-1.5M14.3 5.7l1.5-1.5"/></g></svg></span>
+  </button>;
+}
+
 function Search({ value, onChange, label, inputRef }) {
   return <label className="tx-search">
     <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.8"/><path d="m13 13 4.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
@@ -133,16 +142,22 @@ export default function CouncilsApp() {
   const group = useGroupFocus();
   const [query, setQuery] = useState('');
   const search = useRef(null);
-  return <div className="tx-site" id="top">
+  // Day or night (office, 10 Nov): night by default; the choice is kept on
+  // this device.
+  const [day, setDay] = useState(false);
+  useEffect(() => { try { setDay(localStorage.getItem(THEME_KEY) === 'day'); } catch {} }, []);
+  const toggle = () => setDay(d => { try { localStorage.setItem(THEME_KEY, d ? 'night' : 'day'); } catch {} return !d; });
+  return <div className={`tx-site ${day ? 'tx-day' : ''}`} id="top">
     {/* The living backdrop (office, 10 Nov): stars that twinkle, an aurora
         that drifts, and the earth turning slowly with its city lights
         glowing (NightGlobe). All still for reduced motion. */}
     <div className="tx-sky" aria-hidden="true"><i className="tx-stars tx-stars-1"/><i className="tx-stars tx-stars-2"/><i className="tx-aurora"/></div>
     <div className="tx-backdrop" aria-hidden="true">
-      <NightGlobe src={`${base}/assets/organisations/earth-night-4k.webp`} fallback={`${base}/assets/organisations/earth.webp`}/>
+      <NightGlobe day={day} src={`${base}/assets/organisations/${day ? 'earth-day-4k' : 'earth-night-4k'}.webp`} fallback={`${base}/assets/organisations/earth.webp`}/>
     </div>
     <header className="tx-header"><Title compact={Boolean(group)}>
-      {!group && <Search value={query} onChange={setQuery} label="Search the groups" inputRef={search}/>}
+      {!group && <Search value={query} onChange={setQuery} label="Search groups" inputRef={search}/>}
+      <ThemeSwitch day={day} onToggle={toggle}/>
     </Title></header>
     <main className="tx-main">
       {group ? <>

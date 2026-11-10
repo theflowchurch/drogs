@@ -349,3 +349,11 @@ a.org-group-box{gap:14px}
 .org-good-standing li{margin:2px 0;font-size:13.5px;line-height:1.55;color:#5d5a50}
 @media(min-width:900px){.org-good-standing{column-count:2;column-gap:44px}.org-good-standing small,.org-good-standing h2{column-span:all}}
 @media(max-width:700px){.org-good-standing{margin-top:44px;padding:18px 2px 0}.org-site .org-good-standing p,.org-good-standing li{font-size:13px}}
+/* Smaller small print still (office, 10 Nov). */
+.org-good-standing{padding-top:18px}
+.org-good-standing small{font-size:11px}
+.org-good-standing h2{margin:3px 0 8px;font-size:14.5px}
+.org-good-standing h3{margin:10px 0 3px;font-size:12.5px}
+.org-site .org-good-standing p,.org-good-standing li{font-size:12px;line-height:1.55}
+.org-site .org-good-standing p{margin:0 0 6px}
+.org-good-standing li{margin:1px 0}
