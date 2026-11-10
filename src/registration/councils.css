@@ -240,3 +240,24 @@
 .tx-row{background:linear-gradient(90deg,color-mix(in srgb,var(--box) 82%,transparent) 0%,color-mix(in srgb,var(--box) 42%,transparent) 45%,color-mix(in srgb,var(--box) 10%,transparent) 100%)}
 @media(max-width:1000px){.tx-backdrop{right:-40vw;width:110vw;opacity:.55}}
 @media(max-width:700px){.tx-backdrop{right:-50vw;top:26%;width:130vw;opacity:.45}}
+
+/* Office, 10 Nov: a brighter, more obvious glow on the row under the
+   pointer (and the row reached with the keyboard). */
+.tx-row:hover,.tx-row:focus-visible{
+  border-color:color-mix(in srgb,var(--glow) 90%,#fff);
+  transform:translateX(6px) scale(1.006);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--glow) 80%,transparent),0 0 22px 2px color-mix(in srgb,var(--glow) 70%,transparent),0 0 60px 6px color-mix(in srgb,var(--glow) 35%,transparent),inset 0 0 26px color-mix(in srgb,var(--glow) 30%,transparent);
+  background:radial-gradient(340px circle at var(--mx,50%) 50%,color-mix(in srgb,var(--glow) 60%,transparent),transparent 70%),linear-gradient(90deg,color-mix(in srgb,var(--box) 95%,#fff 5%) 0%,color-mix(in srgb,var(--box) 65%,transparent) 50%,color-mix(in srgb,var(--box) 30%,transparent) 100%)}
+.tx-row:hover::before,.tx-row:focus-visible::before{width:6px;background:#fff;box-shadow:0 0 10px #fff,0 0 22px var(--glow),0 0 40px var(--glow)}
+.tx-row:hover .tx-row-name,.tx-row:focus-visible .tx-row-name{color:#fff;text-shadow:0 0 12px color-mix(in srgb,var(--glow) 90%,#fff),0 0 28px var(--glow)}
+.tx-row:hover .tx-index,.tx-row:focus-visible .tx-index{color:#fff;text-shadow:0 0 10px var(--glow),0 0 20px var(--glow)}
+.tx-row:hover .tx-row-count,.tx-row:focus-visible .tx-row-count{border-color:color-mix(in srgb,var(--glow) 90%,#fff);background:color-mix(in srgb,var(--glow) 25%,#05070f);box-shadow:0 0 14px color-mix(in srgb,var(--glow) 60%,transparent)}
+.tx-row:hover .tx-arrow,.tx-row:focus-visible .tx-arrow{color:#fff;text-shadow:0 0 10px var(--glow);transform:translateX(6px)}
+.tx-card:hover{border-color:color-mix(in oklab,var(--box) 30%,#bff3ff);box-shadow:0 18px 40px #0008,0 0 0 1px color-mix(in oklab,var(--box) 40%,#9fe8ff),0 0 26px color-mix(in oklab,var(--box) 40%,#5ee7ff),0 0 60px color-mix(in oklab,var(--box) 30%,#5ee7ff66)}
+.tx-row{--hot:color-mix(in oklab,var(--box) 22%,#c8f6ff)}
+.tx-row:hover,.tx-row:focus-visible{border-color:var(--hot);
+  box-shadow:0 0 0 1.5px var(--hot),0 0 18px 2px color-mix(in srgb,var(--hot) 85%,transparent),0 0 46px 8px color-mix(in srgb,var(--hot) 45%,transparent),0 0 90px 14px color-mix(in srgb,var(--glow) 30%,transparent),inset 0 0 30px color-mix(in srgb,var(--hot) 35%,transparent);
+  background:radial-gradient(380px circle at var(--mx,50%) 50%,color-mix(in srgb,var(--hot) 45%,transparent),transparent 70%),linear-gradient(90deg,color-mix(in srgb,var(--box) 85%,#fff 15%) 0%,color-mix(in srgb,var(--box) 70%,transparent) 55%,color-mix(in srgb,var(--box) 40%,transparent) 100%)}
+.tx-row:hover::before,.tx-row:focus-visible::before{box-shadow:0 0 12px #fff,0 0 26px var(--hot),0 0 50px var(--hot)}
+.tx-row:hover .tx-row-name,.tx-row:focus-visible .tx-row-name{text-shadow:0 0 10px var(--hot),0 0 26px var(--hot)}
+.tx-row:hover .tx-row-count,.tx-row:focus-visible .tx-row-count{border-color:var(--hot);box-shadow:0 0 16px var(--hot)}
