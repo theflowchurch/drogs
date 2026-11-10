@@ -294,7 +294,7 @@
                   "bishop": true,
                   "church": "Strong Christian Church",
                   "title": "Episcopal Sister",
-                  "image": "assets/organisations/people/elaine-klufio.webp",
+                  "image": "assets/organisations/people/elaine-klufio-0a0ec2f9.webp",
                   "consecrated": "2022"
                 },
                 {
@@ -1089,7 +1089,7 @@
                   "bishop": true,
                   "church": "It Is A Great Thing To Serve The Lord",
                   "title": "Bishop",
-                  "image": "assets/organisations/people/richard-aryee.webp",
+                  "image": "assets/organisations/people/richard-aryee-44c34743.webp",
                   "consecrated": "2010"
                 },
                 {
@@ -2316,7 +2316,7 @@
                   "name": "Richard Aryee",
                   "role": "Senex Council Chairman",
                   "leader": true,
-                  "image": "assets/organisations/people/richard-aryee.webp",
+                  "image": "assets/organisations/people/richard-aryee-44c34743.webp",
                   "rosterId": "B167",
                   "bishop": true,
                   "church": "It Is A Great Thing To Serve The Lord",
@@ -3522,7 +3522,7 @@
                 },
                 {
                   "name": "Elaine Klufio",
-                  "image": "assets/organisations/people/elaine-klufio.webp",
+                  "image": "assets/organisations/people/elaine-klufio-0a0ec2f9.webp",
                   "rosterId": "B46",
                   "bishop": true,
                   "church": "Strong Christian Church",
