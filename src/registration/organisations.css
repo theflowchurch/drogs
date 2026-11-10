@@ -314,3 +314,18 @@ a.org-group-box{gap:14px}
 /* Office, 10 Nov: 17 boxes leave room for larger lettering again. */
 @media(min-width:701px){.org-contents{gap:6px;padding:16px 0 12px}a.org-group-box{padding:6px 22px 6px 26px;font-size:22px;line-height:1.2}}
 @media(min-width:701px){.org-contents{gap:5px;padding:14px 0 10px}a.org-group-box{padding:4px 22px 4px 26px;font-size:21px}}
+
+/* Office, 10 Nov: "Roll of Good Standing" with the count, and the
+   declaration at the foot of the page. */
+.org-dhmm-total{text-transform:uppercase}
+.org-dhmm-dot{color:var(--org-gold);margin:0 4px}
+.org-good-standing{max-width:980px;margin:56px auto 10px;padding:36px 42px;border-radius:18px;border-top:5px solid var(--org-gold);background:#fff;box-shadow:0 10px 30px #14223d14;color:#2f2f2a}
+.org-good-standing small{display:block;font-size:15px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--org-gold-ink)}
+.org-good-standing h2{margin:6px 0 16px;font-family:var(--denom-display);font-size:clamp(28px,3.2vw,38px);line-height:1.15;color:var(--org-navy)}
+.org-good-standing h3{margin:28px 0 10px;font-family:var(--denom-display);font-size:24px;color:var(--org-navy)}
+.org-good-standing p{margin:0 0 12px;font-size:19px;line-height:1.6}
+.org-good-standing ul{margin:6px 0 4px;padding-left:24px}
+.org-good-standing li{margin:6px 0;font-size:18px;line-height:1.55}
+.org-good-standing li::marker{color:var(--org-gold)}
+@media(max-width:700px){.org-good-standing{margin-top:40px;padding:26px 20px}.org-good-standing p{font-size:18px}.org-good-standing li{font-size:17px}}
+.org-site .org-good-standing p{color:#2f2f2a}

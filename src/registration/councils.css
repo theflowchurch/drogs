@@ -155,3 +155,16 @@
 /* Office, 10 Nov: 17 rows leave room for larger lettering again. */
 @media(min-width:701px){.tx-contents{gap:6px}.tx-row{padding:6px 16px 6px 14px}.tx-row-name{font-size:19px}.tx-row-count{font-size:13px}.tx-index{font-size:14px}}
 @media(min-width:701px){.tx-contents{gap:5px}.tx-row{padding:4px 16px 4px 14px}.tx-row-name{font-size:18.5px}}
+
+/* Office, 10 Nov: the Roll of Good Standing declaration, as a glass panel
+   at the foot of the page. */
+.tx-good-standing{position:relative;max-width:980px;margin:56px auto 0;padding:34px 40px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(160deg,#ffffff0b,#ffffff03);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);overflow:hidden}
+.tx-good-standing::before{content:'';position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.tx-good-standing small{display:block;font-family:'Tech Mono',ui-monospace,monospace;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--gold)}
+.tx-good-standing h2{margin:8px 0 16px;font-size:clamp(26px,3vw,36px);font-weight:700;line-height:1.15;letter-spacing:-.3px}
+.tx-good-standing h3{margin:28px 0 10px;font-size:22px;font-weight:600;color:var(--gold-2)}
+.tx-good-standing p{margin:0 0 12px;font-size:17px;line-height:1.65;color:#d7dceb}
+.tx-good-standing ul{margin:8px 0 4px;padding:0;list-style:none}
+.tx-good-standing li{position:relative;margin:8px 0;padding-left:22px;font-size:16px;line-height:1.6;color:#cfd6e6}
+.tx-good-standing li::before{content:'›';position:absolute;left:4px;top:-1px;color:var(--cyan)}
+@media(max-width:700px){.tx-good-standing{margin-top:40px;padding:24px 18px}}

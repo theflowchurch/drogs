@@ -2,6 +2,7 @@
 import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, PAGE_ALIASES } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
+import GoodStandingNotice from './GoodStandingNotice';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './denomination-sites.css';
 import './organisations.css';
@@ -53,7 +54,7 @@ function Masthead() {
     <a href="#contents" className="org-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
     <div className="org-dhmm-text">
       <p className="org-dhmm-sub">Worldwide Fellowship of Bishops</p>
-      <p className="org-dhmm-total"><strong>{DIRECTORY_TOTAL}</strong> Bishops</p>
+      <p className="org-dhmm-total">Roll of Good Standing <span className="org-dhmm-dot" aria-hidden="true">·</span> <strong>{DIRECTORY_TOTAL}</strong> Bishops</p>
     </div>
   </header>;
 }
@@ -89,6 +90,7 @@ export default function OrganisationsApp({ slug = '' }) {
         <Group group={group}/>
         <div className="org-end-links"><a className="org-top" href="#contents">↑ Back to contents</a></div>
       </> : <Contents/>}
+      <GoodStandingNotice className="org-good-standing"/>
     </main>
     <footer className="org-footer"><span>Updated {data.updated}</span></footer>
   </div>;

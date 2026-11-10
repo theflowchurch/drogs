@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { directoryGroupBySlug } from './ministry-organisations.mjs';
+import { directoryGroupBySlug, resolveGroupSlug } from './ministry-organisations.mjs';
 
 // Office, 9 Nov: the first page is a contents page of coloured boxes, one per
 // group. Choosing a box shows that group alone. The choice lives in the
@@ -10,7 +10,7 @@ export default function useGroupFocus(initial = '') {
   const [focus, setFocus] = useState(null);
   useEffect(() => {
     const read = () => {
-      const slug = decodeURIComponent(location.hash.slice(1)) || initial;
+      const slug = resolveGroupSlug(decodeURIComponent(location.hash.slice(1)) || initial);
       const group = directoryGroupBySlug(slug);
       setFocus(group ? group.slug : null);
       window.scrollTo(0, 0);

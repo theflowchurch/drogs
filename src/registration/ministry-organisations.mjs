@@ -50,7 +50,7 @@ const ORDER = ['1965-committee', 'ud-senex-council', 'first-love-senex-council',
   'ud-africa', 'ud-ghana-west', 'ud-ghana-east', 'ud-ghana-central', 'ud-europe', 'ud-north-america',
   'united-jesus', 'united-islands', 'eschatos', 'ursc', FIRST_LOVE, PARA_CHURCH];
 // The initials these groups are known by, shown after a dash (office, 10 Nov).
-const INITIALS = { 'ud-africa': 'UD AF', 'ud-europe': 'UD EU', 'ud-north-america': 'UD NA', 'united-jesus': 'UJ', 'united-islands': 'UI', ursc: 'URSC', [FIRST_LOVE]: 'FLC', 'healing-jesus-council': 'HJC' };
+const INITIALS = { 'ud-africa': 'UD AF', 'ud-ghana-west': 'UD GHW', 'ud-ghana-east': 'UD GHE', 'ud-ghana-central': 'UD GHC', 'ud-europe': 'UD EU', 'ud-north-america': 'UD NA', 'united-jesus': 'UJ', 'united-islands': 'UI', ursc: 'URSC', [FIRST_LOVE]: 'FLC', 'healing-jesus-council': 'HJC' };
 // Office, 9 Nov: every box reads "The Bishops of …" (a council keeps its
 // "the": "The Bishops of the Adjutancy"); Emeritus and Para-Church read
 // "The Emeritus Bishops" and "The Para-Church Bishops".
@@ -75,6 +75,10 @@ export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === sl
   .map((g, i) => ({ ...g, count: countOf(g.parts ? g.parts.flatMap(p => p.people) : g.people), colour: COLOURS[i % COLOURS.length] }));
 // Every bishop on the page once, however many councils they sit on.
 export const DIRECTORY_TOTAL = countOf(DIRECTORY_GROUPS.flatMap(g => g.parts ? g.parts.flatMap(p => p.people) : g.people));
-// A group's address, or one council's or First Love group's (#flow-council,
-// #only-jesus), opens it.
-export const directoryGroupBySlug = slug => DIRECTORY_GROUPS.find(g => g.slug === slug || g.parts?.some(p => p.slug === slug)) || null;
+// First Love's former groups became countries (office, 10 Nov); their old
+// addresses open the country most of their bishops are in.
+const FORMER = { 'only-jesus': 'first-love-ghana', 'jesus-first': 'first-love-ghana', 'choose-jesus': 'first-love-united-kingdom', 'serve-jesus': 'first-love-switzerland', 'jesus-now': 'first-love-belize', 'jesus-forever': 'first-love-united-states', 'king-jesus': FIRST_LOVE };
+// A group's address, or one council's or country's (#flow-council,
+// #first-love-ghana), opens it.
+export const resolveGroupSlug = slug => FORMER[slug] || slug;
+export const directoryGroupBySlug = slug => { slug = resolveGroupSlug(slug); return DIRECTORY_GROUPS.find(g => g.slug === slug || g.parts?.some(p => p.slug === slug)) || null; };

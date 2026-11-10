@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
+import GoodStandingNotice from './GoodStandingNotice';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './councils.css';
 
@@ -57,7 +58,7 @@ function Title({ compact, children }) {
     <a href="#contents" className="tx-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
     <div className="tx-title">
       <p className="tx-sub">Worldwide Fellowship of Bishops</p>
-      <p className="tx-total"><span className="tx-dot" aria-hidden="true"/><strong><CountUp to={DIRECTORY_TOTAL}/></strong> Bishops <span className="tx-sep">/</span> {DIRECTORY_GROUPS.length} groups</p>
+      <p className="tx-total"><span className="tx-dot" aria-hidden="true"/>Roll of Good Standing <span className="tx-sep">·</span> <strong><CountUp to={DIRECTORY_TOTAL}/></strong> Bishops</p>
     </div>
     {children && <div className="tx-head-tools">{children}</div>}
   </div>;
@@ -140,6 +141,7 @@ export default function CouncilsApp() {
         <Group key={group.slug} group={group}/>
         <div className="tx-end"><a className="tx-back" href="#contents">← Back to contents</a></div>
       </> : <Contents query={query} search={search}/>}
+      <GoodStandingNotice className="tx-good-standing"/>
     </main>
     <footer className="tx-footer"><span>Updated {data.updated}</span><span className="tx-mono">{DIRECTORY_TOTAL} bishops · {DIRECTORY_GROUPS.length} groups</span></footer>
   </div>;
