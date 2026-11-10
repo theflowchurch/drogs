@@ -261,3 +261,17 @@
 .tx-row:hover::before,.tx-row:focus-visible::before{box-shadow:0 0 12px #fff,0 0 26px var(--hot),0 0 50px var(--hot)}
 .tx-row:hover .tx-row-name,.tx-row:focus-visible .tx-row-name{text-shadow:0 0 10px var(--hot),0 0 26px var(--hot)}
 .tx-row:hover .tx-row-count,.tx-row:focus-visible .tx-row-count{border-color:var(--hot);box-shadow:0 0 16px var(--hot)}
+
+/* Office, 10 Nov: the hover glow toned down to a calm middle level, so the
+   row is clearly picked out but the writing stays easy to read. */
+.tx-row:hover,.tx-row:focus-visible{
+  border-color:color-mix(in srgb,var(--hot) 75%,transparent);
+  transform:translateX(4px);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--hot) 55%,transparent),0 0 16px color-mix(in srgb,var(--hot) 30%,transparent),0 6px 22px #0006;
+  background:radial-gradient(300px circle at var(--mx,50%) 50%,color-mix(in srgb,var(--hot) 16%,transparent),transparent 70%),linear-gradient(90deg,color-mix(in srgb,var(--box) 88%,#fff 4%) 0%,color-mix(in srgb,var(--box) 52%,transparent) 55%,color-mix(in srgb,var(--box) 22%,transparent) 100%)}
+.tx-row:hover::before,.tx-row:focus-visible::before{width:5px;background:var(--hot);box-shadow:0 0 10px color-mix(in srgb,var(--hot) 70%,transparent)}
+.tx-row:hover .tx-row-name,.tx-row:focus-visible .tx-row-name{color:#fff;text-shadow:none}
+.tx-row:hover .tx-index,.tx-row:focus-visible .tx-index{color:#fff;text-shadow:0 0 8px color-mix(in srgb,var(--hot) 60%,transparent)}
+.tx-row:hover .tx-row-count,.tx-row:focus-visible .tx-row-count{border-color:color-mix(in srgb,var(--hot) 70%,transparent);background:color-mix(in srgb,var(--hot) 10%,#05070f);box-shadow:none}
+.tx-row:hover .tx-arrow,.tx-row:focus-visible .tx-arrow{color:var(--hot);text-shadow:none;transform:translateX(4px)}
+.tx-card:hover{box-shadow:0 18px 40px #0008,0 0 0 1px color-mix(in oklab,var(--box) 40%,#9fe8ff),0 0 22px color-mix(in oklab,var(--box) 35%,#5ee7ff55)}
