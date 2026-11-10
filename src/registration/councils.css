@@ -149,3 +149,9 @@
   .tx-sub{font-size:clamp(17px,1.75vw,23px);letter-spacing:2.5px;white-space:nowrap}
   .tx-head-tools .tx-search{width:min(280px,22vw)}
 }
+
+/* Office, 10 Nov: the initials a group is known by, smaller, after a dash. */
+.tx-initials{font-family:'Tech Mono',ui-monospace,monospace;font-size:.72em;font-weight:400;letter-spacing:1px;color:var(--gold-2);opacity:.85;white-space:nowrap}
+/* Office, 10 Nov: 17 rows leave room for larger lettering again. */
+@media(min-width:701px){.tx-contents{gap:6px}.tx-row{padding:6px 16px 6px 14px}.tx-row-name{font-size:19px}.tx-row-count{font-size:13px}.tx-index{font-size:14px}}
+@media(min-width:701px){.tx-contents{gap:5px}.tx-row{padding:4px 16px 4px 14px}.tx-row-name{font-size:18.5px}}

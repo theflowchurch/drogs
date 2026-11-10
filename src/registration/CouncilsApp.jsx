@@ -16,6 +16,9 @@ const plural = n => `${n} ${n === 1 ? 'Bishop' : 'Bishops'}`;
 const matches = (text, query) => text.toLowerCase().includes(query.trim().toLowerCase());
 const stillMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// A group's name, then the initials it is known by (office, 10 Nov).
+const Name = ({ group }) => <>{group.name}{group.initials && <span className="tx-initials"> – {group.initials}</span>}</>;
+
 function Photo({ person }) {
   if (!person?.image) return <span className="tx-photo-empty" aria-hidden="true"/>;
   const edited = person.image.startsWith('assets/organisations/people/');
@@ -70,7 +73,7 @@ function Search({ value, onChange, label, inputRef }) {
 
 function Contents({ query, search }) {
   const list = useRef(null);
-  const shown = DIRECTORY_GROUPS.filter(g => !query || matches(g.name, query));
+  const shown = DIRECTORY_GROUPS.filter(g => !query || matches(`${g.name} ${g.initials} ${(g.parts || []).map(p => `${p.name} ${p.initials}`).join(' ')}`, query));
   // "/" jumps to the search box; ↑ and ↓ move between the rows.
   useEffect(() => {
     const keys = e => {
@@ -88,7 +91,7 @@ function Contents({ query, search }) {
     <nav className="tx-contents" id="contents" aria-label="Contents" ref={list}>
       {shown.map(g => <a key={g.slug} href={`#${g.slug}`} className="tx-row" style={{ '--box': g.colour, '--i': DIRECTORY_GROUPS.indexOf(g) }}>
         <span className="tx-index">{pad(DIRECTORY_GROUPS.indexOf(g) + 1)}</span>
-        <span className="tx-row-name">{g.name}</span>
+        <span className="tx-row-name"><Name group={g}/></span>
         <span className="tx-row-count"><i aria-hidden="true"/>{plural(g.count)}</span>
         <span className="tx-arrow" aria-hidden="true">→</span>
       </a>)}
@@ -109,12 +112,12 @@ function Group({ group }) {
       <span className="tx-path">DHMM <b>/</b> {pad(number)}</span>
     </div>
     <div className="tx-group-head">
-      <h2 id={`${group.slug}-title`}>{group.name}</h2>
+      <h2 id={`${group.slug}-title`}><Name group={group}/></h2>
       <span className="tx-chip">{plural(group.count)}</span>
     </div>
     <Search value={query} onChange={setQuery} label="Find a bishop in this group"/>
     {parts.map((part, i) => part.people.length > 0 && <div className="tx-part" key={part.slug} id={part.slug}>
-      {part.name && <h3><span className="tx-index">{pad(number)}.{i + 1}</span>{part.name}<span className="tx-chip">{plural(part.people.length)}</span></h3>}
+      {part.name && <h3><span className="tx-index">{pad(number)}.{i + 1}</span><Name group={part}/><span className="tx-chip">{plural(part.people.length)}</span></h3>}
       <div className="tx-cards">{part.people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div>
     </div>)}
     {!found && <p className="tx-empty">No bishop in this group matches “{query}”.</p>}

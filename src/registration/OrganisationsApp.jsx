@@ -33,12 +33,15 @@ function Bishop({ person }) {
   </article>;
 }
 
+// A group's name, then the initials it is known by (office, 10 Nov).
+const Name = ({ group }) => <>{group.name}{group.initials && <span className="org-initials"> – {group.initials}</span>}</>;
+
 // One group's heading, in the shape of the section banners, in its own colour.
 function GroupBox({ group, as: Tag = 'a' }) {
   const link = Tag === 'a';
   const props = link ? { href: `#${group.slug}` } : { id: `${group.slug}-heading` };
   return <Tag className="org-group-box" style={{ '--box': group.colour }} {...props}>
-    <span className="org-box-name">{group.name}</span>
+    <span className="org-box-name"><Name group={group}/></span>
     {link && <span className="org-box-count">{group.count} {group.count === 1 ? 'Bishop' : 'Bishops'}</span>}
   </Tag>;
 }
@@ -67,7 +70,7 @@ function Group({ group }) {
   return <section className="org-council" id={group.slug} aria-labelledby={`${group.slug}-heading`}>
     <GroupBox group={group} as="h2"/>
     {group.parts ? group.parts.map(part => <div className="org-group-part" key={part.slug} id={part.slug}>
-      <h3 className="org-part-heading">{part.name} <Count n={part.people.length}/></h3>
+      <h3 className="org-part-heading"><Name group={part}/> <Count n={part.people.length}/></h3>
       <div className="org-members">{part.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
     </div>) : <>
       <p className="org-group-total"><Count n={group.people.length}/></p>

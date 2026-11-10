@@ -306,3 +306,11 @@ a.org-group-box{gap:14px}
 .org-dhmm-sub{font-size:26px;letter-spacing:4px}
 .org-dhmm-total{font-size:18px}.org-dhmm-total strong{font-size:30px}
 @media(max-width:700px){.org-dhmm-logo img{height:60px}.org-dhmm-sub{font-size:19px;letter-spacing:2.5px;text-align:center}}
+
+/* Office, 10 Nov: the initials a group is known by, smaller and lighter
+   after a dash. */
+.org-initials{font-family:'Church Sans',system-ui,sans-serif;font-size:.72em;font-weight:600;letter-spacing:1px;opacity:.78;white-space:nowrap}
+.org-part-heading .org-initials{color:var(--org-gold-ink);opacity:1}
+/* Office, 10 Nov: 17 boxes leave room for larger lettering again. */
+@media(min-width:701px){.org-contents{gap:6px;padding:16px 0 12px}a.org-group-box{padding:6px 22px 6px 26px;font-size:22px;line-height:1.2}}
+@media(min-width:701px){.org-contents{gap:5px;padding:14px 0 10px}a.org-group-box{padding:4px 22px 4px 26px;font-size:21px}}
