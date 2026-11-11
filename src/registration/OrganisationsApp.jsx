@@ -1,5 +1,5 @@
 'use client';
-import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, PAGE_ALIASES } from './ministry-organisations.mjs';
+import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, PAGE_ALIASES, flatPeople } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
 import { useEffect } from 'react';
 import useGroupFocus from './useGroupFocus';
@@ -88,13 +88,13 @@ function SubContents({ group, variant }) {
 // Office, 11 Nov: choosing a line opens the whole group, every section and
 // every bishop, at the section chosen; the only way back is to All Groups.
 function Group({ group, part }) {
-  useEffect(() => { if (part) setTimeout(() => document.getElementById(part.slug)?.scrollIntoView(), 60); }, [part]);
+  useEffect(() => { if (part && !group.flat) setTimeout(() => document.getElementById(part.slug)?.scrollIntoView(), 60); }, [part]);
   return <section className="org-council" id={group.slug} aria-labelledby={`${group.slug}-heading`}>
     {/* The way back, at the top and kept in view while scrolling (office, 10 Nov). */}
     <div className="org-back-row"><a className="org-all-groups" href="#contents">← All Groups</a></div>
     <GroupBox group={group} as="h2"/>
     <p className="org-group-total"><Count n={group.count}/></p>
-    {group.parts ? group.parts.map(s => <div className="org-group-part" key={s.slug} id={s.slug}>
+    {group.flat ? <div className="org-members">{flatPeople(group, part).map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div> : group.parts ? group.parts.map(s => <div className="org-group-part" key={s.slug} id={s.slug}>
       <h3 className="org-part-heading"><Name group={s}/> <Count n={s.people.length}/></h3>
       <div className="org-members">{s.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
     </div>) : <div className="org-members">{group.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>}

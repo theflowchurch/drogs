@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL } from './ministry-organisations.mjs';
+import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, flatPeople } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
 import GoodStandingNotice from './GoodStandingNotice';
@@ -142,10 +142,10 @@ function SubContents({ group, variant }) {
 function Group({ group, part }) {
   const [query, setQuery] = useState('');
   const keep = people => people.filter(p => !query || matches(`${p.title || ''} ${p.name} ${p.role || ''} ${p.church || ''}`, query));
-  const sections = (group.parts || [{ slug: group.slug, name: '', people: group.people }]).map(s => ({ ...s, people: keep(s.people) }));
+  const sections = (group.flat ? [{ slug: group.slug, name: '', people: flatPeople(group, part) }] : group.parts || [{ slug: group.slug, name: '', people: group.people }]).map(s => ({ ...s, people: keep(s.people) }));
   const found = sections.reduce((n, s) => n + s.people.length, 0);
   const number = DIRECTORY_GROUPS.indexOf(group) + 1;
-  useEffect(() => { if (part) setTimeout(() => document.getElementById(part.slug)?.scrollIntoView(), 60); }, [part]);
+  useEffect(() => { if (part && !group.flat) setTimeout(() => document.getElementById(part.slug)?.scrollIntoView(), 60); }, [part]);
   return <section className="tx-group" id={group.slug} aria-labelledby={`${group.slug}-title`} style={{ '--box': group.colour }}>
     <div className="tx-crumbs"><a href="#contents" className="tx-back">← All Groups</a></div>
     <div className="tx-group-head">
