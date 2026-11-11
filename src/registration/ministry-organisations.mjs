@@ -116,7 +116,7 @@ export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === sl
 export const DIRECTORY_TOTAL = countOf(DIRECTORY_GROUPS.flatMap(g => g.parts ? g.parts.flatMap(p => p.people) : g.people));
 // First Love's former groups became countries (office, 10 Nov); their old
 // addresses open the country most of their bishops are in.
-const FORMER = { 'only-jesus': 'first-love-center', 'jesus-first': 'qodesh-city-church', 'choose-jesus': 'first-love-uk', 'serve-jesus': 'erste-liebe-kirche-switzerland', 'jesus-now': 'first-love-church-belize', 'jesus-forever': 'first-love-church-new-york', 'king-jesus': FIRST_LOVE,
+const FORMER = { 'only-jesus': 'first-love-center', 'jesus-first': 'qodesh-city-church', 'choose-jesus': 'first-love-uk', 'serve-jesus': 'erste-liebe-kirche-switzerland', 'jesus-now': 'first-love-church-belize', 'jesus-forever': 'mighty-foundations-ministries-new-york', 'king-jesus': FIRST_LOVE,
   // Office, 11 Nov: First Love Movement lines are churches, not countries.
   'first-love-ghana': 'first-love-center', 'first-love-united-kingdom': 'first-love-uk', 'first-love-democratic-republic-of-congo': 'centre-chretien-de-lamour-dr-congo',
   'first-love-madagascar': 'fiangonana-fahazavana-velona-madagascar', 'first-love-switzerland': 'erste-liebe-kirche-switzerland', 'first-love-belize': 'first-love-church-belize',
@@ -124,8 +124,8 @@ const FORMER = { 'only-jesus': 'first-love-center', 'jesus-first': 'qodesh-city-
   'first-love-australia': 'first-love-church-australia', 'first-love-botswana': 'love-christian-church-botswana', 'first-love-cote-divoire': 'la-belle-eglise-cote-divoire',
   'first-love-ethiopia': 'mikdash-church-international-ethiopia', 'first-love-germany': 'jesus-gefunden-germany', 'first-love-kenya': 'mountain-of-the-lords-house-kenya',
   'first-love-new-zealand': 'first-love-church-new-zealand', 'first-love-philippines': 'first-love-church-manila', 'first-love-sierra-leone': 'tell-them-church-sierra-leone',
-  'first-love-tanzania': 'mountain-of-the-lords-house-tanzania', 'first-love-united-states': 'first-love-church-new-york',
-  'first-love-zimbabwe': 'others-international-church-zimbabwe',
+  'first-love-tanzania': 'mountain-of-the-lords-house-tanzania', 'first-love-united-states': 'mighty-foundations-ministries-new-york',
+  'first-love-zimbabwe': 'others-international-church-zimbabwe', 'first-love-church-new-york': 'mighty-foundations-ministries-new-york',
   // Office, 11 Nov: Eric Lamptey stays in UD Africa and Maxwell Agyei-Manu in Eschatos.
   'first-love-angola': 'ud-africa-angola', 'first-love-mauritius': 'eschatos' };
 // A group's address, or one council's or country's (#flow-council,

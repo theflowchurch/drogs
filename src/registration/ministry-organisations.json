@@ -2221,14 +2221,14 @@
               ]
             },
             {
-              "slug": "first-love-church-new-york",
-              "name": "First Love Church – New York",
+              "slug": "mighty-foundations-ministries-new-york",
+              "name": "Mighty Foundations Ministries – New York",
               "people": [
                 {
                   "name": "James Quist-Therson",
                   "rosterId": "B141",
                   "bishop": true,
-                  "church": "First Love Church New York",
+                  "church": "Mighty Foundations Ministries",
                   "title": "Bishop",
                   "image": "assets/organisations/people/james-quist-therson.webp",
                   "consecrated": "2024"
