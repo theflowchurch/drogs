@@ -2370,14 +2370,14 @@
               ]
             },
             {
-              "slug": "first-love-zimbabwe",
-              "name": "Zimbabwe",
+              "slug": "others-international-church-zimbabwe",
+              "name": "Others International Church – Zimbabwe",
               "people": [
                 {
                   "name": "Daniel Marcus Annan Jnr",
                   "rosterId": "B253",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Others International Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/daniel-marcus-annan-jnr-e2b75b4c.webp",
                   "consecrated": "2021"

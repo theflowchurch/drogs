@@ -124,7 +124,8 @@ const FORMER = { 'only-jesus': 'first-love-center', 'jesus-first': 'qodesh-city-
   'first-love-australia': 'first-love-church-australia', 'first-love-botswana': 'love-christian-church-botswana', 'first-love-cote-divoire': 'la-belle-eglise-cote-divoire',
   'first-love-ethiopia': 'mikdash-church-international-ethiopia', 'first-love-germany': 'jesus-gefunden-germany', 'first-love-kenya': 'mountain-of-the-lords-house-kenya',
   'first-love-new-zealand': 'first-love-church-new-zealand', 'first-love-philippines': 'first-love-church-manila', 'first-love-sierra-leone': 'tell-them-church-sierra-leone',
-  'first-love-tanzania': 'mountain-of-the-lords-house-tanzania', 'first-love-united-states': 'first-love-church-new-york' };
+  'first-love-tanzania': 'mountain-of-the-lords-house-tanzania', 'first-love-united-states': 'first-love-church-new-york',
+  'first-love-zimbabwe': 'others-international-church-zimbabwe' };
 // A group's address, or one council's or country's (#flow-council,
 // #first-love-ghana), opens it.
 export const resolveGroupSlug = slug => FORMER[slug] || slug;
