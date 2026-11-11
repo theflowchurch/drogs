@@ -8,3 +8,12 @@ test('explicit ZIP photo replacement clears only the inspected saved portrait an
  const next=replaceOfficePortraits(state,references,[rule]);assert.equal(next.overrides.P1.photo,'');assert.equal(next.overrides.P1.city,'Office city');assert.equal(next.registrations[0].displayPhoto,'reference');assert.equal(directoryPeople(next,references).find(p=>p.id==='P1').image,rule.image);assert.equal(replaceOfficePortraits(next,references,[rule]),null);
  const newer=structuredClone(state);newer.overrides.P1.photo='newer-office.webp';assert.equal(replaceOfficePortraits(newer,references,[rule]),null);assert.equal(state.overrides.P1.photo,'old-office.webp');
 });
+
+test('a person the office added by hand gets the edited portrait on that record, never over a newer upload',()=>{
+ const rule={id:'X1',previousPhoto:'old-office.webp',image:'assets/portraits/X1-new.webp',source:'Edited portrait'};
+ const state={...emptyState(),extraReferences:[{id:'X1',role:'bishop',name:'Added Bishop',image:'',photo:'old-office.webp'}],overrides:{X1:{branch:'Centre',deleted:false}}};
+ const next=replaceOfficePortraits(state,refs,[rule]);
+ const added=next.extraReferences.find(p=>p.id==='X1');assert.equal(added.photo,'');assert.equal(added.image,rule.image);
+ assert.equal(directoryPeople(next,refs).find(p=>p.id==='X1').image,rule.image);assert.equal(replaceOfficePortraits(next,refs,[rule]),null);
+ const newer=structuredClone(state);newer.extraReferences[0].photo='newer-office.webp';assert.equal(replaceOfficePortraits(newer,refs,[rule]),null);
+});
