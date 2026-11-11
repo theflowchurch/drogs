@@ -78,11 +78,8 @@ function SubContents({ group, variant }) {
     <GroupBox group={group} as="h2"/>
     <p className="org-group-total"><Count n={group.count}/></p>
     <nav className="org-contents org-subcontents" aria-label={`${group.name}: contents`}>
-      {/* Office, 11 Nov: the photos sit below each bar, outside it. */}
-      {group.parts.map(part => <div className="org-sub-item" key={part.slug}>
-        <GroupBox group={part}/>
-        <a className="org-sub-photos" href={`#${part.slug}`} tabIndex={-1} aria-hidden="true"><GroupThumbs people={part.people} variant={variant}/></a>
-      </div>)}
+      {/* Office, 11 Nov: every bishop's photo beside the name, in the bar. */}
+      {group.parts.map(part => <GroupBox key={part.slug} group={part} thumbs={variant}/>)}
     </nav>
   </section>;
 }
@@ -104,9 +101,9 @@ function Group({ group, part }) {
 export default function OrganisationsApp({ slug = '' }) {
   // An older address for a section opens the contents; one for a group opens it.
   const { group, part } = useGroupFocus(PAGE_ALIASES[slug] ? '' : slug);
-  // Office, 11 Nov: every bishop's photo in a strip below each council's or
+  // Office, 11 Nov: every bishop's photo in a strip beside each council's or
   // country's name.
-  const variant = 'under';
+  const variant = 'all';
   return <div className="denom-site org-site" id="top">
     <Masthead/>
     <main className="org-main">

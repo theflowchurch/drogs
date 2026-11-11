@@ -125,16 +125,14 @@ function SubContents({ group, variant }) {
       <span className="tx-chip">{plural(group.count)}</span>
     </div>
     <nav className="tx-contents tx-subcontents" aria-label={`${group.name}: contents`} onPointerMove={spotlight}>
-      {/* Office, 11 Nov: the photos sit below each bar, outside it. */}
-      {group.parts.map((part, i) => <div className="tx-sub-item" key={part.slug} style={{ '--box': part.colour }}>
-        <a href={`#${part.slug}`} className="tx-row" style={{ '--box': part.colour, '--i': i }}>
-          <span className="tx-index">{pad(i + 1)}</span>
-          <span className="tx-row-name"><Name group={part}/></span>
-          <span className="tx-row-count"><i aria-hidden="true"/>{plural(part.people.length)}</span>
-          <span className="tx-arrow" aria-hidden="true">→</span>
-        </a>
-        <a className="tx-sub-photos" href={`#${part.slug}`} tabIndex={-1} aria-hidden="true"><GroupThumbs people={part.people} variant={variant}/></a>
-      </div>)}
+      {/* Office, 11 Nov: every bishop's photo beside the name, in the bar. */}
+      {group.parts.map((part, i) => <a key={part.slug} href={`#${part.slug}`} className="tx-row tx-subrow" style={{ '--box': part.colour, '--i': i }}>
+        <span className="tx-index">{pad(i + 1)}</span>
+        <span className="tx-row-name"><Name group={part}/></span>
+        <GroupThumbs people={part.people} variant={variant}/>
+        <span className="tx-row-count"><i aria-hidden="true"/>{plural(part.people.length)}</span>
+        <span className="tx-arrow" aria-hidden="true">→</span>
+      </a>)}
     </nav>
   </section>;
 }
@@ -161,9 +159,9 @@ function Group({ group, part }) {
 
 export default function CouncilsApp() {
   const { group, part } = useGroupFocus();
-  // Office, 11 Nov: every bishop's photo in a strip below each council's or
+  // Office, 11 Nov: every bishop's photo in a strip beside each council's or
   // country's name.
-  const variant = 'under';
+  const variant = 'all';
   const [query, setQuery] = useState('');
   const search = useRef(null);
   // Day or night (office, 10 Nov): day by default, night one tap away; the
