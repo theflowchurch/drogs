@@ -87,11 +87,22 @@ const byChurch = (g, o) => {
   const churches = [...new Set(g.people.map(p => p.church))];
   return churches.map(church => withInitials({ slug: `${g.slug}-${slugOf(church)}`, name: formalName(o, { name: WITH_THE.has(church) ? `The ${church}` : church }), people: g.people.filter(p => p.church === church) }));
 };
+// Office, 11 Nov: UD Africa opens a contents page of its countries, largest
+// first, with larger lettering on the lines.
+const BY_COUNTRY = new Set(['ud-africa']);
+const byCountry = (g, o) => {
+  const countries = [...new Set(g.people.map(p => p.country || 'Other'))];
+  const size = c => g.people.filter(p => (p.country || 'Other') === c).length;
+  countries.sort((a, b) => size(b) - size(a) || a.replace(/^The /, '').localeCompare(b.replace(/^The /, '')));
+  return countries.map(country => withInitials({ slug: `${g.slug}-${slugOf(country.replace(/^The /, ''))}`, name: formalName(o, { name: country }), people: g.people.filter(p => (p.country || 'Other') === country) }));
+};
 const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => ONE_BOX[o.slug]
   ? [{ slug: o.slug, name: ONE_BOX[o.slug], section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length).map(g => withInitials({ ...g, name: formalName(o, g) })), people: [] }]
   : groupsOfSection(o).map(g => BY_CHURCH.has(g.slug)
     ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byChurch(g, o), people: [] }
-    : { slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people }))
+    : BY_COUNTRY.has(g.slug)
+      ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byCountry(g, o), people: [], large: true }
+      : { slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people }))
   .map(withInitials);
 export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === slug))
   .filter(g => g && (g.people.length || g.parts?.length))
