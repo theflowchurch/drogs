@@ -119,9 +119,13 @@ const FORMER = { 'only-jesus': 'first-love-ghana', 'jesus-first': 'first-love-gh
 export const resolveGroupSlug = slug => FORMER[slug] || slug;
 // Office, 11 Nov: a group split only for its contents page (URSC, UD Africa)
 // opens as one list without headings, the chosen line's bishops first.
+// The group's chairman (e.g. Bishop Frank Otchere, UD Africa Chairman)
+// always leads the list (office, 11 Nov).
 export const flatPeople = (group, part) => {
-  const first = part ? part.people : [];
-  const seen = new Set(first.map(p => p.rosterId || p.name));
-  return [...first, ...group.parts.flatMap(s => s.people).filter(p => !seen.has(p.rosterId || p.name) && seen.add(p.rosterId || p.name))];
+  const all = group.parts.flatMap(s => s.people);
+  const chair = all.filter(p => p.leader || /chair/i.test(p.role || ''));
+  const first = [...chair, ...(part ? part.people : [])];
+  const seen = new Set();
+  return [...first, ...all].filter(p => !seen.has(p.rosterId || p.name) && seen.add(p.rosterId || p.name));
 };
 export const directoryGroupBySlug = slug => { slug = resolveGroupSlug(slug); return DIRECTORY_GROUPS.find(g => g.slug === slug || g.parts?.some(p => p.slug === slug)) || null; };
