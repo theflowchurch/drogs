@@ -99,9 +99,9 @@ const byCountry = (g, o) => {
 const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => ONE_BOX[o.slug]
   ? [{ slug: o.slug, name: ONE_BOX[o.slug], section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length).map(g => withInitials({ ...g, name: formalName(o, g) })), people: [] }]
   : groupsOfSection(o).map(g => BY_CHURCH.has(g.slug)
-    ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byChurch(g, o), people: [], flat: true }
+    ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byChurch(g, o), people: [], all: g.people, flat: true }
     : BY_COUNTRY.has(g.slug)
-      ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byCountry(g, o), people: [], large: true, flat: true }
+      ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byCountry(g, o), people: [], all: g.people, large: true, flat: true }
       : { slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people }))
   .map(withInitials);
 export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === slug))
@@ -118,14 +118,7 @@ const FORMER = { 'only-jesus': 'first-love-ghana', 'jesus-first': 'first-love-gh
 // #first-love-ghana), opens it.
 export const resolveGroupSlug = slug => FORMER[slug] || slug;
 // Office, 11 Nov: a group split only for its contents page (URSC, UD Africa)
-// opens as one list without headings, the chosen line's bishops first.
-// The group's chairman (e.g. Bishop Frank Otchere, UD Africa Chairman)
-// always leads the list (office, 11 Nov).
-export const flatPeople = (group, part) => {
-  const all = group.parts.flatMap(s => s.people);
-  const chair = all.filter(p => p.leader || /chair/i.test(p.role || ''));
-  const first = [...chair, ...(part ? part.people : [])];
-  const seen = new Set();
-  return [...first, ...all].filter(p => !seen.has(p.rosterId || p.name) && seen.add(p.rosterId || p.name));
-};
+// opens as one list in its original order, chairman first, whichever line
+// was chosen.
+export const flatPeople = group => group.all;
 export const directoryGroupBySlug = slug => { slug = resolveGroupSlug(slug); return DIRECTORY_GROUPS.find(g => g.slug === slug || g.parts?.some(p => p.slug === slug)) || null; };
