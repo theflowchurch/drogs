@@ -1037,7 +1037,7 @@
                   "bishop": true,
                   "church": "Anointed People International",
                   "title": "Bishop",
-                  "image": "assets/portraits/BO201.webp"
+                  "image": "assets/organisations/people/stephen-harry-sawyerr-bc6c3fe6.webp"
                 },
                 {
                   "name": "Mawusi Adagbe",
@@ -1045,7 +1045,7 @@
                   "bishop": true,
                   "church": "True Son Chapel International",
                   "title": "Bishop",
-                  "image": "assets/portraits/BO207-f91fc68f.webp",
+                  "image": "assets/organisations/people/mawusi-adagbe-f166b0c0.webp",
                   "consecrated": "2016"
                 },
                 {
@@ -1054,7 +1054,7 @@
                   "bishop": true,
                   "church": "True Son Chapel International",
                   "title": "Episcopal Sister",
-                  "image": "assets/portraits/BO208.webp",
+                  "image": "assets/organisations/people/olivia-adalena-s-k-sam-2ab31548.webp",
                   "consecrated": "2022"
                 }
               ],
@@ -1079,7 +1079,7 @@
                   "bishop": true,
                   "church": "Mustard Seed Chapel International",
                   "title": "Bishop",
-                  "image": "assets/organisations/people/kwame-adu-gyamfi-1c9582b5.webp",
+                  "image": "assets/organisations/people/kwame-adu-gyamfi-c2331ec9.webp",
                   "consecrated": "2025"
                 },
                 {
@@ -1106,7 +1106,7 @@
                   "bishop": true,
                   "church": "Mustard Seed Chapel International",
                   "title": "Episcopal Sister",
-                  "image": "assets/organisations/people/linda-aryee.webp",
+                  "image": "assets/organisations/people/linda-abana-aryee-284ea002.webp",
                   "consecrated": "2022"
                 },
                 {
@@ -1186,7 +1186,7 @@
                   "bishop": true,
                   "church": "Go Church",
                   "title": "Bishop",
-                  "image": "assets/bishops/matched-109.webp",
+                  "image": "assets/organisations/people/king-bodom-appiagyei-4af26524.webp",
                   "consecrated": "2025"
                 }
               ],
@@ -1826,7 +1826,7 @@
                   "bishop": true,
                   "church": "Qodesh City Church",
                   "title": "Bishop",
-                  "image": "assets/outreach/pius-user-confirmed.jpg",
+                  "image": "assets/organisations/people/pius-worlanyo-kwame-akator-475409f0.webp",
                   "consecrated": "2020"
                 },
                 {
@@ -1835,7 +1835,7 @@
                   "bishop": true,
                   "church": "First Love Church",
                   "title": "Bishop",
-                  "image": "assets/portraits/BO281-bf9ed77c.webp",
+                  "image": "assets/organisations/people/george-seneagya-ff028b93.webp",
                   "consecrated": "2023"
                 }
               ]
@@ -2174,7 +2174,7 @@
                   "bishop": true,
                   "church": "First Love Church",
                   "title": "Mother",
-                  "image": "assets/portraits/BL2-6a7472bdbc3d.webp",
+                  "image": "assets/organisations/people/perpetua-claire-ackuaku-91ba6aa6.webp",
                   "consecrated": "2024"
                 }
               ]
@@ -2806,7 +2806,7 @@
                   "bishop": true,
                   "church": "Mustard Seed Chapel International",
                   "title": "Episcopal Sister",
-                  "image": "assets/organisations/people/leonora-hyde.webp",
+                  "image": "assets/organisations/people/leonora-jamie-hyde-ab3a8f69.webp",
                   "consecrated": "2015"
                 },
                 {
@@ -3231,7 +3231,7 @@
                 },
                 {
                   "name": "Linda Aryee",
-                  "image": "assets/organisations/people/linda-aryee.webp",
+                  "image": "assets/organisations/people/linda-abana-aryee-284ea002.webp",
                   "rosterId": "B126",
                   "bishop": true,
                   "church": "Mustard Seed Chapel International",
