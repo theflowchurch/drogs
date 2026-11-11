@@ -1,7 +1,7 @@
 'use client';
 import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, PAGE_ALIASES, flatPeople } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useGroupFocus from './useGroupFocus';
 import GroupThumbs from './GroupThumbs';
 import GoodStandingNotice from './GoodStandingNotice';
@@ -107,7 +107,10 @@ export default function OrganisationsApp({ slug = '' }) {
   // Office, 11 Nov: every bishop's photo in a strip beside each council's or
   // country's name.
   const variant = 'all';
-  return <div className="denom-site org-site" id="top">
+  // Preview only: ?back=a|b|c|d picks a style for the "← All Groups" button.
+  const [back, setBack] = useState('');
+  useEffect(() => { setBack(new URLSearchParams(location.search).get('back') || ''); }, []);
+  return <div className={`denom-site org-site ${back ? `org-back-${back}` : ''}`} id="top">
     <Masthead/>
     <main className="org-main">
       {group ? <>

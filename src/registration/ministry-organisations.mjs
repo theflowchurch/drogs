@@ -93,7 +93,10 @@ const BY_COUNTRY = new Set(['ud-africa']);
 const byCountry = (g, o) => {
   const countries = [...new Set(g.people.map(p => p.country || 'Other'))];
   const size = c => g.people.filter(p => (p.country || 'Other') === c).length;
-  countries.sort((a, b) => size(b) - size(a) || a.replace(/^The /, '').localeCompare(b.replace(/^The /, '')));
+  // The chairman's country first (office, 11 Nov: Mozambique, Bishop Frank
+  // Otchere), then the largest.
+  const chairOf = c => g.people.some(p => (p.country || 'Other') === c && (p.leader || /chair/i.test(p.role || '')));
+  countries.sort((a, b) => chairOf(b) - chairOf(a) || size(b) - size(a) || a.replace(/^The /, '').localeCompare(b.replace(/^The /, '')));
   return countries.map(country => withInitials({ slug: `${g.slug}-${slugOf(country.replace(/^The /, ''))}`, name: formalName(o, { name: country }), people: g.people.filter(p => (p.country || 'Other') === country) }));
 };
 const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => ONE_BOX[o.slug]
@@ -101,7 +104,7 @@ const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => ONE_BOX[o
   : groupsOfSection(o).map(g => BY_CHURCH.has(g.slug)
     ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byChurch(g, o), people: [], all: g.people, flat: true }
     : BY_COUNTRY.has(g.slug)
-      ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byCountry(g, o), people: [], all: g.people, large: true, flat: true }
+      ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byCountry(g, o), people: [], large: true }
       : { slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people }))
   .map(withInitials);
 export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === slug))

@@ -387,3 +387,19 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
 /* Office, 11 Nov: where every line has only a few bishops (the United
    Reasonable Service Church), larger lettering fills the gap to the photos. */
 @media(min-width:701px){.org-subcontents.is-few a.org-sub-box{min-height:96px;font-size:30px}.org-subcontents.is-few .gt-all .gt-face{width:48px;height:58px}}
+
+/* Preview (office, 11 Nov): four styles for "← All Groups" on the classic site. */
+/* A. Small navy pill */
+.org-back-a .org-all-groups{min-height:0;padding:7px 16px;border-width:1.5px;font-size:15px;box-shadow:0 3px 10px #14223d30}
+/* B. Plain link in navy with a gold underline */
+.org-back-b .org-all-groups{min-height:0;padding:4px 2px;border:0;border-bottom:2px solid var(--org-gold);border-radius:0;background:none;color:var(--org-navy)!important;font-size:16px;box-shadow:none}
+.org-back-b .org-back-row{background:var(--org-ivory);padding:6px 0;margin-left:-4px;width:max-content}
+.org-back-b .org-all-groups:hover{background:none;color:var(--org-gold-ink)!important}
+/* C. Small ivory pill with a thin gold edge */
+.org-back-c .org-all-groups{min-height:0;padding:7px 16px;border:1.5px solid var(--org-gold);background:#fffdf7;color:var(--org-navy)!important;font-size:15px;box-shadow:0 2px 8px #14223d1a}
+.org-back-c .org-all-groups:hover{background:#f3ecd9}
+/* D. Small round arrow button with the words beside it */
+.org-back-d .org-all-groups{min-height:0;gap:10px;padding:0 14px 0 0;border:0;background:none;color:var(--org-navy)!important;font-size:15px;box-shadow:none}
+.org-back-d .org-all-groups::before{content:'←';display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--org-navy);color:#fff;font-size:17px;box-shadow:0 0 0 2px var(--org-gold),0 3px 10px #14223d30}
+.org-back-d .org-all-groups{font-size:0}.org-back-d .org-all-groups::after{content:'All Groups';font-size:15px;font-weight:700;letter-spacing:.3px}
+.org-back-d .org-back-row{background:#faf7efd9;border-radius:999px;width:max-content;padding:4px 6px 4px 4px}
