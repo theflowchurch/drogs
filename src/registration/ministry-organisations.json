@@ -2191,6 +2191,21 @@
               ]
             },
             {
+              "slug": "enlargement-city-church-chicago",
+              "name": "Enlargement City Church – Chicago",
+              "people": [
+                {
+                  "name": "Henrietta Ariel Orleans-Lindsay",
+                  "image": "assets/organisations/people/henrietta-ariel-orleans-lindsay-036804f4.webp",
+                  "rosterId": "B79",
+                  "bishop": true,
+                  "church": "Enlargement City Church",
+                  "title": "Mother",
+                  "consecrated": "2019"
+                }
+              ]
+            },
+            {
               "slug": "first-love-church-australia",
               "name": "First Love Church – Australia",
               "people": [
