@@ -158,9 +158,9 @@ function Group({ group, part }) {
 
 export default function CouncilsApp() {
   const { group, part } = useGroupFocus();
-  // Preview only: ?thumbs=stack|strip|lead|fan picks the photo style.
-  const [variant, setVariant] = useState('stack');
-  useEffect(() => { const v = new URLSearchParams(location.search).get('thumbs'); if (v) setVariant(v); }, []);
+  // Office, 11 Nov: every bishop's photo in a strip below each council's or
+  // country's name.
+  const variant = 'under';
   const [query, setQuery] = useState('');
   const search = useRef(null);
   // Day or night (office, 10 Nov): day by default, night one tap away; the

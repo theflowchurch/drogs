@@ -1126,7 +1126,7 @@
                   "church": "If I Live I Live For You Church Int",
                   "title": "Pastor",
                   "appointed": "2024",
-                  "image": "assets/portraits/P2265.webp"
+                  "image": "assets/organisations/people/joao-pedro-sebastiao-andrade.webp"
                 },
                 {
                   "name": "Alexander Igori",
@@ -1135,7 +1135,7 @@
                   "church": "Together Forever Church Int",
                   "title": "Pastor",
                   "appointed": "2018",
-                  "image": "assets/portraits/P177.webp"
+                  "image": "assets/organisations/people/alexander-igori.webp"
                 },
                 {
                   "name": "Daniel Nabudere",
@@ -1144,14 +1144,15 @@
                   "church": "Why Worry Church Int",
                   "title": "Pastor",
                   "appointed": "2018",
-                  "image": "assets/portraits/P823.webp"
+                  "image": "assets/organisations/people/daniel-nabudere.webp"
                 },
                 {
                   "name": "Stanley Osei-Bonsu",
                   "bishop": true,
                   "church": "Deep Love Church International",
                   "title": "Bishop",
-                  "consecrated": "2026"
+                  "consecrated": "2026",
+                  "image": "assets/organisations/people/stanley-osei-bonsu.webp"
                 }
               ],
               "slug": "ud-europe"

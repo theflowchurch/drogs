@@ -1,7 +1,6 @@
 'use client';
 import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, PAGE_ALIASES } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
-import { useEffect, useState } from 'react';
 import useGroupFocus from './useGroupFocus';
 import GroupThumbs from './GroupThumbs';
 import GoodStandingNotice from './GoodStandingNotice';
@@ -101,9 +100,9 @@ function Group({ group, part }) {
 export default function OrganisationsApp({ slug = '' }) {
   // An older address for a section opens the contents; one for a group opens it.
   const { group, part } = useGroupFocus(PAGE_ALIASES[slug] ? '' : slug);
-  // Preview only: ?thumbs=stack|strip|lead|fan picks the photo style.
-  const [variant, setVariant] = useState('stack');
-  useEffect(() => { const v = new URLSearchParams(location.search).get('thumbs'); if (v) setVariant(v); }, []);
+  // Office, 11 Nov: every bishop's photo in a strip below each council's or
+  // country's name.
+  const variant = 'under';
   return <div className="denom-site org-site" id="top">
     <Masthead/>
     <main className="org-main">
