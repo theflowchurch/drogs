@@ -78,7 +78,11 @@ function SubContents({ group, variant }) {
     <GroupBox group={group} as="h2"/>
     <p className="org-group-total"><Count n={group.count}/></p>
     <nav className="org-contents org-subcontents" aria-label={`${group.name}: contents`}>
-      {group.parts.map(part => <GroupBox key={part.slug} group={part} thumbs={variant}/>)}
+      {/* Office, 11 Nov: the photos sit below each bar, outside it. */}
+      {group.parts.map(part => <div className="org-sub-item" key={part.slug}>
+        <GroupBox group={part}/>
+        <a className="org-sub-photos" href={`#${part.slug}`} tabIndex={-1} aria-hidden="true"><GroupThumbs people={part.people} variant={variant}/></a>
+      </div>)}
     </nav>
   </section>;
 }

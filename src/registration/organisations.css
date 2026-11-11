@@ -376,3 +376,11 @@ a.org-sub-box .org-box-name{flex:1 1 auto}
 a.org-sub-box:has(.gt-under){flex-wrap:wrap;row-gap:4px;padding-top:12px;padding-bottom:12px}
 a.org-sub-box:has(.gt-under) .gt-under{margin-left:0!important}
 a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
+
+/* Office, 11 Nov: the photos below each slim bar, outside it. */
+.org-subcontents{gap:18px!important}
+.org-sub-item{display:flex;flex-direction:column;gap:8px}
+.org-sub-photos{display:block;padding:0 4px 0 14px}
+.org-sub-photos .gt-under{margin:0!important}
+.org-sub-photos .gt-under .gt-face{border-color:#fff;box-shadow:0 2px 6px #14223d2e}
+.org-sub-photos:hover .gt-face{box-shadow:0 3px 10px #14223d4d}

@@ -417,3 +417,11 @@
 .tx-subrow:has(.gt-under) .gt-under{margin-left:42px!important;margin-right:0}
 .tx-subrow:has(.gt-all){padding-top:6px;padding-bottom:6px}
 @media(max-width:700px){.tx-subrow:has(.gt-under) .gt-under{margin-left:0!important}}
+
+/* Office, 11 Nov: the photos below each slim bar, outside it. */
+.tx-subcontents{gap:16px!important}
+.tx-sub-item{display:flex;flex-direction:column;gap:8px}
+.tx-sub-photos{display:block;padding:0 4px 0 18px}
+.tx-sub-photos .gt-under{margin:0!important}
+.tx-site:not(.tx-day) .tx-sub-photos .gt-face{border-color:#ffffff40;box-shadow:0 2px 8px #0008}
+.tx-day .tx-sub-photos .gt-face{border-color:#fff;box-shadow:0 2px 6px #14223d2e}
