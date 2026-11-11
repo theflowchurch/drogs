@@ -50,7 +50,7 @@ const ORDER = ['1965-committee', 'ud-senex-council', 'first-love-senex-council',
   'ud-africa', 'ud-ghana-west', 'ud-ghana-east', 'ud-ghana-central', 'ud-europe', 'ud-north-america',
   'united-jesus', 'united-islands', 'eschatos', 'ursc', FIRST_LOVE, PARA_CHURCH];
 // The initials these groups are known by, shown after a dash (office, 10 Nov).
-const INITIALS = { 'ud-africa': 'UD AF', 'ud-ghana-west': 'UD GHW', 'ud-ghana-east': 'UD GHE', 'ud-ghana-central': 'UD GHC', 'ud-europe': 'UD EU', 'ud-north-america': 'UD NA', 'united-jesus': 'UJ', 'united-islands': 'UI', ursc: 'URSC', [FIRST_LOVE]: 'FLC', 'healing-jesus-council': 'HJC' };
+const INITIALS = { 'ud-africa': 'UD AF', 'ud-ghana-west': 'UD GHW', 'ud-ghana-east': 'UD GHE', 'ud-ghana-central': 'UD GHC', 'ud-europe': 'UD EU', 'ud-north-america': 'UD NA', 'united-jesus': 'UJ', 'united-islands': 'UI', ursc: 'URSC', 'healing-jesus-council': 'HJC' };
 // Office, 9 Nov: every box reads "The Bishops of …" (a council keeps its
 // "the": "The Bishops of the Adjutancy"); Emeritus and Para-Church read
 // "The Emeritus Bishops" and "The Para-Church Bishops".
@@ -72,7 +72,7 @@ const COUNCIL_LABEL = { 'ud-senex-council': 'UD Senex Council', 'first-love-sene
   'general-hospitals-board': 'General Hospitals Board', 'general-orphanage-board': 'General Orphanage Board', 'radio-ministry': 'Radio Ministry',
   'construction-estate-management-board': 'Construction & Estate Management Board', 'abmtc-board': 'ABMTC Board', 'makarios-council': 'Makarios Council' };
 const labelled = g => (COUNCIL_LABEL[g.slug] ? { ...g, people: g.people.map(p => ({ ...p, church: COUNCIL_LABEL[g.slug] })) } : g);
-const ONE_BOX = { [PARA_CHURCH]: 'The Para-Church Bishops', [FIRST_LOVE]: 'The Bishops of First Love Church' };
+const ONE_BOX = { [PARA_CHURCH]: 'The Para-Church Bishops', [FIRST_LOVE]: 'The Bishops of First Love Movement' };
 // "The Bishop of Kenya" when a group has one bishop (office, 10 Nov).
 const singular = g => (g.people?.length && countOf(g.people) === 1 ? { ...g, name: g.name.replace(/^The Bishops of /, 'The Bishop of ') } : g);
 const withInitials = g => singular(labelled({ ...g, initials: INITIALS[g.slug] || '' }));
@@ -116,7 +116,15 @@ export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === sl
 export const DIRECTORY_TOTAL = countOf(DIRECTORY_GROUPS.flatMap(g => g.parts ? g.parts.flatMap(p => p.people) : g.people));
 // First Love's former groups became countries (office, 10 Nov); their old
 // addresses open the country most of their bishops are in.
-const FORMER = { 'only-jesus': 'first-love-ghana', 'jesus-first': 'first-love-ghana', 'choose-jesus': 'first-love-united-kingdom', 'serve-jesus': 'first-love-switzerland', 'jesus-now': 'first-love-belize', 'jesus-forever': 'first-love-united-states', 'king-jesus': FIRST_LOVE };
+const FORMER = { 'only-jesus': 'first-love-center', 'jesus-first': 'qodesh-city-church', 'choose-jesus': 'first-love-uk', 'serve-jesus': 'erste-liebe-kirche-switzerland', 'jesus-now': 'first-love-church-belize', 'jesus-forever': 'first-love-church-new-york', 'king-jesus': FIRST_LOVE,
+  // Office, 11 Nov: First Love Movement lines are churches, not countries.
+  'first-love-ghana': 'first-love-center', 'first-love-united-kingdom': 'first-love-uk', 'first-love-democratic-republic-of-congo': 'centre-chretien-de-lamour-dr-congo',
+  'first-love-madagascar': 'fiangonana-fahazavana-velona-madagascar', 'first-love-switzerland': 'erste-liebe-kirche-switzerland', 'first-love-belize': 'first-love-church-belize',
+  'first-love-cameroon': 'eglise-du-premier-amour-cameroon', 'first-love-france': 'benediction-totale-france', 'first-love-zambia': 'overcomers-house-church-zambia',
+  'first-love-australia': 'first-love-church-australia', 'first-love-botswana': 'love-christian-church-botswana', 'first-love-cote-divoire': 'la-belle-eglise-cote-divoire',
+  'first-love-ethiopia': 'mikdash-church-international-ethiopia', 'first-love-germany': 'jesus-gefunden-germany', 'first-love-kenya': 'mountain-of-the-lords-house-kenya',
+  'first-love-new-zealand': 'first-love-church-new-zealand', 'first-love-philippines': 'first-love-church-manila', 'first-love-sierra-leone': 'tell-them-church-sierra-leone',
+  'first-love-tanzania': 'mountain-of-the-lords-house-tanzania', 'first-love-united-states': 'first-love-church-new-york' };
 // A group's address, or one council's or country's (#flow-council,
 // #first-love-ghana), opens it.
 export const resolveGroupSlug = slug => FORMER[slug] || slug;

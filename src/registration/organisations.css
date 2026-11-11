@@ -392,3 +392,5 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
    edge (style C), at the top and the foot of a group's page. */
 .org-site .org-all-groups{min-height:0;padding:7px 16px;border:1.5px solid var(--org-gold);background:#fffdf7;color:var(--org-navy)!important;font-size:15px;box-shadow:0 2px 8px #14223d1a}
 .org-site .org-all-groups:hover,.org-site .org-all-groups:focus-visible{background:#f3ecd9}
+/* A chosen section lands below the "← All Groups" button, not under it. */
+.org-group-part{scroll-margin-top:72px}

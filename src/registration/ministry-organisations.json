@@ -1668,44 +1668,26 @@
         },
         {
           "slug": "first-love-church",
-          "name": "First Love Church",
+          "name": "First Love Movement",
           "people": [],
           "directoryGroups": [
             {
-              "slug": "first-love-ghana",
-              "name": "Ghana",
+              "slug": "first-love-center",
+              "name": "First Love Center",
               "people": [
                 {
                   "name": "Joshua Heward-Mills",
                   "rosterId": "B194",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Bishop",
                   "image": "assets/organisations/people/joshua-heward-mills-2.webp"
-                },
-                {
-                  "name": "Benjamin Fiadonu",
-                  "rosterId": "B202",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/benjamin-fiadonu-13120db6.webp",
-                  "consecrated": "2025"
-                },
-                {
-                  "name": "Daniel Adjei",
-                  "rosterId": "BO224",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/daniel-adjei-1d25f884.webp",
-                  "consecrated": "2022"
                 },
                 {
                   "name": "Thaddeus Gyabaah Boadi",
                   "rosterId": "B247",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Bishop",
                   "image": "assets/organisations/people/thaddeus-gyabaah-boadi-382dd622.webp",
                   "consecrated": "2024"
@@ -1714,7 +1696,7 @@
                   "name": "Frank Opoku",
                   "rosterId": "B216",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Bishop",
                   "image": "assets/organisations/people/frank-opoku-5ce24627.webp",
                   "consecrated": "2021"
@@ -1723,51 +1705,25 @@
                   "name": "Isaac Agyeman",
                   "rosterId": "B218",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Bishop",
                   "image": "assets/organisations/people/isaac-agyeman-5621742c.webp",
                   "consecrated": "2021"
                 },
                 {
-                  "name": "Isaac Koranteng",
-                  "rosterId": "B219",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/isaac-koranteng-9e1323d5.webp"
-                },
-                {
                   "name": "Isaac Nakoja",
                   "rosterId": "B220",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Bishop",
                   "image": "assets/organisations/people/isaac-nakoja-263ff9af.webp",
                   "consecrated": "2021"
                 },
                 {
-                  "name": "Edwin Morgan Ogoe Jr",
-                  "rosterId": "B196",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/edwin-morgan-ogoe-jr-8ff1dda9.webp",
-                  "consecrated": "2024"
-                },
-                {
-                  "name": "Michael Oddoye",
-                  "rosterId": "B225",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/michael-oddoye-c92ac107.webp",
-                  "consecrated": "2025"
-                },
-                {
                   "name": "Paul Baidoo",
                   "rosterId": "B230",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Bishop",
                   "image": "assets/organisations/people/paul-baidoo-b081afc7.webp",
                   "consecrated": "2021"
@@ -1776,25 +1732,16 @@
                   "name": "Peter Onasis",
                   "rosterId": "B249",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Bishop",
                   "image": "assets/organisations/people/peter-onasis-c75f1f5b.webp",
                   "consecrated": "2024"
                 },
                 {
-                  "name": "Solomon Tay",
-                  "rosterId": "B240",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/solomon-tay-5ece879c.webp",
-                  "consecrated": "2022"
-                },
-                {
                   "name": "Terry Bartels",
                   "rosterId": "B242",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Bishop",
                   "image": "assets/organisations/people/terry-bartels-2a3debbb.webp"
                 },
@@ -1802,7 +1749,7 @@
                   "name": "John Ross Thomas",
                   "rosterId": "B244",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Bishop",
                   "image": "assets/organisations/people/john-ross-thomas-5ec1c1be.webp",
                   "consecrated": "2024"
@@ -1811,25 +1758,16 @@
                   "name": "Emmanuel Amartey",
                   "rosterId": "B209",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Bishop",
                   "image": "assets/organisations/people/emmanuel-amartey.webp",
                   "consecrated": "2021"
                 },
                 {
-                  "name": "Joseph Odarkwei Mills",
-                  "rosterId": "B252",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/joseph-odarkwei-mills-8cfd0872.webp",
-                  "consecrated": "2025"
-                },
-                {
                   "name": "Annika Dwimoh",
                   "rosterId": "B200",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Mother",
                   "image": "assets/organisations/people/annika-dwimoh-f5274dba.webp",
                   "consecrated": "2020"
@@ -1838,15 +1776,89 @@
                   "name": "Kiki Heward-Mills",
                   "rosterId": "B195",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love Center",
                   "title": "Mother",
                   "image": "assets/organisations/people/kiki-heward-mills-5a65cc9f.webp"
+                }
+              ]
+            },
+            {
+              "slug": "first-love-campuses",
+              "name": "The First Love Campuses",
+              "people": [
+                {
+                  "name": "Daniel Adjei",
+                  "rosterId": "BO224",
+                  "bishop": true,
+                  "church": "First Love Koinonia Campus",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/daniel-adjei-1d25f884.webp",
+                  "consecrated": "2022"
                 },
+                {
+                  "name": "Isaac Koranteng",
+                  "rosterId": "B219",
+                  "bishop": true,
+                  "church": "First Love Energy Campus",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/isaac-koranteng-9e1323d5.webp"
+                },
+                {
+                  "name": "Solomon Tay",
+                  "rosterId": "B240",
+                  "bishop": true,
+                  "church": "First Love Passion Campus",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/solomon-tay-5ece879c.webp",
+                  "consecrated": "2022"
+                },
+                {
+                  "name": "Benjamin Fiadonu",
+                  "rosterId": "B202",
+                  "bishop": true,
+                  "church": "First Love Unity Campus",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/benjamin-fiadonu-13120db6.webp",
+                  "consecrated": "2025"
+                },
+                {
+                  "name": "Joseph Odarkwei Mills",
+                  "rosterId": "B252",
+                  "bishop": true,
+                  "church": "First Love Unity Campus",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/joseph-odarkwei-mills-8cfd0872.webp",
+                  "consecrated": "2025"
+                },
+                {
+                  "name": "Michael Oddoye",
+                  "rosterId": "B225",
+                  "bishop": true,
+                  "church": "First Love La Belle Eglise Campus",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/michael-oddoye-c92ac107.webp",
+                  "consecrated": "2025"
+                },
+                {
+                  "name": "George Seneagya",
+                  "rosterId": "BO281",
+                  "bishop": true,
+                  "church": "First Love Gbawe Campus",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/george-seneagya-ff028b93.webp",
+                  "consecrated": "2023"
+                }
+              ]
+            },
+            {
+              "slug": "qodesh-city-church",
+              "name": "Qodesh City Church",
+              "people": [
                 {
                   "name": "Glen Kwame Opoku",
                   "rosterId": "B74",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Qodesh City Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/glen-kwame-opoku.webp",
                   "consecrated": "2025"
@@ -1855,7 +1867,7 @@
                   "name": "Jojo Stephens Ofori-Addo",
                   "rosterId": "B246",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Qodesh City Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/jojo-stephens-ofori-addo-f762d6cd.webp",
                   "consecrated": "2025"
@@ -1868,27 +1880,18 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/pius-worlanyo-kwame-akator-475409f0.webp",
                   "consecrated": "2020"
-                },
-                {
-                  "name": "George Seneagya",
-                  "rosterId": "BO281",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/george-seneagya-ff028b93.webp",
-                  "consecrated": "2023"
                 }
               ]
             },
             {
-              "slug": "first-love-united-kingdom",
-              "name": "The United Kingdom",
+              "slug": "first-love-uk",
+              "name": "First Love UK",
               "people": [
                 {
                   "name": "Kent Njeru",
                   "rosterId": "B222",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love UK",
                   "title": "Bishop",
                   "image": "assets/organisations/people/kent-njeru.webp",
                   "consecrated": "2017"
@@ -1897,7 +1900,7 @@
                   "name": "Andrew Gyamfi",
                   "rosterId": "B199",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love UK",
                   "title": "Bishop",
                   "image": "assets/organisations/people/andrew-gyamfi-5e6e3e93.webp",
                   "consecrated": "2025"
@@ -1906,7 +1909,7 @@
                   "name": "Stephen Jaiden Asamoah",
                   "rosterId": "B241",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love UK",
                   "title": "Bishop",
                   "image": "assets/organisations/people/stephen-jaiden-asamoah-671c289e.webp",
                   "consecrated": "2025"
@@ -1915,25 +1918,16 @@
                   "name": "Danniella Hart",
                   "rosterId": "B208",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love UK",
                   "title": "Mother",
                   "image": "assets/organisations/people/danniella-hart-7e080ec3.webp",
                   "consecrated": "2024"
                 },
                 {
-                  "name": "Sena Agyepong",
-                  "rosterId": "B181",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/sena-agyepong-04bd940f.webp",
-                  "consecrated": "2025"
-                },
-                {
                   "name": "Adara Hyde",
                   "rosterId": "BO214",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "First Love UK",
                   "title": "Mother",
                   "image": "assets/organisations/people/adara-hyde-eec911ed.webp",
                   "consecrated": "2001"
@@ -1941,14 +1935,29 @@
               ]
             },
             {
-              "slug": "first-love-democratic-republic-of-congo",
-              "name": "The Democratic Republic of the Congo",
+              "slug": "only-jesus-united-kingdom",
+              "name": "Only Jesus – United Kingdom",
+              "people": [
+                {
+                  "name": "Sena Agyepong",
+                  "rosterId": "B181",
+                  "bishop": true,
+                  "church": "Only Jesus",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/sena-agyepong-04bd940f.webp",
+                  "consecrated": "2025"
+                }
+              ]
+            },
+            {
+              "slug": "centre-chretien-de-lamour-dr-congo",
+              "name": "Centre Chrétien de l'Amour – DR Congo",
               "people": [
                 {
                   "name": "Augustine Kunituo",
                   "rosterId": "B201",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Centre Chrétien de l'Amour",
                   "title": "Bishop",
                   "image": "assets/organisations/people/augustine-kunituo-4a05529d.webp",
                   "consecrated": "2022"
@@ -1957,7 +1966,7 @@
                   "name": "Emmanuel Opoku Baah",
                   "rosterId": "B211",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Centre Chrétien de l'Amour",
                   "title": "Bishop",
                   "image": "assets/organisations/people/emmanuel-opoku-baah-87e72323.webp",
                   "consecrated": "2025"
@@ -1966,7 +1975,7 @@
                   "name": "Enock Lamptey",
                   "rosterId": "B212",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Centre Chrétien de l'Amour",
                   "title": "Bishop",
                   "image": "assets/organisations/people/enock-lamptey-1f815019.webp",
                   "consecrated": "2025"
@@ -1975,7 +1984,7 @@
                   "name": "Rudy Vaye",
                   "rosterId": "B236",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Centre Chrétien de l'Amour",
                   "title": "Bishop",
                   "image": "assets/organisations/people/rudy-vaye-dd49ee1e.webp",
                   "consecrated": "2021"
@@ -1983,14 +1992,14 @@
               ]
             },
             {
-              "slug": "first-love-madagascar",
-              "name": "Madagascar",
+              "slug": "fiangonana-fahazavana-velona-madagascar",
+              "name": "Fiangonana Fahazavana Velona Int'l – Madagascar",
               "people": [
                 {
                   "name": "Cleland Cofie Bruce",
                   "rosterId": "B204",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Fiangonana Fahazavana Velona Int'l",
                   "title": "Bishop",
                   "image": "assets/organisations/people/cleland-cofie-bruce-a4bc8f03.webp",
                   "consecrated": "2025"
@@ -1999,7 +2008,7 @@
                   "name": "Farrell N K A Bruce",
                   "rosterId": "B215",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Fiangonana Fahazavana Velona Int'l",
                   "title": "Bishop",
                   "image": "assets/organisations/people/farrell-n-k-a-bruce-baea8ffd.webp",
                   "consecrated": "2023"
@@ -2008,7 +2017,7 @@
                   "name": "Kojo Yeboah Atiemo",
                   "rosterId": "B223",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Fiangonana Fahazavana Velona Int'l",
                   "title": "Bishop",
                   "image": "assets/organisations/people/kojo-yeboah-atiemo-d5334c86.webp",
                   "consecrated": "2025"
@@ -2017,7 +2026,7 @@
                   "name": "Reginald Opoku Sarkodie",
                   "rosterId": "B250",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Fiangonana Fahazavana Velona Int'l",
                   "title": "Bishop",
                   "image": "assets/organisations/people/reginald-opoku-sarkodie-217becc8.webp",
                   "consecrated": "2025"
@@ -2025,94 +2034,14 @@
               ]
             },
             {
-              "slug": "first-love-switzerland",
-              "name": "Switzerland",
-              "people": [
-                {
-                  "name": "Roger Hiltbrunner",
-                  "rosterId": "B235",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/roger-hiltbrunner.webp",
-                  "consecrated": "2021"
-                },
-                {
-                  "name": "Daniel Fiifi Gyamerah",
-                  "rosterId": "B207",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/daniel-fiifi-gyamerah-9607e8cf.webp",
-                  "consecrated": "2025"
-                },
-                {
-                  "name": "Emmanuel Fosu",
-                  "rosterId": "B210",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/emmanuel-fosu-07775ac3.webp",
-                  "consecrated": "2026"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-belize",
-              "name": "Belize",
-              "people": [
-                {
-                  "name": "Rutendo Mantiziba",
-                  "rosterId": "B237",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/rutendo-mantiziba.webp"
-                },
-                {
-                  "name": "Esme Asha Mantiziba",
-                  "rosterId": "B214",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Mother",
-                  "image": "assets/organisations/people/esme-asha-mantiziba-a0529108.webp",
-                  "consecrated": "2026"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-cameroon",
-              "name": "Cameroon",
-              "people": [
-                {
-                  "name": "Daniel Amofah",
-                  "rosterId": "B206",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/daniel-amofah-43834dc5.webp",
-                  "consecrated": "2022"
-                },
-                {
-                  "name": "Enoch Tettey-Angmor",
-                  "rosterId": "B213",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/enoch-tettey-angmor-27e9dca8.webp",
-                  "consecrated": "2021"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-france",
-              "name": "France",
+              "slug": "benediction-totale-france",
+              "name": "Bénédiction Totale – France",
               "people": [
                 {
                   "name": "Reginald Agyir Dadzie",
                   "rosterId": "B165",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Bénédiction Totale",
                   "title": "Bishop",
                   "image": "assets/organisations/people/reginald-agyir-dadzie-58577970.webp",
                   "consecrated": "2025"
@@ -2121,7 +2050,7 @@
                   "name": "Henri Fogwe",
                   "rosterId": "B78",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Bénédiction Totale",
                   "title": "Bishop",
                   "image": "assets/organisations/people/henri-fogwe-7b65baa9.webp",
                   "consecrated": "2023"
@@ -2129,14 +2058,109 @@
               ]
             },
             {
-              "slug": "first-love-zambia",
-              "name": "Zambia",
+              "slug": "eglise-du-premier-amour-cameroon",
+              "name": "Église du Premier Amour – Cameroon",
+              "people": [
+                {
+                  "name": "Daniel Amofah",
+                  "rosterId": "B206",
+                  "bishop": true,
+                  "church": "Église du Premier Amour",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/daniel-amofah-43834dc5.webp",
+                  "consecrated": "2022"
+                },
+                {
+                  "name": "Enoch Tettey-Angmor",
+                  "rosterId": "B213",
+                  "bishop": true,
+                  "church": "Église du Premier Amour",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/enoch-tettey-angmor-27e9dca8.webp",
+                  "consecrated": "2021"
+                }
+              ]
+            },
+            {
+              "slug": "erste-liebe-kirche-switzerland",
+              "name": "Erste Liebe Kirche – Switzerland",
+              "people": [
+                {
+                  "name": "Roger Hiltbrunner",
+                  "rosterId": "B235",
+                  "bishop": true,
+                  "church": "Erste Liebe Kirche",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/roger-hiltbrunner.webp",
+                  "consecrated": "2021"
+                },
+                {
+                  "name": "Emmanuel Fosu",
+                  "rosterId": "B210",
+                  "bishop": true,
+                  "church": "Erste Liebe Kirche",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/emmanuel-fosu-07775ac3.webp",
+                  "consecrated": "2026"
+                }
+              ]
+            },
+            {
+              "slug": "first-love-church-belize",
+              "name": "First Love Church – Belize",
+              "people": [
+                {
+                  "name": "Rutendo Mantiziba",
+                  "rosterId": "B237",
+                  "bishop": true,
+                  "church": "First Love Church Belize",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/rutendo-mantiziba.webp"
+                },
+                {
+                  "name": "Esme Asha Mantiziba",
+                  "rosterId": "B214",
+                  "bishop": true,
+                  "church": "First Love Church Belize",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/esme-asha-mantiziba-a0529108.webp",
+                  "consecrated": "2026"
+                }
+              ]
+            },
+            {
+              "slug": "la-belle-eglise-cote-divoire",
+              "name": "La Belle Eglise – Côte d'Ivoire",
+              "people": [
+                {
+                  "name": "Paul Ackuaku",
+                  "rosterId": "B229",
+                  "bishop": true,
+                  "church": "La Belle Eglise",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/paul-ackuaku-eefa1f3d.webp",
+                  "consecrated": "2016"
+                },
+                {
+                  "name": "Perpetua-Claire Ackuaku",
+                  "rosterId": "BL2",
+                  "bishop": true,
+                  "church": "La Belle Eglise",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/perpetua-claire-ackuaku-91ba6aa6.webp",
+                  "consecrated": "2024"
+                }
+              ]
+            },
+            {
+              "slug": "overcomers-house-church-zambia",
+              "name": "Overcomers House Church – Zambia",
               "people": [
                 {
                   "name": "Clement Asante",
                   "rosterId": "B205",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Overcomers House Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/clement-asante.webp"
                 },
@@ -2144,10 +2168,175 @@
                   "name": "Geraldo Amoa",
                   "rosterId": "B217",
                   "bishop": true,
-                  "church": "First Love Church",
+                  "church": "Overcomers House Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/geraldo-amoa-0f979b99.webp",
                   "consecrated": "2022"
+                }
+              ]
+            },
+            {
+              "slug": "eglise-du-premier-amour-switzerland",
+              "name": "Église du Premier Amour – Switzerland",
+              "people": [
+                {
+                  "name": "Daniel Fiifi Gyamerah",
+                  "rosterId": "B207",
+                  "bishop": true,
+                  "church": "Église du Premier Amour",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/daniel-fiifi-gyamerah-9607e8cf.webp",
+                  "consecrated": "2025"
+                }
+              ]
+            },
+            {
+              "slug": "first-love-church-australia",
+              "name": "First Love Church – Australia",
+              "people": [
+                {
+                  "name": "Christian Agbosu-Agorvor",
+                  "rosterId": "B203",
+                  "bishop": true,
+                  "church": "First Love Church Australia",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/christian-agbosu-agorvor-5b2838df.webp",
+                  "consecrated": "2022"
+                }
+              ]
+            },
+            {
+              "slug": "first-love-church-manila",
+              "name": "First Love Church – Manila",
+              "people": [
+                {
+                  "name": "Enoch Boakye-Yiadom",
+                  "rosterId": "B254",
+                  "bishop": true,
+                  "church": "First Love Church Manila",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/enoch-boakye-yiadom-e5b75081.webp",
+                  "consecrated": "2025"
+                }
+              ]
+            },
+            {
+              "slug": "first-love-church-new-york",
+              "name": "First Love Church – New York",
+              "people": [
+                {
+                  "name": "James Quist-Therson",
+                  "rosterId": "B141",
+                  "bishop": true,
+                  "church": "First Love Church New York",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/james-quist-therson.webp",
+                  "consecrated": "2024"
+                }
+              ]
+            },
+            {
+              "slug": "first-love-church-new-zealand",
+              "name": "First Love Church – New Zealand",
+              "people": [
+                {
+                  "name": "Nana Kwasi Mensah",
+                  "rosterId": "B227",
+                  "bishop": true,
+                  "church": "First Love Church New Zealand",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/nana-kwasi-mensah-31c79f2b.webp",
+                  "consecrated": "2025"
+                }
+              ]
+            },
+            {
+              "slug": "jesus-gefunden-germany",
+              "name": "Jesus Gefunden – Germany",
+              "people": [
+                {
+                  "name": "Edwin Adu-Tutu",
+                  "rosterId": "B44",
+                  "bishop": true,
+                  "church": "Jesus Gefunden",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/edwin-adu-tutu-d8d612a6.webp",
+                  "consecrated": "2025"
+                }
+              ]
+            },
+            {
+              "slug": "love-christian-church-botswana",
+              "name": "Love Christian Church – Botswana",
+              "people": [
+                {
+                  "name": "Patrick Inkoom",
+                  "rosterId": "B228",
+                  "bishop": true,
+                  "church": "Love Christian Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/patrick-inkoom-0c6d7f6a.webp",
+                  "consecrated": "2019"
+                }
+              ]
+            },
+            {
+              "slug": "mikdash-church-international-ethiopia",
+              "name": "Mikdash Church International – Ethiopia",
+              "people": [
+                {
+                  "name": "Prince Samuel Osei",
+                  "rosterId": "B158",
+                  "bishop": true,
+                  "church": "Mikdash Church International",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/prince-samuel-osei-3bb7d5f9.webp",
+                  "consecrated": "2022"
+                }
+              ]
+            },
+            {
+              "slug": "mountain-of-the-lords-house-kenya",
+              "name": "The Mountain of the Lord's House – Kenya",
+              "people": [
+                {
+                  "name": "Joseph Papa Wachirah Kabiro",
+                  "rosterId": "B99",
+                  "bishop": true,
+                  "church": "Mountain of the Lord's House",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/joseph-papa-wachirah-kabiro-44282321.webp",
+                  "consecrated": "2022"
+                }
+              ]
+            },
+            {
+              "slug": "mountain-of-the-lords-house-tanzania",
+              "name": "The Mountain of the Lord's House – Tanzania",
+              "people": [
+                {
+                  "name": "Michael Asare",
+                  "rosterId": "B251",
+                  "bishop": true,
+                  "church": "Mountain of the Lord's House",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/michael-asare-6df0e45f.webp",
+                  "consecrated": "2025"
+                }
+              ]
+            },
+            {
+              "slug": "tell-them-church-sierra-leone",
+              "name": "Tell Them Church – Sierra Leone",
+              "people": [
+                {
+                  "name": "Jennis Opoku",
+                  "rosterId": "B221",
+                  "bishop": true,
+                  "church": "Tell Them Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/jennis-opoku-f3cc8b60.webp",
+                  "consecrated": "2019"
                 }
               ]
             },
@@ -2166,105 +2355,6 @@
               ]
             },
             {
-              "slug": "first-love-australia",
-              "name": "Australia",
-              "people": [
-                {
-                  "name": "Christian Agbosu-Agorvor",
-                  "rosterId": "B203",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/christian-agbosu-agorvor-5b2838df.webp",
-                  "consecrated": "2022"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-botswana",
-              "name": "Botswana",
-              "people": [
-                {
-                  "name": "Patrick Inkoom",
-                  "rosterId": "B228",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/patrick-inkoom-0c6d7f6a.webp",
-                  "consecrated": "2019"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-cote-divoire",
-              "name": "Côte d'Ivoire",
-              "people": [
-                {
-                  "name": "Paul Ackuaku",
-                  "rosterId": "B229",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/paul-ackuaku-eefa1f3d.webp",
-                  "consecrated": "2016"
-                },
-                {
-                  "name": "Perpetua-Claire Ackuaku",
-                  "rosterId": "BL2",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Mother",
-                  "image": "assets/organisations/people/perpetua-claire-ackuaku-91ba6aa6.webp",
-                  "consecrated": "2024"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-ethiopia",
-              "name": "Ethiopia",
-              "people": [
-                {
-                  "name": "Prince Samuel Osei",
-                  "rosterId": "B158",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/prince-samuel-osei-3bb7d5f9.webp",
-                  "consecrated": "2022"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-germany",
-              "name": "Germany",
-              "people": [
-                {
-                  "name": "Edwin Adu-Tutu",
-                  "rosterId": "B44",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/edwin-adu-tutu-d8d612a6.webp",
-                  "consecrated": "2025"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-kenya",
-              "name": "Kenya",
-              "people": [
-                {
-                  "name": "Joseph Papa Wachirah Kabiro",
-                  "rosterId": "B99",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/joseph-papa-wachirah-kabiro-44282321.webp",
-                  "consecrated": "2022"
-                }
-              ]
-            },
-            {
               "slug": "first-love-mauritius",
               "name": "Mauritius",
               "people": [
@@ -2276,81 +2366,6 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/maxwell-agyei-manu-4739cc02.webp",
                   "consecrated": "2025"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-new-zealand",
-              "name": "New Zealand",
-              "people": [
-                {
-                  "name": "Nana Kwasi Mensah",
-                  "rosterId": "B227",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/nana-kwasi-mensah-31c79f2b.webp",
-                  "consecrated": "2025"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-philippines",
-              "name": "The Philippines",
-              "people": [
-                {
-                  "name": "Enoch Boakye-Yiadom",
-                  "rosterId": "B254",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/enoch-boakye-yiadom-e5b75081.webp",
-                  "consecrated": "2025"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-sierra-leone",
-              "name": "Sierra Leone",
-              "people": [
-                {
-                  "name": "Jennis Opoku",
-                  "rosterId": "B221",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/jennis-opoku-f3cc8b60.webp",
-                  "consecrated": "2019"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-tanzania",
-              "name": "Tanzania",
-              "people": [
-                {
-                  "name": "Michael Asare",
-                  "rosterId": "B251",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/michael-asare-6df0e45f.webp",
-                  "consecrated": "2025"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-united-states",
-              "name": "The United States",
-              "people": [
-                {
-                  "name": "James Quist-Therson",
-                  "rosterId": "B141",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/james-quist-therson.webp",
-                  "consecrated": "2024"
                 }
               ]
             },
