@@ -125,7 +125,9 @@ const FORMER = { 'only-jesus': 'first-love-center', 'jesus-first': 'qodesh-city-
   'first-love-ethiopia': 'mikdash-church-international-ethiopia', 'first-love-germany': 'jesus-gefunden-germany', 'first-love-kenya': 'mountain-of-the-lords-house-kenya',
   'first-love-new-zealand': 'first-love-church-new-zealand', 'first-love-philippines': 'first-love-church-manila', 'first-love-sierra-leone': 'tell-them-church-sierra-leone',
   'first-love-tanzania': 'mountain-of-the-lords-house-tanzania', 'first-love-united-states': 'first-love-church-new-york',
-  'first-love-zimbabwe': 'others-international-church-zimbabwe' };
+  'first-love-zimbabwe': 'others-international-church-zimbabwe',
+  // Office, 11 Nov: Eric Lamptey stays in UD Africa and Maxwell Agyei-Manu in Eschatos.
+  'first-love-angola': 'ud-africa-angola', 'first-love-mauritius': 'eschatos' };
 // A group's address, or one council's or country's (#flow-council,
 // #first-love-ghana), opens it.
 export const resolveGroupSlug = slug => FORMER[slug] || slug;

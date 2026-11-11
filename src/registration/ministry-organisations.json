@@ -2341,35 +2341,6 @@
               ]
             },
             {
-              "slug": "first-love-angola",
-              "name": "Angola",
-              "people": [
-                {
-                  "name": "Eric Lamptey",
-                  "rosterId": "B58",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/eric-lamptey-2f86b94e.webp"
-                }
-              ]
-            },
-            {
-              "slug": "first-love-mauritius",
-              "name": "Mauritius",
-              "people": [
-                {
-                  "name": "Maxwell Agyei-Manu",
-                  "rosterId": "B226",
-                  "bishop": true,
-                  "church": "First Love Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/maxwell-agyei-manu-4739cc02.webp",
-                  "consecrated": "2025"
-                }
-              ]
-            },
-            {
               "slug": "others-international-church-zimbabwe",
               "name": "Others International Church – Zimbabwe",
               "people": [
