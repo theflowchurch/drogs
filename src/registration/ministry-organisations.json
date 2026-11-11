@@ -1070,32 +1070,6 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/david-asomani.webp",
                   "consecrated": "2018"
-                },
-                {
-                  "name": "Stephen Harry Sawyerr",
-                  "rosterId": "BO201",
-                  "bishop": true,
-                  "church": "Anointed People International",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/stephen-harry-sawyerr-bc6c3fe6.webp"
-                },
-                {
-                  "name": "Mawusi Adagbe",
-                  "rosterId": "BO207",
-                  "bishop": true,
-                  "church": "True Son Chapel International",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/mawusi-adagbe-f166b0c0.webp",
-                  "consecrated": "2016"
-                },
-                {
-                  "name": "Olivia Adalena S K Sam",
-                  "rosterId": "BO208",
-                  "bishop": true,
-                  "church": "True Son Chapel International",
-                  "title": "Episcopal Sister",
-                  "image": "assets/organisations/people/olivia-adalena-s-k-sam-2ab31548.webp",
-                  "consecrated": "2022"
                 }
               ],
               "slug": "ud-ghana-central"
@@ -2819,6 +2793,14 @@
                   "consecrated": "2016"
                 },
                 {
+                  "name": "Stephen Harry Sawyerr",
+                  "rosterId": "BO201",
+                  "bishop": true,
+                  "church": "Anointed People International",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/stephen-harry-sawyerr-bc6c3fe6.webp"
+                },
+                {
                   "name": "E. A. T. Sackey",
                   "image": "assets/organisations/people/e-a-t-sackey.webp",
                   "rosterId": "B39",
@@ -2862,6 +2844,24 @@
                   "church": "True Son Chapel International",
                   "title": "Bishop",
                   "consecrated": "2010"
+                },
+                {
+                  "name": "Mawusi Adagbe",
+                  "rosterId": "BO207",
+                  "bishop": true,
+                  "church": "True Son Chapel International",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/mawusi-adagbe-f166b0c0.webp",
+                  "consecrated": "2016"
+                },
+                {
+                  "name": "Olivia Adalena S K Sam",
+                  "rosterId": "BO208",
+                  "bishop": true,
+                  "church": "True Son Chapel International",
+                  "title": "Episcopal Sister",
+                  "image": "assets/organisations/people/olivia-adalena-s-k-sam-2ab31548.webp",
+                  "consecrated": "2022"
                 },
                 {
                   "name": "Steve Asare",
