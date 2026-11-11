@@ -412,3 +412,8 @@
 .tx-site:not(.tx-day) .gt-stack .gt-face,.tx-site:not(.tx-day) .gt-lead-rest .gt-face{border-color:#0b1020}
 .tx-site:not(.tx-day) .gt-lead .gt-head{border-color:#f2c14e}
 @media(max-width:700px){.tx-subrow{flex-wrap:wrap;row-gap:8px}.tx-subrow .gt{order:3;margin-left:34px}}
+/* The strip under the name: number, name, count and arrow on top, photos below. */
+.tx-subrow:has(.gt-under){flex-wrap:wrap;row-gap:6px;padding-top:12px;padding-bottom:12px}
+.tx-subrow:has(.gt-under) .gt-under{margin-left:42px!important;margin-right:0}
+.tx-subrow:has(.gt-all){padding-top:6px;padding-bottom:6px}
+@media(max-width:700px){.tx-subrow:has(.gt-under) .gt-under{margin-left:0!important}}

@@ -1118,6 +1118,40 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/immanuel-obeng-919d8ef7.webp",
                   "consecrated": "2022"
+                },
+                {
+                  "name": "João Pedro Sebastião Andrade",
+                  "rosterId": "P2265",
+                  "bishop": true,
+                  "church": "If I Live I Live For You Church Int",
+                  "title": "Pastor",
+                  "appointed": "2024",
+                  "image": "assets/portraits/P2265.webp"
+                },
+                {
+                  "name": "Alexander Igori",
+                  "rosterId": "P177",
+                  "bishop": true,
+                  "church": "Together Forever Church Int",
+                  "title": "Pastor",
+                  "appointed": "2018",
+                  "image": "assets/portraits/P177.webp"
+                },
+                {
+                  "name": "Daniel Nabudere",
+                  "rosterId": "P823",
+                  "bishop": true,
+                  "church": "Why Worry Church Int",
+                  "title": "Pastor",
+                  "appointed": "2018",
+                  "image": "assets/portraits/P823.webp"
+                },
+                {
+                  "name": "Stanley Osei-Bonsu",
+                  "bishop": true,
+                  "church": "Deep Love Church International",
+                  "title": "Bishop",
+                  "consecrated": "2026"
                 }
               ],
               "slug": "ud-europe"

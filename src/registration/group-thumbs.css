@@ -42,3 +42,12 @@ a:hover .gt-fan .gt-face+.gt-face{margin-left:-10px}
   .gt-lead-text{display:none}
   .gt-fan .gt-face{width:36px;height:48px}
 }
+
+/* Every bishop, as a strip beside the name: the photos flow onto a second
+   line when a council or country has many. */
+.gt-all{flex-wrap:wrap;justify-content:flex-end;gap:5px;max-width:min(60%,640px);padding:4px 0}
+.gt-all .gt-face{width:36px;height:44px;border-radius:7px}
+/* Every bishop, as a strip under the name, across the whole box. */
+.gt-under{order:10;flex-basis:100%;flex-wrap:wrap;gap:6px;margin:6px 0 2px!important}
+.gt-under .gt-face{width:44px;height:54px;border-radius:8px}
+@media(max-width:700px){.gt-all{max-width:100%;justify-content:flex-start}.gt-all .gt-face,.gt-under .gt-face{width:34px;height:42px}.gt-strip.gt-all .gt-face:nth-child(n+6),.gt-strip.gt-under .gt-face:nth-child(n+6){display:flex}}

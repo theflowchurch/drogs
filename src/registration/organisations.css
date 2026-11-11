@@ -372,3 +372,7 @@ a.org-sub-box .org-box-name{flex:1 1 auto}
 .org-end-links{gap:12px}
 .org-end-links .org-all-groups-end+.org-all-groups-end{background:#fff;color:var(--org-navy)!important}
 @media(max-width:700px){a.org-sub-box{flex-wrap:wrap;row-gap:8px}a.org-sub-box .gt{order:3;margin-left:0}}
+/* The strip under the name: name, count and arrow on top, photos below. */
+a.org-sub-box:has(.gt-under){flex-wrap:wrap;row-gap:4px;padding-top:12px;padding-bottom:12px}
+a.org-sub-box:has(.gt-under) .gt-under{margin-left:0!important}
+a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}

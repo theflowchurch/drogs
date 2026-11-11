@@ -31,7 +31,7 @@ function Bishop({ person }) {
       <small>{person.title || 'Bishop'}</small>
       <strong>{person.name}</strong>
       {person.role ? <span>{person.role}</span> : person.church && <span className="org-member-church">{person.church}</span>}
-      {person.consecrated && <span className="org-consecrated">Consecrated {person.consecrated}</span>}
+      {person.consecrated ? <span className="org-consecrated">Consecrated {person.consecrated}</span> : person.appointed && <span className="org-consecrated">Appointed {person.appointed}</span>}
     </div>
   </article>;
 }
