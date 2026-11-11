@@ -424,3 +424,15 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
   .org-site:has(.is-compact) .org-dhmm-sub{font-size:17px}
 }
 @media(min-width:901px){.org-subcontents.is-compact a.org-group-box.org-sub-box{padding:0 14px 0 16px}.org-subcontents.is-compact .gt-all{padding:0}.org-subcontents.is-compact .gt-all .gt-face{width:13px;height:16px}}
+
+/* Office, 11 Nov: the compact list fills the screen's height, whatever the
+   screen: each line is a share of the space left under the heading (with
+   room for "← All Groups" below), and the writing and photos grow with it. */
+@media(min-width:901px){
+  .org-subcontents.is-compact{--row:clamp(20px,calc((100vh - 290px) / var(--lines,25) - 3px),46px);gap:3px!important}
+  .org-subcontents.is-compact a.org-group-box.org-sub-box{height:var(--row);min-height:0;padding:0 16px 0 18px;font-size:clamp(14px,calc(var(--row) * .52),22px)}
+  .org-subcontents.is-compact .gt-all .gt-face{height:clamp(16px,calc(var(--row) - 6px),40px);width:clamp(13px,calc((var(--row) - 6px) * .8),32px)}
+  .org-subcontents.is-compact .org-box-count{font-size:clamp(10.5px,calc(var(--row) * .36),14px)}
+  .org-main:has(.is-compact) .org-end-links{margin-top:14px}
+}
+@media(min-width:901px){.org-subcontents.is-compact{--row:clamp(18px,calc((100vh - 272px) / var(--lines,25) - 3px),46px)}}

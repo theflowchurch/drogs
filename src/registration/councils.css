@@ -464,3 +464,18 @@
   .tx-site:has(.is-compact) .tx-main{padding-top:6px}
 }
 @media(min-width:901px){.tx-subcontents.is-compact .tx-subrow{padding:0 12px 0 10px}.tx-subcontents.is-compact .gt-all{padding:0}.tx-subcontents.is-compact .gt-all .gt-face{width:13px;height:16px}.tx-subcontents.is-compact .tx-row-count{line-height:1.35}}
+
+/* Office, 11 Nov: the compact list fills the screen's height, whatever the
+   screen: each line is a share of the space left under the heading (with
+   room for "← All Groups" below), and the writing and photos grow with it. */
+@media(min-width:901px){
+  .tx-subcontents.is-compact{--row:clamp(20px,calc((100vh - 290px) / var(--lines,25) - 3px),46px);gap:3px!important}
+  .tx-subcontents.is-compact .tx-subrow{height:var(--row);min-height:0;padding:0 14px 0 12px}
+  .tx-subcontents.is-compact .tx-subrow .tx-row-name{font-size:clamp(13.5px,calc(var(--row) * .5),21px)}
+  .tx-subcontents.is-compact .tx-index{font-size:clamp(11px,calc(var(--row) * .36),15px);width:clamp(20px,calc(var(--row) * .9),30px)}
+  .tx-subcontents.is-compact .gt-all .gt-face{height:clamp(16px,calc(var(--row) - 6px),40px);width:clamp(13px,calc((var(--row) - 6px) * .8),32px)}
+  .tx-subcontents.is-compact .tx-row-count{font-size:clamp(10.5px,calc(var(--row) * .36),14px)}
+  .tx-subcontents.is-compact .tx-arrow{font-size:clamp(13px,calc(var(--row) * .5),18px)}
+  .tx-group:has(.is-compact)~.tx-end,.tx-main:has(.is-compact) .tx-end{margin-top:14px}
+}
+@media(min-width:901px){.tx-subcontents.is-compact{--row:clamp(18px,calc((100vh - 258px) / var(--lines,25) - 3px),46px)}}
