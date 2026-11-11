@@ -384,3 +384,6 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
 .org-sub-photos .gt-under{margin:0!important}
 .org-sub-photos .gt-under .gt-face{border-color:#fff;box-shadow:0 2px 6px #14223d2e}
 .org-sub-photos:hover .gt-face{box-shadow:0 3px 10px #14223d4d}
+/* Office, 11 Nov: where every line has only a few bishops (the United
+   Reasonable Service Church), larger lettering fills the gap to the photos. */
+@media(min-width:701px){.org-subcontents.is-few a.org-sub-box{min-height:96px;font-size:30px}.org-subcontents.is-few .gt-all .gt-face{width:48px;height:58px}}

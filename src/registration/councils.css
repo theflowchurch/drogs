@@ -425,3 +425,6 @@
 .tx-sub-photos .gt-under{margin:0!important}
 .tx-site:not(.tx-day) .tx-sub-photos .gt-face{border-color:#ffffff40;box-shadow:0 2px 8px #0008}
 .tx-day .tx-sub-photos .gt-face{border-color:#fff;box-shadow:0 2px 6px #14223d2e}
+/* Office, 11 Nov: where every line has only a few bishops (the United
+   Reasonable Service Church), larger lettering fills the gap to the photos. */
+@media(min-width:701px){.tx-subcontents.is-few .tx-subrow{min-height:92px}.tx-subcontents.is-few .tx-subrow .tx-row-name{font-size:28px}.tx-subcontents.is-few .gt-all .gt-face{width:48px;height:58px}}

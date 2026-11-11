@@ -77,7 +77,7 @@ function SubContents({ group, variant }) {
     <a className="org-all-groups" href="#contents">← All Groups</a>
     <GroupBox group={group} as="h2"/>
     <p className="org-group-total"><Count n={group.count}/></p>
-    <nav className="org-contents org-subcontents" aria-label={`${group.name}: contents`}>
+    <nav className={`org-contents org-subcontents ${group.parts.every(p => p.people.length <= 4) ? 'is-few' : ''}`} aria-label={`${group.name}: contents`}>
       {/* Office, 11 Nov: every bishop's photo beside the name, in the bar. */}
       {group.parts.map(part => <GroupBox key={part.slug} group={part} thumbs={variant}/>)}
     </nav>

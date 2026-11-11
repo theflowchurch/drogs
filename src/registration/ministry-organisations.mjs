@@ -70,17 +70,28 @@ const COLOURS = ['#1f3a5f', '#6b2737', '#2f5233', '#4a3f6b', '#1f5357', '#5a2846
 const COUNCIL_LABEL = { 'ud-senex-council': 'UD Senex Council', 'first-love-senex-council': 'First Love Senex Council', adjutancy: 'Adjutancy',
   'healing-jesus-council': 'Healing Jesus', 'flow-council': 'FLOW', 'dhmm-council': 'DHMM', 'general-schools-board': 'General Schools Board',
   'general-hospitals-board': 'General Hospitals Board', 'general-orphanage-board': 'General Orphanage Board', 'radio-ministry': 'Radio Ministry',
-  'construction-estate-management-board': 'Construction & Estate Management Board', 'abmtc-board': 'ABMTC Board', 'makarios-council': 'Makarios Council',
-  // Office, 11 Nov: on its own page every card reads the church's name.
-  ursc: 'United Reasonable Service Church' };
+  'construction-estate-management-board': 'Construction & Estate Management Board', 'abmtc-board': 'ABMTC Board', 'makarios-council': 'Makarios Council' };
 const labelled = g => (COUNCIL_LABEL[g.slug] ? { ...g, people: g.people.map(p => ({ ...p, church: COUNCIL_LABEL[g.slug] })) } : g);
 const ONE_BOX = { [PARA_CHURCH]: 'The Para-Church Bishops', [FIRST_LOVE]: 'The Bishops of First Love Church' };
 // "The Bishop of Kenya" when a group has one bishop (office, 10 Nov).
 const singular = g => (g.people?.length && countOf(g.people) === 1 ? { ...g, name: g.name.replace(/^The Bishops of /, 'The Bishop of ') } : g);
 const withInitials = g => singular(labelled({ ...g, initials: INITIALS[g.slug] || '' }));
+// Office, 11 Nov: the United Reasonable Service Church opens a contents page
+// too, one line per denomination its bishops belong to; each card keeps the
+// bishop's own church.
+const BY_CHURCH = new Set(['ursc']);
+// "The Bishops of the Pacific Islands Missionary Church".
+const WITH_THE = new Set(['Pacific Islands Missionary Church']);
+const slugOf = text => text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const byChurch = (g, o) => {
+  const churches = [...new Set(g.people.map(p => p.church))];
+  return churches.map(church => withInitials({ slug: `${g.slug}-${slugOf(church)}`, name: formalName(o, { name: WITH_THE.has(church) ? `The ${church}` : church }), people: g.people.filter(p => p.church === church) }));
+};
 const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => ONE_BOX[o.slug]
   ? [{ slug: o.slug, name: ONE_BOX[o.slug], section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length).map(g => withInitials({ ...g, name: formalName(o, g) })), people: [] }]
-  : groupsOfSection(o).map(g => ({ slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people })))
+  : groupsOfSection(o).map(g => BY_CHURCH.has(g.slug)
+    ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byChurch(g, o), people: [] }
+    : { slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people }))
   .map(withInitials);
 export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === slug))
   .filter(g => g && (g.people.length || g.parts?.length))
