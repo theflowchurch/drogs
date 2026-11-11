@@ -137,23 +137,27 @@ function SubContents({ group, variant }) {
   </section>;
 }
 
+// Office, 11 Nov: choosing a line opens the whole group, every section and
+// every bishop, at the section chosen; the only way back is to All Groups.
 function Group({ group, part }) {
   const [query, setQuery] = useState('');
   const keep = people => people.filter(p => !query || matches(`${p.title || ''} ${p.name} ${p.role || ''} ${p.church || ''}`, query));
-  const shown = part || group;
-  const people = keep(shown.people);
-  return <section className="tx-group" id={shown.slug} aria-labelledby={`${shown.slug}-title`} style={{ '--box': shown.colour || group.colour }}>
-    <div className="tx-crumbs">
-      <a href="#contents" className="tx-back">← All Groups</a>
-      {part && <a href={`#${group.slug}`} className="tx-back">← {group.name}</a>}
-    </div>
+  const sections = (group.parts || [{ slug: group.slug, name: '', people: group.people }]).map(s => ({ ...s, people: keep(s.people) }));
+  const found = sections.reduce((n, s) => n + s.people.length, 0);
+  const number = DIRECTORY_GROUPS.indexOf(group) + 1;
+  useEffect(() => { if (part) setTimeout(() => document.getElementById(part.slug)?.scrollIntoView(), 60); }, [part]);
+  return <section className="tx-group" id={group.slug} aria-labelledby={`${group.slug}-title`} style={{ '--box': group.colour }}>
+    <div className="tx-crumbs"><a href="#contents" className="tx-back">← All Groups</a></div>
     <div className="tx-group-head">
-      <h2 id={`${shown.slug}-title`}><Name group={shown}/></h2>
-      <span className="tx-chip">{plural(shown.people.length)}</span>
+      <h2 id={`${group.slug}-title`}><Name group={group}/></h2>
+      <span className="tx-chip">{plural(group.count)}</span>
     </div>
     <Search value={query} onChange={setQuery} label="Find a bishop in this group"/>
-    <div className="tx-part"><div className="tx-cards">{people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div></div>
-    {!people.length && <p className="tx-empty">No bishop in this group matches “{query}”.</p>}
+    {sections.map((s, i) => s.people.length > 0 && <div className="tx-part" key={s.slug} id={s.slug}>
+      {s.name && <h3><span className="tx-index">{pad(number)}.{i + 1}</span><Name group={s}/><span className="tx-chip">{plural(s.people.length)}</span></h3>}
+      <div className="tx-cards">{s.people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div>
+    </div>)}
+    {!found && <p className="tx-empty">No bishop in this group matches “{query}”.</p>}
   </section>;
 }
 
@@ -184,7 +188,7 @@ export default function CouncilsApp() {
     <main className="tx-main">
       {group ? <>
         {group.parts && !part ? <SubContents group={group} variant={variant}/> : <Group key={(part || group).slug} group={group} part={part}/>}
-        <div className="tx-end"><a className="tx-back" href="#contents">← All Groups</a>{part && <a className="tx-back" href={`#${group.slug}`}>← {group.name}</a>}</div>
+        <div className="tx-end"><a className="tx-back" href="#contents">← All Groups</a></div>
       </> : <Contents query={query} search={search}/>}
       {!group && <GoodStandingNotice className="tx-good-standing"/>}
     </main>
