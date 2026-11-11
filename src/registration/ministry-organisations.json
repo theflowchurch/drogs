@@ -2790,6 +2790,114 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/andrew-kwaku-osei-296beaa4.webp",
                   "consecrated": "2021"
+                },
+                {
+                  "name": "Edwin Morgan Ogoe",
+                  "image": "assets/organisations/people/edwin-morgan-ogoe.webp",
+                  "rosterId": "B45",
+                  "bishop": true,
+                  "church": "Anointed People International",
+                  "title": "Bishop",
+                  "consecrated": "2012"
+                },
+                {
+                  "name": "Bridgette Ogoe",
+                  "image": "assets/organisations/people/bridgette-ogoe.webp",
+                  "rosterId": "B19",
+                  "bishop": true,
+                  "church": "Anointed People International",
+                  "title": "Episcopal Sister",
+                  "consecrated": "2022"
+                },
+                {
+                  "name": "Samuel B Sawyerr",
+                  "rosterId": "BO200",
+                  "bishop": true,
+                  "church": "Anointed People International",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/samuel-b-sawyerr-700f23a0.webp",
+                  "consecrated": "2016"
+                },
+                {
+                  "name": "E. A. T. Sackey",
+                  "image": "assets/organisations/people/e-a-t-sackey.webp",
+                  "rosterId": "B39",
+                  "bishop": true,
+                  "church": "Glory Life Hope Center",
+                  "title": "Bishop",
+                  "consecrated": "2006"
+                },
+                {
+                  "name": "Ato Wilson",
+                  "rosterId": "B188",
+                  "bishop": true,
+                  "church": "Glory Life Hope Center",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/ato-wilson.webp",
+                  "consecrated": "2020"
+                },
+                {
+                  "name": "Emmanuel Nterful",
+                  "image": "assets/organisations/people/emmanuel-nterful.webp",
+                  "rosterId": "B324",
+                  "bishop": true,
+                  "church": "Keep My Word Chapel International",
+                  "title": "Bishop",
+                  "consecrated": "2010"
+                },
+                {
+                  "name": "Paa Kwesi Nyarkoh",
+                  "rosterId": "B148",
+                  "bishop": true,
+                  "church": "Keep My Word Chapel International",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/paa-kwesi-nyarkoh-425aaf6d.webp",
+                  "consecrated": "2023"
+                },
+                {
+                  "name": "Ishmael Sam",
+                  "image": "assets/organisations/people/ishmael-sam.webp",
+                  "rosterId": "B327",
+                  "bishop": true,
+                  "church": "True Son Chapel International",
+                  "title": "Bishop",
+                  "consecrated": "2010"
+                },
+                {
+                  "name": "Steve Asare",
+                  "image": "assets/organisations/people/steve-asare-bd18c700.webp",
+                  "rosterId": "BO202",
+                  "bishop": true,
+                  "church": "Allos Mega Church",
+                  "title": "Bishop",
+                  "consecrated": "2010"
+                },
+                {
+                  "name": "Patrick Bruce",
+                  "image": "assets/organisations/people/patrick-bruce.webp",
+                  "rosterId": "B152",
+                  "bishop": true,
+                  "church": "The Mega Church – Grace Chapel",
+                  "title": "Bishop",
+                  "consecrated": "2012"
+                },
+                {
+                  "name": "Nassib Hage",
+                  "image": "assets/organisations/people/nassib-hage.webp",
+                  "rosterId": "B138",
+                  "bishop": true,
+                  "church": "The Mega Church – Nachal Cathedral",
+                  "title": "Bishop",
+                  "consecrated": "2017"
+                },
+                {
+                  "name": "Eddy Addy",
+                  "image": "assets/organisations/people/eddy-addy.webp",
+                  "rosterId": "B322",
+                  "bishop": true,
+                  "church": "Anointed Word Chapel Int",
+                  "title": "Bishop",
+                  "consecrated": "2006"
                 }
               ]
             },
