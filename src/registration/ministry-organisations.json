@@ -1193,15 +1193,6 @@
                   "title": "Bishop",
                   "consecrated": "2026",
                   "image": "assets/organisations/people/stanley-osei-bonsu.webp"
-                },
-                {
-                  "name": "King Bodom Appiagyei",
-                  "rosterId": "B109",
-                  "bishop": true,
-                  "church": "Go Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/king-bodom-appiagyei-4af26524.webp",
-                  "consecrated": "2025"
                 }
               ],
               "slug": "ud-europe"
@@ -1821,6 +1812,42 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/george-seneagya-ff028b93.webp",
                   "consecrated": "2023"
+                },
+                {
+                  "name": "Simone Ademola",
+                  "image": "assets/organisations/people/simone-ademola-f36e914b.webp",
+                  "rosterId": "B182",
+                  "bishop": true,
+                  "church": "First Love La Belle Eglise Campus",
+                  "title": "Mother",
+                  "consecrated": "2016"
+                },
+                {
+                  "name": "Jacob Godwyll",
+                  "image": "assets/organisations/people/jacob-godwyll.webp",
+                  "rosterId": "B86",
+                  "bishop": true,
+                  "church": "First Love Passion Campus",
+                  "title": "Bishop",
+                  "consecrated": "2012"
+                },
+                {
+                  "name": "Joy Bruce",
+                  "image": "assets/organisations/people/joy-bruce.webp",
+                  "rosterId": "B323",
+                  "bishop": true,
+                  "church": "First Love Fountain of Life Campus",
+                  "title": "Mother",
+                  "consecrated": "2018"
+                },
+                {
+                  "name": "Ruthie Jani Appiah-Denkyira",
+                  "image": "assets/organisations/people/ruthie-jani-appiah-denkyira-0573b75b.webp",
+                  "rosterId": "BO264",
+                  "bishop": true,
+                  "church": "First Love Anagkazo Campus",
+                  "title": "Mother",
+                  "consecrated": "2023"
                 }
               ]
             },
@@ -1854,6 +1881,24 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/pius-worlanyo-kwame-akator-475409f0.webp",
                   "consecrated": "2020"
+                },
+                {
+                  "name": "Adelaide Heward-Mills",
+                  "image": "assets/organisations/people/adelaide-heward-mills-295cff99.webp",
+                  "rosterId": "B4",
+                  "bishop": true,
+                  "church": "Qodesh City Church",
+                  "title": "Episcopal Sister",
+                  "consecrated": "2021"
+                },
+                {
+                  "name": "Amelia Aidoo",
+                  "rosterId": "B9",
+                  "bishop": true,
+                  "church": "Qodesh City Church",
+                  "title": "Mother",
+                  "image": "assets/organisations/people/amelia-aidoo-b6c0105d.webp",
+                  "consecrated": "2022"
                 }
               ]
             },
@@ -2235,6 +2280,21 @@
                   "church": "First Love Church New Zealand",
                   "title": "Bishop",
                   "image": "assets/organisations/people/nana-kwasi-mensah-31c79f2b.webp",
+                  "consecrated": "2025"
+                }
+              ]
+            },
+            {
+              "slug": "go-church-belgium",
+              "name": "Go Church – Belgium",
+              "people": [
+                {
+                  "name": "King Bodom Appiagyei",
+                  "rosterId": "B109",
+                  "bishop": true,
+                  "church": "Go Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/king-bodom-appiagyei-4af26524.webp",
                   "consecrated": "2025"
                 }
               ]
