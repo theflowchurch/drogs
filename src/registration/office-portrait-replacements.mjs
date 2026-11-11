@@ -8,6 +8,9 @@ export function replaceOfficePortraits(state, references, replacements) {
     // record, so the edited portrait goes on that added record itself.
     const added=!references.some(p=>p.id===item.id)&&(next.extraReferences||[]).find(p=>p.id===item.id);
     if(added){
+      // A renamed file for a portrait already in place (a browser kept the old
+      // name's "not found" answer): move the added record to the new name.
+      if(item.previousImage&&!added.photo&&added.image===item.previousImage){next=structuredClone(next);next.extraReferences.find(p=>p.id===item.id).image=item.image;continue;}
       if(!item.source||!item.previousPhoto||added.photo!==item.previousPhoto||next.overrides?.[item.id]?.deleted||(next.overrides?.[item.id]?.photo&&next.overrides[item.id].photo!==item.previousPhoto))continue;
       const linked=new Set(next.profiles.filter(p=>p.referenceId===item.id).map(p=>p.id));
       const registrations=next.registrations.filter(r=>r.data.referenceId===item.id||linked.has(r.userId));

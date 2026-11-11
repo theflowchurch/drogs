@@ -17,3 +17,10 @@ test('a person the office added by hand gets the edited portrait on that record,
  assert.equal(directoryPeople(next,refs).find(p=>p.id==='X1').image,rule.image);assert.equal(replaceOfficePortraits(next,refs,[rule]),null);
  const newer=structuredClone(state);newer.extraReferences[0].photo='newer-office.webp';assert.equal(replaceOfficePortraits(newer,refs,[rule]),null);
 });
+
+test('a renamed portrait file moves a hand-added record already switched to the old name',()=>{
+ const rule={id:'X1',previousPhoto:'old-office.webp',previousImage:'assets/portraits/X1-a.webp',image:'assets/portraits/X1-b.webp',source:'Edited portrait'};
+ const state={...emptyState(),extraReferences:[{id:'X1',role:'bishop',name:'Added Bishop',image:'assets/portraits/X1-a.webp',photo:''}]};
+ const next=replaceOfficePortraits(state,refs,[rule]);assert.equal(next.extraReferences[0].image,rule.image);assert.equal(state.extraReferences[0].image,'assets/portraits/X1-a.webp');assert.equal(replaceOfficePortraits(next,refs,[rule]),null);
+ const upload=structuredClone(state);upload.extraReferences[0].photo='newer-office.webp';assert.equal(replaceOfficePortraits(upload,refs,[rule]),null);
+});
