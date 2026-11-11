@@ -100,7 +100,7 @@ const byCountry = (g, o) => {
   return countries.map(country => withInitials({ slug: `${g.slug}-${slugOf(country.replace(/^The /, ''))}`, name: formalName(o, { name: country }), people: g.people.filter(p => (p.country || 'Other') === country) }));
 };
 const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => ONE_BOX[o.slug]
-  ? [{ slug: o.slug, name: ONE_BOX[o.slug], section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length).map(g => withInitials({ ...g, name: formalName(o, g) })), people: [] }]
+  ? [{ slug: o.slug, name: ONE_BOX[o.slug], section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length).map(g => withInitials({ ...g, name: formalName(o, g) })), people: [], twoColumns: o.slug === FIRST_LOVE }]
   : groupsOfSection(o).map(g => BY_CHURCH.has(g.slug)
     ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byChurch(g, o), people: [], all: g.people, flat: true }
     : BY_COUNTRY.has(g.slug)

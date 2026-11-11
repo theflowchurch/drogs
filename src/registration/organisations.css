@@ -394,3 +394,13 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
 .org-site .org-all-groups:hover,.org-site .org-all-groups:focus-visible{background:#f3ecd9}
 /* A chosen section lands below the "← All Groups" button, not under it. */
 .org-group-part{scroll-margin-top:72px}
+
+/* Office, 11 Nov: two columns of lines (First Love Movement), so the list
+   needs little scrolling; one column on phones. */
+@media(min-width:901px){
+  .org-subcontents.is-two{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px!important}
+  .org-subcontents.is-two a.org-group-box.org-sub-box{min-height:62px;padding:6px 14px 6px 18px;gap:10px;font-size:17px;line-height:1.2;border-left-width:6px}
+  .org-subcontents.is-two .gt-all{max-width:46%;gap:3px}
+  .org-subcontents.is-two .gt-all .gt-face{width:28px;height:35px;border-radius:6px}
+  .org-subcontents.is-two .org-box-count{font-size:12px;padding:1px 8px}
+}

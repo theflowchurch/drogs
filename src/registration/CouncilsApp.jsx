@@ -124,7 +124,7 @@ function SubContents({ group, variant }) {
       <h2 id={`${group.slug}-title`}><Name group={group}/></h2>
       <span className="tx-chip">{plural(group.count)}</span>
     </div>
-    <nav className={`tx-contents tx-subcontents ${group.large || group.parts.every(p => p.people.length <= 4) ? 'is-few' : ''}`} aria-label={`${group.name}: contents`} onPointerMove={spotlight}>
+    <nav className={`tx-contents tx-subcontents ${group.large || group.parts.every(p => p.people.length <= 4) ? 'is-few' : ''} ${group.twoColumns ? 'is-two' : ''}`} aria-label={`${group.name}: contents`} onPointerMove={spotlight}>
       {/* Office, 11 Nov: every bishop's photo beside the name, in the bar. */}
       {group.parts.map((part, i) => <a key={part.slug} href={`#${part.slug}`} className="tx-row tx-subrow" style={{ '--box': part.colour, '--i': i }}>
         <span className="tx-index">{pad(i + 1)}</span>
