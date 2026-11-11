@@ -11,7 +11,10 @@ await mkdir('public/assets',{recursive:true});
 await cp('assets/mitre-transparent.png','public/assets/mitre-transparent.png');
 for(const folder of published)await cp(`assets/${folder}`,`public/assets/${folder}`,{recursive:true});
 const people = JSON.parse(await readFile('src/registration/reference-people.json','utf8'));
-for (const file of publishedPortraits(people)) {
+// Portraits that replace an office upload, including people the office added
+// by hand who have no roll record (Bishop Joshua Heward-Mills).
+const replacements = JSON.parse(await readFile('data/office-portrait-replacements.json','utf8'));
+for (const file of publishedPortraits([...people, ...replacements])) {
   await mkdir(dirname(`public/${file}`), { recursive: true });
   await cp(file, `public/${file}`);
 }
