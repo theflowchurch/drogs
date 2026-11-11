@@ -2300,6 +2300,21 @@
               ]
             },
             {
+              "slug": "go-ye-church-netherlands",
+              "name": "Go Ye Church – Netherlands",
+              "people": [
+                {
+                  "name": "Heywood Osei-Bonsu",
+                  "rosterId": "P5088",
+                  "bishop": true,
+                  "church": "Go Ye Church",
+                  "title": "Bishop",
+                  "appointed": "2021",
+                  "image": "assets/portraits/P5088.webp"
+                }
+              ]
+            },
+            {
               "slug": "jesus-gefunden-germany",
               "name": "Jesus Gefunden – Germany",
               "people": [
