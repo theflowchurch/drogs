@@ -404,3 +404,23 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
   .org-subcontents.is-two .gt-all .gt-face{width:28px;height:35px;border-radius:6px}
   .org-subcontents.is-two .org-box-count{font-size:12px;padding:1px 8px}
 }
+
+/* Office, 11 Nov: First Love Movement as one compact list that fits on a
+   computer screen: slim lines, small writing and photos, a slimmer heading. */
+@media(min-width:901px){
+  .org-council:has(.is-compact){padding-top:8px}
+  .org-council:has(.is-compact) .org-back-row{margin-bottom:8px}
+  .org-council:has(.is-compact) .org-all-groups{padding:4px 12px;font-size:13px}
+  .org-council:has(.is-compact)>h2.org-group-box{min-height:0;padding:8px 22px;font-size:24px;border-radius:12px;border-left-width:6px}
+  .org-council:has(.is-compact) .org-group-total{display:none}
+  .org-subcontents.is-compact{gap:2px!important;padding-top:6px}
+  .org-subcontents.is-compact a.org-group-box.org-sub-box{min-height:0;padding:1px 14px 1px 16px;gap:10px;font-size:14px;line-height:1.25;border-left-width:5px;border-radius:7px}
+  .org-subcontents.is-compact .gt-all{max-width:none;flex-wrap:nowrap;gap:2px;padding:1px 0}
+  .org-subcontents.is-compact .gt-all .gt-face{width:15px;height:19px;border-radius:3px;border-width:1px}
+  .org-subcontents.is-compact .org-box-count{font-size:10.5px;padding:0 7px}
+  .org-subcontents.is-compact a.org-group-box::after{font-size:1em}
+  .org-site:has(.is-compact) .org-dhmm-head{padding:6px 5%}
+  .org-site:has(.is-compact) .org-dhmm-logo img{height:40px}
+  .org-site:has(.is-compact) .org-dhmm-sub{font-size:17px}
+}
+@media(min-width:901px){.org-subcontents.is-compact a.org-group-box.org-sub-box{padding:0 14px 0 16px}.org-subcontents.is-compact .gt-all{padding:0}.org-subcontents.is-compact .gt-all .gt-face{width:13px;height:16px}}
