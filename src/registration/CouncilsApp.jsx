@@ -5,6 +5,7 @@ import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
 import GoodStandingNotice from './GoodStandingNotice';
 import NightGlobe from './NightGlobe';
+import GroupThumbs from './GroupThumbs';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './councils.css';
 
@@ -114,31 +115,52 @@ function Contents({ query, search }) {
   </>;
 }
 
-function Group({ group }) {
-  const [query, setQuery] = useState('');
-  const keep = people => people.filter(p => !query || matches(`${p.title || ''} ${p.name} ${p.role || ''} ${p.church || ''}`, query));
-  const parts = (group.parts || [{ slug: group.slug, name: '', people: group.people }]).map(part => ({ ...part, people: keep(part.people) }));
-  const found = parts.reduce((n, part) => n + part.people.length, 0);
-  const number = DIRECTORY_GROUPS.indexOf(group) + 1;
+// Office, 11 Nov: Para-Church and First Love Church open a second contents
+// page, one row per council or country with small photos of its bishops.
+function SubContents({ group, variant }) {
   return <section className="tx-group" id={group.slug} aria-labelledby={`${group.slug}-title`} style={{ '--box': group.colour }}>
-    <div className="tx-crumbs">
-      <a href="#contents" className="tx-back">← All Groups</a>
-    </div>
+    <div className="tx-crumbs"><a href="#contents" className="tx-back">← All Groups</a></div>
     <div className="tx-group-head">
       <h2 id={`${group.slug}-title`}><Name group={group}/></h2>
       <span className="tx-chip">{plural(group.count)}</span>
     </div>
+    <nav className="tx-contents tx-subcontents" aria-label={`${group.name}: contents`} onPointerMove={spotlight}>
+      {group.parts.map((part, i) => <a key={part.slug} href={`#${part.slug}`} className="tx-row tx-subrow" style={{ '--box': part.colour, '--i': i }}>
+        <span className="tx-index">{pad(i + 1)}</span>
+        <span className="tx-row-name"><Name group={part}/></span>
+        <GroupThumbs people={part.people} variant={variant}/>
+        <span className="tx-row-count"><i aria-hidden="true"/>{plural(part.people.length)}</span>
+        <span className="tx-arrow" aria-hidden="true">→</span>
+      </a>)}
+    </nav>
+  </section>;
+}
+
+function Group({ group, part }) {
+  const [query, setQuery] = useState('');
+  const keep = people => people.filter(p => !query || matches(`${p.title || ''} ${p.name} ${p.role || ''} ${p.church || ''}`, query));
+  const shown = part || group;
+  const people = keep(shown.people);
+  return <section className="tx-group" id={shown.slug} aria-labelledby={`${shown.slug}-title`} style={{ '--box': shown.colour || group.colour }}>
+    <div className="tx-crumbs">
+      <a href="#contents" className="tx-back">← All Groups</a>
+      {part && <a href={`#${group.slug}`} className="tx-back">← {group.name}</a>}
+    </div>
+    <div className="tx-group-head">
+      <h2 id={`${shown.slug}-title`}><Name group={shown}/></h2>
+      <span className="tx-chip">{plural(shown.people.length)}</span>
+    </div>
     <Search value={query} onChange={setQuery} label="Find a bishop in this group"/>
-    {parts.map((part, i) => part.people.length > 0 && <div className="tx-part" key={part.slug} id={part.slug}>
-      {part.name && <h3><span className="tx-index">{pad(number)}.{i + 1}</span><Name group={part}/><span className="tx-chip">{plural(part.people.length)}</span></h3>}
-      <div className="tx-cards">{part.people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div>
-    </div>)}
-    {!found && <p className="tx-empty">No bishop in this group matches “{query}”.</p>}
+    <div className="tx-part"><div className="tx-cards">{people.map(p => <Card key={p.rosterId || p.name} person={p}/>)}</div></div>
+    {!people.length && <p className="tx-empty">No bishop in this group matches “{query}”.</p>}
   </section>;
 }
 
 export default function CouncilsApp() {
-  const group = useGroupFocus();
+  const { group, part } = useGroupFocus();
+  // Preview only: ?thumbs=stack|strip|lead|fan picks the photo style.
+  const [variant, setVariant] = useState('stack');
+  useEffect(() => { const v = new URLSearchParams(location.search).get('thumbs'); if (v) setVariant(v); }, []);
   const [query, setQuery] = useState('');
   const search = useRef(null);
   // Day or night (office, 10 Nov): day by default, night one tap away; the
@@ -160,8 +182,8 @@ export default function CouncilsApp() {
     </Title></header>
     <main className="tx-main">
       {group ? <>
-        <Group key={group.slug} group={group}/>
-        <div className="tx-end"><a className="tx-back" href="#contents">← All Groups</a></div>
+        {group.parts && !part ? <SubContents group={group} variant={variant}/> : <Group key={(part || group).slug} group={group} part={part}/>}
+        <div className="tx-end"><a className="tx-back" href="#contents">← All Groups</a>{part && <a className="tx-back" href={`#${group.slug}`}>← {group.name}</a>}</div>
       </> : <Contents query={query} search={search}/>}
       {!group && <GoodStandingNotice className="tx-good-standing"/>}
     </main>

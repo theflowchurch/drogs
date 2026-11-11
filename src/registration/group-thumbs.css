@@ -1,0 +1,44 @@
+/* Small photos on the second contents page's boxes (office, 11 Nov). */
+.gt{display:inline-flex;align-items:center;flex-shrink:0}
+.gt-face{position:relative;display:block;flex-shrink:0;overflow:hidden;background:#e8ebf1}
+.gt-face>*{display:block;width:100%!important;height:100%!important;aspect-ratio:auto!important;object-fit:cover;object-position:var(--portrait-x,50%) var(--portrait-y,15%)}
+.gt-face-empty{background:linear-gradient(160deg,#d9dde7,#c4cad8)}
+.gt-more{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:14px;letter-spacing:.3px}
+
+/* 1. Overlapping circles */
+.gt-stack .gt-face{width:46px;height:46px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 6px #0003}
+.gt-stack .gt-face+.gt-face{margin-left:-14px}
+.gt-stack .gt-more{width:46px;height:46px;margin-left:-14px;border-radius:50%;border:2.5px solid #fff;background:#ffffffe6;color:#14223d}
+
+/* 2. A strip of small square portraits */
+.gt-strip{gap:6px}
+.gt-strip .gt-face{width:44px;height:54px;border-radius:9px;border:2px solid #ffffffd9;box-shadow:0 2px 6px #0003}
+.gt-strip .gt-more{height:54px;padding:0 10px;border-radius:9px;background:#ffffffd9;color:#14223d}
+
+/* 3. The chairperson larger, the others small */
+.gt-lead{gap:12px}
+.gt-lead .gt-head{width:58px;height:58px;border-radius:50%;border:3px solid #f2c14e;box-shadow:0 2px 8px #0004}
+.gt-lead-text{display:flex;flex-direction:column;min-width:0;max-width:240px;line-height:1.2}
+.gt-lead-text b{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gt-lead-text small{font-size:12px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gt-lead-rest{display:inline-flex;align-items:center;gap:4px;margin-left:6px}
+.gt-lead-rest .gt-face{width:34px;height:34px;border-radius:50%;border:2px solid #fff}
+.gt-lead-rest .gt-more{width:34px;height:34px;border-radius:50%;background:#ffffffe6;color:#14223d;font-size:12px}
+
+/* 4. Photos fanned like cards */
+.gt-fan{position:relative;height:62px;padding:0 10px}
+.gt-fan .gt-face{width:44px;height:58px;border-radius:8px;border:2.5px solid #fff;box-shadow:0 4px 10px #0004;transition:transform .25s}
+.gt-fan .gt-face+.gt-face{margin-left:-18px}
+.gt-fan .gt-fan-0{transform:rotate(-12deg) translateY(4px)}
+.gt-fan .gt-fan-1{transform:rotate(-6deg) translateY(1px)}
+.gt-fan .gt-fan-3{transform:rotate(6deg) translateY(1px)}
+.gt-fan .gt-fan-4{transform:rotate(12deg) translateY(4px)}
+a:hover .gt-fan .gt-face+.gt-face{margin-left:-10px}
+.gt-fan .gt-more{margin-left:10px;padding:4px 10px;border-radius:999px;background:#ffffffe6;color:#14223d}
+
+@media(max-width:700px){
+  .gt-stack .gt-face,.gt-stack .gt-more{width:36px;height:36px}.gt-stack .gt-face+.gt-face,.gt-stack .gt-more{margin-left:-12px}
+  .gt-strip .gt-face{width:34px;height:42px}.gt-strip .gt-face:nth-child(n+6){display:none}.gt-strip .gt-more{height:42px}
+  .gt-lead-text{display:none}
+  .gt-fan .gt-face{width:36px;height:48px}
+}

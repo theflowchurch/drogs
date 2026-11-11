@@ -359,3 +359,16 @@ a.org-group-box{gap:14px}
 .org-good-standing li{margin:1px 0}
 /* The "← All Groups" button at the foot matches the one at the top. */
 .org-all-groups-end{position:static;margin:0}
+
+/* Office, 11 Nov: the second contents page (Para-Church, First Love Church):
+   taller boxes with small photos of each council's or country's bishops. */
+.org-subcontents{padding-top:6px}
+@media(min-width:701px){.org-subcontents{gap:8px}a.org-group-box.org-sub-box{min-height:78px;padding:8px 22px 8px 26px;font-size:22px}}
+a.org-sub-box .gt{margin-left:auto}
+a.org-sub-box .org-box-name{flex:1 1 auto}
+.org-back-row{position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}
+.org-back-row .org-all-groups{position:static;margin:0}
+.org-back-parent{background:#fff;color:var(--org-navy)!important}
+.org-end-links{gap:12px}
+.org-end-links .org-all-groups-end+.org-all-groups-end{background:#fff;color:var(--org-navy)!important}
+@media(max-width:700px){a.org-sub-box{flex-wrap:wrap;row-gap:8px}a.org-sub-box .gt{order:3;margin-left:0}}

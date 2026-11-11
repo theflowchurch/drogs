@@ -1,7 +1,9 @@
 'use client';
 import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, PAGE_ALIASES } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
+import { useEffect, useState } from 'react';
 import useGroupFocus from './useGroupFocus';
+import GroupThumbs from './GroupThumbs';
 import GoodStandingNotice from './GoodStandingNotice';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './denomination-sites.css';
@@ -38,12 +40,14 @@ function Bishop({ person }) {
 const Name = ({ group }) => <>{group.name}{group.initials && <span className="org-initials"> – {group.initials}</span>}</>;
 
 // One group's heading, in the shape of the section banners, in its own colour.
-function GroupBox({ group, as: Tag = 'a' }) {
+function GroupBox({ group, as: Tag = 'a', thumbs }) {
   const link = Tag === 'a';
   const props = link ? { href: `#${group.slug}` } : { id: `${group.slug}-heading` };
-  return <Tag className="org-group-box" style={{ '--box': group.colour }} {...props}>
+  const n = group.count ?? group.people.length;
+  return <Tag className={`org-group-box ${thumbs ? 'org-sub-box' : ''}`} style={{ '--box': group.colour }} {...props}>
     <span className="org-box-name"><Name group={group}/></span>
-    {link && <span className="org-box-count">{group.count} {group.count === 1 ? 'Bishop' : 'Bishops'}</span>}
+    {thumbs && <GroupThumbs people={group.people} variant={thumbs}/>}
+    {link && <span className="org-box-count">{n} {n === 1 ? 'Bishop' : 'Bishops'}</span>}
   </Tag>;
 }
 
@@ -67,30 +71,45 @@ function Contents() {
 
 const Count = ({ n }) => <span className="org-count">{n} {n === 1 ? 'bishop' : 'bishops'}</span>;
 
-function Group({ group }) {
+// Office, 11 Nov: Para-Church and First Love Church open a second contents
+// page, one box per council or country with small photos of its bishops.
+function SubContents({ group, variant }) {
   return <section className="org-council" id={group.slug} aria-labelledby={`${group.slug}-heading`}>
-    {/* The way back, at the top and kept in view while scrolling (office, 10 Nov). */}
     <a className="org-all-groups" href="#contents">← All Groups</a>
     <GroupBox group={group} as="h2"/>
-    {group.parts ? group.parts.map(part => <div className="org-group-part" key={part.slug} id={part.slug}>
-      <h3 className="org-part-heading"><Name group={part}/> <Count n={part.people.length}/></h3>
-      <div className="org-members">{part.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
-    </div>) : <>
-      <p className="org-group-total"><Count n={group.people.length}/></p>
-      <div className="org-members">{group.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
-    </>}
+    <p className="org-group-total"><Count n={group.count}/></p>
+    <nav className="org-contents org-subcontents" aria-label={`${group.name}: contents`}>
+      {group.parts.map(part => <GroupBox key={part.slug} group={part} thumbs={variant}/>)}
+    </nav>
+  </section>;
+}
+
+function Group({ group, part }) {
+  const shown = part || group;
+  return <section className="org-council" id={shown.slug} aria-labelledby={`${shown.slug}-heading`}>
+    {/* The way back, at the top and kept in view while scrolling (office, 10 Nov). */}
+    <div className="org-back-row">
+      <a className="org-all-groups" href="#contents">← All Groups</a>
+      {part && <a className="org-all-groups org-back-parent" href={`#${group.slug}`}>← {group.name}</a>}
+    </div>
+    <GroupBox group={shown} as="h2"/>
+    <p className="org-group-total"><Count n={shown.people.length}/></p>
+    <div className="org-members">{shown.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
   </section>;
 }
 
 export default function OrganisationsApp({ slug = '' }) {
   // An older address for a section opens the contents; one for a group opens it.
-  const group = useGroupFocus(PAGE_ALIASES[slug] ? '' : slug);
+  const { group, part } = useGroupFocus(PAGE_ALIASES[slug] ? '' : slug);
+  // Preview only: ?thumbs=stack|strip|lead|fan picks the photo style.
+  const [variant, setVariant] = useState('stack');
+  useEffect(() => { const v = new URLSearchParams(location.search).get('thumbs'); if (v) setVariant(v); }, []);
   return <div className="denom-site org-site" id="top">
     <Masthead/>
     <main className="org-main">
       {group ? <>
-        <Group group={group}/>
-        <div className="org-end-links"><a className="org-all-groups org-all-groups-end" href="#contents">← All Groups</a></div>
+        {group.parts && !part ? <SubContents group={group} variant={variant}/> : <Group group={group} part={part}/>}
+        <div className="org-end-links"><a className="org-all-groups org-all-groups-end" href="#contents">← All Groups</a>{part && <a className="org-all-groups org-all-groups-end" href={`#${group.slug}`}>← {group.name}</a>}</div>
       </> : <Contents/>}
       {!group && <GoodStandingNotice className="org-good-standing"/>}
     </main>

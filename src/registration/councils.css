@@ -399,3 +399,16 @@
 .tx-day .tx-card{border-color:color-mix(in srgb,var(--box) 22%,transparent)}
 .tx-day .tx-card-title{color:var(--gold)}
 .tx-day .tx-good-standing{background:#ffffffe0}
+
+/* Office, 11 Nov: the second contents page (Para-Church, First Love Church):
+   taller rows with small photos of each council's or country's bishops. */
+.tx-subcontents{margin-top:10px}
+@media(min-width:701px){.tx-subcontents{gap:8px}.tx-subrow{min-height:74px;padding:8px 16px 8px 14px}.tx-subrow .tx-row-name{font-size:20px}}
+.tx-subrow .gt{margin-left:auto;margin-right:6px}
+.tx-subrow .tx-row-name{flex:1 1 auto}
+.tx-crumbs{justify-content:flex-start;flex-wrap:wrap}
+.tx-end{gap:12px;flex-wrap:wrap}
+.tx-day .gt-stack .gt-face,.tx-day .gt-strip .gt-face,.tx-day .gt-fan .gt-face{border-color:#fff}
+.tx-site:not(.tx-day) .gt-stack .gt-face,.tx-site:not(.tx-day) .gt-lead-rest .gt-face{border-color:#0b1020}
+.tx-site:not(.tx-day) .gt-lead .gt-head{border-color:#f2c14e}
+@media(max-width:700px){.tx-subrow{flex-wrap:wrap;row-gap:8px}.tx-subrow .gt{order:3;margin-left:34px}}

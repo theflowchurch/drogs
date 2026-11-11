@@ -82,7 +82,9 @@ const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => ONE_BOX[o
   .map(withInitials);
 export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === slug))
   .filter(g => g && (g.people.length || g.parts?.length))
-  .map((g, i) => ({ ...g, count: countOf(g.parts ? g.parts.flatMap(p => p.people) : g.people), colour: COLOURS[i % COLOURS.length] }));
+  .map((g, i) => ({ ...g, count: countOf(g.parts ? g.parts.flatMap(p => p.people) : g.people), colour: COLOURS[i % COLOURS.length],
+    // Each council or country gets its own colour on the second contents page.
+    parts: g.parts?.map((part, j) => ({ ...part, colour: COLOURS[(j * 5 + 3) % COLOURS.length] })) }));
 // Every bishop on the page once, however many councils they sit on.
 export const DIRECTORY_TOTAL = countOf(DIRECTORY_GROUPS.flatMap(g => g.parts ? g.parts.flatMap(p => p.people) : g.people));
 // First Love's former groups became countries (office, 10 Nov); their old
