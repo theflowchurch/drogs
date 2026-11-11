@@ -88,7 +88,7 @@ test('the women confirmed for FLOW include Zoe while BDR remains in First Love',
   assert.ok(firstLove.has('B79'));
   assert.ok(!flow.has('B79'));
   const zoe = people.find(p => p.id === 'B193');
-  assert.equal(zoe.image, 'assets/bishops/matched-193.webp');
+  assert.equal(zoe.image, 'assets/portraits/B193-aeef2db4.webp');
   const overrides = JSON.parse(readFileSync('data/bishops-list-overrides.json', 'utf8'));
   assert.equal(overrides['Zoe Freda Asamoah'].organization, 'FLOW', 'nightly rebuilds preserve the office correction');
 });
