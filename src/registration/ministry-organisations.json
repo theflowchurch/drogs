@@ -844,15 +844,6 @@
                   "consecrated": "2020"
                 },
                 {
-                  "name": "Kweku Amonoo-Neizer",
-                  "rosterId": "B121",
-                  "bishop": true,
-                  "church": "The Machaneh Church International",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/kweku-amonoo-neizer.webp",
-                  "consecrated": "2021"
-                },
-                {
                   "name": "Kenneth Antwi Agyei",
                   "rosterId": "B105",
                   "bishop": true,
@@ -905,15 +896,6 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/selasy-mcsaint-507a83f8.webp",
                   "consecrated": "2025"
-                },
-                {
-                  "name": "Kingsley Gyasi",
-                  "rosterId": "B110",
-                  "bishop": true,
-                  "church": "Makarios City Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/kingsley-gyasi.webp",
-                  "consecrated": "2010"
                 },
                 {
                   "name": "Ato Dickson",
@@ -1150,7 +1132,7 @@
                   "rosterId": "P2265",
                   "bishop": true,
                   "church": "If I Live I Live For You Church Int",
-                  "title": "Pastor",
+                  "title": "Bishop",
                   "appointed": "2024",
                   "image": "assets/organisations/people/joao-pedro-sebastiao-andrade.webp"
                 },
@@ -1159,7 +1141,7 @@
                   "rosterId": "P177",
                   "bishop": true,
                   "church": "Together Forever Church Int",
-                  "title": "Pastor",
+                  "title": "Bishop",
                   "appointed": "2018",
                   "image": "assets/organisations/people/alexander-igori.webp"
                 },
@@ -1168,7 +1150,7 @@
                   "rosterId": "P823",
                   "bishop": true,
                   "church": "Why Worry Church Int",
-                  "title": "Pastor",
+                  "title": "Bishop",
                   "appointed": "2018",
                   "image": "assets/organisations/people/daniel-nabudere.webp"
                 },
@@ -2713,6 +2695,42 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/kingsley-gyasi.webp",
                   "consecrated": "2010"
+                },
+                {
+                  "name": "Philip Asante",
+                  "rosterId": "B155",
+                  "bishop": true,
+                  "church": "Pacific Islands Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/philip-asante-ecb27883.webp",
+                  "consecrated": "2026"
+                },
+                {
+                  "name": "John Boffah",
+                  "rosterId": "B94",
+                  "bishop": true,
+                  "church": "Pacific Islands Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/john-boffah-b782a0ec.webp",
+                  "consecrated": "2021"
+                },
+                {
+                  "name": "Kristoffer Odoi Yemoh",
+                  "rosterId": "B113",
+                  "bishop": true,
+                  "church": "Pacific Islands Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/kristoffer-odoi-yemoh-57d10fe1.webp",
+                  "consecrated": "2017"
+                },
+                {
+                  "name": "Andrew Kwaku Osei",
+                  "rosterId": "B10",
+                  "bishop": true,
+                  "church": "Pacific Islands Missionary Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/andrew-kwaku-osei-296beaa4.webp",
+                  "consecrated": "2021"
                 }
               ]
             },

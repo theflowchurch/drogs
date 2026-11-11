@@ -70,7 +70,9 @@ const COLOURS = ['#1f3a5f', '#6b2737', '#2f5233', '#4a3f6b', '#1f5357', '#5a2846
 const COUNCIL_LABEL = { 'ud-senex-council': 'UD Senex Council', 'first-love-senex-council': 'First Love Senex Council', adjutancy: 'Adjutancy',
   'healing-jesus-council': 'Healing Jesus', 'flow-council': 'FLOW', 'dhmm-council': 'DHMM', 'general-schools-board': 'General Schools Board',
   'general-hospitals-board': 'General Hospitals Board', 'general-orphanage-board': 'General Orphanage Board', 'radio-ministry': 'Radio Ministry',
-  'construction-estate-management-board': 'Construction & Estate Management Board', 'abmtc-board': 'ABMTC Board', 'makarios-council': 'Makarios Council' };
+  'construction-estate-management-board': 'Construction & Estate Management Board', 'abmtc-board': 'ABMTC Board', 'makarios-council': 'Makarios Council',
+  // Office, 11 Nov: on its own page every card reads the church's name.
+  ursc: 'United Reasonable Service Church' };
 const labelled = g => (COUNCIL_LABEL[g.slug] ? { ...g, people: g.people.map(p => ({ ...p, church: COUNCIL_LABEL[g.slug] })) } : g);
 const ONE_BOX = { [PARA_CHURCH]: 'The Para-Church Bishops', [FIRST_LOVE]: 'The Bishops of First Love Church' };
 // "The Bishop of Kenya" when a group has one bishop (office, 10 Nov).
