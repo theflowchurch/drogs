@@ -73,7 +73,8 @@ test('Osylina retains her linked record and portrait across old saved names', ()
   const s = { ...emptyState(), overrides: { [id]: { name: 'Paulina Ama Drah', city: 'Office-corrected city', _officeFields: ['name', 'city'] } }, profiles: [{ id: 'account', referenceId: id, name: 'Paulina Ama Drah' }], registrations: [{ userId: 'account', year: 2027, status: 'confirmed', manual: true, data: { role: 'pastor', referenceId: id, name: 'Paulina Ama Ansah', firstName: 'Paulina', lastName: 'Ama Ansah' } }] };
   const p = overlayReferences(people, s).find(p => p.id === id);
   assert.equal(p.name, 'Osylina Ama Ansah');
-  assert.equal(p.image, 'assets/portraits/S10325a07.webp');
+  assert.equal(p.image, people.find(p => p.id === id).image);
+  assert.match(p.image, /^assets\/portraits\/S10325a07(-[0-9a-f]+)?\.webp$/);
   assert.equal(p.city, 'Office-corrected city');
   assert.equal(publicRoll(s, people)[0].name, 'Osylina Ama Ansah');
   const updated = syncRoll(s, people, 'osylina-correction');

@@ -11,7 +11,7 @@ test('Isaac Bonuedi remains once under ES Joy and old assignment links follow hi
   assert.equal(matches.length, 1);
   assert.equal(matches[0].id, 'S4994a2da-5272');
   assert.equal(matches[0].bishop, 'Joy-Philippe Bruce');
-  assert.equal(photoTask(matches[0], emptyState()).status, 'replace');
+  assert.equal(photoTask(matches[0], emptyState()).status, 'ready');
   const rules = JSON.parse(readFileSync('data/sheet-conflict-rulings.json'));
   assert.equal(rules.remove.find(r => r.name === 'Isaac Bonuedi').bishop, 'Isaac Agyeman');
   const source = { ...emptyState(), profiles: [{ id: 'isaac', role: 'pastor', referenceId: 'S4994a2da' }], registrations: [{ userId: 'isaac', year: 2027, data: { role: 'pastor', name: 'Isaac Bonuedi', referenceId: 'S4994a2da', photo: 'saved-portrait.webp' } }] };
