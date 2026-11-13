@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import useGroupFocus from './useGroupFocus';
 import GroupThumbs from './GroupThumbs';
 import GoodStandingNotice from './GoodStandingNotice';
+import BishopAccess from './BishopAccess';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './denomination-sites.css';
 import './organisations.css';
@@ -53,13 +54,14 @@ function GroupBox({ group, as: Tag = 'a', thumbs }) {
 
 // The title (office, 9 Nov): the DHMM logo in white on navy, "Worldwide Fellowship of
 // Bishops" in gold, and every bishop on the page counted once.
-function Masthead() {
-  return <header className="org-dhmm-head">
+function Masthead({ bishops = false }) {
+  return <header className={`org-dhmm-head ${bishops ? 'org-dhmm-head-bishops' : ''}`}>
     <a href="#contents" className="org-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
     <div className="org-dhmm-text">
       <p className="org-dhmm-sub">Worldwide Fellowship of Bishops</p>
       <p className="org-dhmm-total">Roll of Good Standing <span className="org-dhmm-dot" aria-hidden="true">·</span> <strong>{DIRECTORY_TOTAL}</strong> Bishops</p>
     </div>
+    {bishops && <BishopAccess className="org-bishop-access"/>}
   </header>;
 }
 
@@ -101,14 +103,14 @@ function Group({ group, part }) {
   </section>;
 }
 
-export default function OrganisationsApp({ slug = '' }) {
+export default function OrganisationsApp({ slug = '', bishops = false }) {
   // An older address for a section opens the contents; one for a group opens it.
   const { group, part } = useGroupFocus(PAGE_ALIASES[slug] ? '' : slug);
   // Office, 11 Nov: every bishop's photo in a strip beside each council's or
   // country's name.
   const variant = 'all';
   return <div className="denom-site org-site" id="top">
-    <Masthead/>
+    <Masthead bishops={bishops}/>
     <main className="org-main">
       {group ? <>
         {group.parts && !part ? <SubContents group={group} variant={variant}/> : <Group group={group} part={part}/>}

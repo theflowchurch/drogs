@@ -436,3 +436,12 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
   .org-main:has(.is-compact) .org-end-links{margin-top:14px}
 }
 @media(min-width:901px){.org-subcontents.is-compact{--row:clamp(18px,calc((100vh - 272px) / var(--lines,25) - 3px),46px)}}
+/* Bishops' link only (/organisations/signup/): Sign in and Sign up at the right of the title. */
+.org-dhmm-head-bishops{position:relative}
+.bishop-access{display:flex;gap:10px;align-items:center}
+.org-bishop-access{position:absolute;right:5%;top:50%;transform:translateY(-50%)}
+.bishop-access a{display:inline-flex;align-items:center;min-height:42px;padding:0 18px;border-radius:999px;font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap}
+.org-bishop-access .bishop-access-signin{color:#fff;border:1.5px solid #ffffff80}
+.org-bishop-access .bishop-access-signup{color:var(--org-navy);background:var(--org-gold);border:1.5px solid var(--org-gold)}
+.org-bishop-access a:hover{filter:brightness(1.08)}
+@media(max-width:1500px){.org-bishop-access{position:static;transform:none;flex-basis:100%;justify-content:center}.org-dhmm-head-bishops{flex-wrap:wrap;row-gap:12px}}

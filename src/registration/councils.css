@@ -479,3 +479,9 @@
   .tx-group:has(.is-compact)~.tx-end,.tx-main:has(.is-compact) .tx-end{margin-top:14px}
 }
 @media(min-width:901px){.tx-subcontents.is-compact{--row:clamp(18px,calc((100vh - 258px) / var(--lines,25) - 3px),46px)}}
+/* Bishops' link only (/councils/signup/): Sign in and Sign up on a row above the title. */
+.tx-bishop-access{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin:0 0 8px}
+.tx-bishop-access a{display:inline-flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;white-space:nowrap}
+.tx-bishop-access .bishop-access-signin{color:var(--ink,inherit);border:1px solid var(--line-2);background:var(--glass)}
+.tx-bishop-access .bishop-access-signup{color:#14223d;background:#c9a95c;border:1px solid #c9a95c}
+.tx-bishop-access a:hover{filter:brightness(1.08)}

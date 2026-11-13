@@ -4,6 +4,7 @@ import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, flatPeople } 
 import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
 import GoodStandingNotice from './GoodStandingNotice';
+import BishopAccess from './BishopAccess';
 import NightGlobe from './NightGlobe';
 import GroupThumbs from './GroupThumbs';
 import { portraitStyle } from '../runtime/portrait-framing';
@@ -161,7 +162,7 @@ function Group({ group, part }) {
   </section>;
 }
 
-export default function CouncilsApp() {
+export default function CouncilsApp({ bishops = false }) {
   const { group, part } = useGroupFocus();
   // Office, 11 Nov: every bishop's photo in a strip beside each council's or
   // country's name.
@@ -181,7 +182,7 @@ export default function CouncilsApp() {
     <div className="tx-backdrop" aria-hidden="true">
       <NightGlobe day={day} src={`${base}/assets/organisations/${day ? 'earth-day-4k' : 'earth-night-4k'}.webp`} fallback={`${base}/assets/organisations/earth.webp`}/>
     </div>
-    <header className="tx-header"><Title compact={Boolean(group)}>
+    <header className="tx-header">{bishops && <BishopAccess className="tx-bishop-access"/>}<Title compact={Boolean(group)}>
       {!group && <Search value={query} onChange={setQuery} label="Search groups" inputRef={search}/>}
       <ThemeSwitch day={day} onToggle={toggle}/>
     </Title></header>
