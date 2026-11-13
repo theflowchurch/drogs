@@ -762,6 +762,15 @@
                   "consecrated": "2015"
                 },
                 {
+                  "name": "Justice Gaisie",
+                  "rosterId": "P2498",
+                  "bishop": true,
+                  "church": "Anagkazo Assemblies",
+                  "title": "Bishop",
+                  "appointed": "2008",
+                  "image": "assets/organisations/people/justice-gaisie.webp"
+                },
+                {
                   "name": "Richard Afenyo Tsaku",
                   "rosterId": "B166",
                   "bishop": true,
