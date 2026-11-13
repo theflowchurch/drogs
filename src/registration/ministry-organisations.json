@@ -1749,7 +1749,7 @@
             },
             {
               "slug": "first-love-campuses",
-              "name": "The First Love Campuses",
+              "name": "First Love Campus",
               "people": [
                 {
                   "name": "Daniel Adjei",
@@ -1808,7 +1808,7 @@
                   "name": "George Seneagya",
                   "rosterId": "BO281",
                   "bishop": true,
-                  "church": "First Love Gbawe Campus",
+                  "church": "First Love Unquenchable Fire Campus",
                   "title": "Bishop",
                   "image": "assets/organisations/people/george-seneagya-ff028b93.webp",
                   "consecrated": "2023"
