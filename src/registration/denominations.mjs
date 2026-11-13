@@ -3,8 +3,7 @@ export const DENOMINATIONS = {
   "First Love": [
     "First Love Church",
     "Go Church",
-    "Go Ye Church",
-    "Qodesh City Church"
+    "Go Ye Church"
   ],
   "United Denominations": [
     "1000 Micro Church Network International",
@@ -62,6 +61,7 @@ export const DENOMINATIONS = {
     "Precious Souls Swaziland",
     "Primeiras Obras",
     "Primero Amor",
+    "Qodesh City Church",
     "Qodesh Family Churches",
     "Rejoice Greatly",
     "Rencontre Prophetique Internationale",

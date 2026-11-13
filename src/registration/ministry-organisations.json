@@ -893,6 +893,51 @@
                   "consecrated": "2023"
                 },
                 {
+                  "name": "Glen Kwame Opoku",
+                  "rosterId": "B74",
+                  "bishop": true,
+                  "church": "Qodesh City Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/glen-kwame-opoku.webp",
+                  "consecrated": "2025"
+                },
+                {
+                  "name": "Jojo Stephens Ofori-Addo",
+                  "rosterId": "B246",
+                  "bishop": true,
+                  "church": "Qodesh City Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/jojo-stephens-ofori-addo-f762d6cd.webp",
+                  "consecrated": "2025"
+                },
+                {
+                  "name": "Pius Worlanyo Kwame Akator",
+                  "rosterId": "B336",
+                  "bishop": true,
+                  "church": "Qodesh City Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/pius-worlanyo-kwame-akator-475409f0.webp",
+                  "consecrated": "2020"
+                },
+                {
+                  "name": "Adelaide Heward-Mills",
+                  "image": "assets/organisations/people/adelaide-heward-mills-295cff99.webp",
+                  "rosterId": "B4",
+                  "bishop": true,
+                  "church": "Qodesh City Church",
+                  "title": "Episcopal Sister",
+                  "consecrated": "2021"
+                },
+                {
+                  "name": "Amelia Aidoo",
+                  "rosterId": "B9",
+                  "bishop": true,
+                  "church": "Qodesh City Church",
+                  "title": "Episcopal Sister",
+                  "image": "assets/organisations/people/amelia-aidoo-4d54ed75.webp",
+                  "consecrated": "2022"
+                },
+                {
                   "name": "Kwame Asiedu Owusu",
                   "rosterId": "B120",
                   "bishop": true,
@@ -1857,57 +1902,6 @@
                   "church": "First Love Anagkazo Campus",
                   "title": "Mother",
                   "consecrated": "2023"
-                }
-              ]
-            },
-            {
-              "slug": "qodesh-city-church",
-              "name": "Qodesh City Church",
-              "people": [
-                {
-                  "name": "Glen Kwame Opoku",
-                  "rosterId": "B74",
-                  "bishop": true,
-                  "church": "Qodesh City Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/glen-kwame-opoku.webp",
-                  "consecrated": "2025"
-                },
-                {
-                  "name": "Jojo Stephens Ofori-Addo",
-                  "rosterId": "B246",
-                  "bishop": true,
-                  "church": "Qodesh City Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/jojo-stephens-ofori-addo-f762d6cd.webp",
-                  "consecrated": "2025"
-                },
-                {
-                  "name": "Pius Worlanyo Kwame Akator",
-                  "rosterId": "B336",
-                  "bishop": true,
-                  "church": "Qodesh City Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/pius-worlanyo-kwame-akator-475409f0.webp",
-                  "consecrated": "2020"
-                },
-                {
-                  "name": "Adelaide Heward-Mills",
-                  "image": "assets/organisations/people/adelaide-heward-mills-295cff99.webp",
-                  "rosterId": "B4",
-                  "bishop": true,
-                  "church": "Qodesh City Church",
-                  "title": "Episcopal Sister",
-                  "consecrated": "2021"
-                },
-                {
-                  "name": "Amelia Aidoo",
-                  "rosterId": "B9",
-                  "bishop": true,
-                  "church": "Qodesh City Church",
-                  "title": "Mother",
-                  "image": "assets/organisations/people/amelia-aidoo-4d54ed75.webp",
-                  "consecrated": "2022"
                 }
               ]
             },
@@ -3101,7 +3095,7 @@
                   "rosterId": "B9",
                   "bishop": true,
                   "church": "Qodesh City Church",
-                  "title": "Mother",
+                  "title": "Episcopal Sister",
                   "image": "assets/organisations/people/amelia-aidoo-4d54ed75.webp",
                   "consecrated": "2022"
                 },

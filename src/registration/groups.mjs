@@ -14,6 +14,7 @@ export const GROUPS = {
       "Loyalty House International",
       "Makarios City Church",
       "Makarios Western North",
+      "Qodesh City Church",
       "Qodesh Family Churches",
       "Saviours Of Men International",
       "The Glorious Mega Church",
