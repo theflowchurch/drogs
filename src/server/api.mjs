@@ -1,4 +1,5 @@
 import { denominationSite } from '../registration/denomination-sites.mjs';
+import { FELLOWSHIP } from '../registration/fellowship.mjs';
 import { readBody, jsonBody } from './api-body.mjs';
 import { createManagementApi } from './management-api.mjs';
 import { readAccounts, readLogins, removeAccounts } from './accounts.mjs';
@@ -55,9 +56,11 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
             if (pause.closed) throw new HttpError(403, pause.notice || SIGNUP_PAUSED);
           }
         }
-        // A church site's code email carries the church's name and its own address.
-        const site = mode !== 'office' && typeof church === 'string' ? denominationSite(church) : null;
-        await auth.requestCode(address, site ? `${url.origin}/${church}/signup/` : url.origin, ['signin', 'office'].includes(mode) ? mode : 'signup', site?.name);
+        // A church site's code email carries the church's name and its own address;
+        // the bishops' sign-up (fellowship.mjs) carries its own name and never the castle's.
+        const fellowship = mode !== 'office' && church === FELLOWSHIP.path;
+        const site = fellowship ? FELLOWSHIP : mode !== 'office' && typeof church === 'string' ? denominationSite(church) : null;
+        await auth.requestCode(address, site ? `${url.origin}/${site.path || church}/signup/` : url.origin, ['signin', 'office'].includes(mode) ? mode : 'signup', site?.name, fellowship);
         return json({ ok: true, codeRequired: true });
       }
       if (path === '/api/registration/references' && method === 'GET') {

@@ -4208,3 +4208,20 @@ input[type="date"] {
   .reg-pay-details > div { grid-template-columns: 1fr; gap: .3rem; }
 }
 .reg-pay-steps .reg-check a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+
+/* The bishops' sign-up from the Organisations and Councils pages (fellowship.mjs):
+   the DHMM navy and gold of those pages, with no castle anywhere. */
+.reg-fellowship-app { --fw-navy: #14223d; --fw-navy-2: #24375c; --fw-gold: #c9a95c; --accent: #1f3a6b; --teal: #1f3a6b; --accent-strong: #14223d; --accent-soft: #d8deea; --bg: #faf7ef; background: var(--bg); }
+:root[data-theme="dark"] .reg-fellowship-app { --accent: #9fb4e0; --teal: #c9a95c; --accent-strong: #c7d3ee; --accent-soft: #2a3550; --bg: #0e1424; }
+.reg-fellowship-app .reg-header { background: radial-gradient(ellipse 70% 120% at 50% 0%, var(--fw-navy-2) 0%, var(--fw-navy) 70%); border-bottom: 3px solid var(--fw-gold); color: #fff; }
+.reg-fellowship-app .reg-header .reg-text { color: var(--fw-gold); }
+.reg-fellowship-app .reg-brand { color: #fff; }
+.reg-fellowship-app .reg-brand strong { font-family: Georgia, "Times New Roman", serif; letter-spacing: .02em; font-size: 17px; color: var(--fw-gold); text-transform: uppercase; }
+.reg-app.reg-fellowship-app .reg-brand-mark { background: none; width: auto; height: 46px; border-radius: 0; }
+.reg-app.reg-fellowship-app .reg-brand-mark img { width: auto; height: 100%; max-width: 140px; object-fit: contain; }
+.reg-fellowship-app .reg-account.signin { position: relative; background: radial-gradient(120% 90% at 50% 0%, var(--fw-navy-2) 0%, var(--fw-navy) 60%, #0d1729 100%); color: #fff; max-width: none; }
+.reg-fellowship-title { flex-direction: column; gap: 16px; text-align: center; font-family: Georgia, "Times New Roman", serif; font-weight: 700; color: var(--fw-gold) !important; text-shadow: none !important; text-wrap: balance; max-width: 900px; letter-spacing: .01em; }
+.reg-fellowship-title .reg-church-kicker { color: #ffffffcc; }
+.reg-fellowship-logo { width: min(320px, 70vw); height: auto; }
+@media (max-width: 700px) { .reg-fellowship-app .reg-brand strong { display: none; } }
+.reg-fellowship-app .reg-header .reg-primary { background: var(--fw-gold); color: var(--fw-navy); border-color: var(--fw-gold); }

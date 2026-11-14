@@ -20,14 +20,17 @@ const EntranceContext = createContext("general");
 const OrganizationSiteContext = createContext("");
 // A church site: the central workspace locked to one denomination (null elsewhere).
 const ChurchContext = createContext(null);
+// The bishops' sign-up from the Organisations and Councils pages (FELLOWSHIP).
+const FellowshipContext = createContext(false);
 // Church sites name the church, never the central site, in what members read.
-const useBrandName = () => useContext(ChurchContext)?.config.name || "Kuriake Castle";
-// Links stay on the church site when there is one.
-const usePagePath = () => { const site = useContext(OrganizationSiteContext), church = useContext(ChurchContext); return (path) => church ? `${base}/${church.path}/${path}/` : sitePath(site, path, base); };
+const useBrandName = () => { const church = useContext(ChurchContext), fellowship = useContext(FellowshipContext); return fellowship ? FELLOWSHIP.name : church?.config.name || "Kuriake Castle"; };
+// Links stay on the church site (or the bishops' sign-up) when there is one.
+const usePagePath = () => { const site = useContext(OrganizationSiteContext), church = useContext(ChurchContext), fellowship = useContext(FellowshipContext); return (path) => fellowship && path === "signup" ? fellowshipSignupPath(base) : church ? `${base}/${church.path}/${path}/` : sitePath(site, path, base); };
 import { ORGANIZATION_SITES, FLOW_GROUPS, peopleForSite, siteCatalog, siteOfOrganization, sitePath, organizationSiteKey } from "./organization-sites.mjs";
 import * as api from "./client";
 import { signupBishopChoices } from './signup-bishops.mjs';
 import { denominationSite, churchPlacement, inChurch, churchOfDenomination } from './denomination-sites.mjs';
+import { FELLOWSHIP, fellowshipSignupPath } from './fellowship.mjs';
 import { LegalFooter } from "./Docs";
 import { DENOMINATIONS } from "./denominations.mjs";
 import {
@@ -520,7 +523,9 @@ export default function RegistrationApp({
   entrance = "general",
   organizationSite = "",
   church: churchPath = "",
+  fellowship: fellowshipProp = false,
 }) {
+  const fellowship = !office && fellowshipProp;
   const churchConfig = office ? null : denominationSite(churchPath);
   // A church has one sign-up link for bishops and pastors; the form asks which.
   const openSignup = typeof signup === "string" || Boolean(churchConfig && signup);
@@ -549,9 +554,9 @@ export default function RegistrationApp({
   const church = useMemo(() => churchConfig ? churchPlacement(catalogOf(state), churchPath, FLOW_GROUPS) : null, [churchConfig, churchPath, state?.catalog]);
   const site = church ? siteOfOrganization(church.organization) : office ? "" : organizationSiteKey(organizationSite);
   const siteConfig = ORGANIZATION_SITES[site];
-  const brand = churchConfig || siteConfig;
-  const home = churchConfig ? `${base}/${churchPath}/` : sitePath(site, "", base);
-  const signupPath = churchConfig ? `${home}signup/` : sitePath(site, "signup", base);
+  const brand = fellowship ? FELLOWSHIP : churchConfig || siteConfig;
+  const home = fellowship ? fellowshipSignupPath(base) : churchConfig ? `${base}/${churchPath}/` : sitePath(site, "", base);
+  const signupPath = fellowship ? fellowshipSignupPath(base) : churchConfig ? `${home}signup/` : sitePath(site, "signup", base);
   const snapshots = useRef(null), publicSnapshots = useRef(null), saving = useRef(0);
   if (!snapshots.current) snapshots.current = snapshotSync(api.snapshot, data => {
     setState(data);
@@ -775,9 +780,10 @@ export default function RegistrationApp({
     <EntranceContext.Provider value={entrance}>
     <OrganizationSiteContext.Provider value={site}>
     <ChurchContext.Provider value={church}>
+    <FellowshipContext.Provider value={fellowship}>
     <RosterContext.Provider value={everyone}>
-    <div className={`reg-app ${site ? `reg-organization-app organization-${site}` : ""} ${churchConfig ? "reg-church-app" : ""}`} style={churchConfig ? { "--brand": churchConfig.accent } : undefined}>
-      {!hero && !churchConfig && (
+    <div className={`reg-app ${site ? `reg-organization-app organization-${site}` : ""} ${churchConfig ? "reg-church-app" : ""} ${fellowship ? "reg-fellowship-app" : ""}`} style={churchConfig ? { "--brand": churchConfig.accent } : undefined}>
+      {!hero && !churchConfig && !fellowship && (
         <div
           className="reg-app-bg"
           style={{ backgroundImage: `url(${base}/assets/brand/castle-night.webp)` }}
@@ -803,7 +809,7 @@ export default function RegistrationApp({
           {(!churchConfig || churchConfig.logo) && <span className="reg-brand-mark">
             <img src={`${base}/${brand?.logo || "assets/brand/castle-blue.png"}`} alt="" />
           </span>}
-          {(site !== "flow" || churchConfig) && <strong>{brand?.shortName || "Kuriake Castle"}</strong>}
+          {(site !== "flow" || churchConfig || fellowship) && <strong>{brand?.shortName || "Kuriake Castle"}</strong>}
         </a>
         <div className="reg-header-right">
           {gate && actor ? (
@@ -848,7 +854,7 @@ export default function RegistrationApp({
         <div className="reg-demo reg-directory-demo">
           <strong>Preview</strong> · every bishop with pastors, and their photographed pastors, are marked confirmed; everyone else stays dark.
         </div>
-      ) : !api.live && (
+      ) : !api.live && !fellowship && (
         <div className="reg-demo">
           Saved in this browser only · email delivery and shared accounts are
           not connected ·{" "}
@@ -987,7 +993,7 @@ export default function RegistrationApp({
               <b>
                 {office
                   ? "Every bishop and pastor. Every year."
-                  : profile?.name || `Welcome to ${churchConfig?.name || "Kuriake Castle"}`}
+                  : profile?.name || `Welcome to ${fellowship ? FELLOWSHIP.name : churchConfig?.name || "Kuriake Castle"}`}
               </b>
               <p>
                 {office
@@ -1174,9 +1180,10 @@ export default function RegistrationApp({
           <HelpButton actor={actor} run={run} />
         </div>
       )}
-      <LegalFooter />
+      <LegalFooter hidden={fellowship} />
     </div>
     </RosterContext.Provider>
+    </FellowshipContext.Provider>
     </ChurchContext.Provider>
     </OrganizationSiteContext.Provider>
     </EntranceContext.Provider>
@@ -1299,6 +1306,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
   const [paused, setPaused] = useState(null);
   const site = useContext(OrganizationSiteContext);
   const church = useContext(ChurchContext);
+  const fellowship = useContext(FellowshipContext);
   const entrance = useContext(EntranceContext);
   useEffect(() => {
     if (mode !== "signup") return;
@@ -1332,7 +1340,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
         onActor(await api.verifyCode(email, token, mode, remember));
       }
       else {
-        await api.requestCode(email, mode, entrance, church?.path || "");
+        await api.requestCode(email, mode, entrance, fellowship ? FELLOWSHIP.path : church?.path || "");
         setSent(true);
       }
     });
@@ -1404,7 +1412,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
   )}
   {signup && (
     <p className="reg-small">
-      Already registered? <a href={`${church ? `${base}/${church.path}/signup/` : sitePath(site, "signup", base)}#signin`}>Sign in</a>
+      Already registered? <a href={`${fellowship ? fellowshipSignupPath(base) : church ? `${base}/${church.path}/signup/` : sitePath(site, "signup", base)}#signin`}>Sign in</a>
     </p>
   )}
 </form>
@@ -1415,11 +1423,12 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
 function Account({ office, signup = false, run, busy, onActor, open = false, onClose, showVideo = true }) {
   const site = useContext(OrganizationSiteContext);
   const church = useContext(ChurchContext);
+  const fellowship = useContext(FellowshipContext);
   const config = church?.config || ORGANIZATION_SITES[site];
   const [sent] = useState(false);
   return (
-    <section className={`reg-account ${office ? "signup" : "signin"}`}>
-      {showVideo && !church && <HeroVideo src={`${base}/assets/brand/castle-hero-night-b-{size}.mp4`} />}
+    <section className={`reg-account ${office ? "signup" : "signin"} ${fellowship ? "reg-fellowship-account" : ""}`}>
+      {showVideo && !church && !fellowship && <HeroVideo src={`${base}/assets/brand/castle-hero-night-b-{size}.mp4`} />}
       {office ? (
         <>
           <div>
@@ -1436,7 +1445,11 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
         </>
       ) : (
         <>
-          {church ? <h1 className="reg-hero-title reg-church-title">
+          {fellowship ? <h1 className="reg-hero-title reg-fellowship-title">
+            <img className="reg-fellowship-logo" src={`${base}/${FELLOWSHIP.logo}`} alt="DHMM – Dag Heward-Mills Ministries" />
+            <span className="reg-church-kicker">BISHOPS' REGISTRATION</span>
+            {FELLOWSHIP.name}
+          </h1> : church ? <h1 className="reg-hero-title reg-church-title">
             {config.logo && <img className="reg-organization-hero-logo" src={`${base}/${config.logo}`} alt="" />}
             <span className="reg-church-kicker">MINISTERIAL DIRECTORY</span>
             {config.name}
