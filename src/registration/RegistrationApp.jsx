@@ -1445,7 +1445,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
         </>
       ) : (
         <>
-          {fellowship ? <h1 className="reg-hero-title reg-fellowship-title">
+          {fellowship ? open ? null : <h1 className="reg-hero-title reg-fellowship-title">
             <img className="reg-fellowship-logo" src={`${base}/${FELLOWSHIP.logo}`} alt="DHMM – Dag Heward-Mills Ministries" />
             <span className="reg-church-kicker">BISHOPS' REGISTRATION</span>
             {FELLOWSHIP.name}
