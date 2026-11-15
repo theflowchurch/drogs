@@ -445,3 +445,32 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
 .org-bishop-access .bishop-access-signup{color:var(--org-navy);background:var(--org-gold);border:1.5px solid var(--org-gold)}
 .org-bishop-access a:hover{filter:brightness(1.08)}
 @media(max-width:1500px){.org-bishop-access{position:static;transform:none;flex-basis:100%;justify-content:center}.org-dhmm-head-bishops{flex-wrap:wrap;row-gap:12px}}
+/* The public A to Z of bishops (/bishops/, office 15 Nov): the organisations
+   page's cards under letter headings; a card opens the bishop's details. */
+.bl-main{padding-top:28px}
+.bl-tools{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px}
+.bl-heading{margin:0;font-family:var(--denom-display);font-size:clamp(28px,4vw,40px);color:var(--org-navy);text-wrap:balance}
+.bl-heading span{font-family:inherit;color:var(--org-gold-ink);font-size:.6em;letter-spacing:.12em;text-transform:uppercase;margin-left:10px}
+.bl-search input{width:min(360px,80vw);font:inherit;font-size:18px;padding:10px 16px;border:2px solid var(--org-line);border-radius:999px;background:#fff;color:var(--org-navy)}
+.bl-search input:focus{outline:3px solid var(--org-gold);outline-offset:1px}
+.bl-letters{position:sticky;top:0;z-index:3;display:flex;flex-wrap:wrap;gap:4px;padding:10px 0;background:var(--org-ivory);border-bottom:1px solid var(--org-line);margin-bottom:8px}
+.bl-letters a{min-width:34px;text-align:center;padding:4px 6px;border-radius:8px;font-weight:700;font-size:17px;color:var(--org-navy);text-decoration:none}
+.bl-letters a:hover,.bl-letters a:focus-visible{background:var(--org-navy);color:#fff}
+.bl-letter{scroll-margin-top:64px;margin-top:22px}
+.bl-letter-heading{margin:0 0 14px;font-family:var(--denom-display);font-size:34px;color:var(--org-gold-ink);border-bottom:3px solid var(--org-gold);padding-bottom:4px}
+.bl-card{font:inherit;text-align:left;padding:0;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.bl-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px #14223d1f}
+.bl-card:focus-visible{outline:3px solid var(--org-gold);outline-offset:2px}
+.bl-empty{font-size:20px;color:var(--org-navy);padding:30px 0}
+.bl-backdrop{position:fixed;inset:0;z-index:40;background:#0d1729b3;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.bl-detail{position:relative;display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);width:min(760px,100%);max-height:100%;overflow:auto;background:var(--org-ivory);border:3px solid var(--org-gold);border-radius:20px}
+.bl-detail-photo{display:flex;aspect-ratio:4/5;background:#e6e4df;overflow:hidden}
+.bl-detail-text{padding:30px 28px;display:flex;flex-direction:column;gap:6px;justify-content:center}
+.bl-detail-text small{font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--org-gold-ink)}
+.bl-detail-text h2{margin:0 0 14px;font-family:var(--denom-display);font-size:32px;line-height:1.15;color:var(--org-navy)}
+.bl-detail dl{margin:0;display:grid;gap:14px}
+.bl-detail dt{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6b665d}
+.bl-detail dd{margin:2px 0 0;font-size:22px;color:var(--org-navy)}
+.bl-close{position:absolute;top:10px;right:10px;width:42px;height:42px;border-radius:50%;border:2px solid var(--org-line);background:#fff;color:var(--org-navy);font-size:24px;line-height:1;cursor:pointer;z-index:1}
+@media(max-width:640px){.bl-detail{grid-template-columns:1fr}.bl-detail-photo{max-height:48vh}.bl-detail-text{padding:20px}}
+@media(prefers-reduced-motion:reduce){.bl-card{transition:none}.bl-card:hover{transform:none}}

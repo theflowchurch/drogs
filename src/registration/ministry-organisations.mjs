@@ -138,3 +138,19 @@ export const resolveGroupSlug = slug => FORMER[slug] || slug;
 // was chosen.
 export const flatPeople = group => group.all;
 export const directoryGroupBySlug = slug => { slug = resolveGroupSlug(slug); return DIRECTORY_GROUPS.find(g => g.slug === slug || g.parts?.some(p => p.slug === slug)) || null; };
+// Every bishop on the Organisations page once, A to Z by surname, for the
+// public list of bishops (/bishops/, office 15 Nov). A bishop's own church
+// entry (United Denominations, First Love) gives the name, title, church and
+// dates; their councils only fill what that entry lacks.
+const surnameOf = name => String(name).replace(/\(.*?\)/g, ' ').replace(/\b(jnr|snr|jr|sr)\.?$/i, '').trim().split(/\s+/).at(-1) || '';
+export const ALL_BISHOPS = (() => {
+  const byKey = new Map();
+  const own = g => g.section === 'united-denominations' || g.section === FIRST_LOVE;
+  for (const pass of [own, g => !own(g)]) for (const g of DIRECTORY_GROUPS.filter(pass)) for (const p of g.parts ? g.parts.flatMap(x => x.people) : g.people) {
+    const k = bishopKey(p), had = byKey.get(k);
+    if (!had) { const { role, leader, ...rest } = p; byKey.set(k, rest); continue; }
+    for (const f of ['church', 'consecrated', 'appointed', 'image', 'title', 'country']) if (!had[f] && p[f]) had[f] = p[f];
+  }
+  return [...byKey.values()].sort((a, b) => surnameOf(a.name).localeCompare(surnameOf(b.name)) || a.name.localeCompare(b.name));
+})();
+export const bishopSurname = surnameOf;

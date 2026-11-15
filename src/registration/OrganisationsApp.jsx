@@ -15,7 +15,7 @@ import './organisations.css';
 // chosen. Ivory and navy, with large type for older readers.
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
-function Photo({ person, large = false }) {
+export function Photo({ person, large = false }) {
   if (!person?.image) return <span className="org-photo-empty" aria-hidden="true"><svg viewBox="0 0 80 96" fill="currentColor"><circle cx="40" cy="27" r="18"/><path d="M7 91V76c0-20 14-30 33-30s33 10 33 30v15Z"/></svg></span>;
   // The office's edited portraits are framed alike with headroom above the
   // head, so they sit against the top of every card and never lose the head.
@@ -54,7 +54,7 @@ function GroupBox({ group, as: Tag = 'a', thumbs }) {
 
 // The title (office, 9 Nov): the DHMM logo in white on navy, "Worldwide Fellowship of
 // Bishops" in gold, and every bishop on the page counted once.
-function Masthead({ bishops = false }) {
+export function Masthead({ bishops = false }) {
   return <header className={`org-dhmm-head ${bishops ? 'org-dhmm-head-bishops' : ''}`}>
     <a href="#contents" className="org-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
     <div className="org-dhmm-text">
