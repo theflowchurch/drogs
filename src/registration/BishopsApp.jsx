@@ -8,6 +8,7 @@ import './organisations.css';
 // The public list of bishops (office, 15 Nov): every bishop on the
 // Organisations page once, A to Z by surname, in that page's style. A bishop's
 // card opens their church and the year they were consecrated.
+const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const letterOf = b => (bishopSurname(b.name)[0] || '#').toUpperCase();
 
 function Card({ person, onOpen }) {
@@ -36,7 +37,7 @@ function Detail({ person, onClose }) {
         <small>{person.title || 'Bishop'}</small>
         <h2 id="bl-detail-name">{person.name}</h2>
         <dl>
-          <div><dt>Church</dt><dd>{person.church || 'Not recorded'}</dd></div>
+          <div><dt>Church</dt><dd className="bl-church">{person.logo && <img src={`${base}/${person.logo}`} alt=""/>}<span>{person.church || 'Not recorded'}</span></dd></div>
           <div><dt>{person.consecrated || !person.appointed ? 'Consecrated' : 'Appointed'}</dt><dd>{person.consecrated || person.appointed || 'Not recorded'}</dd></div>
         </dl>
       </div>
@@ -45,31 +46,19 @@ function Detail({ person, onClose }) {
 }
 
 export default function BishopsApp({ bishops }) {
-  const [query, setQuery] = useState('');
   const [open, setOpen] = useState(null);
-  const shown = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return q ? bishops.filter(b => `${b.name} ${b.church || ''}`.toLowerCase().includes(q)) : bishops;
-  }, [bishops, query]);
   const letters = useMemo(() => {
     const m = new Map();
-    for (const b of shown) { const l = letterOf(b); if (!m.has(l)) m.set(l, []); m.get(l).push(b); }
+    for (const b of bishops) { const l = letterOf(b); if (!m.has(l)) m.set(l, []); m.get(l).push(b); }
     return [...m];
-  }, [shown]);
+  }, [bishops]);
   return <div className="denom-site org-site bl-site" id="top">
     <Masthead/>
     <main className="org-main bl-main">
-      <div className="bl-tools">
-        <h1 className="bl-heading">The Bishops <span>A to Z</span></h1>
-        <label className="bl-search"><span className="sr-only">Search bishops</span>
-          <input id="bl-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by name or church" autoComplete="off"/>
-        </label>
-      </div>
-      {!query && <nav className="bl-letters" aria-label="Jump to a letter">{letters.map(([l]) => <a key={l} href={`#letter-${l}`}>{l}</a>)}</nav>}
-      {letters.length ? letters.map(([l, people]) => <section key={l} className="bl-letter" id={`letter-${l}`} aria-labelledby={`h-${l}`}>
+      {letters.map(([l, people]) => <section key={l} className="bl-letter" id={`letter-${l}`} aria-labelledby={`h-${l}`}>
         <h2 className="bl-letter-heading" id={`h-${l}`}>{l}</h2>
         <div className="org-members">{people.map(p => <Card key={p.rosterId || p.name} person={p} onOpen={setOpen}/>)}</div>
-      </section>) : <p className="bl-empty">No bishop matches “{query}”.</p>}
+      </section>)}
     </main>
     {open && <Detail person={open} onClose={() => setOpen(null)}/>}
   </div>;
