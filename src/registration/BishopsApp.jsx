@@ -47,14 +47,25 @@ function Detail({ person, onClose }) {
 
 export default function BishopsApp({ bishops }) {
   const [open, setOpen] = useState(null);
+  const [query, setQuery] = useState('');
+  const shown = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return q ? bishops.filter(b => `${b.name} ${b.church || ''}`.toLowerCase().includes(q)) : bishops;
+  }, [bishops, query]);
   const letters = useMemo(() => {
     const m = new Map();
-    for (const b of bishops) { const l = letterOf(b); if (!m.has(l)) m.set(l, []); m.get(l).push(b); }
+    for (const b of shown) { const l = letterOf(b); if (!m.has(l)) m.set(l, []); m.get(l).push(b); }
     return [...m];
-  }, [bishops]);
+  }, [shown]);
   return <div className="denom-site org-site bl-site" id="top">
     <Masthead/>
     <main className="org-main bl-main">
+      <div className="bl-tools">
+        <label className="bl-search"><span className="sr-only">Search bishops</span>
+          <input id="bl-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by name or church" autoComplete="off"/>
+        </label>
+      </div>
+      {!letters.length && <p className="bl-empty">No bishop matches “{query}”.</p>}
       {letters.map(([l, people]) => <section key={l} className="bl-letter" id={`letter-${l}`} aria-labelledby={`h-${l}`}>
         <h2 className="bl-letter-heading" id={`h-${l}`}>{l}</h2>
         <div className="org-members">{people.map(p => <Card key={p.rosterId || p.name} person={p} onOpen={setOpen}/>)}</div>

@@ -477,3 +477,4 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
 .bl-main{padding-top:6px}
 .bl-church{display:flex;align-items:center;gap:12px}
 .bl-church img{width:52px;height:52px;object-fit:contain;flex:none}
+.bl-tools{justify-content:flex-end;margin:18px 0 0}
