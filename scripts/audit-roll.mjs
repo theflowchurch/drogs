@@ -23,7 +23,8 @@ const correctedSheetRow = p => nameCorrections.some(c =>
 let fails = 0; const out = [];
 const check = (name, ok, evidence = '') => { out.push(`${ok ? 'PASS' : 'FAIL'}  ${name}${evidence ? ' — ' + evidence : ''}`); if (!ok) fails++; };
 // 1. Who is on the roll
-check('Bishops on the roll = Bishops List', bishops.length === list.length, `${bishops.length} vs ${list.length}`);
+const promoted = Object.entries(JSON.parse(readFileSync(`${root}data/role-corrections.json`, 'utf8'))).filter(([id, c]) => id !== 'note' && c.role === 'bishop').length;
+check('Bishops on the roll = Bishops List + the office\'s role corrections', bishops.length === list.length + promoted, `${bishops.length} vs ${list.length} + ${promoted}`);
 check('Lay Presidents are exactly the three named', lays.length === 3 && lay.every((n) => lays.some((l) => key(l.name) === key(n))), lays.map((l) => l.name).join(', '));
 check('Lay Presidents come after every bishop', people.findIndex((p) => p.lay) > people.findLastIndex((p) => p.role === 'bishop' && !p.lay));
 check('Only men hold the title Bishop', bishops.every((b) => b.gender === 'female' ? b.title !== 'Bishop' : true), bishops.filter((b) => b.gender === 'female' && b.title === 'Bishop').map((b) => b.name).join(', '));

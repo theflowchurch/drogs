@@ -351,7 +351,18 @@ writeFileSync(`${root}data/submitted-roster-assets.json`, JSON.stringify({ bisho
 // Choices in sign-up/admin are also drawn from the current sheets.
 const denominations = Object.fromEntries(['First Love', 'United Denominations', 'FLOW', 'HJC', 'DHMM'].map(o => [o, ['FLOW', 'HJC', 'DHMM'].includes(o) ? [] : [...new Set(people.filter(p => p.organization === o).map(p => p.denomination).filter(Boolean))].sort()]));
 writeFileSync(`${root}src/registration/denominations.mjs`, `// Generated from the current submitted sheets by scripts/build-roll.mjs.\nexport const DENOMINATIONS = ${JSON.stringify(denominations, null, 2)};\n`);
-writeFileSync(`${root}src/registration/reference-people.json`, JSON.stringify(people.map(({ sheet, source, ...rest }) => rest)) + '\n');
+// The office's role corrections (data/role-corrections.json): someone listed on a
+// bishop's sheet who is now a bishop keeps their id, photo and details, and only
+// their role, title and supervising bishop change.
+const roleCorrections = Object.fromEntries(Object.entries(read('data/role-corrections.json', {})).filter(([id]) => id !== 'note'));
+const corrected = p => { const c = roleCorrections[p.id]; return c ? { ...p, role: c.role || p.role, title: c.title || p.title, ...(c.role === 'bishop' ? { bishop: '' } : {}) } : p; };
+const rollOut = people.map(({ sheet, source, ...rest }) => corrected(rest));
+// A corrected bishop joins the bishops, ahead of the lay presidents and pastors.
+const promoted = rollOut.filter(p => roleCorrections[p.id]?.role === 'bishop');
+const lastBishop = rollOut.findLastIndex(p => p.role === 'bishop' && !p.lay && !roleCorrections[p.id]);
+const rest = rollOut.filter(p => !promoted.includes(p));
+rest.splice(rest.indexOf(rollOut[lastBishop]) + 1, 0, ...promoted);
+writeFileSync(`${root}src/registration/reference-people.json`, JSON.stringify(rest) + '\n');
 const noSheet = listBishops.filter((b) => !latestByBishop.has(b.listName));
 const report = {
   generated: new Date().toISOString(),

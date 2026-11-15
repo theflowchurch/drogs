@@ -1,0 +1,6 @@
+{
+ "note": "Office corrections to a person's role on the roll, applied by scripts/build-roll.mjs as the roll is written. Key: the person's roll id, which stays the same so photos, registrations and links keep working. The person still comes from the sheet that lists them; only role, title and bishop change.",
+ "P177": { "name": "Alexander Igori", "role": "bishop", "title": "Bishop", "source": "Office 15 Nov 2026: bishop in UD Europe (Pleasant Surprise), no longer a pastor under Stephen Poku" },
+ "P823": { "name": "Daniel Nabudere", "role": "bishop", "title": "Bishop", "source": "Office 15 Nov 2026: bishop in UD Europe (Pleasant Surprise), no longer a pastor under Stephen Poku" },
+ "P2265": { "name": "Joao Pedro Sebastiao Andrade", "role": "bishop", "title": "Bishop", "source": "Office 15 Nov 2026: bishop in UD Europe (Pleasant Surprise), no longer a pastor under Stephen Poku" }
+}

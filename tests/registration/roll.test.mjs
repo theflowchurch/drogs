@@ -4,13 +4,15 @@ import { readFileSync } from 'node:fs';
 
 // The roll is built from the Bishops List and the bishops' own sheets only (scripts/build-roll.mjs).
 const people = JSON.parse(readFileSync(new URL('../../src/registration/reference-people.json', import.meta.url), 'utf8'));
+// People the office has made bishops by hand (data/role-corrections.json), on top of the Bishops List.
+const promoted = Object.entries(JSON.parse(readFileSync(new URL('../../data/role-corrections.json', import.meta.url), 'utf8'))).filter(([id, c]) => id !== 'note' && c.role === 'bishop').length;
 const report = JSON.parse(readFileSync(new URL('../../data/reports/roll-build.json', import.meta.url), 'utf8'));
 const lay = people.filter((p) => p.title === 'Lay President');
 const bishops = people.filter((p) => p.role === 'bishop' && p.title !== 'Lay President'), pastors = people.filter((p) => p.role === 'pastor');
 const under = name => pastors.filter(p => p.bishop === (people.find(b => b.role === 'bishop' && b.id === name)?.name || name));
 
-test('every bishop on the Bishops List is on the roll, and nobody else is a bishop', () => {
-  assert.equal(bishops.length, 283);
+test('every bishop on the Bishops List is on the roll, plus the office\'s own corrections, and nobody else is a bishop', () => {
+  assert.equal(bishops.length, 283 + promoted);
   assert.ok(bishops.every((b) => b.group && b.organization), 'each bishop has a group');
 });
 test('the three Lay Presidents claim their pastors and are not counted as bishops', () => {
