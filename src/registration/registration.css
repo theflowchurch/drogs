@@ -4225,3 +4225,4 @@ input[type="date"] {
 .reg-fellowship-logo { width: min(320px, 70vw); height: auto; }
 @media (max-width: 700px) { .reg-fellowship-app .reg-brand strong { display: none; } }
 .reg-fellowship-app .reg-header .reg-primary { background: var(--fw-gold); color: var(--fw-navy); border-color: var(--fw-gold); }
+@media (max-width: 700px) { .reg-fellowship-app .reg-header { position: static; } }
