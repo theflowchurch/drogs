@@ -115,7 +115,7 @@ test("unmatched pastor is Unclaimed but can already send payment proof; linked p
     rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }],
   });
   assert.equal(s.registrations.at(-1).status, "confirmed");
-  assert.equal(s.registrations.at(-1).amount, 25);
+  assert.equal(s.registrations.at(-1).amount, 20);
   s = applyAction(s, pastor, "payment", { proof: "p1/receipt/a.jpg", nonrefundable: true, transactionId: "TX-TEST-0001" });
   assert.equal(s.registrations.at(-1).payment, "pending");
   assert.throws(

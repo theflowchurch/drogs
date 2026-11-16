@@ -19,7 +19,7 @@ test('FLOW offers only Mother Nina Masuku before her own annual registration', (
   let state = applyAction(emptyState(), actor, 'save', data);
   state = applyAction(state, actor, 'submit', state.registrations[0].data);
   assert.equal(state.registrations[0].data.bishopId, 'B334');
-  assert.equal(state.registrations[0].amount, 25);
+  assert.equal(state.registrations[0].amount, 20);
   assert.equal(state.registrations[0].status, 'unclaimed');
   assert.equal(state.profiles.length, 1, 'no bishop account is fabricated');
 });

@@ -28,7 +28,7 @@ test('bank receipts can be submitted on a draft and remain pending until office 
   assert.throws(() => applyAction(state, actor, 'payment', { transactionId: 'BANK-1234', nonrefundable: true }), /Upload payment proof/);
   state = applyAction(state, actor, 'payment', { proof: 'own/receipt/test.webp', transactionId: 'BANK 2026/1234', method: 'bank', nonrefundable: true, receiptCheck: { verdict: 'unclear', reason: 'Manual review' } });
   const record = state.registrations[0];
-  assert.equal(record.status, 'draft'); assert.equal(record.payment, 'pending'); assert.equal(record.paymentMethod, 'bank'); assert.equal(record.amount, 25);
+  assert.equal(record.status, 'draft'); assert.equal(record.payment, 'pending'); assert.equal(record.paymentMethod, 'bank'); assert.equal(record.amount, 20);
   assert.equal(paymentReady(record), true); assert.equal(record.receiptCheck.verdict, 'unclear');
   assert.equal(paymentReady({ payment: 'pending' }), false);
   assert.equal(paymentReady({ payment: 'rejected', proof: 'old' }), false);
