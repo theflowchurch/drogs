@@ -74,13 +74,13 @@ export function LiveGroups({ children }) {
   return <GroupsContext.Provider value={value}>{children}</GroupsContext.Provider>;
 }
 // The live version of a group or line chosen in the address.
-export function useLiveFocus(focus) {
+export function useLiveFocus(focus, fallback = '') {
   const { groups } = useGroups();
   // Read the address too, so a group the office added (not on the published
   // page) opens as well.
   const [hash, setHash] = useState('');
   useEffect(() => { const read = () => setHash(resolveGroupSlug(decodeURIComponent(location.hash.slice(1)))); read(); addEventListener('hashchange', read); return () => removeEventListener('hashchange', read); }, []);
-  const slug = focus.part?.slug || focus.group?.slug || hash;
+  const slug = focus.part?.slug || focus.group?.slug || hash || fallback;
   const group = slug ? groups.find(g => g.slug === slug || g.parts?.some(p => p.slug === slug)) || null : null;
   const part = group?.parts?.find(p => p.slug === slug) || null;
   return { group, part };
@@ -135,12 +135,14 @@ function Group({ group, part }) {
   </section>;
 }
 
-export default function OrganisationsApp({ slug = '', bishops = false }) {
+export default function OrganisationsApp({ slug = '', bishops = false, fromAddress = false }) {
   // An older address for a section opens the contents; one for a group opens it.
-  return <LiveGroups><OrganisationsPage slug={slug} bishops={bishops}/></LiveGroups>;
+  return <LiveGroups><OrganisationsPage slug={slug} bishops={bishops} fromAddress={fromAddress}/></LiveGroups>;
 }
-function OrganisationsPage({ slug, bishops }) {
-  const { group, part } = useLiveFocus(useGroupFocus(PAGE_ALIASES[slug] ? '' : slug));
+function OrganisationsPage({ slug, bishops, fromAddress }) {
+  const [addressSlug, setAddressSlug] = useState('');
+  useEffect(() => { if (fromAddress) setAddressSlug(decodeURIComponent(location.pathname.replace(/\/+$/, '').split('/').pop() || '')); }, [fromAddress]);
+  const { group, part } = useLiveFocus(useGroupFocus(PAGE_ALIASES[slug] ? '' : slug), addressSlug);
   // Office, 11 Nov: every bishop's photo in a strip beside each council's or
   // country's name.
   const variant = 'all';

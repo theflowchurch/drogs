@@ -11,9 +11,15 @@ if(registrationKey){
  if(registrationKey.startsWith('sb_secret_'))throw new Error('Use a public Supabase key, never a secret key.');
  if(registrationKey.startsWith('eyJ')){let claims;try{claims=JSON.parse(Buffer.from(registrationKey.split('.')[1],'base64url').toString());}catch{}if(claims?.role==='service_role')throw new Error('A service-role key cannot be included in the website.');}
 }
+// A group the office adds later has no page built for it; on the live (server)
+// site its address opens it through /orderofbishopsingoodstanding/new-group/.
+const { ORGANISATION_PAGES } = mysqlBackend ? await import('./src/registration/ministry-organisations.mjs') : { ORGANISATION_PAGES: [] };
+const builtPages = [...ORGANISATION_PAGES, 'signup', 'new-group'].map(s => s.replace(/[^a-z0-9-]/g, '')).join('|');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  ...(mysqlBackend ? {} : { output: 'export' }),
+  ...(mysqlBackend ? {
+    async rewrites() { return { beforeFiles: [{ source: `/orderofbishopsingoodstanding/:group((?!(?:${builtPages})$)[a-z0-9]+(?:-[a-z0-9]+)*)/`, destination: '/orderofbishopsingoodstanding/new-group/' }] }; },
+  } : { output: 'export' }),
   trailingSlash: true,
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   images: { unoptimized: true },

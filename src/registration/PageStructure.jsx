@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from 'react';
 import publishedStructure from './ministry-organisations.json';
-import { DEFAULT_LAYOUT, buildDirectory } from './ministry-organisations.mjs';
+import { DEFAULT_LAYOUT, buildDirectory, ORGANISATION_PAGES } from './ministry-organisations.mjs';
 import { overlayReferences } from './model.mjs';
 import { rosterFrom } from './live-roster.mjs';
 import { pastorEntries, pastorGroups } from './public-entries.mjs';
@@ -79,7 +79,7 @@ function BishopsStructure({ state, perform }) {
       <select aria-label="Section for the new group" value={newGroup.section || sections(st)[0]?.slug} onChange={e => setNewGroup({ ...newGroup, section: e.target.value })}>{sections(st).map(o => <option key={o.slug} value={o.slug}>{o.name}</option>)}</select>
       <button type="button" className="reg-secondary" disabled={!newGroup.name.trim()} onClick={() => update(next => {
         const o = sections(next).find(x => x.slug === (newGroup.section || sections(next)[0].slug));
-        let slug = slugOf(newGroup.name); while (allGroups(next).some(x => x.g.slug === slug)) slug += '-2';
+        let slug = slugOf(newGroup.name) || 'group'; while (slug === 'signup' || ORGANISATION_PAGES.includes(slug) || allGroups(next).some(x => x.g.slug === slug)) slug += '-2';
         o.directoryGroups = [...(o.directoryGroups || []), { slug, name: newGroup.name.trim(), people: [] }];
         if (!['first-love-church', 'para-church'].includes(o.slug)) setLayout(next, { order: [...layoutOf(next).order, slug] });
         setOpen(slug); setNewGroup({ name: '', section: newGroup.section });
@@ -87,6 +87,7 @@ function BishopsStructure({ state, perform }) {
     </div>
     {current && <div className="reg-ps-editor">
       <h3>{current.g.name} <small>in {current.o.name}</small></h3>
+      <p className="reg-small">Its own link (works once saved): <a href={`/orderofbishopsingoodstanding/${open}/`} target="_blank" rel="noreferrer">kuriakecastle.org/orderofbishopsingoodstanding/{open}/</a></p>
       <div className="reg-fields">
         <label className="reg-field"><span>Name</span><input value={current.g.name} onChange={e => update(next => { groupOf(next, open).g.name = e.target.value; })}/></label>
         <label className="reg-field"><span>Initials (shown after a dash)</span><input value={L.initials[open] || ''} onChange={e => update(next => setLayout(next, { initials: { ...layoutOf(next).initials, [open]: e.target.value } }))}/></label>
