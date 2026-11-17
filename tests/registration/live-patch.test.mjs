@@ -46,3 +46,15 @@ test('people the office adds appear, a new church gets its own box, and nobody s
   assert.ok(pastors.find(p => p.rosterId === 'Xnew2').details.some(d => d.value === 'Bishop New Bishop Person'));
   const ids = allBishopsOf(groups).map(b => b.rosterId); assert.equal(new Set(ids).size, ids.length);
 });
+
+test('the seven pastors deleted twice over are restored once, and can be deleted again later', async () => {
+  const { emptyState, syncRoll, overlayReferences } = await import('../../src/registration/model.mjs');
+  const seven = ['Sb8c7d044', 'PF158', 'Sdb542231', 'S0ec63b27', 'S391d2dfe', 'PF260', 'S961d9198'];
+  const state = { ...emptyState(), overrides: { ...Object.fromEntries(seven.map(id => [id, { deleted: true }])), B123: { denomination: 'Malawi', _officeFields: ['denomination'] } } };
+  const once = syncRoll(state, people, 'v1');
+  for (const id of seven) assert.ok(overlayReferences(people, once).some(p => p.id === id), id);
+  assert.equal(once.overrides.B123.denomination, 'Malawi', "the office's other changes stay");
+  const deletedAgain = { ...once, overrides: { ...once.overrides, PF260: { deleted: true } } };
+  assert.equal(syncRoll(deletedAgain, people, 'v1'), null, 'not applied a second time');
+  assert.ok(!overlayReferences(people, deletedAgain).some(p => p.id === 'PF260'));
+});

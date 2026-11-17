@@ -155,8 +155,16 @@ export const pauseFor = (state, entrance) => { const s = signupOf(state); return
 // (run once per roll by the server at start-up): every denomination the roll uses is in the structure, each
 // United Denominations group lists what its bishops and pastors use. Office corrections remain
 // authoritative; hidden ids that no longer exist are forgotten.
+// One-off fixes to the office's saved decisions, each applied once at the next
+// start-up and remembered in officeFixes so it never repeats.
+// Office, 17 Nov 2026: while removing pastors listed under two bishops, the office
+// and this site each deleted a different copy, so seven people vanished. Their
+// records are restored once; nothing else the office did changes, and they can be
+// deleted or hidden again on the admin page like anyone else.
+const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', 'PF158', 'Sdb542231', 'S0ec63b27', 'S391d2dfe', 'PF260', 'S961d9198'] }];
+const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
-  if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1') return null;
+  if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
   state = canonicalOfficeNames(mergeCurrentReferences(state, people));
   const aligned = reconcileSubmittedState(state, people);
   state = aligned.state;
@@ -184,7 +192,11 @@ export function syncRoll(state, people, version) {
     rollSync: version,
     submittedSourceSync: 'submitted-only-v1',
   };
+  const fixes = pendingFixes(state);
+  for (const fix of fixes) for (const id of fix.restore || []) if (next.overrides[id]?.deleted) next.overrides[id] = { ...next.overrides[id], deleted: false };
+  if (fixes.length) next.officeFixes = [...(state.officeFixes || []), ...fixes.map(f => f.id)];
   const dropped = Object.keys(state.overrides || {}).length - Object.keys(overrides).length;
+  if (fixes.length) state.audit = [...state.audit, { id: crypto.randomUUID(), actor: "system", at: new Date().toISOString(), action: "restoreReference", detail: { fixes: fixes.map(f => f.id), restored: fixes.flatMap(f => f.restore || []) } }];
   next.audit = [...state.audit, { id: crypto.randomUUID(), actor: "system", at: new Date().toISOString(), action: "rollSync", detail: { version, corrections: dropped, sourceCleanup: aligned.summary, denominations: Object.values(next.catalog.denominations).reduce((n, d) => n + d.length, 0) } }];
   return next;
 }
