@@ -1205,6 +1205,7 @@ export function applyAction(
     if (payload.source === "reference" && !r.data.referenceId)
       throw Error("This registration is not linked to an existing record.");
     r.displayPhoto = payload.source;
+    r.photoByOffice = true; // the office's own choice, kept until it changes it
   } else if (action === "reviewPayment") {
     office();
     const r = registration();
@@ -1231,7 +1232,7 @@ export function applyAction(
     detail = Object.fromEntries(Object.keys(incoming).filter((k) => JSON.stringify(r.data[k] ?? "") !== JSON.stringify(data[k] ?? "")).map((k) => [k, [r.data[k] ?? "", data[k] ?? ""]]));
     const oldName = state.overrides?.[r.data.referenceId]?.name || references.find(p => p.id === r.data.referenceId)?.name || r.data.name;
     r.data = { ...data, consentedAt: r.data.consentedAt, photoConfirmed: true, referenceId: data.referenceId || r.data.referenceId || "", bishopId: data.bishopId || r.data.bishopId || "", photoCheck: incoming.photo !== undefined && incoming.photoCheck === undefined ? null : data.photoCheck };
-    if (incoming.photo !== undefined) r.displayPhoto = 'upload';
+    if (incoming.photo !== undefined) { r.displayPhoto = 'upload'; r.photoByOffice = true; } // the office uploaded it
     r.updatedAt = now;
     const p = state.profiles.find((x) => x.id === r.userId);
     if (p) { p.name = data.name; p.organization = data.organization; p.role = data.role; if (incoming.referenceId !== undefined) p.referenceId = data.referenceId || ""; }
@@ -1368,7 +1369,7 @@ export function applyAction(
     for (const r of state.registrations.filter(r => r.data.referenceId === id || linked.has(r.userId))) {
       for (const [k, v] of Object.entries(fields)) if (!['bishop', 'group', 'yearAppointed', 'yearOrdained', 'yearConsecrated'].includes(k)) r.data[k === 'branch' ? 'church' : k] = v;
       if (fields.name !== undefined) { const words = fields.name.split(/\s+/); r.data.firstName = words.slice(0, -1).join(' '); r.data.lastName = words.at(-1); }
-      if (fields.photo !== undefined) { r.displayPhoto = 'upload'; r.data.photoCheck = null; }
+      if (fields.photo !== undefined) { r.displayPhoto = 'upload'; r.photoByOffice = true; r.data.photoCheck = null; }
       r.updatedAt = now;
     }
     for (const p of state.profiles.filter(p => linked.has(p.id))) {
@@ -1516,6 +1517,16 @@ export function titleFor({ role, gender, organization, title }) {
   if (gender === "female") return BISHOP_TITLES_FEMALE.includes(title) ? title : organization === "United Denominations" ? "Episcopal Sister" : organization === "First Love" ? "Mother" : "Bishop";
   return "Bishop";
 }
+// Which picture the directory shows (office, 17 Nov): our own photo (an office
+// upload on the record, else the portrait we already hold). A member's upload is
+// for the office to confirm it is them; it shows only when we hold no photo, or
+// when the office itself picks it ("Which photo should the roll show?").
+export function shownPhoto(reg, ref) {
+  if (ref?.photo) return { photo: ref.photo, image: '' };
+  const ours = ref?.image || '';
+  if (ours && !(reg?.displayPhoto === 'upload' && reg?.photoByOffice)) return { photo: '', image: ours };
+  return { photo: reg?.data?.photo || '', image: ours };
+}
 export function publicRoll(state, people, year = state.year) {
   const byId = new Map(overlayReferences(people, state).map((p) => [p.id, p]));
   const bishopOf = (r) => state.profiles.find((p) => (p.referenceId || p.id) === r.data.bishopId && p.bishopApproved);
@@ -1533,8 +1544,8 @@ export function publicRoll(state, people, year = state.year) {
               const reg = x.pastorId && state.registrations.find((y) => y.userId === x.pastorId && y.year === year);
               const ref = byId.get(x.referenceId || reg?.data.referenceId);
               const d = reg ? registrationDetails(state, reg.data, ref?.id) : ref;
-              const useReference = reg?.displayPhoto === 'reference' && ref?.image;
-              return { id: `p:${x.id}`, referenceId: ref?.id || '', role: "pastor", name: d?.name || x.name, title: d ? titleFor(d) : "Pastor", photo: reg && !useReference ? ref?.photo || reg.data.photo || "" : "", image: useReference ? ref.image : '', city: d?.city || "", country: d?.country || "", registered: Boolean(reg) };
+              const shown = reg ? shownPhoto(reg, ref) : { photo: '', image: '' };
+              return { id: `p:${x.id}`, referenceId: ref?.id || '', role: "pastor", name: d?.name || x.name, title: d ? titleFor(d) : "Pastor", photo: shown.photo, image: shown.image, city: d?.city || "", country: d?.country || "", registered: Boolean(reg) };
             })
             .sort(bySurname)
         : undefined;
@@ -1556,9 +1567,8 @@ export function publicRoll(state, people, year = state.year) {
         country: d.country,
         branch: ref?.branch || "",
         bishop: ref?.bishop || "",
-        // The office may prefer the existing portrait over the new upload.
-        photo: r.displayPhoto === "reference" && ref?.image ? "" : ref?.photo || r.data.photo,
-        image: r.displayPhoto === "reference" ? ref?.image || "" : "",
+        // Our photo first; the member's upload only when we hold none or the office picks it.
+        ...shownPhoto(r, ref),
         referenceId: r.data.referenceId || "",
       };
     })
@@ -1685,7 +1695,7 @@ export function directoryPeople(state, references, year = state.year) {
       country: d?.country || p.country,
       denomination: d?.denomination || p.denomination,
       // The office's "which photo" choice applies everywhere, not only on the public roll.
-      photo: registration?.displayPhoto === "reference" && p.image ? "" : p.photo || d?.photo || draftPhotos.get(p.id) || "",
+      photo: p.photo || (p.image && !(registration?.displayPhoto === "upload" && registration?.photoByOffice) ? "" : d?.photo || draftPhotos.get(p.id) || ""),
       recorded: { email: state.contacts?.[p.id]?.email ?? p.email, phone: state.contacts?.[p.id]?.phone ?? p.phone },
       updated: Boolean(registration || row?.referenceConfirmedAt),
       updatedAt:

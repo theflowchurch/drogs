@@ -73,8 +73,10 @@ test('hidden records remain photo tasks; deleted records are accounted for separ
 });
 test('linked registrations are counted once and the selected displayed photo determines replacement status', () => {
   const s = { ...emptyState(), profiles: [{ id: 'u2', referenceId: 'P2' }], registrations: [{ userId: 'u2', year: 2027, status: 'confirmed', manual: true, data: { role: 'pastor', name: 'Flagged Person', referenceId: 'P2', photo: 'u2/portrait/new.webp' } }] };
-  assert.equal(count(s).total, 3); assert.equal(count(s).replace, 0); assert.equal(count(s).replaced, 1);
-  s.registrations[0].displayPhoto = 'reference';
+  assert.equal(count(s).total, 3); assert.equal(count(s).replace, 1, 'a member upload does not replace our photo (17 Nov)');
+  s.registrations[0].displayPhoto = 'upload'; s.registrations[0].photoByOffice = true;
+  assert.equal(count(s).replace, 0, 'unless the office picks the upload');
+  s.registrations[0].displayPhoto = 'reference'; s.registrations[0].photoByOffice = true;
   assert.equal(count(s).replace, 1);
   const replaced = edit(s, 'P2', { photo: 'office/portrait/replacement.webp' });
   assert.equal(count(replaced).replace, 0, 'office replacement switches back to the new upload');

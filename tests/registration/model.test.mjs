@@ -415,10 +415,13 @@ test("the public roll lists only confirmed people and the office can pick the ph
   s = applyAction(s, office, "approveBishop", { userId: bishop.id, referenceId: "B1" });
   const roll = publicRoll(s, references);
   assert.equal(roll.length, 1);
-  assert.equal(roll[0].photo, profile(bishop).photo, "the new upload shows by default");
+  assert.equal(roll[0].photo, "", "our existing photo shows by default, not the member's upload");
+  assert.equal(roll[0].image, "assets/bishops/001.jpg");
   assert.equal(roll[0].email, undefined, "no contact details on the roll");
   assert.equal(directoryPeople(s, references).find((p) => p.id === "B1").updated, true);
   assert.throws(() => applyAction(s, bishop, "choosePhoto", { userId: bishop.id, source: "reference" }), /Office/);
+  s = applyAction(s, office, "choosePhoto", { userId: bishop.id, source: "upload" });
+  assert.equal(publicRoll(s, references)[0].photo, profile(bishop).photo, "the office can choose to show the upload");
   s = applyAction(s, office, "choosePhoto", { userId: bishop.id, source: "reference" });
   const shown = directoryPeople(s, references).find((p) => p.id === "B1");
   assert.equal(shown.photo, "", "the office directory shows the existing photo too");

@@ -3104,7 +3104,7 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
     p.recorded && p.recorded[field] && p.recorded[field] !== p[field];
   const r = p.registration;
   const canChoose = Boolean(r && r.data?.photo && p.image && perform);
-  const showing = r?.displayPhoto === "reference" ? "reference" : "upload";
+  const showing = r?.displayPhoto === "upload" && r?.photoByOffice ? "upload" : "reference"; // our photo unless the office picked the upload
   return (
     <>
       <div className="reg-record-hero centred">

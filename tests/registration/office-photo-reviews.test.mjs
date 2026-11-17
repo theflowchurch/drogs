@@ -27,7 +27,7 @@ test('the explicit bishop assignment also corrects a conflicting saved organizat
   const pastor = directoryPeople(next, refs).find(p => p.id === 'P1');
   assert.equal(pastor.bishop, 'ES Joy');
   assert.equal(pastor.organization, 'First Love');
-  assert.equal(pastor.photo, 'saved.webp');
+  assert.equal(pastor.photo, '', 'our photo shows; the member upload is only for the office to check');
   assert.equal(photoProgress(next, refs).replace, 1);
   assert.equal(applyOfficePhotoReviews(next, refs, [rule]), null);
 });

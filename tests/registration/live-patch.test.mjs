@@ -58,3 +58,11 @@ test('the seven pastors deleted twice over are restored once, and can be deleted
   assert.equal(syncRoll(deletedAgain, people, 'v1'), null, 'not applied a second time');
   assert.ok(!overlayReferences(people, deletedAgain).some(p => p.id === 'PF260'));
 });
+test('the directory shows our photo, not the member upload, unless we hold none or the office picks the upload', async () => {
+  const { shownPhoto } = await import('../../src/registration/model.mjs');
+  const reg = { displayPhoto: 'upload', data: { photo: 'member.webp' } };
+  assert.deepEqual(shownPhoto(reg, { image: 'ours.webp' }), { photo: '', image: 'ours.webp' });
+  assert.deepEqual(shownPhoto(reg, { image: 'ours.webp', photo: 'office.webp' }), { photo: 'office.webp', image: '' });
+  assert.deepEqual(shownPhoto(reg, { image: '' }), { photo: 'member.webp', image: '' });
+  assert.deepEqual(shownPhoto({ ...reg, photoByOffice: true }, { image: 'ours.webp' }), { photo: 'member.webp', image: 'ours.webp' });
+});
