@@ -739,12 +739,12 @@ export default function RegistrationApp({
   const SUB_LABEL = { Directory: "Roll of Good Standing", "Existing records": "Existing Records", "Pastor lists": "Pastor Lists", "API keys": "API Keys" };
   const [sub, setSub] = useState({}); // which page is open inside People, Review and Settings
   const nav = office
-    ? ["Dashboard", "Directory", "Photo tasks", "Review", "Data", "Communication", "Denominations", "Bishops & Pastors pages", ...(SUBS.Settings.length ? ["Settings"] : [])]
+    ? ["Dashboard", "To do", "Directory", "Photo tasks", "Review", "Data", "Communication", "Denominations", "Bishops & Pastors pages", ...(SUBS.Settings.length ? ["Settings"] : [])]
     : [
         "Registration",
         ...(current && current.status !== "draft" ? ROLL_TABS : []),
         ...(profile?.role === "bishop" && current && !["draft", "denied"].includes(current.status)
-          ? ["My pastors"]
+          ? ["To do", "My pastors"]
           : []),
       ];
   const view = SUBS[tab] ? sub[tab] || SUBS[tab][0] : tab;
@@ -980,7 +980,7 @@ export default function RegistrationApp({
                       ? "My profile"
                       : n}
                   </span>
-                  {n === "My pastors" && todoFor(state, actor).total > 0 && <b>{todoFor(state, actor).total}</b>}
+                  {n === "To do" && state && todoFor(state, actor).total > 0 && <b>{todoFor(state, actor).total}</b>}
                   {n === "Review" && scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length + conflicts.length + unclaimedPeople.length > 0 && (
                     <b>
                       {scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length + conflicts.length + unclaimedPeople.length}
@@ -1007,7 +1007,7 @@ export default function RegistrationApp({
             <fieldset className="reg-workspace-fieldset" disabled={busy}>
               {tab === "Dashboard" && (
                 <>
-                  <OfficeTodo state={state} actor={actor} onOpen={(v) => { setTab("Review"); setSub({ ...sub, Review: v }); }} />
+                  <div className="reg-dash-todo"><OfficeTodo state={state} actor={actor} onOpen={(v) => { setTab("Review"); setSub({ ...sub, Review: v }); }} /></div>
                   {conflicts.length > 0 && (
                     <div className="reg-conflict-banner" role="alert">
                       <b>{conflicts.length.toLocaleString()} {conflicts.length === 1 ? "record contradicts" : "records contradict"} the group and denomination structure.</b>
@@ -1024,7 +1024,12 @@ export default function RegistrationApp({
                   </section>
                 </>
               )}
-              {tab === "Registration" && !office && <BishopTodo state={state} actor={actor} perform={perform} />}
+              {tab === "Registration" && !office && todoFor(state, actor).total > 0 && (
+                <div className="reg-conflict-banner reg-todo-banner" role="status">
+                  <b>{todoFor(state, actor).total === 1 ? "A pastor is" : `${todoFor(state, actor).total} pastors are`} waiting for you to confirm.</b>
+                  <button type="button" className="reg-text" onClick={() => setTab("To do")}>Open To do →</button>
+                </div>
+              )}
               {tab === "Registration" && (
                 <Participant
                   fixedRole={typeof signup === "string" ? signup : ""}
@@ -1097,6 +1102,9 @@ export default function RegistrationApp({
                     </div>
                   </div>
                   {tab === "Communication" && <Communication state={state} run={run} />}
+                  {tab === "To do" && (office
+                    ? <OfficeTodo state={state} actor={actor} onOpen={(v) => { setTab("Review"); setSub({ ...sub, Review: v }); }} />
+                    : todoFor(state, actor).total ? <BishopTodo state={state} actor={actor} perform={perform} /> : <p className="reg-small">Nothing waiting. When a pastor registers under you, they will appear here and you will get an email.</p>)}
                   {tab === "Denominations" && <div className="reg-settings-list"><Structure state={state} perform={perform} actor={actor} show={["orgs", "groups"]} /></div>}
                   {tab === "Bishops & Pastors pages" && <PageStructure state={state} perform={perform} />}
                   {tab === "Data" && <DataExport state={state} people={everyone} year={Number(year)} />}
@@ -1166,7 +1174,7 @@ export default function RegistrationApp({
                     />
                   )}
                   {view === "Conflicts" && <StructureConflicts conflicts={conflicts} />}
-                  {view === "My pastors" && <BishopTodo state={state} actor={actor} perform={perform} />}
+                  {view === "My pastors" && !office && <BishopTodo state={state} actor={actor} perform={perform} />}
                   {(view === "My pastors" || view === "Pastor lists") && (
                     <Roster
                       state={state}
@@ -1699,7 +1707,7 @@ function Participant({
           <h1>My profile</h1>
           <p>Your place on the Roll of Good Standing. You can update your details at any time.</p>
         </div>
-        <Badge status={current.status === "unclaimed" ? "pending" : current.status} />
+        {current.status === "unclaimed" ? <Badge status="pending">Waiting for your bishop to confirm</Badge> : <Badge status={current.status} />}
       </div>
       <div className="reg-status-layout">
         <section className="reg-card">
