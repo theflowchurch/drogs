@@ -1522,9 +1522,13 @@ export function titleFor({ role, gender, organization, title }) {
 // for the office to confirm it is them; it shows only when we hold no photo, or
 // when the office itself picks it ("Which photo should the roll show?").
 export function shownPhoto(reg, ref) {
-  if (ref?.photo) return { photo: ref.photo, image: '' };
+  const officePicked = reg?.displayPhoto === 'upload' && reg?.photoByOffice;
+  // A member's details are copied onto their record, upload included; that copy
+  // is still the member's upload, not a photo the office put there.
+  const copiedUpload = ref?.photo && ref.photo === reg?.data?.photo && !officePicked;
+  if (ref?.photo && !copiedUpload) return { photo: ref.photo, image: '' };
   const ours = ref?.image || '';
-  if (ours && !(reg?.displayPhoto === 'upload' && reg?.photoByOffice)) return { photo: '', image: ours };
+  if (ours && !officePicked) return { photo: '', image: ours };
   return { photo: reg?.data?.photo || '', image: ours };
 }
 export function publicRoll(state, people, year = state.year) {

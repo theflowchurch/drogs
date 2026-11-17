@@ -101,7 +101,9 @@ test('office name and location corrections survive later member photo updates in
   assert.equal(row.name, 'Corrected Official Name'); assert.equal(row.city, 'Tema'); assert.equal(row.email, 'corrected@example.com');
   assert.equal(row.photo, 'u2/portrait/replaced.webp');
   const roll = publicRoll(s, refs)[0];
-  assert.equal(roll.name, row.name); assert.equal(roll.city, row.city); assert.equal(roll.photo, row.photo);
+  assert.equal(roll.name, row.name); assert.equal(roll.city, row.city);
+  // The roll shows our photo, not the member's upload copied onto the record (office, 17 Nov).
+  assert.equal(roll.photo, ''); assert.equal(roll.image, 'old.jpg');
   assert.equal(publicOverlay(s).overrides.P2._officeFields, undefined);
   s = applyAction(s, office, 'officeEdit', { userId: 'u2', data: { photo: 'office/portrait/latest.webp' } }, undefined, refs);
   assert.equal(directoryPeople(s, refs).find(p => p.id === 'P2').name, row.name);
