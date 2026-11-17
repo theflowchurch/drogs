@@ -11,7 +11,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { paymentJson, createQuote, readQuote, checkoutReturnUrl, validateQuotedPayment } from './paystack.mjs';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
-import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, assignedPortrait, canReadMedia } from './storage.mjs';
@@ -46,6 +46,20 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
   const keys = createKeyService({ pool, config, storage });
   const management = createManagementApi({ pool, config, storage, keys, people, invalidate: () => { publicCache.at = 0; } });
   const support = createSupport({ config, mailer, fetcher, logger });
+  // The email a bishop gets when a pastor registers under them; the same pastor
+  // also waits under "To do" on the bishop's account until confirmed.
+  async function notifyBishop({ pastor, to, bishopName, bishopUser }) {
+    let address = to;
+    if (!address) { const [[u]] = await pool.execute('SELECT email FROM dr_users WHERE id=?', [bishopUser]); address = u?.email || ''; }
+    if (!address) return;
+    const esc = v => String(v || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const link = `${config.origin.replace(/drogs\.dagministry\.org/, 'kuriakecastle.org')}/orderofbishopsingoodstanding/signup/#signin`;
+    const who = `${pastor.title || 'Pastor'} ${pastor.name}`.trim();
+    const place = [pastor.denomination || pastor.church, [pastor.city, pastor.country].filter(Boolean).join(', ')].filter(Boolean).join(' · ');
+    await mailer.sendMail(brandedMail({ from: config.from, to: address, subject: `${who} has registered under you`,
+      text: `Dear Bishop ${String(bishopName).split(' ')[0] || ''},\n\n${who}${place ? ` (${place})` : ''} has registered on Kuriake Castle and named you as their bishop.\n\nPlease sign in and confirm them under "To do" or "My pastors": ${link}\n\nIf they are not your pastor, choose "Not my pastor" there.\n\nKuriake Castle Office`,
+      html: `<p style="margin:0 0 12px">Dear Bishop ${esc(String(bishopName).split(' ')[0])},</p><p style="margin:0 0 12px"><b>${esc(who)}</b>${place ? ` (${esc(place)})` : ''} has registered on Kuriake Castle and named you as their bishop.</p><p style="margin:0 0 18px">Please sign in and confirm them under <b>To do</b> or <b>My pastors</b>.</p><p style="margin:0 0 18px"><a href="${link}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Sign in to confirm →</a></p><p style="margin:0;color:#6a7283;font-size:13px">If they are not your pastor, choose “Not my pastor” there.</p>` }));
+  }
   return async function handle(request) {
     try {
       const url = new URL(request.url), path = url.pathname.replace(/\/$/, ''), method = request.method;
@@ -237,7 +251,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           await assertOwnedMedia(pool, actor, payload.proof, 'receipt');
           payload.receiptCheck = await storage.receiptReport(payload.proof);
         }
-        let reviewed = null;
+        let reviewed = null, newPastor = null;
         await transaction(pool, async conn => {
           const before = await readState(conn, true);
           if (['save', 'submit', 'update'].includes(name) && payload.photo && !assignedPortrait(before, actor, payload.photo)) await assertOwnedMedia(conn, actor, payload.photo, 'portrait');
@@ -255,7 +269,15 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           catch (error) { throw new HttpError(400, error.message); }
           await persistState(conn, before, after);
           if (name === 'reviewBishop') reviewed = after.registrations.find(r => r.userId === payload.userId && r.year === after.year);
+          // A pastor who has just registered under a registered bishop: that bishop is told (17 Nov).
+          if (name === 'submit') {
+            const r = after.registrations.find(x => x.userId === actor.id && x.year === after.year);
+            const bishop = r?.data?.role === 'pastor' && r.status === 'unclaimed' ? bishopKeyed(after, r.data.bishopId) : null;
+            const bishopReg = bishop && after.registrations.find(x => x.userId === bishop.id && x.year === after.year);
+            if (bishop) newPastor = { pastor: r.data, to: bishopReg?.data?.email || bishop.email || '', bishopName: bishop.name || bishopReg?.data?.name || '', bishopUser: bishop.id };
+          }
         });
+        if (newPastor) notifyBishop(newPastor).catch(error => logger.error?.('new-pastor email failed:', error?.message || error));
         publicCache.at = 0; // office edits and pauses show on the public page at once
         // The office's decision goes to the address the bishop registered with; a mail failure must not undo the decision.
         if (reviewed?.data?.email) {

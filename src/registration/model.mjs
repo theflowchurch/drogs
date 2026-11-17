@@ -627,6 +627,18 @@ export function bishopKeyed(state, key) {
     (p) => (p.referenceId || p.id) === key && submittedBishop(state, p),
   );
 }
+// What is waiting for someone (17 Nov). A bishop: pastors who named them and
+// wait to be confirmed. The office: pastors no bishop has confirmed yet, bishops
+// waiting for approval, and receipts from money transfer apps to check (Paystack
+// payments confirm themselves). Works on the state the person can see.
+export function todoFor(state, actor) {
+  const year = state.year, mine = (state.registrations || []).filter(r => r.year === year);
+  const pastorsToConfirm = mine.filter(r => r.data?.role === 'pastor' && r.status === 'unclaimed' && r.userId !== actor?.id);
+  if (!actor?.office) return { pastorsToConfirm, bishopsToApprove: [], receiptsToCheck: [], total: pastorsToConfirm.length };
+  const bishopsToApprove = mine.filter(r => r.data?.role === 'bishop' && r.status === 'pending');
+  const receiptsToCheck = mine.filter(r => r.payment === 'pending' && r.proof && r.status !== 'denied');
+  return { pastorsToConfirm, bishopsToApprove, receiptsToCheck, total: pastorsToConfirm.length + bishopsToApprove.length + receiptsToCheck.length };
+}
 export const registeredBishops = (state) =>
   state.profiles
     .filter((p) => submittedBishop(state, p))
@@ -1059,6 +1071,18 @@ export function applyAction(
     row.pastorId = r.userId;
     row.confirmedBy = actor.id;
     row.confirmedAt = now;
+  } else if (action === "declinePastor") {
+    // The bishop a pastor named says they are not theirs (17 Nov): the pastor
+    // goes back to the office, which can assign the right bishop.
+    const r = registration();
+    if (!r || r.data.role !== "pastor" || r.status !== "unclaimed") throw Error("This pastor is no longer waiting. Refresh the page.");
+    const named = bishopKeyed(state, r.data.bishopId);
+    if (!actor.office && named?.id !== actor.id && !(submittedBishop(state, profile) && namesAlike(profile?.name, r.data.bishopName))) throw Error("Only the bishop this pastor named can do this.");
+    r.declinedBy = [...new Set([...(r.declinedBy || []), actor.id])];
+    r.declinedBishop = r.data.bishopName || named?.name || "";
+    r.data.bishopId = "";
+    r.data.bishopName = "";
+    detail = { pastor: r.data.name, declined: r.declinedBishop };
   } else if (action === "assignBishop") {
     office();
     const r = registration();

@@ -78,3 +78,20 @@ test('member uploads already copied onto records come off once; office uploads s
   assert.equal(next.overrides.P2.photo, 'office-user/portrait/office.webp');
   assert.ok(next.officeFixes.includes('member-photos-off-records-2026-11-17'));
 });
+test('to do: a bishop sees pastors who named them; "not my pastor" sends them back to the office', async () => {
+  const { emptyState, applyAction, todoFor, visibleState } = await import('../../src/registration/model.mjs');
+  const bishop = { id: 'b1', email: 'b@x.com' }, office = { id: 'o', email: 'o@x.com', office: true };
+  const s = { ...emptyState(), year: 2027, profiles: [{ id: 'b1', role: 'bishop', name: 'Ama Mensah', bishopApproved: true }, { id: 'p2', role: 'bishop', name: 'Esi Bishop' }],
+    registrations: [
+      { userId: 'b1', year: 2027, status: 'confirmed', data: { role: 'bishop', name: 'Ama Mensah' } },
+      { userId: 'p1', year: 2027, status: 'unclaimed', data: { role: 'pastor', name: 'Kofi Pastor', bishopId: 'b1', bishopName: 'Ama Mensah' } },
+      { userId: 'p2', year: 2027, status: 'confirmed', payment: 'pending', proof: 'p2/receipt/x.webp', data: { role: 'bishop', name: 'Esi Bishop' } }] };
+  assert.deepEqual(todoFor(visibleState(s, bishop, []), bishop).pastorsToConfirm.map(r => r.userId), ['p1']);
+  const o = todoFor(s, office);
+  assert.equal(o.pastorsToConfirm.length, 1); assert.equal(o.receiptsToCheck.length, 1); assert.equal(o.total, 2);
+  const next = applyAction(s, bishop, 'declinePastor', { userId: 'p1' });
+  assert.equal(next.registrations[1].data.bishopId, '');
+  assert.equal(todoFor(visibleState(next, bishop, []), bishop).total, 0, 'gone from the bishop');
+  assert.equal(todoFor(next, office).pastorsToConfirm.length, 1, 'still with the office');
+  assert.throws(() => applyAction(s, { id: 'x', email: 'x@x.com' }, 'declinePastor', { userId: 'p1' }), /Only the bishop/);
+});

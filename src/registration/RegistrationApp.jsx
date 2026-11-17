@@ -75,6 +75,7 @@ import {
   referenceIndex,
   referenceMatches,
   directoryPeople,
+  todoFor,
 } from "./model.mjs";
 import {
   currencyFor,
@@ -979,6 +980,7 @@ export default function RegistrationApp({
                       ? "My profile"
                       : n}
                   </span>
+                  {n === "My pastors" && todoFor(state, actor).total > 0 && <b>{todoFor(state, actor).total}</b>}
                   {n === "Review" && scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length + conflicts.length + unclaimedPeople.length > 0 && (
                     <b>
                       {scoped.filter((r) => r.status === "unclaimed" || r.status === "pending").length + conflicts.length + unclaimedPeople.length}
@@ -1005,6 +1007,7 @@ export default function RegistrationApp({
             <fieldset className="reg-workspace-fieldset" disabled={busy}>
               {tab === "Dashboard" && (
                 <>
+                  <OfficeTodo state={state} actor={actor} onOpen={(v) => { setTab("Review"); setSub({ ...sub, Review: v }); }} />
                   {conflicts.length > 0 && (
                     <div className="reg-conflict-banner" role="alert">
                       <b>{conflicts.length.toLocaleString()} {conflicts.length === 1 ? "record contradicts" : "records contradict"} the group and denomination structure.</b>
@@ -1021,6 +1024,7 @@ export default function RegistrationApp({
                   </section>
                 </>
               )}
+              {tab === "Registration" && !office && <BishopTodo state={state} actor={actor} perform={perform} />}
               {tab === "Registration" && (
                 <Participant
                   fixedRole={typeof signup === "string" ? signup : ""}
@@ -1162,6 +1166,7 @@ export default function RegistrationApp({
                     />
                   )}
                   {view === "Conflicts" && <StructureConflicts conflicts={conflicts} />}
+                  {view === "My pastors" && <BishopTodo state={state} actor={actor} perform={perform} />}
                   {(view === "My pastors" || view === "Pastor lists") && (
                     <Roster
                       state={state}
@@ -2627,6 +2632,41 @@ const initials = (name) =>
 // record's portrait is a published asset.
 // Grids load a 240px thumbnail (a tenth of the weight of the 640px portrait); dialogs ask for the full file with `full`.
 const thumbOf = (image) => image.replace(/^(assets\/(?:portraits|bishops|pastors))\/([^/]+)\.[^.]+$/, "$1/thumbs/$2.webp");
+// To do (17 Nov). A bishop sees the pastors who named them and wait to be
+// confirmed; the office sees pastors no bishop has confirmed, bishops waiting
+// for approval and money-transfer receipts to check.
+function BishopTodo({ state, actor, perform }) {
+  const waiting = todoFor(state, actor).pastorsToConfirm;
+  if (!waiting.length) return null;
+  return <section className="reg-card reg-todo" aria-labelledby="todo-bishop">
+    <h2 id="todo-bishop">To do <b className="reg-todo-count">{waiting.length}</b></h2>
+    <p>{waiting.length === 1 ? "A pastor has" : `${waiting.length} pastors have`} registered and named you as their bishop. Confirm each one who is under you.</p>
+    <ul className="reg-todo-list">{waiting.map((r) => <li key={r.userId}>
+      <Portrait person={{ photo: r.data.photo, name: r.data.name }} className="reg-todo-photo" />
+      <span><b>{titleFor(r.data)} {r.data.name}</b><small>{[r.data.denomination || r.data.church, [r.data.city, r.data.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>{r.submittedAt && <small>Registered {shortDateTime(r.submittedAt)}</small>}</span>
+      <span className="reg-todo-actions">
+        <button type="button" className="reg-primary" onClick={() => perform("claim", { userId: r.userId }, `${r.data.name} is confirmed under you.`)}>Confirm</button>
+        <button type="button" className="reg-text danger" onClick={() => { if (confirm(`${r.data.name} is not your pastor? The office will find their bishop.`)) perform("declinePastor", { userId: r.userId }, "Sent back to the office."); }}>Not my pastor</button>
+      </span>
+    </li>)}</ul>
+  </section>;
+}
+function OfficeTodo({ state, actor, onOpen }) {
+  const todo = todoFor(state, actor);
+  const groups = [
+    ["Pastors waiting for their bishop", "Unclaimed", todo.pastorsToConfirm, (r) => `under ${r.data.bishopName || "no bishop named"}`],
+    ["Bishops waiting for approval", "Approvals", todo.bishopsToApprove, (r) => r.data.denomination || r.data.organization || ""],
+    ["Receipts to check (money transfer app)", "Payments", todo.receiptsToCheck, (r) => `${titleCase(r.data.role)} · transaction ${r.transactionId || "not given"}`],
+  ];
+  return <section className="reg-card reg-todo" aria-labelledby="todo-office">
+    <h2 id="todo-office">To do {todo.total > 0 ? <b className="reg-todo-count">{todo.total}</b> : null}</h2>
+    {!todo.total ? <p className="reg-small">Nothing waiting. New registrations and receipts will appear here.</p> : <div className="reg-todo-groups">{groups.filter(([, , list]) => list.length).map(([title, view, list, note]) => <div key={view} className="reg-todo-group">
+      <h3>{title} <b>{list.length}</b></h3>
+      <ul>{list.slice(0, 6).map((r) => <li key={r.userId}><b>{r.data.name}</b> <small>{note(r)}</small></li>)}{list.length > 6 && <li><small>and {list.length - 6} more</small></li>}</ul>
+      <button type="button" className="reg-text" onClick={() => onOpen(view)}>Open {title.toLowerCase().replace(/ \(.*\)/, "")} →</button>
+    </div>)}</div>}
+  </section>;
+}
 function Portrait({ person, className = "", full = false }) {
   if (person.photo)
     return (
