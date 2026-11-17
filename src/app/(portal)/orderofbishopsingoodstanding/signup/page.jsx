@@ -1,5 +1,13 @@
-import OrganisationsApp from '../../../../registration/OrganisationsApp';
-// The bishops' link (shared by the office): the same page as /orderofbishopsingoodstanding/
-// with Sign in and Sign up for bishops. Kept out of search results.
-export const metadata = { title: 'Order of Bishops in Good Standing', description: 'Bishops by group.', robots: { index: false, follow: false } };
-export default function Page() { return <OrganisationsApp bishops/>; }
+import RegistrationApp from '../../../../registration/RegistrationApp';
+import { FELLOWSHIP } from '../../../../registration/fellowship.mjs';
+// The bishops' sign-up (office, 17 Nov): opens straight onto the email box, in
+// DHMM's look with no Kuriake Castle, writing to the same records and office as
+// the main sign-up. Kept out of search results.
+const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+export const metadata = {
+  title: FELLOWSHIP.name,
+  description: 'Registration for bishops of the Worldwide Fellowship of Bishops.',
+  icons: { icon: `${base}/assets/organisations/dhmm-favicon.png`, apple: `${base}/assets/organisations/dhmm-favicon.png` },
+  robots: { index: false, follow: false },
+};
+export default function Page() { return <RegistrationApp signup="bishop" fellowship/>; }

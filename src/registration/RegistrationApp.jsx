@@ -1051,7 +1051,7 @@ export default function RegistrationApp({
                   <div className="reg-page-heading">
                     <div>
                       <span className="reg-eyebrow">
-                        {office ? "KURIAKE CASTLE / OFFICE" : "KURIAKE CASTLE / YOUR MINISTRY"}
+                        {office ? "KURIAKE CASTLE / OFFICE" : `${fellowship ? FELLOWSHIP.name.toUpperCase() : churchConfig ? churchConfig.name.toUpperCase() : "KURIAKE CASTLE"} / YOUR MINISTRY`}
                       </span>
                       <h1>
                         {view === "Directory"
@@ -4370,13 +4370,17 @@ function ReferenceReview({ rows, perform, canEdit }) {
   const [openId, setOpenId] = useState(null),
     [pick, setPick] = useState(""),
     [same, setSame] = useState(false);
+  // Everyone already on the roll, to match the list's names against (the index
+  // was never built here, so "My pastors" failed to open whenever a listed
+  // pastor was not yet linked to a record).
+  const index = useMemo(() => referenceIndex(people), []);
   const pending = useMemo(
     () =>
       rows
         .filter((r) => r.status === "active" && !r.referenceId)
         .map((row) => ({ row, matches: referenceMatches(index, row).filter((m) => inChurch(church, m.reference)) }))
         .filter((m) => m.matches.length),
-    [rows, church],
+    [rows, church, index],
   );
   const entry = pending.find((m) => m.row.id === openId);
   const chosen =
@@ -4396,7 +4400,7 @@ function ReferenceReview({ rows, perform, canEdit }) {
         <div>
           <h2>Pastors already in {brandName}</h2>
           <p>
-            {pending.length.toLocaleString()} on this list already appear in
+            {pending.length.toLocaleString()} on this list already appear in{" "}
             {brandName}. Confirm each person so their information is updated instead
             of a second entry being created.
           </p>

@@ -8,4 +8,7 @@ export const FELLOWSHIP = {
   shortName: 'Worldwide Fellowship of Bishops',
   logo: 'assets/organisations/dhmm-logo-white.webp',
 };
-export const fellowshipSignupPath = (base = '') => `${base}/${FELLOWSHIP.path}/signup/`;
+// Office, 17 Nov: the sign-up lives at /orderofbishopsingoodstanding/signup/ (the
+// old /bishops/signup/ forwards there). FELLOWSHIP.path stays the key the server
+// uses to brand the sign-in code email.
+export const fellowshipSignupPath = (base = '') => `${base}/orderofbishopsingoodstanding/signup/`;
