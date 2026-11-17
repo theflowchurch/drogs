@@ -1286,17 +1286,22 @@ p {
   .reg-side-note {
     display: none;
   }
+  /* Every tab in view on a phone (17 Nov): they wrap onto new lines, no sideways scrolling. */
   .reg-nav {
     display: flex;
-    overflow-x: auto;
-    gap: 5px;
-    scrollbar-width: thin;
+    flex-wrap: wrap;
+    gap: 6px;
   }
   .reg-nav button {
     white-space: nowrap;
-    flex-shrink: 0;
-    font-size: 12px;
-    padding: 12px;
+    flex: 0 1 auto;
+    font-size: 13px;
+    padding: 9px 12px;
+  }
+  .reg-switch {
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 16px;
   }
   .reg-main {
     padding: 30px 18px 50px;
