@@ -48,6 +48,8 @@ export function validateQuotedPayment(tx, quote, actor, year, reference) {
   if (quote.userId !== actor.id || quote.year !== year || tx.reference !== reference || tx.currency !== quote.currency || tx.amount !== quote.amount)
     throw new HttpError(400, 'This payment does not match the quoted registration amount. Please contact the office.');
   const metadata = typeof tx.metadata === 'string' ? JSON.parse(tx.metadata || '{}') : tx.metadata;
-  if (metadata?.registrationUser !== actor.id || metadata?.registrationYear !== year || metadata?.quoteReference !== reference)
+  // Paystack can hand metadata back with numbers as text ("2027"), so compare as text.
+  const same = (a, b) => a != null && String(a) === String(b);
+  if (!same(metadata?.registrationUser, actor.id) || !same(metadata?.registrationYear, year) || !same(metadata?.quoteReference, reference))
     throw new HttpError(400, 'This payment is not for this registration.');
 }

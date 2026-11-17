@@ -18,6 +18,8 @@ test('verification uses the frozen amount even after quote expiry, rejects under
  const q = {...read(quote().token),reference:'KC-test'};
  const tx = {status:'success',amount:q.amount,currency:'GHS',reference:q.reference,customer:{email:actor.email},metadata:{registrationUser:actor.id,registrationYear:2027,quoteReference:q.reference}};
  assert.doesNotThrow(() => validateQuotedPayment(tx,q,actor,2027,q.reference));
+ assert.doesNotThrow(() => validateQuotedPayment({...tx,metadata:{...tx.metadata,registrationYear:'2027'}},q,actor,2027,q.reference), 'Paystack may return the year as text');
+ assert.doesNotThrow(() => validateQuotedPayment({...tx,metadata:JSON.stringify({...tx.metadata,registrationYear:'2027'})},q,actor,2027,q.reference));
  for (const change of [{amount:q.amount-1},{amount:q.amount+1},{currency:'USD'},{status:'pending'},{reference:'wrong'},{customer:{email:'other@example.com'}},{metadata:{...tx.metadata,registrationYear:2028}}]) assert.throws(() => validateQuotedPayment({...tx,...change},q,actor,2027,q.reference));
 });
 test('checkout only returns to a registration page on this website', () => {
