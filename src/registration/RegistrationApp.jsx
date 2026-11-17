@@ -742,9 +742,11 @@ export default function RegistrationApp({
     ? ["Dashboard", "To do", "Directory", "Photo tasks", "Review", "Data", "Communication", "Denominations", "Bishops & Pastors pages", ...(SUBS.Settings.length ? ["Settings"] : [])]
     : [
         "Registration",
+        // Bishops: To do sits next to My profile so it is in view on a phone too.
+        ...(profile?.role === "bishop" && current && !["draft", "denied"].includes(current.status) ? ["To do"] : []),
         ...(current && current.status !== "draft" ? ROLL_TABS : []),
         ...(profile?.role === "bishop" && current && !["draft", "denied"].includes(current.status)
-          ? ["To do", "My pastors"]
+          ? ["My pastors"]
           : []),
       ];
   const view = SUBS[tab] ? sub[tab] || SUBS[tab][0] : tab;
