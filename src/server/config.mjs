@@ -26,6 +26,7 @@ export function configuration(env = process.env) {
     db: { host: env.DB_HOST, port: port('DB_PORT', 3306), database: env.DB_NAME,
       user: env.DB_USER, password: env.DB_PASSWORD, charset: 'utf8mb4', timezone: 'Z',
       ...(env.DB_SSL === 'true' ? { ssl: { rejectUnauthorized: true, ...(env.DB_SSL_CA ? { ca: env.DB_SSL_CA.replace(/\\n/g, '\n') } : {}) } } : {}) },
+    resendKey: env.RESEND_API_KEY?.trim() || '',
     // Resend, when a key is present, replaces whatever SMTP server the host was given.
     smtp: env.RESEND_API_KEY?.trim()
       ? { host: 'smtp.resend.com', port: 465, secure: true, auth: { user: 'resend', pass: env.RESEND_API_KEY.trim() }, connectionTimeout: 15000, socketTimeout: 20000 }

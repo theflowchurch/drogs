@@ -39,7 +39,9 @@ await pool.query('SELECT current_year FROM dr_settings WHERE id=1');
 await applySettings(config, pool); // saved settings (office emails included) apply before anything acts on them
 if (await launchReset(pool, config)) console.log('Launch reset applied: member accounts and records cleared; original data, structure and settings kept.');
 // The transport is created per message so mail settings saved in /admin/ apply at once.
-const mailer = { sendMail: message => nodemailer.createTransport(config.smtp).sendMail(message) };
+const { sendViaResend } = await import('../src/server/resend-mail.mjs');
+// Resend's HTTPS API when a Resend key is saved (the host blocks the SMTP route); otherwise SMTP.
+const mailer = { sendMail: message => config.resendKey ? sendViaResend(config.resendKey, message) : nodemailer.createTransport(config.smtp).sendMail(message) };
 const auth = createAuth({ pool, config, mailer });
 const storage = createStorage({ pool, config });
 const api = createApi({ pool, config, auth, storage, mailer });
