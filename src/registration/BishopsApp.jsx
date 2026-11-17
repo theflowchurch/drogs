@@ -11,7 +11,7 @@ import './organisations.css';
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const letterOf = b => (bishopSurname(b.name)[0] || '#').toUpperCase();
 
-function Card({ person, onOpen, fallback }) {
+export function Card({ person, onOpen, fallback }) {
   return <button type="button" className="org-member bl-card" onClick={() => onOpen(person)} aria-haspopup="dialog">
     <span className="org-member-photo"><Photo person={person}/></span>
     <span className="org-member-text">
@@ -21,7 +21,7 @@ function Card({ person, onOpen, fallback }) {
   </button>;
 }
 
-function Detail({ person, onClose, fallback }) {
+export function Detail({ person, onClose, fallback }) {
   const close = useRef(null);
   useEffect(() => {
     close.current?.focus();

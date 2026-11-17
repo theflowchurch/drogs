@@ -20,11 +20,16 @@ export let live = mysqlBackend || Boolean(url && key);
 // page only, everything stays in this browser under its own key and starts
 // fresh on every visit; nothing reaches the server, the database or email.
 let storageKey = STORAGE_KEY, demoStarted = false;
-export function useLocalDemo(name) {
+export function useLocalDemo(name, seed = []) {
   mysqlBackend = false; url = ""; key = ""; live = false; storageKey = name;
   if (demoStarted || typeof window === "undefined") return;
   demoStarted = true;
-  try { localStorage.removeItem(name); for (const office of [false, true]) { sessionStorage.removeItem(sessionKey(office)); localStorage.removeItem(rememberedKey(office)); } } catch {}
+  try {
+    localStorage.removeItem(name); for (const office of [false, true]) { sessionStorage.removeItem(sessionKey(office)); localStorage.removeItem(rememberedKey(office)); }
+    // A demonstration may start from earlier steps (the pastors' one needs their
+    // bishop already registered), played out here in this browser only.
+    if (seed.length) localStorage.setItem(name, JSON.stringify(seed.reduce((state, s) => applyAction(state, s.actor, s.action, s.payload, undefined, people), emptyState())));
+  } catch {}
 }
 // Which door this page is: member (/signup/) or office (/admin/). Sent with every
 // request so the server reads the matching session cookie.

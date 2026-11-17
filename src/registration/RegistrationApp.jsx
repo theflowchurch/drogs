@@ -25,15 +25,15 @@ const FellowshipContext = createContext(false);
 // The sign-up demonstration (fellowship-demo.mjs): sample details that fill every step.
 const DemoContext = createContext(null);
 // Church sites name the church, never the central site, in what members read.
-const useBrandName = () => { const church = useContext(ChurchContext), fellowship = useContext(FellowshipContext); return fellowship ? FELLOWSHIP.name : church?.config.name || "Kuriake Castle"; };
+const useBrandName = () => { const church = useContext(ChurchContext), fellowship = useContext(FellowshipContext); return fellowship ? fellowship.name : church?.config.name || "Kuriake Castle"; };
 // Links stay on the church site (or the bishops' sign-up) when there is one.
-const usePagePath = () => { const site = useContext(OrganizationSiteContext), church = useContext(ChurchContext), fellowship = useContext(FellowshipContext); return (path) => fellowship && path === "signup" ? fellowshipSignupPath(base) : church ? `${base}/${church.path}/${path}/` : sitePath(site, path, base); };
+const usePagePath = () => { const site = useContext(OrganizationSiteContext), church = useContext(ChurchContext), fellowship = useContext(FellowshipContext); return (path) => fellowship && path === "signup" ? fellowshipSignupPath(base, fellowship) : church ? `${base}/${church.path}/${path}/` : sitePath(site, path, base); };
 import { ORGANIZATION_SITES, FLOW_GROUPS, peopleForSite, siteCatalog, siteOfOrganization, sitePath, organizationSiteKey } from "./organization-sites.mjs";
 import * as api from "./client";
 import { signupBishopChoices } from './signup-bishops.mjs';
 import { denominationSite, churchPlacement, inChurch, churchOfDenomination } from './denomination-sites.mjs';
-import { FELLOWSHIP, fellowshipSignupPath } from './fellowship.mjs';
-import { FELLOWSHIP_DEMO } from './fellowship-demo.mjs';
+import { fellowshipOf, fellowshipSignupPath } from './fellowship.mjs';
+import { FELLOWSHIP_DEMOS } from './fellowship-demo.mjs';
 import { LegalFooter } from "./Docs";
 import { DENOMINATIONS } from "./denominations.mjs";
 import {
@@ -530,9 +530,10 @@ export default function RegistrationApp({
   fellowship: fellowshipProp = false,
   demo: demoMode = false,
 }) {
-  const demo = demoMode ? FELLOWSHIP_DEMO : null;
-  if (demo) api.useLocalDemo(demo.storage); // this page only: nothing leaves the browser
-  const fellowship = !office && fellowshipProp;
+  const demo = demoMode ? FELLOWSHIP_DEMOS[fellowshipProp === 'pastors' ? 'pastors' : 'bishops'] : null;
+  if (demo) api.useLocalDemo(demo.storage, demo.seed); // this page only: nothing leaves the browser
+  // fellowship: true or 'bishops' for the bishops' sign-up, 'pastors' for the pastors'.
+  const fellowship = office || !fellowshipProp ? null : fellowshipOf(fellowshipProp === true ? 'bishops' : fellowshipProp);
   const churchConfig = office ? null : denominationSite(churchPath);
   // A church has one sign-up link for bishops and pastors; the form asks which.
   const openSignup = typeof signup === "string" || Boolean(churchConfig && signup);
@@ -561,9 +562,9 @@ export default function RegistrationApp({
   const church = useMemo(() => churchConfig ? churchPlacement(catalogOf(state), churchPath, FLOW_GROUPS) : null, [churchConfig, churchPath, state?.catalog]);
   const site = church ? siteOfOrganization(church.organization) : office ? "" : organizationSiteKey(organizationSite);
   const siteConfig = ORGANIZATION_SITES[site];
-  const brand = fellowship ? FELLOWSHIP : churchConfig || siteConfig;
-  const home = fellowship ? fellowshipSignupPath(base) : churchConfig ? `${base}/${churchPath}/` : sitePath(site, "", base);
-  const signupPath = fellowship ? fellowshipSignupPath(base) : churchConfig ? `${home}signup/` : sitePath(site, "signup", base);
+  const brand = fellowship || churchConfig || siteConfig;
+  const home = fellowship ? fellowshipSignupPath(base, fellowship) : churchConfig ? `${base}/${churchPath}/` : sitePath(site, "", base);
+  const signupPath = fellowship ? fellowshipSignupPath(base, fellowship) : churchConfig ? `${home}signup/` : sitePath(site, "signup", base);
   const snapshots = useRef(null), publicSnapshots = useRef(null), saving = useRef(0);
   if (!snapshots.current) snapshots.current = snapshotSync(api.snapshot, data => {
     setState(data);
@@ -1001,7 +1002,7 @@ export default function RegistrationApp({
               <b>
                 {office
                   ? "Every bishop and pastor. Every year."
-                  : profile?.name || `Welcome to ${fellowship ? FELLOWSHIP.name : churchConfig?.name || "Kuriake Castle"}`}
+                  : profile?.name || `Welcome to ${fellowship ? fellowship.name : churchConfig?.name || "Kuriake Castle"}`}
               </b>
               <p>
                 {office
@@ -1049,7 +1050,7 @@ export default function RegistrationApp({
                   <div className="reg-page-heading">
                     <div>
                       <span className="reg-eyebrow">
-                        {office ? "KURIAKE CASTLE / OFFICE" : `${fellowship ? FELLOWSHIP.name.toUpperCase() : churchConfig ? churchConfig.name.toUpperCase() : "KURIAKE CASTLE"} / YOUR MINISTRY`}
+                        {office ? "KURIAKE CASTLE / OFFICE" : `${fellowship ? fellowship.name.toUpperCase() : churchConfig ? churchConfig.name.toUpperCase() : "KURIAKE CASTLE"} / YOUR MINISTRY`}
                       </span>
                       <h1>
                         {view === "Directory"
@@ -1351,7 +1352,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
         onActor(await api.verifyCode(email, token, mode, remember));
       }
       else {
-        await api.requestCode(email, mode, entrance, fellowship ? FELLOWSHIP.path : church?.path || "");
+        await api.requestCode(email, mode, entrance, fellowship ? fellowship.path : church?.path || "");
         setSent(true);
       }
     });
@@ -1423,7 +1424,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
   )}
   {signup && (
     <p className="reg-small">
-      Already registered? <a href={`${fellowship ? fellowshipSignupPath(base) : church ? `${base}/${church.path}/signup/` : sitePath(site, "signup", base)}#signin`}>Sign in</a>
+      Already registered? <a href={`${fellowship ? fellowshipSignupPath(base, fellowship) : church ? `${base}/${church.path}/signup/` : sitePath(site, "signup", base)}#signin`}>Sign in</a>
     </p>
   )}
 </form>
@@ -1457,9 +1458,9 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
       ) : (
         <>
           {fellowship ? open ? null : <h1 className="reg-hero-title reg-fellowship-title">
-            <img className="reg-fellowship-logo" src={`${base}/${FELLOWSHIP.logo}`} alt="DHMM – Dag Heward-Mills Ministries" />
-            <span className="reg-church-kicker">BISHOPS' REGISTRATION</span>
-            {FELLOWSHIP.name}
+            <img className="reg-fellowship-logo" src={`${base}/${fellowship.logo}`} alt="DHMM – Dag Heward-Mills Ministries" />
+            <span className="reg-church-kicker">{fellowship.role === "pastor" ? "PASTORS' REGISTRATION" : "BISHOPS' REGISTRATION"}</span>
+            {fellowship.name}
           </h1> : church ? <h1 className="reg-hero-title reg-church-title">
             {config.logo && <img className="reg-organization-hero-logo" src={`${base}/${config.logo}`} alt="" />}
             <span className="reg-church-kicker">MINISTERIAL DIRECTORY</span>
