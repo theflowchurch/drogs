@@ -1,4 +1,5 @@
-import OrganisationsApp from '../../../registration/OrganisationsApp';
-// No title yet (office, 9 Nov).
-export const metadata = { title: 'Organisations', description: 'Bishops by group.' };
-export default function Page() { return <OrganisationsApp/>; }
+import Redirect from '../../../registration/Redirect';
+// /organisations/ moved to /orderofbishopsingoodstanding/ (office, 17 Nov).
+const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+export const metadata = { title: 'Order of Bishops in Good Standing', robots: { index: false, follow: true } };
+export default function Page() { return <Redirect to={`${base}/orderofbishopsingoodstanding/`}/>; }

@@ -4,7 +4,7 @@ import data from './ministry-organisations.json' with { type: 'json' };
 // church, outreach and para-church groups, each council listing the people in
 // charge (leader: true) and its members.
 export const ORGANISATIONS = data;
-export const ORGANISATIONS_PATH = 'organisations';
+export const ORGANISATIONS_PATH = 'orderofbishopsingoodstanding'; // office, 17 Nov (was organisations)
 export const ALL_ORGANISATIONS = data.groups.flatMap(group => group.organisations.map(organisation => ({ ...organisation, group })));
 export const organisationBySlug = slug => ALL_ORGANISATIONS.find(o => o.slug === slug) || null;
 export const groupBySlug = slug => data.groups.find(g => g.slug === slug) || null;

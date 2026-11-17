@@ -1,7 +1,7 @@
 'use client';
 // Sign in and Sign up for bishops, shown only on the bishops' links that the
-// office shares (/organisations/signup/ and /councils/signup/). The public
-// /organisations/ and /councils/ pages show the bishops alone, with no sign-up.
+// office shares (/orderofbishopsingoodstanding/signup/ and /councils/signup/). The public
+// /orderofbishopsingoodstanding/ and /councils/ pages show the bishops alone, with no sign-up.
 // Both open the bishops' own sign-up (/bishops/signup/, fellowship.mjs): DHMM's
 // look with no Kuriake Castle, writing to the same records and office as the
 // main directory's sign-up.

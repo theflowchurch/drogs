@@ -1,8 +1,8 @@
-import { notFound } from 'next/navigation';
-import OrganisationsApp from '../../../../registration/OrganisationsApp';
-import { ORGANISATION_PAGES, organisationBySlug, subsectionBySlug, PAGE_ALIASES } from '../../../../registration/ministry-organisations.mjs';
-// One address per category (church, outreach, para-church) and per organisation.
+import Redirect from '../../../../registration/Redirect';
+import { ORGANISATION_PAGES } from '../../../../registration/ministry-organisations.mjs';
+// /organisations/<page>/ moved to /orderofbishopsingoodstanding/<page>/ (office, 17 Nov).
+const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 export const dynamicParams = false;
 export function generateStaticParams() { return ORGANISATION_PAGES.map(organisation => ({ organisation })); }
-export async function generateMetadata({ params }) { const { organisation } = await params; const o = organisationBySlug(PAGE_ALIASES[organisation] || organisation) || subsectionBySlug(organisation); return o ? { title: o.name, description: `The people in charge of ${o.name}.` } : {}; }
-export default async function Page({ params }) { const { organisation } = await params; if (!ORGANISATION_PAGES.includes(organisation)) notFound(); return <OrganisationsApp slug={organisation}/>; }
+export const metadata = { title: 'Order of Bishops in Good Standing', robots: { index: false, follow: true } };
+export default async function Page({ params }) { const { organisation } = await params; return <Redirect to={`${base}/orderofbishopsingoodstanding/${organisation}/`}/>; }
