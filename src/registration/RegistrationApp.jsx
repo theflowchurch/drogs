@@ -646,6 +646,10 @@ export default function RegistrationApp({
     // The bishop / pastor links open straight onto the email box: email first,
     // then the code, then the form with that email locked in.
     else if (openSignup) setSigninOpen("signup");
+    // A "Sign in" link to this same page only changes the #, so listen for it.
+    const onHash = () => { if (signup && location.hash === "#signin") setSigninOpen("signin"); };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
   }, [signup]);
   const toggleSidebar = () => {
     const next = !sidebarHidden;
@@ -936,6 +940,7 @@ export default function RegistrationApp({
             setActor(a);
           }}
           open={signinOpen}
+          onSwitch={setSigninOpen}
           onClose={() => setSigninOpen(false)}
         />
       ) : !state ? (
@@ -1297,7 +1302,7 @@ function Gate({ office, onEnter }) {
 }
 // Members (17 Nov): sign up with email and a password typed twice; sign in with
 // email and password; "Forgot password?" emails a code to set a new one.
-function PasswordForm({ signup, run, busy, onActor }) {
+function PasswordForm({ signup, onSwitch, run, busy, onActor }) {
   const church = useContext(ChurchContext), fellowship = useContext(FellowshipContext), site = useContext(OrganizationSiteContext);
   const demo = useContext(DemoContext), entrance = useContext(EntranceContext);
   const [view, setView] = useState(signup ? "signup" : "signin"); // signup | signin | forgot | reset
@@ -1353,15 +1358,15 @@ function PasswordForm({ signup, run, busy, onActor }) {
       {(view === "forgot" || view === "reset") && <button type="button" className="reg-text" onClick={() => { setProblem(""); setCode(""); setView("signin"); }}>Back to sign in</button>}
       {view === "reset" && <button type="button" className="reg-text" onClick={() => setView("forgot")}>Send a new code</button>}
       {view === "signup" && <p className="reg-small">{api.live ? "Your email is your account identity. Keep using the same address each year." : "Accounts and uploads remain on this device until the site is connected."}</p>}
-      {view === "signup" && <p className="reg-small">Already registered? <a href={signinHref}>Sign in</a></p>}
-      {view === "signin" && signup === false && <p className="reg-small">New here? <a href={signupHref}>Create an account</a></p>}
+      {view === "signup" && <p className="reg-small">Already registered? <a href={signinHref} onClick={(e) => { e.preventDefault(); setProblem(""); setConfirm(""); if (onSwitch) onSwitch("signin"); else setView("signin"); }}>Sign in</a></p>}
+      {view === "signin" && <p className="reg-small">New here? <a href={signupHref} onClick={(e) => { e.preventDefault(); setProblem(""); if (onSwitch) onSwitch("signup"); else setView("signup"); }}>Create an account</a></p>}
     </form>
   );
 }
 function AccountForm(props) {
   const demo = useContext(DemoContext);
   const mode = props.mode || (props.office ? "office" : props.signup ? "signup" : "signin");
-  return !props.office && (api.passwordAuth() || demo) ? <PasswordForm signup={mode === "signup"} run={props.run} busy={props.busy} onActor={props.onActor} /> : <CodeForm {...props} />;
+  return !props.office && (api.passwordAuth() || demo) ? <PasswordForm key={mode} signup={mode === "signup"} onSwitch={props.onSwitch} run={props.run} busy={props.busy} onActor={props.onActor} /> : <CodeForm {...props} />;
 }
 // The office door (and a site with no password server) still uses the emailed code.
 function CodeForm({ office, signup = false, mode = office ? "office" : signup ? "signup" : "signin", run, busy, onActor }) {
@@ -1486,7 +1491,7 @@ function CodeForm({ office, signup = false, mode = office ? "office" : signup ? 
 }
 // The landing page is only the castle and its name over the photograph; the
 // green Sign in button in the header opens the email form.
-function Account({ office, signup = false, run, busy, onActor, open = false, onClose, showVideo = true }) {
+function Account({ office, signup = false, run, busy, onActor, open = false, onClose, onSwitch, showVideo = true }) {
   const site = useContext(OrganizationSiteContext);
   const church = useContext(ChurchContext);
   const fellowship = useContext(FellowshipContext);
@@ -1525,7 +1530,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
           </h1>}
           {open && (
             <Dialog title={open === "signin" ? "Sign in" : "Sign up"} onClose={onClose}>
-              <AccountForm office={office} signup={open === "signup"} mode={open} run={run} busy={busy} onActor={onActor} />
+              <AccountForm office={office} signup={open === "signup"} mode={open} run={run} busy={busy} onActor={onActor} onSwitch={onSwitch} />
             </Dialog>
           )}
         </>
