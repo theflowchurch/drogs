@@ -1342,7 +1342,7 @@ function PasswordForm({ signup, run, busy, onActor }) {
     run(async () => {
       if (!api.live || demo) { onActor(api.demoSignIn(email, false, view === "signin" ? "signin" : "signup")); return; } // demonstration: this browser only
       localStorage.setItem("kc-remember", remember ? "yes" : "no");
-      if (view === "signup") onActor(await api.passwordSignup(email, password, entrance, remember));
+      if (view === "signup") { const created = await api.passwordSignup(email, password, entrance, remember); try { sessionStorage.setItem(WELCOME_KEY, "1"); } catch {} onActor(created); }
       else if (view === "signin") onActor(await api.passwordLogin(email, password, remember));
       else if (view === "forgot") { await api.requestCode(email, "reset", entrance, fellowship ? fellowship.path : church?.path || ""); setPassword(""); setConfirm(""); setView("reset"); }
       else onActor(await api.resetPassword(email, code, password, remember));
@@ -1814,6 +1814,22 @@ function Participant({
     </>
   );
 }
+const WELCOME_KEY = "kc-welcome";
+// The welcome a member sees once, after creating their account (office, 17 Nov).
+function WelcomeCard({ onContinue }) {
+  return <section className="reg-card reg-welcome" aria-labelledby="reg-welcome-title">
+    <span className="reg-welcome-tick" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+    <h1 id="reg-welcome-title">Welcome to Kuriake Castle!</h1>
+    <p className="reg-welcome-lead">Your account has been successfully created.</p>
+    <p>You can now access your account, manage your profile and keep your information up to date.</p>
+    <div className="reg-welcome-reminder">
+      <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z"/><path d="m8.8 12.2 2.2 2.2 4.2-4.4"/></svg>Important Reminder</h2>
+      <p>Please keep your login details safe. Remember the email address and password you used to register, as you will need them to sign in again.</p>
+    </div>
+    <p className="reg-welcome-note">We encourage you to review your profile and ensure that your details are accurate and complete.</p>
+    <button type="button" className="reg-primary reg-welcome-button" onClick={onContinue}>Create my profile →</button>
+  </section>;
+}
 function RegistrationForm({
   editing = false,
   fixedRole = "",
@@ -1828,6 +1844,8 @@ function RegistrationForm({
 }) {
   const entrance = useContext(EntranceContext);
   const site = useContext(OrganizationSiteContext);
+  // Shown once, straight after a new account is created, before the details form.
+  const [welcome, setWelcome] = useState(() => { try { return !editing && sessionStorage.getItem(WELCOME_KEY) === "1"; } catch { return false; } });
   const church = useContext(ChurchContext), brandName = useBrandName(), pagePath = usePagePath();
   const demo = useContext(DemoContext);
   const siteConfig = ORGANIZATION_SITES[site];
@@ -1972,6 +1990,7 @@ function RegistrationForm({
     if (ok) try { sessionStorage.removeItem(checkoutDraftKey); } catch {}
     if (ok && editing) onDone?.();
   }
+  if (welcome) return <WelcomeCard onContinue={() => { try { sessionStorage.removeItem(WELCOME_KEY); } catch {} setWelcome(false); window.scrollTo(0, 0); }} />;
   return (
     <>
       <div className="reg-page-heading">
