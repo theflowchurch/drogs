@@ -18,7 +18,7 @@ const builtPages = [...ORGANISATION_PAGES, 'signup', 'new-group'].map(s => s.rep
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   ...(mysqlBackend ? {
-    async rewrites() { return { beforeFiles: [{ source: `/orderofbishopsingoodstanding/:group((?!(?:${builtPages})$)[a-z0-9]+(?:-[a-z0-9]+)*)/`, destination: '/orderofbishopsingoodstanding/new-group/' }] }; },
+    async rewrites() { return { beforeFiles: [{ source: `/orderofbishopsingoodstanding/:group((?!(?:${builtPages})(?:/|$))[a-z0-9]+(?:-[a-z0-9]+)*)/`, destination: '/orderofbishopsingoodstanding/new-group/' }] }; },
   } : { output: 'export' }),
   trailingSlash: true,
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
