@@ -109,3 +109,24 @@ test('the bishop who confirms a pastor becomes their bishop everywhere; a pastor
   assert.equal(overlayReferences(refs, s).find(p => p.id === 'P9').bishop, 'Frank Opoku', 'moved under Frank on every page');
   assert.ok(s.overrides.P9._officeFields.includes('bishop'), 'kept through later roll updates');
 });
+test("Nina's unregistered listed pastors wait for her to confirm them; confirming uses their line on her list", async () => {
+  const { emptyState, syncRoll, matchFor, applyAction } = await import('../../src/registration/model.mjs');
+  const refs = [{ id: 'B334', role: 'bishop', name: 'Nina Masuku', title: 'Mother' }, { id: 'PA', role: 'pastor', name: 'Ama Done', bishop: 'Nina Masuku' }, { id: 'PK', role: 'pastor', name: 'Kojo Later', bishop: 'Nina Masuku' }];
+  const nina = { id: 'nina', email: 'n@x.com' };
+  let s = { ...emptyState(), year: 2027, officeFixes: ['restore-seven-2026-11-17', 'member-photos-off-records-2026-11-17'],
+    profiles: [{ id: 'nina', role: 'bishop', name: 'Nina Masuku', referenceId: 'B334', bishopApproved: true }, { id: 'already', role: 'pastor', name: 'Ama Done' }],
+    registrations: [{ userId: 'nina', year: 2027, status: 'confirmed', data: { role: 'bishop', name: 'Nina Masuku', referenceId: 'B334' } },
+      { userId: 'already', year: 2027, status: 'confirmed', data: { role: 'pastor', name: 'Ama Done', dob: '1990-01-01', bishopId: 'B334' } }],
+    rosters: [{ id: 'r1', bishopId: 'nina', year: 2027, name: 'Ama Done', dob: '1990-01-01', status: 'active', pastorId: 'already' },
+      { id: 'r2', bishopId: 'nina', year: 2027, name: 'Kojo Later', dob: '1991-02-02', status: 'active' }] };
+  s = syncRoll(s, refs, 'v-nina');
+  assert.equal(s.rosters.find(r => r.id === 'r1').claimRequired, undefined, 'already registered and confirmed: unchanged');
+  assert.equal(s.rosters.find(r => r.id === 'r2').claimRequired, true);
+  const pastorReg = { userId: 'kojo', year: 2027, status: 'unclaimed', data: { role: 'pastor', name: 'Kojo Later', dob: '1991-02-02', bishopId: 'B334', bishopName: 'Nina Masuku' } };
+  assert.equal(matchFor(s, pastorReg), null, 'no automatic confirmation');
+  s = { ...s, registrations: [...s.registrations, pastorReg] };
+  s = applyAction(s, nina, 'claim', { userId: 'kojo' }, undefined, refs);
+  assert.equal(s.rosters.filter(r => r.name === 'Kojo Later').length, 1, 'her existing line is used, no duplicate');
+  assert.equal(s.rosters.find(r => r.id === 'r2').pastorId, 'kojo');
+  assert.equal(s.registrations.find(r => r.userId === 'kojo').status, 'confirmed');
+});

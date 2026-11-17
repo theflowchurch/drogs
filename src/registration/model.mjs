@@ -165,7 +165,10 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   // Office, 17 Nov: a member's own upload is only for the office to confirm it is
   // them. Uploads that registration copied onto records come off, so the edited
   // photos show again; photos the office uploaded stay.
-  { id: 'member-photos-off-records-2026-11-17', memberPhotos: true }];
+  { id: 'member-photos-off-records-2026-11-17', memberPhotos: true },
+  // Office, 17 Nov: the pastors still unregistered on Mother Nina Masuku's (B334)
+  // uploaded list wait for her to confirm them, like everyone else.
+  { id: 'nina-confirms-her-pastors-2026-11-17', claimRequired: ['B334'] }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -198,6 +201,10 @@ export function syncRoll(state, people, version) {
   };
   const fixes = pendingFixes(state);
   for (const fix of fixes) for (const id of fix.restore || []) if (next.overrides[id]?.deleted) next.overrides[id] = { ...next.overrides[id], deleted: false };
+  for (const fix of fixes) for (const ref of fix.claimRequired || []) {
+    const accounts = new Set((state.profiles || []).filter(p => p.referenceId === ref).map(p => p.id));
+    next.rosters = (next.rosters || state.rosters || []).map(row => accounts.has(row.bishopId) && row.status === 'active' && !row.pastorId ? { ...row, claimRequired: true } : row);
+  }
   if (fixes.some(f => f.memberPhotos)) for (const r of state.registrations || []) {
     const id = r.data?.referenceId || state.profiles?.find(p => p.id === r.userId)?.referenceId;
     const o = id && next.overrides[id];
@@ -708,6 +715,8 @@ export function matchFor(state, registration) {
       r.bishopId === bishop.id &&
       r.status === "active" &&
       (!r.pastorId || r.pastorId === registration.userId) &&
+      // A line the office marked "bishop must confirm" (17 Nov) never confirms on its own.
+      (!r.claimRequired || r.pastorId === registration.userId) &&
       namesAlike(r.name, p.name) &&
       dobClose(r.dob, p.dob),
   );
@@ -1054,6 +1063,8 @@ export function applyAction(
     );
     if (payload.rosterId && !row)
       throw Error("That roster entry is no longer available.");
+    // The pastor's line on the bishop's earlier list, if there is one, is used rather than a second line.
+    if (!row) row = state.rosters.find((x) => x.year === state.year && x.bishopId === bishop.id && x.status === "active" && !x.pastorId && namesAlike(x.name, r.data.name) && (!x.dob || !r.data.dob || dobClose(x.dob, r.data.dob))) || null;
     if (!row) {
       row = {
         id: makeId(),
