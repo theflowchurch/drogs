@@ -919,10 +919,13 @@ export default function RegistrationApp({
           office={office}
           onEnter={(code) => run(async () => {
             // The office code opens the door; the email and its code come next.
-            if (api.live) { if (!(await api.officeCode(code)).ok) throw Error("That access code is not correct."); }
+            // Office (17 Nov): the admin access code alone signs the office in.
+            let signedIn = null;
+            if (api.live) { const r = await api.officeCode(code); if (!r.ok) throw Error("That access code is not correct."); signedIn = r.actor || null; }
             else if (code !== "1234") throw Error("That access code is not correct.");
             sessionStorage.setItem("drogs-registration-gate", String(Date.now() + 1800000));
             setGate(true);
+            if (signedIn) setActor(signedIn);
           })}
         />
       ) : browse ? (
@@ -1313,7 +1316,76 @@ function Gate({ office, onEnter }) {
     </section>
   );
 }
-function AccountForm({ office, signup = false, mode = office ? "office" : signup ? "signup" : "signin", run, busy, onActor }) {
+// Members (17 Nov): sign up with email and a password typed twice; sign in with
+// email and password; "Forgot password?" emails a code to set a new one.
+function PasswordForm({ signup, run, busy, onActor }) {
+  const church = useContext(ChurchContext), fellowship = useContext(FellowshipContext), site = useContext(OrganizationSiteContext);
+  const demo = useContext(DemoContext), entrance = useContext(EntranceContext);
+  const [view, setView] = useState(signup ? "signup" : "signin"); // signup | signin | forgot | reset
+  const [email, setEmail] = useState(() => demo?.email || ""), [password, setPassword] = useState(() => demo ? "demonstration" : ""), [confirm, setConfirm] = useState(() => demo ? "demonstration" : "");
+  const [code, setCode] = useState(""), [remember, setRemember] = useState(false), [problem, setProblem] = useState("");
+  const [paused, setPaused] = useState(null);
+  useEffect(() => {
+    if (!signup) return;
+    let live = true;
+    api.publicSignupStatus().then((d) => { const flag = entrance === "appointments" ? d?.signup?.appointments : d?.signup; if (live && flag?.closed) setPaused(flag.notice || SIGNUP_PAUSED); }).catch(() => {});
+    return () => { live = false; };
+  }, [signup, entrance]);
+  const signinHref = `${fellowship ? fellowshipSignupPath(base, fellowship) : church ? `${base}/${church.path}/signup/` : sitePath(site, "signup", base)}#signin`;
+  const signupHref = signinHref.replace(/#signin$/, "");
+  if (paused && view === "signup") return <div className="reg-paused" role="status"><h3>{entrance === "appointments" ? "Appointment registration is paused" : "Sign-up is paused"}</h3><p>{paused}</p><p className="reg-small">Already registered? Use Sign in instead.</p></div>;
+  const twice = view === "signup" || view === "reset";
+  const submit = (e) => {
+    e.preventDefault(); setProblem("");
+    if (twice && password !== confirm) { setProblem("The two passwords do not match. Please type them again."); return; }
+    if (twice && password.length < 8) { setProblem("Choose a password of at least 8 characters."); return; }
+    run(async () => {
+      if (!api.live || demo) { onActor(api.demoSignIn(email, false, view === "signin" ? "signin" : "signup")); return; } // demonstration: this browser only
+      localStorage.setItem("kc-remember", remember ? "yes" : "no");
+      if (view === "signup") onActor(await api.passwordSignup(email, password, entrance, remember));
+      else if (view === "signin") onActor(await api.passwordLogin(email, password, remember));
+      else if (view === "forgot") { await api.requestCode(email, "reset", entrance, fellowship ? fellowship.path : church?.path || ""); setPassword(""); setConfirm(""); setView("reset"); }
+      else onActor(await api.resetPassword(email, code, password, remember));
+    });
+  };
+  return (
+    <form className="reg-card" onSubmit={submit}>
+      {entrance === "appointments" && view === "signup" && <p className="reg-eyebrow reg-entrance-note">PASTORAL APPOINTMENT · registering a newly appointed bishop or pastor</p>}
+      {view === "forgot" && <p className="reg-small">Enter your email and we will send you a code to set a new password.</p>}
+      <Field label="Email address">
+        <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} readOnly={view === "reset"} autoComplete="email" />
+      </Field>
+      {view === "reset" && <Field label="Code from your email">
+        <input value={code} onChange={(e) => setCode(e.target.value)} autoComplete="one-time-code" inputMode="numeric" required pattern="[0-9]{6}" />
+      </Field>}
+      {view !== "forgot" && <Field label={view === "reset" ? "New password" : view === "signup" ? "Create a password" : "Password"}>
+        <input type="password" required minLength={view === "signin" ? undefined : 8} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={view === "signin" ? "current-password" : "new-password"} />
+      </Field>}
+      {twice && <Field label="Type the password again">
+        <input type="password" required value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="new-password" />
+      </Field>}
+      {twice && <p className="reg-small">At least 8 characters.</p>}
+      {problem && <p className="reg-receipt-error" role="alert">{problem}</p>}
+      {view !== "forgot" && <label className="reg-check"><input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} /><span>Keep me signed in on this device for 30 days.</span></label>}
+      <button className="reg-primary full" disabled={busy}>
+        {busy ? "Please wait…" : view === "signup" ? "Create account" : view === "signin" ? "Sign in" : view === "forgot" ? "Send reset code" : "Save new password and sign in"} →
+      </button>
+      {view === "signin" && <button type="button" className="reg-text" onClick={() => { setProblem(""); setView("forgot"); }}>Forgot password?</button>}
+      {(view === "forgot" || view === "reset") && <button type="button" className="reg-text" onClick={() => { setProblem(""); setCode(""); setView("signin"); }}>Back to sign in</button>}
+      {view === "reset" && <button type="button" className="reg-text" onClick={() => setView("forgot")}>Send a new code</button>}
+      {view === "signup" && <p className="reg-small">{api.live ? "Your email is your account identity. Keep using the same address each year." : "Accounts and uploads remain on this device until the site is connected."}</p>}
+      {view === "signup" && <p className="reg-small">Already registered? <a href={signinHref}>Sign in</a></p>}
+      {view === "signin" && signup === false && <p className="reg-small">New here? <a href={signupHref}>Create an account</a></p>}
+    </form>
+  );
+}
+function AccountForm(props) {
+  const demo = useContext(DemoContext);
+  const mode = props.mode || (props.office ? "office" : props.signup ? "signup" : "signin");
+  return !props.office && (api.passwordAuth() || demo) ? <PasswordForm signup={mode === "signup"} run={props.run} busy={props.busy} onActor={props.onActor} /> : <CodeForm {...props} />;
+}
+// The office door (and a site with no password server) still uses the emailed code.
+function CodeForm({ office, signup = false, mode = office ? "office" : signup ? "signup" : "signin", run, busy, onActor }) {
   const [remember, setRemember] = useState(false);
   // New sign-ups check whether registration is paused; the notice replaces the form.
   const [paused, setPaused] = useState(null);

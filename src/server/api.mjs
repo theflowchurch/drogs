@@ -59,12 +59,36 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         throw new HttpError(403, 'Open the form on the configured website before continuing.');
       if (request.headers.get('sec-fetch-site') === 'cross-site') throw new HttpError(403, 'Cross-site requests are not allowed.');
       if (path === '/api/registration/auth/office-code' && method === 'POST') {
-        return json(await auth.checkOfficeCode((await jsonBody(request)).code));
+        const session = await auth.officeSignIn((await jsonBody(request)).code);
+        await auth.signOut(request);
+        return json({ ok: true, actor: session.actor }, 200, { 'Set-Cookie': sessionCookie(config, session.token, session.maxAge, true) });
+      }
+      // Members: email and password (17 Nov). The emailed code is only for a reset.
+      if (path === '/api/registration/auth/signup' && method === 'POST') {
+        const { email, password, entrance, remember } = await jsonBody(request);
+        const address = emailAddress(email);
+        const pause = pauseFor(await transaction(pool, conn => readState(conn)), entrance);
+        if (pause.closed) throw new HttpError(403, pause.notice || SIGNUP_PAUSED);
+        const session = await auth.signupWithPassword(address, password, remember === true);
+        await auth.signOut(request);
+        return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token, session.maxAge, false) });
+      }
+      if (path === '/api/registration/auth/login' && method === 'POST') {
+        const { email, password, remember } = await jsonBody(request);
+        const session = await auth.loginWithPassword(emailAddress(email), password, remember === true);
+        await auth.signOut(request);
+        return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token, session.maxAge, false) });
+      }
+      if (path === '/api/registration/auth/reset' && method === 'POST') {
+        const { email, token, password, remember } = await jsonBody(request);
+        const session = await auth.resetPassword(emailAddress(email), token, password, remember === true);
+        await auth.signOut(request);
+        return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token, session.maxAge, false) });
       }
       if (path === '/api/registration/auth/request' && method === 'POST') {
         const { email, mode, entrance, church } = await jsonBody(request);
         const address = emailAddress(email);
-        if (!['signin', 'office'].includes(mode)) {
+        if (!['signin', 'office', 'reset'].includes(mode)) {
           // Paused sign-up turns new people away at the first step; existing accounts still sign in.
           const [[known]] = await pool.execute('SELECT 1 FROM dr_users WHERE email=?', [address]);
           if (!known) {
@@ -76,7 +100,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         // the bishops' sign-up (fellowship.mjs) carries its own name and never the castle's.
         const fellowship = mode !== 'office' && typeof church === 'string' ? fellowshipByPath(church) : null;
         const site = fellowship || (mode !== 'office' && typeof church === 'string' ? denominationSite(church) : null);
-        await auth.requestCode(address, fellowship ? `${url.origin}${fellowship.signup}` : site ? `${url.origin}/${church}/signup/` : url.origin, ['signin', 'office'].includes(mode) ? mode : 'signup', site?.name, Boolean(fellowship));
+        await auth.requestCode(address, fellowship ? `${url.origin}${fellowship.signup}` : site ? `${url.origin}/${church}/signup/` : url.origin, ['signin', 'office', 'reset'].includes(mode) ? mode : 'signup', site?.name, Boolean(fellowship));
         return json({ ok: true, codeRequired: true });
       }
       if (path === '/api/registration/references' && method === 'GET') {
