@@ -48,17 +48,17 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
   const support = createSupport({ config, mailer, fetcher, logger });
   // The email a bishop gets when a pastor registers under them; the same pastor
   // also waits under "To do" on the bishop's account until confirmed.
-  async function notifyBishop({ pastor, to, bishopName, bishopUser }) {
+  async function notifyBishop({ pastor, to, bishopName, bishopUser, unregistered = false }) {
     let address = to;
-    if (!address) { const [[u]] = await pool.execute('SELECT email FROM dr_users WHERE id=?', [bishopUser]); address = u?.email || ''; }
+    if (!address && bishopUser) { const [[u]] = await pool.execute('SELECT email FROM dr_users WHERE id=?', [bishopUser]); address = u?.email || ''; }
     if (!address) return;
     const esc = v => String(v || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const link = `${config.origin.replace(/drogs\.dagministry\.org/, 'kuriakecastle.org')}/orderofbishopsingoodstanding/signup/#signin`;
     const who = `${pastor.title || 'Pastor'} ${pastor.name}`.trim();
     const place = [pastor.denomination || pastor.church, [pastor.city, pastor.country].filter(Boolean).join(', ')].filter(Boolean).join(' · ');
     await mailer.sendMail(brandedMail({ from: config.from, to: address, subject: `${who} has registered under you`,
-      text: `Dear Bishop ${String(bishopName).split(' ')[0] || ''},\n\n${who}${place ? ` (${place})` : ''} has registered on Kuriake Castle and named you as their bishop.\n\nPlease sign in and confirm them under "To do" or "My pastors": ${link}\n\nIf they are not your pastor, choose "Not my pastor" there.\n\nKuriake Castle Office`,
-      html: `<p style="margin:0 0 12px">Dear Bishop ${esc(String(bishopName).split(' ')[0])},</p><p style="margin:0 0 12px"><b>${esc(who)}</b>${place ? ` (${esc(place)})` : ''} has registered on Kuriake Castle and named you as their bishop.</p><p style="margin:0 0 18px">Please sign in and confirm them under <b>To do</b> or <b>My pastors</b>.</p><p style="margin:0 0 18px"><a href="${link}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Sign in to confirm →</a></p><p style="margin:0;color:#6a7283;font-size:13px">If they are not your pastor, choose “Not my pastor” there.</p>` }));
+      text: `Dear Bishop ${String(bishopName).split(' ')[0] || ''},\n\n${who}${place ? ` (${place})` : ''} has registered on Kuriake Castle and named you as their bishop.\n\n${unregistered ? `Please register as a bishop (or sign in) to confirm them: ${link.replace('#signin', '')}` : `Please sign in and confirm them under "To do" or "My pastors": ${link}`}\n\nIf they are not your pastor, choose "Not my pastor" there.\n\nKuriake Castle Office`,
+      html: `<p style="margin:0 0 12px">Dear Bishop ${esc(String(bishopName).split(' ')[0])},</p><p style="margin:0 0 12px"><b>${esc(who)}</b>${place ? ` (${esc(place)})` : ''} has registered on Kuriake Castle and named you as their bishop.</p><p style="margin:0 0 18px">${unregistered ? 'Please register as a bishop (or sign in) to confirm them. Once your registration is approved they will be waiting under <b>To do</b>.' : 'Please sign in and confirm them under <b>To do</b> or <b>My pastors</b>.'}</p><p style="margin:0 0 18px"><a href="${unregistered ? link.replace('#signin', '') : link}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">${unregistered ? 'Register to confirm →' : 'Sign in to confirm →'}</a></p><p style="margin:0;color:#6a7283;font-size:13px">If they are not your pastor, choose “Not my pastor” there.</p>` }));
   }
   return async function handle(request) {
     try {
@@ -270,11 +270,19 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           await persistState(conn, before, after);
           if (name === 'reviewBishop') reviewed = after.registrations.find(r => r.userId === payload.userId && r.year === after.year);
           // A pastor who has just registered under a registered bishop: that bishop is told (17 Nov).
-          if (name === 'submit') {
+          // ... or has just changed to a different bishop on their profile.
+          const was = before.registrations.find(x => x.userId === actor.id && x.year === before.year);
+          if (name === 'submit' || (name === 'update' && was?.data?.bishopId !== undefined)) {
             const r = after.registrations.find(x => x.userId === actor.id && x.year === after.year);
-            const bishop = r?.data?.role === 'pastor' && r.status === 'unclaimed' ? bishopKeyed(after, r.data.bishopId) : null;
-            const bishopReg = bishop && after.registrations.find(x => x.userId === bishop.id && x.year === after.year);
-            if (bishop) newPastor = { pastor: r.data, to: bishopReg?.data?.email || bishop.email || '', bishopName: bishop.name || bishopReg?.data?.name || '', bishopUser: bishop.id };
+            const changed = name === 'submit' || (r?.data?.bishopId && r.data.bishopId !== was?.data?.bishopId);
+            if (changed && r?.data?.role === 'pastor' && r.status === 'unclaimed' && r.data.bishopId) {
+              const bishop = bishopKeyed(after, r.data.bishopId);
+              const bishopReg = bishop && after.registrations.find(x => x.userId === bishop.id && x.year === after.year);
+              // A bishop on our list who has not registered yet is emailed at the address we hold for them.
+              const listed = !bishop && people.find(p => p.id === r.data.bishopId && p.role === 'bishop');
+              if (bishop) newPastor = { pastor: r.data, to: bishopReg?.data?.email || bishop.email || '', bishopName: bishop.name || bishopReg?.data?.name || '', bishopUser: bishop.id };
+              else if (listed?.email) newPastor = { pastor: r.data, to: listed.email, bishopName: listed.name, bishopUser: '', unregistered: true };
+            }
           }
         });
         if (newPastor) notifyBishop(newPastor).catch(error => logger.error?.('new-pastor email failed:', error?.message || error));

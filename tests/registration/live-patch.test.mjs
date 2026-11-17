@@ -95,3 +95,17 @@ test('to do: a bishop sees pastors who named them; "not my pastor" sends them ba
   assert.equal(todoFor(next, office).pastorsToConfirm.length, 1, 'still with the office');
   assert.throws(() => applyAction(s, { id: 'x', email: 'x@x.com' }, 'declinePastor', { userId: 'p1' }), /Only the bishop/);
 });
+test('the bishop who confirms a pastor becomes their bishop everywhere; a pastor who changes bishop waits again', async () => {
+  const { emptyState, applyAction, overlayReferences } = await import('../../src/registration/model.mjs');
+  const refs = [{ id: 'BJ', role: 'bishop', name: 'Joshua Heward-Mills' }, { id: 'BF', role: 'bishop', name: 'Frank Opoku' }, { id: 'P9', role: 'pastor', name: 'Kofi Mensah', bishop: 'Joshua Heward-Mills', image: 'p9.webp' }];
+  const frank = { id: 'f', email: 'f@x.com' }, pastor = { id: 'p', email: 'p@x.com' };
+  let s = { ...emptyState(), year: 2027,
+    profiles: [{ id: 'f', role: 'bishop', name: 'Frank Opoku', referenceId: 'BF', bishopApproved: true }, { id: 'p', role: 'pastor', name: 'Kofi Mensah', referenceId: 'P9' }],
+    registrations: [
+      { userId: 'f', year: 2027, status: 'confirmed', data: { role: 'bishop', name: 'Frank Opoku', referenceId: 'BF' } },
+      { userId: 'p', year: 2027, status: 'unclaimed', data: { role: 'pastor', name: 'Kofi Mensah', referenceId: 'P9', bishopId: 'BF', bishopName: 'Frank Opoku' } }] };
+  s = applyAction(s, frank, 'claim', { userId: 'p' }, undefined, refs);
+  assert.equal(s.registrations[1].status, 'confirmed');
+  assert.equal(overlayReferences(refs, s).find(p => p.id === 'P9').bishop, 'Frank Opoku', 'moved under Frank on every page');
+  assert.ok(s.overrides.P9._officeFields.includes('bishop'), 'kept through later roll updates');
+});

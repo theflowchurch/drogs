@@ -24,10 +24,12 @@ test('FLOW offers only Mother Nina Masuku before her own annual registration', (
   assert.equal(state.profiles.length, 1, 'no bishop account is fabricated');
 });
 
-test('other organisations still offer their own approved registered bishops', () => {
-  const bishops = [{ id: 'ud', name: 'UD Bishop', organization: 'United Denominations', approved: true },
-    { id: 'firstlove', name: 'First Love Bishop', organization: 'First Love', approved: true },
+test('pastors can choose any bishop on the list, registered or not (17 Nov)', () => {
+  const bishops = [{ id: 'new-ud', name: 'New UD Bishop', organization: 'United Denominations', approved: true },
     { id: 'pending', name: 'Pending Bishop', organization: 'First Love', approved: false }];
-  assert.deepEqual(signupBishopChoices(bishops, people, 'First Love').map(b => b.id), ['firstlove']);
-  assert.deepEqual(signupBishopChoices(bishops, people, 'United Denominations').map(b => b.id), ['ud']);
+  const choices = signupBishopChoices(bishops, people, 'First Love');
+  const listed = people.filter(p => p.role === 'bishop').length;
+  assert.equal(choices.length, listed + 1, 'every listed bishop plus approved new ones');
+  assert.ok(choices.some(b => b.id === 'new-ud'));
+  assert.ok(!choices.some(b => b.id === 'pending'));
 });

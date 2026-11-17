@@ -56,27 +56,11 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   }
   async function login(email) {
     assert.equal((await call('auth/request', '', { email })).status, 200);
-    const token = mails.at(-1).text.match(/code is (\d{6})/)[1];
+    const token = mails.filter(m => m.to === email).at(-1).text.match(/code is (\d{6})/)[1];
     const result = await call('auth/verify', '', { email, token });
     assert.equal(result.status, 200);
     assert.equal((await call('auth/verify', '', { email, token })).status, 401, 'code cannot be reused');
     return result;
-  }
-  // Email and password (17 Nov): sign up, sign in, wrong password, no second account, reset by code.
-  {
-    const email = 'password-member@example.com';
-    assert.equal((await call('auth/signup', '', { email, password: 'short' })).status, 400);
-    const made = await call('auth/signup', '', { email, password: 'first password 1' });
-    assert.equal(made.status, 200); assert.ok(made.cookie);
-    assert.equal((await call('auth/signup', '', { email, password: 'another password' })).status, 409, 'an email cannot be claimed twice');
-    assert.equal((await call('auth/login', '', { email, password: 'wrong password!' })).status, 401);
-    assert.equal((await call('auth/login', '', { email, password: 'first password 1' })).status, 200);
-    assert.equal((await call('auth/request', '', { email, mode: 'reset' })).status, 200);
-    const token = mails.at(-1).text.match(/code is (\d{6})/)[1];
-    assert.equal((await call('auth/reset', '', { email, token, password: 'second password 2' })).status, 200);
-    assert.equal((await call('auth/login', '', { email, password: 'first password 1' })).status, 401, 'the old password stops working');
-    assert.equal((await call('auth/login', '', { email, password: 'second password 2' })).status, 200);
-    assert.equal((await call('auth/request', '', { email: 'nobody-here@example.com', mode: 'reset' })).status, 404);
   }
   const image = await sharp({ create: { width: 60, height: 80, channels: 3, background: 'red' } }).png().toBuffer();
   async function upload(who, kind = 'portrait') {
@@ -88,6 +72,22 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
   const profile = (photo, role = 'bishop') => ({ role, firstName: role === 'bishop' ? 'Test' : 'John', lastName: role === 'bishop' ? 'Bishop' : 'Doe', phone: '+233201234567', dob: '1990-01-01', country: 'Ghana', city: 'Accra', organization: 'First Love', denomination: 'First Love Church', photo, gender: 'male', photoConfirmed: true, consentedAt: '2026-09-29T08:00:00.000Z', bishopId: 'B1', bishopFirstName: 'Test', bishopLastName: 'Bishop' });
   try {
     await migrate(pool); await migrate(pool); // Idempotent, preserves existing records.
+    // Email and password (17 Nov): sign up, sign in, wrong password, no second account, reset by code.
+    {
+      const email = 'password-member@example.com';
+      assert.equal((await call('auth/signup', '', { email, password: 'short' })).status, 400);
+      const made = await call('auth/signup', '', { email, password: 'first password 1' });
+      assert.equal(made.status, 200); assert.ok(made.cookie);
+      assert.equal((await call('auth/signup', '', { email, password: 'another password' })).status, 409, 'an email cannot be claimed twice');
+      assert.equal((await call('auth/login', '', { email, password: 'wrong password!' })).status, 401);
+      assert.equal((await call('auth/login', '', { email, password: 'first password 1' })).status, 200);
+      assert.equal((await call('auth/request', '', { email, mode: 'reset' })).status, 200);
+      const token = mails.at(-1).text.match(/code is (\d{6})/)[1];
+      assert.equal((await call('auth/reset', '', { email, token, password: 'second password 2' })).status, 200);
+      assert.equal((await call('auth/login', '', { email, password: 'first password 1' })).status, 401, 'the old password stops working');
+      assert.equal((await call('auth/login', '', { email, password: 'second password 2' })).status, 200);
+      assert.equal((await call('auth/request', '', { email: 'nobody-here@example.com', mode: 'reset' })).status, 404);
+    }
     const published = await call('references');
     assert.equal(published.status, 200);
     assert.match(published.data.rosterVersion, /^[a-f0-9]{64}$/);
@@ -147,6 +147,12 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     const unclaimed = await call('snapshot', pastor.cookie);
     assert.equal(unclaimed.data.rosterVersion, published.data.rosterVersion, 'signed-in and public clients follow the same submitted roster');
     assert.equal(unclaimed.data.registrations[0].status, 'unclaimed');
+    // 17 Nov: the bishop the pastor named is emailed and sees them under To do.
+    await new Promise(r => setTimeout(r, 100));
+    const told = mails.filter(m => m.to === 'bishop@example.com' && /registered under you/.test(m.subject));
+    assert.equal(told.length, 1, 'the bishop is emailed once');
+    assert.match(told[0].text, /John Doe[\s\S]*sign in and confirm/i);
+    assert.ok((await call('snapshot', bishop.cookie)).data.registrations.some(r => r.userId === pastor.data.id && r.status === 'unclaimed'), 'the waiting pastor is on the bishop account');
     assert.equal((await call('action', bishop.cookie, { name: 'addRoster', payload: { rows: [{ name: 'Valid Person', dob: '01/01/1990' }, { name: '' }] } })).status, 400);
     assert.equal((await call('snapshot', bishop.cookie)).data.rosters.length, 0, 'failed bulk write rolled back');
     const concurrent = await Promise.all([1, 2].map(() => call('action', bishop.cookie, { name: 'addRoster', payload: { rows: [{ name: 'John Doe', dob: '01/01/1990' }] } })));
@@ -168,6 +174,12 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(saved.photo_key, pastorPhoto); assert.equal(saved.proof_key, receipt);
     assert.doesNotMatch(saved.photo_key, /^https:/, 'database stores permanent keys, not expiring URLs');
     assert.equal((await call('action', office.cookie, { name: 'reviewPayment', payload: { userId: pastor.data.id, result: 'verified' } })).status, 200);
+    // 17 Nov: a pastor may change their bishop on their profile; they wait again and the new bishop (not yet registered) is emailed at the address we hold.
+    const changed = await call('action', pastor.cookie, { name: 'update', payload: { ...profile(pastorPhoto, 'pastor'), bishopId: 'B2', bishopFirstName: 'Abraham Nii Ayi', bishopLastName: 'Aryee' } });
+    assert.equal(changed.status, 200);
+    assert.equal((await call('snapshot', pastor.cookie)).data.registrations[0].status, 'unclaimed', 'waits for the new bishop');
+    await new Promise(r => setTimeout(r, 100));
+    assert.ok(mails.some(m => m.to === 'reverendab@gmail.com' && /registered under you/.test(m.subject) && /register as a bishop/i.test(m.text)), 'the new bishop is emailed and asked to register');
     assert.equal((await call('action', office.cookie, { name: 'openYear', payload: { year: 2028 } })).status, 200);
     assert.equal((await call('snapshot', pastor.cookie)).data.registrations[0].payment, 'verified');
     assert.equal((await call('auth/signout', pastor.cookie, {})).status, 200);
@@ -186,9 +198,9 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(accounts.data.total, 1);
     assert.ok(accounts.data.data[0].signedUpAt);
     assert.ok(accounts.data.data[0].lastLoginAt);
-    assert.equal(accounts.data.data[0].loginCount, 1, 'Failed code reuse must not count as a login');
+    assert.equal(accounts.data.data[0].loginCount, 2, 'the admin-code sign-in and the code sign-in count; failed code reuse does not');
     const logins = await call(`logins?user=${accounts.data.data[0].id}`, office.cookie);
-    assert.equal(logins.data.data.length, 1);
+    assert.equal(logins.data.data.length, 2, "admin-code and code sign-ins");
     assert.equal(logins.data.data[0].email, 'office@example.com');
     assert.equal(JSON.stringify(logins.data).includes('token'), false);
     // Application API keys are a separate, read-only identity from admin cookies.
@@ -308,7 +320,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(blob.status, 200); assert.equal(blob.headers.get('content-type'), 'image/webp'); assert.ok((await blob.arrayBuffer()).byteLength > 20, "the stored image is returned");
     assert.equal((await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(fallback)}`, { headers: { cookie: stranger.cookie } }))).status, 403, 'strangers cannot read a stored image');
 
-    assert.equal((await call('paystack/verify', bishop.cookie, { reference: 'abc123' })).status, 404, 'Paystack checkout is removed');
+    assert.equal((await call('paystack/verify', bishop.cookie, { reference: 'abc123' })).status, 503, 'Paystack answers "not switched on" until its keys are saved');
 
     assert.equal((await call('settings/telegram-test', bishop.cookie, {})).status, 403);
     // First-time setup: one secret, one use.

@@ -1071,6 +1071,15 @@ export function applyAction(
     row.pastorId = r.userId;
     row.confirmedBy = actor.id;
     row.confirmedAt = now;
+    // The bishop who confirms a pastor becomes their bishop everywhere (17 Nov),
+    // even if our list had them under someone else.
+    const pastorRef = r.data.referenceId || state.profiles.find((p) => p.id === r.userId)?.referenceId;
+    const bishopName = (bishop.referenceId && overlayReferences(references, state).find((p) => p.id === bishop.referenceId)?.name) || bishop.name;
+    if (pastorRef && bishopName) {
+      const owned = new Set([...(state.overrides?.[pastorRef]?._officeFields || []), 'bishop']);
+      state.overrides = { ...(state.overrides || {}), [pastorRef]: { ...(state.overrides?.[pastorRef] || {}), bishop: bishopName, _officeFields: [...owned] } };
+      detail = { pastor: r.data.name, bishop: bishopName };
+    }
   } else if (action === "declinePastor") {
     // The bishop a pastor named says they are not theirs (17 Nov): the pastor
     // goes back to the office, which can assign the right bishop.

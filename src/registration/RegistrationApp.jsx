@@ -258,11 +258,14 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
   const site = useContext(OrganizationSiteContext);
   const church = useContext(ChurchContext);
   const catalog = siteCatalog(state.catalog || catalogOf(state), site);
-  const [f, setF] = useState({ gender: d.gender || "", title: d.title || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "" });
+  const [f, setF] = useState({ gender: d.gender || "", title: d.title || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "", bishopFirstName: d.bishopFirstName || "", bishopLastName: d.bishopLastName || "" });
   const [busyPhoto, setBusyPhoto] = useState(false), [problem, setProblem] = useState("");
-  const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "", ...((state.bishops || []).find(b => b.id === x.bishopId)?.organization !== v ? { bishopId: "" } : {}) } : {}) }));
+  const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
   const countries = [...new Set([...overlayReferences(rosterFrom(state, people), state).map((x) => x.country), f.country].filter(Boolean))].sort();
-  const bishops = [...(state.bishops || [])].filter((b) => b.approved && b.organization === f.organization).sort((a, b) => a.name.localeCompare(b.name));
+  // Every bishop on our list (17 Nov). A different bishop means they must confirm the pastor again.
+  const bishops = signupBishopChoices(state.bishops || [], overlayReferences(rosterFrom(state, people), state), f.organization);
+  const pickBishop = (b) => { const parts = (b?.name || "").trim().split(/\s+/); setF((x) => ({ ...x, bishopId: b?.id || "", bishopFirstName: b ? parts.slice(0, -1).join(" ") : "", bishopLastName: b ? parts.at(-1) || "" : "" })); };
+  const changedBishop = d.role === "pastor" && f.bishopId && f.bishopId !== d.bishopId;
   const denominations = catalog.denominations[f.organization] || [];
   const save = () => perform("update", { ...f, photoConfirmed: true }, "Your details were updated.").then((ok) => ok && onDone());
   return (
@@ -277,11 +280,8 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
       <Field label="Country where you currently serve"><Choice value={f.country} options={countries} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
       <Field label="City"><input value={f.city} onChange={(e) => set("city", e.target.value)} /></Field>
       {d.role === "pastor" && (
-        <Field label="Your bishop" wide hint="Only bishops who have registered appear here. Choosing a different bishop re-runs the match against their list.">
-          <select value={f.bishopId} onChange={(e) => set("bishopId", e.target.value)}>
-            <option value="">Choose your bishop…</option>
-            {bishops.map((b) => <option key={b.id} value={b.id}>{[b.name, caps(b.denomination)].filter(Boolean).join(" · ")}</option>)}
-          </select>
+        <Field label="Your bishop" wide hint={changedBishop ? "After you save, you will wait as unclaimed until this bishop confirms you. They will be emailed." : "To change your bishop, press Change and search for them. The new bishop will need to confirm you."}>
+          <BishopSearch choices={bishops} value={f.bishopId} onPick={pickBishop} />
         </Field>
       )}
       <div className="reg-field wide">
@@ -2252,27 +2252,8 @@ function RegistrationForm({
                 {data.role === "pastor" && (
                   <Field label="Your bishop" wide hint={data.organization === "FLOW"
                     ? "Mother Nina Masuku is currently the available bishop for FLOW."
-                    : registeredBishops.length
-                    ? `Only bishops who have already registered appear here. If yours is missing, ask them to sign up first at ${pagePath("signup/bishop")}.`
-                    : `No bishop has registered yet. Ask your bishop to sign up first at ${pagePath("signup/bishop")}.`}>
-                    <select
-                      value={data.bishopId}
-                      onChange={(e) => pickBishop(registeredBishops.find((b) => b.id === e.target.value))}
-                    >
-                      <option value="">Choose your bishop…</option>
-                      {registeredBishops.map((b) => (
-                        <option key={b.id} value={b.id}>{[b.label || b.name, caps(b.denomination)].filter(Boolean).join(" · ")}</option>
-                      ))}
-                    </select>
-                    {chosenBishop && (
-                      <div className="reg-candidate chosen">
-                        <Portrait person={chosenBishop} />
-                        <div>
-                          <b>{chosenBishop.name}</b>
-                          <small>{[caps(chosenBishop.denomination), chosenBishop.organization].filter(Boolean).join(" · ")}</small>
-                        </div>
-                      </div>
-                    )}
+                    : "Type your bishop’s name and choose them from the list. Your bishop will be asked to confirm you."}>
+                    <BishopSearch choices={registeredBishops} value={data.bishopId} onPick={pickBishop} />
                   </Field>
                 )}
               </div>
@@ -2635,6 +2616,29 @@ const thumbOf = (image) => image.replace(/^(assets\/(?:portraits|bishops|pastors
 // To do (17 Nov). A bishop sees the pastors who named them and wait to be
 // confirmed; the office sees pastors no bishop has confirmed, bishops waiting
 // for approval and money-transfer receipts to check.
+// Pastors find their bishop by typing part of the name (17 Nov): every bishop on
+// our list, registered or not. The bishop is then asked to confirm them.
+function BishopSearch({ choices, value, onPick }) {
+  const chosen = choices.find((b) => b.id === value) || null;
+  const [q, setQ] = useState("");
+  const words = normalName(q).split(" ").filter(Boolean);
+  const found = words.length ? choices.filter((b) => { const n = normalName(`${b.name} ${b.denomination}`); return words.every((w) => n.includes(w)); }).slice(0, 8) : [];
+  useEffect(() => { if (choices.length === 1 && !chosen) onPick(choices[0]); }, [choices.length === 1 && choices[0]?.id, Boolean(chosen)]); // FLOW: Mother Nina is the one bishop
+  return <div className="reg-bishop-search">
+    {chosen ? <div className="reg-candidate chosen">
+      <Portrait person={chosen} />
+      <div><b>{chosen.label || `Bishop ${chosen.name}`}</b><small>{[caps(chosen.denomination), chosen.organization].filter(Boolean).join(" · ")}</small></div>
+      {choices.length > 1 && <button type="button" className="reg-text" onClick={() => { onPick(null); setQ(""); }}>Change</button>}
+    </div> : <>
+      <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Start typing your bishop’s name" aria-label="Search for your bishop" autoComplete="off" />
+      {words.length > 0 && <ul className="reg-bishop-results" role="listbox">
+        {found.length ? found.map((b) => <li key={b.id}><button type="button" onClick={() => { onPick(b); setQ(""); }}>
+          <Portrait person={b} /><span><b>{b.label || `Bishop ${b.name}`}</b><small>{[caps(b.denomination), b.organization].filter(Boolean).join(" · ")}</small></span>
+        </button></li>) : <li className="reg-small">No bishop found with that name. Check the spelling or try the surname.</li>}
+      </ul>}
+    </>}
+  </div>;
+}
 function BishopTodo({ state, actor, perform }) {
   const waiting = todoFor(state, actor).pastorsToConfirm;
   if (!waiting.length) return null;
