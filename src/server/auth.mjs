@@ -96,11 +96,13 @@ export function createAuth({ pool, config, mailer }) {
         await mailer.sendMail(brandedMail({ from: ownName ? fromAs(config.from, name) : config.from, to: email, subject: `Your ${name} sign-in code`, brand, ownName,
           text: `Your ${name} sign-in code is ${token}. It expires in 10 minutes.\n\n${ownName ? 'Enter it on the page where you asked for it.' : `Use it at ${origin}.`} If you did not request this code, you can ignore this email.`,
           html: `<p style="margin:0 0 6px;color:#6a7283">Your sign-in code</p><p style="margin:0 0 18px;font:700 36px/1 -apple-system,Arial,sans-serif;letter-spacing:6px;color:#13324c">${token}</p><p style="margin:0 0 12px">It expires in 10 minutes. ${ownName ? 'Enter it on the page where you asked for it.' : `Use it at <a href="${origin}" style="color:#1e3a8a">${origin.replace(/^https?:\/\//, '')}</a>.`}</p><p style="margin:0;color:#6a7283;font-size:13px">If you did not request this code, you can ignore this email.</p>` }));
-      } catch {
+      } catch (error) {
+        console.error('sign-in code email failed:', error?.message || error);
         await pool.execute('DELETE FROM dr_otp WHERE email=? AND code_hash=?', [email, hash]);
         // Nothing was sent, so the one-a-minute allowance is given back for an immediate retry.
         await pool.execute('DELETE FROM dr_rate_limits WHERE rate_key=?', [digest(config.secret, `rate:otp-minute:${email}`)]);
-        throw new HttpError(503, 'Unable to send your code. Please try again shortly.');
+        // A short reason (no secrets) so the office can tell what the email service said.
+        throw new HttpError(503, `Unable to send your code. Please try again shortly. (${String(error?.message || 'email service unavailable').replace(/re_[A-Za-z0-9_]+/g, 're_…').slice(0, 160)})`);
       }
     },
     async verifyCode(email, code, mode = 'signup', remember = false) {
