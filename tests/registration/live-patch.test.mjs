@@ -66,3 +66,15 @@ test('the directory shows our photo, not the member upload, unless we hold none 
   assert.deepEqual(shownPhoto(reg, { image: '' }), { photo: 'member.webp', image: '' });
   assert.deepEqual(shownPhoto({ ...reg, photoByOffice: true }, { image: 'ours.webp' }), { photo: 'member.webp', image: 'ours.webp' });
 });
+test('member uploads already copied onto records come off once; office uploads stay', async () => {
+  const { emptyState, syncRoll } = await import('../../src/registration/model.mjs');
+  const refs = [{ id: 'P1', role: 'pastor', name: 'A', image: 'edited.webp' }, { id: 'P2', role: 'pastor', name: 'B', image: 'edited2.webp' }];
+  const s = { ...emptyState(), officeFixes: ['restore-seven-2026-11-17'],
+    profiles: [{ id: 'u1', referenceId: 'P1' }],
+    registrations: [{ userId: 'u1', year: 2027, status: 'confirmed', data: { referenceId: 'P1', photo: 'u1/portrait/own.webp' } }],
+    overrides: { P1: { photo: 'u1/portrait/own.webp' }, P2: { photo: 'office-user/portrait/office.webp' } } };
+  const next = syncRoll(s, refs, 'v-member-photos');
+  assert.equal(next.overrides.P1.photo, undefined);
+  assert.equal(next.overrides.P2.photo, 'office-user/portrait/office.webp');
+  assert.ok(next.officeFixes.includes('member-photos-off-records-2026-11-17'));
+});

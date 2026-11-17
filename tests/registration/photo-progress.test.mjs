@@ -99,7 +99,8 @@ test('office name and location corrections survive later member photo updates in
   s = applyAction(s, member, 'update', { city: 'Accra', email: member.email, photo: 'u2/portrait/replaced.webp', photoConfirmed: true }, undefined, refs);
   const row = directoryPeople(s, refs).find(p => p.id === 'P2');
   assert.equal(row.name, 'Corrected Official Name'); assert.equal(row.city, 'Tema'); assert.equal(row.email, 'corrected@example.com');
-  assert.equal(row.photo, 'u2/portrait/replaced.webp');
+  assert.equal(row.photo, '', 'the member upload does not replace our photo (17 Nov)');
+  assert.equal(s.overrides.P2.photo, undefined, 'nor is it copied onto the record');
   const roll = publicRoll(s, refs)[0];
   assert.equal(roll.name, row.name); assert.equal(roll.city, row.city);
   // The roll shows our photo, not the member's upload copied onto the record (office, 17 Nov).
@@ -108,6 +109,7 @@ test('office name and location corrections survive later member photo updates in
   s = applyAction(s, office, 'officeEdit', { userId: 'u2', data: { photo: 'office/portrait/latest.webp' } }, undefined, refs);
   assert.equal(directoryPeople(s, refs).find(p => p.id === 'P2').name, row.name);
   assert.equal(directoryPeople(s, refs).find(p => p.id === 'P2').city, row.city);
+  assert.equal(directoryPeople(s, refs).find(p => p.id === 'P2').photo, 'office/portrait/latest.webp', 'a photo the office uploads does show');
 });
 test('older office corrections are protected even without stored field ownership', () => {
   let s = { ...emptyState(), overrides: { P2: { city: 'Tema', name: 'Corrected Person' } }, audit: [{ action: 'editReference', target: 'P2', detail: { city: 'Tema', name: 'Corrected Person' } }], profiles: [{ id: 'u2', referenceId: 'P2', role: 'pastor' }], registrations: [{ userId: 'u2', year: 2027, status: 'confirmed', data: { role: 'pastor', name: 'Corrected Person', firstName: 'Corrected', lastName: 'Person', referenceId: 'P2', city: 'Accra', country: 'Ghana', organization: 'First Love', denomination: 'First Love Church', photo: 'u2/portrait/old.webp', dob: '1990-01-01', gender: 'male', phone: '+233201234567', photoConfirmed: true, bishopId: 'B1' } }] };

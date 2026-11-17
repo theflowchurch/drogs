@@ -161,7 +161,11 @@ export const pauseFor = (state, entrance) => { const s = signupOf(state); return
 // and this site each deleted a different copy, so seven people vanished. Their
 // records are restored once; nothing else the office did changes, and they can be
 // deleted or hidden again on the admin page like anyone else.
-const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', 'PF158', 'Sdb542231', 'S0ec63b27', 'S391d2dfe', 'PF260', 'S961d9198'] }];
+const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', 'PF158', 'Sdb542231', 'S0ec63b27', 'S391d2dfe', 'PF260', 'S961d9198'] },
+  // Office, 17 Nov: a member's own upload is only for the office to confirm it is
+  // them. Uploads that registration copied onto records come off, so the edited
+  // photos show again; photos the office uploaded stay.
+  { id: 'member-photos-off-records-2026-11-17', memberPhotos: true }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -194,6 +198,11 @@ export function syncRoll(state, people, version) {
   };
   const fixes = pendingFixes(state);
   for (const fix of fixes) for (const id of fix.restore || []) if (next.overrides[id]?.deleted) next.overrides[id] = { ...next.overrides[id], deleted: false };
+  if (fixes.some(f => f.memberPhotos)) for (const r of state.registrations || []) {
+    const id = r.data?.referenceId || state.profiles?.find(p => p.id === r.userId)?.referenceId;
+    const o = id && next.overrides[id];
+    if (o?.photo && r.data?.photo && o.photo === r.data.photo && String(o.photo).startsWith(`${r.userId}/`)) { const { photo, ...rest } = o; next.overrides[id] = rest; }
+  }
   if (fixes.length) next.officeFixes = [...(state.officeFixes || []), ...fixes.map(f => f.id)];
   const dropped = Object.keys(state.overrides || {}).length - Object.keys(overrides).length;
   if (fixes.length) state.audit = [...state.audit, { id: crypto.randomUUID(), actor: "system", at: new Date().toISOString(), action: "restoreReference", detail: { fixes: fixes.map(f => f.id), restored: fixes.flatMap(f => f.restore || []) } }];
@@ -466,7 +475,8 @@ function syncReference(state, r, { byOffice = false, changed = null } = {}) {
   const d = r.data;
   const owned = officeFields(state, id), wanted = changed && new Set(changed.map(referenceField));
   const values = { ...(byOffice ? { name: d.name, role: d.role, gender: d.gender, dob: d.dob, title: d.title, branch: d.church } : {}), city: d.city, country: d.country, denomination: d.denomination, organization: d.organization, phone: d.phone, email: d.email, photo: d.photo };
-  const fields = Object.fromEntries(Object.entries(values).filter(([k, v]) => v !== undefined && (!wanted || wanted.has(k)) && (byOffice || k === 'photo' || !owned.has(k))));
+  // A member's own upload never goes onto the record (17 Nov): it is for the office to check.
+  const fields = Object.fromEntries(Object.entries(values).filter(([k, v]) => v !== undefined && (!wanted || wanted.has(k)) && (k === 'photo' ? byOffice : byOffice || !owned.has(k))));
   if (byOffice) for (const k of Object.keys(fields)) if (k !== 'photo') owned.add(k);
   state.overrides = { ...(state.overrides || {}), [id]: { ...(state.overrides?.[id] || {}), ...fields, _officeFields: [...owned] } };
 }
