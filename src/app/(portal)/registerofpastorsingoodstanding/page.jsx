@@ -23,4 +23,4 @@ const list = people.filter(p => p.role === 'pastor')
     ] };
   })
   .sort((a, b) => bishopSurname(a.name).localeCompare(bishopSurname(b.name)) || a.name.localeCompare(b.name));
-export default function Page() { return <BishopsApp bishops={list} kind="pastor"/>; }
+export default function Page() { return <BishopsApp bishops={list} kind="pastor" masthead={{ sub: 'Worldwide Fellowship of Pastors' }}/>; }
