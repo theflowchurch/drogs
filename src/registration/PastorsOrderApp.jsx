@@ -3,6 +3,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Masthead } from './OrganisationsApp';
 import { Card, Detail } from './BishopsApp';
 import GoodStandingNotice from './GoodStandingNotice';
+import useLiveRoll from './useLiveRoll';
+import { pastorEntries, pastorGroups, setOfficeLogos } from './public-entries.mjs';
+import { COLOURS } from './ministry-organisations.mjs';
 import './denomination-sites.css';
 import './organisations.css';
 
@@ -41,7 +44,15 @@ function Group({ group, onOpen }) {
   </section>;
 }
 
-export default function PastorsOrderApp({ groups, total }) {
+export default function PastorsOrderApp({ groups: published, total: publishedTotal }) {
+  // The office's live changes over the groups this page was built with.
+  const live = useLiveRoll();
+  const { groups, total } = useMemo(() => {
+    if (!live) return { groups: published, total: publishedTotal };
+    setOfficeLogos(live.logos);
+    const entries = pastorEntries(live.people);
+    return { groups: pastorGroups(entries, COLOURS).map(g => ({ ...g, people: g.people.map(({ denomination, ...p }) => p) })), total: entries.length };
+  }, [live, published, publishedTotal]);
   const [slug, setSlug] = useState('');
   const [open, setOpen] = useState(null);
   useEffect(() => {

@@ -1,6 +1,9 @@
 'use client';
 import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, PAGE_ALIASES, flatPeople } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
+import useLiveRoll, { useUploadedPhoto } from './useLiveRoll';
+import { patchGroups } from './live-patch.mjs';
+import { createContext, useContext, useMemo } from 'react';
 import { useEffect } from 'react';
 import useGroupFocus from './useGroupFocus';
 import GroupThumbs from './GroupThumbs';
@@ -15,7 +18,14 @@ import './organisations.css';
 // chosen. Ivory and navy, with large type for older readers.
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
+// A portrait the office uploaded on the admin page wins over the published one.
+function UploadedPhoto({ person }) {
+  const src = useUploadedPhoto(person.photo);
+  if (!src) return <span className="org-photo-empty" aria-hidden="true"/>;
+  return <img src={src} alt={person.name} className="denom-portrait" loading="lazy" decoding="async" style={{ '--portrait-x': '50%', '--portrait-y': '0%' }}/>;
+}
 export function Photo({ person, large = false }) {
+  if (person?.photo) return <UploadedPhoto person={person}/>;
   if (!person?.image) return <span className="org-photo-empty" aria-hidden="true"><svg viewBox="0 0 80 96" fill="currentColor"><circle cx="40" cy="27" r="18"/><path d="M7 91V76c0-20 14-30 33-30s33 10 33 30v15Z"/></svg></span>;
   // The office's edited portraits are framed alike with headroom above the
   // head, so they sit against the top of every card and never lose the head.
@@ -54,7 +64,24 @@ function GroupBox({ group, as: Tag = 'a', thumbs }) {
 
 // The title (office, 9 Nov): the DHMM logo in white on navy, "Worldwide Fellowship of
 // Bishops" in gold, and every bishop on the page counted once.
-export function Masthead({ bishops = false, count = true, sub = 'Worldwide Fellowship of Bishops', line = 'Roll of Good Standing', total = DIRECTORY_TOTAL, noun = 'Bishops' }) {
+// The office's live changes (deletions, corrections, photos, new bishops) over
+// the groups this page was built with (live-patch.mjs).
+const GroupsContext = createContext({ groups: DIRECTORY_GROUPS, total: DIRECTORY_TOTAL });
+export const useGroups = () => useContext(GroupsContext);
+export function LiveGroups({ children }) {
+  const live = useLiveRoll();
+  const value = useMemo(() => live ? patchGroups(DIRECTORY_GROUPS, live) : { groups: DIRECTORY_GROUPS, total: DIRECTORY_TOTAL }, [live]);
+  return <GroupsContext.Provider value={value}>{children}</GroupsContext.Provider>;
+}
+// The live version of a group or line chosen in the address.
+export function useLiveFocus(focus) {
+  const { groups } = useGroups();
+  const group = focus.group && groups.find(g => g.slug === focus.group.slug);
+  const part = group && focus.part ? group.parts?.find(p => p.slug === focus.part.slug) || null : null;
+  return { group: group || null, part };
+}
+export function Masthead({ bishops = false, count = true, sub = 'Worldwide Fellowship of Bishops', line = 'Roll of Good Standing', total: totalProp, noun = 'Bishops' }) {
+  const live = useGroups(); const total = totalProp ?? live.total;
   return <header className={`org-dhmm-head ${bishops ? 'org-dhmm-head-bishops' : ''}`}>
     <a href="#contents" className="org-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
     <div className="org-dhmm-text">
@@ -67,7 +94,7 @@ export function Masthead({ bishops = false, count = true, sub = 'Worldwide Fello
 
 function Contents() {
   return <nav id="contents" className="org-contents" aria-label="Contents">
-    {DIRECTORY_GROUPS.map(g => <GroupBox key={g.slug} group={g}/>)}
+    {useGroups().groups.map(g => <GroupBox key={g.slug} group={g}/>)}
   </nav>;
 }
 
@@ -105,7 +132,10 @@ function Group({ group, part }) {
 
 export default function OrganisationsApp({ slug = '', bishops = false }) {
   // An older address for a section opens the contents; one for a group opens it.
-  const { group, part } = useGroupFocus(PAGE_ALIASES[slug] ? '' : slug);
+  return <LiveGroups><OrganisationsPage slug={slug} bishops={bishops}/></LiveGroups>;
+}
+function OrganisationsPage({ slug, bishops }) {
+  const { group, part } = useLiveFocus(useGroupFocus(PAGE_ALIASES[slug] ? '' : slug));
   // Office, 11 Nov: every bishop's photo in a strip beside each council's or
   // country's name.
   const variant = 'all';

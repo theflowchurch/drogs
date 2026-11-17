@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, flatPeople } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
+import { LiveGroups, useGroups, useLiveFocus, Photo as LivePhoto } from './OrganisationsApp';
 import GoodStandingNotice from './GoodStandingNotice';
 import BishopAccess from './BishopAccess';
 import NightGlobe from './NightGlobe';
@@ -24,6 +25,7 @@ const stillMotion = () => typeof matchMedia === 'function' && matchMedia('(prefe
 const Name = ({ group }) => <>{group.name}{group.initials && <span className="tx-initials"> – {group.initials}</span>}</>;
 
 function Photo({ person }) {
+  if (person?.photo) return <LivePhoto person={person}/>; // a portrait the office uploaded
   if (!person?.image) return <span className="tx-photo-empty" aria-hidden="true"/>;
   const edited = person.image.startsWith('assets/organisations/people/');
   const style = edited ? { '--portrait-x': '50%', '--portrait-y': '0%' } : Object.fromEntries(portraitStyle(person.image).split(';').filter(Boolean).map(pair => pair.split(':')));
@@ -61,7 +63,7 @@ function Title({ compact, children }) {
     <a href="#contents" className="tx-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
     <div className="tx-title">
       <p className="tx-sub">Worldwide Fellowship of Bishops</p>
-      <p className="tx-total"><span className="tx-dot" aria-hidden="true"/>Roll of Good Standing <span className="tx-sep">·</span> <strong><CountUp to={DIRECTORY_TOTAL}/></strong> Bishops</p>
+      <p className="tx-total"><span className="tx-dot" aria-hidden="true"/>Roll of Good Standing <span className="tx-sep">·</span> <strong><CountUp to={useGroups().total}/></strong> Bishops</p>
     </div>
     {children && <div className="tx-head-tools">{children}</div>}
   </div>;
@@ -89,7 +91,8 @@ const spotlight = e => { const row = e.target.closest?.('.tx-row'); if (!row) re
 
 function Contents({ query, search }) {
   const list = useRef(null);
-  const shown = DIRECTORY_GROUPS.filter(g => !query || matches(`${g.name} ${g.initials} ${(g.parts || []).map(p => `${p.name} ${p.initials}`).join(' ')}`, query));
+  const { groups } = useGroups();
+  const shown = groups.filter(g => !query || matches(`${g.name} ${g.initials} ${(g.parts || []).map(p => `${p.name} ${p.initials}`).join(' ')}`, query));
   // "/" jumps to the search box; ↑ and ↓ move between the rows.
   useEffect(() => {
     const keys = e => {
@@ -105,8 +108,8 @@ function Contents({ query, search }) {
   }, []);
   return <>
     <nav className="tx-contents" id="contents" aria-label="Contents" ref={list} onPointerMove={spotlight}>
-      {shown.map(g => <a key={g.slug} href={`#${g.slug}`} className="tx-row" style={{ '--box': g.colour, '--i': DIRECTORY_GROUPS.indexOf(g) }}>
-        <span className="tx-index">{pad(DIRECTORY_GROUPS.indexOf(g) + 1)}</span>
+      {shown.map(g => <a key={g.slug} href={`#${g.slug}`} className="tx-row" style={{ '--box': g.colour, '--i': groups.indexOf(g) }}>
+        <span className="tx-index">{pad(groups.indexOf(g) + 1)}</span>
         <span className="tx-row-name"><Name group={g}/></span>
         <span className="tx-row-count"><i aria-hidden="true"/>{plural(g.count)}</span>
         <span className="tx-arrow" aria-hidden="true">→</span>
@@ -145,7 +148,8 @@ function Group({ group, part }) {
   const keep = people => people.filter(p => !query || matches(`${p.title || ''} ${p.name} ${p.role || ''} ${p.church || ''}`, query));
   const sections = (group.flat ? [{ slug: group.slug, name: '', people: flatPeople(group, part) }] : group.parts || [{ slug: group.slug, name: '', people: group.people }]).map(s => ({ ...s, people: keep(s.people) }));
   const found = sections.reduce((n, s) => n + s.people.length, 0);
-  const number = DIRECTORY_GROUPS.indexOf(group) + 1;
+  const { groups } = useGroups();
+  const number = groups.findIndex(g => g.slug === group.slug) + 1;
   useEffect(() => { if (part && !group.flat) setTimeout(() => document.getElementById(part.slug)?.scrollIntoView(), 60); }, [part]);
   return <section className="tx-group" id={group.slug} aria-labelledby={`${group.slug}-title`} style={{ '--box': group.colour }}>
     <div className="tx-crumbs"><a href="#contents" className="tx-back">← All Groups</a></div>
@@ -163,7 +167,11 @@ function Group({ group, part }) {
 }
 
 export default function CouncilsApp({ bishops = false }) {
-  const { group, part } = useGroupFocus();
+  return <LiveGroups><CouncilsPage bishops={bishops}/></LiveGroups>;
+}
+function CouncilsPage({ bishops }) {
+  const { group, part } = useLiveFocus(useGroupFocus());
+  const live = useGroups();
   // Office, 11 Nov: every bishop's photo in a strip beside each council's or
   // country's name.
   const variant = 'all';
@@ -193,6 +201,6 @@ export default function CouncilsApp({ bishops = false }) {
       </> : <Contents query={query} search={search}/>}
       {!group && <GoodStandingNotice className="tx-good-standing"/>}
     </main>
-    <footer className="tx-footer"><span>Updated {data.updated}</span><span className="tx-mono">{DIRECTORY_TOTAL} bishops · {DIRECTORY_GROUPS.length} groups</span></footer>
+    <footer className="tx-footer"><span>Updated {data.updated}</span><span className="tx-mono">{live.total} bishops · {live.groups.length} groups</span></footer>
   </div>;
 }

@@ -1,7 +1,10 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Masthead, Photo } from './OrganisationsApp';
-import { bishopSurname } from './ministry-organisations.mjs';
+import { bishopSurname, DIRECTORY_GROUPS, allBishopsOf } from './ministry-organisations.mjs';
+import useLiveRoll from './useLiveRoll';
+import { patchGroups } from './live-patch.mjs';
+import { bishopEntries, pastorEntries, setOfficeLogos } from './public-entries.mjs';
 import './denomination-sites.css';
 import './organisations.css';
 
@@ -50,7 +53,12 @@ export function Detail({ person, onClose, fallback }) {
 // Pastors' register (office, 17 Nov): thousands of cards, so they are drawn a
 // screenful at a time as the visitor scrolls.
 const STEP = 120;
-export default function BishopsApp({ bishops, kind = 'bishop', masthead = {} }) {
+export default function BishopsApp({ bishops: published, kind = 'bishop', masthead = {} }) {
+  // The office's live changes over the list this page was built with.
+  const live = useLiveRoll();
+  const bishops = useMemo(() => { if (live) setOfficeLogos(live.logos); return !live ? published : kind === 'pastor'
+    ? pastorEntries(live.people).map(({ denomination, ...p }) => p)
+    : bishopEntries(allBishopsOf(patchGroups(DIRECTORY_GROUPS, live).groups), live.byId); }, [live, published, kind]);
   const noun = kind === 'pastor' ? 'pastor' : 'bishop', fallback = kind === 'pastor' ? 'Pastor' : 'Bishop';
   const [open, setOpen] = useState(null);
   const [query, setQuery] = useState('');
