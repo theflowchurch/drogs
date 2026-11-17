@@ -11,11 +11,12 @@ function ReceiptPreview({ path }) {
   useEffect(() => { let live = true; setSrc(''); if (path) api.mediaUrl(path).then(url => live && setSrc(url)).catch(() => {}); return () => { live = false; }; }, [path]);
   return src ? <a href={src} target="_blank" rel="noreferrer"><img className="reg-receipt-preview" src={src} alt="Your payment receipt" /></a> : null;
 }
-export default function PaymentOptions({ current, actor, run, refresh, beforeSave }) {
+export default function PaymentOptions({ current, actor, run, refresh, beforeSave, demo = null }) {
   const domestic = inGhana(current.data.country);
   const [method, setMethod] = useState('momo');
-  const [proof, setProof] = useState(''), [check, setCheck] = useState(null), [transactionId, setTransactionId] = useState('');
-  const [acknowledged, setAcknowledged] = useState(false), [uploading, setUploading] = useState(false), [saving, setSaving] = useState(false), [error, setError] = useState(''), [replacing, setReplacing] = useState(false);
+  // The sign-up demonstration arrives with a sample receipt already chosen.
+  const [proof, setProof] = useState(demo?.proof || ''), [check, setCheck] = useState(demo ? { verdict: 'ok' } : null), [transactionId, setTransactionId] = useState(demo?.transactionId || '');
+  const [acknowledged, setAcknowledged] = useState(Boolean(demo)), [uploading, setUploading] = useState(false), [saving, setSaving] = useState(false), [error, setError] = useState(''), [replacing, setReplacing] = useState(false);
     const reference = paymentReference({ userId: actor.id, year: current.year });
   async function upload(file) {
     setError(''); setProof(''); setCheck(null);

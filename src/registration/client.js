@@ -12,10 +12,20 @@ import {
   normalEmail,
 } from "./model.mjs";
 const mode = process.env.NEXT_PUBLIC_REGISTRATION_BACKEND;
-const mysqlBackend = mode === "mysql";
-const url = mysqlBackend || mode === "demo" ? "" : process.env.NEXT_PUBLIC_SUPABASE_URL;
-const key = mysqlBackend || mode === "demo" ? "" : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-export const live = mysqlBackend || Boolean(url && key);
+let mysqlBackend = mode === "mysql";
+let url = mysqlBackend || mode === "demo" ? "" : process.env.NEXT_PUBLIC_SUPABASE_URL;
+let key = mysqlBackend || mode === "demo" ? "" : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+export let live = mysqlBackend || Boolean(url && key);
+// The sign-up demonstration (/orderofbishopsingoodstanding/signup/test/): this
+// page only, everything stays in this browser under its own key and starts
+// fresh on every visit; nothing reaches the server, the database or email.
+let storageKey = STORAGE_KEY, demoStarted = false;
+export function useLocalDemo(name) {
+  mysqlBackend = false; url = ""; key = ""; live = false; storageKey = name;
+  if (demoStarted || typeof window === "undefined") return;
+  demoStarted = true;
+  try { localStorage.removeItem(name); for (const office of [false, true]) { sessionStorage.removeItem(sessionKey(office)); localStorage.removeItem(rememberedKey(office)); } } catch {}
+}
 // Which door this page is: member (/signup/) or office (/admin/). Sent with every
 // request so the server reads the matching session cookie.
 let door = "member";
@@ -38,7 +48,7 @@ const sessionKey = (office) =>
 const rememberedKey = (office) =>
   `drogs-registration-demo-remembered:${office ? "office" : "member"}`;
 const read = () =>
-  JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || emptyState();
+  JSON.parse(localStorage.getItem(storageKey) || "null") || emptyState();
 function mediaDB() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("drogs-registration-media", 1);
@@ -146,10 +156,10 @@ export async function action(actor, name, payload) {
   }
   const write = () => {
     const state = applyAction(read(), actor, name, payload, undefined, people);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    localStorage.setItem(storageKey, JSON.stringify(state));
     window.dispatchEvent(new Event("registration-change"));
   };
-  if (navigator.locks) await navigator.locks.request(STORAGE_KEY, write);
+  if (navigator.locks) await navigator.locks.request(storageKey, write);
   else write();
 }
 export async function upload(actor, file, kind = "portrait", withDetails = false) {
@@ -181,6 +191,7 @@ export async function mediaUrl(path) {
   // Images kept in the database have a fixed address; no need to ask the server for it first.
   if (mysqlBackend && path.startsWith("db/")) return `/api/registration/media/blob?path=${encodeURIComponent(path)}`;
   if (mysqlBackend) return (await server(`media?path=${encodeURIComponent(path)}`)).url;
+  if (!live && path.startsWith("assets/")) return `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/${path}`; // the demonstration's sample photo
   if (live) {
     const { data, error } = await supabase()
       .storage.from("registration-media")

@@ -22,6 +22,8 @@ const OrganizationSiteContext = createContext("");
 const ChurchContext = createContext(null);
 // The bishops' sign-up from the Organisations and Councils pages (FELLOWSHIP).
 const FellowshipContext = createContext(false);
+// The sign-up demonstration (fellowship-demo.mjs): sample details that fill every step.
+const DemoContext = createContext(null);
 // Church sites name the church, never the central site, in what members read.
 const useBrandName = () => { const church = useContext(ChurchContext), fellowship = useContext(FellowshipContext); return fellowship ? FELLOWSHIP.name : church?.config.name || "Kuriake Castle"; };
 // Links stay on the church site (or the bishops' sign-up) when there is one.
@@ -31,6 +33,7 @@ import * as api from "./client";
 import { signupBishopChoices } from './signup-bishops.mjs';
 import { denominationSite, churchPlacement, inChurch, churchOfDenomination } from './denomination-sites.mjs';
 import { FELLOWSHIP, fellowshipSignupPath } from './fellowship.mjs';
+import { FELLOWSHIP_DEMO } from './fellowship-demo.mjs';
 import { LegalFooter } from "./Docs";
 import { DENOMINATIONS } from "./denominations.mjs";
 import {
@@ -525,7 +528,10 @@ export default function RegistrationApp({
   organizationSite = "",
   church: churchPath = "",
   fellowship: fellowshipProp = false,
+  demo: demoMode = false,
 }) {
+  const demo = demoMode ? FELLOWSHIP_DEMO : null;
+  if (demo) api.useLocalDemo(demo.storage); // this page only: nothing leaves the browser
   const fellowship = !office && fellowshipProp;
   const churchConfig = office ? null : denominationSite(churchPath);
   // A church has one sign-up link for bishops and pastors; the form asks which.
@@ -782,6 +788,7 @@ export default function RegistrationApp({
     <OrganizationSiteContext.Provider value={site}>
     <ChurchContext.Provider value={church}>
     <FellowshipContext.Provider value={fellowship}>
+    <DemoContext.Provider value={demo}>
     <RosterContext.Provider value={everyone}>
     <div className={`reg-app ${site ? `reg-organization-app organization-${site}` : ""} ${churchConfig ? "reg-church-app" : ""} ${fellowship ? "reg-fellowship-app" : ""}`} style={churchConfig ? { "--brand": churchConfig.accent } : undefined}>
       {!hero && !churchConfig && !fellowship && (
@@ -855,6 +862,8 @@ export default function RegistrationApp({
         <div className="reg-demo reg-directory-demo">
           <strong>Preview</strong> · every bishop with pastors, and their photographed pastors, are marked confirmed; everyone else stays dark.
         </div>
+      ) : demo ? (
+        <div className="reg-demo reg-fellowship-demo" role="note">Demonstration only. The details are filled in for you, and nothing here is saved or sent.</div>
       ) : !api.live && !fellowship && (
         <div className="reg-demo">
           Saved in this browser only · email delivery and shared accounts are
@@ -1184,6 +1193,7 @@ export default function RegistrationApp({
       <LegalFooter hidden={fellowship} />
     </div>
     </RosterContext.Provider>
+    </DemoContext.Provider>
     </FellowshipContext.Provider>
     </ChurchContext.Provider>
     </OrganizationSiteContext.Provider>
@@ -1308,6 +1318,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
   const site = useContext(OrganizationSiteContext);
   const church = useContext(ChurchContext);
   const fellowship = useContext(FellowshipContext);
+  const demo = useContext(DemoContext);
   const entrance = useContext(EntranceContext);
   useEffect(() => {
     if (mode !== "signup") return;
@@ -1315,7 +1326,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
     api.publicSignupStatus().then((d) => { const flag = entrance === "appointments" ? d?.signup?.appointments : d?.signup; if (live && flag?.closed) setPaused(flag.notice || SIGNUP_PAUSED); }).catch(() => {});
     return () => { live = false; };
   }, [mode, entrance]);
-  const [email, setEmail] = useState(""),
+  const [email, setEmail] = useState(() => demo?.email || ""),
     [sent, setSent] = useState(false),
     [token, setToken] = useState("");
   if (paused)
@@ -1332,6 +1343,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
   onSubmit={(e) => {
     e.preventDefault();
     run(async () => {
+      if (demo && !sent) { setSent(true); setToken(demo.code); return; } // the demonstration shows the code step, already filled in
       if (!api.live) {
         onActor(api.demoSignIn(email, office, mode));
         return;
@@ -1381,7 +1393,7 @@ function AccountForm({ office, signup = false, mode = office ? "office" : signup
   <button className="reg-primary full" disabled={busy}>
     {busy
       ? "Please wait…"
-      : !api.live
+      : !api.live && !demo
         ? "Continue"
         : sent
           ? signup
@@ -1742,6 +1754,7 @@ function RegistrationForm({
   const entrance = useContext(EntranceContext);
   const site = useContext(OrganizationSiteContext);
   const church = useContext(ChurchContext), brandName = useBrandName(), pagePath = usePagePath();
+  const demo = useContext(DemoContext);
   const siteConfig = ORGANIZATION_SITES[site];
   const catalog = siteCatalog(state.catalog || catalogOf(state), site);
   const matchingIndex = useMemo(() => referenceIndex(peopleForSite(overlayReferences(rosterFrom(state, people), state), site).filter(p => inChurch(church, p))), [site, church, state.referencePeople, state.overrides, state.extraReferences, state.hidden]);
@@ -1769,12 +1782,13 @@ function RegistrationForm({
         bishopLastName: "",
       },
       ...initial,
+      ...(demo?.details || {}),
       email: registrationEmail(actor.email, initial?.email),
     })),
     // Onboarding is one guided path: details → (bishops: pastors) → payment → review → confirm.
     [step, setStep] = useState("details"),
     [rosterRows, setRosterRows] = useState([]),
-    [slots, setSlots] = useState(() => blankSlots(4)),
+    [slots, setSlots] = useState(() => demo ? demo.pastors.map(p => ({ ...p })) : blankSlots(4)),
     [rosterError, setRosterError] = useState(""),
     [rates, setRates] = useState(null),
     [accurate, setAccurate] = useState(false),
@@ -2246,6 +2260,7 @@ function RegistrationForm({
               ) : <PaymentOptions
                 current={{ ...mine, amount: fees[data.role], year: state.year, data }} actor={actor} run={run} refresh={refresh}
                 beforeSave={async () => { await api.action(actor, "save", data); }}
+                demo={demo?.payment}
               />}
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
