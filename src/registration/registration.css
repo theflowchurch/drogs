@@ -4257,3 +4257,16 @@ input[type="date"] {
 .reg-pay-total { display: grid; gap: 4px; margin: 0 0 1rem; }
 .reg-pay-total strong { font-size: 1.25rem; color: var(--accent); }
 .reg-pay-total small { color: var(--muted, #667); line-height: 1.5; }
+/* The one-time welcome after an account is created. */
+.reg-welcome { max-width: 620px; margin: 3rem auto; padding: 2.6rem 2.4rem; text-align: center; display: grid; gap: 1rem; justify-items: center; }
+.reg-welcome-tick { display: inline-grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: color-mix(in srgb, #1f9d55 14%, transparent); color: #1f9d55; }
+.reg-welcome h1 { margin: .2rem 0 0; font-size: clamp(1.7rem, 4vw, 2.2rem); line-height: 1.2; }
+.reg-welcome p { margin: 0; font-size: 1.08rem; line-height: 1.6; color: var(--muted, #687084); }
+.reg-welcome .reg-welcome-lead { font-size: 1.25rem; font-weight: 600; color: var(--ink); }
+.reg-welcome-reminder { width: 100%; margin-top: .6rem; padding-top: 1.3rem; border-top: 1px solid var(--line, #d9deeb); text-align: left; }
+.reg-welcome-reminder h2 { display: flex; align-items: center; gap: .55rem; margin: 0 0 .5rem; font-size: 1.15rem; }
+.reg-welcome-reminder h2 svg { color: var(--accent); flex: 0 0 auto; }
+.reg-welcome-reminder p { color: var(--ink); }
+.reg-welcome .reg-welcome-note { width: 100%; padding: 1rem 1.2rem; border-radius: 12px; background: color-mix(in srgb, var(--accent) 7%, transparent); color: var(--ink); }
+.reg-welcome-button { width: 100%; min-height: 56px; margin-top: .4rem; font-size: 1.1rem; }
+@media (max-width: 640px) { .reg-welcome { margin: 1.4rem 0; padding: 2rem 1.3rem; } }
