@@ -715,8 +715,10 @@ export function matchFor(state, registration) {
       r.bishopId === bishop.id &&
       r.status === "active" &&
       (!r.pastorId || r.pastorId === registration.userId) &&
-      // A line the office marked "bishop must confirm" (17 Nov) never confirms on its own.
-      (!r.claimRequired || r.pastorId === registration.userId) &&
+      // Office, 17 Nov: a name on a list made before the pastor registered (e.g. an
+      // uploaded sheet) never confirms them: their bishop confirms under To do. A
+      // bishop who lists a pastor who has already registered is confirming them.
+      (r.pastorId === registration.userId || (!r.claimRequired && Boolean(r.createdAt && registration.submittedAt) && r.createdAt >= registration.submittedAt)) &&
       namesAlike(r.name, p.name) &&
       dobClose(r.dob, p.dob),
   );

@@ -129,14 +129,17 @@ test("unmatched pastor is Unclaimed but can already send payment proof; linked p
   });
   assert.equal(s.registrations.at(-1).payment, "verified");
 });
-test("a close name and birthday match automatically; a wrong birthday waits for the bishop", () => {
+test("a name on an earlier list waits for the bishop to confirm (17 Nov); confirming uses that line", () => {
   let s = setup();
   s = applyAction(s, bishop, "addRoster", {
     rows: [{ name: "Jon Doe", dob: "02/01/1990" }],
   });
-  // A spelling slip plus swapped day and month still matches.
+  s.rosters.forEach((r) => { r.createdAt = '2000-01-01T00:00:00.000Z'; }); // the list was made before the pastor registered
   s = applyAction(s, pastor, "submit", profile(pastor));
+  assert.equal(s.registrations.at(-1).status, "unclaimed", "a list made earlier never confirms on its own");
+  s = applyAction(s, bishop, "claim", { userId: "p1" });
   assert.equal(s.registrations.at(-1).status, "confirmed");
+  assert.equal(s.rosters.length, 1, "the spelling slip on the list is the same line");
   s = setup();
   s = applyAction(s, bishop, "addRoster", {
     rows: [{ name: "Jon Doe", dob: "14/07/1988" }],
@@ -172,7 +175,9 @@ test("removal preserves payment and next cycle has fresh counts and no copied pa
   s = applyAction(s, bishop, "addRoster", {
     rows: [{ name: "John Doe", dob: "01/02/1990", email: pastor.email }],
   });
+  s.rosters.forEach((r) => { r.createdAt = '2000-01-01T00:00:00.000Z'; }); // the list was made before the pastor registered
   s = applyAction(s, pastor, "submit", profile(pastor));
+  s = applyAction(s, bishop, "claim", { userId: pastor.id });
   s = applyAction(s, pastor, "payment", { proof: "p1/receipt/a", nonrefundable: true, transactionId: "TX-TEST-0001" });
   s = applyAction(s, bishop, "removeRoster", {
     id: s.rosters[0].id,
@@ -363,7 +368,10 @@ test("a pastor must pick a registered bishop and is matched or left for that bis
     ["B1"],
     "only registered bishops are offered",
   );
+  s.rosters.forEach((r) => { r.createdAt = '2000-01-01T00:00:00.000Z'; }); // the list was made before the pastor registered
   s = applyAction(s, pastor, "submit", profile(pastor));
+  assert.equal(s.registrations.find((r) => r.userId === pastor.id).status, "unclaimed");
+  s = applyAction(s, bishop, "claim", { userId: pastor.id });
   assert.equal(s.registrations.find((r) => r.userId === pastor.id).status, "confirmed");
 
   // Not on the bishop's list: floats in that bishop's Unclaimed until they confirm.
@@ -453,7 +461,9 @@ test("names are alike across order, missing middle names and small typos", () =>
 test("a submitted profile stays editable, but status and payment are untouched", () => {
   let s = setup();
   s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
+  s.rosters.forEach((r) => { r.createdAt = '2000-01-01T00:00:00.000Z'; }); // the list was made before the pastor registered
   s = applyAction(s, pastor, "submit", profile(pastor));
+  s = applyAction(s, bishop, "claim", { userId: pastor.id });
   s = applyAction(s, pastor, "update", { city: "Kumasi", photoConfirmed: true });
   const r = s.registrations.find((x) => x.userId === pastor.id);
   assert.equal(r.data.city, "Kumasi");
@@ -474,12 +484,14 @@ test("female bishops are addressed by their organization's title", () => {
   assert.equal(validateProfile({ ...profile(pastor), title: "Archdeacon" }, pastor.email).title, "");
   assert.throws(() => validateProfile({ ...profile(pastor), gender: "" }, pastor.email), /male or female/);
 });
-test("a pastor matched under a pending bishop stays on the roll when the office confirms the bishop with a reference", () => {
+test("a pastor under a pending bishop waits; once the office confirms the bishop with a reference, the bishop confirms them", () => {
   let s = applyAction(emptyState(), bishop, "submit", profile(bishop, "bishop", "Ama Bishop"));
   s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
+  s.rosters.forEach((r) => { r.createdAt = '2000-01-01T00:00:00.000Z'; }); // the list was made before the pastor registered
   s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: bishop.id });
-  assert.equal(s.registrations.at(-1).status, "confirmed");
+  assert.equal(s.registrations.at(-1).status, "unclaimed");
   s = applyAction(s, office, "approveBishop", { userId: bishop.id, referenceId: "B1" });
+  s = applyAction(s, bishop, "claim", { userId: pastor.id });
   const reg = s.registrations.find((r) => r.userId === pastor.id);
   assert.equal(reg.status, "confirmed");
   assert.equal(reg.data.bishopId, "B1", "the pastor follows the bishop's new key");
@@ -489,7 +501,9 @@ test("a pastor matched under a pending bishop stays on the roll when the office 
 test("a pastor removed from the list by mistake is matched again when re-added", () => {
   let s = setup();
   s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
+  s.rosters.forEach((r) => { r.createdAt = '2000-01-01T00:00:00.000Z'; }); // the list was made before the pastor registered
   s = applyAction(s, pastor, "submit", { ...profile(pastor), bishopId: "B1" });
+  s = applyAction(s, bishop, "claim", { userId: pastor.id });
   assert.equal(s.registrations.at(-1).status, "confirmed");
   s = applyAction(s, bishop, "removeRoster", { id: s.rosters[0].id, reason: "Transferred" });
   assert.equal(s.registrations.at(-1).status, "removed");
@@ -721,8 +735,10 @@ test("a pastor who picks a different bishop is re-matched under the new one", ()
   s = applyAction(s, other, "submit", profile(other, "bishop", "Kofi Other"));
   s = applyAction(s, office, "approveBishop", { userId: other.id });
   s = applyAction(s, bishop, "addRoster", { rows: [{ name: "John Doe", dob: "01/02/1990" }] });
+  s.rosters.forEach((r) => { r.createdAt = '2000-01-01T00:00:00.000Z'; }); // the list was made before the pastor registered
   s = applyAction(s, pastor, "submit", profile(pastor));
-  assert.equal(s.registrations.at(-1).status, "confirmed", "matched under the first bishop");
+  s = applyAction(s, bishop, "claim", { userId: pastor.id });
+  assert.equal(s.registrations.at(-1).status, "confirmed", "confirmed by the first bishop");
   s = applyAction(s, pastor, "update", { bishopId: other.id, photoConfirmed: true });
   const r = s.registrations.find((x) => x.userId === pastor.id);
   assert.equal(r.data.bishopId, other.id);
