@@ -66,6 +66,7 @@ export async function writeSettings(pool, values, actor, config = {}) {
     const v = values[key]?.trim();
     if (v && !new RegExp(`^${prefix}_(live|test)_[A-Za-z0-9]+$`).test(v)) throw new HttpError(400, `That is not a Paystack ${label} key. It should start with ${prefix}_live_. Nothing was saved.`);
   }
+  if (values.RESEND_API_KEY?.trim() && !/^re_[A-Za-z0-9_]+$/.test(values.RESEND_API_KEY.trim())) throw new HttpError(400, 'That is not a Resend API key. It should start with re_. Nothing was saved.');
   try {
     configuration({ ...(config.sourceEnv || process.env), ...(await readSettings(pool)), ...Object.fromEntries(entries.filter(([, v]) => v.trim())) });
   } catch (error) { throw new HttpError(400, error.message); }
@@ -76,8 +77,8 @@ export async function writeSettings(pool, values, actor, config = {}) {
 }
 // For the Paystack keys the office also sees whether what is saved is a real key
 // (never the key itself).
-const KEY_SHAPE = { PAYSTACK_PUBLIC_KEY: /^pk_(live|test)_[A-Za-z0-9]+$/, PAYSTACK_SECRET_KEY: /^sk_(live|test)_[A-Za-z0-9]+$/ };
+const KEY_SHAPE = { PAYSTACK_PUBLIC_KEY: /^pk_(live|test)_[A-Za-z0-9]+$/, PAYSTACK_SECRET_KEY: /^sk_(live|test)_[A-Za-z0-9]+$/, RESEND_API_KEY: /^re_[A-Za-z0-9_]+$/ };
 export const describeSettings = stored => SETTINGS.map(([key, label, hint]) => ({ key, label, hint, set: Boolean(stored[key]),
-  ...(KEY_SHAPE[key] && stored[key] ? { invalid: !KEY_SHAPE[key].test(String(stored[key]).trim()), test: /_test_/.test(String(stored[key])) } : {}) }));
+  ...(KEY_SHAPE[key] && stored[key] ? { invalid: !KEY_SHAPE[key].test(String(stored[key]).trim()), test: key.startsWith("PAYSTACK") && /_test_/.test(String(stored[key])) } : {}) }));
 // Office emails are not secrets: the office sees and manages the list.
 export const officeMembers = config => config.admins;

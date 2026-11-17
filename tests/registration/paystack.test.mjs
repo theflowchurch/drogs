@@ -37,3 +37,9 @@ test('a saved browser password cannot replace a Paystack key', async () => {
  const pool = { execute: async () => { throw Error('must not write'); } };
  for (const values of [{ PAYSTACK_SECRET_KEY: 'MyPassword123' }, { PAYSTACK_PUBLIC_KEY: 'sk_live_abc' }]) await assert.rejects(writeSettings(pool, values, { office: true }), /not a Paystack/);
 });
+test('a saved browser password cannot replace the Resend key, and a wrong saved one is flagged', async () => {
+ const { writeSettings, describeSettings } = await import('../../src/server/settings.mjs');
+ await assert.rejects(writeSettings({ execute: async () => { throw Error('no'); } }, { RESEND_API_KEY: 'MyPassword1' }, { office: true }), /not a Resend/);
+ assert.equal(describeSettings({ RESEND_API_KEY: 'MyPassword1' }).find(s => s.key === 'RESEND_API_KEY').invalid, true);
+ assert.equal(describeSettings({ RESEND_API_KEY: 're_abc_123' }).find(s => s.key === 'RESEND_API_KEY').invalid, false);
+});
