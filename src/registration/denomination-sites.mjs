@@ -40,7 +40,11 @@ export function denominationPeople(snapshot, site, fallback = []) {
   // Office instruction, 23 Oct: everyone on the denomination rosters
   // is publicly approved for now. This is a presentation policy only: it does
   // not approve an account, verify a payment, or change the central-site rules.
-  return all.filter(p => !p.unclaimed && names.has(normalName(p.denomination))).map(p => ({ ...p, standing: true }));
+  // Photos follow the roll's rule: the edited portrait we hold stays, whatever a
+  // member uploads (their upload is copied onto the record for the office to check).
+  const onRoll = new Map((snapshot?.roll || []).filter(r => r.referenceId).map(r => [r.referenceId, r]));
+  const photoOf = p => { const r = onRoll.get(p.id); return r ? { photo: r.photo || '', image: r.photo ? '' : r.image || p.image || '' } : p.image ? { photo: '', image: p.image } : {}; };
+  return all.filter(p => !p.unclaimed && names.has(normalName(p.denomination))).map(p => ({ ...p, ...photoOf(p), standing: true }));
 }
 export const ministerSections = (people, { q = '', city = '', gender = '' } = {}) => {
   const words = normalName(q).split(' ').filter(Boolean);
