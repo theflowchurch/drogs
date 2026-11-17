@@ -862,9 +862,7 @@ export default function RegistrationApp({
         <div className="reg-demo reg-directory-demo">
           <strong>Preview</strong> · every bishop with pastors, and their photographed pastors, are marked confirmed; everyone else stays dark.
         </div>
-      ) : demo ? (
-        <div className="reg-demo reg-fellowship-demo" role="note">Demonstration only. The details are filled in for you, and nothing here is saved or sent.</div>
-      ) : !api.live && !fellowship && (
+      ) : !api.live && !fellowship && !demo && (
         <div className="reg-demo">
           Saved in this browser only · email delivery and shared accounts are
           not connected ·{" "}
