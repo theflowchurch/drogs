@@ -2072,7 +2072,7 @@ function RegistrationForm({
               {titleCase(data.role)} · {state.year}
             </p>
             <hr />
-            <b>Non-refundable</b>
+            <a className="reg-refund-link" href={`${base}/refunds/`} target="_blank" rel="noreferrer"><b>Non-refundable</b> · Read the refund policy ↗</a>
           </div>
         </aside>
         <section className="reg-card reg-form-card">
@@ -2443,7 +2443,7 @@ function RegistrationForm({
                   onChange={(e) => setConsent(e.target.checked)}
                 />
                 <span>
-                  I consent to {brandName} displaying my name, title, photograph,
+                  I consent to Kuriake Castle displaying my name, title, photograph,
                   organization, denomination, city and country on the public Roll
                   of Good Standing. My email address, phone number and date of
                   birth will remain private and will only be used by the office
