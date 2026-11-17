@@ -382,7 +382,7 @@ const report = {
   bishopRankRows, skippedSelf, resolved, conflicts, nonListPastors, rulingNotOnSheet, dupMerged, dupPending, reconcile, reconcileProblems,
   rulingsNotFound: rulings.people.filter((r) => !pastors.some((p) => key(p.name) === key(r.name) || words(key(p.name)).sort().join(' ') === words(key(r.name)).sort().join(' '))).map((r) => ({ name: r.name, ruledTo: r.winner, source: r.source })),
   newBishops: bishops.filter((b) => /^BL/.test(b.id)).map((b) => b.name),
-  oldBishopsNotOnList: cont.bishops.filter((o) => !bishops.some((b) => b.id === o.id)).map((o) => o.name),
+  oldBishopsNotOnList: cont.bishops.filter((o) => !bishops.some((b) => b.id === o.id) && !addedBishops.some((b) => b.id === o.id)).map((o) => o.name),
   noPhoto: pastors.filter((p) => !p.image).map((p) => ({ id: p.id, name: p.name, bishop: p.bishop, group: p.group, denomination: p.denomination, place: [p.city, p.country].filter(Boolean).join(', ') })),
   photos: { fromFolders: photoFromFolder, converted, looseMatches },
 };

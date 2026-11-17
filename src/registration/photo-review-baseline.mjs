@@ -35,7 +35,6 @@ export const PHOTO_REVIEW = {
   "PF155": {"photo": "image:assets/portraits/PF155.webp","codes": ["CASUAL"]},
   "P4813": {"photo": "image:assets/portraits/P4813.webp","codes": ["BG","CASUAL"]},
   "PF116": {"photo": "image:assets/portraits/PF116.webp","codes": ["CASUAL"]},
-  "P5071": {"photo": "image:assets/portraits/P5071.webp","codes": ["LOW","WDRESS"]},
   "P5064": {"photo": "image:assets/portraits/P5064.webp","codes": ["CASUAL"]},
   "PF117": {"photo": "image:assets/portraits/PF117.webp","codes": ["CASUAL"]},
   "P5050": {"photo": "image:assets/portraits/P5050.webp","codes": ["CASUAL"]},

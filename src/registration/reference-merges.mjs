@@ -4,6 +4,13 @@ export const CURRENT_REFERENCE_MERGES = [
   { from: 'P3682', to: 'PF538', source: '16 Oct 2026: Rebecca Siwoyle / Rebecca Siyolwe, same birthday on current Stephen Poku sheet; supplied portrait uses Rebecca Siyolwe' },
   { from: 'P465', to: 'PF612', source: '16 Oct 2026: Berima Samuel Twum / Samuel Twum Boateng, same birthday and phone on current Emmanuel Tetteh sheet; supplied Jamase portrait uses Samuel Twum Boateng' },
   { from: 'S4994a2da', to: 'S4994a2da-5272', source: 'Joshua 17 Oct 2026: Isaac Bonuedi is under ES Joy only; remove the duplicate assignment under Isaac Agyeman' },
+  // Office, 17 Nov 2026: listed under two bishops; kept under the one whose record has the correct edited photo.
+  { from: 'P5071', to: 'Sb8c7d044', source: 'Office 17 Nov 2026: Angela Mpundu kept under Geraldo Amoa (removed from Clement Asante)' },
+  { from: 'S45729b62-c685', to: 'S45729b62', source: 'Office 17 Nov 2026: Mwenda Machima kept under Clement Asante (removed from Geraldo Amoa)' },
+  { from: 'S7128fcc4', to: 'PF158', source: 'Office 17 Nov 2026: Shelly Amoa / Shelly Amoah kept under Geraldo Amoa (removed from Clement Asante)' },
+  { from: 'Sdb542231-bed5', to: 'Sdb542231', source: 'Office 17 Nov 2026: Wisdom Dery kept under Charles Kwame Bonsu (removed from David Afreh)' },
+  { from: 'P1317', to: 'S0ec63b27', source: 'Office 17 Nov 2026: Emmanuel Opuni kept under Norman Kwadwo Darkwa (removed from Glen Kwame Opoku)' },
+  { from: 'P2471', to: 'S391d2dfe', source: 'Office 17 Nov 2026: Jude Baiden kept under Stephen Poku (removed from Kent Njeru)' },
 ];
 
 // Relink saved work before the general submitted-roster cleanup can treat a
