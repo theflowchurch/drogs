@@ -3892,6 +3892,56 @@
               ]
             }
           ]
+        },
+        {
+          "slug": "affiliated-denominations",
+          "name": "The Affiliated Denominations",
+          "tabName": "Affiliated Denominations",
+          "people": [],
+          "directoryGroups": [
+            {
+              "slug": "affiliated-denomination-bishops",
+              "name": "The Affiliated Denomination Bishops",
+              "people": [
+                {
+                  "name": "Andrew Adotei Pappoe Jnr",
+                  "rosterId": "BA1",
+                  "bishop": true,
+                  "church": "Heritage Baptist Church Global",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/andrew-adotei-pappoe-jnr-8fb9020c.webp",
+                  "consecrated": "2021"
+                },
+                {
+                  "name": "Isaac Oti-Boateng",
+                  "rosterId": "BA2",
+                  "bishop": true,
+                  "church": "Love Economy Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/isaac-oti-boateng-872f6221.webp",
+                  "consecrated": "2021"
+                },
+                {
+                  "name": "Louis Macaiah",
+                  "rosterId": "BA4",
+                  "bishop": true,
+                  "church": "Christ Vision Sanctuary International",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/louis-macaiah-573f6990.webp",
+                  "consecrated": "2021"
+                },
+                {
+                  "name": "Jesse Sackey",
+                  "rosterId": "BA3",
+                  "bishop": true,
+                  "church": "Revival House of Holy Fire Ministries",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/jesse-sackey-bf83e704.webp",
+                  "consecrated": "2021"
+                }
+              ]
+            }
+          ]
         }
       ]
     }

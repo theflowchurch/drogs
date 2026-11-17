@@ -90,5 +90,11 @@ export const DENOMINATIONS = {
   ],
   "FLOW": [],
   "HJC": [],
-  "DHMM": []
+  "DHMM": [],
+  "Affiliated Denominations": [
+    "Christ Vision Sanctuary International",
+    "Heritage Baptist Church Global",
+    "Love Economy Church",
+    "Revival House of Holy Fire Ministries"
+  ]
 };

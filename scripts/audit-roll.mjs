@@ -23,7 +23,8 @@ const correctedSheetRow = p => nameCorrections.some(c =>
 let fails = 0; const out = [];
 const check = (name, ok, evidence = '') => { out.push(`${ok ? 'PASS' : 'FAIL'}  ${name}${evidence ? ' — ' + evidence : ''}`); if (!ok) fails++; };
 // 1. Who is on the roll
-const promoted = Object.entries(JSON.parse(readFileSync(`${root}data/role-corrections.json`, 'utf8'))).filter(([id, c]) => id !== 'note' && c.role === 'bishop').length;
+const promoted = Object.entries(JSON.parse(readFileSync(`${root}data/role-corrections.json`, 'utf8'))).filter(([id, c]) => id !== 'note' && c.role === 'bishop').length
+  + JSON.parse(readFileSync(`${root}data/office-bishop-additions.json`, 'utf8')).additions.length;
 check('Bishops on the roll = Bishops List + the office\'s role corrections', bishops.length === list.length + promoted, `${bishops.length} vs ${list.length} + ${promoted}`);
 check('Lay Presidents are exactly the three named', lays.length === 3 && lay.every((n) => lays.some((l) => key(l.name) === key(n))), lays.map((l) => l.name).join(', '));
 check('Lay Presidents come after every bishop', people.findIndex((p) => p.lay) > people.findLastIndex((p) => p.role === 'bishop' && !p.lay));

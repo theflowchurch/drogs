@@ -44,7 +44,8 @@ test('all submitted denomination names have a site and every directory is isolat
  const {normalName}=await import('../../src/registration/model.mjs');
  const {organizationSitePaths}=await import('../../src/registration/organization-sites.mjs');
  const names=new Set(Object.values(DENOMINATION_SITES).flatMap(s=>s.denominations.map(normalName)));
- for(const name of Object.values(DENOMINATIONS).flat())assert.ok(names.has(normalName(name)),`Missing submitted denomination: ${name}`);
+ // The Affiliated Denominations' churches (office, 17 Nov) have no church site of their own.
+ for(const name of Object.entries(DENOMINATIONS).filter(([o])=>o!=='Affiliated Denominations').flatMap(([,d])=>d))assert.ok(names.has(normalName(name)),`Missing submitted denomination: ${name}`);
  const records=Object.entries(DENOMINATION_SITES).map(([path,site],i)=>({...p,id:path,role:i%2?'bishop':'pastor',denomination:site.denominations[0]}));
  const snapshot={referencePeople:records,overrides:{},hidden:[]};
  for(const [path,site] of Object.entries(DENOMINATION_SITES)){

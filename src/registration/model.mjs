@@ -36,6 +36,7 @@ export const ORGANIZATIONS = [
   "DHMM",
   "FLOW",
   "HJC",
+  "Affiliated Denominations", // office, 17 Nov 2026
 ];
 export const STORAGE_KEY = "drogs-registration-v1";
 export const splitName = (name) => { const parts = String(name || "").trim().split(/\s+/); return parts.length > 1 ? { given: parts.slice(0, -1).join(" "), surname: parts.at(-1) } : { given: "", surname: parts[0] || "" }; };

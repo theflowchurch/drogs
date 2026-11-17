@@ -48,13 +48,15 @@ const FIRST_LOVE = 'first-love-church';
 // groups on one page.
 const ORDER = ['1965-committee', 'ud-senex-council', 'first-love-senex-council', 'adjutancy', 'emeritus',
   'ud-africa', 'ud-ghana-west', 'ud-ghana-east', 'ud-ghana-central', 'ud-europe', 'ud-north-america',
-  'united-jesus', 'united-islands', 'eschatos', 'ursc', FIRST_LOVE, PARA_CHURCH];
+  'united-jesus', 'united-islands', 'eschatos', 'ursc', FIRST_LOVE, PARA_CHURCH,
+  // Office, 17 Nov: the Affiliated Denomination Bishops, after the Para-Church Bishops.
+  'affiliated-denomination-bishops'];
 // The initials these groups are known by, shown after a dash (office, 10 Nov).
-const INITIALS = { 'ud-africa': 'UD AF', 'ud-ghana-west': 'UD GHW', 'ud-ghana-east': 'UD GHE', 'ud-ghana-central': 'UD GHC', 'ud-europe': 'UD EU', 'ud-north-america': 'UD NA', 'united-jesus': 'UJ', 'united-islands': 'UI', ursc: 'URSC', 'healing-jesus-council': 'HJC' };
+const INITIALS = { 'ud-africa': 'UD AF', 'ud-ghana-west': 'UD GHW', 'ud-ghana-east': 'UD GHE', 'ud-ghana-central': 'UD GHC', 'ud-europe': 'UD EU', 'ud-north-america': 'UD NA', 'united-jesus': 'UJ', 'united-islands': 'UI', ursc: 'URSC', 'healing-jesus-council': 'HJC', 'affiliated-denomination-bishops': 'AD' };
 // Office, 9 Nov: every box reads "The Bishops of …" (a council keeps its
 // "the": "The Bishops of the Adjutancy"); Emeritus and Para-Church read
 // "The Emeritus Bishops" and "The Para-Church Bishops".
-const OWN_NAMES = { emeritus: 'The Emeritus Bishops' };
+const OWN_NAMES = { emeritus: 'The Emeritus Bishops', 'affiliated-denomination-bishops': 'The Affiliated Denomination Bishops' };
 const formalName = (o, g) => OWN_NAMES[g.slug] || `The Bishops of ${g.name.replace(/^The /, 'the ')}`;
 const bishopKey = p => p.rosterId || p.name;
 const countOf = people => new Set(people.map(bishopKey)).size;

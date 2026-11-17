@@ -1,0 +1,77 @@
+{
+ "note": "Bishops the office added by hand who are on no Bishops List or sheet, applied by scripts/build-roll.mjs as the roll is written. dob goes only to the server-side contact index (as dobKeys), never to the public roll.",
+ "additions": [
+  {
+   "id": "BA1",
+   "name": "Andrew Adotei Pappoe Jnr",
+   "title": "Bishop",
+   "gender": "male",
+   "organization": "Affiliated Denominations",
+   "group": "The Affiliated Denomination Bishops",
+   "denomination": "Heritage Baptist Church Global",
+   "yearAppointed": "2007",
+   "yearOrdained": "2016",
+   "yearConsecrated": "2021",
+   "pastorsReported": "40",
+   "dobKeys": [
+    "26-10-79"
+   ],
+   "source": "Office 17 Nov 2026: Affiliated Denomination Bishops",
+   "branch": "Heritage Baptist Church Global"
+  },
+  {
+   "id": "BA2",
+   "name": "Isaac Oti-Boateng",
+   "title": "Bishop",
+   "gender": "male",
+   "organization": "Affiliated Denominations",
+   "group": "The Affiliated Denomination Bishops",
+   "denomination": "Love Economy Church",
+   "yearAppointed": "2009",
+   "yearOrdained": "2013",
+   "yearConsecrated": "2021",
+   "pastorsReported": "506",
+   "dobKeys": [
+    "15-12-85"
+   ],
+   "source": "Office 17 Nov 2026: Affiliated Denomination Bishops",
+   "branch": "Love Economy Church"
+  },
+  {
+   "id": "BA3",
+   "name": "Jesse Sackey",
+   "title": "Bishop",
+   "gender": "male",
+   "organization": "Affiliated Denominations",
+   "group": "The Affiliated Denomination Bishops",
+   "denomination": "Revival House of Holy Fire Ministries",
+   "yearAppointed": "1989",
+   "yearOrdained": "1993",
+   "yearConsecrated": "2021",
+   "pastorsReported": "36",
+   "dobKeys": [
+    "4-9-62"
+   ],
+   "source": "Office 17 Nov 2026: Affiliated Denomination Bishops",
+   "branch": "Revival House of Holy Fire Ministries"
+  },
+  {
+   "id": "BA4",
+   "name": "Louis Macaiah",
+   "title": "Bishop",
+   "gender": "male",
+   "organization": "Affiliated Denominations",
+   "group": "The Affiliated Denomination Bishops",
+   "denomination": "Christ Vision Sanctuary International",
+   "yearAppointed": "",
+   "yearOrdained": "",
+   "yearConsecrated": "2021",
+   "pastorsReported": "over 100",
+   "dobKeys": [
+    "26-12-73"
+   ],
+   "source": "Office 17 Nov 2026: Affiliated Denomination Bishops",
+   "branch": "Christ Vision Sanctuary International"
+  }
+ ]
+}

@@ -332,10 +332,17 @@ for (const b of bishops) {
   // submissions too. Keep these personal details in the server-only contact index.
   for (const addition of read('data/office-pastor-additions.json', { additions: [] }).additions)
     if (pastors.some(p => p.id === addition.id)) take(addition.id, addition);
+  // Bishops the office added by hand (data/office-bishop-additions.json).
+  for (const addition of read('data/office-bishop-additions.json', { additions: [] }).additions) take(addition.id, addition);
   writeFileSync(`${root}data/reference-contacts.json`, JSON.stringify(contacts) + '\n');
   console.log(`Contacts: ${Object.keys(contacts).length} records with an email or phone (${bishops.filter((b) => contacts[b.id]?.email).length} bishops with an email)`);
 }
-const people = [...bishops.filter((b) => !b.lay), ...layPresidents, ...pastors]; // lay presidents after the bishops
+// Bishops the office added by hand (data/office-bishop-additions.json): after the
+// other bishops and ahead of the lay presidents, in the asset index and the
+// denomination lists like everyone else. Photos come from the office overrides.
+const addedBishops = read('data/office-bishop-additions.json', { additions: [] }).additions.map(({ dobKeys, source, pastorsReported, ...a }) =>
+  ({ role: 'bishop', denominationLogo: '', city: '', branch: '', country: '', gender: '', yearAppointed: '', yearOrdained: '', yearConsecrated: '', ...a, image: overrides[a.id] && existsSync(`${root}${overrides[a.id]}`) ? overrides[a.id] : a.image || '' }));
+const people = [...bishops.filter((b) => !b.lay), ...addedBishops, ...layPresidents, ...pastors]; // lay presidents after the bishops
 // Persist only the 286 audited latest sheets, never superseded submissions.
 const currentSheets = [...latestByBishop.values(), ...nonList.filter(s => s.lay)];
 writeFileSync(`${root}data/bishop-submissions.json`, JSON.stringify(currentSheets.map(({ bishopRef, lay, rowBelongsToAnother, ...sheet }) => sheet), null, 1) + '\n');
@@ -349,7 +356,7 @@ const assetOf = p => {
 };
 writeFileSync(`${root}data/submitted-roster-assets.json`, JSON.stringify({ bishops: people.filter(p => p.role === 'bishop' && !p.lay).map(assetOf), pastors: people.filter(p => p.role === 'pastor' || p.lay).map(assetOf) }) + '\n');
 // Choices in sign-up/admin are also drawn from the current sheets.
-const denominations = Object.fromEntries(['First Love', 'United Denominations', 'FLOW', 'HJC', 'DHMM'].map(o => [o, ['FLOW', 'HJC', 'DHMM'].includes(o) ? [] : [...new Set(people.filter(p => p.organization === o).map(p => p.denomination).filter(Boolean))].sort()]));
+const denominations = Object.fromEntries(['First Love', 'United Denominations', 'FLOW', 'HJC', 'DHMM', 'Affiliated Denominations'].map(o => [o, ['FLOW', 'HJC', 'DHMM'].includes(o) ? [] : [...new Set(people.filter(p => p.organization === o).map(p => p.denomination).filter(Boolean))].sort()]));
 writeFileSync(`${root}src/registration/denominations.mjs`, `// Generated from the current submitted sheets by scripts/build-roll.mjs.\nexport const DENOMINATIONS = ${JSON.stringify(denominations, null, 2)};\n`);
 // The office's role corrections (data/role-corrections.json): someone listed on a
 // bishop's sheet who is now a bishop keeps their id, photo and details, and only

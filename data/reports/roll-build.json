@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-16T09:48:29.163Z",
+ "generated": "2026-11-17T08:20:15.460Z",
  "sourceAuthority": {
   "personalDetails": "latest submitted spreadsheets and explicit office additions",
   "bishopMembership": "current Bishops List and explicit office corrections",
@@ -5612,7 +5612,12 @@
   "Lovell Nii Jnr Ankrah",
   "Perpetua-Claire Ackuaku"
  ],
- "oldBishopsNotOnList": [],
+ "oldBishopsNotOnList": [
+  "Andrew Adotei Pappoe Jnr",
+  "Isaac Oti-Boateng",
+  "Jesse Sackey",
+  "Louis Macaiah"
+ ],
  "noPhoto": [
   {
    "id": "S7128fcc4",
