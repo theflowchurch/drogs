@@ -334,7 +334,7 @@ ${others.length ? `<p><b>${photoIssue ? 'Other Updates' : 'Updates Needed'}</b><
         });
         const checkout = result?.data;
         if (!result.status || checkout?.reference !== reference || !/^https:\/\/checkout\.paystack\.com\/[A-Za-z0-9_-]+$/.test(checkout?.authorization_url || ''))
-          throw new HttpError(503, 'Paystack could not open checkout. Please try again shortly.');
+          throw new HttpError(503, 'The secure payment page could not open. Please try again shortly.');
         return json({ reference, url: checkout.authorization_url, amount: quote.amount, currency: quote.currency });
       }
       if (path === '/api/registration/paystack/verify' && method === 'POST') {
@@ -344,7 +344,7 @@ ${others.length ? `<p><b>${photoIssue ? 'Other Updates' : 'Updates Needed'}</b><
         if (typeof reference !== 'string' || !/^[A-Za-z0-9._=-]{6,100}$/.test(reference)) throw new HttpError(400, 'Invalid payment reference.');
         const result = await paymentJson(fetcher, `https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, { headers: { Authorization: `Bearer ${config.paystack}` } });
         const tx = result?.data;
-        if (!result?.status || tx?.status !== 'success') throw new HttpError(400, 'Paystack has not confirmed this payment yet.');
+        if (!result?.status || tx?.status !== 'success') throw new HttpError(400, 'This payment has not been confirmed yet.');
         // The payment has to belong to this person and this registration, not merely exist.
         if (String(tx.customer?.email || '').toLowerCase() !== actor.email.toLowerCase()) throw new HttpError(400, 'This payment was made under a different email address.');
         const metadata = typeof tx.metadata === 'string' ? JSON.parse(tx.metadata || '{}') : tx.metadata;

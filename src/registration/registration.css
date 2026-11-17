@@ -4254,3 +4254,6 @@ input[type="date"] {
 .reg-ps-find li button { text-align: left; }
 .reg-secondary.danger { color: #a40000; }
 @media (max-width: 700px) { .reg-ps-members { display: block; overflow-x: auto; } }
+.reg-pay-total { display: grid; gap: 4px; margin: 0 0 1rem; }
+.reg-pay-total strong { font-size: 1.25rem; color: var(--accent); }
+.reg-pay-total small { color: var(--muted, #667); line-height: 1.5; }

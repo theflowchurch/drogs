@@ -1891,7 +1891,7 @@ function RegistrationForm({
   }
   async function send() {
     const ok = await run(async () => {
-      if (!editing && !paymentReady(mine)) throw Error("Complete your Paystack payment before confirming your registration.");
+      if (!editing && !paymentReady(mine)) throw Error("Complete your payment before confirming your registration.");
       await api.action(actor, editing ? "update" : "submit", { ...data, consentedAt: data.consentedAt || new Date().toISOString() });
       // The pastors and the payment proof gathered on the way are sent right after.
       if (!editing && rosterRows.length) await api.action(actor, "addRoster", { rows: rosterRows });
@@ -1921,7 +1921,7 @@ function RegistrationForm({
               : step === "pastors"
                 ? "Add the pastors under your oversight. When they register, they will automatically be linked to you."
                 : step === "payment"
-                  ? "Pay securely with Paystack by card, Mobile Money or bank."
+                  ? "Pay your Annual Good Standing Renewal Fee securely by card or Mobile Money."
                   : `Complete your ${state.year} annual renewal to remain on the Roll of Good Standing.`}
           </p>
         </div>
@@ -2278,7 +2278,7 @@ function RegistrationForm({
               />}
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
-                {paymentReady(mine) ? <button className="reg-primary" disabled={busy}>Review your details →</button> : <span className="reg-small">Complete your Paystack payment to continue.</span>}
+                {paymentReady(mine) ? <button className="reg-primary" disabled={busy}>Review your details →</button> : <span className="reg-small">Complete your payment to continue.</span>}
               </div>
             </form>
           ) : (
@@ -2425,7 +2425,7 @@ function PaystackReturn({ actor, run, refresh }) {
   }
   useEffect(() => { if (reference && !started.current) { started.current = true; verify(); } }, [reference]);
   if (!reference) return null;
-  return <div className="reg-alert" role="status">{status === 'checking' ? 'Confirming your payment with Paystack…' : 'Your payment has not been confirmed yet. Please check it before paying again.'}{status === 'failed' && <button type="button" onClick={verify}>Check payment again</button>}</div>;
+  return <div className="reg-alert" role="status">{status === 'checking' ? 'Confirming your payment…' : 'Your payment has not been confirmed yet. Please check it before paying again.'}{status === 'failed' && <button type="button" onClick={verify}>Check payment again</button>}</div>;
 }
 function Payment({ current, actor, run, refresh, paystackKey = "" }) {
   const [rates, setRates] = useState(null);

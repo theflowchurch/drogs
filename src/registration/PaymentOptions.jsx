@@ -24,6 +24,15 @@ export default function PaymentOptions({ current, actor, run, beforeSave, paysta
     get.then(q => { if (live) setQuote(q); }).catch(e => { if (live) setError(e.message); }).finally(() => { if (live) setLoading(false); });
     return () => { live = false; };
   }, [current.data.role, current.amount, retry, enabled]);
+  // Paid but closed the page before coming back: the last checkout is checked
+  // again quietly when the payment page opens, so the payment is still recorded.
+  const lastCheckout = current.paystackQuotes?.at?.(-1)?.reference || '';
+  useEffect(() => {
+    if (demo || !enabled || !lastCheckout || current.payment === 'verified') return;
+    let live = true;
+    api.paystackVerify(lastCheckout).then(() => live && refresh?.()).catch(() => {});
+    return () => { live = false; };
+  }, [lastCheckout, enabled]);
   // An older receipt the office has not checked yet stays as it was.
   if (current.payment === 'pending' && current.proof) return <div className="reg-manual-payment" role="status">
     <h3>Receipt submitted</h3><p>The office will check your receipt against the payment received. Your payment is awaiting verification.</p>
@@ -49,25 +58,19 @@ export default function PaymentOptions({ current, actor, run, beforeSave, paysta
   }
   return <div className="reg-manual-payment reg-pay-steps">
     <section className="reg-pay-step" aria-labelledby="pay-step-1">
-      <h3 id="pay-step-1"><span>1</span>Your renewal fee</h3>
-      <dl className="reg-details reg-pay-details">
-        <div><dt>Annual renewal fee</dt><dd><strong>${current.amount} USD</strong></dd></div>
-        <div><dt>Amount charged by Paystack</dt><dd>{quote ? <strong>GHS {cedis}</strong> : loading ? 'Getting today’s cedi amount…' : enabled ? 'Not available yet' : '—'}{quote && <small>The ${quote.usd} USD fee in Ghana cedis at today’s rate. No extra fee is added by this site.</small>}</dd></div>
-      </dl>
-      {error && <p className="reg-receipt-error" role="alert">{error}</p>}
-      {enabled && !loading && <button className="reg-text" type="button" disabled={opening} onClick={() => setRetry(n => n + 1)}>Refresh cedi amount</button>}
-    </section>
-    <section className="reg-pay-step" aria-labelledby="pay-step-2">
-      <h3 id="pay-step-2"><span>2</span>Pay securely with Paystack</h3>
+      <h3 id="pay-step-1"><span>1</span>Pay securely</h3>
       {enabled ? <>
-        <p>Pay with a <strong>Visa or Mastercard card from any country</strong>, <strong>Mobile Money</strong> or your <strong>bank</strong>. You will go to Paystack’s secure page, then come back here.</p>
+        <p>Pay with a <strong>Visa or Mastercard card from any country</strong>, or by <strong>Mobile Money</strong> (MTN, Telecel, AT). You will go to a secure payment page, then return here automatically.</p>
+        <p className="reg-pay-total">{quote ? <><strong>Checkout total: GHS {cedis}</strong><small>The ${quote.usd} USD fee in Ghana cedis at today’s rate. No extra fee is added by this site.</small></> : loading ? 'Getting today’s cedi amount…' : null}</p>
+        {error && <p className="reg-receipt-error" role="alert">{error}</p>}
         <button type="button" className="reg-primary reg-pay-submit" disabled={!quote || opening || loading} onClick={pay}>{opening ? 'Opening secure checkout…' : quote ? `Pay GHS ${cedis} securely →` : loading ? 'Getting your cedi amount…' : 'Payment amount unavailable'}</button>
+        {!loading && <button className="reg-text" type="button" disabled={opening} onClick={() => setRetry(n => n + 1)}>Refresh cedi amount</button>}
         <p className="reg-pay-note">If your card is in another currency, your bank converts the amount and may add its own charge.</p>
       </> : <p role="status">Online payment is being switched on. Please try again shortly, or contact the office.</p>}
     </section>
-    <section className="reg-pay-step" aria-labelledby="pay-step-3">
-      <h3 id="pay-step-3"><span>3</span>Payment confirmed</h3>
-      <p>When your payment goes through, you return here and it is confirmed straight away. No receipt upload is needed.</p>
+    <section className="reg-pay-step" aria-labelledby="pay-step-2">
+      <h3 id="pay-step-2"><span>2</span>Payment confirmed</h3>
+      <p>Once your payment is successful, you return to this page and your payment is confirmed automatically. No receipt upload is needed.</p>
       <p className="reg-small reg-pay-after">The renewal fee is non-refundable, subject to the <a href={`${base}/refunds/`} target="_blank" rel="noreferrer">refund policy</a>. Never share your card PIN or Mobile Money PIN with anyone.</p>
     </section>
   </div>;
