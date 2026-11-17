@@ -83,7 +83,7 @@ Members pay through Paystack's secure checkout, by Visa or Mastercard card from 
 
 Card and mobile-money details are entered on Paystack's checkout, not on this website. When Paystack confirms the payment, it is recorded against your registration straight away. No receipt upload is needed.
 
-Receipts uploaded for earlier mobile-money or bank-transfer payments are still checked by the office against the receiving account.
+Members can instead send the fee with a money transfer app (such as Remitly, WorldRemit or Taptap Send) to the Mobile Money account KURIAKE CASTLE LBG, +233 59 202 4923 (MTN Mobile Money, Ghana), then upload the receipt and its transaction number. Automated checks help spot unrelated uploads but do not prove a payment; the office confirms each receipt against the payments received before the renewal is confirmed.
 `;
 
 export const FAQ = `# Frequently asked questions

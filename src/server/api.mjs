@@ -321,7 +321,7 @@ ${others.length ? `<p><b>${photoIssue ? 'Other Updates' : 'Updates Needed'}</b><
         if (!config.paystack) throw new HttpError(503, 'Card and mobile-money payments are not switched on yet.');
         await rateLimit(pool, config, `paystack-initialize:${actor.id}`, 20, 600000);
         const { token, returnUrl } = await jsonBody(request);
-        const callback = checkoutReturnUrl(returnUrl, config.origin);
+        const callback = checkoutReturnUrl(returnUrl, url.origin);
         // Freeze the signed amount before contacting Paystack. Network requests
         // never run inside the state lock. A later rate change cannot alter it.
         const reference = `KC-${randomUUID()}`;

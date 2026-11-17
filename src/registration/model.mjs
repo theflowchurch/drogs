@@ -1167,7 +1167,7 @@ export function applyAction(
     r.payment = "pending";
     r.proof = payload.proof;
     r.transactionId = transactionId;
-    r.paymentMethod = payload.method === 'bank' ? 'bank' : 'momo';
+    r.paymentMethod = payload.method === 'bank' ? 'bank' : payload.method === 'app' ? 'app' : 'momo';
     r.receiptCheck = payload.receiptCheck && ['receipt', 'unclear'].includes(payload.receiptCheck.verdict) ? { verdict: payload.receiptCheck.verdict, reason: String(payload.receiptCheck.reason || '').slice(0, 300) } : null;
     r.nonrefundableAt = now;
     r.paymentSubmittedAt = now;

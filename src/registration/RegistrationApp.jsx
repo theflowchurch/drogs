@@ -1921,7 +1921,7 @@ function RegistrationForm({
               : step === "pastors"
                 ? "Add the pastors under your oversight. When they register, they will automatically be linked to you."
                 : step === "payment"
-                  ? "Pay your Annual Good Standing Renewal Fee securely by card or Mobile Money."
+                  ? "Pay by card or Mobile Money, or send money using an app."
                   : `Complete your ${state.year} annual renewal to remain on the Roll of Good Standing.`}
           </p>
         </div>
@@ -2278,7 +2278,7 @@ function RegistrationForm({
               />}
               <div className="reg-form-actions">
                 <button type="button" className="reg-secondary" onClick={back}>← Back</button>
-                {paymentReady(mine) ? <button className="reg-primary" disabled={busy}>Review your details →</button> : <span className="reg-small">Complete your payment to continue.</span>}
+                {paymentReady(mine) ? <button className="reg-primary" disabled={busy}>Review your details →</button> : <span className="reg-small">Complete your payment, or submit your receipt, to continue.</span>}
               </div>
             </form>
           ) : (
@@ -4348,7 +4348,7 @@ function Payments({ records, perform, canEdit }) {
           <dl className="reg-details">
             <div><dt>Transaction ID</dt><dd><b>{selected.transactionId || "Not given"}</b></dd></div>
             <div><dt>Reference</dt><dd>{paymentReference(selected)}</dd></div>
-            <div><dt>Payment method</dt><dd>{selected.paymentMethod === 'bank' ? 'Bank transfer' : 'Mobile money'}</dd></div>
+            <div><dt>Payment method</dt><dd>{selected.paymentMethod === 'bank' ? 'Bank transfer' : selected.paymentMethod === 'app' ? 'Money transfer app to Mobile Money' : 'Mobile money'}</dd></div>
             <div><dt>Receipt check</dt><dd>{selected.receiptCheck?.verdict === 'receipt' ? 'Receipt details detected · payment still needs verification' : 'Manual review required'}</dd></div>
           </dl>
           <p>
