@@ -3,11 +3,15 @@
 export function canonicalBishopName(value) {
   const name = String(value || '');
   const match = name.trim().match(/^((?:bishop|rev\.?|reverend)\s+)?(?:eat|e[.\s]*a[.\s]*t\.?)\s+sackey$/i);
-  return match ? `${match[1] || ''}E.A.T Sackey` : name;
+  if (match) return `${match[1] || ''}E.A.T Sackey`;
+  // Office, 17 Nov: Mother Nina Masuku (B334) is "Nina Masuku", not "Nely Nina Masuku".
+  const nina = name.trim().match(/^((?:mother|bishop|rev\.?)\s+)?nely\s+nina\s+masuku$/i);
+  return nina ? `${nina[1] || ''}Nina Masuku` : name;
 }
 // Joshua, 16 October: photo names resolve these current-sheet variants;
 // Thérèse's full name was explicitly confirmed in the supplied conversation.
 const photoNames = {
+  B334: ['Nina Masuku', ['Nely Nina Masuku', 'Nina Masuku']],
   S82018e8a: ["Vivian Quansah",["Vivan Quansah","Vivian Quansah"]],
   PF140: ["Vongai Moyo Amponsah",["Vongai Amponsah","Vongai Moyo Amponsah"]],
   P5062: ["Sam Siliwimba",["Sam Silwimba","Sam Siliwimba"]],
@@ -91,6 +95,7 @@ export function canonicalOfficeNames(state) {
     }
     if (d.bishopName !== undefined) d.bishopName = canonicalBishopName(d.bishopName);
     if (d.bishopName === 'E.A.T Sackey') { d.bishopFirstName = 'E.A.T'; d.bishopLastName = 'Sackey'; }
+    if (d.bishopName === 'Nina Masuku') { d.bishopFirstName = 'Nina'; d.bishopLastName = 'Masuku'; }
   }
   for (const [id, fields] of Object.entries(next.overrides || {})) next.overrides[id] = canonicalPerson({ ...fields, id });
   // IDs are the map keys, not another editable field in a correction.

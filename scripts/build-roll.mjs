@@ -10,6 +10,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import * as XLSX from 'xlsx'; import fs from 'node:fs'; XLSX.set_fs(fs);
 import sharp from 'sharp';
+import { canonicalBishopName, canonicalPersonName } from '../src/registration/name-corrections.mjs';
 import { normalName, namesAlike } from '../src/registration/model.mjs';
 import { GROUPS } from '../src/registration/groups.mjs';
 import { DENOMINATIONS } from '../src/registration/denominations.mjs';
@@ -363,7 +364,7 @@ writeFileSync(`${root}src/registration/denominations.mjs`, `// Generated from th
 // their role, title and supervising bishop change.
 const roleCorrections = Object.fromEntries(Object.entries(read('data/role-corrections.json', {})).filter(([id]) => id !== 'note'));
 const corrected = p => { const c = roleCorrections[p.id]; return c ? { ...p, role: c.role || p.role, title: c.title || p.title, ...(c.role === 'bishop' ? { bishop: '' } : {}) } : p; };
-const rollOut = people.map(({ sheet, source, ...rest }) => corrected(rest));
+const rollOut = people.map(({ sheet, source, ...rest }) => corrected({ ...rest, name: canonicalPersonName(rest.id, rest.name), ...(rest.bishop ? { bishop: canonicalBishopName(rest.bishop) } : {}) })); // office name corrections (e.g. Nina Masuku, 17 Nov)
 // A corrected bishop joins the bishops, ahead of the lay presidents and pastors.
 const promoted = rollOut.filter(p => roleCorrections[p.id]?.role === 'bishop');
 const lastBishop = rollOut.findLastIndex(p => p.role === 'bishop' && !p.lay && !roleCorrections[p.id]);

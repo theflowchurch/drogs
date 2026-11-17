@@ -151,7 +151,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     await new Promise(r => setTimeout(r, 100));
     const told = mails.filter(m => m.to === 'bishop@example.com' && /registered under you/.test(m.subject));
     assert.equal(told.length, 1, 'the bishop is emailed once');
-    assert.match(told[0].text, /John Doe[\s\S]*sign in and confirm/i);
+    assert.match(told[0].text, /^Dear Bishop Abednego,[\s\S]*John Doe[\s\S]*supervising bishop[\s\S]*Sign In to Review Request: https:\/\/kuriakecastle\.org\/orderofbishopsingoodstanding\/signup\/#signin[\s\S]*Confirm Pastor[\s\S]*Not My Pastor/);
     assert.ok((await call('snapshot', bishop.cookie)).data.registrations.some(r => r.userId === pastor.data.id && r.status === 'unclaimed'), 'the waiting pastor is on the bishop account');
     assert.equal((await call('action', bishop.cookie, { name: 'addRoster', payload: { rows: [{ name: 'Valid Person', dob: '01/01/1990' }, { name: '' }] } })).status, 400);
     assert.equal((await call('snapshot', bishop.cookie)).data.rosters.length, 0, 'failed bulk write rolled back');

@@ -11,7 +11,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import { paymentJson, createQuote, readQuote, checkoutReturnUrl, validateQuotedPayment } from './paystack.mjs';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
-import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor } from '../registration/model.mjs';
+import { canonicalPersonName } from '../registration/name-corrections.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit } from './auth.mjs';
 import { assertOwnedMedia, assignedPortrait, canReadMedia } from './storage.mjs';
@@ -48,18 +49,26 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
   const support = createSupport({ config, mailer, fetcher, logger });
   // The email a bishop gets when a pastor registers under them; the same pastor
   // also waits under "To do" on the bishop's account until confirmed.
-  async function notifyBishop({ pastor, to, bishopName, bishopUser, unregistered = false }) {
+  async function notifyBishop({ pastor, to, bishopName, bishopUser, bishopTitle = 'Bishop', unregistered = false }) {
     let address = to;
     if (!address && bishopUser) { const [[u]] = await pool.execute('SELECT email FROM dr_users WHERE id=?', [bishopUser]); address = u?.email || ''; }
     if (!address) return;
     const esc = v => String(v || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-    const link = `${config.origin.replace(/drogs\.dagministry\.org/, 'kuriakecastle.org')}/orderofbishopsingoodstanding/signup/#signin`;
+    // The bishops' sign-in page (17 Nov wording from the office).
+    const signup = `${config.origin.replace(/drogs\.dagministry\.org/, 'kuriakecastle.org')}/orderofbishopsingoodstanding/signup/`;
+    const link = unregistered ? signup : `${signup}#signin`;
     const who = `${pastor.title || 'Pastor'} ${pastor.name}`.trim();
-    const place = [pastor.denomination || pastor.church, [pastor.city, pastor.country].filter(Boolean).join(', ')].filter(Boolean).join(' · ');
+    const where = [pastor.city, pastor.country].filter(Boolean).join(', ');
+    const dear = `${bishopTitle} ${String(bishopName).trim().split(/\s+/)[0] || ''}`.trim();
+    const button = unregistered ? 'Register to Review Request' : 'Sign In to Review Request';
+    const intro = `${who}${where ? `, based in ${where},` : ''} has registered on Kuriake Castle and identified you as their supervising bishop.`;
+    const ask = unregistered ? 'Please register as a bishop on Kuriake Castle to review and confirm whether this pastor is under your oversight.' : 'Please sign in to your Kuriake Castle account to review and confirm whether this pastor is under your oversight.';
+    const choose = 'If you recognise this pastor, select Confirm Pastor. If the pastor is not under your oversight, select Not My Pastor.';
     await mailer.sendMail(brandedMail({ from: config.from, to: address, subject: `${who} has registered under you`,
-      text: `Dear Bishop ${String(bishopName).split(' ')[0] || ''},\n\n${who}${place ? ` (${place})` : ''} has registered on Kuriake Castle and named you as their bishop.\n\n${unregistered ? `Please register as a bishop (or sign in) to confirm them: ${link.replace('#signin', '')}` : `Please sign in and confirm them under "To do" or "My pastors": ${link}`}\n\nIf they are not your pastor, choose "Not my pastor" there.\n\nKuriake Castle Office`,
-      html: `<p style="margin:0 0 12px">Dear Bishop ${esc(String(bishopName).split(' ')[0])},</p><p style="margin:0 0 12px"><b>${esc(who)}</b>${place ? ` (${esc(place)})` : ''} has registered on Kuriake Castle and named you as their bishop.</p><p style="margin:0 0 18px">${unregistered ? 'Please register as a bishop (or sign in) to confirm them. Once your registration is approved they will be waiting under <b>To do</b>.' : 'Please sign in and confirm them under <b>To do</b> or <b>My pastors</b>.'}</p><p style="margin:0 0 18px"><a href="${unregistered ? link.replace('#signin', '') : link}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">${unregistered ? 'Register to confirm →' : 'Sign in to confirm →'}</a></p><p style="margin:0;color:#6a7283;font-size:13px">If they are not your pastor, choose “Not my pastor” there.</p>` }));
+      text: `Dear ${dear},\n\n${intro}\n\n${ask}\n\n${button}: ${link}\n\n${choose}\n\nThank you for helping us maintain accurate pastoral records.\n\nKuriake Castle`,
+      html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px"><b>${esc(who)}</b>${where ? `, based in ${esc(where)},` : ''} has registered on Kuriake Castle and identified you as their supervising bishop.</p><p style="margin:0 0 18px">${esc(ask)}</p><p style="margin:0 0 18px"><a href="${link}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">${button} →</a></p><p style="margin:0 0 12px">If you recognise this pastor, select <b>Confirm Pastor</b>. If the pastor is not under your oversight, select <b>Not My Pastor</b>.</p><p style="margin:0 0 12px">Thank you for helping us maintain accurate pastoral records.</p><p style="margin:0">Kuriake Castle</p>` }));
   }
+
   return async function handle(request) {
     try {
       const url = new URL(request.url), path = url.pathname.replace(/\/$/, ''), method = request.method;
@@ -280,8 +289,9 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
               const bishopReg = bishop && after.registrations.find(x => x.userId === bishop.id && x.year === after.year);
               // A bishop on our list who has not registered yet is emailed at the address we hold for them.
               const listed = !bishop && people.find(p => p.id === r.data.bishopId && p.role === 'bishop');
-              if (bishop) newPastor = { pastor: r.data, to: bishopReg?.data?.email || bishop.email || '', bishopName: bishop.name || bishopReg?.data?.name || '', bishopUser: bishop.id };
-              else if (listed?.email) newPastor = { pastor: r.data, to: listed.email, bishopName: listed.name, bishopUser: '', unregistered: true };
+              const listedRef = people.find(p => p.id === (bishop?.referenceId || r.data.bishopId) && p.role === 'bishop');
+              if (bishop) newPastor = { pastor: r.data, to: bishopReg?.data?.email || bishop.email || '', bishopName: canonicalPersonName(listedRef?.id, listedRef?.name || bishopReg?.data?.name || bishop.name || ''), bishopTitle: listedRef?.title || (bishopReg?.data ? titleFor(bishopReg.data) : 'Bishop'), bishopUser: bishop.id };
+              else if (listed?.email) newPastor = { pastor: r.data, to: listed.email, bishopName: canonicalPersonName(listed.id, listed.name), bishopTitle: listed.title || 'Bishop', bishopUser: '', unregistered: true };
             }
           }
         });
