@@ -32,3 +32,8 @@ test('provider failure, invalid JSON and a stalled payment request fail safely',
    try { await assert.rejects(paymentJson(fetcher,'https://api.paystack.co/test',{},15),/payment service/); } finally {clearInterval(keepAlive);}
  }
 });
+test('a saved browser password cannot replace a Paystack key', async () => {
+ const { writeSettings } = await import('../../src/server/settings.mjs');
+ const pool = { execute: async () => { throw Error('must not write'); } };
+ for (const values of [{ PAYSTACK_SECRET_KEY: 'MyPassword123' }, { PAYSTACK_PUBLIC_KEY: 'sk_live_abc' }]) await assert.rejects(writeSettings(pool, values, { office: true }), /not a Paystack/);
+});

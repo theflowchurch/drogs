@@ -61,6 +61,11 @@ export async function writeSettings(pool, values, actor, config = {}) {
   const entries = Object.entries(values);
   if (entries.some(([key, value]) => !allowed.has(key) || typeof value !== 'string' || value.length > 4096))
     throw new HttpError(400, 'One of the settings is not recognised.');
+  // A browser filling a saved password into these boxes must not replace a key.
+  for (const [key, prefix, label] of [['PAYSTACK_PUBLIC_KEY', 'pk', 'public'], ['PAYSTACK_SECRET_KEY', 'sk', 'secret']]) {
+    const v = values[key]?.trim();
+    if (v && !new RegExp(`^${prefix}_(live|test)_[A-Za-z0-9]+$`).test(v)) throw new HttpError(400, `That is not a Paystack ${label} key. It should start with ${prefix}_live_. Nothing was saved.`);
+  }
   try {
     configuration({ ...(config.sourceEnv || process.env), ...(await readSettings(pool)), ...Object.fromEntries(entries.filter(([, v]) => v.trim())) });
   } catch (error) { throw new HttpError(400, error.message); }

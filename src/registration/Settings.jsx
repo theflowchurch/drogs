@@ -199,7 +199,7 @@ export default function Settings({ run, state, perform, actor }) {
   ];
   const field = s => <label className="reg-field" key={s.key}>
     <span>{s.label} <small className={`reg-badge ${s.set ? 'verified' : 'unclaimed'}`}>{s.set ? 'Set up' : 'Not set up'}</small></span>
-    <input aria-label={s.label} type={/KEY|SECRET|TOKEN|CODE/.test(s.key) ? 'password' : 'text'} autoComplete="off"
+    <input aria-label={s.label} name={`setting-${s.key}`} type={/KEY|SECRET|TOKEN|CODE/.test(s.key) ? 'password' : 'text'} autoComplete={/KEY|SECRET|TOKEN|CODE/.test(s.key) ? 'new-password' : 'off'} data-lpignore="true" data-1p-ignore=""
       value={values[s.key] ?? ''} placeholder={s.set ? '••••••••' : ''} onChange={e => setValues({ ...values, [s.key]: e.target.value })} />
     {s.hint && <small>{s.hint}</small>}
   </label>;
