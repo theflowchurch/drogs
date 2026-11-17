@@ -3910,7 +3910,8 @@
                   "church": "Heritage Baptist Church Global",
                   "title": "Bishop",
                   "image": "assets/organisations/people/andrew-adotei-pappoe-jnr-8fb9020c.webp",
-                  "consecrated": "2021"
+                  "consecrated": "2021",
+                  "country": "Ghana"
                 },
                 {
                   "name": "Isaac Oti-Boateng",
@@ -3919,7 +3920,8 @@
                   "church": "Love Economy Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/isaac-oti-boateng-872f6221.webp",
-                  "consecrated": "2021"
+                  "consecrated": "2021",
+                  "country": "Ghana"
                 },
                 {
                   "name": "Louis Macaiah",
@@ -3928,7 +3930,8 @@
                   "church": "Christ Vision Sanctuary International",
                   "title": "Bishop",
                   "image": "assets/organisations/people/louis-macaiah-573f6990.webp",
-                  "consecrated": "2021"
+                  "consecrated": "2021",
+                  "country": "Ghana"
                 },
                 {
                   "name": "Jesse Sackey",
@@ -3937,7 +3940,8 @@
                   "church": "Revival House of Holy Fire Ministries",
                   "title": "Bishop",
                   "image": "assets/organisations/people/jesse-sackey-bf83e704.webp",
-                  "consecrated": "2021"
+                  "consecrated": "2021",
+                  "country": "Ghana"
                 }
               ]
             }

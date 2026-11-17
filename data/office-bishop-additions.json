@@ -17,7 +17,8 @@
     "26-10-79"
    ],
    "source": "Office 17 Nov 2026: Affiliated Denomination Bishops",
-   "branch": "Heritage Baptist Church Global"
+   "city": "Accra",
+   "country": "Ghana"
   },
   {
    "id": "BA2",
@@ -35,7 +36,8 @@
     "15-12-85"
    ],
    "source": "Office 17 Nov 2026: Affiliated Denomination Bishops",
-   "branch": "Love Economy Church"
+   "city": "Accra",
+   "country": "Ghana"
   },
   {
    "id": "BA3",
@@ -53,7 +55,8 @@
     "4-9-62"
    ],
    "source": "Office 17 Nov 2026: Affiliated Denomination Bishops",
-   "branch": "Revival House of Holy Fire Ministries"
+   "city": "Accra",
+   "country": "Ghana"
   },
   {
    "id": "BA4",
@@ -71,7 +74,8 @@
     "26-12-73"
    ],
    "source": "Office 17 Nov 2026: Affiliated Denomination Bishops",
-   "branch": "Christ Vision Sanctuary International"
+   "city": "Accra",
+   "country": "Ghana"
   }
  ]
 }
