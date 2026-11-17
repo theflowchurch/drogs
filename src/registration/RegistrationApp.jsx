@@ -548,7 +548,6 @@ export default function RegistrationApp({
     [sidebarHidden, setSidebarHidden] = useState(false),
     [signinOpen, setSigninOpen] = useState(false),
     [directoryRole, setDirectoryRole] = useState("bishop"),
-    [facePref, setFacePref] = useState(""), // Read the saved choice after hydration so the switch matches the photographs.
     [gate, setGate] = useState(!gated),
     [actor, setActor] = useState(null),
     [checking, setChecking] = useState(true),
@@ -633,18 +632,8 @@ export default function RegistrationApp({
     setTheme(saved);
     document.documentElement.dataset.theme = saved;
   }, []);
-  useEffect(() => {
-    const restore = () => {
-      const saved = localStorage.getItem("kc-faces");
-      setFacePref(["all", "confirmed"].includes(saved) ? saved : "");
-    };
-    const changed = (event) => {
-      if (event.storageArea === localStorage && (event.key === "kc-faces" || event.key === null)) restore();
-    };
-    restore();
-    window.addEventListener("storage", changed);
-    return () => window.removeEventListener("storage", changed);
-  }, []);
+  // The old photo switch is gone; forget any choice a browser saved from it.
+  useEffect(() => { try { localStorage.removeItem("kc-faces"); } catch {} }, []);
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
@@ -844,17 +833,7 @@ export default function RegistrationApp({
               <a className="reg-primary reg-signin-button" href={`${signupPath}#signin`}>Sign in</a>
             </>
           ) : null}
-          {!office && (browse || profile?.role === "bishop") && (
-            <button
-              type="button"
-              role="switch"
-              className="reg-face-switch"
-              aria-checked={(facePref || pub?.photos || state?.publicPhotos || "confirmed") === "confirmed"}
-              aria-label="Dark faces until confirmed"
-              title="Photographs or dark faces"
-              onClick={() => { const next = (facePref || pub?.photos || state?.publicPhotos || "confirmed") === "confirmed" ? "all" : "confirmed"; localStorage.setItem("kc-faces", next); setFacePref(next); }}
-            />
-          )}
+          {/* No photo switch (office, 17 Nov): visitors and members only ever see photos of people in good standing. */}
           <button className="reg-theme-toggle" onClick={toggleTheme} aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} title={theme === "dark" ? "Light mode" : "Dark mode"}>
             {theme === "dark" ? "☀" : "☾"}
           </button>
@@ -930,7 +909,7 @@ export default function RegistrationApp({
         />
       ) : browse ? (
         pub ? (
-          <PublicDirectory data={{ ...pub, photos: facePref || pub.photos }} />
+          <PublicDirectory data={{ ...pub, photos: pub.photos }} />
         ) : pubError ? (
           <div className="reg-loading" role="alert">
             <p>The directory could not be opened. {pubError}</p>
@@ -1130,7 +1109,7 @@ export default function RegistrationApp({
                   {rollTabRole(tab) && (
                     <PublicDirectory
                       key={tab}
-                      data={{ referencePeople: state.referencePeople, source: state.publicDirectory || "original", photos: facePref || state.publicPhotos, roll: state.roll || [], catalog: catalogOf(state), year: state.year, hidden: state.hidden, overrides: state.overrides, extraReferences: state.extraReferences }}
+                      data={{ referencePeople: state.referencePeople, source: state.publicDirectory || "original", photos: state.publicPhotos, roll: state.roll || [], catalog: catalogOf(state), year: state.year, hidden: state.hidden, overrides: state.overrides, extraReferences: state.extraReferences }}
                       embedded
                       role={rollTabRole(tab)}
                     />
