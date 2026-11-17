@@ -216,6 +216,7 @@ export const paystackInitialize = (token, returnUrl) => server('paystack/initial
 export const paystackVerify = (reference) => server("paystack/verify", { reference });
 
 export const telegramTest = () => server('settings/telegram-test', {});
+export const emailTest = () => server('settings/email-test', {});
 
 export const apiKeysAvailable = mysqlBackend;
 export const listKeys = () => server('keys');

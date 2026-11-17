@@ -201,6 +201,7 @@ export default function Settings({ run, state, perform, actor }) {
     <span>{s.label} {s.invalid ? <small className="reg-badge rejected">Wrong value – paste the key again</small> : <small className={`reg-badge ${s.set ? 'verified' : 'unclaimed'}`}>{s.set ? s.test ? 'Set up (test key)' : 'Set up' : 'Not set up'}</small>}</span>
     <input aria-label={s.label} name={`setting-${s.key}`} type={/KEY|SECRET|TOKEN|CODE/.test(s.key) ? 'password' : 'text'} autoComplete={/KEY|SECRET|TOKEN|CODE/.test(s.key) ? 'new-password' : 'off'} data-lpignore="true" data-1p-ignore=""
       value={values[s.key] ?? ''} placeholder={s.set ? '••••••••' : ''} onChange={e => setValues({ ...values, [s.key]: e.target.value })} />
+    {s.value && <small>Saved now: <b>{s.value}</b></small>}
     {s.hint && <small>{s.hint}</small>}
   </label>;
   const setCount = keys => { const mine = settings.filter(s => keys.includes(s.key)); if (!mine.length) return ''; if (mine.some(s => s.invalid)) return 'Needs fixing'; const n = mine.filter(s => s.set).length; return n === 0 ? 'Not set up' : n === mine.length ? 'Set up' : 'Partly set up'; };
@@ -228,6 +229,10 @@ export default function Settings({ run, state, perform, actor }) {
   }}>
     {CATEGORIES.filter(([title]) => visible(title)).map(([title, blurb, keys]) => <Category key={title} title={title} summary={`${blurb}${setCount(keys) ? ` · ${setCount(keys)}` : ''}`} open={Boolean(query.trim())}>
       {settings.filter(s => keys.includes(s.key)).map(field)}
+      {title === 'Email' && <>
+        <button type="button" className="reg-secondary" onClick={() => run(async () => { const r = await api.emailTest(); setTelegramResult(`Test email sent to ${r.to}.`); }, 'Email is working.')}>Send me a test email</button>
+        {telegramResult && <p className="reg-small">{telegramResult}</p>}
+      </>}
       {title === 'Telegram' && <>
         <button type="button" className="reg-secondary" disabled={!settings.find(s => s.key === 'TELEGRAM_CHAT_ID')?.set} onClick={() => run(async () => { const r = await api.telegramTest(); setTelegramResult(`Test message posted to “${r.chat}”.`); }, 'Telegram is connected.')}>Send a Telegram test message</button>
         {telegramResult && <p className="reg-small">{telegramResult}</p>}

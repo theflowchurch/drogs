@@ -138,6 +138,16 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         await applySettings(config, pool);
         return json({ settings: describeSettings(await readSettings(pool)), admins: officeMembers(config) });
       }
+      if (path === '/api/registration/settings/email-test' && method === 'POST') {
+        // The office sees exactly why sign-in codes cannot be sent (the provider's own words).
+        if (!actor.office) throw new HttpError(403, 'Office access required.');
+        try {
+          await mailer.sendMail({ from: config.from, to: actor.email, subject: 'Kuriake Castle test email', text: `Email sending works. Sent at ${new Date().toISOString()}.` });
+        } catch (error) {
+          throw new HttpError(400, `The email service refused: ${String(error?.response || error?.message || error).slice(0, 300)}. From address in use: ${config.from || '(none)'}`);
+        }
+        return json({ ok: true, to: actor.email, from: config.from });
+      }
       if (path === '/api/registration/settings/telegram-test' && method === 'POST') {
         // The office checks the Telegram link right after pasting the token and chat ID.
         if (!actor.office) throw new HttpError(403, 'Office access required.');
