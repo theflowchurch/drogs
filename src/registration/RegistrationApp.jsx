@@ -91,6 +91,7 @@ import { checkAttire, expectedAttire } from "./attire-check.mjs";
 import DataExport from "./DataExport.jsx";
 import people from "./reference-people.json";
 import { rosterFrom, publicRosterFrom } from "./live-roster.mjs";
+import PageStructure from "./PageStructure.jsx";
 const RosterContext = createContext(people);
 import { photoProgress, photoTask, PHOTO_REASONS } from './photo-progress.mjs';
 import { snapshotSync, changedFields } from './snapshot-sync.mjs';
@@ -744,7 +745,7 @@ export default function RegistrationApp({
   const SUB_LABEL = { Directory: "Roll of Good Standing", "Existing records": "Existing Records", "Pastor lists": "Pastor Lists", "API keys": "API Keys" };
   const [sub, setSub] = useState({}); // which page is open inside People, Review and Settings
   const nav = office
-    ? ["Dashboard", "Directory", "Photo tasks", "Review", "Data", "Communication", "Denominations", ...(SUBS.Settings.length ? ["Settings"] : [])]
+    ? ["Dashboard", "Directory", "Photo tasks", "Review", "Data", "Communication", "Denominations", "Bishops & Pastors pages", ...(SUBS.Settings.length ? ["Settings"] : [])]
     : [
         "Registration",
         ...(current && current.status !== "draft" ? ROLL_TABS : []),
@@ -1105,6 +1106,7 @@ export default function RegistrationApp({
                   </div>
                   {tab === "Communication" && <Communication state={state} run={run} />}
                   {tab === "Denominations" && <div className="reg-settings-list"><Structure state={state} perform={perform} actor={actor} show={["orgs", "groups"]} /></div>}
+                  {tab === "Bishops & Pastors pages" && <PageStructure state={state} perform={perform} />}
                   {tab === "Data" && <DataExport state={state} people={everyone} year={Number(year)} />}
                   {view === "Accounts" && <Accounts run={run} />}
                   {view === "API keys" && <ApiKeys run={run} />}

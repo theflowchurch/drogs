@@ -14,6 +14,8 @@ export function liveRoll(referencePeople, publicData) {
     baseById: new Map(referencePeople.map(p => [p.id, p])),
     overrides: publicData.overrides || {},
     logos: publicData.catalog?.logos || {}, // the office's church logos (Denominations tab)
+    structure: publicData.pageStructure || null, // the office's Order of Bishops structure, if edited
+    pastorBoxes: publicData.pastorBoxes || null, // the office's pastors' boxes, if edited
   };
 }
 

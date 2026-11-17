@@ -4230,3 +4230,27 @@ input[type="date"] {
 .reg-fellowship-app .reg-header .reg-primary { background: var(--fw-gold); color: var(--fw-navy); border-color: var(--fw-gold); }
 @media (max-width: 700px) { .reg-fellowship-app .reg-header { position: static; } }
 .reg-fellowship-demo { background: #c9a95c; color: #14223d; font-weight: 600; font-size: 13px; }
+
+/* Admin › Bishops & Pastors pages (PageStructure.jsx) */
+.reg-page-structure { display: grid; gap: 14px; }
+.reg-ps-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.reg-ps-h { margin: 12px 0 4px; font-size: 1rem; }
+.reg-ps-boxes { margin: 0; padding-left: 22px; max-height: 320px; overflow: auto; }
+.reg-ps-boxes li { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; border-bottom: 1px solid #eee; }
+.reg-ps-box-name small { color: #777; margin-left: 6px; }
+.reg-ps-move { white-space: nowrap; }
+.reg-ps-move button { padding: 0 6px; font-size: 1rem; }
+.reg-ps-section { margin: 6px 0; }
+.reg-ps-groups { list-style: none; padding: 0; margin: 6px 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.reg-ps-group { border: 1px solid #ccc; background: #fff; border-radius: 16px; padding: 4px 10px; cursor: pointer; font: inherit; }
+.reg-ps-group.open { background: #1b2a4a; color: #fff; border-color: #1b2a4a; }
+.reg-ps-group small { opacity: .7; margin-left: 4px; }
+.reg-ps-editor { border: 1px solid #ddd; border-radius: 8px; padding: 12px; background: #fafafa; }
+.reg-ps-editor h3 small { font-weight: normal; color: #777; }
+.reg-ps-members { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.reg-ps-members th, .reg-ps-members td { text-align: left; padding: 5px 6px; border-bottom: 1px solid #e6e6e6; vertical-align: middle; }
+.reg-ps-members input:not([type=checkbox]), .reg-ps-members select { width: 100%; min-width: 110px; }
+.reg-ps-find { list-style: none; padding: 0; margin: 4px 0; width: 100%; }
+.reg-ps-find li button { text-align: left; }
+.reg-secondary.danger { color: #a40000; }
+@media (max-width: 700px) { .reg-ps-members { display: block; overflow-x: auto; } }

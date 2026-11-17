@@ -51,7 +51,7 @@ export default function PastorsOrderApp({ groups: published, total: publishedTot
     if (!live) return { groups: published, total: publishedTotal };
     setOfficeLogos(live.logos);
     const entries = pastorEntries(live.people);
-    return { groups: pastorGroups(entries, COLOURS).map(g => ({ ...g, people: g.people.map(({ denomination, ...p }) => p) })), total: entries.length };
+    return { groups: pastorGroups(entries, COLOURS, live.pastorBoxes).map(g => ({ ...g, people: g.people.map(({ denomination, ...p }) => p) })), total: entries.length };
   }, [live, published, publishedTotal]);
   const [slug, setSlug] = useState('');
   const [open, setOpen] = useState(null);

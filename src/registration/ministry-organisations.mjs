@@ -57,12 +57,8 @@ const INITIALS = { 'ud-africa': 'UD AF', 'ud-ghana-west': 'UD GHW', 'ud-ghana-ea
 // "the": "The Bishops of the Adjutancy"); Emeritus and Para-Church read
 // "The Emeritus Bishops" and "The Para-Church Bishops".
 const OWN_NAMES = { emeritus: 'The Emeritus Bishops', 'affiliated-denomination-bishops': 'The Affiliated Denomination Bishops' };
-const formalName = (o, g) => OWN_NAMES[g.slug] || `The Bishops of ${g.name.replace(/^The /, 'the ')}`;
 const bishopKey = p => p.rosterId || p.name;
 const countOf = people => new Set(people.map(bishopKey)).size;
-const groupsOfSection = o => o.directoryGroups?.length
-  ? o.directoryGroups.filter(g => g.slug && g.name)
-  : [{ slug: o.slug, name: o.name, people: sectionsOf(o).flatMap(s => s.people) }];
 // Muted deep tones (office, 9 Nov), a different one for each box, all dark
 // enough for white lettering and calm beside the gold edge.
 export const COLOURS = ['#1f3a5f', '#6b2737', '#2f5233', '#4a3f6b', '#1f5357', '#5a2846', '#3a3d42', '#7a5a2e', '#2e3566', '#5c3a2a', '#2c4a40', '#34495e', '#6a3045', '#3f4a2c', '#43365a', '#24505f', '#5a4632', '#2b4257', '#5e2f3c', '#35503f', '#4d3b5e', '#3b4f5a', '#664a2b'];
@@ -73,25 +69,37 @@ const COUNCIL_LABEL = { 'ud-senex-council': 'UD Senex Council', 'first-love-sene
   'healing-jesus-council': 'Healing Jesus', 'flow-council': 'FLOW', 'dhmm-council': 'DHMM', 'general-schools-board': 'General Schools Board',
   'general-hospitals-board': 'General Hospitals Board', 'general-orphanage-board': 'General Orphanage Board', 'radio-ministry': 'Radio Ministry',
   'construction-estate-management-board': 'Construction & Estate Management Board', 'abmtc-board': 'ABMTC Board', 'makarios-council': 'Makarios Council' };
-const labelled = g => (COUNCIL_LABEL[g.slug] ? { ...g, people: g.people.map(p => ({ ...p, church: COUNCIL_LABEL[g.slug] })) } : g);
 const ONE_BOX = { [PARA_CHURCH]: 'The Para-Church Bishops', [FIRST_LOVE]: 'The Bishops of First Love Movement' };
-// "The Bishop of Kenya" when a group has one bishop (office, 10 Nov).
-const singular = g => (g.people?.length && countOf(g.people) === 1 ? { ...g, name: g.name.replace(/^The Bishops of /, 'The Bishop of ') } : g);
-const withInitials = g => singular(labelled({ ...g, initials: INITIALS[g.slug] || '' }));
+// "The Bishops of the Pacific Islands Missionary Church".
+const WITH_THE = new Set(['Pacific Islands Missionary Church']);
+const slugOf = text => text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 // Office, 11 Nov: the United Reasonable Service Church opens a contents page
 // too, one line per denomination its bishops belong to; each card keeps the
 // bishop's own church.
 const BY_CHURCH = new Set(['ursc']);
-// "The Bishops of the Pacific Islands Missionary Church".
-const WITH_THE = new Set(['Pacific Islands Missionary Church']);
-const slugOf = text => text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+// Office, 11 Nov: UD Africa opens a contents page of its countries, largest
+// first, with larger lettering on the lines.
+const BY_COUNTRY = new Set(['ud-africa']);
+// The office can change all of this on the admin page (Bishops and pastors
+// pages): the saved structure carries its own groups and, in layout, any of
+// these settings; anything it leaves out keeps the published value.
+export const DEFAULT_LAYOUT = { order: ORDER, initials: INITIALS, names: OWN_NAMES, labels: COUNCIL_LABEL, oneBox: ONE_BOX, byChurch: [...BY_CHURCH], byCountry: [...BY_COUNTRY] };
+// The Order of Bishops and Councils pages' groups, built from a structure: the
+// published one, or the office's saved one (live-patch.mjs).
+export function buildDirectory(d = data) {
+  const L = { ...DEFAULT_LAYOUT, ...(d.layout || {}) };
+const formalName = (o, g) => L.names[g.slug] || `The Bishops of ${g.name.replace(/^The /, 'the ')}`;
+const groupsOfSection = o => o.directoryGroups?.length
+  ? o.directoryGroups.filter(g => g.slug && g.name)
+  : [{ slug: o.slug, name: o.name, people: sectionsOf(o).flatMap(s => s.people) }];
+const labelled = g => (L.labels[g.slug] ? { ...g, people: g.people.map(p => ({ ...p, church: L.labels[g.slug] })) } : g);
+// "The Bishop of Kenya" when a group has one bishop (office, 10 Nov).
+const singular = g => (g.people?.length && countOf(g.people) === 1 ? { ...g, name: g.name.replace(/^The Bishops of /, 'The Bishop of ') } : g);
+const withInitials = g => singular(labelled({ ...g, initials: L.initials[g.slug] || '' }));
 const byChurch = (g, o) => {
   const churches = [...new Set(g.people.map(p => p.church))];
   return churches.map(church => withInitials({ slug: `${g.slug}-${slugOf(church)}`, name: formalName(o, { name: WITH_THE.has(church) ? `The ${church}` : church }), people: g.people.filter(p => p.church === church) }));
 };
-// Office, 11 Nov: UD Africa opens a contents page of its countries, largest
-// first, with larger lettering on the lines.
-const BY_COUNTRY = new Set(['ud-africa']);
 const byCountry = (g, o) => {
   const countries = [...new Set(g.people.map(p => p.country || 'Other'))];
   const size = c => g.people.filter(p => (p.country || 'Other') === c).length;
@@ -101,21 +109,27 @@ const byCountry = (g, o) => {
   countries.sort((a, b) => chairOf(b) - chairOf(a) || size(b) - size(a) || a.replace(/^The /, '').localeCompare(b.replace(/^The /, '')));
   return countries.map(country => withInitials({ slug: `${g.slug}-${slugOf(country.replace(/^The /, ''))}`, name: formalName(o, { name: country }), people: g.people.filter(p => (p.country || 'Other') === country) }));
 };
-const groups = ALL_ORGANISATIONS.filter(o => !o.untitled).flatMap(o => ONE_BOX[o.slug]
-  ? [{ slug: o.slug, name: ONE_BOX[o.slug], section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length).map(g => withInitials({ ...g, name: formalName(o, g) })), people: [], twoColumns: o.slug === FIRST_LOVE }]
-  : groupsOfSection(o).map(g => BY_CHURCH.has(g.slug)
+const allOrgs = d.groups.flatMap(group => group.organisations.map(organisation => ({ ...organisation, group })));
+  const groups = allOrgs.filter(o => !o.untitled).flatMap(o => L.oneBox[o.slug]
+  ? [{ slug: o.slug, name: L.oneBox[o.slug], section: o.slug, parts: groupsOfSection(o).filter(g => g.people.length).map(g => withInitials({ ...g, name: formalName(o, g) })), people: [], twoColumns: o.slug === FIRST_LOVE }]
+  : groupsOfSection(o).map(g => L.byChurch.includes(g.slug)
     ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byChurch(g, o), people: [], all: g.people, flat: true }
-    : BY_COUNTRY.has(g.slug)
+    : L.byCountry.includes(g.slug)
       ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byCountry(g, o), people: [], large: true }
       : { slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people }))
   .map(withInitials);
-export const DIRECTORY_GROUPS = ORDER.map(slug => groups.find(g => g.slug === slug))
+  // Groups the office added go after the ones it has placed.
+  const order = [...L.order, ...groups.map(g => g.slug).filter(x => !L.order.includes(x))];
+  const directoryGroups = order.map(slug => groups.find(g => g.slug === slug))
   .filter(g => g && (g.people.length || g.parts?.length))
   .map((g, i) => ({ ...g, count: countOf(g.parts ? g.parts.flatMap(p => p.people) : g.people), colour: COLOURS[i % COLOURS.length],
     // Each council or country gets its own colour on the second contents page.
     parts: g.parts?.map((part, j) => ({ ...part, colour: COLOURS[(j * 5 + 3) % COLOURS.length] })) }));
-// Every bishop on the page once, however many councils they sit on.
-export const DIRECTORY_TOTAL = countOf(DIRECTORY_GROUPS.flatMap(g => g.parts ? g.parts.flatMap(p => p.people) : g.people));
+  return { groups: directoryGroups, total: countOf(directoryGroups.flatMap(g => g.parts ? g.parts.flatMap(p => p.people) : g.people)) };
+}
+const BUILT = buildDirectory(data);
+export const DIRECTORY_GROUPS = BUILT.groups;
+export const DIRECTORY_TOTAL = BUILT.total;
 // First Love's former groups became countries (office, 10 Nov); their old
 // addresses open the country most of their bishops are in.
 const FORMER = { 'only-jesus': 'first-love-center', 'jesus-first': 'ud-ghana-central', 'choose-jesus': 'first-love-uk', 'serve-jesus': 'erste-liebe-kirche-switzerland', 'jesus-now': 'first-love-church-belize', 'jesus-forever': 'mighty-foundations-ministries-new-york', 'king-jesus': FIRST_LOVE,

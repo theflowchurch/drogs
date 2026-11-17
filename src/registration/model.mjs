@@ -330,6 +330,10 @@ export const publicOverlay = (state) => ({
   hidden: state.hidden || [],
   overrides: Object.fromEntries(Object.entries(state.overrides || {}).map(([k, v]) => [k, scrubContacts(v)])),
   extraReferences: (state.extraReferences || []).map(scrubContacts),
+  // The office's edits to the Order of Bishops / Councils structure and the
+  // pastors' boxes (admin › Bishops and pastors pages); null keeps the published ones.
+  pageStructure: state.pageStructure || null,
+  pastorBoxes: state.pastorBoxes || null,
 });
 // A member's own details flow back onto their original-data record, so the
 // office always sees the current number, city and denomination.
@@ -1374,6 +1378,27 @@ export function applyAction(
     const id = `X${makeId().replace(/-/g, "").slice(0, 10)}`;
     state.extraReferences = [...(state.extraReferences || []), { id, role: d.role, name, title: String(d.title || (d.role === "bishop" ? "Bishop" : "Pastor")), organization: String(d.organization || ""), denomination: String(d.denomination || ""), denominationLogo: "", city: String(d.city || ""), country: String(d.country || ""), branch: String(d.branch || ""), image: String(d.image || ""), photo: String(d.photo || ""), email: "", phone: "", ...(d.role === "pastor" && d.bishop ? { bishop: String(d.bishop) } : {}) }];
     detail = { added: name, id };
+  } else if (action === "setPageStructure") {
+    // The Order of Bishops, Councils and pastors' pages (office, 17 Nov): groups,
+    // councils and boards, who is in each and in what order, their roles, the
+    // boxes' names and order. payload.structure null returns to the published one.
+    office();
+    const st = payload.structure;
+    if (st !== undefined) {
+      if (st !== null) {
+        if (!Array.isArray(st.groups) || !st.groups.every(g => Array.isArray(g.organisations))) throw Error("That page structure is not complete.");
+        const text = JSON.stringify(st);
+        if (text.length > 600000) throw Error("That page structure is too large.");
+        for (const o of st.groups.flatMap(g => g.organisations)) for (const g of o.directoryGroups || [])
+          if (!g.slug || !g.name || !Array.isArray(g.people) || g.people.some(p => !String(p.name || '').trim())) throw Error("Every group needs a name, and every person in it a name.");
+      }
+      state.pageStructure = st;
+    }
+    if (payload.pastorBoxes !== undefined) {
+      const b = payload.pastorBoxes;
+      state.pastorBoxes = b === null ? null : { names: Object.fromEntries(Object.entries(b.names || {}).map(([k, v]) => [String(k), String(v || '').trim()]).filter(([, v]) => v)), merge: Object.fromEntries(Object.entries(b.merge || {}).map(([k, v]) => [String(k), String(v || '')]).filter(([k, v]) => v && v !== k)), order: [...new Set((b.order || []).map(String))] };
+    }
+    detail = { structure: payload.structure === null ? 'published' : payload.structure !== undefined ? 'saved' : undefined, pastorBoxes: payload.pastorBoxes !== undefined ? 'saved' : undefined };
   } else if (action === "setCatalog") {
     // Organizations and denominations offered on the sign-up form.
     office();
@@ -1547,6 +1572,8 @@ export function visibleState(state, actor, references, people = references) {
     hidden: state.hidden || [],
     overrides: actor.office ? state.overrides || {} : publicOverlay(state).overrides,
     extraReferences: actor.office ? state.extraReferences || [] : publicOverlay(state).extraReferences,
+    pageStructure: state.pageStructure || null,
+    pastorBoxes: state.pastorBoxes || null,
     photoReviews: actor.office ? state.photoReviews || {} : {},
   };
 }

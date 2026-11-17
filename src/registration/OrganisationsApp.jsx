@@ -1,9 +1,9 @@
 'use client';
-import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, PAGE_ALIASES, flatPeople } from './ministry-organisations.mjs';
+import { ORGANISATIONS as data, DIRECTORY_GROUPS, DIRECTORY_TOTAL, PAGE_ALIASES, flatPeople, buildDirectory, resolveGroupSlug } from './ministry-organisations.mjs';
 import PortraitImage from './PortraitImage';
 import useLiveRoll, { useUploadedPhoto } from './useLiveRoll';
 import { patchGroups } from './live-patch.mjs';
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 import { useEffect } from 'react';
 import useGroupFocus from './useGroupFocus';
 import GroupThumbs from './GroupThumbs';
@@ -70,15 +70,20 @@ const GroupsContext = createContext({ groups: DIRECTORY_GROUPS, total: DIRECTORY
 export const useGroups = () => useContext(GroupsContext);
 export function LiveGroups({ children }) {
   const live = useLiveRoll();
-  const value = useMemo(() => live ? patchGroups(DIRECTORY_GROUPS, live) : { groups: DIRECTORY_GROUPS, total: DIRECTORY_TOTAL }, [live]);
+  const value = useMemo(() => live ? patchGroups(live.structure ? buildDirectory(live.structure).groups : DIRECTORY_GROUPS, live) : { groups: DIRECTORY_GROUPS, total: DIRECTORY_TOTAL }, [live]);
   return <GroupsContext.Provider value={value}>{children}</GroupsContext.Provider>;
 }
 // The live version of a group or line chosen in the address.
 export function useLiveFocus(focus) {
   const { groups } = useGroups();
-  const group = focus.group && groups.find(g => g.slug === focus.group.slug);
-  const part = group && focus.part ? group.parts?.find(p => p.slug === focus.part.slug) || null : null;
-  return { group: group || null, part };
+  // Read the address too, so a group the office added (not on the published
+  // page) opens as well.
+  const [hash, setHash] = useState('');
+  useEffect(() => { const read = () => setHash(resolveGroupSlug(decodeURIComponent(location.hash.slice(1)))); read(); addEventListener('hashchange', read); return () => removeEventListener('hashchange', read); }, []);
+  const slug = focus.part?.slug || focus.group?.slug || hash;
+  const group = slug ? groups.find(g => g.slug === slug || g.parts?.some(p => p.slug === slug)) || null : null;
+  const part = group?.parts?.find(p => p.slug === slug) || null;
+  return { group, part };
 }
 export function Masthead({ bishops = false, count = true, sub = 'Worldwide Fellowship of Bishops', line = 'Roll of Good Standing', total: totalProp, noun = 'Bishops' }) {
   const live = useGroups(); const total = totalProp ?? live.total;

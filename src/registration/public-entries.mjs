@@ -40,8 +40,13 @@ export function pastorEntries(people) {
 // Order of Pastors: one box per denomination, A to Z (ignoring a leading "The").
 const slugOf = text => text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const plain = d => d.replace(/^The /, '');
-export function pastorGroups(entries, colours) {
-  return [...new Set(entries.map(p => p.denomination || 'Other'))]
-    .sort((a, b) => plain(a).localeCompare(plain(b)))
-    .map((d, i) => ({ slug: slugOf(d), name: `The Pastors of ${/^The /.test(d) ? d.replace(/^The /, 'the ') : d}`, colour: colours[i % colours.length], people: entries.filter(p => (p.denomination || 'Other') === d) }));
+// The office can rename a box, fold one church's pastors into another's box,
+// and set the boxes' order (admin › Bishops and pastors pages); the rest stay A to Z.
+export function pastorGroups(entries, colours, boxes = null) {
+  const merge = boxes?.merge || {}, names = boxes?.names || {}, order = boxes?.order || [];
+  const boxOf = p => { let d = p.denomination || 'Other'; for (let i = 0; i < 5 && merge[d]; i++) d = merge[d]; return d; };
+  const rank = d => { const i = order.indexOf(d); return i < 0 ? Infinity : i; };
+  return [...new Set(entries.map(boxOf))]
+    .sort((a, b) => rank(a) - rank(b) || plain(a).localeCompare(plain(b)))
+    .map((d, i) => ({ slug: slugOf(d), denomination: d, name: names[d] || `The Pastors of ${/^The /.test(d) ? d.replace(/^The /, 'the ') : d}`, colour: colours[i % colours.length], people: entries.filter(p => boxOf(p) === d) }));
 }

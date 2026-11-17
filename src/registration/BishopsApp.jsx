@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Masthead, Photo } from './OrganisationsApp';
-import { bishopSurname, DIRECTORY_GROUPS, allBishopsOf } from './ministry-organisations.mjs';
+import { bishopSurname, DIRECTORY_GROUPS, allBishopsOf, buildDirectory } from './ministry-organisations.mjs';
 import useLiveRoll from './useLiveRoll';
 import { patchGroups } from './live-patch.mjs';
 import { bishopEntries, pastorEntries, setOfficeLogos } from './public-entries.mjs';
@@ -58,7 +58,7 @@ export default function BishopsApp({ bishops: published, kind = 'bishop', masthe
   const live = useLiveRoll();
   const bishops = useMemo(() => { if (live) setOfficeLogos(live.logos); return !live ? published : kind === 'pastor'
     ? pastorEntries(live.people).map(({ denomination, ...p }) => p)
-    : bishopEntries(allBishopsOf(patchGroups(DIRECTORY_GROUPS, live).groups), live.byId); }, [live, published, kind]);
+    : bishopEntries(allBishopsOf(patchGroups(live.structure ? buildDirectory(live.structure).groups : DIRECTORY_GROUPS, live).groups), live.byId); }, [live, published, kind]);
   const noun = kind === 'pastor' ? 'pastor' : 'bishop', fallback = kind === 'pastor' ? 'Pastor' : 'Bishop';
   const [open, setOpen] = useState(null);
   const [query, setQuery] = useState('');
