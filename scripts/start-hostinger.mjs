@@ -41,7 +41,22 @@ if (await launchReset(pool, config)) console.log('Launch reset applied: member a
 // The transport is created per message so mail settings saved in /admin/ apply at once.
 const { sendViaResend } = await import('../src/server/resend-mail.mjs');
 // Resend's HTTPS API when a Resend key is saved (the host blocks the SMTP route); otherwise SMTP.
-const mailer = { sendMail: message => config.resendKey ? sendViaResend(config.resendKey, message) : nodemailer.createTransport(config.smtp).sendMail(message) };
+// If Resend rejects the key saved in /admin/ and hPanel holds a different
+// RESEND_API_KEY, that one is used and saved, so a wrong saved key cannot lock
+// the office out of the emailed sign-in code.
+const sendResend = async message => {
+  try { return await sendViaResend(config.resendKey, message); }
+  catch (error) {
+    const hostKey = config.sourceEnv?.RESEND_API_KEY?.trim();
+    if (!/api key is invalid|invalid api key|unauthor|restricted/i.test(error.message) || !hostKey || hostKey === config.resendKey) throw error;
+    const result = await sendViaResend(hostKey, message);
+    await pool.execute('INSERT INTO dr_config (name,value,updated_at) VALUES (?,?,?) ON DUPLICATE KEY UPDATE value=VALUES(value),updated_at=VALUES(updated_at)', ['RESEND_API_KEY', hostKey, Date.now()]);
+    await applySettings(config, pool);
+    console.log('Resend: the saved key was rejected; the hPanel key worked and is now saved.');
+    return result;
+  }
+};
+const mailer = { sendMail: message => config.resendKey ? sendResend(message) : nodemailer.createTransport(config.smtp).sendMail(message) };
 const auth = createAuth({ pool, config, mailer });
 const storage = createStorage({ pool, config });
 const api = createApi({ pool, config, auth, storage, mailer });
