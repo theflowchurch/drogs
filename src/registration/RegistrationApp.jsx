@@ -37,6 +37,7 @@ import {
   ORGANIZATIONS,
   registrationEmail,
   AMOUNTS,
+  feesOf,
   parseRoster,
   validateProfile,
   normalName,
@@ -1836,7 +1837,7 @@ function RegistrationForm({
         next.name = [next.firstName, next.lastName].filter(Boolean).join(" ");
       return next;
     });
-  const fees = state.fees || AMOUNTS;
+  const fees = feesOf(state);
   const steps = editing
     ? ["details", "review"]
     : data.role === "bishop"

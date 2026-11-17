@@ -251,7 +251,11 @@ export function structureConflicts(catalog, people) {
   }
   return out;
 }
-export const feesOf = (state) => state?.fees?.bishop ? state.fees : AMOUNTS;
+// Office, 16 Nov 2026: pastors pay $20. A fee saved in the office's Settings
+// before then at the old amounts ($100 / $25) gives way to the new default; any
+// other amount the office saves is used as it stands.
+const SUPERSEDED_FEES = [{ bishop: 100, pastor: 25 }];
+export const feesOf = (state) => state?.fees?.bishop && !SUPERSEDED_FEES.some(f => f.bishop === state.fees.bishop && f.pastor === state.fees.pastor) ? state.fees : AMOUNTS;
 // Fields of an old roster record the office may correct.
 export const REFERENCE_FIELDS = ["name", "role", "title", "gender", "dob", "organization", "denomination", "group", "city", "country", "bishop", "branch", "yearAppointed", "yearOrdained", "yearConsecrated", "photo", "phone", "email"];
 // Contact details and birth dates stay in the office: public and member views

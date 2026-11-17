@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  feesOf, AMOUNTS,
   emptyState,
   applyAction,
   visibleState,
@@ -378,9 +379,9 @@ test("saving an unpaid draft updates its amount to the current fee", () => {
   let s = setup();
   s.fees = { bishop: 100, pastor: 50 };
   s = applyAction(s, pastor, "save", profile(pastor));
-  s = applyAction(s, office, "setFees", { bishop: 100, pastor: 25 });
+  s = applyAction(s, office, "setFees", { bishop: 100, pastor: 30 });
   s = applyAction(s, pastor, "save", profile(pastor));
-  assert.equal(s.registrations.find(r => r.userId === pastor.id).amount, 25);
+  assert.equal(s.registrations.find(r => r.userId === pastor.id).amount, 30);
 });
 
 test("a mobile-money Transaction ID pays for one person only", () => {
@@ -881,4 +882,10 @@ test('an omitted middle name suggests the current pastor without claiming or alt
  const exact=referenceMatches(referenceIndex(people),{name:'Joshua Korsi Gbafa'});
  assert.deepEqual(exact.map(m=>m.reference.id),['joshua']);
  assert.deepEqual(referenceMatches(referenceIndex(people),{name:'Someone Else'}),[]);
+});
+
+test("a fee saved at the old $100 / $25 gives way to the $20 pastor default (office, 16 Nov 2026)", () => {
+  assert.deepEqual(feesOf({ fees: { bishop: 100, pastor: 25 } }), AMOUNTS);
+  assert.equal(AMOUNTS.pastor, 20);
+  assert.deepEqual(feesOf({ fees: { bishop: 120, pastor: 30 } }), { bishop: 120, pastor: 30 });
 });
