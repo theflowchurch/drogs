@@ -4,6 +4,7 @@ import * as api from './client';
 import { checkReceiptImage } from './receipt-check.mjs';
 import { paymentReference } from './model.mjs';
 import { REGISTRATION_MOMO, REMITTANCE_APPS } from './manual-payments.mjs';
+import { currencyFor, loadRates, rateFor, localAmount } from './exchange.mjs';
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 function ReceiptPreview({ path }) {
@@ -24,6 +25,12 @@ export default function PaymentOptions({ current, actor, run, beforeSave, paysta
   const [acknowledged, setAcknowledged] = useState(false), [uploading, setUploading] = useState(false), [saving, setSaving] = useState(false), [uploadError, setUploadError] = useState(''), [replacing, setReplacing] = useState(false);
   useEffect(() => { if (demo && method === 'app') { setProof(p => p || demo.proof); setCheck(c => c || { verdict: 'receipt' }); setTransactionId(t => t || demo.transactionId); setAcknowledged(true); } }, [demo, method]);
   const reference = paymentReference({ userId: actor.id, year: current.year });
+  // Only the registrant's own country's currency is shown beside the US dollars
+  // (office, 17 Nov). The checkout still settles through the signed quote.
+  const [rates, setRates] = useState(null);
+  const country = String(current.data?.country || '').trim(), currency = currencyFor(country);
+  useEffect(() => { if (!currency || currency === 'USD') return; let live = true; loadRates().then(v => live && setRates(v)); return () => { live = false; }; }, [currency]);
+  const rate = rateFor(rates, currency), local = rate > 0 ? localAmount(current.amount, rate, currency) : '';
   async function upload(file) {
     setUploadError(''); setProof(''); setCheck(null);
     if (!file) return;
@@ -73,11 +80,10 @@ export default function PaymentOptions({ current, actor, run, beforeSave, paysta
     <ReceiptPreview path={current.proof} />
     <button type="button" className="reg-text" onClick={() => { setReplacing(true); setMethod('app'); }}>Replace receipt</button>
   </div>;
-  const cedis = quote ? new Intl.NumberFormat('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(quote.amount / 100) : '';
   async function pay() {
     setOpening(true);
     await run(async () => {
-      if (quote.expiresAt <= Date.now()) { setRetry(n => n + 1); throw Error('The cedi amount has expired. Please check the refreshed amount and pay again.'); }
+      if (quote.expiresAt <= Date.now()) { setRetry(n => n + 1); throw Error('The payment amount has expired. It has been refreshed; please pay again.'); }
       await beforeSave?.();
       if (demo) {
         // Demonstration: the payment is recorded in this browser only. No money moves.
@@ -105,10 +111,10 @@ export default function PaymentOptions({ current, actor, run, beforeSave, paysta
       <h3 id="pay-step-2"><span>2</span>Pay securely</h3>
       {enabled ? <>
         <p>Pay with a <strong>Visa or Mastercard card from any country</strong>, or by <strong>Mobile Money</strong> (MTN, Telecel, AT). You will go to a secure payment page, then return here automatically.</p>
-        <p className="reg-pay-total">{quote ? <><strong>Checkout total: GHS {cedis}</strong><small>The ${quote.usd} USD fee in Ghana cedis at today’s rate. No extra fee is added by this site.</small></> : loading ? 'Getting today’s cedi amount…' : null}</p>
+        <p className="reg-pay-total">{quote ? <><strong>Amount to pay: ${quote.usd} USD{local ? ` · approximately ${local} in ${country}` : ''}</strong><small>No extra fee is added by this site.</small></> : loading ? 'Getting today’s amount…' : null}</p>
         {error && <p className="reg-receipt-error" role="alert">{error}</p>}
-        <button type="button" className="reg-primary reg-pay-submit" disabled={!quote || opening || loading} onClick={pay}>{opening ? 'Opening secure checkout…' : quote ? `Pay GHS ${cedis} securely →` : loading ? 'Getting your cedi amount…' : 'Payment amount unavailable'}</button>
-        {!loading && <button className="reg-text" type="button" disabled={opening} onClick={() => setRetry(n => n + 1)}>Refresh cedi amount</button>}
+        <button type="button" className="reg-primary reg-pay-submit" disabled={!quote || opening || loading} onClick={pay}>{opening ? 'Opening secure checkout…' : quote ? `Pay $${quote.usd} USD securely →` : loading ? 'Getting today’s amount…' : 'Payment amount unavailable'}</button>
+        {!loading && <button className="reg-text" type="button" disabled={opening} onClick={() => setRetry(n => n + 1)}>Refresh amount</button>}
         <p className="reg-pay-note">If your card is in another currency, your bank converts the amount and may add its own charge.</p>
       </> : <p role="status">Online payment is being switched on. Please try again shortly, or contact the office.</p>}
     </section>

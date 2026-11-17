@@ -2447,7 +2447,7 @@ function Payment({ current, actor, run, refresh, paystackKey = "" }) {
       {rate > 0 && (
         <p className="reg-local-amount">
           Approximately {localAmount(current.amount, rate, currency)}
-          <small>Estimate only. Your exact Ghana cedi total appears below.</small>
+          <small>Estimate only.</small>
         </p>
       )}
       <p>
