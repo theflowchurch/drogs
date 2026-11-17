@@ -100,6 +100,7 @@ export async function currentActor(office = false) {
   if (error || !data.user) return null;
   return { id: data.user.id, email: data.user.email };
 }
+// The admin access code alone signs the office in (17 Nov); the answer carries the session.
 export const officeCode = (code) =>
   mysqlBackend ? server("auth/office-code", { code }) : Promise.resolve({ ok: code === "1234" });
 export async function requestCode(email, mode = "signup", entrance = "general", church = "") {
@@ -120,6 +121,11 @@ export async function verifyCode(email, token, mode = "signup", remember = false
   check(error);
   return { id: data.user.id, email: data.user.email };
 }
+// Members: email and password on the live site (17 Nov); the code is only for a reset.
+export const passwordAuth = () => mysqlBackend;
+export const passwordSignup = (email, password, entrance = "general", remember = false) => server("auth/signup", { email, password, entrance, remember });
+export const passwordLogin = (email, password, remember = false) => server("auth/login", { email, password, remember });
+export const resetPassword = (email, token, password, remember = false) => server("auth/reset", { email, token, password, remember });
 export function demoSignIn(email, office = false, mode = "signup") {
   email = normalEmail(email);
   const p = read().profiles.find((p) => normalEmail(p.email) === email);

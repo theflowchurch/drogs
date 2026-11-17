@@ -62,6 +62,22 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('auth/verify', '', { email, token })).status, 401, 'code cannot be reused');
     return result;
   }
+  // Email and password (17 Nov): sign up, sign in, wrong password, no second account, reset by code.
+  {
+    const email = 'password-member@example.com';
+    assert.equal((await call('auth/signup', '', { email, password: 'short' })).status, 400);
+    const made = await call('auth/signup', '', { email, password: 'first password 1' });
+    assert.equal(made.status, 200); assert.ok(made.cookie);
+    assert.equal((await call('auth/signup', '', { email, password: 'another password' })).status, 409, 'an email cannot be claimed twice');
+    assert.equal((await call('auth/login', '', { email, password: 'wrong password!' })).status, 401);
+    assert.equal((await call('auth/login', '', { email, password: 'first password 1' })).status, 200);
+    assert.equal((await call('auth/request', '', { email, mode: 'reset' })).status, 200);
+    const token = mails.at(-1).text.match(/code is (\d{6})/)[1];
+    assert.equal((await call('auth/reset', '', { email, token, password: 'second password 2' })).status, 200);
+    assert.equal((await call('auth/login', '', { email, password: 'first password 1' })).status, 401, 'the old password stops working');
+    assert.equal((await call('auth/login', '', { email, password: 'second password 2' })).status, 200);
+    assert.equal((await call('auth/request', '', { email: 'nobody-here@example.com', mode: 'reset' })).status, 404);
+  }
   const image = await sharp({ create: { width: 60, height: 80, channels: 3, background: 'red' } }).png().toBuffer();
   async function upload(who, kind = 'portrait') {
     const receipt = kind === 'receipt' ? await sharp(Buffer.from('<svg width="600" height="800" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="white"/><text x="30" y="100" font-size="30">Transfer successful</text><text x="30" y="180" font-size="28">GHS 300.00</text><text x="30" y="260" font-size="28">Reference TEST-123456</text></svg>')).png().toBuffer() : image;
