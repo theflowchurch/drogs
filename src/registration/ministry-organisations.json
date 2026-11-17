@@ -893,6 +893,15 @@
                   "consecrated": "2023"
                 },
                 {
+                  "name": "Eddie Fabin",
+                  "rosterId": "B41",
+                  "bishop": true,
+                  "church": "Qodesh City Church",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/eddie-fabin.webp",
+                  "consecrated": "2014"
+                },
+                {
                   "name": "Glen Kwame Opoku",
                   "rosterId": "B74",
                   "bishop": true,
