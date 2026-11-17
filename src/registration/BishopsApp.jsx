@@ -11,17 +11,17 @@ import './organisations.css';
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const letterOf = b => (bishopSurname(b.name)[0] || '#').toUpperCase();
 
-function Card({ person, onOpen }) {
+function Card({ person, onOpen, fallback }) {
   return <button type="button" className="org-member bl-card" onClick={() => onOpen(person)} aria-haspopup="dialog">
     <span className="org-member-photo"><Photo person={person}/></span>
     <span className="org-member-text">
-      <small>{person.title || 'Bishop'}</small>
+      <small>{person.title || fallback}</small>
       <strong>{person.name}</strong>
     </span>
   </button>;
 }
 
-function Detail({ person, onClose }) {
+function Detail({ person, onClose, fallback }) {
   const close = useRef(null);
   useEffect(() => {
     close.current?.focus();
@@ -34,43 +34,59 @@ function Detail({ person, onClose }) {
       <button ref={close} type="button" className="bl-close" onClick={onClose} aria-label="Close">×</button>
       <div className="bl-detail-photo"><Photo person={person} large/></div>
       <div className="bl-detail-text">
-        <small>{person.title || 'Bishop'}</small>
+        <small>{person.title || fallback}</small>
         <h2 id="bl-detail-name">{person.name}</h2>
         <dl>
+          {person.details ? person.details.map(d => <div key={d.label}><dt>{d.label}</dt><dd className={d.logo !== undefined ? 'bl-church' : undefined}>{d.logo && <img src={`${base}/${d.logo}`} alt=""/>}<span>{d.value || 'Not recorded'}</span></dd></div>) : <>
           <div><dt>Church</dt><dd className="bl-church">{person.logo && <img src={`${base}/${person.logo}`} alt=""/>}<span>{person.church || 'Not recorded'}</span></dd></div>
           <div><dt>{person.consecrated || !person.appointed ? 'Consecrated' : 'Appointed'}</dt><dd>{person.consecrated || person.appointed || 'Not recorded'}</dd></div>
+          </>}
         </dl>
       </div>
     </div>
   </div>;
 }
 
-export default function BishopsApp({ bishops }) {
+// Pastors' register (office, 17 Nov): thousands of cards, so they are drawn a
+// screenful at a time as the visitor scrolls.
+const STEP = 120;
+export default function BishopsApp({ bishops, kind = 'bishop', masthead = {} }) {
+  const noun = kind === 'pastor' ? 'pastor' : 'bishop', fallback = kind === 'pastor' ? 'Pastor' : 'Bishop';
   const [open, setOpen] = useState(null);
   const [query, setQuery] = useState('');
+  const [limit, setLimit] = useState(STEP);
+  const more = useRef(null);
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase();
     return q ? bishops.filter(b => b.name.toLowerCase().includes(q)) : bishops;
   }, [bishops, query]);
+  useEffect(() => { setLimit(STEP); }, [query]);
+  useEffect(() => {
+    if (!more.current || limit >= shown.length) return;
+    const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) setLimit(n => n + STEP); }, { rootMargin: '1200px 0px' });
+    io.observe(more.current);
+    return () => io.disconnect();
+  }, [limit, shown.length]);
   const letters = useMemo(() => {
     const m = new Map();
-    for (const b of shown) { const l = letterOf(b); if (!m.has(l)) m.set(l, []); m.get(l).push(b); }
+    for (const b of shown.slice(0, limit)) { const l = letterOf(b); if (!m.has(l)) m.set(l, []); m.get(l).push(b); }
     return [...m];
-  }, [shown]);
+  }, [shown, limit]);
   return <div className="denom-site org-site bl-site" id="top">
-    <Masthead count={false}/>
+    <Masthead count={false} {...masthead}/>
     <main className="org-main bl-main">
       <div className="bl-tools">
-        <label className="bl-search"><span className="sr-only">Search bishops</span>
+        <label className="bl-search"><span className="sr-only">Search {noun}s</span>
           <input id="bl-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by name" autoComplete="off"/>
         </label>
       </div>
-      {!letters.length && <p className="bl-empty">No bishop matches “{query}”.</p>}
+      {!letters.length && <p className="bl-empty">No {noun} matches “{query}”.</p>}
       {letters.map(([l, people]) => <section key={l} className="bl-letter" id={`letter-${l}`} aria-labelledby={`h-${l}`}>
         <h2 className="bl-letter-heading" id={`h-${l}`}>{l}</h2>
-        <div className="org-members">{people.map(p => <Card key={p.rosterId || p.name} person={p} onOpen={setOpen}/>)}</div>
+        <div className="org-members">{people.map(p => <Card key={p.rosterId || p.name} person={p} onOpen={setOpen} fallback={fallback}/>)}</div>
       </section>)}
+      {limit < shown.length && <div ref={more} className="bl-more"><button type="button" className="bl-more-button" onClick={() => setLimit(n => n + STEP)}>Show more</button></div>}
     </main>
-    {open && <Detail person={open} onClose={() => setOpen(null)}/>}
+    {open && <Detail person={open} onClose={() => setOpen(null)} fallback={fallback}/>}
   </div>;
 }

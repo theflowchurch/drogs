@@ -478,3 +478,5 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
 .bl-church{display:flex;align-items:center;gap:12px}
 .bl-church img{width:52px;height:52px;object-fit:contain;flex:none}
 .bl-tools{justify-content:flex-end;margin:18px 0 0}
+.bl-more{display:flex;justify-content:center;padding:30px 0}
+.bl-more-button{font:inherit;font-size:18px;padding:10px 26px;border-radius:999px;border:2px solid var(--org-line);background:#fff;color:var(--org-navy);cursor:pointer}
