@@ -198,12 +198,12 @@ export default function Settings({ run, state, perform, actor }) {
     ['Access and public page', 'Manage office access and what appears on the public directory', ['ADMIN_ACCESS_CODE', 'PUBLIC_DIRECTORY_SOURCE', 'PUBLIC_PHOTOS']],
   ];
   const field = s => <label className="reg-field" key={s.key}>
-    <span>{s.label} <small className={`reg-badge ${s.set ? 'verified' : 'unclaimed'}`}>{s.set ? 'Set up' : 'Not set up'}</small></span>
+    <span>{s.label} {s.invalid ? <small className="reg-badge rejected">Wrong value – paste the key again</small> : <small className={`reg-badge ${s.set ? 'verified' : 'unclaimed'}`}>{s.set ? s.test ? 'Set up (test key)' : 'Set up' : 'Not set up'}</small>}</span>
     <input aria-label={s.label} name={`setting-${s.key}`} type={/KEY|SECRET|TOKEN|CODE/.test(s.key) ? 'password' : 'text'} autoComplete={/KEY|SECRET|TOKEN|CODE/.test(s.key) ? 'new-password' : 'off'} data-lpignore="true" data-1p-ignore=""
       value={values[s.key] ?? ''} placeholder={s.set ? '••••••••' : ''} onChange={e => setValues({ ...values, [s.key]: e.target.value })} />
     {s.hint && <small>{s.hint}</small>}
   </label>;
-  const setCount = keys => { const mine = settings.filter(s => keys.includes(s.key)); if (!mine.length) return ''; const n = mine.filter(s => s.set).length; return n === 0 ? 'Not set up' : n === mine.length ? 'Set up' : 'Partly set up'; };
+  const setCount = keys => { const mine = settings.filter(s => keys.includes(s.key)); if (!mine.length) return ''; if (mine.some(s => s.invalid)) return 'Needs fixing'; const n = mine.filter(s => s.set).length; return n === 0 ? 'Not set up' : n === mine.length ? 'Set up' : 'Partly set up'; };
   // Each church site runs the same sign-up, locked to that church; the office shares these links.
   const churches = Object.entries(DENOMINATION_SITES).sort(([, a], [, b]) => a.name.localeCompare(b.name));
   const sections = [['signup', 'registration sign-up signup pause open close notice'], ['fees', 'fees fee amount price payment bishop pastor'], ['links', 'registration links share copy ' + links.map(([l]) => l).join(' ')], ['church-links', 'church denomination sign-up signup links share copy ' + churches.map(([, c]) => c.name).join(' ')], ...CATEGORIES.map(([title, blurb, keys]) => [title, `${title} ${blurb} ${settings.filter(s => keys.includes(s.key)).map(s => `${s.label} ${s.hint || ''}`).join(' ')}`])];

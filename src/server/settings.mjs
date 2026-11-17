@@ -74,6 +74,10 @@ export async function writeSettings(pool, values, actor, config = {}) {
     else await pool.execute('DELETE FROM dr_config WHERE name=?', [key]);
   }
 }
-export const describeSettings = stored => SETTINGS.map(([key, label, hint]) => ({ key, label, hint, set: Boolean(stored[key]) }));
+// For the Paystack keys the office also sees whether what is saved is a real key
+// (never the key itself).
+const KEY_SHAPE = { PAYSTACK_PUBLIC_KEY: /^pk_(live|test)_[A-Za-z0-9]+$/, PAYSTACK_SECRET_KEY: /^sk_(live|test)_[A-Za-z0-9]+$/ };
+export const describeSettings = stored => SETTINGS.map(([key, label, hint]) => ({ key, label, hint, set: Boolean(stored[key]),
+  ...(KEY_SHAPE[key] && stored[key] ? { invalid: !KEY_SHAPE[key].test(String(stored[key]).trim()), test: /_test_/.test(String(stored[key])) } : {}) }));
 // Office emails are not secrets: the office sees and manages the list.
 export const officeMembers = config => config.admins;
