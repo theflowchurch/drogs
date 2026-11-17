@@ -54,14 +54,14 @@ function GroupBox({ group, as: Tag = 'a', thumbs }) {
 
 // The title (office, 9 Nov): the DHMM logo in white on navy, "Worldwide Fellowship of
 // Bishops" in gold, and every bishop on the page counted once.
-export function Masthead({ bishops = false, count = true }) {
+export function Masthead({ bishops = false, count = true, demo = false }) {
   return <header className={`org-dhmm-head ${bishops ? 'org-dhmm-head-bishops' : ''}`}>
     <a href="#contents" className="org-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
     <div className="org-dhmm-text">
       <p className="org-dhmm-sub">Worldwide Fellowship of Bishops</p>
       <p className="org-dhmm-total">Roll of Good Standing{count && <> <span className="org-dhmm-dot" aria-hidden="true">·</span> <strong>{DIRECTORY_TOTAL}</strong> Bishops</>}</p>
     </div>
-    {bishops && <BishopAccess className="org-bishop-access"/>}
+    {bishops && <BishopAccess className="org-bishop-access" demo={demo}/>}
   </header>;
 }
 
@@ -103,14 +103,14 @@ function Group({ group, part }) {
   </section>;
 }
 
-export default function OrganisationsApp({ slug = '', bishops = false }) {
+export default function OrganisationsApp({ slug = '', bishops = false, demo = false }) {
   // An older address for a section opens the contents; one for a group opens it.
   const { group, part } = useGroupFocus(PAGE_ALIASES[slug] ? '' : slug);
   // Office, 11 Nov: every bishop's photo in a strip beside each council's or
   // country's name.
   const variant = 'all';
   return <div className="denom-site org-site" id="top">
-    <Masthead bishops={bishops}/>
+    <Masthead bishops={bishops} demo={demo}/>
     <main className="org-main">
       {group ? <>
         {group.parts && !part ? <SubContents group={group} variant={variant}/> : <Group group={group} part={part}/>}

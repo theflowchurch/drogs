@@ -8,9 +8,11 @@
 import { fellowshipSignupPath } from './fellowship.mjs';
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
-export default function BishopAccess({ className = '' }) {
+export default function BishopAccess({ className = '', demo = false }) {
+  // The sign-up demonstration's buttons open its filled-in form instead.
+  const to = demo ? `${base}/orderofbishopsingoodstanding/signup/test/form/` : fellowshipSignupPath(base);
   return <nav className={`bishop-access ${className}`} aria-label="Bishops">
-    <a className="bishop-access-signin" href={`${fellowshipSignupPath(base)}#signin`}>Sign in</a>
-    <a className="bishop-access-signup" href={fellowshipSignupPath(base)}>Sign up</a>
+    <a className="bishop-access-signin" href={demo ? to : `${to}#signin`}>Sign in</a>
+    <a className="bishop-access-signup" href={to}>Sign up</a>
   </nav>;
 }
