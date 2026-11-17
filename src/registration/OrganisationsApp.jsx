@@ -54,12 +54,12 @@ function GroupBox({ group, as: Tag = 'a', thumbs }) {
 
 // The title (office, 9 Nov): the DHMM logo in white on navy, "Worldwide Fellowship of
 // Bishops" in gold, and every bishop on the page counted once.
-export function Masthead({ bishops = false }) {
+export function Masthead({ bishops = false, count = true }) {
   return <header className={`org-dhmm-head ${bishops ? 'org-dhmm-head-bishops' : ''}`}>
     <a href="#contents" className="org-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
     <div className="org-dhmm-text">
       <p className="org-dhmm-sub">Worldwide Fellowship of Bishops</p>
-      <p className="org-dhmm-total">Roll of Good Standing <span className="org-dhmm-dot" aria-hidden="true">·</span> <strong>{DIRECTORY_TOTAL}</strong> Bishops</p>
+      <p className="org-dhmm-total">Roll of Good Standing{count && <> <span className="org-dhmm-dot" aria-hidden="true">·</span> <strong>{DIRECTORY_TOTAL}</strong> Bishops</>}</p>
     </div>
     {bishops && <BishopAccess className="org-bishop-access"/>}
   </header>;

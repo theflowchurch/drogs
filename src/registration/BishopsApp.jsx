@@ -50,7 +50,7 @@ export default function BishopsApp({ bishops }) {
   const [query, setQuery] = useState('');
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return q ? bishops.filter(b => `${b.name} ${b.church || ''}`.toLowerCase().includes(q)) : bishops;
+    return q ? bishops.filter(b => b.name.toLowerCase().includes(q)) : bishops;
   }, [bishops, query]);
   const letters = useMemo(() => {
     const m = new Map();
@@ -58,11 +58,11 @@ export default function BishopsApp({ bishops }) {
     return [...m];
   }, [shown]);
   return <div className="denom-site org-site bl-site" id="top">
-    <Masthead/>
+    <Masthead count={false}/>
     <main className="org-main bl-main">
       <div className="bl-tools">
         <label className="bl-search"><span className="sr-only">Search bishops</span>
-          <input id="bl-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by name or church" autoComplete="off"/>
+          <input id="bl-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by name" autoComplete="off"/>
         </label>
       </div>
       {!letters.length && <p className="bl-empty">No bishop matches “{query}”.</p>}
