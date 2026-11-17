@@ -1663,7 +1663,6 @@ function Participant({
       />
     );
   const bishop = state.directory.find((b) => b.id === current.data.bishopId);
-  const pastorCount = state.rosters.filter((r) => r.year === state.year && r.bishopId === actor.id && r.status === "active").length;
   // Right after finishing: one confirmation card, then the profile (which is also what every later sign-in shows).
   if (startedHere && !viewedProfile)
     return (
@@ -1676,7 +1675,6 @@ function Participant({
               ? `Your registration has been confirmed. You are in good standing for ${state.year}.`
               : "Your registration has been submitted. The office is reviewing it, and your status will appear on your profile."}
             {current.payment === "verified" ? " Your payment has been received." : ""}
-            {pastorCount ? ` ${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded.` : ""}
           </p>
           <button className="reg-primary" onClick={() => setViewedProfile(true)}>View my profile →</button>
           {PREVIEW && current.data.role === "bishop" && (
@@ -1764,7 +1762,7 @@ function Participant({
                 : current.status === "denied" || current.resubmit
                   ? current.bishopNote || "Please get in touch with the office for details."
                   : current.status === "pending"
-                    ? `${current.payment === "verified" ? "Your payment has been received. " : ""}${pastorCount ? `${pastorCount} pastor${pastorCount === 1 ? "" : "s"} uploaded. ` : ""}The office is reviewing your registration. Once it has been approved, your status will appear here. You can add more pastors under “My pastors” at any time.`
+                    ? `${current.payment === "verified" ? "Your payment has been received. " : ""}The office is reviewing your registration. Once it has been approved, your status will appear here.`
                     : current.status === "removed"
                       ? "Please speak to your bishop or the office about this change. Your registration and payment history are kept on file."
                       : `${current.payment === "verified" ? "Your payment has been received. " : ""}Your bishop and the office are reviewing your registration. Once it has been confirmed, your status will appear here.`}
@@ -1937,9 +1935,7 @@ function RegistrationForm({
   const fees = feesOf(state);
   const steps = editing
     ? ["details", "review"]
-    : data.role === "bishop"
-      ? ["details", "pastors", "payment", "review"]
-      : ["details", "payment", "review"];
+    : ["details", "payment", "review"]; // bishops no longer list their pastors when registering (17 Nov)
   const review = step === "review";
   const stepLabel = { details: "Your details", pastors: "Pastors Under Your Oversight", payment: "Payment", review: "Review" };
   const next = () => setStep(steps[Math.min(steps.indexOf(step) + 1, steps.length - 1)]);
@@ -2407,17 +2403,6 @@ function RegistrationForm({
                 </button>
               </section>
               <ProfileDetails record={{ data }} directory={state.directory} />
-              {!editing && data.role === "bishop" && (
-                <section className="reg-review-block">
-                  <h3>Pastors Under Your Oversight <b>{rosterRows.length}</b></h3>
-                  {rosterRows.length ? (
-                    <RowsTable rows={rosterRows} />
-                  ) : (
-                    <p className="reg-small">None added yet. You can add them under My pastors.</p>
-                  )}
-                  <button type="button" className="reg-text" onClick={() => setStep("pastors")}>Change</button>
-                </section>
-              )}
               {!editing && (
                 <section className="reg-review-block">
                   <h3>Payment</h3>
