@@ -11,7 +11,7 @@ import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import { paymentJson, createQuote, readQuote, checkoutReturnUrl, validateQuotedPayment } from './paystack.mjs';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
-import { createAutoPhoto } from './auto-photo.mjs';
+import { createAutoPhoto, testGeminiKey } from './auto-photo.mjs';
 import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline } from '../registration/model.mjs';
 import { canonicalPersonName } from '../registration/name-corrections.mjs';
 import { transaction, readState, persistState } from './database.mjs';
@@ -384,6 +384,18 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           throw new HttpError(400, `The email service refused: ${String(error?.response || error?.message || error).slice(0, 300)}. From address in use: ${config.from || '(none)'}`);
         }
         return json({ ok: true, to: actor.email, from: config.from });
+      }
+      if (path === '/api/registration/settings/gemini-test' && method === 'POST') {
+        // The office sees Google's own answer, and how the automatic photos are going.
+        if (!actor.office) throw new HttpError(403, 'Office access required.');
+        await applySettings(config, pool);
+        const state = await transaction(pool, conn => readState(conn));
+        const mine = state.registrations.filter(r => r.year === state.year);
+        const counts = { edited: mine.filter(r => r.autoPhoto).length, notEdited: mine.filter(r => r.autoPhotoNote).length, failed: mine.filter(r => r.autoPhotoError).length, lastError: mine.map(r => r.autoPhotoError).filter(Boolean).at(-1) || '' };
+        try { await testGeminiKey({ fetcher, key: config.geminiKey }); }
+        catch (error) { throw new HttpError(400, `Google refused: ${String(error?.message || error).replace(/^Gemini \d+: /, '').slice(0, 300)} · Photos so far: ${counts.edited} edited, ${counts.failed} failed${counts.lastError ? ` (last problem: ${counts.lastError})` : ''}.`); }
+        autoPhoto.queue();
+        return json({ ok: true, ...counts });
       }
       if (path === '/api/registration/settings/telegram-test' && method === 'POST') {
         // The office checks the Telegram link right after pasting the token and chat ID.

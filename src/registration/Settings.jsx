@@ -234,6 +234,10 @@ export default function Settings({ run, state, perform, actor }) {
         <button type="button" className="reg-secondary" onClick={() => run(async () => { const r = await api.emailTest(); setTelegramResult(`Test email sent to ${r.to}.`); }, 'Email is working.')}>Send me a test email</button>
         {telegramResult && <p className="reg-small">{telegramResult}</p>}
       </>}
+      {title === 'Photos' && <>
+        <button type="button" className="reg-secondary" disabled={!settings.find(s => s.key === 'GEMINI_API_KEY')?.set} onClick={() => run(async () => { const r = await api.geminiTest(); setTelegramResult(`The Gemini key works: a test photo was edited. Photos so far: ${r.edited} edited, ${r.failed} failed${r.lastError ? ` (last problem: ${r.lastError})` : ''}. Any photos waiting are being edited now.`); }, 'The Gemini key works.')}>Test the Gemini key</button>
+        {telegramResult && <p className="reg-small">{telegramResult}</p>}
+      </>}
       {title === 'Telegram' && <>
         <button type="button" className="reg-secondary" disabled={!settings.find(s => s.key === 'TELEGRAM_CHAT_ID')?.set} onClick={() => run(async () => { const r = await api.telegramTest(); setTelegramResult(`Test message posted to “${r.chat}”.`); }, 'Telegram is connected.')}>Send a Telegram test message</button>
         {telegramResult && <p className="reg-small">{telegramResult}</p>}

@@ -223,6 +223,7 @@ export const paystackVerify = (reference) => server("paystack/verify", { referen
 
 export const telegramTest = () => server('settings/telegram-test', {});
 export const emailTest = () => server('settings/email-test', {});
+export const geminiTest = () => server('settings/gemini-test', {});
 
 export const apiKeysAvailable = mysqlBackend;
 export const listKeys = () => server('keys');

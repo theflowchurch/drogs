@@ -97,6 +97,15 @@ export function needsAutoPhoto(r, refs = new Map()) {
   return (same ? Number(r.autoPhotoTries || 0) : 0) < MAX_TRIES;
 }
 
+// The office's "Test the Gemini key" (19 Nov): one real small edit of an example
+// portrait, so the key is proven for image editing, not just accepted.
+export async function testGeminiKey({ fetcher = fetch, key }) {
+  if (!key) throw Error('No Gemini key is saved yet.');
+  const examples = JSON.parse(await readFile(examplesFile, 'utf8'));
+  const photo = await readFile(new URL(examples['pastor-male-ud'][0], root));
+  const edited = await editPortrait({ fetcher, key, photo: await sharp(photo).resize({ width: 400 }).toBuffer(), group: 'pastor-male-ud' });
+  return { ok: true, bytes: edited.length };
+}
 export function createAutoPhoto({ pool, config, storage, references = [], fetcher = fetch, logger = console }) {
   let refs = new Map(references.map((p) => [p.id, p]));
   const running = new Set();
@@ -117,7 +126,7 @@ export function createAutoPhoto({ pool, config, storage, references = [], fetche
     const tries = (r.autoPhotoSource === source && r.autoPhotoGroup === group ? Number(r.autoPhotoTries || 0) : 0) + 1;
     // Only while the person's photo and details are still the ones looked at.
     const still = (x) => (sourceFor(x, refs)?.source === source && groupOf(x) === group);
-    const done = (patch) => save(r.userId, r.year, (x) => (still(x) ? { autoPhotoSource: source, autoPhotoGroup: group, autoPhotoTries: tries, autoPhotoAt: new Date().toISOString(), autoPhoto: '', autoPhotoOk: false, autoPhotoFailed: false, autoPhotoNote: '', ...patch } : {}));
+    const done = (patch) => save(r.userId, r.year, (x) => (still(x) ? { autoPhotoSource: source, autoPhotoGroup: group, autoPhotoTries: tries, autoPhotoAt: new Date().toISOString(), autoPhoto: '', autoPhotoOk: false, autoPhotoFailed: false, autoPhotoNote: '', autoPhotoError: '', ...patch } : {}));
     try {
       const original = ours ? await readFile(new URL(source.slice(6), root)) : await storage.bytes(source);
       if (!original) throw Error('the photo could not be read');
@@ -137,7 +146,7 @@ export function createAutoPhoto({ pool, config, storage, references = [], fetche
     } catch (error) {
       logger.error('Automatic photo edit failed:', error?.message || error);
       // After the last try the person keeps the photo they had; nobody is asked to act.
-      await done({ autoPhotoFailed: tries >= MAX_TRIES }).catch(() => {});
+      await done({ autoPhotoFailed: tries >= MAX_TRIES, autoPhotoError: String(error?.message || error).slice(0, 240) }).catch(() => {});
       return tries >= MAX_TRIES ? 'gave-up' : 'retry';
     } finally { running.delete(r.userId); }
   }
