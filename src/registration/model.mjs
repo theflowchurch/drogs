@@ -173,7 +173,9 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   // denomination on the record (Darius Phiri, Calvince Dondi). Blanks come off.
   { id: 'blank-denominations-2026-11-18', blankDenominations: true },
   // Pastors already waiting when the bishop's deadline starts get a fresh two weeks (office, 19 Nov).
-  { id: 'claim-deadline-fresh-start-2026-11-19', freshDeadline: true }];
+  { id: 'claim-deadline-fresh-start-2026-11-19', freshDeadline: true },
+  // Joshua Gbafa registered without his middle name and was not linked to his listed record (office, 19 Nov).
+  { id: 'link-joshua-gbafa-2026-11-19', link: [{ userId: '6aa10206-ca20-4fae-a4ed-38504c43a70c', referenceId: 'S7f891fda' }] }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -213,6 +215,12 @@ export function syncRoll(state, people, version) {
   if (fixes.some(f => f.blankDenominations)) {
     for (const [id, o] of Object.entries(next.overrides)) if (o && o.denomination === '') { const { denomination, ...rest } = o; next.overrides[id] = rest; }
     for (const r of next.registrations || []) if (r.data && !r.data.denomination && ORGANIZATION_DENOMINATION[r.data.organization]) r.data = { ...r.data, denomination: ORGANIZATION_DENOMINATION[r.data.organization] };
+  }
+  for (const fix of fixes) for (const { userId, referenceId } of fix.link || []) {
+    if (!ids.has(referenceId)) continue;
+    next.profiles = (next.profiles || []).map(p => p.id === userId ? { ...p, referenceId } : p);
+    next.registrations = (next.registrations || []).map(r => r.userId === userId ? { ...r, data: { ...r.data, referenceId } } : r);
+    for (const r of next.registrations) if (r.userId === userId && r.year === next.year) syncReference(next, r);
   }
   if (fixes.some(f => f.freshDeadline)) {
     const start = new Date().toISOString();

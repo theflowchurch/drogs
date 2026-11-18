@@ -955,3 +955,18 @@ test("pastors already waiting when the deadline starts get a fresh two weeks (19
   assert.deepEqual(claimDeadlines(next).expire, [], "nobody already waiting is removed on day one");
   assert.equal(syncRoll(next, [], "fresh-deadline-test"), null, "runs once");
 });
+
+test("Joshua Gbafa's registration is linked to his listed record, once (19 Nov)", async () => {
+  const { syncRoll } = await import("../../src/registration/model.mjs");
+  const uid = "6aa10206-ca20-4fae-a4ed-38504c43a70c";
+  const refs = [{ id: "S7f891fda", role: "pastor", name: "Joshua Korsi Gbafa", title: "Pastor", organization: "FLOW", denomination: "FLOW", image: "assets/portraits/S7f891fda-c56525b1.webp" }];
+  const s = { ...emptyState(), year: 2027, profiles: [{ id: uid, role: "pastor", name: "Joshua Gbafa" }], registrations: [{ userId: uid, year: 2027, status: "confirmed", payment: "verified", manual: true, data: { role: "pastor", name: "Joshua Gbafa", organization: "FLOW", denomination: "FLOW", city: "Online", country: "Ghana", photo: `${uid}/portrait/x.webp` } }] };
+  const next = syncRoll(s, refs, "link-test");
+  assert.equal(next.registrations[0].data.referenceId, "S7f891fda");
+  assert.equal(next.profiles[0].referenceId, "S7f891fda");
+  assert.equal(s.registrations[0].data.referenceId, undefined, "the earlier state is untouched");
+  const roll = publicRoll(next, refs);
+  assert.equal(roll.length, 1);
+  assert.equal(roll[0].referenceId, "S7f891fda", "one card, on his listed record");
+  assert.equal(roll[0].image, "assets/portraits/S7f891fda-c56525b1.webp", "with the photo we have");
+});
