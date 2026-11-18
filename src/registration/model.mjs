@@ -180,7 +180,9 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   { id: 'walter-edited-photo-2026-11-19', editedPhoto: ['903239e8-aa44-455f-8c15-360c1c0a69ec'] },
   // Three bishops on the Order of Bishops whose records said otherwise (office, 19 Nov).
   { id: 'three-bishops-2026-11-19', makeBishops: ['PN2177b36054d9', 'P5088'],
-    addRecords: [{ id: 'Xstanleyoseibonsu', role: 'bishop', name: 'Stanley Osei-Bonsu', title: 'Bishop', gender: 'male', organization: 'United Denominations', denomination: 'Deep Love Church International', group: 'UD Europe', image: 'assets/organisations/people/stanley-osei-bonsu.webp', yearConsecrated: '2026', city: '', country: '' }] }];
+    addRecords: [{ id: 'Xstanleyoseibonsu', role: 'bishop', name: 'Stanley Osei-Bonsu', title: 'Bishop', gender: 'male', organization: 'United Denominations', denomination: 'Deep Love Church International', group: 'UD Europe', image: 'assets/organisations/people/stanley-osei-bonsu.webp', yearConsecrated: '2026', city: '', country: '' }] },
+  // Confirmed pastors whose line on their bishop's list is missing get it back, once (Walter Woelle, 19 Nov).
+  { id: 'heal-bishop-lists-2026-11-19', healLists: true }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -237,6 +239,17 @@ export function syncRoll(state, people, version) {
   for (const fix of fixes) for (const rec of fix.addRecords || [])
     if (!(next.extraReferences || []).some(x => x.id === rec.id || (x.role === rec.role && normalName(x.name) === normalName(rec.name))))
       next.extraReferences = [...(next.extraReferences || []), rec];
+  if (fixes.some(f => f.healLists)) {
+    const rows = [...(next.rosters || [])];
+    for (const r of next.registrations || []) {
+      if (r.year !== next.year || r.data?.role !== 'pastor' || r.status !== 'confirmed' || r.holdMatch) continue;
+      if (rows.some(x => x.year === r.year && x.pastorId === r.userId && x.status === 'active')) continue;
+      const owner = bishopKeyed(next, r.data.bishopId);
+      if (!owner) continue;
+      rows.push({ id: crypto.randomUUID(), bishopId: owner.id, year: r.year, name: r.data.name, dob: r.data.dob, email: r.data.email, phone: r.data.phone, status: 'active', pastorId: r.userId, confirmedBy: 'system', confirmedAt: new Date().toISOString(), createdAt: new Date().toISOString() });
+    }
+    next.rosters = rows;
+  }
   if (fixes.some(f => f.freshDeadline)) {
     const start = new Date().toISOString();
     next.registrations = (next.registrations || []).map(r => r.data?.role === 'pastor' && r.status === 'unclaimed' && !r.claimWaitFrom ? { ...r, claimWaitFrom: start } : r);

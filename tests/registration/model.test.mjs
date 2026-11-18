@@ -1058,3 +1058,14 @@ test("the three bishops on the Order of Bishops are bishops in the records too (
   for (const n of ["Allan Opiyo", "Heywood Osei Bonsu", "Stanley Osei-Bonsu"]) assert.equal(people.find(p => p.name === n)?.role, "bishop", n);
   assert.equal(people.filter(p => p.role === "bishop" && p.title !== "Lay President" && !["B194"].includes(p.id)).length >= 292, true);
 });
+
+test("a confirmed pastor missing from their bishop's list is put back on it when the site updates (19 Nov)", async () => {
+  const { syncRoll } = await import("../../src/registration/model.mjs");
+  const refs = [{ id: "B334", role: "bishop", name: "Nina Masuku", title: "Mother", organization: "FLOW", image: "x" }];
+  const s = { ...emptyState(), year: 2027, profiles: [{ id: "nina", role: "bishop", referenceId: "B334", name: "Nina Masuku", bishopApproved: true }, { id: "w", role: "pastor", name: "Walter Woelle" }],
+    registrations: [{ userId: "nina", year: 2027, status: "confirmed", payment: "verified", data: { role: "bishop", name: "Nina Masuku", referenceId: "B334", organization: "FLOW" } },
+      { userId: "w", year: 2027, status: "confirmed", payment: "verified", data: { role: "pastor", name: "Walter Woelle", organization: "FLOW", bishopId: "B334" } }], rosters: [] };
+  const next = syncRoll(s, refs, "heal");
+  assert.ok(next.rosters.some(x => x.pastorId === "w" && x.bishopId === "nina" && x.status === "active"), "Walter is on Mother Nina's list");
+  assert.equal(s.rosters.length, 0, "the earlier state is untouched, so the new line is saved");
+});
