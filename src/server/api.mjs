@@ -2,7 +2,7 @@ import { denominationSite } from '../registration/denomination-sites.mjs';
 import { fellowshipByPath } from '../registration/fellowship.mjs';
 import { readBody, jsonBody } from './api-body.mjs';
 import { createManagementApi } from './management-api.mjs';
-import { readAccounts, readLogins, removeAccounts } from './accounts.mjs';
+import { readAccounts, readLogins, removeAccounts, changeAccountEmail } from './accounts.mjs';
 import { createKeyService } from './api-keys.mjs';
 import { createSupport } from './support.mjs';
 import { applySettings, bootstrapSettings, describeSettings, officeMembers, readSettings, writeSettings } from './settings.mjs';
@@ -14,7 +14,8 @@ import { brandedMail } from './mail.mjs';
 import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor } from '../registration/model.mjs';
 import { canonicalPersonName } from '../registration/name-corrections.mjs';
 import { transaction, readState, persistState } from './database.mjs';
-import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit, digest } from './auth.mjs';
+import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit, digest, checkPassword } from './auth.mjs';
+import { randomInt } from 'node:crypto';
 import { assertOwnedMedia, assignedPortrait, canReadMedia } from './storage.mjs';
 import { photoProgress, photoProgressGroups } from '../registration/photo-progress.mjs';
 import { inGhana, paymentReady } from '../registration/manual-payments.mjs';
@@ -213,6 +214,47 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (['/api/registration/accounts', '/api/registration/logins'].includes(path) && method === 'GET') {
         if (!actor.office) throw new HttpError(403, 'Office access required.');
         return json(await (path.endsWith('/accounts') ? readAccounts : readLogins)(pool, config, url));
+      }
+      // The office changes someone's sign-in email (e.g. they mistyped it at sign-up).
+      if (path === '/api/registration/accounts/email' && method === 'POST') {
+        if (!actor.office) throw new HttpError(403, 'Office access required.');
+        const { user, email } = await jsonBody(request);
+        const done = await changeAccountEmail(pool, config, user, email);
+        publicCache.at = 0;
+        return json({ ok: true, ...done });
+      }
+      // A member changes their own sign-in email: password, then a code sent to the new address.
+      if (path === '/api/registration/account/email-request' && method === 'POST') {
+        const { email, password } = await jsonBody(request);
+        const next = emailAddress(email);
+        await rateLimit(pool, config, `email-change:${actor.id}`, 5, 3600000);
+        const [[pw]] = await pool.execute('SELECT password_hash FROM dr_passwords WHERE user_id=?', [actor.id]);
+        if (pw && !(await checkPassword(String(password || ''), pw.password_hash))) throw new HttpError(401, 'Your current password is not correct.');
+        if (next === actor.email) throw new HttpError(400, 'That is already your email address.');
+        const [[taken]] = await pool.execute('SELECT id FROM dr_users WHERE email=?', [next]);
+        if (taken) throw new HttpError(409, 'That email address is already used by another account.');
+        const key = `chg:${digest(config.secret, `email-change:${actor.id}:${next}`).slice(0, 40)}`, token = String(randomInt(0, 1000000)).padStart(6, '0');
+        await pool.execute('INSERT INTO dr_otp (email,code_hash,expires_at,attempts) VALUES (?,?,?,0) ON DUPLICATE KEY UPDATE code_hash=VALUES(code_hash),expires_at=VALUES(expires_at),attempts=0', [key, digest(config.secret, `otp:${key}:${token}`), Date.now() + 600000]);
+        try {
+          await mailer.sendMail(brandedMail({ from: config.from, to: next, subject: 'Confirm your new Kuriake Castle email',
+            text: `Your code to confirm this email address for your Kuriake Castle account is ${token}. It expires in 10 minutes.\n\nIf you did not ask to change your email, you can ignore this message.`,
+            html: `<p style="margin:0 0 6px;color:#6a7283">Your code to confirm this email address</p><p style="margin:0 0 18px;font:700 36px/1 -apple-system,Arial,sans-serif;letter-spacing:6px;color:#13324c">${token}</p><p style="margin:0 0 12px">It expires in 10 minutes. Enter it on your Kuriake Castle profile.</p><p style="margin:0;color:#6a7283;font-size:13px">If you did not ask to change your email, you can ignore this message.</p>` }));
+        } catch (error) { throw new HttpError(503, `The code could not be sent to that address. Check it is typed correctly, or contact the office. (${String(error?.message || '').slice(0, 120)})`); }
+        return json({ ok: true });
+      }
+      if (path === '/api/registration/account/email-confirm' && method === 'POST') {
+        const { email, token } = await jsonBody(request);
+        const next = emailAddress(email);
+        const key = `chg:${digest(config.secret, `email-change:${actor.id}:${next}`).slice(0, 40)}`;
+        const [[otp]] = await pool.execute('SELECT * FROM dr_otp WHERE email=?', [key]);
+        if (!otp || Number(otp.expires_at) <= Date.now()) throw new HttpError(401, 'That code has expired. Please send a new code.');
+        if (otp.attempts >= 3) throw new HttpError(429, 'That code was entered incorrectly 3 times. Please send a new code, or contact the office.');
+        const a = Buffer.from(otp.code_hash, 'hex'), b = Buffer.from(digest(config.secret, `otp:${key}:${String(token || '')}`), 'hex');
+        if (a.length !== b.length || !timingSafeEqual(a, b)) { await pool.execute('UPDATE dr_otp SET attempts=attempts+1 WHERE email=?', [key]); throw new HttpError(401, 'That code is not correct. Please check the email and try again.'); }
+        await pool.execute('DELETE FROM dr_otp WHERE email=?', [key]);
+        const done = await changeAccountEmail(pool, config, actor.id, next);
+        publicCache.at = 0;
+        return json({ ok: true, ...done });
       }
       if (path === '/api/registration/accounts/remove' && method === 'POST') {
         if (!actor.office) throw new HttpError(403, 'Office access required.');

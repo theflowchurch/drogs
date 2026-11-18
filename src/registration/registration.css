@@ -4322,3 +4322,8 @@ input[type="date"] {
 .reg-access-card p { line-height: 1.6; }
 .reg-access-card form { display: grid; gap: 12px; }
 .reg-access-button { display: block; text-align: center; text-decoration: none; margin-top: 12px; }
+.reg-inline-email { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.reg-inline-email input { flex: 1 1 200px; min-width: 0; }
+.reg-email-change { display: grid; gap: 12px; }
+.reg-change-email-open { margin-left: 8px; }
+.reg-card > .reg-receipt-error, .reg-card form .reg-receipt-error { color: #b42318; font-size: 14px; font-weight: 600; margin: 0; }

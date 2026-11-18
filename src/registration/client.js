@@ -231,6 +231,10 @@ export const revokeKey = id => server('keys/revoke', { id });
 
 export const accounts = (search = '', page = 1) => server(`accounts?search=${encodeURIComponent(search)}&page=${page}`);
 export const removeAccounts = (body) => server('accounts/remove', body);
+// Sign-in email changes (17 Nov): the office directly; a member with a code sent to the new address.
+export const officeChangeEmail = (user, email) => server('accounts/email', { user, email });
+export const requestEmailChange = (email, password) => server('account/email-request', { email, password });
+export const confirmEmailChange = (email, token) => server('account/email-confirm', { email, token });
 export const logins = (user, before = '') => server(`logins?user=${encodeURIComponent(user)}&before=${encodeURIComponent(before)}`);
 
 export const supportAvailable = mysqlBackend;

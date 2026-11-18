@@ -7,7 +7,7 @@ const status = value => value === 'not_started' ? 'Not started' : value.replaceA
 export default function Accounts({ run }) {
   const [result, setResult] = useState(null), [search, setSearch] = useState(''), [query, setQuery] = useState('');
   const [history, setHistory] = useState(null), [person, setPerson] = useState(null);
-  const [admins, setAdmins] = useState([]), [newAdmin, setNewAdmin] = useState(''), [revoking, setRevoking] = useState(''), [deleting, setDeleting] = useState('');
+  const [admins, setAdmins] = useState([]), [newAdmin, setNewAdmin] = useState(''), [revoking, setRevoking] = useState(''), [deleting, setDeleting] = useState(''), [emailFor, setEmailFor] = useState(''), [newEmail, setNewEmail] = useState('');
   const seq = useRef(0);
   // Only the latest request may set the table; a slow first load must not overwrite a search.
   const load = (page = 1, term = query) => { const n = ++seq.current; return run(async () => { const r = await api.accounts(term, page); if (n === seq.current) setResult(r); }); };
@@ -34,7 +34,13 @@ export default function Accounts({ run }) {
       <p className="reg-account-note">An account is created when someone first signs in. Deleting an account permanently removes their profile, registration, uploads and login history.</p>
       <p className="reg-account-note">Office accounts cannot be deleted from this page.</p>
       {result && !result.data.length ? <p>No accounts found.</p> : result && <div className="reg-account-table"><table><thead><tr><th>Person</th><th>Account created</th><th>Last login</th><th>Registration</th><th>Activity</th></tr></thead><tbody>{result.data.map(account => <tr key={account.id}>
-        <td><strong>{account.name || 'Name not provided yet'}</strong><span>{account.email}</span><small>{account.office ? 'Office member' : account.role || 'Role not yet selected'}</small></td>
+        <td><strong>{account.name || 'Name not provided yet'}</strong><span>{account.email}</span><small>{account.office ? 'Office member' : account.role || 'Role not yet selected'}</small>
+          {!account.office && (emailFor === account.id
+            ? <form className="reg-inline-email" onSubmit={e => { e.preventDefault(); run(async () => { await api.officeChangeEmail(account.id, newEmail); setEmailFor(''); setNewEmail(''); const n = ++seq.current; const r = await api.accounts(query, 1); if (n === seq.current) setResult(r); }, 'Email changed. They now sign in with the new address.'); }}>
+                <input type="email" required aria-label={`New email for ${account.name || account.email}`} placeholder="New email address" value={newEmail} onChange={e => setNewEmail(e.target.value)} autoFocus />
+                <button className="reg-primary">Save</button><button type="button" className="reg-text" onClick={() => setEmailFor('')}>Cancel</button>
+              </form>
+            : <button type="button" className="reg-text" onClick={() => { setEmailFor(account.id); setNewEmail(account.email); }}>Change email</button>)}</td>
         <td>{date(account.signedUpAt)}</td><td>{date(account.lastLoginAt)}</td><td className="reg-account-status">{status(account.registrationStatus)}</td>
         <td><button className="reg-text" onClick={() => run(async () => { const events = await api.logins(account.id); setPerson(account); setHistory(events); })}>View logins ({account.loginCount})</button>
           {!account.office && (deleting === account.id

@@ -19,7 +19,7 @@ export default function AccessGate() {
   const [next, setNext] = useState('/orderofbishopsingoodstanding/');
   const [step, setStep] = useState('loading'), [standing, setStanding] = useState(null);
   const [mode, setMode] = useState('signin'); // signin | create
-  const [code, setCode] = useState(''), [email, setEmail] = useState(''), [password, setPassword] = useState(''), [confirm, setConfirm] = useState('');
+  const [code, setCode] = useState(''), [email, setEmail] = useState(''), [emailAgain, setEmailAgain] = useState(''), [password, setPassword] = useState(''), [confirm, setConfirm] = useState('');
   const [error, setError] = useState(''), [busy, setBusy] = useState(false);
   const pastors = next.startsWith('/orderofpastorsingoodstanding');
   const signup = `${base}/${pastors ? 'orderofpastorsingoodstanding' : 'orderofbishopsingoodstanding'}/signup/`;
@@ -52,6 +52,7 @@ export default function AccessGate() {
         </form>}
         {step === 'signin' && <form onSubmit={(e) => { e.preventDefault(); run(async () => {
           if (mode === 'create') {
+            if (email.trim().toLowerCase() !== emailAgain.trim().toLowerCase()) throw Error('The two email addresses do not match. Please check them.');
             if (password !== confirm) throw Error('The two passwords do not match. Please type them again.');
             if (password.length < 8) throw Error('Choose a password of at least 8 characters.');
             await api.passwordSignup(email, password, 'general', false);
@@ -64,6 +65,7 @@ export default function AccessGate() {
           <h1>{mode === 'create' ? 'Create an account' : 'Sign in'}</h1>
           <p>{mode === 'create' ? 'You will then complete your registration. Once you are in good standing you can view this page.' : 'Sign in with your Kuriake Castle account to continue.'}</p>
           <label className="reg-field"><span>Email address</span><input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" /></label>
+          {mode === 'create' && <label className="reg-field"><span>Type your email again</span><input type="email" value={emailAgain} onChange={(e) => setEmailAgain(e.target.value)} required autoComplete="off" onPaste={(e) => e.preventDefault()} /></label>}
           <label className="reg-field"><span>{mode === 'create' ? 'Create a password' : 'Password'}</span><input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete={mode === 'create' ? 'new-password' : 'current-password'} /></label>
           {mode === 'create' && <label className="reg-field"><span>Type the password again</span><input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required autoComplete="new-password" /></label>}
           <button className="reg-primary full" disabled={busy}>{busy ? 'Please wait…' : mode === 'create' ? 'Create account →' : 'Sign in →'}</button>

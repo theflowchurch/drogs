@@ -106,7 +106,19 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
       assert.equal((await call('auth/request', '', { email, mode: 'reset' })).status, 200);
       const fresh = mails.filter(m => m.to === email).at(-1).text.match(/code is (\d{6})/)[1];
       assert.equal((await call('auth/reset', '', { email, token: fresh, password: 'third password 3' })).status, 200);
-      assert.equal((await call('auth/login', '', { email, password: 'third password 3' })).status, 200, 'unlocked by the reset');
+      const member = await call('auth/login', '', { email, password: 'third password 3' });
+      assert.equal(member.status, 200, 'unlocked by the reset');
+      // 17 Nov: a member changes their sign-in email: password, then a code sent to the new address.
+      const moved = 'moved-member@example.com';
+      assert.equal((await call('account/email-request', member.cookie, { email: moved, password: 'not my password' })).status, 401);
+      assert.equal((await call('auth/signup', '', { email: 'taken-member@example.com', password: 'taken password 1' })).status, 200);
+      assert.equal((await call('account/email-request', member.cookie, { email: 'taken-member@example.com', password: 'third password 3' })).status, 409, 'an address already in use is refused');
+      assert.equal((await call('account/email-request', member.cookie, { email: moved, password: 'third password 3' })).status, 200);
+      const changeCode = mails.filter(m => m.to === moved).at(-1).text.match(/is (\d{6})/)[1];
+      assert.equal((await call('account/email-confirm', member.cookie, { email: moved, token: changeCode === '000000' ? '111111' : '000000' })).status, 401);
+      assert.equal((await call('account/email-confirm', member.cookie, { email: moved, token: changeCode })).status, 200);
+      assert.equal((await call('auth/login', '', { email: moved, password: 'third password 3' })).status, 200, 'signs in with the new email');
+      assert.equal((await call('auth/login', '', { email, password: 'third password 3' })).status, 401, 'the old email no longer works');
       // Someone who cannot sign in can still reach the office from the sign-in page.
       const help = await call('support-public', '', { message: 'I did not get my reset code.', contact: 'locked-out@example.com' });
       assert.equal(help.status, 200);
@@ -189,6 +201,12 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
       assert.equal((await visit('/orderofbishopsingoodstanding/', `${passed.cookie}; ${bishop.cookie}`)).body, 'page', 'in good standing: the page opens');
     }
     assert.equal((await call('settings', office.cookie, { values: { ORDER_ACCESS_CODE: '' } })).status, 200);
+    // The office changes a mistyped sign-in email directly.
+    assert.equal((await call('accounts/email', bishop.cookie, { user: stranger.data.id, email: 'fixed@example.com' })).status, 403);
+    assert.equal((await call('accounts/email', office.cookie, { user: stranger.data.id, email: 'fixed@example.com' })).status, 200);
+    assert.equal((await call('auth/me', stranger.cookie)).data.email, 'fixed@example.com', 'their session continues under the new address');
+    assert.equal((await call('accounts/email', office.cookie, { user: office.data.id, email: 'x@example.com' })).status, 400, 'office emails are changed under Office access');
+    assert.equal((await call('accounts/email', office.cookie, { user: stranger.data.id, email: 'stranger@example.com' })).status, 200);
     assert.equal((await call('action', pastor.cookie, { name: 'save', payload: profile(bishopPhoto, 'pastor') })).status, 400, 'cannot save another account photo');
     assert.equal((await call('action', pastor.cookie, { name: 'save', payload: profile(pastorPhoto, 'pastor') })).status, 200);
     assert.equal((await call('action', pastor.cookie, { name: 'submit', payload: { ...profile(pastorPhoto, 'pastor'), country: 'United States' } })).status, 400, 'international registration cannot bypass the required payment receipt');

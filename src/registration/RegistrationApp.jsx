@@ -1220,6 +1220,29 @@ export default function RegistrationApp({
 // An error that asks someone to contact the office can open this form straight
 // away, already filled in (17 Nov): window "kc-contact-office" with the text.
 export const contactOffice = (text, contact = "") => window.dispatchEvent(new CustomEvent("kc-contact-office", { detail: { text, contact } }));
+// A member changes the email they sign in with (17 Nov): current password, then
+// a code sent to the new address proves it is theirs and typed correctly.
+function EmailChange({ actor, run, refresh, onDone }) {
+  const [email, setEmail] = useState(""), [again, setAgain] = useState(""), [password, setPassword] = useState(""), [code, setCode] = useState(""), [sent, setSent] = useState(false), [problem, setProblem] = useState("");
+  return <form className="reg-email-change" onSubmit={(e) => { e.preventDefault(); setProblem("");
+    if (!sent && email.trim().toLowerCase() !== again.trim().toLowerCase()) { setProblem("The two email addresses do not match."); return; }
+    run(async () => {
+      if (!sent) { await api.requestEmailChange(email, password); setSent(true); return; }
+      await api.confirmEmailChange(email, code);
+      await refresh?.();
+      onDone?.();
+    }, sent ? "Your email has been changed. Use the new address to sign in from now on." : undefined);
+  }}>
+    <p className="reg-small">You sign in with <b>{actor.email}</b>. We will send a code to the new address to make sure it is yours and typed correctly.</p>
+    <Field label="New email address"><input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} readOnly={sent} autoComplete="email" /></Field>
+    {!sent && <Field label="Type the new email again"><input type="email" required value={again} onChange={(e) => setAgain(e.target.value)} autoComplete="off" /></Field>}
+    {!sent && <Field label="Your current password"><input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" /></Field>}
+    {sent && <Field label={`Code sent to ${email}`}><input value={code} onChange={(e) => setCode(e.target.value)} inputMode="numeric" pattern="[0-9]{6}" required autoComplete="one-time-code" /></Field>}
+    {sent && <p className="reg-small">Not there? Check your spam folder. <button type="button" className="reg-text" onClick={() => { setSent(false); setCode(""); }}>Change the address or send a new code</button></p>}
+    {problem && <p className="reg-receipt-error" role="alert">{problem}</p>}
+    <button className="reg-primary full">{sent ? "Confirm new email →" : "Send code to the new email →"}</button>
+  </form>;
+}
 function HelpButton({ actor, run }) {
   const [open, setOpen] = useState(false),
     [message, setMessage] = useState(""),
@@ -1342,7 +1365,7 @@ function PasswordForm({ signup, onSwitch, run, busy, onActor }) {
   const demo = useContext(DemoContext), entrance = useContext(EntranceContext);
   const [view, setView] = useState(signup ? "signup" : "signin"); // signup | signin | forgot | reset
   const [email, setEmail] = useState(() => demo?.email || ""), [password, setPassword] = useState(() => demo ? "demonstration" : ""), [confirm, setConfirm] = useState(() => demo ? "demonstration" : "");
-  const [code, setCode] = useState(""), [remember, setRemember] = useState(false), [problem, setProblem] = useState("");
+  const [code, setCode] = useState(""), [remember, setRemember] = useState(false), [problem, setProblem] = useState(""), [emailAgain, setEmailAgain] = useState(() => demo?.email || "");
   const [paused, setPaused] = useState(null);
   useEffect(() => {
     if (!signup) return;
@@ -1358,6 +1381,8 @@ function PasswordForm({ signup, onSwitch, run, busy, onActor }) {
   const twice = view === "signup" || view === "reset";
   const submit = (e) => {
     e.preventDefault(); setProblem("");
+    // A mistyped email at sign-up would lock the person out of a password reset (17 Nov).
+    if (view === "signup" && email.trim().toLowerCase() !== emailAgain.trim().toLowerCase()) { setProblem("The two email addresses do not match. Please check them."); return; }
     if (twice && password !== confirm) { setProblem("The two passwords do not match. Please type them again."); return; }
     if (twice && password.length < 8) { setProblem("Choose a password of at least 8 characters."); return; }
     run(async () => {
@@ -1376,6 +1401,9 @@ function PasswordForm({ signup, onSwitch, run, busy, onActor }) {
       <Field label="Email address">
         <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} readOnly={view === "reset"} autoComplete="email" />
       </Field>
+      {view === "signup" && <Field label="Type your email again">
+        <input type="email" required value={emailAgain} onChange={(e) => setEmailAgain(e.target.value)} autoComplete="off" onPaste={(e) => e.preventDefault()} />
+      </Field>}
       {view === "reset" && <Field label="Code from your email">
         <input value={code} onChange={(e) => setCode(e.target.value)} autoComplete="one-time-code" inputMode="numeric" required pattern="[0-9]{6}" />
       </Field>}
@@ -1680,7 +1708,7 @@ function Participant({
   const previous = state.registrations
     .filter((r) => r.userId === actor.id && r.year < state.year)
     .sort((a, b) => b.year - a.year)[0];
-  const [editing, setEditing] = useState(false), [editDetails, setEditDetails] = useState(false);
+  const [editing, setEditing] = useState(false), [editDetails, setEditDetails] = useState(false), [changeEmail, setChangeEmail] = useState(false);
   // The thank-you is for the moment of finishing; anyone returning later sees their profile.
   const [startedHere] = useState(() => !current || current.status === "draft");
   const [viewedProfile, setViewedProfile] = useState(false);
@@ -1815,6 +1843,12 @@ function Participant({
             <button className="reg-secondary" onClick={() => setEditDetails(true)}>
               Edit my details
             </button>
+          )}
+          {api.passwordAuth() && <button className="reg-secondary reg-change-email-open" onClick={() => setChangeEmail(true)}>Change my email</button>}
+          {changeEmail && (
+            <Dialog title="Change my email" onClose={() => setChangeEmail(false)}>
+              <EmailChange actor={actor} run={run} refresh={refresh} onDone={() => setChangeEmail(false)} />
+            </Dialog>
           )}
           {editDetails && (
             <Dialog title="Edit my details" onClose={() => setEditDetails(false)}>

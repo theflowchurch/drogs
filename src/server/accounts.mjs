@@ -1,4 +1,4 @@
-import { HttpError } from './auth.mjs';
+import { HttpError, emailAddress } from './auth.mjs';
 export async function readAccounts(pool, config, url) {
   const search = (url.searchParams.get('search') || '').trim();
   const page = Number(url.searchParams.get('page') || 1);
@@ -42,4 +42,26 @@ export async function removeAccounts(pool, config, actor, body) {
   for (const [table, column] of [['dr_rosters', 'bishop_id'], ['dr_registrations', 'user_id'], ['dr_profiles', 'id'], ['dr_sessions', 'user_id'], ['dr_logins', 'user_id'], ['dr_account_activity', 'user_id'], ['dr_media', 'owner_id'], ['dr_passwords', 'user_id'], ['dr_login_failures', 'user_id'], ['dr_users', 'id']])
     await run(`DELETE FROM ${table} WHERE ${column} IN (${marks})`);
   return { removed: ids.length };
+}
+// Changing the email someone signs in with (17 Nov). The office may do it
+// directly; a member does it after proving the new address with a code. The
+// email on their registration follows, so codes and notices go to the new one.
+export async function changeAccountEmail(pool, config, userId, value) {
+  const email = emailAddress(value);
+  if (typeof userId !== 'string' || !userId || userId.length > 36) throw new HttpError(400, 'Which account?');
+  const { transaction, readState, persistState } = await import('./database.mjs');
+  return transaction(pool, async conn => {
+    const [[user]] = await conn.execute('SELECT id,email FROM dr_users WHERE id=? FOR UPDATE', [userId]);
+    if (!user) throw new HttpError(404, 'That account no longer exists.');
+    if (config.admins.includes(user.email)) throw new HttpError(400, 'Office emails are changed under Office access.');
+    if (user.email === email) return { email };
+    const [[taken]] = await conn.execute('SELECT id FROM dr_users WHERE email=?', [email]);
+    if (taken) throw new HttpError(409, 'That email address is already used by another account.');
+    await conn.execute('UPDATE dr_users SET email=? WHERE id=?', [email, userId]);
+    const before = await readState(conn, true), after = structuredClone(before);
+    for (const r of after.registrations) if (r.userId === userId) r.data = { ...r.data, email };
+    for (const p of after.profiles) if (p.id === userId) p.email = email;
+    await persistState(conn, before, after);
+    return { email };
+  });
 }
