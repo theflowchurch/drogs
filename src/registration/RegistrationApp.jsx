@@ -3939,8 +3939,10 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
       list.forEach((q) => taken.add(q.id));
       blocks.push({ bishop: b, pastors: list });
     }
-    let k = 0;
-    const number = (q) => ({ ...q, n: ++k });
+    // As on the Bishops tab (19 Nov): a pastor's number is their place in surname
+    // order among all the pastors, wherever they are shown on the page.
+    const pastorRank = new Map(roll.filter((q) => q.role === "pastor" || isLay(q)).sort(byRank).map((q, i) => [q.id, i + 1]));
+    const number = (q) => ({ ...q, n: pastorRank.get(q.id) ?? q.n });
     // Approved bishops with pastors lead; every other bishop (not yet approved, or without pastors) sits at the very bottom as a circle.
     const withPastors = blocks.filter((x) => x.pastors.length && x.bishop.standing !== false).map((x) => ({ ...x, pastors: x.pastors.map(number) }));
     const alone = blocks.filter((x) => !x.pastors.length || x.bishop.standing === false).map((x) => x.bishop);
