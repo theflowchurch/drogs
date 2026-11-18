@@ -194,6 +194,7 @@ export default function Settings({ run, state, perform, actor }) {
     ['Email', 'Sign-in emails, bulk emails and issue reports', ['RESEND_API_KEY', 'SMTP_FROM', 'SUPPORT_EMAIL']],
     ['Payments', 'Paystack card and mobile money payments', ['PAYSTACK_PUBLIC_KEY', 'PAYSTACK_SECRET_KEY']],
     ['Telegram', 'Receive system issue alerts on Telegram', ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID']],
+    ['Photos', 'Automatic editing of new photos to the official look (Gemini)', ['GEMINI_API_KEY']],
     ['Photo storage', 'Storage for uploaded photos and payment receipts', ['R2_ACCOUNT_ID', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY']],
     ['Access and public page', 'Manage office access and what appears on the public directory', ['ADMIN_ACCESS_CODE', 'ORDER_ACCESS_CODE', 'PUBLIC_DIRECTORY_SOURCE', 'PUBLIC_PHOTOS']],
   ];
