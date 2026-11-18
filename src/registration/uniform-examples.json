@@ -1,0 +1,52 @@
+{
+ "bishop-male": [
+  "assets/portraits/B1-90f34053.webp",
+  "assets/portraits/B100-45dfe725.webp"
+ ],
+ "bishop-sister": [
+  "assets/portraits/B101-f7c8a735.webp",
+  "assets/portraits/B125-af041e19.webp"
+ ],
+ "bishop-mother": [
+  "assets/portraits/B127-f6caab8f.webp",
+  "assets/portraits/B187-1771ab5d.webp"
+ ],
+ "pastor-female-ud": [
+  "assets/portraits/P1011-294e97d5.webp",
+  "assets/portraits/P1015-a758046c.webp"
+ ],
+ "pastor-male-ud": [
+  "assets/portraits/P1002-1fc91b38.webp",
+  "assets/portraits/P1007-bc09f96c.webp"
+ ],
+ "rev-male-ud": [
+  "assets/portraits/P1004-abf01ad1.webp",
+  "assets/portraits/P1032-88c86224.webp"
+ ],
+ "rev-female-ud": [
+  "assets/portraits/P1092-8bc7ce75.webp",
+  "assets/portraits/P1813-d08b8634.webp"
+ ],
+ "pastor-female-firstlove": [
+  "assets/portraits/P127-34d76203.webp",
+  "assets/portraits/P1607-92718fc1.webp"
+ ],
+ "pastor-male-firstlove": [
+  "assets/portraits/P1056-155184dd.webp",
+  "assets/portraits/P1442-926bc503.webp"
+ ],
+ "rev-male-firstlove": [
+  "assets/portraits/P1831-3b16b5a6.webp",
+  "assets/portraits/P2515-b9cd8284.webp"
+ ],
+ "rev-female-firstlove": [
+  "assets/portraits/P4680-119f02a6.webp",
+  "assets/portraits/Scc751a83-7a3fb1d4.webp"
+ ],
+ "pastor-male-flow": [
+  "assets/portraits/PNb8ebe0e70952-852d9e28cc71.webp"
+ ],
+ "pastor-female-flow": [
+  "assets/portraits/PN5fdb88285737-f41e6c72.webp"
+ ]
+}

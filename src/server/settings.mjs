@@ -9,6 +9,7 @@ export const SETTINGS = [
   ['SMTP_FROM', 'From address', 'e.g. Kuriake Castle <no-reply@notifications.kuriakecastle.org>'],
   ['PAYSTACK_PUBLIC_KEY', 'Paystack public key', 'Starts with pk_live_. From the Paystack dashboard: Settings › API Keys & Webhooks.'],
   ['PAYSTACK_SECRET_KEY', 'Paystack secret key', 'Starts with sk_live_. Used by the server to confirm each payment.'],
+  ['GEMINI_API_KEY', 'Gemini API key (photos)', 'From Google AI Studio (aistudio.google.com › Get API key). Starts with AIza. New bishops and pastors we have no photo for get their photo edited to the official look automatically.'],
   ['TELEGRAM_BOT_TOKEN', 'Telegram bot token', 'From @BotFather. Every “Any issues?” report is posted to the channel below as well as emailed.'],
   ['TELEGRAM_CHAT_ID', 'Telegram chat ID', 'The channel or group the bot posts to. Channels look like -1001234567890. Add the bot as an admin of the channel first.'],
   ['R2_ACCOUNT_ID', 'Cloudflare R2 account ID', 'Photo storage. Leave blank to keep the host’s values.'],
@@ -67,6 +68,7 @@ export async function writeSettings(pool, values, actor, config = {}) {
     const v = values[key]?.trim();
     if (v && !new RegExp(`^${prefix}_(live|test)_[A-Za-z0-9]+$`).test(v)) throw new HttpError(400, `That is not a Paystack ${label} key. It should start with ${prefix}_live_. Nothing was saved.`);
   }
+  if (values.GEMINI_API_KEY?.trim() && !/^AIza[A-Za-z0-9_-]{30,}$/.test(values.GEMINI_API_KEY.trim())) throw new HttpError(400, 'That is not a Gemini API key. It should start with AIza. Nothing was saved.');
   if (values.RESEND_API_KEY?.trim() && !/^re_[A-Za-z0-9_]+$/.test(values.RESEND_API_KEY.trim())) throw new HttpError(400, 'That is not a Resend API key. It should start with re_. Nothing was saved.');
   try {
     configuration({ ...(config.sourceEnv || process.env), ...(await readSettings(pool)), ...Object.fromEntries(entries.filter(([, v]) => v.trim())) });
@@ -78,7 +80,7 @@ export async function writeSettings(pool, values, actor, config = {}) {
 }
 // For the Paystack keys the office also sees whether what is saved is a real key
 // (never the key itself).
-const KEY_SHAPE = { PAYSTACK_PUBLIC_KEY: /^pk_(live|test)_[A-Za-z0-9]+$/, PAYSTACK_SECRET_KEY: /^sk_(live|test)_[A-Za-z0-9]+$/, RESEND_API_KEY: /^re_[A-Za-z0-9_]+$/ };
+const KEY_SHAPE = { PAYSTACK_PUBLIC_KEY: /^pk_(live|test)_[A-Za-z0-9]+$/, PAYSTACK_SECRET_KEY: /^sk_(live|test)_[A-Za-z0-9]+$/, RESEND_API_KEY: /^re_[A-Za-z0-9_]+$/, GEMINI_API_KEY: /^AIza[A-Za-z0-9_-]{30,}$/ };
 export const describeSettings = stored => SETTINGS.map(([key, label, hint]) => ({ key, label, hint, set: Boolean(stored[key]),
   // Not secrets: the office sees the addresses in use.
   ...(['SMTP_FROM', 'SUPPORT_EMAIL'].includes(key) && stored[key] ? { value: String(stored[key]) } : {}),
