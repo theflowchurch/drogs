@@ -9,6 +9,7 @@ import sharp from 'sharp';
 import { uniformGroup, uniformPrompt, UNIFORMS } from '../registration/uniforms.mjs';
 import { titleFor, overlayReferences } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
+import { applySettings } from './settings.mjs';
 
 // Gemini's API: the key goes in the x-goog-api-key header.
 const API = 'https://generativelanguage.googleapis.com/v1beta/models';
@@ -133,6 +134,7 @@ export function createAutoPhoto({ pool, config, storage, references = [], fetche
   }
   // Everyone waiting for a look, one at a time (also retries earlier failures).
   async function sweep() {
+    await applySettings(config, pool).catch(() => {}); // a key saved in /admin/ applies at once
     if (!config.geminiKey) return { done: 0 };
     const state = await transaction(pool, (conn) => readState(conn, true));
     refs = new Map(overlayReferences(references, state).map((p) => [p.id, p])); // with the office's own edits and photos

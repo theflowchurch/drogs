@@ -1790,7 +1790,7 @@ function Participant({
         <section className="reg-card">
           <div className="reg-profile-hero">
             <Media
-              path={current.data.photo}
+              path={(!current.photoByOffice && current.autoPhoto) || current.data.photo}
               alt={current.data.name}
               className="reg-record-photo"
             />

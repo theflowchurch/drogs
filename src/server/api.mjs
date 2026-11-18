@@ -369,8 +369,10 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         return json({ settings: describeSettings(await readSettings(pool)), admins: officeMembers(config) });
       }
       if (path === '/api/registration/settings' && method === 'POST') {
-        await writeSettings(pool, (await jsonBody(request)).values, actor, config);
+        const values = (await jsonBody(request)).values;
+        await writeSettings(pool, values, actor, config);
         await applySettings(config, pool);
+        if (values?.GEMINI_API_KEY?.trim()) autoPhoto.queue(); // a new Gemini key: photos waiting are edited straight away
         return json({ settings: describeSettings(await readSettings(pool)), admins: officeMembers(config) });
       }
       if (path === '/api/registration/settings/email-test' && method === 'POST') {
