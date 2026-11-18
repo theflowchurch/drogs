@@ -11,6 +11,7 @@ import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import { paymentJson, createQuote, readQuote, checkoutReturnUrl, validateQuotedPayment } from './paystack.mjs';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
+import { createAutoPhoto } from './auto-photo.mjs';
 import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline } from '../registration/model.mjs';
 import { canonicalPersonName } from '../registration/name-corrections.mjs';
 import { transaction, readState, persistState } from './database.mjs';
@@ -48,6 +49,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
   const keys = createKeyService({ pool, config, storage });
   const management = createManagementApi({ pool, config, storage, keys, people, invalidate: () => { publicCache.at = 0; } });
   const support = createSupport({ config, mailer, fetcher, logger });
+  const autoPhoto = createAutoPhoto({ pool, config, storage, references: people, fetcher, logger });
   // The email a bishop gets when a pastor registers under them; the same pastor
   // also waits under "To do" on the bishop's account until confirmed.
   async function notifyBishop({ pastor, to, bishopName, bishopUser, bishopTitle = 'Bishop', unregistered = false }) {
@@ -121,6 +123,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
     return { reminded, removed };
   }
   handle.sweepDeadlines = sweepDeadlines;
+  handle.autoPhotos = autoPhoto;
   handle.deadlineMail = deadlineMail;
 
   // The Order of Bishops / Pastors pages and Councils (office, 17 Nov). Step 1: the
@@ -437,6 +440,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           }
         });
         if (newPastor) notifyBishop(newPastor).catch(error => logger.error?.('new-pastor email failed:', error?.message || error));
+        if (['submit', 'update', 'officeEdit', 'choosePhoto', 'approveBishop'].includes(name)) autoPhoto.queue(); // the photo is checked and edited in the background (19 Nov)
         publicCache.at = 0; // office edits and pauses show on the public page at once
         // The office's decision goes to the address the bishop registered with; a mail failure must not undo the decision.
         if (reviewed?.data?.email) {

@@ -6,69 +6,83 @@
 // office does nothing, but can switch back to the original at any time.
 import { readFile } from 'node:fs/promises';
 import sharp from 'sharp';
-import { uniformGroup, uniformPrompt } from '../registration/uniforms.mjs';
-import { titleFor } from '../registration/model.mjs';
+import { uniformGroup, uniformPrompt, UNIFORMS } from '../registration/uniforms.mjs';
+import { titleFor, overlayReferences } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 
-// Gemini's OpenAI-compatible API: the key goes in Authorization: Bearer.
-const API = 'https://generativelanguage.googleapis.com/v1beta/openai';
+// Gemini's API: the key goes in the x-goog-api-key header.
+const API = 'https://generativelanguage.googleapis.com/v1beta/models';
 export const EDIT_MODEL = 'gemini-2.5-flash-image', CHECK_MODEL = 'gemini-2.5-flash';
 export const MAX_TRIES = 3;
 const examplesFile = new URL('../registration/uniform-examples.json', import.meta.url);
 const root = new URL('../../', import.meta.url);
 const jpeg = (bytes, size = 1024) => sharp(bytes).rotate().resize({ width: size, height: size, fit: 'inside', withoutEnlargement: true }).jpeg({ quality: 88 }).toBuffer();
-async function call(fetcher, key, path, init) {
-  const res = await fetcher(`${API}/${path}`, { method: 'POST', ...init, headers: { authorization: `Bearer ${key}`, ...(init.headers || {}) }, signal: AbortSignal.timeout(150000) });
+const picture = async (bytes, size) => ({ inline_data: { mime_type: 'image/jpeg', data: (await jpeg(bytes, size)).toString('base64') } });
+async function gemini(fetcher, key, model, parts, generationConfig) {
+  const res = await fetcher(`${API}/${model}:generateContent`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': key }, body: JSON.stringify({ contents: [{ role: 'user', parts }], generationConfig }), signal: AbortSignal.timeout(150000) });
   const data = await res.json().catch(() => ({}));
-  const body = Array.isArray(data) ? data[0] : data;
-  if (!res.ok || body?.error) throw Error(`Gemini ${res.status}: ${body?.error?.message || 'request failed'}`);
-  return body;
+  if (!res.ok || data?.error) throw Error(`Gemini ${res.status}: ${data?.error?.message || 'request failed'}`);
+  return data.candidates?.[0]?.content?.parts || [];
 }
+const answer = async (...args) => { const text = (await gemini(...args)).map((p) => p.text || '').join(''); try { return JSON.parse(text); } catch { return { text }; } };
 
 // The photo edited into the group's official look; returns image bytes.
 // The examples go first; the person's own photo is the last image.
 export async function editPortrait({ fetcher = fetch, key, photo, group }) {
   const examples = JSON.parse(await readFile(examplesFile, 'utf8'))[group] || [];
-  const form = new FormData();
-  form.append('model', EDIT_MODEL);
-  form.append('prompt', uniformPrompt(group));
-  form.append('n', '1');
-  form.append('response_format', 'b64_json');
-  for (const [i, f] of examples.entries()) form.append('image[]', new Blob([await jpeg(await readFile(new URL(f, root)), 640)], { type: 'image/jpeg' }), `example-${i + 1}.jpg`);
-  form.append('image[]', new Blob([await jpeg(photo)], { type: 'image/jpeg' }), 'person.jpg');
-  const data = await call(fetcher, key, 'images/edits', { body: form });
-  const b64 = data.data?.[0]?.b64_json;
+  const exampleParts = await Promise.all(examples.map(async (f) => picture(await readFile(new URL(f, root)), 640)));
+  const parts = await gemini(fetcher, key, EDIT_MODEL, [{ text: uniformPrompt(group) }, ...exampleParts, await picture(photo, 1024)], { responseModalities: ['IMAGE'] });
+  const image = parts.find((p) => p.inlineData || p.inline_data);
+  const b64 = image?.inlineData?.data || image?.inline_data?.data;
   if (!b64) throw Error('Gemini returned no image');
   return Buffer.from(b64, 'base64');
 }
 // Whether the edited portrait still shows the same person as the upload.
 export async function samePerson({ fetcher = fetch, key, original, edited }) {
-  const url = async (b) => ({ type: 'image_url', image_url: { url: `data:image/jpeg;base64,${(await jpeg(b, 768)).toString('base64')}` } });
-  const data = await call(fetcher, key, 'chat/completions', { headers: { 'content-type': 'application/json' }, body: JSON.stringify({
-    model: CHECK_MODEL, temperature: 0, response_format: { type: 'json_object' },
-    messages: [{ role: 'user', content: [
-      { type: 'text', text: 'Photo 1 is an original photo of a person. Photo 2 is an edited portrait (new clothes and background are expected). Is Photo 2 clearly the same person as Photo 1, with the same face? Answer only with JSON: {"same": true} or {"same": false}.' },
-      await url(original), await url(edited),
-    ] }],
-  }) });
-  const text = String(data.choices?.[0]?.message?.content || '');
-  try { return JSON.parse(text).same === true; } catch { return /"same"\s*:\s*true/.test(text); }
+  const out = await answer(fetcher, key, CHECK_MODEL, [
+    { text: 'Photo 1 is an original photo of a person. Photo 2 is an edited portrait (new clothes and background are expected). Is Photo 2 clearly the same person as Photo 1, with the same face? Answer only with JSON: {"same": true} or {"same": false}.' },
+    await picture(original, 768), await picture(edited, 768),
+  ], { responseMimeType: 'application/json', temperature: 0 });
+  return out.same === true || /"same"\s*:\s*true/.test(out.text || '');
 }
 
-// Who needs an edit: submitted, has an upload, no photo of ours (not on our
-// list, or on it without a photo), a group with an official look, and this
-// upload not yet done or given up on.
+// What the photo shows (one cheap Gemini call): man or woman, and whether the
+// person already wears the group's uniform on a plain white background.
+export async function inspectPhoto({ fetcher = fetch, key, photo, group }) {
+  const out = await answer(fetcher, key, CHECK_MODEL, [
+    { text: `Look at this portrait. 1) Is the person a man or a woman? 2) Are they wearing ${UNIFORMS[group]}, against a plain white background? Answer only with JSON: {"gender": "male" or "female", "uniform": true or false}.` },
+    await picture(photo, 768),
+  ], { responseMimeType: 'application/json', temperature: 0 });
+  const text = out.text || '';
+  const gender = out.gender || (/"gender"\s*:\s*"female"/.test(text) ? 'female' : /"gender"\s*:\s*"male"/.test(text) ? 'male' : '');
+  return { gender: ['male', 'female'].includes(gender) ? gender : '', uniform: out.uniform === true || /"uniform"\s*:\s*true/.test(text) };
+}
+
+// The photo the person would be shown with, and whether it is one of ours.
+// A photo the office uploaded or chose is the office's decision: never touched.
+function sourceFor(r, refs) {
+  const ref = r.data?.referenceId ? refs.get(r.data.referenceId) : null;
+  if (ref?.photo && ref.photo !== r.data.photo) return null;
+  if (r.photoByOffice) return null;
+  if (ref?.image) return { source: `asset:${ref.image}`, ours: true };
+  return r.data?.photo ? { source: r.data.photo, ours: false } : null;
+}
+const groupOf = (r) => uniformGroup({ ...r.data, title: titleFor(r.data) });
+// Who needs a look (office, 19 Nov): everyone who registers. A new person with no
+// photo of ours has their upload edited. Someone we already have a photo for is
+// checked against the details they filled in, and edited only when the uniform
+// does not match. Done once per photo and group; changing either looks again.
 export function needsAutoPhoto(r, refs = new Map()) {
-  if (!r?.data?.photo || r.status === 'draft' || r.status === 'denied') return false;
-  const ref = r.data.referenceId ? refs.get(r.data.referenceId) : null;
-  if (ref && (ref.image || ref.photo)) return false;
-  if (!uniformGroup({ ...r.data, title: titleFor(r.data) })) return false;
-  if (r.autoPhotoSource === r.data.photo && (r.autoPhoto || r.autoPhotoFailed)) return false;
-  return (r.autoPhotoSource === r.data.photo ? Number(r.autoPhotoTries || 0) : 0) < MAX_TRIES;
+  if (r?.status === 'draft' || r?.status === 'denied' || !r?.data) return false;
+  const src = sourceFor(r, refs), group = groupOf(r);
+  if (!src || !group) return false;
+  const same = r.autoPhotoSource === src.source && r.autoPhotoGroup === group;
+  if (same && (r.autoPhoto || r.autoPhotoFailed || r.autoPhotoOk || r.autoPhotoNote)) return false;
+  return (same ? Number(r.autoPhotoTries || 0) : 0) < MAX_TRIES;
 }
 
 export function createAutoPhoto({ pool, config, storage, references = [], fetcher = fetch, logger = console }) {
-  const refs = new Map(references.map((p) => [p.id, p]));
+  let refs = new Map(references.map((p) => [p.id, p]));
   const running = new Set();
   const save = (userId, year, patch) => transaction(pool, async (conn) => {
     const before = await readState(conn, true);
@@ -80,34 +94,48 @@ export function createAutoPhoto({ pool, config, storage, references = [], fetche
   });
   async function process(r) {
     if (!config.geminiKey || running.has(r.userId)) return 'skipped';
+    const src = sourceFor(r, refs), group = groupOf(r);
+    if (!src || !group) return 'skipped';
     running.add(r.userId);
-    const source = r.data.photo, group = uniformGroup({ ...r.data, title: titleFor(r.data) });
-    const tries = (r.autoPhotoSource === source ? Number(r.autoPhotoTries || 0) : 0) + 1;
+    const { source, ours } = src, key = config.geminiKey;
+    const tries = (r.autoPhotoSource === source && r.autoPhotoGroup === group ? Number(r.autoPhotoTries || 0) : 0) + 1;
+    // Only while the person's photo and details are still the ones looked at.
+    const still = (x) => (sourceFor(x, refs)?.source === source && groupOf(x) === group);
+    const done = (patch) => save(r.userId, r.year, (x) => (still(x) ? { autoPhotoSource: source, autoPhotoGroup: group, autoPhotoTries: tries, autoPhotoAt: new Date().toISOString(), autoPhoto: '', autoPhotoOk: false, autoPhotoFailed: false, autoPhotoNote: '', ...patch } : {}));
     try {
-      const original = await storage.bytes(source);
-      if (!original) throw Error('the upload could not be read');
-      const edited = await editPortrait({ fetcher, key: config.geminiKey, photo: original, group });
-      if (!(await samePerson({ fetcher, key: config.geminiKey, original, edited }))) throw Error('the edit did not look like the same person');
-      const key = await storage.upload({ id: r.userId }, edited, 'image/png', 'portrait');
-      await save(r.userId, r.year, (x) => (x.data.photo === source ? { autoPhoto: key, autoPhotoSource: source, autoPhotoGroup: group, autoPhotoAt: new Date().toISOString(), autoPhotoTries: tries, autoPhotoFailed: false } : {}));
+      const original = ours ? await readFile(new URL(source.slice(6), root)) : await storage.bytes(source);
+      if (!original) throw Error('the photo could not be read');
+      const seen = await inspectPhoto({ fetcher, key, photo: original, group });
+      // A man who says he is a woman (or the reverse) is not put in the other uniform.
+      const gender = r.data.gender;
+      if (seen.gender && ['male', 'female'].includes(gender) && seen.gender !== gender) {
+        await done({ autoPhotoNote: `The photo looks like a ${seen.gender === 'male' ? 'man' : 'woman'}, but the details say ${gender}. The photo was not edited.` });
+        return 'noted';
+      }
+      if (ours && seen.uniform) { await done({ autoPhotoOk: true }); return 'matches'; }
+      const edited = await editPortrait({ fetcher, key, photo: original, group });
+      if (!(await samePerson({ fetcher, key, original, edited }))) throw Error('the edit did not look like the same person');
+      const saved = await storage.upload({ id: r.userId }, edited, 'image/png', 'portrait');
+      await done({ autoPhoto: saved });
       return 'edited';
     } catch (error) {
       logger.error('Automatic photo edit failed:', error?.message || error);
-      // After the last try the member's own upload stays; nobody is asked to act.
-      await save(r.userId, r.year, (x) => (x.data.photo === source ? { autoPhotoSource: source, autoPhotoTries: tries, autoPhotoFailed: tries >= MAX_TRIES, ...(x.autoPhotoSource !== source ? { autoPhoto: '' } : {}) } : {})).catch(() => {});
+      // After the last try the person keeps the photo they had; nobody is asked to act.
+      await done({ autoPhotoFailed: tries >= MAX_TRIES }).catch(() => {});
       return tries >= MAX_TRIES ? 'gave-up' : 'retry';
     } finally { running.delete(r.userId); }
   }
-  // Everyone waiting for an edit, one at a time (also retries earlier failures).
+  // Everyone waiting for a look, one at a time (also retries earlier failures).
   async function sweep() {
-    if (!config.geminiKey) return { edited: 0 };
+    if (!config.geminiKey) return { done: 0 };
     const state = await transaction(pool, (conn) => readState(conn, true));
+    refs = new Map(overlayReferences(references, state).map((p) => [p.id, p])); // with the office's own edits and photos
     const due = state.registrations.filter((r) => r.year === state.year && needsAutoPhoto(r, refs));
     const results = [];
     for (const r of due) results.push(await process(r));
-    const edited = results.filter((x) => x === 'edited').length;
-    if (due.length) console.log(`Automatic photos: ${edited} edited, ${results.length - edited} not yet`);
-    return { edited, due: due.length };
+    if (due.length) console.log(`Automatic photos: ${results.join(', ')}`);
+    return { due: due.length, results };
   }
-  return { process, sweep, queue: () => { setTimeout(() => sweep().catch((e) => logger.error('Automatic photos failed:', e?.message || e)), 1000); } };
+  let timer = null;
+  return { process, sweep, queue: () => { clearTimeout(timer); timer = setTimeout(() => sweep().catch((e) => logger.error('Automatic photos failed:', e?.message || e)), 1500); } };
 }

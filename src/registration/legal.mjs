@@ -163,6 +163,10 @@ Personal email addresses, telephone numbers, dates of birth, receipts and privat
 
 We use Hostinger for hosting and database services, Cloudflare R2 for image storage, email providers including Resend where configured, and Paystack for payment processing. Support reports may also be delivered to an office notification service. Providers receive information needed for their functions and have their own applicable privacy terms.
 
+## Official photographs
+
+So that every photograph on the Roll of Good Standing has the same official look, the photograph you upload may be edited automatically by an artificial intelligence service (Google Gemini). The edit places you against a plain white background in the official attire for your title and organisation. It is checked automatically to make sure it still shows you; if it does not, your own photograph is used instead. Only your photograph and the attire required for your role are sent for this purpose. Your original photograph is kept privately, and the office can show it instead at any time.
+
 We may disclose information where required by law or necessary to investigate fraud, protect accounts or resolve a payment dispute. We do not sell personal information or use directory records for unsolicited advertising.
 
 Providers may process information outside Ghana. International processing is subject to applicable data protection requirements; this policy does not represent that every record is stored in one country.

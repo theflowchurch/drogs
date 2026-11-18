@@ -3247,6 +3247,8 @@ function RecordDetails({ person: p, under = [], onOpen, perform, state, actor })
         {r?.data?.photoCheck && attireWords(r.data.photoCheck) && (
           <p className={`reg-attire-flag ${r.data.photoCheck.verdict === "ok" ? "ok" : "warn"}`}>{attireWords(r.data.photoCheck)}</p>
         )}
+        {r?.autoPhoto && !r.photoByOffice && <p className="reg-attire-flag ok">Edited automatically to the official look{r.autoPhotoAt ? ` · ${shortDateTime(r.autoPhotoAt)}` : ""}{perform && <> · <button type="button" className="reg-text" onClick={() => perform("choosePhoto", { userId: r.userId, source: p.image ? "reference" : "upload" }, "The roll now shows the photo from before the automatic edit.")}>Show the photo from before</button></>}</p>}
+        {r?.autoPhotoNote && <p className="reg-attire-flag warn">{r.autoPhotoNote}</p>}
         {canChoose && (
           <div className="reg-photo-choice">
             <p>Which photo should the roll show?</p>

@@ -1624,6 +1624,8 @@ export function shownPhoto(reg, ref) {
   // is still the member's upload, not a photo the office put there.
   const copiedUpload = ref?.photo && ref.photo === reg?.data?.photo && !officePicked;
   if (ref?.photo && !copiedUpload) return { photo: ref.photo, image: '' };
+  // The automatic edit (19 Nov): a new person's upload, or our photo in the uniform of the details they gave.
+  if (reg?.autoPhoto && !reg?.photoByOffice) return { photo: reg.autoPhoto, image: '' }; // any choice the office made wins
   const ours = ref?.image || '';
   if (ours && !officePicked) return { photo: '', image: ours };
   return { photo: reg?.data?.photo || '', image: ours };
