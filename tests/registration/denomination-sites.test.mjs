@@ -13,7 +13,7 @@ test('denomination pages use current office corrections, removals and extra peop
 test('the three sites publish their current roster as approved without changing accounts or payments',()=>{
  const state={source:'original',photos:'confirmed',referencePeople:[{...b,image:'current.webp'}],roll:[],registrations:[{payment:'unpaid'}]};const before=structuredClone(state);
  const list=denominationPeople(state,'gochurch');assert.equal(list[0].standing,true);assert.equal(list[0].image,'current.webp');assert.deepEqual(state,before);
- const current=denominationPeople({...state,source:'roll',roll:[p]},'gochurch');assert.deepEqual(current.map(p=>p.id),['b'],'the office approved the current submitted roster, not only the annual paid roll');
+ const current=denominationPeople({...state,source:'roll',roll:[p]},'gochurch');assert.deepEqual(current.map(p=>p.id),['b','p'],'the current submitted roster, plus someone new who registered and was confirmed under this church (18 Nov)');
 });
 test('bishops and pastors remain separate sections with city and gender filters and no rank toggle',()=>{
  const lay={...b,id:'lay',title:'Lay President',name:'Lay Leader'};

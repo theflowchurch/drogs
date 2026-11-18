@@ -168,7 +168,10 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   { id: 'member-photos-off-records-2026-11-17', memberPhotos: true },
   // Office, 17 Nov: the pastors still unregistered on Mother Nina Masuku's (B334)
   // uploaded list wait for her to confirm them, like everyone else.
-  { id: 'nina-confirms-her-pastors-2026-11-17', claimRequired: ['B334'] }];
+  { id: 'nina-confirms-her-pastors-2026-11-17', claimRequired: ['B334'] },
+  // Office, 18 Nov: registrations in FLOW (no list of denominations) blanked the
+  // denomination on the record (Darius Phiri, Calvince Dondi). Blanks come off.
+  { id: 'blank-denominations-2026-11-18', blankDenominations: true }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -204,6 +207,10 @@ export function syncRoll(state, people, version) {
   for (const fix of fixes) for (const ref of fix.claimRequired || []) {
     const accounts = new Set((state.profiles || []).filter(p => p.referenceId === ref).map(p => p.id));
     next.rosters = (next.rosters || state.rosters || []).map(row => accounts.has(row.bishopId) && row.status === 'active' && !row.pastorId ? { ...row, claimRequired: true } : row);
+  }
+  if (fixes.some(f => f.blankDenominations)) {
+    for (const [id, o] of Object.entries(next.overrides)) if (o && o.denomination === '') { const { denomination, ...rest } = o; next.overrides[id] = rest; }
+    for (const r of next.registrations || []) if (r.data && !r.data.denomination && ORGANIZATION_DENOMINATION[r.data.organization]) r.data = { ...r.data, denomination: ORGANIZATION_DENOMINATION[r.data.organization] };
   }
   if (fixes.some(f => f.memberPhotos)) for (const r of state.registrations || []) {
     const id = r.data?.referenceId || state.profiles?.find(p => p.id === r.userId)?.referenceId;
@@ -286,6 +293,7 @@ export function structureConflicts(catalog, people) {
 const SUPERSEDED_FEES = [{ bishop: 100, pastor: 25 }];
 export const feesOf = (state) => state?.fees?.bishop && !SUPERSEDED_FEES.some(f => f.bishop === state.fees.bishop && f.pastor === state.fees.pastor) ? state.fees : AMOUNTS;
 // Fields of an old roster record the office may correct.
+export const ORGANIZATION_DENOMINATION = { FLOW: 'FLOW', HJC: 'Healing Jesus Campaign' };
 export const REFERENCE_FIELDS = ["name", "role", "title", "gender", "dob", "organization", "denomination", "group", "city", "country", "bishop", "branch", "yearAppointed", "yearOrdained", "yearConsecrated", "photo", "phone", "email"];
 // Contact details and birth dates stay in the office: public and member views
 // receive corrections without these private fields.
@@ -481,7 +489,7 @@ function syncReference(state, r, { byOffice = false, changed = null } = {}) {
   if (!id) return;
   const d = r.data;
   const owned = officeFields(state, id), wanted = changed && new Set(changed.map(referenceField));
-  const values = { ...(byOffice ? { name: d.name, role: d.role, gender: d.gender, dob: d.dob, title: d.title, branch: d.church } : {}), city: d.city, country: d.country, denomination: d.denomination, organization: d.organization, phone: d.phone, email: d.email, photo: d.photo };
+  const values = { ...(byOffice ? { name: d.name, role: d.role, gender: d.gender, dob: d.dob, title: d.title, branch: d.church } : {}), city: d.city, country: d.country, denomination: d.denomination || undefined, organization: d.organization, phone: d.phone, email: d.email, photo: d.photo }; // a blank denomination never wipes the record's
   // A member's own upload never goes onto the record (17 Nov): it is for the office to check.
   const fields = Object.fromEntries(Object.entries(values).filter(([k, v]) => v !== undefined && (!wanted || wanted.has(k)) && (k === 'photo' ? byOffice : byOffice || !owned.has(k))));
   if (byOffice) for (const k of Object.keys(fields)) if (k !== 'photo') owned.add(k);
@@ -602,7 +610,9 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
       throw Error("Choose your bishop from the registered bishops.");
   }
   if (q.bishopId === "missing") q.bishopId = "";
-  if (!(catalog.denominations[q.organization] || []).length) q.denomination = "";
+  // Organisations with no list of denominations still have one (17 Nov): FLOW's
+  // pastors and bishops are FLOW, Healing Jesus Campaign's are Healing Jesus Campaign.
+  if (!(catalog.denominations[q.organization] || []).length) q.denomination = ORGANIZATION_DENOMINATION[q.organization] || "";
   if (q.role === "bishop") {
     q.bishopId = "";
     q.bishopName = "";

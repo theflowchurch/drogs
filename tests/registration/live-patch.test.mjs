@@ -144,3 +144,24 @@ test("a bishop cannot add a pastor who registered and was confirmed by another b
   const ok = applyAction(s, b2, 'addRoster', { rows: [{ name: 'Yaw Someone', dob: '02/02/1991' }] });
   assert.ok(ok.rosters.some(r => r.name === 'Yaw Someone' && r.bishopId === 'b2'), 'other names are still added');
 });
+test('18 Nov: blank denominations come off records; FLOW registrations keep FLOW; changing denomination moves the person between church pages', async () => {
+  const { emptyState, syncRoll, overlayReferences, applyAction, publicOverlay } = await import('../../src/registration/model.mjs');
+  const { denominationPeople, DENOMINATION_SITES } = await import('../../src/registration/denomination-sites.mjs');
+  const refs = [{ id: 'PF', role: 'pastor', name: 'Darius Phiri', organization: 'FLOW', denomination: 'FLOW', image: 'd.webp', bishop: 'Nina Masuku' }];
+  let s = { ...emptyState(), officeFixes: ['restore-seven-2026-11-17', 'member-photos-off-records-2026-11-17', 'nina-confirms-her-pastors-2026-11-17'], overrides: { PF: { denomination: '', city: 'Accra', _officeFields: ['city'] } } };
+  s = syncRoll(s, refs, 'v-blank');
+  assert.equal(overlayReferences(refs, s)[0].denomination, 'FLOW');
+  assert.equal(s.overrides.PF.city, 'Accra', 'other office fields stay');
+  assert.ok(DENOMINATION_SITES.flowdenomination, 'FLOW has a church page');
+  assert.deepEqual(denominationPeople({ referencePeople: refs, ...publicOverlay(s), roll: [] }, 'flowdenomination').map(p => p.id), ['PF']);
+  for (const path of ['heritagebaptistchurchglobal', 'loveeconomychurch', 'revivalhouseofholyfireministries', 'christvisionsanctuaryinternational']) assert.ok(DENOMINATION_SITES[path], path);
+  // A pastor on our list who registers under a different church moves to that church's page.
+  const refs2 = [{ id: 'P1', role: 'pastor', name: 'John Doe', organization: 'First Love', denomination: 'First Love Church' }];
+  const pastor = { id: 'u1', email: 'j@x.com' };
+  let t = { ...emptyState(), profiles: [{ id: 'u1', role: 'pastor', name: 'John Doe', referenceId: 'P1' }],
+    registrations: [{ userId: 'u1', year: emptyState().year, status: 'confirmed', data: { role: 'pastor', name: 'John Doe', firstName: 'John', lastName: 'Doe', referenceId: 'P1', organization: 'First Love', denomination: 'First Love Church', country: 'Ghana', city: 'Accra', phone: '+233201234567', email: 'j@x.com', dob: '1990-01-01', gender: 'male', photo: 'u1/portrait/a.webp', photoConfirmed: true, bishopId: 'B1' } }] };
+  t = applyAction(t, pastor, 'update', { denomination: 'Go Church', photoConfirmed: true }, undefined, refs2);
+  const view = { referencePeople: refs2, ...publicOverlay(t), roll: [] };
+  assert.deepEqual(denominationPeople(view, 'gochurch').map(p => p.id), ['P1'], 'now on Go Church');
+  assert.deepEqual(denominationPeople(view, 'firstlovechurch').map(p => p.id), [], 'no longer on First Love Church');
+});

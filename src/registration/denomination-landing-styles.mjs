@@ -86,5 +86,10 @@ export const LANDING_STYLES = [
   ['zen', 'Zen', 'Vast whitespace and a single brush circle'],
   ['billboard', 'Billboard', 'Huge type cropped by the frame'],
   ['echo', 'Echo', 'Outlined name repeated in echoes'],
+  ['compass', 'Compass', 'Concentric rings spreading like a signal', true],
+  ['cornerstone', 'Cornerstone', 'Courses of stone with the name as the cornerstone'],
+  ['hearth', 'Hearth', 'Warm overlapping circles'],
+  ['flame', 'Flame', 'A rising flame of colour', true],
+  ['beacon', 'Beacon', 'Rays of light behind a round seal'],
 ].map(([id, name, description, dark = false]) => ({ id, name, description, dark }));
 export const landingStyle = id => LANDING_STYLES.find(style => style.id === id);

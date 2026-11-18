@@ -243,10 +243,11 @@ test("new form enforces split names, location, organization denomination and att
       validateProfile({ ...p, denomination: "Invented Church" }, pastor.email),
     /denomination/,
   );
-  for (const organization of ["DHMM", "FLOW", "HJC"])
+  // Organisations with no list keep their own denomination (18 Nov).
+  for (const [organization, denomination] of [["DHMM", ""], ["FLOW", "FLOW"], ["HJC", "Healing Jesus Campaign"]])
     assert.equal(
       validateProfile({ ...p, organization }, pastor.email).denomination,
-      "",
+      denomination,
     );
   assert.throws(
     () =>

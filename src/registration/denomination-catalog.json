@@ -1332,5 +1332,80 @@
     "accent": "#703232",
     "directoryAction": "View bishops and pastors",
     "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "flowdenomination",
+    "name": "FLOW",
+    "shortName": "FLOW",
+    "subtitle": "",
+    "denominations": [
+      "FLOW"
+    ],
+    "logo": "assets/brand/flow-logo-black.png",
+    "homeLayout": "compass",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#1f3b6e",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed Ministers in Good Standing"
+  },
+  {
+    "path": "heritagebaptistchurchglobal",
+    "name": "Heritage Baptist Church Global",
+    "shortName": "Heritage Baptist",
+    "subtitle": "Church Global",
+    "denominations": [
+      "Heritage Baptist Church Global"
+    ],
+    "logo": "assets/denominations/heritagebaptistchurchglobal.png",
+    "homeLayout": "cornerstone",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#33506e",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed Ministers in Good Standing"
+  },
+  {
+    "path": "loveeconomychurch",
+    "name": "Love Economy Church",
+    "shortName": "Love Economy",
+    "subtitle": "Church",
+    "denominations": [
+      "Love Economy Church"
+    ],
+    "logo": "assets/denominations/loveeconomychurch.png",
+    "homeLayout": "hearth",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#7a2e3b",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed Ministers in Good Standing"
+  },
+  {
+    "path": "revivalhouseofholyfireministries",
+    "name": "Revival House of Holy Fire Ministries",
+    "shortName": "Revival House",
+    "subtitle": "of Holy Fire Ministries",
+    "denominations": [
+      "Revival House of Holy Fire Ministries"
+    ],
+    "logo": "assets/denominations/revivalhouseofholyfireministries.png",
+    "homeLayout": "flame",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#8a4a14",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed Ministers in Good Standing"
+  },
+  {
+    "path": "christvisionsanctuaryinternational",
+    "name": "Christ Vision Sanctuary International",
+    "shortName": "Christ Vision Sanctuary",
+    "subtitle": "International",
+    "denominations": [
+      "Christ Vision Sanctuary International"
+    ],
+    "logo": "assets/denominations/christvisionsanctuaryinternational.png",
+    "homeLayout": "beacon",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#3d3a70",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed Ministers in Good Standing"
   }
 ]
