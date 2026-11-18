@@ -7,7 +7,11 @@ import { overlayReferences } from './model.mjs';
 
 // The live roll: the published records with the office's changes applied.
 export function liveRoll(referencePeople, publicData) {
-  const people = overlayReferences(referencePeople, publicData);
+  // People who registered but are not on our list (19 Nov) join the Order pages too.
+  const listed = overlayReferences(referencePeople, publicData);
+  const known = new Set(listed.map(p => p.id));
+  const newcomers = (publicData.roll || []).filter(r => !r.referenceId || !known.has(r.referenceId)).map(r => ({ id: r.id, role: r.role, name: r.name, title: r.title, organization: r.organization, denomination: r.denomination || '', group: r.group || '', city: r.city || '', country: r.country || '', image: r.image || '', photo: r.photo || '', bishop: r.bishop || '', registered: true }));
+  const people = [...listed, ...newcomers];
   return {
     people,
     byId: new Map(people.map(p => [p.id, p])),

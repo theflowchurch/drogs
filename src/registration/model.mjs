@@ -855,7 +855,11 @@ function reconcile(state) {
     // A confirmed pastor stays confirmed until someone changes it on purpose (19 Nov):
     // an unrelated office click must never take them off the roll because their
     // line on the bishop's list is missing.
-    else if (r.status === "confirmed" && !r.holdMatch && bishopKeyed(state, r.data.bishopId)) r.status = "confirmed";
+    else if (r.status === "confirmed" && !r.holdMatch && bishopKeyed(state, r.data.bishopId)) {
+      // ... and their line on the bishop's list is put back, so My pastors and Pastor Lists count them.
+      const owner = bishopKeyed(state, r.data.bishopId);
+      state.rosters.push({ id: crypto.randomUUID(), bishopId: owner.id, year: r.year, name: r.data.name, dob: r.data.dob, email: r.data.email, phone: r.data.phone, status: "active", pastorId: r.userId, confirmedBy: "system", confirmedAt: new Date().toISOString(), createdAt: new Date().toISOString() });
+    }
     else r.status = "unclaimed";
   }
 }
@@ -1734,7 +1738,8 @@ export function publicRoll(state, people, year = state.year) {
         city: d.city,
         country: d.country,
         branch: ref?.branch || "",
-        bishop: ref?.bishop || "",
+        // Someone not on our list shows the bishop they registered under (19 Nov).
+        bishop: ref?.bishop || (r.data.role === "pastor" ? canonicalBishopName(bishopKeyed(state, r.data.bishopId)?.name || r.data.bishopName || "") : ""),
         // Our photo first; the member's upload only when we hold none or the office picks it.
         ...shownPhoto(r, ref),
         referenceId: r.data.referenceId || "",

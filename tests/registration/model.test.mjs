@@ -1022,3 +1022,19 @@ test("the office can go back to the edited photo, or ask for a fresh edit (19 No
   assert.equal(again.registrations[1].autoPhoto, "", "Edit again clears the old edit so a fresh one is made");
   assert.equal(photoOf(syncRoll(s, refs, "walter-photo")), "w/edit.webp", "Walter's edited photo is shown again on the live site");
 });
+
+test("someone not on our list: their bishop shows, they are on the bishop's list and on the Order of Pastors (19 Nov)", async () => {
+  const { applyAction: act, publicRoll: roll } = await import("../../src/registration/model.mjs");
+  const { liveRoll } = await import("../../src/registration/live-patch.mjs");
+  const { pastorEntries } = await import("../../src/registration/public-entries.mjs");
+  const refs = [{ id: "B334", role: "bishop", name: "Nina Masuku", title: "Mother", organization: "FLOW", image: "x" }];
+  const s = { ...emptyState(), year: 2027, profiles: [{ id: "nina", role: "bishop", referenceId: "B334", name: "Nina Masuku", bishopApproved: true }, { id: "w", role: "pastor", name: "Walter Woelle" }],
+    registrations: [{ userId: "nina", year: 2027, status: "confirmed", payment: "verified", data: { role: "bishop", name: "Nina Masuku", referenceId: "B334", organization: "FLOW" } },
+      { userId: "w", year: 2027, status: "confirmed", payment: "verified", data: { role: "pastor", name: "Walter Woelle", organization: "FLOW", denomination: "FLOW", gender: "male", bishopId: "B334", bishopName: "Nina Masuku", photo: "w/up.webp" } }], rosters: [] };
+  const after = act(s, { id: "office", office: true }, "choosePhoto", { userId: "w", source: "upload" }, undefined, refs);
+  assert.ok(after.rosters.some(x => x.pastorId === "w" && x.bishopId === "nina" && x.status === "active"), "his line on Mother Nina's list is put back");
+  const entry = roll(after, refs).find(r => r.name === "Walter Woelle");
+  assert.equal(entry.bishop, "Nina Masuku", "his bishop shows on his public profile");
+  const people = pastorEntries(liveRoll(refs, { roll: roll(after, refs) }).people);
+  assert.ok(people.some(p => p.name === "Walter Woelle" && p.details.some(d => d.label === "Overseeing Bishop" && d.value === "Mother Nina Masuku")), "on the Order of Pastors, under Mother Nina");
+});
