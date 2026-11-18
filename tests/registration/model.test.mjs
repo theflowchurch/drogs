@@ -993,3 +993,16 @@ test("a likely listed record is found for someone who registered as new (19 Nov)
   assert.deepEqual(kept.registrations[0].notSameAs, ["S7"]);
   assert.throws(() => act(s, { id: "u" }, "linkRecord", { userId: "u", referenceId: "S7" }, undefined, refs), /Office/);
 });
+
+test("an unrelated office action never takes a confirmed pastor off the roll (19 Nov)", async () => {
+  const { applyAction: act, publicRoll: roll } = await import("../../src/registration/model.mjs");
+  const refs = [{ id: "B334", role: "bishop", name: "Nina Masuku", title: "Mother", organization: "FLOW", image: "x" }];
+  const s = { ...emptyState(), year: 2027, profiles: [{ id: "nina", role: "bishop", referenceId: "B334", name: "Nina Masuku", bishopApproved: true }, { id: "w", role: "pastor", name: "Walter Woelle" }],
+    registrations: [{ userId: "nina", year: 2027, status: "confirmed", payment: "verified", data: { role: "bishop", name: "Nina Masuku", referenceId: "B334", organization: "FLOW" } },
+      { userId: "w", year: 2027, status: "confirmed", payment: "verified", autoPhoto: "w/portrait/edit.webp", data: { role: "pastor", name: "Walter Woelle", organization: "FLOW", gender: "male", bishopId: "B334", bishopName: "Nina Masuku", photo: "w/portrait/up.webp" } }] };
+  const t = act(s, { id: "office", office: true }, "choosePhoto", { userId: "w", source: "upload" }, undefined, refs);
+  assert.equal(t.registrations[1].status, "confirmed", "still confirmed");
+  assert.deepEqual(roll(t, refs).map(r => [r.name, r.photo]), [["Nina Masuku", ""], ["Walter Woelle", "w/portrait/up.webp"]], "still on the roll, now with the photo from before");
+  const off = act(s, { id: "office", office: true }, "setStatus", { userId: "w", status: "unclaimed" }, undefined, refs);
+  assert.equal(off.registrations[1].status, "unclaimed", "the office can still un-confirm on purpose");
+});

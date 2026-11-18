@@ -847,10 +847,12 @@ function reconcile(state) {
       r.status = "confirmed";
       const owner = state.profiles.find((p) => p.id === match.bishopId);
       if (owner) r.data.bishopId = bishopKey(owner);
-    } else
-      r.status = state.rosters.some((x) => x.year === r.year && x.pastorId === r.userId)
-        ? "removed"
-        : "unclaimed";
+    } else if (state.rosters.some((x) => x.year === r.year && x.pastorId === r.userId)) r.status = "removed";
+    // A confirmed pastor stays confirmed until someone changes it on purpose (19 Nov):
+    // an unrelated office click must never take them off the roll because their
+    // line on the bishop's list is missing.
+    else if (r.status === "confirmed" && !r.holdMatch && bishopKeyed(state, r.data.bishopId)) r.status = "confirmed";
+    else r.status = "unclaimed";
   }
 }
 export function parseRoster(text) {
@@ -1005,6 +1007,7 @@ export function applyAction(
     if (newBishop) {
       for (const row of state.rosters) if (row.pastorId === r.userId) row.pastorId = null;
       r.holdMatch = false;
+      if (r.status === "confirmed") r.status = "unclaimed"; // a new bishop confirms them afresh
     }
     if (payload.photo && payload.photo !== r.data.photo && r.status === "confirmed") r.photoChangedAt = now; // the office re-checks a new photo on an approved person
     r.data = { ...data, referenceId: r.data.referenceId, bishopId: newBishop ? data.bishopId : r.data.bishopId };
