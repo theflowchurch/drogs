@@ -74,7 +74,11 @@ const cleanup = setInterval(async () => {
   } catch { console.error('Expired authentication record cleanup failed'); }
 }, 3600000);
 cleanup.unref();
+// The bishop's two-week deadline (19 Nov): reminders after a week, removal after two. Checked hourly.
+const deadlines = setInterval(() => api.sweepDeadlines().catch(error => console.error('Bishop deadline check failed:', error?.message || error)), 3600000);
+deadlines.unref();
+setTimeout(() => api.sweepDeadlines().catch(error => console.error('Bishop deadline check failed:', error?.message || error)), 60000).unref();
 for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => {
-  clearInterval(cleanup);
+  clearInterval(cleanup); clearInterval(deadlines);
   server.close(async () => { await pool.end(); await app.close(); process.exit(0); });
 });

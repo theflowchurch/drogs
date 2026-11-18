@@ -4327,3 +4327,9 @@ input[type="date"] {
 .reg-email-change { display: grid; gap: 12px; }
 .reg-change-email-open { margin-left: 8px; }
 .reg-card > .reg-receipt-error, .reg-card form .reg-receipt-error { color: #b42318; font-size: 14px; font-weight: 600; margin: 0; }
+/* The bishop's two-week deadline (19 Nov) */
+.reg-deadline { margin: 14px 0 0; padding: 12px 14px; border-radius: 10px; background: #fff7e6; border: 1px solid #f1c56b; color: #5c3d00; line-height: 1.5; }
+.reg-todo-deadline { color: #9a5b00 !important; font-weight: 600; }
+:root[data-theme="dark"] .reg-deadline { background: #3a2b0c; border-color: #8a6420; color: #ffe2a8; }
+:root[data-theme="dark"] .reg-todo-deadline { color: #f3c46b !important; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .reg-deadline { background: #3a2b0c; border-color: #8a6420; color: #ffe2a8; } :root:not([data-theme="light"]) .reg-todo-deadline { color: #f3c46b !important; } }

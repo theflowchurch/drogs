@@ -77,6 +77,8 @@ import {
   directoryPeople,
   todoFor,
   inGoodStanding,
+  claimDeadline,
+  claimDaysLeft,
 } from "./model.mjs";
 import {
   currencyFor,
@@ -1859,6 +1861,11 @@ function Participant({
                       ? "Please speak to your bishop or the office about this change. Your registration and payment history are kept on file."
                       : `${current.payment === "verified" ? "Your payment has been received. " : ""}Your bishop and the office are reviewing your registration. Once it has been confirmed, your status will appear here.`}
             </p>
+            {current.status === "unclaimed" && current.data.role === "pastor" && claimDeadline(current) && (
+              <p className="reg-deadline" role="note">
+                <b>Your bishop must confirm you by {longDate(claimDeadline(current).slice(0, 10))}</b> ({daysLeft(claimDaysLeft(current))}). Please speak to your bishop and ask them to sign in and confirm you. If you are not confirmed by then, your registration and account will be removed.
+              </p>
+            )}
           </div>
           )}
           {current.resubmit ? (
@@ -2735,6 +2742,7 @@ function BishopSearch({ choices, value, onPick }) {
     </>}
   </div>;
 }
+const daysLeft = (n) => n === null ? "" : n <= 0 ? "due today" : n === 1 ? "1 day left" : `${n} days left`;
 function BishopTodo({ state, actor, perform }) {
   const waiting = todoFor(state, actor).pastorsToConfirm;
   if (!waiting.length) return null;
@@ -2743,7 +2751,7 @@ function BishopTodo({ state, actor, perform }) {
     <p>{waiting.length === 1 ? "A pastor has" : `${waiting.length} pastors have`} registered and named you as their bishop. Confirm each one who is under you.</p>
     <ul className="reg-todo-list">{waiting.map((r) => <li key={r.userId}>
       <Portrait person={{ photo: r.data.photo, name: r.data.name }} className="reg-todo-photo" />
-      <span><b>{titleFor(r.data)} {r.data.name}</b><small>{[r.data.denomination || r.data.church, [r.data.city, r.data.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>{r.submittedAt && <small>Registered {shortDateTime(r.submittedAt)}</small>}</span>
+      <span><b>{titleFor(r.data)} {r.data.name}</b><small>{[r.data.denomination || r.data.church, [r.data.city, r.data.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>{r.submittedAt && <small>Registered {shortDateTime(r.submittedAt)}</small>}{claimDeadline(r) && <small className="reg-todo-deadline">Confirm by {longDate(claimDeadline(r).slice(0, 10))} · {daysLeft(claimDaysLeft(r))}</small>}</span>
       <span className="reg-todo-actions">
         <button type="button" className="reg-primary" onClick={() => perform("claim", { userId: r.userId }, `${r.data.name} is confirmed under you.`)}>Confirm</button>
         <button type="button" className="reg-text danger" onClick={() => { if (confirm(`${r.data.name} is not your pastor? The office will find their bishop.`)) perform("declinePastor", { userId: r.userId }, "Sent back to the office."); }}>Not my pastor</button>
@@ -2754,7 +2762,7 @@ function BishopTodo({ state, actor, perform }) {
 function OfficeTodo({ state, actor, onOpen }) {
   const todo = todoFor(state, actor);
   const groups = [
-    ["Pastors waiting for their bishop", "Unclaimed", todo.pastorsToConfirm, (r) => `under ${r.data.bishopName || "no bishop named"}`],
+    ["Pastors waiting for their bishop", "Unclaimed", todo.pastorsToConfirm, (r) => `under ${r.data.bishopName || "no bishop named"}${claimDeadline(r) ? ` · removed ${longDate(claimDeadline(r).slice(0, 10))} if not confirmed (${daysLeft(claimDaysLeft(r))})` : ""}`],
     ["Bishops waiting for approval", "Approvals", todo.bishopsToApprove, (r) => r.data.denomination || r.data.organization || ""],
     ["Receipts to check (money transfer app)", "Payments", todo.receiptsToCheck, (r) => `${titleCase(r.data.role)} · transaction ${r.transactionId || "not given"}`],
   ];

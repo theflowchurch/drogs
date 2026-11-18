@@ -648,6 +648,22 @@ export function bishopKeyed(state, key) {
 // wait to be confirmed. The office: pastors no bishop has confirmed yet, bishops
 // waiting for approval, and receipts from money transfer apps to check (Paystack
 // payments confirm themselves). Works on the state the person can see.
+// The bishop's deadline (office, 19 Nov): a pastor waiting for their bishop has
+// two weeks from submitting. After one week they are reminded by email to speak
+// to their bishop; when the two weeks pass, the registration and account are removed.
+export const CLAIM_DAYS = 14, CLAIM_REMINDER_DAYS = 7;
+const DAY_MS = 86400000;
+const waitingFrom = (r) => Date.parse(r?.submittedAt || r?.createdAt || "");
+export const claimDeadline = (r) => { const t = waitingFrom(r); return Number.isFinite(t) ? new Date(t + CLAIM_DAYS * DAY_MS).toISOString() : ""; };
+export const claimDaysLeft = (r, now = Date.now()) => { const d = Date.parse(claimDeadline(r)); return Number.isFinite(d) ? Math.max(0, Math.ceil((d - now) / DAY_MS)) : null; };
+export function claimDeadlines(state, now = Date.now()) {
+  const waiting = (state.registrations || []).filter((r) => r.year === state.year && r.data?.role === "pastor" && r.status === "unclaimed" && !r.manual && Number.isFinite(waitingFrom(r)));
+  const due = (r, days) => now >= waitingFrom(r) + days * DAY_MS;
+  return {
+    remind: waiting.filter((r) => !r.claimReminderAt && due(r, CLAIM_REMINDER_DAYS) && !due(r, CLAIM_DAYS)),
+    expire: waiting.filter((r) => due(r, CLAIM_DAYS)),
+  };
+}
 export function todoFor(state, actor) {
   const year = state.year, mine = (state.registrations || []).filter(r => r.year === year);
   const pastorsToConfirm = mine.filter(r => r.data?.role === 'pastor' && r.status === 'unclaimed' && r.userId !== actor?.id);

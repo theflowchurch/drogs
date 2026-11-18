@@ -11,7 +11,7 @@ import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import { paymentJson, createQuote, readQuote, checkoutReturnUrl, validateQuotedPayment } from './paystack.mjs';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
-import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline } from '../registration/model.mjs';
 import { canonicalPersonName } from '../registration/name-corrections.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit, digest, checkPassword } from './auth.mjs';
@@ -69,6 +69,59 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       text: `Dear ${dear},\n\n${intro}\n\n${ask}\n\n${button}: ${link}\n\n${choose}\n\nThank you for helping us maintain accurate pastoral records.\n\nKuriake Castle`,
       html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px"><b>${esc(who)}</b>${where ? `, based in ${esc(where)},` : ''} has registered on Kuriake Castle and identified you as their supervising bishop.</p><p style="margin:0 0 18px">${esc(ask)}</p><p style="margin:0 0 18px"><a href="${link}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">${button} →</a></p><p style="margin:0 0 12px">If you recognise this pastor, select <b>Confirm Pastor</b>. If the pastor is not under your oversight, select <b>Not My Pastor</b>.</p><p style="margin:0 0 12px">Thank you for helping us maintain accurate pastoral records.</p><p style="margin:0">Kuriake Castle</p>` }));
   }
+
+  // The bishop's two-week deadline (office, 19 Nov). Run once a day by the server:
+  // after one week the waiting pastor is reminded to speak to their bishop; when
+  // the two weeks pass, their registration and account are removed and they are told.
+  const longDay = iso => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  function deadlineMail(kind, { to, name, title, bishop, deadline }) {
+    const esc = v => String(v || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const site = config.origin.replace(/drogs\.dagministry\.org/, 'kuriakecastle.org');
+    const signin = `${site}/orderofpastorsingoodstanding/signup/#signin`, signup = `${site}/orderofpastorsingoodstanding/signup/`;
+    const dear = `${title || 'Pastor'} ${String(name || '').trim().split(/\s+/)[0] || ''}`.trim();
+    const byBishop = bishop ? `your bishop, ${bishop},` : 'your bishop';
+    const button = (href, label) => `<p style="margin:0 0 18px"><a href="${href}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">${label} →</a></p>`;
+    if (kind === 'reminder') {
+      const lines = [`Your registration on Kuriake Castle is still waiting for ${byBishop} to confirm you.`,
+        `Your bishop must confirm you by ${longDay(deadline)}. If you are not confirmed by then, your registration and account will be removed.`,
+        'Please speak to your bishop and ask them to sign in to Kuriake Castle and confirm you. If you named the wrong bishop, sign in and change your bishop on your profile.'];
+      return brandedMail({ from: config.from, to, subject: `Reminder: your bishop must confirm you by ${longDay(deadline)}`,
+        text: `Dear ${dear},\n\n${lines.join('\n\n')}\n\nView my registration: ${signin}\n\nKuriake Castle`,
+        html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px">${esc(lines[0])}</p><p style="margin:0 0 12px;padding:12px 14px;background:#fff7e6;border:1px solid #f1c56b;border-radius:8px;color:#5c3d00"><b>Your bishop must confirm you by ${esc(longDay(deadline))}.</b> If you are not confirmed by then, your registration and account will be removed.</p><p style="margin:0 0 18px">${esc(lines[2])}</p>${button(signin, 'View my registration')}<p style="margin:0">Kuriake Castle</p>` });
+    }
+    const lines = [`Your registration on Kuriake Castle was not confirmed by ${byBishop} within two weeks, so your registration and account have been removed.`,
+      'If you are still a pastor under this bishop, or under another bishop, please speak to them first and then create a new account and register again.'];
+    return brandedMail({ from: config.from, to, subject: 'Your Kuriake Castle account has been removed',
+      text: `Dear ${dear},\n\n${lines.join('\n\n')}\n\nRegister again: ${signup}\n\nIf you think this is a mistake, please contact the office.\n\nKuriake Castle`,
+      html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px">${esc(lines[0])}</p><p style="margin:0 0 18px">${esc(lines[1])}</p>${button(signup, 'Register again')}<p style="margin:0 0 12px">If you think this is a mistake, please contact the office.</p><p style="margin:0">Kuriake Castle</p>` });
+  }
+  async function sweepDeadlines(now = Date.now()) {
+    const state = await transaction(pool, conn => readState(conn, true));
+    const { remind, expire } = claimDeadlines(state, now);
+    const emailOf = async id => { const [[u]] = await pool.execute('SELECT email FROM dr_users WHERE id=?', [id]); return u?.email || ''; };
+    const who = r => ({ name: r.data.name, title: titleFor(r.data), bishop: bishopKeyed(state, r.data.bishopId)?.name || r.data.bishopName || '', deadline: claimDeadline(r) });
+    let reminded = 0, removed = 0;
+    for (const r of remind) {
+      const to = await emailOf(r.userId);
+      try { if (to) await mailer.sendMail(deadlineMail('reminder', { to, ...who(r) })); }
+      catch (error) { console.error('deadline reminder failed:', error?.message || error); continue; }
+      await transaction(pool, async conn => { const before = await readState(conn, true); const after = structuredClone(before); const x = after.registrations.find(y => y.userId === r.userId && y.year === r.year); if (x && !x.claimReminderAt) { x.claimReminderAt = new Date(now).toISOString(); await persistState(conn, before, after); } });
+      reminded++;
+    }
+    for (const r of expire) {
+      const to = await emailOf(r.userId);
+      // Still waiting at the moment of removal (a bishop may have just confirmed).
+      const current = (await transaction(pool, conn => readState(conn, true))).registrations.find(y => y.userId === r.userId && y.year === r.year);
+      if (current?.status !== 'unclaimed') continue;
+      await removeAccounts(pool, config, { id: '' }, { user: r.userId });
+      try { if (to) await mailer.sendMail(deadlineMail('removed', { to, ...who(r) })); } catch (error) { console.error('removal email failed:', error?.message || error); }
+      removed++;
+    }
+    if (reminded || removed) console.log(`Bishop deadline: ${reminded} reminded, ${removed} removed`);
+    return { reminded, removed };
+  }
+  handle.sweepDeadlines = sweepDeadlines;
+  handle.deadlineMail = deadlineMail;
 
   // The Order of Bishops / Pastors pages and Councils (office, 17 Nov). Step 1: the
   // Order pages password (a signed cookie, 12 hours; changing the password ends

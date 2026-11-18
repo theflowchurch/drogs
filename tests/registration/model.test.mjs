@@ -928,3 +928,17 @@ test("a receipt waits for the office before good standing; Paystack is confirmed
   assert.equal(inGoodStanding(paystack), true, "Paystack payments are confirmed straight away");
   assert.equal(inGoodStanding({ status: "confirmed", payment: "rejected" }), false, "a rejected receipt is not good standing");
 });
+
+test("the bishop's two-week deadline: a reminder after one week, removal after two (19 Nov)", async () => {
+  const { claimDeadlines, claimDeadline, claimDaysLeft } = await import("../../src/registration/model.mjs");
+  const day = 86400000, start = Date.parse("2026-11-01T10:00:00.000Z");
+  const waiting = { userId: "p", year: 2027, status: "unclaimed", submittedAt: new Date(start).toISOString(), data: { role: "pastor" } };
+  const s = { ...emptyState(), year: 2027, registrations: [waiting, { ...waiting, userId: "q", status: "confirmed" }] };
+  assert.equal(claimDeadline(waiting), "2026-11-15T10:00:00.000Z");
+  assert.equal(claimDaysLeft(waiting, start + 5 * day), 9);
+  assert.deepEqual(claimDeadlines(s, start + 6 * day), { remind: [], expire: [] }, "nothing in the first week");
+  assert.deepEqual(claimDeadlines(s, start + 7 * day).remind.map(r => r.userId), ["p"], "reminded after a week; confirmed pastors are left alone");
+  assert.deepEqual(claimDeadlines({ ...s, registrations: [{ ...waiting, claimReminderAt: "x" }] }, start + 8 * day).remind, [], "reminded once");
+  const late = claimDeadlines(s, start + 14 * day);
+  assert.deepEqual([late.remind.length, late.expire.map(r => r.userId)], [0, ["p"]], "removed when two weeks pass");
+});
