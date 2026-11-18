@@ -1070,17 +1070,9 @@ test("a confirmed pastor missing from their bishop's list is put back on it when
   assert.equal(s.rosters.length, 0, "the earlier state is untouched, so the new line is saved");
 });
 
-test("the public registers live under /licensingauthority/ and the old addresses send people there (19 Nov)", async () => {
-  const { requestHandler } = await import("../../src/server/http.mjs");
+test("the public registers live only under /licensingauthority/ (19 Nov): the old addresses are gone", async () => {
   const { existsSync } = await import("node:fs");
   assert.ok(existsSync("src/app/(portal)/licensingauthority/registerofbishopsingoodstanding/page.jsx"));
   assert.ok(existsSync("src/app/(portal)/licensingauthority/registerofpastorsingoodstanding/page.jsx"));
-  const handler = requestHandler({ origin: "https://kuriakecastle.org", api: async () => new Response("{}"), nextHandler: (req, res) => { res.writeHead(200); res.end("page"); } });
-  const visit = (url) => new Promise((done) => { const res = { headers: {}, setHeader(k, v) { this.headers[k] = v; }, writeHead(code, h = {}) { this.code = code; Object.assign(this.headers, h); }, end() { done(this); } }; handler({ url, method: "GET", headers: { host: "kuriakecastle.org" } }, res); });
-  for (const [from, to] of [["/registerofbishopsingoodstanding/", "/licensingauthority/registerofbishopsingoodstanding/"], ["/registerofpastorsingoodstanding", "/licensingauthority/registerofpastorsingoodstanding/"], ["/registerofbishopsingoodstanding/?q=1", "/licensingauthority/registerofbishopsingoodstanding/?q=1"]]) {
-    const r = await visit(from);
-    assert.equal(r.code, 301, from);
-    assert.equal(r.headers.Location, to, from);
-  }
-  assert.equal((await visit("/licensingauthority/registerofbishopsingoodstanding/")).code, 200, "the new address opens");
+  for (const old of ["registerofbishopsingoodstanding", "registerofpastorsingoodstanding", "bishops"]) assert.ok(!existsSync(`src/app/(portal)/${old}/page.jsx`), old);
 });
