@@ -1756,7 +1756,9 @@ function Participant({
           <p>
             {current.status === "confirmed"
               ? `Your registration has been confirmed. You are in good standing for ${state.year}.`
-              : "Your registration has been submitted. The office is reviewing it, and your status will appear on your profile."}
+              : current.status === "unclaimed"
+                ? "Your registration has been submitted. Your bishop has been asked to confirm you, and your status will appear on your profile."
+                : "Your registration has been submitted. The office is reviewing it, and your status will appear on your profile."}
             {current.payment === "verified" ? " Your payment has been received." : ""}
           </p>
           <button className="reg-primary" onClick={() => setViewedProfile(true)}>View my profile →</button>
@@ -2167,6 +2169,9 @@ function RegistrationForm({
                 e.preventDefault();
                 run(async () => {
                   validateProfile(data, actor.email, { catalog });
+                  // Continue also saves the draft (19 Nov): someone who stops at the payment
+                  // step finds their photo and details still there when they come back.
+                  if (!editing && (!mine || mine.status === "draft")) { await api.action(actor, "save", data); await refresh(); }
                   setData((d) => ({ ...d, photoConfirmed: false }));
                   setAccurate(false);
                   next();
