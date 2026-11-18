@@ -22,6 +22,17 @@ export function requestHandler({ origin, api, nextHandler }) {
       res.writeHead(308, { Location: siteRedirect, 'Cache-Control': 'no-store' });
       return res.end();
     }
+    // The Order of Bishops / Pastors pages and Councils (not their sign-up pages)
+    // open only after the Order pages password and a signed-in member in good
+    // standing; otherwise the person goes to /access/ to do those steps.
+    if (api.orderAccess && ['GET', 'HEAD'].includes(req.method) && /^\/(orderofbishopsingoodstanding|orderofpastorsingoodstanding|councils)(\/|$)/.test(path) && !/^\/[a-z]+\/signup(\/|$)/.test(path)) {
+      const probe = new Request(new URL(req.url, origin), { headers: req.headers });
+      const access = await api.orderAccess(probe).catch(() => ({ step: 'code' }));
+      if (access.step !== 'ok') {
+        res.writeHead(302, { Location: `/access/?next=${encodeURIComponent(req.url || path)}`, 'Cache-Control': 'no-store' });
+        return res.end();
+      }
+    }
     if (!path.startsWith('/api/registration/') && !path.startsWith('/api/v1/')) {
       // Pages must not sit in the CDN for a year after a deploy. Hashed /_next/static files and
       // /assets/ images may be cached for a year (an image that changes gets a new file name).

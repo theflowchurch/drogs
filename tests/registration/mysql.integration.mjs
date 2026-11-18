@@ -161,6 +161,34 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.ok(mails.at(-1).attachments?.some(a => a.cid === 'required'), 'the required attire example is embedded when the photo is the problem');
     assert.match(mails.at(-1).html, /cid:required/);
     assert.equal((await call('action', office.cookie, { name: 'approveBishop', payload: { userId: bishop.data.id, referenceId: 'B1' } })).status, 200);
+    // 17 Nov: the Order pages. Open until a password is saved; then password, sign-in, good standing.
+    assert.equal((await call('order-access')).data.step, 'ok', 'no password saved yet: the pages stay open');
+    assert.equal((await call('settings', office.cookie, { values: { ORDER_ACCESS_CODE: 'order-pass-123' } })).status, 200);
+    assert.equal((await call('order-access')).data.step, 'code');
+    assert.equal((await call('auth/order-code', '', { code: 'admin-test-code' })).status, 401, 'the office code is not the Order pages password');
+    const passed = await call('auth/order-code', '', { code: 'order-pass-123' });
+    assert.equal(passed.status, 200); assert.match(passed.cookie, /^kc_order=\d+\.[a-f0-9]+$/);
+    assert.equal((await call('order-access', passed.cookie)).data.step, 'signin', 'the password alone is not enough');
+    assert.equal((await call('order-access', `${passed.cookie}; ${stranger.cookie}`)).data.step, 'standing', 'signed in but not registered');
+    assert.equal((await call('order-access', `${passed.cookie}; ${bishop.cookie}`)).data.step, 'ok', 'a confirmed bishop gets in');
+    assert.equal((await call('order-access', bishop.cookie)).data.step, 'code', 'a member still needs the password');
+    assert.equal((await call('order-access', 'kc_order=9999999999999.0000; ' + bishop.cookie)).data.step, 'code', 'a forged pass is refused');
+    {
+      // The page itself: the server sends people to /access/ until every step is done.
+      const gate = requestHandler({ origin: config.origin, api, nextHandler: (req, res) => { res.writeHead(200); res.end('page'); } });
+      const visit = (path, cookie = '') => new Promise(resolve => {
+        const res = { headers: {}, setHeader(k, v) { this.headers[k.toLowerCase()] = v; }, writeHead(code, h = {}) { this.code = code; Object.assign(this.headers, Object.fromEntries(Object.entries(h).map(([k, v]) => [k.toLowerCase(), v]))); }, end(body) { resolve({ code: this.code || 200, location: this.headers.location, body }); } };
+        gate({ method: 'GET', url: path, headers: { host: 'kuriakecastle.org', cookie } }, res);
+      });
+      const away = await visit('/orderofbishopsingoodstanding/ud-ghana-central/');
+      assert.equal(away.code, 302); assert.equal(away.location, '/access/?next=%2Forderofbishopsingoodstanding%2Fud-ghana-central%2F');
+      assert.equal((await visit('/orderofpastorsingoodstanding/')).code, 302);
+      assert.equal((await visit('/councils/')).code, 302);
+      assert.equal((await visit('/orderofbishopsingoodstanding/signup/')).body, 'page', 'the sign-up page stays open');
+      assert.equal((await visit('/registerofbishopsingoodstanding/')).body, 'page', 'the public Register is not affected');
+      assert.equal((await visit('/orderofbishopsingoodstanding/', `${passed.cookie}; ${bishop.cookie}`)).body, 'page', 'in good standing: the page opens');
+    }
+    assert.equal((await call('settings', office.cookie, { values: { ORDER_ACCESS_CODE: '' } })).status, 200);
     assert.equal((await call('action', pastor.cookie, { name: 'save', payload: profile(bishopPhoto, 'pastor') })).status, 400, 'cannot save another account photo');
     assert.equal((await call('action', pastor.cookie, { name: 'save', payload: profile(pastorPhoto, 'pastor') })).status, 200);
     assert.equal((await call('action', pastor.cookie, { name: 'submit', payload: { ...profile(pastorPhoto, 'pastor'), country: 'United States' } })).status, 400, 'international registration cannot bypass the required payment receipt');

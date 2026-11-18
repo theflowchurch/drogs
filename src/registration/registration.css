@@ -4311,3 +4311,14 @@ input[type="date"] {
 .reg-dash-todo { margin: 16px max(24px, 4vw); }
 .reg-alert-action { display: inline-block; margin: 10px 0 0; padding: 8px 14px; border-radius: 8px; border: 0; background: #b42318; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
 .reg-alert button.reg-alert-action { position: static; display: block; font-size: 14px; background: #b42318; color: #fff; }
+/* /access/: the way in to the private Order pages (17 Nov). */
+.reg-access-gate { min-height: 100vh; background: linear-gradient(160deg, #13284b, #0b1530); color: #fff; }
+.reg-access-head { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 22px 16px; border-bottom: 2px solid #c9a95b; }
+.reg-access-head img { width: 150px; height: auto; }
+.reg-access-head span { color: #d9b765; font: 700 clamp(14px, 3.4vw, 22px)/1.2 Georgia, serif; letter-spacing: .03em; }
+.reg-access-main { display: grid; place-items: start center; padding: 48px 16px 80px; }
+.reg-access-card { width: min(460px, 100%); color: var(--ink, #172139); }
+.reg-access-card h1 { font-size: 28px; margin: 8px 0 8px; }
+.reg-access-card p { line-height: 1.6; }
+.reg-access-card form { display: grid; gap: 12px; }
+.reg-access-button { display: block; text-align: center; text-decoration: none; margin-top: 12px; }

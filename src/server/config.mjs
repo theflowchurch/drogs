@@ -23,6 +23,8 @@ export function configuration(env = process.env) {
     sourceEnv: env,
     origin: origin.origin, secure: origin.protocol === 'https:', secret: env.SESSION_SECRET, admins,
     siteCode: env.SITE_ACCESS_CODE, adminCode: env.ADMIN_ACCESS_CODE,
+    // The Order of Bishops / Pastors pages and Councils (17 Nov): a separate password, then a member in good standing.
+    orderCode: (env.ORDER_ACCESS_CODE || '').trim(),
     db: { host: env.DB_HOST, port: port('DB_PORT', 3306), database: env.DB_NAME,
       user: env.DB_USER, password: env.DB_PASSWORD, charset: 'utf8mb4', timezone: 'Z',
       ...(env.DB_SSL === 'true' ? { ssl: { rejectUnauthorized: true, ...(env.DB_SSL_CA ? { ca: env.DB_SSL_CA.replace(/\\n/g, '\n') } : {}) } } : {}) },

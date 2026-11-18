@@ -7,14 +7,14 @@ import { createKeyService } from './api-keys.mjs';
 import { createSupport } from './support.mjs';
 import { applySettings, bootstrapSettings, describeSettings, officeMembers, readSettings, writeSettings } from './settings.mjs';
 import { readFile } from 'node:fs/promises';
-import { createHash, randomUUID } from 'node:crypto';
+import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import { paymentJson, createQuote, readQuote, checkoutReturnUrl, validateQuotedPayment } from './paystack.mjs';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
 import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor } from '../registration/model.mjs';
 import { canonicalPersonName } from '../registration/name-corrections.mjs';
 import { transaction, readState, persistState } from './database.mjs';
-import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit } from './auth.mjs';
+import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit, digest } from './auth.mjs';
 import { assertOwnedMedia, assignedPortrait, canReadMedia } from './storage.mjs';
 import { photoProgress, photoProgressGroups } from '../registration/photo-progress.mjs';
 import { inGhana, paymentReady } from '../registration/manual-payments.mjs';
@@ -69,7 +69,34 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px"><b>${esc(who)}</b>${where ? `, based in ${esc(where)},` : ''} has registered on Kuriake Castle and identified you as their supervising bishop.</p><p style="margin:0 0 18px">${esc(ask)}</p><p style="margin:0 0 18px"><a href="${link}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">${button} →</a></p><p style="margin:0 0 12px">If you recognise this pastor, select <b>Confirm Pastor</b>. If the pastor is not under your oversight, select <b>Not My Pastor</b>.</p><p style="margin:0 0 12px">Thank you for helping us maintain accurate pastoral records.</p><p style="margin:0">Kuriake Castle</p>` }));
   }
 
-  return async function handle(request) {
+  // The Order of Bishops / Pastors pages and Councils (office, 17 Nov). Step 1: the
+  // Order pages password (a signed cookie, 12 hours; changing the password ends
+  // them). Step 2: signed in. Step 3: in good standing this year (or the office).
+  // With no password saved the pages stay open, as before.
+  const ORDER_COOKIE = 'kc_order', ORDER_MS = 12 * 3600000;
+  const orderSig = exp => digest(config.secret, `order:${exp}:${digest(config.secret, `order-code:${config.orderCode}`)}`);
+  const orderCookie = request => (request.headers.get('cookie') || '').split(';').map(c => c.trim()).find(c => c.startsWith(`${ORDER_COOKIE}=`))?.slice(ORDER_COOKIE.length + 1) || '';
+  function orderPassed(request) {
+    const [exp, sig] = orderCookie(request).split('.');
+    if (!exp || !sig || Number(exp) <= Date.now()) return false;
+    const a = Buffer.from(sig), b = Buffer.from(orderSig(exp));
+    return a.length === b.length && timingSafeEqual(a, b);
+  }
+  async function orderAccess(request) {
+    await applySettings(config, pool);
+    if (!config.orderCode) return { step: 'ok', open: true };
+    if (!orderPassed(request)) return { step: 'code' };
+    const who = await auth.actor(request);
+    if (!who) return { step: 'signin' };
+    if (who.office) return { step: 'ok' };
+    const [[row]] = await pool.execute('SELECT r.data FROM dr_registrations r JOIN dr_settings s ON s.id=1 AND r.registration_year=s.current_year WHERE r.user_id=?', [who.id]);
+    const reg = row ? (typeof row.data === 'string' ? JSON.parse(row.data) : row.data) : null;
+    if (reg?.status === 'confirmed') return { step: 'ok' };
+    return { step: 'standing', status: reg?.status || 'none', role: reg?.data?.role || '' };
+  }
+  handle.orderAccess = orderAccess;
+  return handle;
+  async function handle(request) {
     try {
       const url = new URL(request.url), path = url.pathname.replace(/\/$/, ''), method = request.method;
       await applySettings(config, pool);
@@ -81,6 +108,16 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (method === 'POST' && request.headers.get('origin') !== url.origin)
         throw new HttpError(403, 'Open the form on the configured website before continuing.');
       if (request.headers.get('sec-fetch-site') === 'cross-site') throw new HttpError(403, 'Cross-site requests are not allowed.');
+      if (path === '/api/registration/order-access' && method === 'GET') return json(await orderAccess(request));
+      if (path === '/api/registration/auth/order-code' && method === 'POST') {
+        const { code } = await jsonBody(request);
+        await rateLimit(pool, config, `order-code:${request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'all'}`, 20, 600000);
+        if (!config.orderCode) return json({ ok: true, open: true });
+        const a = Buffer.from(digest(config.secret, `order-try:${String(code || '')}`)), b = Buffer.from(digest(config.secret, `order-try:${config.orderCode}`));
+        if (typeof code !== 'string' || !timingSafeEqual(a, b)) throw new HttpError(401, 'That password is not correct.');
+        const exp = String(Date.now() + ORDER_MS);
+        return json({ ok: true }, 200, { 'Set-Cookie': `${ORDER_COOKIE}=${exp}.${orderSig(exp)}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${ORDER_MS / 1000}${config.secure ? '; Secure' : ''}` });
+      }
       if (path === '/api/registration/auth/office-code' && method === 'POST') {
         const session = await auth.officeSignIn((await jsonBody(request)).code);
         await auth.signOut(request);

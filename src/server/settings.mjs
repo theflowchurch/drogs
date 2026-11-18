@@ -18,6 +18,7 @@ export const SETTINGS = [
   ['PUBLIC_DIRECTORY_SOURCE', 'Public directory shows', '"original" (the existing roster, for now) or "roll" (only people confirmed this year).'],
   ['PUBLIC_PHOTOS', 'Public directory photographs', '"confirmed" (a photograph appears only once the person is confirmed for this year; everyone else is a dark silhouette — the default) or "all" (every photograph shows).'],
   ['ADMIN_ACCESS_CODE', 'Office access code', 'The code typed at /admin/ before the email.'],
+  ['ORDER_ACCESS_CODE', 'Order pages password', 'Asked before the Order of Bishops, Order of Pastors and Councils pages open (then the person signs in and must be in good standing). Different from the office code.'],
   ['ADMIN_EMAILS', 'Office emails', 'Comma-separated. Only these addresses can sign in to /admin/; each sign-in is confirmed by an emailed code.'],
 ];
 const allowed = new Set(SETTINGS.map(([key]) => key));
