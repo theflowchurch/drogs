@@ -29,6 +29,9 @@ export const STANDARD_DIRECTORY_HEADING = 'Licensed Ministers in Good Standing';
 export const DENOMINATION_SITES = Object.fromEntries(Object.entries(CHURCH_SITES)
   .map(([path, site]) => [path, { ...STANDARD_PRESENTATION, ...site, directoryHeading: STANDARD_DIRECTORY_HEADING }]));
 export const denominationSite = key => DENOMINATION_SITES[key] || null;
+// A church page's address (office, 19 Nov): kuriakecastle.org/<church>/rollofgoodstanding/licensingauthority/…
+export const CHURCH_ROOT = 'rollofgoodstanding/licensingauthority';
+export const churchHref = (path, sub = '', base = '') => `${base}/${path}/${CHURCH_ROOT}/${sub ? `${String(sub).replace(/^\/+|\/+$/g, '')}/` : ''}`;
 // Scope the saved, current public fields; never infer a church from somebody's
 // name, country, or a similar-looking denomination (Go Ye and Lighthouse City
 // remain distinct). The main site and office continue to see the whole roster.

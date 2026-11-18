@@ -1,4 +1,4 @@
+import { notFound } from 'next/navigation';
 import RegistrationApp from '../../../../registration/RegistrationApp';
-import DenominationApp from '../../../../registration/DenominationApp';
 import { denominationSite } from '../../../../registration/denomination-sites.mjs';
-export default async function Page({ params }) { const { organizationSite } = await params; return denominationSite(organizationSite) ? <DenominationApp site={organizationSite} browse /> : <RegistrationApp organizationSite={organizationSite} browse />; }
+export default async function Page({ params }) { const { organizationSite } = await params; if (denominationSite(organizationSite)) notFound(); return <RegistrationApp organizationSite={organizationSite} browse />; }

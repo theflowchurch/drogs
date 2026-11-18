@@ -1,4 +1,4 @@
-import { denominationSite } from './denomination-sites.mjs';
+import { denominationSite, churchHref } from './denomination-sites.mjs';
 import LicensedMinisterNotice from './LicensedMinisterNotice';
 import DenominationLanding from './DenominationLanding';
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
@@ -9,7 +9,7 @@ function ChurchName({ config }) {
 export default function DenominationHome({ site, concept = 1 }) {
   const config = denominationSite(site);
   if (config.homeLayout) return <DenominationLanding site={site} config={config}/>;
-  const link = <a className="denom-action" href={`${base}/${site}/directory/`}>{config.directoryAction}<Arrow/></a>;
+  const link = <a className="denom-action" href={churchHref(site, 'directory', base)}>{config.directoryAction}<Arrow/></a>;
   const mark = <img className="denom-hero-logo" src={`${base}/${config.logo}`} alt={`${config.name} logo`} fetchPriority="high"/>;
   return <main className="denom-home denom-new-landing">
     {site === 'lighthousechapelinternational' && concept === 1 && <section className="lighthouse-beacon">

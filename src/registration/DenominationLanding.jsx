@@ -1,3 +1,4 @@
+import { churchHref } from './denomination-sites.mjs';
 import LicensedMinisterNotice from './LicensedMinisterNotice';
 import set1 from './landings/set1';
 import set2 from './landings/set2';
@@ -13,7 +14,7 @@ export default function DenominationLanding({ site, config }) {
     ? <img className="church-landing-logo" src={`${base}/${config.logo}`} alt={`${config.name} logo`} fetchPriority="high"/>
     : <span className="church-text-mark">{config.shortName}</span>;
   const title = <div className="church-landing-identity"><h1 className="denom-church-name">{config.shortName}</h1>{config.subtitle && <p className="denom-church-subtitle">{config.subtitle}</p>}</div>;
-  const action = <a className="denom-action" href={`${base}/${site}/directory/`}>{config.directoryAction}<span aria-hidden="true">→</span></a>;
+  const action = <a className="denom-action" href={churchHref(site, 'directory', base)}>{config.directoryAction}<span aria-hidden="true">→</span></a>;
   const description = <p className="denom-home-description">Directory of bishops and pastors licensed to minister within {config.name}.</p>;
   const label = <p className="denom-kicker">MINISTERIAL DIRECTORY</p>;
   const Copy = ({ logo = false, kicker = true }) => <div className="hero-copy">{logo && mark}{kicker && label}{title}{description}{action}</div>;

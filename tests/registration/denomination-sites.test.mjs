@@ -92,3 +92,10 @@ test('every church page with a logo has a square browser-tab icon (wide logos ar
   const missing = Object.entries(DENOMINATION_SITES).filter(([path, s]) => s.logo && !existsSync(`assets/denominations/icons/${path}.png`)).map(([path]) => path);
   assert.deepEqual(missing, []);
 });
+
+test('church pages live at /<church>/rollofgoodstanding/licensingauthority/ (19 Nov)', async () => {
+  const { churchHref } = await import('../../src/registration/denomination-sites.mjs');
+  assert.equal(churchHref('gochurch'), '/gochurch/rollofgoodstanding/licensingauthority/');
+  assert.equal(churchHref('gochurch', 'signup', 'https://kuriakecastle.org'), 'https://kuriakecastle.org/gochurch/rollofgoodstanding/licensingauthority/signup/');
+  assert.equal(churchHref('gochurch', '/directory/'), '/gochurch/rollofgoodstanding/licensingauthority/directory/');
+});

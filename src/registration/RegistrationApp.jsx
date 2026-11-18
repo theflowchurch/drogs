@@ -27,11 +27,11 @@ const DemoContext = createContext(null);
 // Church sites name the church, never the central site, in what members read.
 const useBrandName = () => { const church = useContext(ChurchContext), fellowship = useContext(FellowshipContext); return fellowship ? fellowship.name : church?.config.name || "Kuriake Castle"; };
 // Links stay on the church site (or the bishops' sign-up) when there is one.
-const usePagePath = () => { const site = useContext(OrganizationSiteContext), church = useContext(ChurchContext), fellowship = useContext(FellowshipContext); return (path) => fellowship && path === "signup" ? fellowshipSignupPath(base, fellowship) : church ? `${base}/${church.path}/${path}/` : sitePath(site, path, base); };
+const usePagePath = () => { const site = useContext(OrganizationSiteContext), church = useContext(ChurchContext), fellowship = useContext(FellowshipContext); return (path) => fellowship && path === "signup" ? fellowshipSignupPath(base, fellowship) : church ? churchHref(church.path, path, base) : sitePath(site, path, base); };
 import { ORGANIZATION_SITES, FLOW_GROUPS, peopleForSite, siteCatalog, siteOfOrganization, sitePath, organizationSiteKey } from "./organization-sites.mjs";
 import * as api from "./client";
 import { signupBishopChoices } from './signup-bishops.mjs';
-import { denominationSite, churchPlacement, inChurch, churchOfDenomination } from './denomination-sites.mjs';
+import { denominationSite, churchPlacement, inChurch, churchOfDenomination, churchHref } from './denomination-sites.mjs';
 import { fellowshipOf, fellowshipSignupPath } from './fellowship.mjs';
 import { FELLOWSHIP_DEMOS } from './fellowship-demo.mjs';
 import { LegalFooter } from "./Docs";
@@ -567,7 +567,7 @@ export default function RegistrationApp({
   const site = church ? siteOfOrganization(church.organization) : office ? "" : organizationSiteKey(organizationSite);
   const siteConfig = ORGANIZATION_SITES[site];
   const brand = fellowship || churchConfig || siteConfig;
-  const home = fellowship ? fellowshipSignupPath(base, fellowship) : churchConfig ? `${base}/${churchPath}/` : sitePath(site, "", base);
+  const home = fellowship ? fellowshipSignupPath(base, fellowship) : churchConfig ? churchHref(churchPath, "", base) : sitePath(site, "", base);
   const signupPath = fellowship ? fellowshipSignupPath(base, fellowship) : churchConfig ? `${home}signup/` : sitePath(site, "signup", base);
   const snapshots = useRef(null), publicSnapshots = useRef(null), saving = useRef(0);
   if (!snapshots.current) snapshots.current = snapshotSync(api.snapshot, data => {
@@ -1395,7 +1395,7 @@ function PasswordForm({ signup, onSwitch, run, busy, onActor }) {
   useEffect(() => { const go = () => { setProblem(""); setView("forgot"); }; window.addEventListener("kc-start-reset", go); return () => window.removeEventListener("kc-start-reset", go); }, []);
   // "Create an account" on the no-account message keeps the typed email.
   useEffect(() => { const go = () => { setProblem(""); setPassword(""); setConfirm(""); if (onSwitch) onSwitch("signup"); else setView("signup"); }; window.addEventListener("kc-start-signup", go); return () => window.removeEventListener("kc-start-signup", go); }, [onSwitch]);
-  const signinHref = `${fellowship ? fellowshipSignupPath(base, fellowship) : church ? `${base}/${church.path}/signup/` : sitePath(site, "signup", base)}#signin`;
+  const signinHref = `${fellowship ? fellowshipSignupPath(base, fellowship) : church ? churchHref(church.path, "signup", base) : sitePath(site, "signup", base)}#signin`;
   const signupHref = signinHref.replace(/#signin$/, "");
   if (paused && view === "signup") return <div className="reg-paused" role="status"><h3>{entrance === "appointments" ? "Appointment registration is paused" : "Sign-up is paused"}</h3><p>{paused}</p><p className="reg-small">Already registered? Use Sign in instead.</p></div>;
   const twice = view === "signup" || view === "reset";
@@ -1569,7 +1569,7 @@ function CodeForm({ office, signup = false, mode = office ? "office" : signup ? 
   )}
   {signup && (
     <p className="reg-small">
-      Already registered? <a href={`${fellowship ? fellowshipSignupPath(base, fellowship) : church ? `${base}/${church.path}/signup/` : sitePath(site, "signup", base)}#signin`}>Sign in</a>
+      Already registered? <a href={`${fellowship ? fellowshipSignupPath(base, fellowship) : church ? churchHref(church.path, "signup", base) : sitePath(site, "signup", base)}#signin`}>Sign in</a>
     </p>
   )}
 </form>

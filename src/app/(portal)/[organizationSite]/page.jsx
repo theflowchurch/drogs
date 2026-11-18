@@ -1,4 +1,5 @@
+import { notFound } from 'next/navigation';
 import RegistrationApp from '../../../registration/RegistrationApp';
-import DenominationApp from '../../../registration/DenominationApp';
 import { denominationSite } from '../../../registration/denomination-sites.mjs';
-export default async function Page({ params }) { const { organizationSite } = await params; return denominationSite(organizationSite) ? <DenominationApp site={organizationSite} /> : <RegistrationApp organizationSite={organizationSite} />; }
+// Church pages live at /<church>/rollofgoodstanding/licensingauthority/ (office, 19 Nov); here only the umbrella sites.
+export default async function Page({ params }) { const { organizationSite } = await params; if (denominationSite(organizationSite)) notFound(); return <RegistrationApp organizationSite={organizationSite} />; }

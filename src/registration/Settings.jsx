@@ -4,7 +4,7 @@ import * as api from './client';
 // Office-managed integration settings. Saved values are never shown back; the
 // office sees only whether each one is set.
 import { catalogOf, feesOf, orgLabel, signupOf, SIGNUP_PAUSED } from './model.mjs';
-import { DENOMINATION_SITES } from './denomination-sites.mjs';
+import { DENOMINATION_SITES, churchHref } from './denomination-sites.mjs';
 // Organizations, their denominations and the fees: editable lists saved as one action each.
 // Pause or reopen sign-up. Paused: new people cannot request a code or submit;
 // everyone already registered keeps signing in, paying and editing.
@@ -219,7 +219,7 @@ export default function Settings({ run, state, perform, actor }) {
     <ul className="reg-admin-list">{links.map(([label, path]) => <li key={path}><span><b>{label}</b><br /><a href={origin + path}>{origin + path}</a></span><button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button></li>)}</ul>
   </Category>}
   {visible('church-links') && <Category title="Church sign-up links" summary={`${churches.length} churches`} open={Boolean(query.trim())}>
-    <ul className="reg-admin-list">{churches.filter(([, c]) => !query.trim() || matches(c.name)).map(([path, c]) => <li key={path}><span><b>{c.name}</b><br /><a href={`${origin}/${path}/signup/`}>{`${origin}/${path}/signup/`}</a></span>{copy(`/${path}/signup/`)}</li>)}</ul>
+    <ul className="reg-admin-list">{churches.filter(([, c]) => !query.trim() || matches(c.name)).map(([path, c]) => <li key={path}><span><b>{c.name}</b><br /><a href={churchHref(path, 'signup', origin)}>{churchHref(path, 'signup', origin)}</a></span>{copy(churchHref(path, 'signup'))}</li>)}</ul>
   </Category>}
   <form className="reg-settings-form" onSubmit={event => {
     event.preventDefault();
