@@ -199,7 +199,9 @@ export function createAuth({ pool, config, mailer }) {
       await rateLimit(pool, config, `login:${email}`, 10, 900000);
       await rateLimit(pool, config, 'login-global', 2000, 3600000);
       const [[row]] = await pool.execute('SELECT u.id,u.email,p.password_hash FROM dr_users u LEFT JOIN dr_passwords p ON p.user_id=u.id WHERE u.email=?', [email]);
-      if (row && !row.password_hash && await isMember(email)) throw new HttpError(401, 'You have not set a password yet. Use “Forgot password?” to create one.');
+      // No account at all, or an account from before passwords (19 Nov): say what to do next.
+      if (!row) throw new HttpError(401, 'We could not find an account for this email. Check the address, or create an account.');
+      if (!row.password_hash) throw new HttpError(401, 'You have not set a password yet. Use “Forgot password?” to create one.');
       // Five wrong passwords in a row lock the password until it is reset (17 Nov).
       const LOCKED = 'You have entered the wrong password 5 times. For your security, please reset your password using “Forgot password?”.';
       const [[failed]] = row ? await pool.execute('SELECT failures FROM dr_login_failures WHERE user_id=?', [row.id]) : [[null]];

@@ -868,6 +868,16 @@ export default function RegistrationApp({
               Reset my password
             </button>
           )}
+          {/not set a password yet/i.test(error) && (
+            <button type="button" className="reg-alert-action" onClick={() => { window.dispatchEvent(new Event("kc-start-reset")); setError(""); }}>
+              Create my password
+            </button>
+          )}
+          {/could not find an account/i.test(error) && (
+            <button type="button" className="reg-alert-action" onClick={() => { window.dispatchEvent(new Event("kc-start-signup")); setError(""); }}>
+              Create an account
+            </button>
+          )}
           {/contact the office/i.test(error) && (
             <button type="button" className="reg-alert-action" onClick={() => { contactOffice(/already registered and confirmed under/i.test(error) ? `${error.replace(/ Please contact the office.*$/i, "")}\n\nThis pastor should move to me. Please move them to my list.` : /3 times/i.test(error) ? `I could not reset my password: ${error.replace(/ Please contact the office.*$/i, "")} Please help me reset it.` : error, document.querySelector('.reg-card input[type=email]')?.value || ""); setError(""); }}>
               Contact the office
@@ -1135,13 +1145,18 @@ export default function RegistrationApp({
                         mode="registered"
                       />
                     ) : null)}
+                  {/* Members see the whole roll here, whichever church or group page they signed in on (19 Nov). */}
                   {rollTabRole(tab) && (
-                    <PublicDirectory
-                      key={tab}
-                      data={{ referencePeople: state.referencePeople, source: state.publicDirectory || "original", photos: state.publicPhotos, roll: state.roll || [], catalog: catalogOf(state), year: state.year, hidden: state.hidden, overrides: state.overrides, extraReferences: state.extraReferences }}
-                      embedded
-                      role={rollTabRole(tab)}
-                    />
+                    <OrganizationSiteContext.Provider value="">
+                      <ChurchContext.Provider value={null}>
+                        <PublicDirectory
+                          key={tab}
+                          data={{ referencePeople: state.referencePeople, source: state.publicDirectory || "original", photos: state.publicPhotos, roll: state.roll || [], catalog: catalogOf(state), year: state.year, hidden: state.hidden, overrides: state.overrides, extraReferences: state.extraReferences }}
+                          embedded
+                          role={rollTabRole(tab)}
+                        />
+                      </ChurchContext.Provider>
+                    </OrganizationSiteContext.Provider>
                   )}
                   {view === "Existing records" && (
                     <Directory
@@ -1243,7 +1258,7 @@ function EmailChange({ actor, run, refresh, onDone }) {
     <button className="reg-primary full">{sent ? "Confirm new email →" : "Send code to the new email →"}</button>
   </form>;
 }
-function HelpButton({ actor, run }) {
+export function HelpButton({ actor, run }) {
   const [open, setOpen] = useState(false),
     [message, setMessage] = useState(""),
     [contact, setContact] = useState(""),
@@ -1375,6 +1390,8 @@ function PasswordForm({ signup, onSwitch, run, busy, onActor }) {
   }, [signup, entrance]);
   // "Reset my password" on the five-wrong-passwords message opens the reset step here.
   useEffect(() => { const go = () => { setProblem(""); setView("forgot"); }; window.addEventListener("kc-start-reset", go); return () => window.removeEventListener("kc-start-reset", go); }, []);
+  // "Create an account" on the no-account message keeps the typed email.
+  useEffect(() => { const go = () => { setProblem(""); setPassword(""); setConfirm(""); if (onSwitch) onSwitch("signup"); else setView("signup"); }; window.addEventListener("kc-start-signup", go); return () => window.removeEventListener("kc-start-signup", go); }, [onSwitch]);
   const signinHref = `${fellowship ? fellowshipSignupPath(base, fellowship) : church ? `${base}/${church.path}/signup/` : sitePath(site, "signup", base)}#signin`;
   const signupHref = signinHref.replace(/#signin$/, "");
   if (paused && view === "signup") return <div className="reg-paused" role="status"><h3>{entrance === "appointments" ? "Appointment registration is paused" : "Sign-up is paused"}</h3><p>{paused}</p><p className="reg-small">Already registered? Use Sign in instead.</p></div>;
@@ -2880,7 +2897,8 @@ const filterOptions = (list, org, group = "") => {
     [...new Set(from.map((p) => p[field]).filter(Boolean))].sort();
   return {
     organization: unique("organization", list),
-    group: unique("group", scope),
+    // Every group of the organization stays offered after one is picked (19 Nov).
+    group: unique("group", list.filter((p) => !org || p.organization === org)),
     // Only denominations that still exist; the rest fall under "No denomination".
     denomination: unique("denomination", scope.filter((p) => p.denominationListed !== false)),
     unlisted: scope.filter((p) => p.denominationListed === false).length,

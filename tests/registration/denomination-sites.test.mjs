@@ -85,3 +85,10 @@ test('a church site locks sign-up to its own organization and denomination and o
  assert.equal(churchPlacement({organizations:[],denominations:{}},'allosmegachurch').organization,'','a church missing from the catalog stays closed');
  assert.equal(churchOfDenomination('Allos Mega Church'),'allosmegachurch');
 });
+
+test('every church page with a logo has a square browser-tab icon (wide logos are not squashed)', async () => {
+  const { existsSync } = await import('node:fs');
+  const { DENOMINATION_SITES } = await import('../../src/registration/denomination-sites.mjs');
+  const missing = Object.entries(DENOMINATION_SITES).filter(([path, s]) => s.logo && !existsSync(`assets/denominations/icons/${path}.png`)).map(([path]) => path);
+  assert.deepEqual(missing, []);
+});
