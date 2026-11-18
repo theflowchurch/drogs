@@ -248,6 +248,12 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.doesNotMatch(saved.photo_key, /^https:/, 'database stores permanent keys, not expiring URLs');
     assert.equal((await call('action', office.cookie, { name: 'reviewPayment', payload: { userId: pastor.data.id, result: 'verified' } })).status, 200);
     assert.equal((await call(`media?path=${pastorPhoto}`)).status, 200, 'public directory portrait without a session once in good standing');
+    await new Promise(r => setTimeout(r, 100));
+    // 19 Nov: confirmed by the bishop and payment confirmed: the pastor is told, once, with the bishop's own title.
+    const standingMails = mails.filter(m => /You are now in good standing/.test(m.subject));
+    assert.equal(standingMails.filter(m => m.to === 'pastor@example.com').length, 1, 'the pastor is told once they are in good standing');
+    assert.match(standingMails.find(m => m.to === 'pastor@example.com').text, /has confirmed you, and the office has confirmed your payment/);
+    assert.ok(!standingMails.some(m => m.to === 'bishop@example.com'), 'a bishop marked paid by the office (not a receipt) gets no good-standing email');
     // 17 Nov: a pastor may change their bishop on their profile; they wait again and the new bishop (not yet registered) is emailed at the address we hold.
     const changed = await call('action', pastor.cookie, { name: 'update', payload: { ...profile(pastorPhoto, 'pastor'), bishopId: 'B2', bishopFirstName: 'Abraham Nii Ayi', bishopLastName: 'Aryee' } });
     assert.equal(changed.status, 200);

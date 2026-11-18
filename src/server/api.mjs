@@ -72,6 +72,50 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px"><b>${esc(who)}</b>${where ? `, based in ${esc(where)},` : ''} has registered on Kuriake Castle and identified you as their supervising bishop.</p><p style="margin:0 0 18px">${esc(ask)}</p><p style="margin:0 0 18px"><a href="${link}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">${button} →</a></p><p style="margin:0 0 12px">If you recognise this pastor, select <b>Confirm Pastor</b>. If the pastor is not under your oversight, select <b>Not My Pastor</b>.</p><p style="margin:0 0 12px">Thank you for helping us maintain accurate pastoral records.</p><p style="margin:0">Kuriake Castle</p>` }));
   }
 
+  // A pastor's bishop with their own title (office, 19 Nov): Mother, Episcopal Sister or Bishop.
+  function titledBishop(state, r) {
+    const bishop = bishopKeyed(state, r.data.bishopId);
+    const reg = bishop && state.registrations.find(x => x.userId === bishop.id && x.year === state.year);
+    const ref = people.find(p => p.id === (bishop?.referenceId || r.data.bishopId) && p.role === 'bishop');
+    const name = canonicalPersonName(ref?.id, ref?.name || reg?.data?.name || bishop?.name || r.data.bishopName || '');
+    const title = ref?.title || (reg?.data ? titleFor(reg.data) : 'Bishop');
+    return name ? `${title} ${name}` : '';
+  }
+  // "You are now in good standing" (office, 19 Nov). Pastors: once confirmed by their
+  // bishop and their payment is confirmed, whichever comes last. Bishops: only when
+  // they paid by receipt and the office has confirmed it (Paystack is instant).
+  function standingMail(state, r, to) {
+    const esc = v => String(v || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const site = config.origin.replace(/drogs\.dagministry\.org/, 'kuriakecastle.org');
+    const pastor = r.data.role !== 'bishop';
+    const link = `${site}/${pastor ? 'orderofpastorsingoodstanding' : 'orderofbishopsingoodstanding'}/signup/#signin`;
+    const dear = `${titleFor(r.data)} ${String(r.data.name || '').trim().split(/\s+/)[0] || ''}`.trim();
+    const bishop = pastor ? titledBishop(state, r) : '';
+    const first = pastor
+      ? `${bishop || 'Your bishop'} has confirmed you${r.paymentMethod === 'paystack' ? '' : ', and the office has confirmed your payment'}.`
+      : 'The office has checked your receipt and confirmed your payment.';
+    const second = `You are now in good standing for ${state.year} and appear on the Roll of Good Standing.`;
+    return brandedMail({ from: config.from, to, subject: `You are now in good standing for ${state.year}`,
+      text: `Dear ${dear},\n\n${first}\n\n${second}\n\nView my profile: ${link}\n\nThank you for your commitment.\n\nKuriake Castle`,
+      html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px">${esc(first)}</p><p style="margin:0 0 18px;padding:12px 14px;background:#ecf7ef;border:1px solid #9fd3ad;border-radius:8px;color:#14532d"><b>${esc(second)}</b></p><p style="margin:0 0 18px"><a href="${link}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">View my profile →</a></p><p style="margin:0 0 12px">Thank you for your commitment.</p><p style="margin:0">Kuriake Castle</p>` });
+  }
+  // Who has just come into good standing and should be told (once a year each).
+  function newlyStanding(before, after) {
+    const was = new Map(before.registrations.filter(r => r.year === before.year).map(r => [r.userId, r]));
+    return after.registrations.filter(r => r.year === after.year && !r.standingMailAt && inGoodStanding(r) && !inGoodStanding(was.get(r.userId))
+      && (r.data.role !== 'bishop' || (r.paymentMethod && r.paymentMethod !== 'paystack' && r.proof)));
+  }
+  async function tellStanding(state, list) {
+    for (const r of list) {
+      try {
+        const [[u]] = await pool.execute('SELECT email FROM dr_users WHERE id=?', [r.userId]);
+        const to = u?.email || r.data.email;
+        if (to) await mailer.sendMail(standingMail(state, r, to));
+      } catch (error) { logger.error?.('good-standing email failed:', error?.message || error); }
+    }
+  }
+  handle.standingMail = standingMail;
+
   // The bishop's two-week deadline (office, 19 Nov). Run once a day by the server:
   // after one week the waiting pastor is reminded to speak to their bishop; when
   // the two weeks pass, their registration and account are removed and they are told.
@@ -101,7 +145,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
     const state = await transaction(pool, conn => readState(conn, true));
     const { remind, expire } = claimDeadlines(state, now);
     const emailOf = async id => { const [[u]] = await pool.execute('SELECT email FROM dr_users WHERE id=?', [id]); return u?.email || ''; };
-    const who = r => ({ name: r.data.name, title: titleFor(r.data), bishop: bishopKeyed(state, r.data.bishopId)?.name || r.data.bishopName || '', deadline: claimDeadline(r) });
+    const who = r => ({ name: r.data.name, title: titleFor(r.data), bishop: titledBishop(state, r), deadline: claimDeadline(r) });
     let reminded = 0, removed = 0;
     for (const r of remind) {
       const to = await emailOf(r.userId);
@@ -404,7 +448,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           await assertOwnedMedia(pool, actor, payload.proof, 'receipt');
           payload.receiptCheck = await storage.receiptReport(payload.proof);
         }
-        let reviewed = null, newPastor = null;
+        let reviewed = null, newPastor = null, standing = [], standingState = null;
         await transaction(pool, async conn => {
           const before = await readState(conn, true);
           if (['save', 'submit', 'update'].includes(name) && payload.photo && !assignedPortrait(before, actor, payload.photo)) await assertOwnedMedia(conn, actor, payload.photo, 'portrait');
@@ -420,6 +464,9 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           let after;
           try { after = applyAction(before, actor, name, payload, undefined, people); }
           catch (error) { throw new HttpError(400, error.message); }
+          standing = newlyStanding(before, after);
+          for (const r of standing) r.standingMailAt = new Date().toISOString();
+          standingState = after;
           await persistState(conn, before, after);
           if (name === 'reviewBishop') reviewed = after.registrations.find(r => r.userId === payload.userId && r.year === after.year);
           // A pastor who has just registered under a registered bishop: that bishop is told (17 Nov).
@@ -440,6 +487,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           }
         });
         if (newPastor) notifyBishop(newPastor).catch(error => logger.error?.('new-pastor email failed:', error?.message || error));
+        if (standing.length) tellStanding(standingState, standing).catch(() => {});
         if (['submit', 'update', 'officeEdit', 'choosePhoto', 'approveBishop'].includes(name)) autoPhoto.queue(); // the photo is checked and edited in the background (19 Nov)
         publicCache.at = 0; // office edits and pauses show on the public page at once
         // The office's decision goes to the address the bishop registered with; a mail failure must not undo the decision.
