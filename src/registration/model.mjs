@@ -171,7 +171,9 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   { id: 'nina-confirms-her-pastors-2026-11-17', claimRequired: ['B334'] },
   // Office, 18 Nov: registrations in FLOW (no list of denominations) blanked the
   // denomination on the record (Darius Phiri, Calvince Dondi). Blanks come off.
-  { id: 'blank-denominations-2026-11-18', blankDenominations: true }];
+  { id: 'blank-denominations-2026-11-18', blankDenominations: true },
+  // Pastors already waiting when the bishop's deadline starts get a fresh two weeks (office, 19 Nov).
+  { id: 'claim-deadline-fresh-start-2026-11-19', freshDeadline: true }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -211,6 +213,10 @@ export function syncRoll(state, people, version) {
   if (fixes.some(f => f.blankDenominations)) {
     for (const [id, o] of Object.entries(next.overrides)) if (o && o.denomination === '') { const { denomination, ...rest } = o; next.overrides[id] = rest; }
     for (const r of next.registrations || []) if (r.data && !r.data.denomination && ORGANIZATION_DENOMINATION[r.data.organization]) r.data = { ...r.data, denomination: ORGANIZATION_DENOMINATION[r.data.organization] };
+  }
+  if (fixes.some(f => f.freshDeadline)) {
+    const start = new Date().toISOString();
+    next.registrations = (next.registrations || []).map(r => r.data?.role === 'pastor' && r.status === 'unclaimed' && !r.claimWaitFrom ? { ...r, claimWaitFrom: start } : r);
   }
   if (fixes.some(f => f.memberPhotos)) for (const r of state.registrations || []) {
     const id = r.data?.referenceId || state.profiles?.find(p => p.id === r.userId)?.referenceId;
@@ -653,7 +659,8 @@ export function bishopKeyed(state, key) {
 // to their bishop; when the two weeks pass, the registration and account are removed.
 export const CLAIM_DAYS = 14, CLAIM_REMINDER_DAYS = 7;
 const DAY_MS = 86400000;
-const waitingFrom = (r) => Date.parse(r?.submittedAt || r?.createdAt || "");
+// From submitting, or from the day the deadline started for those already waiting then; changing bishop does not restart it.
+const waitingFrom = (r) => Math.max(Date.parse(r?.submittedAt || r?.createdAt || "") || 0, Date.parse(r?.claimWaitFrom || "") || 0) || NaN;
 export const claimDeadline = (r) => { const t = waitingFrom(r); return Number.isFinite(t) ? new Date(t + CLAIM_DAYS * DAY_MS).toISOString() : ""; };
 export const claimDaysLeft = (r, now = Date.now()) => { const d = Date.parse(claimDeadline(r)); return Number.isFinite(d) ? Math.max(0, Math.ceil((d - now) / DAY_MS)) : null; };
 export function claimDeadlines(state, now = Date.now()) {

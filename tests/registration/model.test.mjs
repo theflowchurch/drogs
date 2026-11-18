@@ -942,3 +942,16 @@ test("the bishop's two-week deadline: a reminder after one week, removal after t
   const late = claimDeadlines(s, start + 14 * day);
   assert.deepEqual([late.remind.length, late.expire.map(r => r.userId)], [0, ["p"]], "removed when two weeks pass");
 });
+
+test("pastors already waiting when the deadline starts get a fresh two weeks (19 Nov)", async () => {
+  const { claimDeadline, claimDeadlines, syncRoll } = await import("../../src/registration/model.mjs");
+  const old = { userId: "p", year: 2027, status: "unclaimed", submittedAt: "2026-10-01T00:00:00.000Z", data: { role: "pastor" } };
+  const s = { ...emptyState(), year: 2027, registrations: [old, { ...old, userId: "q", status: "confirmed" }] };
+  const next = syncRoll(s, [], "fresh-deadline-test");
+  const waiting = next.registrations.find(r => r.userId === "p");
+  assert.ok(waiting.claimWaitFrom, "the waiting pastor gets a fresh start");
+  assert.equal(next.registrations.find(r => r.userId === "q").claimWaitFrom, undefined, "confirmed pastors are untouched");
+  assert.ok(Date.parse(claimDeadline(waiting)) > Date.now() + 13 * 86400000, "two weeks from now, not from October");
+  assert.deepEqual(claimDeadlines(next).expire, [], "nobody already waiting is removed on day one");
+  assert.equal(syncRoll(next, [], "fresh-deadline-test"), null, "runs once");
+});
