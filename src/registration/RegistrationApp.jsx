@@ -3944,7 +3944,10 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
     // Approved bishops with pastors lead; every other bishop (not yet approved, or without pastors) sits at the very bottom as a circle.
     const withPastors = blocks.filter((x) => x.pastors.length && x.bishop.standing !== false).map((x) => ({ ...x, pastors: x.pastors.map(number) }));
     const alone = blocks.filter((x) => !x.pastors.length || x.bishop.standing === false).map((x) => x.bishop);
-    const rest = roll.filter((q) => q.role === "pastor" && !taken.has(q.id)).sort(byRank).map(number);
+    // Every pastor shows, as on the Bishops tab (19 Nov): those whose bishop is not
+    // in good standing yet are listed below, not hidden with their bishop.
+    const inBlocks = new Set(withPastors.flatMap((x) => x.pastors.map((q) => q.id)));
+    const rest = roll.filter((q) => q.role === "pastor" && !inBlocks.has(q.id)).sort(byRank).map(number);
     // The order people appear on screen, so the dialog's arrows move to the neighbour.
     const order = [...withPastors.flatMap((x) => [x.bishop, ...x.pastors]), ...alone, ...rest];
     return { withPastors, alone, rest, order };
