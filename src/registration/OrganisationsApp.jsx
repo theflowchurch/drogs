@@ -70,7 +70,7 @@ const GroupsContext = createContext({ groups: DIRECTORY_GROUPS, total: DIRECTORY
 export const useGroups = () => useContext(GroupsContext);
 export function LiveGroups({ children }) {
   const live = useLiveRoll();
-  const value = useMemo(() => live ? patchGroups(live.structure ? buildDirectory(live.structure).groups : DIRECTORY_GROUPS, live) : { groups: DIRECTORY_GROUPS, total: DIRECTORY_TOTAL }, [live]);
+  const value = useMemo(() => live ? patchGroups(live.structure ? buildDirectory(live.structure).groups : DIRECTORY_GROUPS, live) : { groups: DIRECTORY_GROUPS, total: null }, [live]); // the total waits for the live roll, so it never changes on screen
   return <GroupsContext.Provider value={value}>{children}</GroupsContext.Provider>;
 }
 // The live version of a group or line chosen in the address.
@@ -86,12 +86,12 @@ export function useLiveFocus(focus, fallback = '') {
   return { group, part };
 }
 export function Masthead({ bishops = false, count = true, sub = 'Worldwide Fellowship of Bishops', line = 'Roll of Good Standing', total: totalProp, noun = 'Bishops' }) {
-  const live = useGroups(); const total = totalProp ?? live.total;
+  const live = useGroups(); const total = totalProp === undefined ? live.total : totalProp;
   return <header className={`org-dhmm-head ${bishops ? 'org-dhmm-head-bishops' : ''}`}>
     <a href="#contents" className="org-dhmm-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
     <div className="org-dhmm-text">
       <p className="org-dhmm-sub">{sub}</p>
-      <p className="org-dhmm-total">{line}{count && <> <span className="org-dhmm-dot" aria-hidden="true">·</span> <strong>{total.toLocaleString()}</strong> {noun}</>}</p>
+      <p className="org-dhmm-total">{line}{count && total != null && <> <span className="org-dhmm-dot" aria-hidden="true">·</span> <strong>{total.toLocaleString()}</strong> {noun}</>}</p>
     </div>
     {bishops && <BishopAccess className="org-bishop-access"/>}
   </header>;

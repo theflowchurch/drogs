@@ -63,7 +63,7 @@ function Title({ compact, children }) {
     <a href="#contents" className="tx-logo"><img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396"/></a>
     <div className="tx-title">
       <p className="tx-sub">Worldwide Fellowship of Bishops</p>
-      <p className="tx-total"><span className="tx-dot" aria-hidden="true"/>Roll of Good Standing <span className="tx-sep">·</span> <strong><CountUp to={useGroups().total}/></strong> Bishops</p>
+      <p className="tx-total"><span className="tx-dot" aria-hidden="true"/>Roll of Good Standing {useGroups().total != null && <><span className="tx-sep">·</span> <strong><CountUp to={useGroups().total}/></strong> Bishops</>}</p>
     </div>
     {children && <div className="tx-head-tools">{children}</div>}
   </div>;
@@ -201,6 +201,6 @@ function CouncilsPage({ bishops }) {
       </> : <Contents query={query} search={search}/>}
       {!group && <GoodStandingNotice className="tx-good-standing"/>}
     </main>
-    <footer className="tx-footer"><span>Updated {data.updated}</span><span className="tx-mono">{live.total} bishops · {live.groups.length} groups</span></footer>
+    <footer className="tx-footer"><span>Updated {data.updated}</span><span className="tx-mono">{live.total != null ? `${live.total} bishops · ` : ''}{live.groups.length} groups</span></footer>
   </div>;
 }
