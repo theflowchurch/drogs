@@ -26,7 +26,8 @@ export function bishopEntries(list, rosterById) {
 // Lady Rev.) and the bishop they serve under, A to Z by surname.
 export function pastorEntries(people) {
   const bishops = new Map(people.filter(p => p.role === 'bishop').map(b => [b.name, b]));
-  return people.filter(p => p.role === 'pastor').map(p => {
+  // Lay presidents are pastors (Reverends) who perform a bishop's role (office, 19 Nov): they are on the Order of Pastors.
+  return people.filter(p => p.role === 'pastor' || p.title === 'Lay President').map(p => {
     const b = bishops.get(p.bishop);
     return { rosterId: p.id, name: p.name, title: p.title || 'Pastor', image: p.image || '', photo: p.photo || '', denomination: p.denomination || '', details: [
       { label: 'Church', value: p.denomination, logo: churchLogo(p.denomination) },

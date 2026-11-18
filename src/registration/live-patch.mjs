@@ -33,6 +33,7 @@ export function patchBishop(entry, live) {
   // Deleted or hidden, or made a pastor by the office. (A few bishops are listed
   // here from a pastor record the roll has not caught up with; they stay.)
   if (!p || (p.role !== 'bishop' && o.role !== undefined)) return null;
+  if (p.title === 'Lay President') return null; // lay presidents are pastors (office, 19 Nov): never among the bishops
   const out = { ...entry };
   if (o.name !== undefined) out.name = p.name;
   if (o.title !== undefined) out.title = p.title;

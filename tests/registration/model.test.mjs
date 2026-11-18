@@ -1038,3 +1038,14 @@ test("someone not on our list: their bishop shows, they are on the bishop's list
   const people = pastorEntries(liveRoll(refs, { roll: roll(after, refs) }).people);
   assert.ok(people.some(p => p.name === "Walter Woelle" && p.details.some(d => d.label === "Overseeing Bishop" && d.value === "Mother Nina Masuku")), "on the Order of Pastors, under Mother Nina");
 });
+
+test("lay presidents are on the Order of Pastors, never among the bishops (19 Nov)", async () => {
+  const { pastorEntries } = await import("../../src/registration/public-entries.mjs");
+  const { PUBLIC_PASTORS } = await import("../../src/registration/pastors-public.mjs");
+  const { patchBishop } = await import("../../src/registration/live-patch.mjs");
+  const lay = { id: "P1062", role: "bishop", name: "Ebenezer Johnson", title: "Lay President", denomination: "Living Waters International" };
+  assert.ok(pastorEntries([lay]).some(p => p.name === "Ebenezer Johnson"));
+  assert.ok(["Ebenezer Johnson", "Justice Hagan", "Kobina Quansah"].every(n => PUBLIC_PASTORS.some(p => p.name === n)), "all three on the published Order of Pastors");
+  const live = { byId: new Map([["P1062", lay]]), baseById: new Map([["P1062", lay]]), overrides: {} };
+  assert.equal(patchBishop({ rosterId: "P1062", name: "Ebenezer Johnson" }, live), null, "never a card on the Order of Bishops");
+});
