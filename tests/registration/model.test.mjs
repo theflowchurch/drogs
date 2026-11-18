@@ -970,3 +970,26 @@ test("Joshua Gbafa's registration is linked to his listed record, once (19 Nov)"
   assert.equal(roll[0].referenceId, "S7f891fda", "one card, on his listed record");
   assert.equal(roll[0].image, "assets/portraits/S7f891fda-c56525b1.webp", "with the photo we have");
 });
+
+test("a likely listed record is found for someone who registered as new (19 Nov)", async () => {
+  const { likelyRecords, applyAction: act } = await import("../../src/registration/model.mjs");
+  const refs = [
+    { id: "S7", role: "pastor", name: "Joshua Korsi Gbafa", organization: "FLOW", bishop: "Nina Masuku", image: "x.webp" },
+    { id: "S8", role: "pastor", name: "Joshua Mensah", organization: "FLOW", bishop: "Nina Masuku" },
+    { id: "S9", role: "pastor", name: "Joshua Gbafa", organization: "First Love", bishop: "Nina Masuku" },
+    { id: "S10", role: "pastor", name: "Walter Wolle", organization: "FLOW", bishop: "Brian Masuku" },
+  ];
+  const r = { userId: "u", year: 2027, status: "confirmed", data: { role: "pastor", name: "Joshua Gbafa", organization: "FLOW", bishopName: "Nina Masuku" } };
+  const s = { ...emptyState(), year: 2027, registrations: [r], profiles: [{ id: "u", role: "pastor" }] };
+  assert.deepEqual(likelyRecords(s, refs, r).map(p => p.id), ["S7"], "middle name ignored; other surnames and other organizations left out");
+  const w = { ...r, data: { ...r.data, name: "Walter Woelle", bishopName: "Nina Masuku" } };
+  assert.deepEqual(likelyRecords(s, refs, w).map(p => p.id), [], "a different bishop is not the same person");
+  assert.deepEqual(likelyRecords({ ...s, registrations: [r, { userId: "other", year: 2027, data: { referenceId: "S7" } }] }, refs, r), [], "a record someone else registered on is not offered");
+  const linked = act(s, { id: "office", office: true }, "linkRecord", { userId: "u", referenceId: "S7" }, undefined, refs);
+  assert.equal(linked.registrations[0].data.referenceId, "S7");
+  assert.equal(linked.profiles[0].referenceId, "S7");
+  const kept = act({ ...s, registrations: [{ ...r, possibleRecord: "S7" }] }, { id: "office", office: true }, "notSamePerson", { userId: "u", referenceId: "S7" }, undefined, refs);
+  assert.equal(kept.registrations[0].possibleRecord, "");
+  assert.deepEqual(kept.registrations[0].notSameAs, ["S7"]);
+  assert.throws(() => act(s, { id: "u" }, "linkRecord", { userId: "u", referenceId: "S7" }, undefined, refs), /Office/);
+});

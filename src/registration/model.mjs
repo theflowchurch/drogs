@@ -679,13 +679,34 @@ export function claimDeadlines(state, now = Date.now()) {
     expire: waiting.filter((r) => due(r, CLAIM_DAYS)),
   };
 }
+// Someone who registered as new may be on our list under a fuller or slightly
+// different name (Joshua Gbafa / Joshua Korsi Gbafa, 19 Nov). A listed record is a
+// likely match when the role and organization agree, the first name and surname
+// agree (middle names ignored) or the names are alike, the bishop agrees when both
+// are known, and nobody else has registered on that record.
+const nameWords = (n) => normalName(n).split(" ").filter(Boolean);
+export function likelyRecords(state, references, r) {
+  if (!r?.data || r.data.referenceId || r.status === "draft") return [];
+  const words = nameWords(r.data.name), first = words[0], last = words.at(-1);
+  if (!first || !last || words.length < 2) return [];
+  const taken = new Set([...(state.registrations || []).filter((x) => x.userId !== r.userId).map((x) => x.data?.referenceId), ...(state.profiles || []).filter((p) => p.id !== r.userId).map((p) => p.referenceId)].filter(Boolean));
+  const bishop = r.data.bishopName || "";
+  return references.filter((p) => {
+    if (taken.has(p.id) || p.role !== r.data.role || normalName(p.organization) !== normalName(r.data.organization)) return false;
+    const w = nameWords(p.name);
+    if (!((w[0] === first && w.at(-1) === last) || namesAlike(p.name, r.data.name))) return false;
+    if (r.data.role === "pastor" && bishop && p.bishop && !namesAlike(p.bishop, bishop)) return false;
+    return true;
+  });
+}
 export function todoFor(state, actor) {
   const year = state.year, mine = (state.registrations || []).filter(r => r.year === year);
   const pastorsToConfirm = mine.filter(r => r.data?.role === 'pastor' && r.status === 'unclaimed' && r.userId !== actor?.id);
-  if (!actor?.office) return { pastorsToConfirm, bishopsToApprove: [], receiptsToCheck: [], total: pastorsToConfirm.length };
+  if (!actor?.office) return { pastorsToConfirm, bishopsToApprove: [], receiptsToCheck: [], possibleDuplicates: [], total: pastorsToConfirm.length };
   const bishopsToApprove = mine.filter(r => r.data?.role === 'bishop' && r.status === 'pending');
   const receiptsToCheck = mine.filter(r => r.payment === 'pending' && r.proof && r.status !== 'denied');
-  return { pastorsToConfirm, bishopsToApprove, receiptsToCheck, total: pastorsToConfirm.length + bishopsToApprove.length + receiptsToCheck.length };
+  const possibleDuplicates = mine.filter(r => r.possibleRecord && !r.data?.referenceId);
+  return { pastorsToConfirm, bishopsToApprove, receiptsToCheck, possibleDuplicates, total: pastorsToConfirm.length + bishopsToApprove.length + receiptsToCheck.length + possibleDuplicates.length };
 }
 export const registeredBishops = (state) =>
   state.profiles
@@ -1301,6 +1322,24 @@ export function applyAction(
     r.nonrefundableAt = now;
     r.paymentSubmittedAt = now;
     r.paymentReviewedAt = now;
+  } else if (action === "linkRecord" || action === "notSamePerson") {
+    // The office settles a possible duplicate: the same person (their registration
+    // goes onto the listed record, which keeps our photo) or two different people.
+    office();
+    const r = registration();
+    if (!r || r.status === "draft") throw Error("Select a submitted registration.");
+    if (action === "notSamePerson") { r.possibleRecord = ""; r.notSameAs = [...new Set([...(r.notSameAs || []), payload.referenceId].filter(Boolean))]; }
+    else {
+      const id = payload.referenceId || r.possibleRecord;
+      if (!id || !(references || []).some((p) => p.id === id)) throw Error("Choose the listed record.");
+      if (state.registrations.some((x) => x.userId !== r.userId && x.data?.referenceId === id)) throw Error("Someone else has already registered on that record.");
+      r.data = { ...r.data, referenceId: id };
+      r.possibleRecord = "";
+      const p = state.profiles.find((x) => x.id === r.userId);
+      if (p) p.referenceId = id;
+      syncReference(state, r);
+      detail = { linked: id };
+    }
   } else if (action === "choosePhoto") {
     office();
     const r = registration();

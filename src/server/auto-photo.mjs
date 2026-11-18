@@ -7,7 +7,7 @@
 import { readFile } from 'node:fs/promises';
 import sharp from 'sharp';
 import { uniformGroup, uniformPrompt, UNIFORMS } from '../registration/uniforms.mjs';
-import { titleFor, overlayReferences } from '../registration/model.mjs';
+import { titleFor, overlayReferences, likelyRecords, applyAction } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { applySettings } from './settings.mjs';
 
@@ -49,6 +49,15 @@ export async function samePerson({ fetcher = fetch, key, original, edited }) {
   const out = await answer(fetcher, key, CHECK_MODEL, [
     { text: 'Photo 1 is an original photo of a person. Photo 2 is an edited portrait (new clothes and background are expected). Is Photo 2 clearly the same person as Photo 1, with the same face? Answer only with JSON: {"same": true} or {"same": false}.' },
     await picture(original, 768), await picture(edited, 768),
+  ], { responseMimeType: 'application/json', temperature: 0 });
+  return out.same === true || /"same"\s*:\s*true/.test(out.text || '');
+}
+
+// Whether two photos (taken at different times, in different clothes) show the same person.
+export async function samePersonPhotos({ fetcher = fetch, key, a, b }) {
+  const out = await answer(fetcher, key, CHECK_MODEL, [
+    { text: 'These two photos were taken at different times and the clothes or background may differ. Do they clearly show the same person, with the same face? Answer only with JSON: {"same": true} or {"same": false}.' },
+    await picture(a, 768), await picture(b, 768),
   ], { responseMimeType: 'application/json', temperature: 0 });
   return out.same === true || /"same"\s*:\s*true/.test(out.text || '');
 }
@@ -132,9 +141,46 @@ export function createAutoPhoto({ pool, config, storage, references = [], fetche
       return tries >= MAX_TRIES ? 'gave-up' : 'retry';
     } finally { running.delete(r.userId); }
   }
+  // Someone who registered as new but is likely on our list (19 Nov): with the
+  // same face in both photos they are linked automatically (they keep the photo we
+  // have); otherwise the office sees a possible duplicate with a Link button.
+  const SYSTEM = { id: 'system', office: true };
+  async function checkDuplicates(state, list) {
+    let linked = 0, flagged = 0;
+    for (const r of state.registrations.filter((x) => x.year === state.year && x.status !== 'draft' && !x.data?.referenceId && x.duplicateCheckedFor !== `${x.data?.name}|${x.data?.bishopName || ''}`)) {
+      const found = likelyRecords(state, list, r).filter((p) => !(r.notSameAs || []).includes(p.id));
+      let match = null;
+      if (found.length && config.geminiKey && r.data.photo) {
+        const upload = await storage.bytes(r.data.photo).catch(() => null);
+        for (const p of found) {
+          if (!upload || !(p.image || p.photo)) continue;
+          const ours = p.photo ? await storage.bytes(p.photo).catch(() => null) : await readFile(new URL(p.image, root)).catch(() => null);
+          if (ours && await samePersonPhotos({ fetcher, key: config.geminiKey, a: ours, b: upload }).catch(() => false)) { match = p; break; }
+        }
+      }
+      await transaction(pool, async (conn) => {
+        const before = await readState(conn, true);
+        const x = before.registrations.find((y) => y.userId === r.userId && y.year === r.year);
+        if (!x || x.data?.referenceId) return;
+        let after = before;
+        if (match) after = applyAction(before, SYSTEM, 'linkRecord', { userId: r.userId, referenceId: match.id }, undefined, list);
+        else after = structuredClone(before);
+        const y = after.registrations.find((z) => z.userId === r.userId && z.year === r.year);
+        y.duplicateCheckedFor = `${r.data.name}|${r.data.bishopName || ''}`;
+        if (!match && found.length) y.possibleRecord = found[0].id;
+        await persistState(conn, before, after);
+      });
+      if (match) linked++; else if (found.length) flagged++;
+    }
+    if (linked || flagged) console.log(`Possible duplicates: ${linked} linked, ${flagged} for the office`);
+  }
   // Everyone waiting for a look, one at a time (also retries earlier failures).
   async function sweep() {
     await applySettings(config, pool).catch(() => {}); // a key saved in /admin/ applies at once
+    {
+      const first = await transaction(pool, (conn) => readState(conn, true));
+      await checkDuplicates(first, [...overlayReferences(references, first), ...(first.extraReferences || [])]).catch((e) => logger.error('Duplicate check failed:', e?.message || e));
+    }
     if (!config.geminiKey) return { done: 0 };
     const state = await transaction(pool, (conn) => readState(conn, true));
     refs = new Map(overlayReferences(references, state).map((p) => [p.id, p])); // with the office's own edits and photos

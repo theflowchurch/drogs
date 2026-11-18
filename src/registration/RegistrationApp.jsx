@@ -1032,7 +1032,7 @@ export default function RegistrationApp({
             <fieldset className="reg-workspace-fieldset" disabled={busy}>
               {tab === "Dashboard" && (
                 <>
-                  <div className="reg-dash-todo"><OfficeTodo state={state} actor={actor} onOpen={(v) => { setTab("Review"); setSub({ ...sub, Review: v }); }} /></div>
+                  <div className="reg-dash-todo"><OfficeTodo state={state} actor={actor} perform={perform} onOpen={(v) => { setTab("Review"); setSub({ ...sub, Review: v }); }} /></div>
                   {conflicts.length > 0 && (
                     <div className="reg-conflict-banner" role="alert">
                       <b>{conflicts.length.toLocaleString()} {conflicts.length === 1 ? "record contradicts" : "records contradict"} the group and denomination structure.</b>
@@ -1128,7 +1128,7 @@ export default function RegistrationApp({
                   </div>
                   {tab === "Communication" && <Communication state={state} run={run} />}
                   {tab === "To do" && (office
-                    ? <OfficeTodo state={state} actor={actor} onOpen={(v) => { setTab("Review"); setSub({ ...sub, Review: v }); }} />
+                    ? <OfficeTodo state={state} actor={actor} perform={perform} onOpen={(v) => { setTab("Review"); setSub({ ...sub, Review: v }); }} />
                     : todoFor(state, actor).total ? <BishopTodo state={state} actor={actor} perform={perform} /> : <p className="reg-small">Nothing waiting. When a pastor registers under you, they will appear here and you will get an email.</p>)}
                   {tab === "Denominations" && <div className="reg-settings-list"><Structure state={state} perform={perform} actor={actor} show={["orgs", "groups"]} /></div>}
                   {tab === "Bishops & Pastors pages" && <PageStructure state={state} perform={perform} />}
@@ -2182,6 +2182,8 @@ function RegistrationForm({
               onSubmit={(e) => {
                 e.preventDefault();
                 run(async () => {
+                  // A listed record that may be them needs an answer first (19 Nov).
+                  if (candidates.length) throw Error("Please tell us whether the record shown under your name is you: choose “Yes, this is me” or “This is not me”.");
                   validateProfile(data, actor.email, { catalog });
                   // Continue also saves the draft (19 Nov): someone who stops at the payment
                   // step finds their photo and details still there when they come back.
@@ -2260,7 +2262,7 @@ function RegistrationForm({
                       </p>
                     ) : (
                       <>
-                        <p>Is this you? We already have a record with this name.</p>
+                        <p><b>Is this you?</b> We already have a record with this name. If it is you, choose <b>Yes, this is me</b> so your existing record and photo are kept.</p>
                         <div className="reg-candidates">
                           {candidates.map((ref) => (
                             <div key={ref.id} className="reg-candidate">
@@ -2270,14 +2272,14 @@ function RegistrationForm({
                                 <small>
                                   {[ref.denomination, ref.city, ref.country].filter(Boolean).join(" · ")}
                                 </small>
-                                <button type="button" className="reg-secondary" onClick={() => adopt(ref)}>
+                                <button type="button" className="reg-primary" onClick={() => adopt(ref)}>
                                   Yes, this is me
                                 </button>
                               </div>
                             </div>
                           ))}
                         </div>
-                        <button type="button" className="reg-text" onClick={() => setDismissed(true)}>
+                        <button type="button" className="reg-text" onClick={() => { if (confirm(candidates.length === 1 ? `Are you sure you are not ${candidates[0].name}? If this is you, choose “Yes, this is me” instead.` : "Are you sure none of these is you? If one is you, choose “Yes, this is me” on it instead.")) setDismissed(true); }}>
                           {candidates.length === 1 ? "This is not me" : "None of these are me"}
                         </button>
                       </>
@@ -2759,8 +2761,9 @@ function BishopTodo({ state, actor, perform }) {
     </li>)}</ul>
   </section>;
 }
-function OfficeTodo({ state, actor, onOpen }) {
+function OfficeTodo({ state, actor, onOpen, perform }) {
   const todo = todoFor(state, actor);
+  const refById = new Map([...overlayReferences(people, state), ...(state.extraReferences || [])].map((p) => [p.id, p]));
   const groups = [
     ["Pastors waiting for their bishop", "Unclaimed", todo.pastorsToConfirm, (r) => `under ${r.data.bishopName || "no bishop named"}${claimDeadline(r) ? ` · removed ${longDate(claimDeadline(r).slice(0, 10))} if not confirmed (${daysLeft(claimDaysLeft(r))})` : ""}`],
     ["Bishops waiting for approval", "Approvals", todo.bishopsToApprove, (r) => r.data.denomination || r.data.organization || ""],
@@ -2773,6 +2776,20 @@ function OfficeTodo({ state, actor, onOpen }) {
       <ul>{list.slice(0, 6).map((r) => <li key={r.userId}><b>{r.data.name}</b> <small>{note(r)}</small></li>)}{list.length > 6 && <li><small>and {list.length - 6} more</small></li>}</ul>
       <button type="button" className="reg-text" onClick={() => onOpen(view)}>Open {title.toLowerCase().replace(/ \(.*\)/, "")} →</button>
     </div>)}</div>}
+    {todo.possibleDuplicates.length > 0 && <div className="reg-todo-group reg-dupes">
+      <h3>Possible duplicates <b>{todo.possibleDuplicates.length}</b></h3>
+      <p className="reg-small">These people registered as new, but we may already have them on our list under a fuller or slightly different name. Link keeps their new details and the photo we have.</p>
+      <ul>{todo.possibleDuplicates.map((r) => { const ref = refById.get(r.possibleRecord); if (!ref) return null; return <li key={r.userId} className="reg-dupe">
+        <span className="reg-dupe-pair">
+          <span><Portrait person={{ photo: r.data.photo, name: r.data.name }} /><b>{r.data.name}</b><small>Registered · {[r.data.city, r.data.country].filter(Boolean).join(", ")}</small></span>
+          <span><Portrait person={ref} /><b>{ref.name}</b><small>On our list · {[ref.denomination, ref.city || ref.country].filter(Boolean).join(" · ")}</small></span>
+        </span>
+        {perform && <span className="reg-todo-actions">
+          <button type="button" className="reg-primary" onClick={() => perform("linkRecord", { userId: r.userId, referenceId: ref.id }, `${r.data.name} is now linked to ${ref.name}.`)}>Link</button>
+          <button type="button" className="reg-text" onClick={() => perform("notSamePerson", { userId: r.userId, referenceId: ref.id }, "Kept as two different people.")}>Not the same person</button>
+        </span>}
+      </li>; })}</ul>
+    </div>}
   </section>;
 }
 function Portrait({ person, className = "", full = false }) {
