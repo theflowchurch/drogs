@@ -130,3 +130,17 @@ test("Nina's unregistered listed pastors wait for her to confirm them; confirmin
   assert.equal(s.rosters.find(r => r.id === 'r2').pastorId, 'kojo');
   assert.equal(s.registrations.find(r => r.userId === 'kojo').status, 'confirmed');
 });
+test("a bishop cannot add a pastor who registered and was confirmed by another bishop", async () => {
+  const { emptyState, applyAction } = await import('../../src/registration/model.mjs');
+  const b2 = { id: 'b2', email: 'b2@x.com' };
+  const s = { ...emptyState(), year: 2027,
+    profiles: [{ id: 'b1', role: 'bishop', name: 'Ama Mensah', bishopApproved: true }, { id: 'b2', role: 'bishop', name: 'Kofi Other', bishopApproved: true }],
+    registrations: [
+      { userId: 'b1', year: 2027, status: 'confirmed', data: { role: 'bishop', name: 'Ama Mensah' } },
+      { userId: 'b2', year: 2027, status: 'confirmed', data: { role: 'bishop', name: 'Kofi Other' } },
+      { userId: 'p1', year: 2027, status: 'confirmed', data: { role: 'pastor', name: 'Esi Pastor', dob: '1990-01-01', bishopId: 'b1' } }],
+    rosters: [{ id: 'r', bishopId: 'b1', year: 2027, name: 'Esi Pastor', dob: '1990-01-01', status: 'active', pastorId: 'p1' }] };
+  assert.throws(() => applyAction(s, b2, 'addRoster', { rows: [{ name: 'Esi Pastor', dob: '01/01/1990' }] }), /already registered and confirmed under Bishop Ama Mensah/);
+  const ok = applyAction(s, b2, 'addRoster', { rows: [{ name: 'Yaw Someone', dob: '02/02/1991' }] });
+  assert.ok(ok.rosters.some(r => r.name === 'Yaw Someone' && r.bishopId === 'b2'), 'other names are still added');
+});

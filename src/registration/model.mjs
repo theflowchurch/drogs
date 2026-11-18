@@ -1022,6 +1022,14 @@ export function applyAction(
         )
       )
         continue; // already on this year's list (e.g. re-uploading an updated spreadsheet)
+      // Office, 17 Nov: a pastor who has registered and been confirmed by another
+      // bishop cannot be added to this bishop's list. The office can move them.
+      const taken = state.registrations.find((x) => x.year === state.year && x.data?.role === "pastor" && x.status === "confirmed" && x.userId !== actor.id &&
+        namesAlike(x.data.name, r.name) && dobClose(x.data.dob, r.dob) && bishopKeyed(state, x.data.bishopId)?.id !== actor.id);
+      if (taken) {
+        const owner = bishopKeyed(state, taken.data.bishopId);
+        throw Error(`${r.name} is already registered and confirmed under ${owner?.name ? `Bishop ${owner.name}` : "another bishop"}. Please contact the office if this pastor should move to you.`);
+      }
       state.rosters.push({
         ...r,
         id: makeId(),
