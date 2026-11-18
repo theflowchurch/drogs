@@ -863,6 +863,11 @@ export default function RegistrationApp({
       {error && (
         <div className="reg-alert error" role="alert">
           {error}
+          {/contact the office/i.test(error) && (
+            <button type="button" className="reg-alert-action" onClick={() => { contactOffice(/already registered and confirmed under/i.test(error) ? `${error.replace(/ Please contact the office.*$/i, "")}\n\nThis pastor should move to me. Please move them to my list.` : error); setError(""); }}>
+              Contact the office
+            </button>
+          )}
           <button onClick={() => setError("")} aria-label="Dismiss error">
             ×
           </button>
@@ -1206,11 +1211,19 @@ export default function RegistrationApp({
 }
 // Anyone stuck can report it from any screen. The office receives an email,
 // with an optional Telegram heads-up, when the connected backend is running.
+// An error that asks someone to contact the office can open this form straight
+// away, already filled in (17 Nov): window "kc-contact-office" with the text.
+export const contactOffice = (text) => window.dispatchEvent(new CustomEvent("kc-contact-office", { detail: text }));
 function HelpButton({ actor, run }) {
   const [open, setOpen] = useState(false),
     [message, setMessage] = useState(""),
     [contact, setContact] = useState(""),
     [sent, setSent] = useState(false);
+  useEffect(() => {
+    const openWith = (e) => { setMessage(String(e.detail || "")); setContact(actor?.email || ""); setSent(false); setOpen(true); };
+    window.addEventListener("kc-contact-office", openWith);
+    return () => window.removeEventListener("kc-contact-office", openWith);
+  }, [actor?.email]);
   return (
     <>
       <button

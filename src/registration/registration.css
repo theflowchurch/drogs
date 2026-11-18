@@ -4309,3 +4309,5 @@ input[type="date"] {
 .reg-bishop-search .reg-candidate.chosen { display: flex; gap: 10px; align-items: center; }
 .reg-main-flush > .reg-workspace-fieldset > .reg-todo-banner, .reg-todo-banner { margin: 16px max(24px, 4vw) 16px; background: #fff4e5; border-color: #f0b35a; color: #5c3b00; }
 .reg-dash-todo { margin: 16px max(24px, 4vw); }
+.reg-alert-action { display: inline-block; margin: 10px 0 0; padding: 8px 14px; border-radius: 8px; border: 0; background: #b42318; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+.reg-alert button.reg-alert-action { position: static; display: block; font-size: 14px; background: #b42318; color: #fff; }
