@@ -1878,7 +1878,9 @@ export function directoryPeople(state, references, year = state.year) {
       country: r.data.country,
       image: "",
       group: groupOf(catalogOf(state), r.data),
-      photo: r.data.photo,
+      photo: shownPhoto(r, null).photo || r.data.photo, // the edited photo when there is one (19 Nov)
+      // The bishop they registered under (19 Nov): they are not on our list, so it is not recorded there.
+      bishop: r.data.role === "pastor" ? canonicalBishopName(bishopKeyed(state, r.data.bishopId)?.name || r.data.bishopName || "") : "",
       email: r.data.email,
       phone: r.data.phone,
       recorded: null,
