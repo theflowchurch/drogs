@@ -155,6 +155,15 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         await auth.signOut(request);
         return json({ ok: true }, 200, { 'Set-Cookie': sessionCookie(config, '', 0, officeDoor(request)) });
       }
+      // "Contact the office" from the sign-in pages (17 Nov): someone who cannot sign
+      // in (no reset code, locked) can still reach the office. They give an email.
+      if (path === '/api/registration/support-public' && method === 'POST') {
+        const body = await jsonBody(request);
+        const contact = emailAddress(body?.contact);
+        await rateLimit(pool, config, `support-public:${contact}`, 5, 600000);
+        await rateLimit(pool, config, `support-public:${request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'all'}`, 10, 600000);
+        return json(await support({ id: 'not signed in', email: contact, office: false }, { ...body, contact }));
+      }
       if (path === '/api/registration/settings/bootstrap' && method === 'POST') {
         await bootstrapSettings(config, pool, await jsonBody(request));
         await applySettings(config, pool);

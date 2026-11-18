@@ -863,8 +863,13 @@ export default function RegistrationApp({
       {error && (
         <div className="reg-alert error" role="alert">
           {error}
+          {/reset your password using/i.test(error) && (
+            <button type="button" className="reg-alert-action" onClick={() => { window.dispatchEvent(new Event("kc-start-reset")); setError(""); }}>
+              Reset my password
+            </button>
+          )}
           {/contact the office/i.test(error) && (
-            <button type="button" className="reg-alert-action" onClick={() => { contactOffice(/already registered and confirmed under/i.test(error) ? `${error.replace(/ Please contact the office.*$/i, "")}\n\nThis pastor should move to me. Please move them to my list.` : error); setError(""); }}>
+            <button type="button" className="reg-alert-action" onClick={() => { contactOffice(/already registered and confirmed under/i.test(error) ? `${error.replace(/ Please contact the office.*$/i, "")}\n\nThis pastor should move to me. Please move them to my list.` : /3 times/i.test(error) ? `I could not reset my password: ${error.replace(/ Please contact the office.*$/i, "")} Please help me reset it.` : error, document.querySelector('.reg-card input[type=email]')?.value || ""); setError(""); }}>
               Contact the office
             </button>
           )}
@@ -1199,6 +1204,7 @@ export default function RegistrationApp({
           <HelpButton actor={actor} run={run} />
         </div>
       )}
+      {!actor && <HelpButton actor={null} run={run} />}
       <LegalFooter hidden={fellowship} />
     </div>
     </RosterContext.Provider>
@@ -1213,14 +1219,14 @@ export default function RegistrationApp({
 // with an optional Telegram heads-up, when the connected backend is running.
 // An error that asks someone to contact the office can open this form straight
 // away, already filled in (17 Nov): window "kc-contact-office" with the text.
-export const contactOffice = (text) => window.dispatchEvent(new CustomEvent("kc-contact-office", { detail: text }));
+export const contactOffice = (text, contact = "") => window.dispatchEvent(new CustomEvent("kc-contact-office", { detail: { text, contact } }));
 function HelpButton({ actor, run }) {
   const [open, setOpen] = useState(false),
     [message, setMessage] = useState(""),
     [contact, setContact] = useState(""),
     [sent, setSent] = useState(false);
   useEffect(() => {
-    const openWith = (e) => { setMessage(String(e.detail || "")); setContact(actor?.email || ""); setSent(false); setOpen(true); };
+    const openWith = (e) => { setMessage(String(e.detail?.text || "")); setContact(actor?.email || e.detail?.contact || ""); setSent(false); setOpen(true); };
     window.addEventListener("kc-contact-office", openWith);
     return () => window.removeEventListener("kc-contact-office", openWith);
   }, [actor?.email]);
@@ -1277,6 +1283,7 @@ function HelpButton({ actor, run }) {
                 <input
                   type="email"
                   value={contact}
+                  required={!actor}
                   onChange={(e) => setContact(e.target.value)}
                   autoComplete="email"
                 />
@@ -1343,6 +1350,8 @@ function PasswordForm({ signup, onSwitch, run, busy, onActor }) {
     api.publicSignupStatus().then((d) => { const flag = entrance === "appointments" ? d?.signup?.appointments : d?.signup; if (live && flag?.closed) setPaused(flag.notice || SIGNUP_PAUSED); }).catch(() => {});
     return () => { live = false; };
   }, [signup, entrance]);
+  // "Reset my password" on the five-wrong-passwords message opens the reset step here.
+  useEffect(() => { const go = () => { setProblem(""); setView("forgot"); }; window.addEventListener("kc-start-reset", go); return () => window.removeEventListener("kc-start-reset", go); }, []);
   const signinHref = `${fellowship ? fellowshipSignupPath(base, fellowship) : church ? `${base}/${church.path}/signup/` : sitePath(site, "signup", base)}#signin`;
   const signupHref = signinHref.replace(/#signin$/, "");
   if (paused && view === "signup") return <div className="reg-paused" role="status"><h3>{entrance === "appointments" ? "Appointment registration is paused" : "Sign-up is paused"}</h3><p>{paused}</p><p className="reg-small">Already registered? Use Sign in instead.</p></div>;
@@ -1370,6 +1379,7 @@ function PasswordForm({ signup, onSwitch, run, busy, onActor }) {
       {view === "reset" && <Field label="Code from your email">
         <input value={code} onChange={(e) => setCode(e.target.value)} autoComplete="one-time-code" inputMode="numeric" required pattern="[0-9]{6}" />
       </Field>}
+      {view === "reset" && <p className="reg-small reg-code-help">We sent a 6-digit code to {email}. Check your spam folder too. <button type="button" className="reg-text" onClick={() => contactOffice(`I asked for a password reset code for ${email}, but it has not arrived. Please help me reset my password.`, email)}>Didn’t get the code? Contact the office</button></p>}
       {view !== "forgot" && <Field label={view === "reset" ? "New password" : view === "signup" ? "Create a password" : "Password"}>
         <input type="password" required minLength={view === "signin" ? undefined : 8} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={view === "signin" ? "current-password" : "new-password"} />
       </Field>}

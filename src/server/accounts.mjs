@@ -39,7 +39,7 @@ export async function removeAccounts(pool, config, actor, body) {
   const marks = ids.map(() => '?').join(',');
   const run = sql => pool.execute(sql, ids);
   await run(`UPDATE dr_rosters SET data=JSON_REMOVE(data,'$.pastorId') WHERE JSON_UNQUOTE(JSON_EXTRACT(data,'$.pastorId')) IN (${marks})`);
-  for (const [table, column] of [['dr_rosters', 'bishop_id'], ['dr_registrations', 'user_id'], ['dr_profiles', 'id'], ['dr_sessions', 'user_id'], ['dr_logins', 'user_id'], ['dr_account_activity', 'user_id'], ['dr_media', 'owner_id'], ['dr_passwords', 'user_id'], ['dr_users', 'id']])
+  for (const [table, column] of [['dr_rosters', 'bishop_id'], ['dr_registrations', 'user_id'], ['dr_profiles', 'id'], ['dr_sessions', 'user_id'], ['dr_logins', 'user_id'], ['dr_account_activity', 'user_id'], ['dr_media', 'owner_id'], ['dr_passwords', 'user_id'], ['dr_login_failures', 'user_id'], ['dr_users', 'id']])
     await run(`DELETE FROM ${table} WHERE ${column} IN (${marks})`);
   return { removed: ids.length };
 }

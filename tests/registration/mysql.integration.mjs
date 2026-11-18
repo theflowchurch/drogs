@@ -87,6 +87,31 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
       assert.equal((await call('auth/login', '', { email, password: 'first password 1' })).status, 401, 'the old password stops working');
       assert.equal((await call('auth/login', '', { email, password: 'second password 2' })).status, 200);
       assert.equal((await call('auth/request', '', { email: 'nobody-here@example.com', mode: 'reset' })).status, 404);
+      // 17 Nov: five wrong passwords lock the account until the password is reset.
+      for (let i = 1; i <= 4; i++) { const r = await call('auth/login', '', { email, password: 'not the password' }); assert.equal(r.status, 401); assert.match(r.data.error, new RegExp(`${5 - i} tr(y|ies) left`)); }
+      const fifth = await call('auth/login', '', { email, password: 'not the password' });
+      assert.equal(fifth.status, 423); assert.match(fifth.data.error, /wrong password 5 times[\s\S]*reset your password/);
+      assert.equal((await call('auth/login', '', { email, password: 'second password 2' })).status, 423, 'even the right password waits for a reset');
+      // Three wrong reset codes: contact the office.
+      await pool.query('DELETE FROM dr_rate_limits');
+      assert.equal((await call('auth/request', '', { email, mode: 'reset' })).status, 200);
+      const good = mails.filter(m => m.to === email).at(-1).text.match(/code is (\d{6})/)[1], bad = good === '000000' ? '111111' : '000000';
+      assert.equal((await call('auth/reset', '', { email, token: bad, password: 'third password 3' })).status, 401);
+      assert.equal((await call('auth/reset', '', { email, token: bad, password: 'third password 3' })).status, 401);
+      const third = await call('auth/reset', '', { email, token: bad, password: 'third password 3' });
+      assert.equal(third.status, 429); assert.match(third.data.error, /3 times[\s\S]*contact the office/);
+      assert.equal((await call('auth/reset', '', { email, token: good, password: 'third password 3' })).status, 429, 'that code no longer works');
+      // A fresh code, entered correctly, sets the password and unlocks the account.
+      await pool.query('DELETE FROM dr_rate_limits');
+      assert.equal((await call('auth/request', '', { email, mode: 'reset' })).status, 200);
+      const fresh = mails.filter(m => m.to === email).at(-1).text.match(/code is (\d{6})/)[1];
+      assert.equal((await call('auth/reset', '', { email, token: fresh, password: 'third password 3' })).status, 200);
+      assert.equal((await call('auth/login', '', { email, password: 'third password 3' })).status, 200, 'unlocked by the reset');
+      // Someone who cannot sign in can still reach the office from the sign-in page.
+      const help = await call('support-public', '', { message: 'I did not get my reset code.', contact: 'locked-out@example.com' });
+      assert.equal(help.status, 200);
+      assert.ok(mails.some(m => m.to === config.support && /did not get my reset code/.test(m.text) && m.replyTo === 'locked-out@example.com'));
+      assert.equal((await call('support-public', '', { message: 'No email given' })).status, 400, 'an email for the reply is required');
     }
     const published = await call('references');
     assert.equal(published.status, 200);

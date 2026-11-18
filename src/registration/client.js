@@ -249,7 +249,7 @@ const SUPPORT_KEY = "drogs-registration-support";
 // In the demo nothing leaves the browser; the report is kept so the flow can be
 // checked end to end without pretending an email was sent.
 export async function reportIssue(actor, input) {
-  if (mysqlBackend) return server("support", input);
+  if (mysqlBackend) return server(actor ? "support" : "support-public", input);
   const saved = JSON.parse(localStorage.getItem(SUPPORT_KEY) || "[]");
   saved.push({ ...input, actor: actor?.email || "", at: new Date().toISOString() });
   localStorage.setItem(SUPPORT_KEY, JSON.stringify(saved.slice(-50)));

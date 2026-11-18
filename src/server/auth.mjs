@@ -127,7 +127,7 @@ export function createAuth({ pool, config, mailer }) {
         // Nothing was sent, so the one-a-minute allowance is given back for an immediate retry.
         await pool.execute('DELETE FROM dr_rate_limits WHERE rate_key=?', [digest(config.secret, `rate:otp-minute:${email}`)]);
         // A short reason (no secrets) so the office can tell what the email service said.
-        throw new HttpError(503, `Unable to send your code. Please try again shortly. (${String(error?.message || 'email service unavailable').replace(/re_[A-Za-z0-9_]+/g, 're_…').slice(0, 160)})`);
+        throw new HttpError(503, `Unable to send your code. Please try again shortly, or contact the office if it keeps happening. (${String(error?.message || 'email service unavailable').replace(/re_[A-Za-z0-9_]+/g, 're_…').slice(0, 160)})`);
       }
     },
     async verifyCode(email, code, mode = 'signup', remember = false) {
@@ -200,7 +200,20 @@ export function createAuth({ pool, config, mailer }) {
       await rateLimit(pool, config, 'login-global', 2000, 3600000);
       const [[row]] = await pool.execute('SELECT u.id,u.email,p.password_hash FROM dr_users u LEFT JOIN dr_passwords p ON p.user_id=u.id WHERE u.email=?', [email]);
       if (row && !row.password_hash && await isMember(email)) throw new HttpError(401, 'You have not set a password yet. Use “Forgot password?” to create one.');
-      if (!row?.password_hash || typeof password !== 'string' || !(await checkPassword(password, row.password_hash))) throw new HttpError(401, 'Email or password is incorrect.');
+      // Five wrong passwords in a row lock the password until it is reset (17 Nov).
+      const LOCKED = 'You have entered the wrong password 5 times. For your security, please reset your password using “Forgot password?”.';
+      const [[failed]] = row ? await pool.execute('SELECT failures FROM dr_login_failures WHERE user_id=?', [row.id]) : [[null]];
+      if (row?.password_hash && Number(failed?.failures || 0) >= 5) throw new HttpError(423, LOCKED);
+      if (!row?.password_hash || typeof password !== 'string' || !(await checkPassword(password, row.password_hash))) {
+        if (row?.password_hash) {
+          await pool.execute('INSERT INTO dr_login_failures (user_id,failures,updated_at) VALUES (?,1,?) ON DUPLICATE KEY UPDATE failures=failures+1,updated_at=VALUES(updated_at)', [row.id, Date.now()]);
+          const left = 5 - (Number(failed?.failures || 0) + 1);
+          if (left <= 0) throw new HttpError(423, LOCKED);
+          throw new HttpError(401, `Email or password is incorrect. ${left} ${left === 1 ? 'try' : 'tries'} left before you will need to reset your password.`);
+        }
+        throw new HttpError(401, 'Email or password is incorrect.');
+      }
+      await pool.execute('DELETE FROM dr_login_failures WHERE user_id=?', [row.id]);
       return transaction(pool, async conn => {
         const now = Date.now(), user = { id: row.id, email: row.email };
         await conn.execute('INSERT INTO dr_account_activity (user_id,signed_up_at,last_login_at,login_count) VALUES (?,NULL,?,1) ON DUPLICATE KEY UPDATE last_login_at=VALUES(last_login_at),login_count=login_count+1', [user.id, now]);
@@ -216,14 +229,17 @@ export function createAuth({ pool, config, mailer }) {
       if (typeof code !== 'string' || !/^\d{6}$/.test(code)) throw new HttpError(400, 'Enter the six-digit code from your email.');
       await rateLimit(pool, config, `verify:${email}`, 20, 3600000);
       const hash = await hashPassword(password);
+      // Three wrong reset codes (17 Nov): the person is asked to contact the office.
+      const THREE = 'That code was entered incorrectly 3 times. Please contact the office for help resetting your password.';
       const result = await transaction(pool, async conn => {
         const [[otp]] = await conn.execute('SELECT * FROM dr_otp WHERE email=? FOR UPDATE', [email]);
-        if (!otp || Number(otp.expires_at) <= Date.now() || otp.attempts >= 5) return null;
+        if (otp && otp.attempts >= 3) return 'three';
+        if (!otp || Number(otp.expires_at) <= Date.now()) return null;
         const expected = Buffer.from(otp.code_hash, 'hex');
         const supplied = Buffer.from(digest(config.secret, `otp:${email}:${code}`), 'hex');
         if (expected.length !== supplied.length || !timingSafeEqual(expected, supplied)) {
           await conn.execute('UPDATE dr_otp SET attempts=attempts+1 WHERE email=?', [email]);
-          return null;
+          return otp.attempts + 1 >= 3 ? 'three' : 'wrong';
         }
         await conn.execute('DELETE FROM dr_otp WHERE email=?', [email]);
         const [[user]] = await conn.execute('SELECT id,email FROM dr_users WHERE email=?', [email]);
@@ -231,10 +247,13 @@ export function createAuth({ pool, config, mailer }) {
         const now = Date.now();
         await conn.execute('INSERT INTO dr_passwords (user_id,password_hash,updated_at) VALUES (?,?,?) ON DUPLICATE KEY UPDATE password_hash=VALUES(password_hash),updated_at=VALUES(updated_at)', [user.id, hash, now]);
         await conn.execute('DELETE FROM dr_sessions WHERE user_id=?', [user.id]);
+        await conn.execute('DELETE FROM dr_login_failures WHERE user_id=?', [user.id]); // a new password unlocks the account
         await conn.execute('INSERT INTO dr_account_activity (user_id,signed_up_at,last_login_at,login_count) VALUES (?,NULL,?,1) ON DUPLICATE KEY UPDATE last_login_at=VALUES(last_login_at),login_count=login_count+1', [user.id, now]);
         await conn.execute('INSERT INTO dr_logins (user_id,logged_in_at) VALUES (?,?)', [user.id, now]);
         return createSession(conn, user, remember === true, false);
       });
+      if (result === 'three') throw new HttpError(429, THREE);
+      if (result === 'wrong') throw new HttpError(401, 'That code is not correct. Please check the email and try again.');
       if (!result) throw new HttpError(401, 'That code is invalid or expired. Request a new code.');
       return result;
     },

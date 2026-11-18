@@ -9,7 +9,7 @@ export async function transaction(pool, fn) {
   finally { conn.release(); }
 }
 export async function migrate(pool) {
-  for (const name of ['001_registration.sql', '002_api_keys.sql', '003_account_activity.sql', '004_media_blobs.sql', '005_config.sql', '006_office.sql', '007_passwords.sql']) {
+  for (const name of ['001_registration.sql', '002_api_keys.sql', '003_account_activity.sql', '004_media_blobs.sql', '005_config.sql', '006_office.sql', '007_passwords.sql', '008_login_failures.sql']) {
     const sql = await readFile(new URL(`../../mysql/${name}`, import.meta.url), 'utf8');
     for (const statement of sql.split(';').map(s => s.trim()).filter(Boolean)) await pool.query(statement);
   }
