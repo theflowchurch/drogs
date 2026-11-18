@@ -76,6 +76,7 @@ import {
   referenceMatches,
   directoryPeople,
   todoFor,
+  inGoodStanding,
 } from "./model.mjs";
 import {
   currencyFor,
@@ -1754,8 +1755,10 @@ function Participant({
           <span className="reg-eyebrow">{state.year} / REGISTRATION</span>
           <h1>Thank you, {current.data.name.split(" ")[0]}.</h1>
           <p>
-            {current.status === "confirmed"
+            {inGoodStanding(current)
               ? `Your registration has been confirmed. You are in good standing for ${state.year}.`
+              : current.status === "confirmed"
+                ? "Your registration has been submitted. The office is checking your payment receipt; once it is confirmed you are in good standing."
               : current.status === "unclaimed"
                 ? "Your registration has been submitted. Your bishop has been asked to confirm you, and your status will appear on your profile."
                 : "Your registration has been submitted. The office is reviewing it, and your status will appear on your profile."}
@@ -1792,8 +1795,8 @@ function Participant({
             <div>
               <span className="reg-eyebrow">{titleFor(current.data).toUpperCase()}</span>
               <h2>{current.data.name}</h2>
-              <span className={`reg-status-pill ${current.status === "confirmed" ? "good" : current.status === "denied" || current.resubmit ? "action" : "pending"}`}>
-                Status: {current.status === "confirmed" ? "In Good Standing" : current.status === "denied" || current.resubmit ? "Action Required" : "Pending Review"}
+              <span className={`reg-status-pill ${inGoodStanding(current) ? "good" : current.status === "denied" || current.resubmit ? "action" : "pending"}`}>
+                Status: {inGoodStanding(current) ? "In Good Standing" : current.status === "denied" || current.resubmit ? "Action Required" : current.status === "confirmed" ? "Awaiting payment confirmation" : "Pending Review"}
               </span>
               <p>
                 {[orgLabel(current.data.organization), caps(current.data.denomination || current.data.church)]
@@ -1826,8 +1829,8 @@ function Participant({
               </div>
             )}
           </dl>
-          {(current.status !== "confirmed" || current.resubmit) && (
-          <div className={`reg-status-message ${current.status === "unclaimed" ? "pending" : current.status}`}>
+          {(!inGoodStanding(current) || current.resubmit) && (
+          <div className={`reg-status-message ${current.status === "unclaimed" || current.status === "confirmed" ? "pending" : current.status}`}>
             <h3>
               {current.status === "confirmed"
                 ? "Your registration is confirmed."
@@ -1843,7 +1846,11 @@ function Participant({
             </h3>
             <p>
               {current.status === "confirmed"
-                ? "You can now pay your Annual Good Standing Renewal Fee."
+                ? current.payment === "pending"
+                  ? "The office is checking your payment receipt. Once it is confirmed, you will be in good standing."
+                  : current.payment === "rejected"
+                    ? `The office could not confirm your receipt${current.paymentNote ? `: ${current.paymentNote}` : "."} Please upload a new receipt below.`
+                    : "You can now pay your Annual Good Standing Renewal Fee."
                 : current.status === "denied" || current.resubmit
                   ? current.bishopNote || "Please get in touch with the office for details."
                   : current.status === "pending"

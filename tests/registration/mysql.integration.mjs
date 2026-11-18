@@ -182,6 +182,8 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(passed.status, 200); assert.match(passed.cookie, /^kc_order=\d+\.[a-f0-9]+$/);
     assert.equal((await call('order-access', passed.cookie)).data.step, 'signin', 'the password alone is not enough');
     assert.equal((await call('order-access', `${passed.cookie}; ${stranger.cookie}`)).data.step, 'standing', 'signed in but not registered');
+    assert.equal((await call('order-access', `${passed.cookie}; ${bishop.cookie}`)).data.status, 'payment', 'confirmed but the fee not yet confirmed: not in good standing (19 Nov)');
+    assert.equal((await call('action', office.cookie, { name: 'markPaid', payload: { userId: bishop.data.id, paid: true, note: 'Cash at the office' } })).status, 200);
     assert.equal((await call('order-access', `${passed.cookie}; ${bishop.cookie}`)).data.step, 'ok', 'a confirmed bishop gets in');
     assert.equal((await call('order-access', bishop.cookie)).data.step, 'code', 'a member still needs the password');
     assert.equal((await call('order-access', 'kc_order=9999999999999.0000; ' + bishop.cookie)).data.step, 'code', 'a forged pass is refused');
@@ -235,7 +237,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call(`media?path=${receipt}`, bishop.cookie)).status, 403);
     assert.equal((await call('snapshot', bishop.cookie)).data.registrations.find(r => r.userId === pastor.data.id).proof, undefined);
     // Anyone may load a confirmed member's portrait for the public directory, but never a receipt.
-    assert.equal((await call(`media?path=${pastorPhoto}`)).status, 200, 'public directory portrait without a session');
+    assert.equal((await call(`media?path=${pastorPhoto}`)).status, 403, 'not public while the office checks the receipt (19 Nov)');
     assert.equal((await call(`media?path=${receipt}`)).status, 403, 'receipts stay private');
     const media = await call(`media?path=${receipt}`, office.cookie);
     assert.equal(media.status, 200);
@@ -245,6 +247,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(saved.photo_key, pastorPhoto); assert.equal(saved.proof_key, receipt);
     assert.doesNotMatch(saved.photo_key, /^https:/, 'database stores permanent keys, not expiring URLs');
     assert.equal((await call('action', office.cookie, { name: 'reviewPayment', payload: { userId: pastor.data.id, result: 'verified' } })).status, 200);
+    assert.equal((await call(`media?path=${pastorPhoto}`)).status, 200, 'public directory portrait without a session once in good standing');
     // 17 Nov: a pastor may change their bishop on their profile; they wait again and the new bishop (not yet registered) is emailed at the address we hold.
     const changed = await call('action', pastor.cookie, { name: 'update', payload: { ...profile(pastorPhoto, 'pastor'), bishopId: 'B2', bishopFirstName: 'Abraham Nii Ayi', bishopLastName: 'Aryee' } });
     assert.equal(changed.status, 200);

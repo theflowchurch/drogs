@@ -94,6 +94,7 @@ export default function AccessGate() {
           <p>{standing?.status === 'none' || standing?.status === 'draft'
             ? 'Only bishops and pastors in good standing can view this page. Please finish your registration and payment first.'
             : standing?.status === 'unclaimed' ? 'Your registration is waiting for your bishop to confirm you. Once you are confirmed and in good standing you can view this page.'
+            : standing?.status === 'payment' ? 'The office is checking your payment receipt. Once your payment is confirmed you are in good standing and can view this page.'
             : 'Your registration is being reviewed. Once it is confirmed and you are in good standing you can view this page.'}</p>
           <a className="reg-primary full reg-access-button" href={signup}>{standing?.status === 'none' || standing?.status === 'draft' ? 'Complete my registration →' : 'Open my profile →'}</a>
         </div>}

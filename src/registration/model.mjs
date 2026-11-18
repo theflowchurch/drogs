@@ -1605,11 +1605,15 @@ export function shownPhoto(reg, ref) {
   if (ours && !officePicked) return { photo: '', image: ours };
   return { photo: reg?.data?.photo || '', image: ours };
 }
+// Good standing (office, 19 Nov): confirmed, and the fee confirmed. Paystack is
+// confirmed at once; a receipt from a money-transfer app waits for the office.
+export const paymentConfirmed = (r) => Boolean(r?.manual) || r?.payment === "verified" || r?.payment === "waived";
+export const inGoodStanding = (r) => r?.status === "confirmed" && paymentConfirmed(r);
 export function publicRoll(state, people, year = state.year) {
   const byId = new Map(overlayReferences(people, state).map((p) => [p.id, p]));
   const bishopOf = (r) => state.profiles.find((p) => (p.referenceId || p.id) === r.data.bishopId && p.bishopApproved);
   return state.registrations
-    .filter((r) => r.year === year && r.status === "confirmed" && !r.hidden && (!r.data.referenceId || byId.has(r.data.referenceId)) && (r.data.role === "bishop" || r.manual || bishopOf(r)))
+    .filter((r) => r.year === year && inGoodStanding(r) && !r.hidden && (!r.data.referenceId || byId.has(r.data.referenceId)) && (r.data.role === "bishop" || r.manual || bishopOf(r)))
     .map((r) => {
       const ref = byId.get(r.data.referenceId) || null;
       const d = registrationDetails(state, r.data);

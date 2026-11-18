@@ -3,7 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import sharp from 'sharp';
 import { randomUUID } from 'node:crypto';
 import { HttpError, rateLimit } from './auth.mjs';
-import { submittedBishop } from '../registration/model.mjs';
+import { submittedBishop, inGoodStanding } from '../registration/model.mjs';
 import { inspectReceipt } from './receipt-check.mjs';
 export async function prepareImage(bytes, contentType) {
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(contentType) || bytes.length > 5 * 1024 * 1024 || !bytes.length)
@@ -27,7 +27,7 @@ export function canReadMedia(state, actor, media) {
   // Portraits on the public roll and on original-data records are part of the
   // directory anyone can open, signed in or not.
   const key = media.object_key, hidden = new Set(state.hidden || []), overrides = state.overrides || {};
-  if (state.registrations.some(r => r.status === 'confirmed' && !r.hidden && r.data.photo === key)) return true;
+  if (state.registrations.some(r => inGoodStanding(r) && !r.hidden && r.data.photo === key)) return true;
   if ((state.extraReferences || []).some(x => x.photo === key && !hidden.has(x.id) && !overrides[x.id]?.deleted)) return true;
   if (Object.entries(overrides).some(([id, o]) => o.photo === key && !o.deleted && !hidden.has(id))) return true;
   if (!actor) return false;

@@ -30,6 +30,7 @@ import {
   bySurname,
   placeOf,
   caps,
+  inGoodStanding,
 } from "../../src/registration/model.mjs";
 const bishop = { id: "b1", email: "bishop@example.com" },
   other = { id: "b2", email: "other@example.com" },
@@ -422,6 +423,7 @@ test("the public roll lists only confirmed people and the office can pick the ph
   assert.equal(s.registrations[0].data.referenceId, "", "a record with another name is not linked");
   assert.equal(publicRoll(s, references).length, 0, "a pending bishop is not on the roll");
   s = applyAction(s, office, "approveBishop", { userId: bishop.id, referenceId: "B1" });
+  s.registrations[0].payment = "verified"; // paid (good standing needs the fee confirmed)
   const roll = publicRoll(s, references);
   assert.equal(roll.length, 1);
   assert.equal(roll[0].photo, "", "our existing photo shows by default, not the member's upload");
@@ -496,6 +498,7 @@ test("a pastor under a pending bishop waits; once the office confirms the bishop
   const reg = s.registrations.find((r) => r.userId === pastor.id);
   assert.equal(reg.status, "confirmed");
   assert.equal(reg.data.bishopId, "B1", "the pastor follows the bishop's new key");
+  reg.payment = "verified";
   const roll = publicRoll(s, [{ id: "B1", role: "bishop", name: "Ama Bishop", title: "Bishop", organization: "First Love", denomination: "First Love Church", image: "", city: "Accra", country: "Ghana" }]);
   assert.ok(roll.some((p) => p.role === "pastor" && p.name === "John Doe"), "the pastor keeps their own public card");
 });
@@ -908,4 +911,20 @@ test("a fee saved at the old $100 / $25 gives way to the $20 pastor default (off
   assert.deepEqual(feesOf({ fees: { bishop: 100, pastor: 25 } }), AMOUNTS);
   assert.equal(AMOUNTS.pastor, 20);
   assert.deepEqual(feesOf({ fees: { bishop: 120, pastor: 30 } }), { bishop: 120, pastor: 30 });
+});
+
+test("a receipt waits for the office before good standing; Paystack is confirmed at once (19 Nov)", () => {
+  const references = [{ id: "B1", role: "bishop", name: "Ama Bishop", title: "Bishop", organization: "First Love", denomination: "First Love Church", city: "Accra", country: "Ghana", image: "" }];
+  let s = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Ama Bishop"), referenceId: "B1" }, undefined, references);
+  if (s.registrations[0].status !== "confirmed") s = applyAction(s, office, "approveBishop", { userId: bishop.id, referenceId: "B1" });
+  const r = s.registrations[0];
+  assert.equal(r.status, "confirmed");
+  r.payment = "pending"; r.proof = "x/receipt/1.webp";
+  assert.equal(inGoodStanding(r), false, "a receipt alone is not good standing");
+  assert.equal(publicRoll(s, references).length, 0, "not on the roll while the office checks the receipt");
+  s = applyAction(s, office, "reviewPayment", { userId: bishop.id, result: "verified" });
+  assert.equal(publicRoll(s, references).length, 1, "on the roll once the office confirms the receipt");
+  const paystack = { status: "confirmed", payment: "verified", paymentMethod: "paystack" };
+  assert.equal(inGoodStanding(paystack), true, "Paystack payments are confirmed straight away");
+  assert.equal(inGoodStanding({ status: "confirmed", payment: "rejected" }), false, "a rejected receipt is not good standing");
 });

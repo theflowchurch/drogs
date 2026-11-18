@@ -42,7 +42,7 @@ test('older sheet spellings match E.A.T Sackey without changing other people', (
   assert.equal(canonicalBishopName('Eat Sackey.xlsx'), 'Eat Sackey.xlsx', 'source filenames stay usable');
 });
 test('old saved spellings cannot reappear in office, registered or public views', () => {
-  const s = { ...emptyState(), overrides: { B39: { name: 'Eat Sackey', _officeFields: ['name'] }, P1: { bishop: 'Eat Sackey', _officeFields: ['bishop'] } }, profiles: [{ id: 'account', role: 'bishop', referenceId: 'B39', name: 'Eat Sackey', bishopApproved: true }], registrations: [{ userId: 'account', year: 2027, status: 'confirmed', data: { role: 'bishop', referenceId: 'B39', name: 'Eat Sackey', firstName: 'Eat', lastName: 'Sackey', photo: 'account/portrait/bishop.webp' } }] };
+  const s = { ...emptyState(), overrides: { B39: { name: 'Eat Sackey', _officeFields: ['name'] }, P1: { bishop: 'Eat Sackey', _officeFields: ['bishop'] } }, profiles: [{ id: 'account', role: 'bishop', referenceId: 'B39', name: 'Eat Sackey', bishopApproved: true }], registrations: [{ userId: 'account', year: 2027, status: 'confirmed', payment: 'verified', data: { role: 'bishop', referenceId: 'B39', name: 'Eat Sackey', firstName: 'Eat', lastName: 'Sackey', photo: 'account/portrait/bishop.webp' } }] };
   assert.equal(overlayReferences(refs, s)[0].name, 'E.A.T Sackey');
   assert.equal(directoryPeople(s, refs).find(p => p.id === 'B39').name, 'E.A.T Sackey');
   assert.equal(overlayReferences(refs, s)[1].bishop, 'E.A.T Sackey');

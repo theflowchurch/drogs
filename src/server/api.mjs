@@ -11,7 +11,7 @@ import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import { paymentJson, createQuote, readQuote, checkoutReturnUrl, validateQuotedPayment } from './paystack.mjs';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
-import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding } from '../registration/model.mjs';
 import { canonicalPersonName } from '../registration/name-corrections.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit, digest, checkPassword } from './auth.mjs';
@@ -92,8 +92,8 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
     if (who.office) return { step: 'ok' };
     const [[row]] = await pool.execute('SELECT r.data FROM dr_registrations r JOIN dr_settings s ON s.id=1 AND r.registration_year=s.current_year WHERE r.user_id=?', [who.id]);
     const reg = row ? (typeof row.data === 'string' ? JSON.parse(row.data) : row.data) : null;
-    if (reg?.status === 'confirmed') return { step: 'ok' };
-    return { step: 'standing', status: reg?.status || 'none', role: reg?.data?.role || '' };
+    if (inGoodStanding(reg)) return { step: 'ok' };
+    return { step: 'standing', status: reg?.status === 'confirmed' ? 'payment' : reg?.status || 'none', role: reg?.data?.role || '' };
   }
   handle.orderAccess = orderAccess;
   return handle;
