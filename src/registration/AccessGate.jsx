@@ -42,7 +42,7 @@ export default function AccessGate() {
     </header>
     <main className="reg-access-main">
       <section className="reg-card reg-access-card" aria-live="polite">
-        <span className="reg-eyebrow">PRIVATE · {title.toUpperCase()}</span>
+        <span className="reg-eyebrow">{title.toUpperCase()}</span>
         {step === 'loading' && <p role="status">Checking your access…</p>}
         {step === 'code' && <form onSubmit={(e) => { e.preventDefault(); run(async () => { await call('auth/order-code', { code }); setCode(''); await check(); }); }}>
           <h1>Enter the password</h1>
