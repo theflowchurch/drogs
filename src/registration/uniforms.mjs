@@ -30,9 +30,10 @@ export function uniformGroup({ role, title = '', gender = '', organization = '' 
   const key = rev ? `rev-${gender}-${org}` : `pastor-${gender}-${org}`;
   return UNIFORMS[key] ? key : '';
 }
-export const uniformPrompt = (group) => `Edit the LAST photo. It shows the person whose portrait this is.
-Keep this exact person: the same face, facial features, skin tone, age, hairline and hairstyle, glasses if any, and expression. Do not change who they are.
-Make it an official head-and-shoulders portrait: the person centred and facing the camera, a pure white background, soft even studio lighting, sharp focus, framed from just above the head to the middle of the chest, portrait orientation.
-Dress them in ${UNIFORMS[group]}.
-The other photos are examples of the required style, framing and uniform. They show other people: never copy their faces.
-Remove any other people, objects, text or watermarks.`;
+export const uniformPrompt = (group) => `Edit the PHOTO OF THE PERSON into an official portrait.
+The face must stay exactly the same person: identical facial features, face shape, skin tone, age, hairline, hairstyle, facial hair, glasses if any, and expression. Do not beautify, slim, age or change the face in any way. Do not use any face other than the one in the photo of the person.
+Change only the clothes, the background, the lighting and the framing:
+- Dress them in ${UNIFORMS[group]}, exactly like the uniform examples.
+- Pure white background, soft even studio lighting, sharp focus.
+- Head-and-shoulders, centred, facing the camera, framed from just above the head to the middle of the chest, portrait orientation.
+- Remove any other people, objects, text or watermarks.`;

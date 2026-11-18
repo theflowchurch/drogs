@@ -12,7 +12,7 @@ import { transaction, readState, persistState } from './database.mjs';
 
 // Gemini's API: the key goes in the x-goog-api-key header.
 const API = 'https://generativelanguage.googleapis.com/v1beta/models';
-export const EDIT_MODEL = 'gemini-2.5-flash-image', CHECK_MODEL = 'gemini-2.5-flash';
+export const EDIT_MODEL = 'gemini-3.1-flash-image', CHECK_MODEL = 'gemini-2.5-flash';
 export const MAX_TRIES = 3;
 const examplesFile = new URL('../registration/uniform-examples.json', import.meta.url);
 const root = new URL('../../', import.meta.url);
@@ -28,10 +28,16 @@ const answer = async (...args) => { const text = (await gemini(...args)).map((p)
 
 // The photo edited into the group's official look; returns image bytes.
 // The examples go first; the person's own photo is the last image.
-export async function editPortrait({ fetcher = fetch, key, photo, group }) {
+export async function editPortrait({ fetcher = fetch, key, photo, group, model = EDIT_MODEL }) {
   const examples = JSON.parse(await readFile(examplesFile, 'utf8'))[group] || [];
-  const exampleParts = await Promise.all(examples.map(async (f) => picture(await readFile(new URL(f, root)), 640)));
-  const parts = await gemini(fetcher, key, EDIT_MODEL, [{ text: uniformPrompt(group) }, ...exampleParts, await picture(photo, 1024)], { responseModalities: ['IMAGE'] });
+  // Only the clothes of the examples (head cut off), so there is no other face to copy.
+  const clothes = async (f) => { const img = sharp(await readFile(new URL(f, root))); const { width, height } = await img.metadata(); const top = Math.round(height * 0.5); return picture(await img.extract({ left: 0, top, width, height: height - top }).toBuffer(), 640); };
+  const exampleParts = await Promise.all(examples.map(clothes));
+  const parts = await gemini(fetcher, key, model, [
+    { text: 'PHOTO OF THE PERSON (keep this exact face and person):' }, await picture(photo, 1024),
+    { text: 'UNIFORM EXAMPLES (clothing only, from other people; copy only the clothes):' }, ...exampleParts,
+    { text: uniformPrompt(group) },
+  ], { responseModalities: ['IMAGE'] });
   const image = parts.find((p) => p.inlineData || p.inline_data);
   const b64 = image?.inlineData?.data || image?.inline_data?.data;
   if (!b64) throw Error('Gemini returned no image');
