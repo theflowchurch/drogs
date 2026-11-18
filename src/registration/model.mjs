@@ -175,7 +175,9 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   // Pastors already waiting when the bishop's deadline starts get a fresh two weeks (office, 19 Nov).
   { id: 'claim-deadline-fresh-start-2026-11-19', freshDeadline: true },
   // Joshua Gbafa registered without his middle name and was not linked to his listed record (office, 19 Nov).
-  { id: 'link-joshua-gbafa-2026-11-19', link: [{ userId: '6aa10206-ca20-4fae-a4ed-38504c43a70c', referenceId: 'S7f891fda' }] }];
+  { id: 'link-joshua-gbafa-2026-11-19', link: [{ userId: '6aa10206-ca20-4fae-a4ed-38504c43a70c', referenceId: 'S7f891fda' }] },
+  // Walter Woelle's roll shows his edited portrait again (office, 19 Nov).
+  { id: 'walter-edited-photo-2026-11-19', editedPhoto: ['903239e8-aa44-455f-8c15-360c1c0a69ec'] }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -222,6 +224,8 @@ export function syncRoll(state, people, version) {
     next.registrations = (next.registrations || []).map(r => r.userId === userId ? { ...r, data: { ...r.data, referenceId } } : r);
     for (const r of next.registrations) if (r.userId === userId && r.year === next.year) syncReference(next, r);
   }
+  for (const fix of fixes) for (const userId of fix.editedPhoto || [])
+    next.registrations = (next.registrations || []).map(r => r.userId === userId && r.autoPhoto ? { ...r, displayPhoto: undefined, photoByOffice: false } : r);
   if (fixes.some(f => f.freshDeadline)) {
     const start = new Date().toISOString();
     next.registrations = (next.registrations || []).map(r => r.data?.role === 'pastor' && r.status === 'unclaimed' && !r.claimWaitFrom ? { ...r, claimWaitFrom: start } : r);
@@ -1347,12 +1351,19 @@ export function applyAction(
     office();
     const r = registration();
     if (!r || r.status === "draft") throw Error("Select a submitted registration.");
+    // Back to the automatic edit, or a fresh edit (19 Nov): the office's own choice is cleared.
+    if (payload.source === "edited" || payload.source === "again") {
+      r.displayPhoto = undefined; r.photoByOffice = false;
+      if (payload.source === "again") { r.autoPhoto = ""; r.autoPhotoSource = ""; r.autoPhotoGroup = ""; r.autoPhotoTries = 0; r.autoPhotoFailed = false; r.autoPhotoOk = false; r.autoPhotoNote = ""; r.autoPhotoError = ""; }
+      detail = { photo: payload.source === "again" ? "edit again" : "edited photo" };
+    } else {
     if (!["upload", "reference"].includes(payload.source))
       throw Error("Choose the uploaded photo or the existing one.");
     if (payload.source === "reference" && !r.data.referenceId)
       throw Error("This registration is not linked to an existing record.");
     r.displayPhoto = payload.source;
     r.photoByOffice = true; // the office's own choice, kept until it changes it
+    }
   } else if (action === "reviewPayment") {
     office();
     const r = registration();

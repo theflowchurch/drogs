@@ -1006,3 +1006,19 @@ test("an unrelated office action never takes a confirmed pastor off the roll (19
   const off = act(s, { id: "office", office: true }, "setStatus", { userId: "w", status: "unclaimed" }, undefined, refs);
   assert.equal(off.registrations[1].status, "unclaimed", "the office can still un-confirm on purpose");
 });
+
+test("the office can go back to the edited photo, or ask for a fresh edit (19 Nov)", async () => {
+  const { applyAction: act, publicRoll: roll, syncRoll } = await import("../../src/registration/model.mjs");
+  const refs = [{ id: "B334", role: "bishop", name: "Nina Masuku", title: "Mother", organization: "FLOW", image: "x" }];
+  const w = "903239e8-aa44-455f-8c15-360c1c0a69ec";
+  const s = { ...emptyState(), year: 2027, profiles: [{ id: "nina", role: "bishop", referenceId: "B334", name: "Nina Masuku", bishopApproved: true }, { id: w, role: "pastor", name: "Walter Woelle" }],
+    registrations: [{ userId: "nina", year: 2027, status: "confirmed", payment: "verified", data: { role: "bishop", name: "Nina Masuku", referenceId: "B334", organization: "FLOW" } },
+      { userId: w, year: 2027, status: "confirmed", payment: "verified", autoPhoto: "w/edit.webp", autoPhotoSource: "w/up.webp", displayPhoto: "upload", photoByOffice: true, data: { role: "pastor", name: "Walter Woelle", organization: "FLOW", gender: "male", bishopId: "B334", photo: "w/up.webp" } }] };
+  const photoOf = (x) => roll(x, refs).find(r => r.name === "Walter Woelle").photo;
+  assert.equal(photoOf(s), "w/up.webp", "the office chose the photo from before");
+  const back = act(s, { id: "office", office: true }, "choosePhoto", { userId: w, source: "edited" }, undefined, refs);
+  assert.equal(photoOf(back), "w/edit.webp", "Use the edited photo");
+  const again = act(back, { id: "office", office: true }, "choosePhoto", { userId: w, source: "again" }, undefined, refs);
+  assert.equal(again.registrations[1].autoPhoto, "", "Edit again clears the old edit so a fresh one is made");
+  assert.equal(photoOf(syncRoll(s, refs, "walter-photo")), "w/edit.webp", "Walter's edited photo is shown again on the live site");
+});
