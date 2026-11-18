@@ -3799,7 +3799,6 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
     <section className={embedded ? "" : "reg-public-list"}>
       {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
       {!embedded && legend}
-      {embedded && fixedRole && <p className="reg-roll-total"><b>{countRole(list, fixedRole).toLocaleString()}</b> {fixedRole === "bishop" ? "bishops" : "pastors"} on the Roll of Good Standing</p>}
       <div className="reg-member-roll">
         <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} index={index} initialQuery={q} switcher={!fixedRole} counts={embedded} circles={!embedded} />
       </div>
