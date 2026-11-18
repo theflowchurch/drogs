@@ -22,6 +22,13 @@ export function requestHandler({ origin, api, nextHandler }) {
       res.writeHead(308, { Location: siteRedirect, 'Cache-Control': 'no-store' });
       return res.end();
     }
+    // The public registers moved under the licensing authority (office, 19 Nov); old links still work.
+    const moved = path.match(/^\/(registerof(?:bishops|pastors)ingoodstanding)(\/.*)?$/);
+    if (moved) {
+      const query = (req.url || '').includes('?') ? (req.url || '').slice((req.url || '').indexOf('?')) : '';
+      res.writeHead(301, { Location: `/licensingauthority/${moved[1]}${moved[2] || '/'}${query}`, 'Cache-Control': 'no-store' });
+      return res.end();
+    }
     // The Order of Bishops / Pastors pages and Councils (not their sign-up pages)
     // open only after the Order pages password and a signed-in member in good
     // standing; otherwise the person goes to /access/ to do those steps.
