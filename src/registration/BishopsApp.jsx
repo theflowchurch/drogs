@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Masthead, Photo } from './OrganisationsApp';
-import { bishopSurname, DIRECTORY_GROUPS, allBishopsOf, buildDirectory } from './ministry-organisations.mjs';
+import { DIRECTORY_GROUPS, allBishopsOf, buildDirectory } from './ministry-organisations.mjs';
 import useLiveRoll from './useLiveRoll';
 import { patchGroups } from './live-patch.mjs';
 import { bishopEntries, pastorEntries, setOfficeLogos } from './public-entries.mjs';
@@ -12,7 +12,6 @@ import './organisations.css';
 // Organisations page once, A to Z by surname, in that page's style. A bishop's
 // card opens their church and the year they were consecrated.
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
-const letterOf = b => (bishopSurname(b.name)[0] || '#').toUpperCase();
 
 export function Card({ person, onOpen, fallback }) {
   return <button type="button" className="org-member bl-card" onClick={() => onOpen(person)} aria-haspopup="dialog">
@@ -75,11 +74,8 @@ export default function BishopsApp({ bishops: published, kind = 'bishop', masthe
     io.observe(more.current);
     return () => io.disconnect();
   }, [limit, shown.length]);
-  const letters = useMemo(() => {
-    const m = new Map();
-    for (const b of shown.slice(0, limit)) { const l = letterOf(b); if (!m.has(l)) m.set(l, []); m.get(l).push(b); }
-    return [...m];
-  }, [shown, limit]);
+  // One list in alphabetical order, no letter headings (office, 19 Nov).
+  const visible = useMemo(() => shown.slice(0, limit), [shown, limit]);
   return <div className="denom-site org-site bl-site" id="top">
     <Masthead count={false} {...masthead}/>
     <main className="org-main bl-main">
@@ -88,11 +84,8 @@ export default function BishopsApp({ bishops: published, kind = 'bishop', masthe
           <input id="bl-search" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by name" autoComplete="off"/>
         </label>
       </div>
-      {!letters.length && <p className="bl-empty">No {noun} matches “{query}”.</p>}
-      {letters.map(([l, people]) => <section key={l} className="bl-letter" id={`letter-${l}`} aria-labelledby={`h-${l}`}>
-        <h2 className="bl-letter-heading" id={`h-${l}`}>{l}</h2>
-        <div className="org-members">{people.map(p => <Card key={p.rosterId || p.name} person={p} onOpen={setOpen} fallback={fallback}/>)}</div>
-      </section>)}
+      {!visible.length && <p className="bl-empty">No {noun} matches “{query}”.</p>}
+      {visible.length > 0 && <section className="bl-letter bl-all"><div className="org-members">{visible.map(p => <Card key={p.rosterId || p.name} person={p} onOpen={setOpen} fallback={fallback}/>)}</div></section>}
       {limit < shown.length && <div ref={more} className="bl-more"><button type="button" className="bl-more-button" onClick={() => setLimit(n => n + STEP)}>Show more</button></div>}
     </main>
     {open && <Detail person={open} onClose={() => setOpen(null)} fallback={fallback}/>}
