@@ -5,6 +5,10 @@ export const REMITTANCE_APPS = [
   ['WorldRemit', 'https://www.worldremit.com/', 'worldremit.com.png'],
   ['Remitly', 'https://www.remitly.com/', 'remitly.com.png'],
   ['Taptap Send', 'https://www.taptapsend.com/', 'taptapsend.com.png'],
+  // Added by the office, 19 Nov.
+  ['Sendwave', 'https://www.sendwave.com/', 'sendwave.com.png'],
+  ['Wise', 'https://wise.com/', 'wise.com.png'],
+  ['LemFi', 'https://lemfi.com/', 'lemfi.com.png'],
 ];
 export const inGhana = country => ['ghana', 'gh'].includes(String(country || '').trim().toLowerCase());
 export const paymentReady = record => record?.payment === 'verified' || (record?.payment === 'pending' && Boolean(record.proof));

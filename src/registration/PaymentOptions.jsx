@@ -103,7 +103,7 @@ export default function PaymentOptions({ current, actor, run, beforeSave, paysta
       <h3 id="pay-step-1"><span>1</span>Choose how to pay</h3>
       <fieldset className="reg-payment-methods"><legend className="reg-visually-hidden">How would you like to pay?</legend>
         <label><input type="radio" name="payment-method" value="card" checked={!app} onChange={() => setMethod('card')} />Card or Mobile Money · confirmed instantly</label>
-        <label><input type="radio" name="payment-method" value="app" checked={app} onChange={() => setMethod('app')} />Send money using an app (Remitly, WorldRemit, Taptap Send and others)</label>
+        <label><input type="radio" name="payment-method" value="app" checked={app} onChange={() => setMethod('app')} />Send money using an app (WorldRemit, Remitly, Sendwave, Wise, LemFi and others)</label>
       </fieldset>
     </section>
     {!app ? <>
