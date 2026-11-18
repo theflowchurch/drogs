@@ -1049,3 +1049,12 @@ test("lay presidents are on the Order of Pastors, never among the bishops (19 No
   const live = { byId: new Map([["P1062", lay]]), baseById: new Map([["P1062", lay]]), overrides: {} };
   assert.equal(patchBishop({ rosterId: "P1062", name: "Ebenezer Johnson" }, live), null, "never a card on the Order of Bishops");
 });
+
+test("the three bishops on the Order of Bishops are bishops in the records too (19 Nov)", async () => {
+  const { syncRoll, overlayReferences: overlay } = await import("../../src/registration/model.mjs");
+  const refs = JSON.parse((await import("node:fs")).readFileSync("src/registration/reference-people.json", "utf8"));
+  const next = syncRoll({ ...emptyState(), year: 2027 }, refs, "three-bishops");
+  const people = [...overlay(refs, next), ...(next.extraReferences || [])];
+  for (const n of ["Allan Opiyo", "Heywood Osei Bonsu", "Stanley Osei-Bonsu"]) assert.equal(people.find(p => p.name === n)?.role, "bishop", n);
+  assert.equal(people.filter(p => p.role === "bishop" && p.title !== "Lay President" && !["B194"].includes(p.id)).length >= 292, true);
+});

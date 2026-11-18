@@ -177,7 +177,10 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   // Joshua Gbafa registered without his middle name and was not linked to his listed record (office, 19 Nov).
   { id: 'link-joshua-gbafa-2026-11-19', link: [{ userId: '6aa10206-ca20-4fae-a4ed-38504c43a70c', referenceId: 'S7f891fda' }] },
   // Walter Woelle's roll shows his edited portrait again (office, 19 Nov).
-  { id: 'walter-edited-photo-2026-11-19', editedPhoto: ['903239e8-aa44-455f-8c15-360c1c0a69ec'] }];
+  { id: 'walter-edited-photo-2026-11-19', editedPhoto: ['903239e8-aa44-455f-8c15-360c1c0a69ec'] },
+  // Three bishops on the Order of Bishops whose records said otherwise (office, 19 Nov).
+  { id: 'three-bishops-2026-11-19', makeBishops: ['PN2177b36054d9', 'P5088'],
+    addRecords: [{ id: 'Xstanleyoseibonsu', role: 'bishop', name: 'Stanley Osei-Bonsu', title: 'Bishop', gender: 'male', organization: 'United Denominations', denomination: 'Deep Love Church International', group: 'UD Europe', image: 'assets/organisations/people/stanley-osei-bonsu.webp', yearConsecrated: '2026', city: '', country: '' }] }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -226,6 +229,14 @@ export function syncRoll(state, people, version) {
   }
   for (const fix of fixes) for (const userId of fix.editedPhoto || [])
     next.registrations = (next.registrations || []).map(r => r.userId === userId && r.autoPhoto ? { ...r, displayPhoto: undefined, photoByOffice: false } : r);
+  for (const fix of fixes) for (const id of fix.makeBishops || []) {
+    if (!ids.has(id)) continue;
+    const o = next.overrides[id] || {};
+    next.overrides[id] = { ...o, role: 'bishop', title: 'Bishop', bishop: '', _officeFields: [...new Set([...(o._officeFields || []), 'role', 'title', 'bishop'])] };
+  }
+  for (const fix of fixes) for (const rec of fix.addRecords || [])
+    if (!(next.extraReferences || []).some(x => x.id === rec.id || (x.role === rec.role && normalName(x.name) === normalName(rec.name))))
+      next.extraReferences = [...(next.extraReferences || []), rec];
   if (fixes.some(f => f.freshDeadline)) {
     const start = new Date().toISOString();
     next.registrations = (next.registrations || []).map(r => r.data?.role === 'pastor' && r.status === 'unclaimed' && !r.claimWaitFrom ? { ...r, claimWaitFrom: start } : r);
@@ -1717,7 +1728,7 @@ export function publicRoll(state, people, year = state.year) {
               const ref = byId.get(x.referenceId || reg?.data.referenceId);
               const d = reg ? registrationDetails(state, reg.data, ref?.id) : ref;
               const shown = reg ? shownPhoto(reg, ref) : { photo: '', image: '' };
-              return { id: `p:${x.id}`, referenceId: ref?.id || '', role: "pastor", name: d?.name || x.name, title: d ? titleFor(d) : "Pastor", photo: shown.photo, image: shown.image, city: d?.city || "", country: d?.country || "", registered: Boolean(reg) };
+              return { id: `p:${x.id}`, referenceId: ref?.id || '', accountId: x.pastorId ? `u:${x.pastorId}` : '', role: "pastor", name: d?.name || x.name, title: d ? titleFor(d) : "Pastor", photo: shown.photo, image: shown.image, city: d?.city || "", country: d?.country || "", registered: Boolean(reg) };
             })
             .sort(bySurname)
         : undefined;

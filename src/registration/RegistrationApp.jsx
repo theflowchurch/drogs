@@ -3799,8 +3799,9 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
     <section className={embedded ? "" : "reg-public-list"}>
       {!embedded && <h1 className="reg-doors-title">Roll of Good Standing</h1>}
       {!embedded && legend}
+      {embedded && fixedRole && <p className="reg-roll-total"><b>{countRole(list, fixedRole).toLocaleString()}</b> {fixedRole === "bishop" ? "bishops" : "pastors"} on the Roll of Good Standing</p>}
       <div className="reg-member-roll">
-        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} index={index} initialQuery={q} switcher={!fixedRole} counts={embedded} />
+        <MemberDirectory role={role || "bishop"} setRole={setRole} roll={list} index={index} initialQuery={q} switcher={!fixedRole} counts={embedded} circles={!embedded} />
       </div>
     </section>
   );
@@ -3841,9 +3842,11 @@ function SearchResults({ list, q }) {
 const inRole = (p, role) => (role === "lay" ? isLay(p) : role === "pastor" || (p.role === role && !isLay(p))); // the Bishops view is bishops only; lay presidents lead the Pastors view
 const countRole = (list, role) => list.filter((p) => (role === "lay" ? isLay(p) : role === "pastor" ? p.role === "pastor" || isLay(p) : p.role === role && !isLay(p))).length; // lay presidents count among the pastors, never among the bishops (Joshua, 13 Oct)
 // The pastors shown under a bishop: the list they uploaded this year (lit once registered with a photo), then pastors whose record names them.
-const pastorsUnder = (b, byBishop) => {
-  const uploaded = (b.pastors || []).map((q) => ({ id: q.id, role: "pastor", name: q.name, photo: q.photo || "", image: "", city: q.city || "", country: q.country || "", standing: Boolean(q.registered && q.photo), bishop: b.name }));
-  return [...uploaded, ...(byBishop.get(b.id) || []).filter((q) => !uploaded.some((u) => namesAlike(u.name, q.name)))];
+// Each line of the bishop's list is the pastor's own card when we have it (19 Nov),
+// with our photo and their good standing, so nobody shows dark or twice.
+const pastorsUnder = (b, byBishop, byId = null) => {
+  const uploaded = (b.pastors || []).map((q) => byId?.get(q.referenceId) || byId?.get(q.accountId) || ({ id: q.id, role: "pastor", name: q.name, photo: q.photo || "", image: q.image || "", city: q.city || "", country: q.country || "", standing: Boolean(q.registered && (q.photo || q.image)), bishop: b.name }));
+  return [...uploaded, ...(byBishop.get(b.id) || []).filter((q) => !uploaded.some((u) => u.id === q.id || namesAlike(u.name, q.name)))];
 };
 const overseeing = (n) => (n ? <>Overseeing <b>{n}</b> pastor{n === 1 ? "" : "s"}</> : "");
 // Split-site homepages show two plain lines beneath the directory link. The
@@ -3886,7 +3889,7 @@ function GoodStandingNotice({ compact = false }) {
     </section>
   );
 }
-function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery = "", switcher = true, counts = true }) {
+function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery = "", switcher = true, counts = true, circles = true }) {
   const site = useContext(OrganizationSiteContext);
   const [filter, setFilter] = useState({
       q: initialQuery,
@@ -3922,6 +3925,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
   // The pastors' side groups pastors under their bishop while no search or filter is active.
   const filtering = Boolean(filter.q || filter.org || filter.group || filter.denomination || filter.country);
   // Bishop → pastors as roll entries. The public page hands in the id index so it survives the face switch; elsewhere it is built here.
+  const rollById = useMemo(() => new Map(roll.map((p) => [p.id, p])), [roll]);
   const byBishop = useMemo(() => {
     const byId = new Map(roll.map((p) => [p.id, p]));
     const ids = index || new Map([...pastorsByBishop(roll)].map(([id, qs]) => [id, qs.map((q) => q.id)]));
@@ -3932,7 +3936,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
     const bishopsSorted = [...roll.filter((p) => p.role === "bishop")].sort(byOversight).map((p, i) => ({ ...p, n: i + 1 })); // lay presidents first (they oversee), then the bishops
     const taken = new Set(), blocks = [];
     for (const b of bishopsSorted) {
-      const list = pastorsUnder(b, byBishop).filter((q) => !taken.has(q.id)).sort(byRank);
+      const list = pastorsUnder(b, byBishop, rollById).filter((q) => !taken.has(q.id)).sort(byRank);
       list.forEach((q) => taken.add(q.id));
       blocks.push({ bishop: b, pastors: list });
     }
@@ -3946,11 +3950,11 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
     const order = [...withPastors.flatMap((x) => [x.bishop, ...x.pastors]), ...alone, ...rest];
     return { withPastors, alone, rest, order };
   }, [roll, role, filtering, byBishop, site]);
-  const pastorCount = useMemo(() => new Map(roll.filter((p) => p.role === "bishop").map((b) => [b.id, pastorsUnder(b, byBishop).length])), [roll, byBishop]);
+  const pastorCount = useMemo(() => new Map(roll.filter((p) => p.role === "bishop").map((b) => [b.id, pastorsUnder(b, byBishop, rollById).length])), [roll, byBishop]);
   // Resolve an open profile against each refreshed list as well: holding the
   // old person object would leave its name/photo unchanged inside the dialog.
   const currentPeople = useMemo(() => new Map([
-    ...roll, ...roll.filter(p => p.role === "bishop").flatMap(b => pastorsUnder(b, byBishop)),
+    ...roll, ...roll.filter(p => p.role === "bishop").flatMap(b => pastorsUnder(b, byBishop, rollById)),
   ].map(p => [p.id, p])), [roll, byBishop]);
   const selected = currentPeople.get(selectedId) || null;
   const setSelected = p => setSelectedId(p?.id || null);
@@ -4030,7 +4034,7 @@ function MemberDirectory({ role, setRole, roll = [], index = null, initialQuery 
               {ps.length > 0 && <PeopleGrid list={ps} limit={ps.length} onOpen={pick(grouped.order)} dots={false} />}
             </section>
           ))}
-          {grouped.alone.length > 0 && (
+          {circles && grouped.alone.length > 0 && (
             <section className="reg-bishop-block plain">
               <h3 className="reg-group-heading">Bishops</h3>
               <div className="reg-circles">
