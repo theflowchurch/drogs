@@ -3489,7 +3489,7 @@ function TextChoice({ value, options, onChange, ...rest }) {
   const listId = useId();
   return <><input {...rest} value={value} list={listId} onChange={(e) => onChange(e.target.value)} /><datalist id={listId}>{options.map((option) => <option key={option} value={option} />)}</datalist></>;
 }
-const TITLES = ["Bishop", "Pastor", "Rev.", "Lady Rev.", "Reverend", "Dr", "Mother", "Episcopal Sister", "Lady Pastor", "Lay President"];
+const TITLES = ["Bishop", "Archbishop", "Pastor", "Rev.", "Lady Rev.", "Reverend", "Dr", "Mother", "Episcopal Sister", "Lady Pastor", "Lay President"];
 function ReferenceEditor({ person: p, state, perform, actor }) {
   const [open, setOpen] = useState(false),
     [form, setForm] = useState(null);

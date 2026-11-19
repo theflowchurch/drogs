@@ -161,6 +161,9 @@ export const pauseFor = (state, entrance) => { const s = signupOf(state); return
 // and this site each deleted a different copy, so seven people vanished. Their
 // records are restored once; nothing else the office did changes, and they can be
 // deleted or hidden again on the admin page like anyone else.
+// FLOW's pastors and bishops are all listed in Accra, Ghana (office, 19 Nov),
+// never "Online" or another town.
+export const FLOW_CITY = 'Accra', FLOW_COUNTRY = 'Ghana';
 const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', 'PF158', 'Sdb542231', 'S0ec63b27', 'S391d2dfe', 'PF260', 'S961d9198'] },
   // Office, 17 Nov: a member's own upload is only for the office to confirm it is
   // them. Uploads that registration copied onto records come off, so the edited
@@ -182,7 +185,15 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   { id: 'three-bishops-2026-11-19', makeBishops: ['PN2177b36054d9', 'P5088'],
     addRecords: [{ id: 'Xstanleyoseibonsu', role: 'bishop', name: 'Stanley Osei-Bonsu', title: 'Bishop', gender: 'male', organization: 'United Denominations', denomination: 'Deep Love Church International', group: 'UD Europe', image: 'assets/organisations/people/stanley-osei-bonsu.webp', yearConsecrated: '2026', city: '', country: '' }] },
   // Confirmed pastors whose line on their bishop's list is missing get it back, once (Walter Woelle, 19 Nov).
-  { id: 'heal-bishop-lists-2026-11-19', healLists: true }];
+  { id: 'heal-bishop-lists-2026-11-19', healLists: true },
+  // Office, 19 Nov: the Adjutancy's four archbishops (Eddie Fabin, Jacob
+  // Godwyll, Kweku Amonoo-Neizer, Emmanuel Sakyi) are titled Archbishop, and
+  // Joshua Heward-Mills was consecrated in 2019.
+  { id: 'archbishops-and-joshua-2026-11-19', setFields: [
+    { id: 'B41', fields: { title: 'Archbishop' } }, { id: 'B86', fields: { title: 'Archbishop' } },
+    { id: 'B121', fields: { title: 'Archbishop' } }, { id: 'B49', fields: { title: 'Archbishop' } },
+    { id: 'B194', fields: { yearConsecrated: '2019' } }] },
+  { id: 'flow-accra-ghana-2026-11-19', flowAccra: true }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -235,6 +246,22 @@ export function syncRoll(state, people, version) {
     if (!ids.has(id)) continue;
     const o = next.overrides[id] || {};
     next.overrides[id] = { ...o, role: 'bishop', title: 'Bishop', bishop: '', _officeFields: [...new Set([...(o._officeFields || []), 'role', 'title', 'bishop'])] };
+  }
+  for (const fix of fixes) for (const { id, fields } of fix.setFields || []) {
+    if (!ids.has(id)) continue;
+    const o = next.overrides[id] || {};
+    next.overrides[id] = { ...o, ...fields, _officeFields: [...new Set([...(o._officeFields || []), ...Object.keys(fields)])] };
+    // Their registration says the same, so the roll and emails agree.
+    next.registrations = (next.registrations || []).map(r => r.data?.referenceId === id ? { ...r, data: { ...r.data, ...fields } } : r);
+  }
+  if (fixes.some(f => f.flowAccra)) {
+    const place = { city: FLOW_CITY, country: FLOW_COUNTRY };
+    for (const p of [...people, ...(next.extraReferences || [])]) {
+      const o = next.overrides[p.id] || {};
+      if ((o.organization ?? p.organization) !== 'FLOW') continue;
+      next.overrides[p.id] = { ...o, ...place, _officeFields: [...new Set([...(o._officeFields || []), 'city', 'country'])] };
+    }
+    next.registrations = (next.registrations || []).map(r => r.data?.organization === 'FLOW' ? { ...r, data: { ...r.data, ...place } } : r);
   }
   for (const fix of fixes) for (const rec of fix.addRecords || [])
     if (!(next.extraReferences || []).some(x => x.id === rec.id || (x.role === rec.role && normalName(x.name) === normalName(rec.name))))
@@ -640,6 +667,7 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
     // Ministers are adults: a date of birth under sixteen years ago is almost certainly a typo.
     if (q.dob > new Date(Date.now() - 16 * 365.25 * 86400000).toISOString().slice(0, 10))
       throw Error("Check the date of birth: it gives an age under 16.");
+    if (q.organization === "FLOW") { q.city = FLOW_CITY; q.country = FLOW_COUNTRY; } // FLOW is in Accra, Ghana (office, 19 Nov)
     if (!q.country || !q.city) throw Error("Enter your country and city.");
     if (!q.gender) throw Error("Select male or female.");
     const denominations = catalog.denominations[q.organization] || [];
@@ -1701,7 +1729,7 @@ export function titleFor({ role, gender, organization, title }) {
   if (title === "Lay President") return title;
   if (role !== "bishop") return title === "Rev." || (title === "Lady Rev." && gender === "female") ? title : "Pastor";
   if (gender === "female") return BISHOP_TITLES_FEMALE.includes(title) ? title : organization === "United Denominations" ? "Episcopal Sister" : organization === "First Love" ? "Mother" : "Bishop";
-  return "Bishop";
+  return title === "Archbishop" ? title : "Bishop"; // the Adjutancy's archbishops (office, 19 Nov)
 }
 // Which picture the directory shows (office, 17 Nov): our own photo (an office
 // upload on the record, else the portrait we already hold). A member's upload is
@@ -1751,7 +1779,7 @@ export function publicRoll(state, people, year = state.year) {
         id: `u:${r.userId}`,
         role: r.data.role,
         name: d.name,
-        title: d.gender ? titleFor(d) : ref?.title || (d.role === "bishop" ? "Bishop" : "Pastor"),
+        title: ref?.title === "Archbishop" ? ref.title : d.gender ? titleFor(d) : ref?.title || (d.role === "bishop" ? "Bishop" : "Pastor"),
         organization: d.organization,
         denomination: state.overrides?.[r.data.referenceId]?._officeFields?.includes('denomination') ? d.denomination : d.denomination || d.church || ref?.denomination || "",
         group: ref?.group || groupOf(catalogOf(state), d),

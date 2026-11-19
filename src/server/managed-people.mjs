@@ -64,7 +64,7 @@ export function changePerson(state, actor, references, { id, fields: input = {},
   if (!catalogOf(state).organizations.includes(effective.organization)) throw new HttpError(400, 'Choose an organization from the current catalog.');
   if (role === 'pastor' && /bishop|mother|episcopal|lay president/i.test(effective.title || '')) throw new HttpError(400, 'A pastor cannot have a bishop title.');
   if (!effective.name || effective.name.trim().split(/\s+/).length < 2) throw new HttpError(400, 'Enter the full name.');
-  if (effective.title && !['Bishop','Mother','Episcopal Sister','Lay President','Pastor','Rev.','Lady Rev.','Apostle'].includes(effective.title)) throw new HttpError(400, 'Use a supported title.');
+  if (effective.title && !['Bishop','Archbishop','Mother','Episcopal Sister','Lay President','Pastor','Rev.','Lady Rev.','Apostle'].includes(effective.title)) throw new HttpError(400, 'Use a supported title.');
   if (!allowDuplicate && (!id || fields.name !== undefined || fields.dob !== undefined)) {
     const duplicates = possibleDuplicates(current, effective, id);
     if (duplicates.length) throw new HttpError(409, `Possible duplicate: ${duplicates.map(p => `${p.name} (${p.id})`).join(', ')}. Update that referenceId, supply a distinct birthday, or explicitly set allowDuplicate for a confirmed namesake.`);

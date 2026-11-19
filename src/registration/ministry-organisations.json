@@ -897,7 +897,7 @@
                   "rosterId": "B41",
                   "bishop": true,
                   "church": "Qodesh City Church",
-                  "title": "Bishop",
+                  "title": "Archbishop",
                   "image": "assets/organisations/people/eddie-fabin.webp",
                   "consecrated": "2014"
                 },
@@ -1112,7 +1112,7 @@
                   "rosterId": "B49",
                   "bishop": true,
                   "church": "East Mountain Churches",
-                  "title": "Bishop",
+                  "title": "Archbishop",
                   "image": "assets/organisations/people/emmanuel-sakyi.webp",
                   "consecrated": "2020"
                 },
@@ -1710,7 +1710,9 @@
                   "church": "First Love Center",
                   "title": "Bishop",
                   "image": "assets/organisations/people/joshua-heward-mills-2.webp",
-                  "role": "First Love Chairman"
+                  "role": "First Love Chairman",
+                  "consecrated": "2019",
+                  "hideChurch": true
                 },
                 {
                   "name": "Thaddeus Gyabaah Boadi",
@@ -1892,7 +1894,7 @@
                   "rosterId": "B86",
                   "bishop": true,
                   "church": "First Love Passion Campus",
-                  "title": "Bishop",
+                  "title": "Archbishop",
                   "consecrated": "2012"
                 },
                 {
@@ -2804,7 +2806,7 @@
                   "rosterId": "B121",
                   "bishop": true,
                   "church": "The Machaneh Church International",
-                  "title": "Bishop",
+                  "title": "Archbishop",
                   "image": "assets/organisations/people/kweku-amonoo-neizer.webp",
                   "consecrated": "2021"
                 },
@@ -3693,7 +3695,7 @@
                   "rosterId": "B41",
                   "bishop": true,
                   "church": "Qodesh City Church",
-                  "title": "Bishop",
+                  "title": "Archbishop",
                   "consecrated": "2014"
                 },
                 {
