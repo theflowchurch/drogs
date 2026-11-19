@@ -364,60 +364,19 @@
     "logoScale": 0.68
   },
   {
-    "path": "graceinternationalesahelburkinafaso",
-    "name": "Grace Internationale Sahel - Burkina Faso",
-    "shortName": "Grace Internationale Sahel - Burkina Faso",
+    "path": "graceinternationalesahel",
+    "name": "Grace Internationale Sahel",
+    "shortName": "Grace Internationale Sahel",
     "subtitle": "",
     "denominations": [
-      "Grace Internationale Sahel - Burkina Faso"
-    ],
-    "logo": "assets/denominations/grace-internationale-sahel.png",
-    "homeLayout": "memphis",
-    "visualStyle": "lighthousechapelinternational",
-    "accent": "#707032",
-    "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "graceinternationalesahelchad",
-    "name": "Grace Internationale Sahel - Chad",
-    "shortName": "Grace Internationale Sahel - Chad",
-    "subtitle": "",
-    "denominations": [
+      "Grace Internationale Sahel",
+      "Grace Internationale Sahel - Burkina Faso",
+      "Grace Internationale Sahel - Mali",
+      "Grace Internationale Sahel - Niger",
       "Grace Internationale Sahel - Chad"
     ],
     "logo": "assets/denominations/grace-internationale-sahel.png",
-    "homeLayout": "blueprint",
-    "visualStyle": "pleasantsurprise",
-    "accent": "#707032",
-    "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "graceinternationalesahelmali",
-    "name": "Grace Internationale Sahel - Mali",
-    "shortName": "Grace Internationale Sahel - Mali",
-    "subtitle": "",
-    "denominations": [
-      "Grace Internationale Sahel - Mali"
-    ],
-    "logo": "assets/denominations/grace-internationale-sahel.png",
-    "homeLayout": "monolith",
-    "visualStyle": "gochurch",
-    "accent": "#707032",
-    "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "graceinternationalesahelniger",
-    "name": "Grace Internationale Sahel - Niger",
-    "shortName": "Grace Internationale Sahel - Niger",
-    "subtitle": "",
-    "denominations": [
-      "Grace Internationale Sahel - Niger"
-    ],
-    "logo": "assets/denominations/grace-internationale-sahel.png",
-    "homeLayout": "ribbonfold",
+    "homeLayout": "memphis",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#707032",
     "directoryAction": "View licensed ministers",
@@ -562,27 +521,14 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "labelleeglisecar",
-    "name": "La Belle Église Car",
-    "shortName": "La Belle Église Car",
+    "path": "labelleeglise",
+    "name": "La Belle Église",
+    "shortName": "La Belle Église",
     "subtitle": "",
     "denominations": [
+      "La Belle Église",
+      "La Belle Eglise Gabon",
       "La Belle Église Car"
-    ],
-    "logo": "assets/denominations/la-belle-eglise-gabon.png",
-    "homeLayout": "typographic",
-    "visualStyle": "pleasantsurprise",
-    "accent": "#705132",
-    "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "labelleeglisegabon",
-    "name": "La Belle Eglise Gabon",
-    "shortName": "La Belle Eglise Gabon",
-    "subtitle": "",
-    "denominations": [
-      "La Belle Eglise Gabon"
     ],
     "logo": "assets/denominations/la-belle-eglise-gabon.png",
     "homeLayout": "sandstone",
@@ -851,48 +797,21 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "precioussoulschurcheswatini",
-    "name": "Precious Souls Church – Eswatini",
-    "shortName": "Precious Souls Church – Eswatini",
+    "path": "precioussoulschurch",
+    "name": "Precious Souls Church",
+    "shortName": "Precious Souls Church",
     "subtitle": "",
     "denominations": [
-      "Precious Souls Church – Eswatini"
-    ],
-    "logo": "assets/denominations/precious-souls-church.png",
-    "homeLayout": "certificate",
-    "visualStyle": "gochurch",
-    "accent": "#703232",
-    "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "precioussoulsnamibia",
-    "name": "Precious Souls Namibia",
-    "shortName": "Precious Souls Namibia",
-    "subtitle": "",
-    "denominations": [
-      "Precious Souls Namibia"
+      "Precious Souls Church",
+      "Precious Souls Namibia",
+      "Precious Souls Church – Eswatini",
+      "Precious Souls Swaziland"
     ],
     "logo": "assets/denominations/precious-souls-church.png",
     "homeLayout": "plaque",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#703232",
     "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "precioussoulsswaziland",
-    "name": "Precious Souls Swaziland",
-    "shortName": "Precious Souls Swaziland",
-    "subtitle": "",
-    "denominations": [
-      "Precious Souls Swaziland"
-    ],
-    "logo": "assets/denominations/precious-souls-church.png",
-    "homeLayout": "aurora",
-    "visualStyle": "pleasantsurprise",
-    "accent": "#703232",
-    "directoryAction": "View bishops and pastors",
     "directoryHeading": "Licensed ministers"
   },
   {
@@ -1006,12 +925,12 @@
   },
   {
     "path": "roseofsharon",
-    "name": "Rose Of Sharon",
-    "shortName": "Rose Of Sharon",
+    "name": "Rose of Sharon",
+    "shortName": "Rose of Sharon",
     "subtitle": "",
     "denominations": [
-      "Rose Of Sharon",
-      "Rose of Sharon"
+      "Rose of Sharon",
+      "Rose Of Sharon"
     ],
     "logo": "",
     "homeLayout": "sunburst",
@@ -1056,28 +975,14 @@
     "shortName": "Serious Christian Church",
     "subtitle": "",
     "denominations": [
-      "Serious Christian Church"
+      "Serious Christian Church",
+      "Serious Christian Church Lesotho"
     ],
     "logo": "assets/denominations/serious-christian-church.png",
     "homeLayout": "origami",
     "visualStyle": "lighthousechapelinternational",
     "accent": "#706132",
     "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "seriouschristianchurchlesotho",
-    "name": "Serious Christian Church Lesotho",
-    "shortName": "Serious Christian Church Lesotho",
-    "subtitle": "",
-    "denominations": [
-      "Serious Christian Church Lesotho"
-    ],
-    "logo": "assets/denominations/serious-christian-church.png",
-    "homeLayout": "louvre",
-    "visualStyle": "pleasantsurprise",
-    "accent": "#706132",
-    "directoryAction": "View bishops and pastors",
     "directoryHeading": "Licensed ministers"
   },
   {
@@ -1118,28 +1023,14 @@
     "shortName": "Strong Christian Church",
     "subtitle": "",
     "denominations": [
-      "Strong Christian Church"
+      "Strong Christian Church",
+      "Strong Christian Church South Africa"
     ],
     "logo": "assets/denominations/strong-christian-church.png",
     "homeLayout": "transit",
     "visualStyle": "pleasantsurprise",
     "accent": "#706132",
     "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "strongchristianchurchsouthafrica",
-    "name": "Strong Christian Church South Africa",
-    "shortName": "Strong Christian Church South Africa",
-    "subtitle": "",
-    "denominations": [
-      "Strong Christian Church South Africa"
-    ],
-    "logo": "assets/denominations/strong-christian-church.png",
-    "homeLayout": "pennant",
-    "visualStyle": "gochurch",
-    "accent": "#706132",
-    "directoryAction": "Search the directory",
     "directoryHeading": "Licensed ministers"
   },
   {
@@ -1158,27 +1049,13 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "tellthem",
-    "name": "Tell Them",
-    "shortName": "Tell Them",
-    "subtitle": "",
-    "denominations": [
-      "Tell Them"
-    ],
-    "logo": "",
-    "homeLayout": "ripple",
-    "visualStyle": "pleasantsurprise",
-    "accent": "#42554d",
-    "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
     "path": "tellthemchurch",
     "name": "Tell Them Church",
     "shortName": "Tell Them Church",
     "subtitle": "",
     "denominations": [
-      "Tell Them Church"
+      "Tell Them Church",
+      "Tell Them"
     ],
     "logo": "",
     "homeLayout": "zigzag",

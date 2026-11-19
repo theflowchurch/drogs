@@ -223,7 +223,26 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
     byBishop: { B117: 'Bata City State Church', B101: 'Bata City State Church', B146: 'Malabo City State Church' } } },
   // Office, 19 Nov: both names carry the word Church.
   { id: 'first-love-church-malawi-2026-11-19', renameDenomination: { from: 'First Love Malawi', to: 'First Love Church Malawi', organization: 'United Denominations', group: 'UD Africa' } },
-  { id: 'first-love-church-seychelles-2026-11-19', renameDenomination: { from: 'First Love Seychelles', to: 'First Love Church Seychelles', organization: 'United Denominations', group: 'United Islands' } }];
+  { id: 'first-love-church-seychelles-2026-11-19', renameDenomination: { from: 'First Love Seychelles', to: 'First Love Church Seychelles', organization: 'United Denominations', group: 'United Islands' } },
+  // Office, 19 Nov: one denomination each, whatever the country; everyone
+  // keeps their own city and country. Jesus Gefunden and First Love Church
+  // Zimbabwe are First Love, not United Denominations.
+  { id: 'one-denomination-each-2026-11-19', renameDenominations: [
+    { from: "Strong Christian Church South Africa", to: "Strong Christian Church", organization: "United Denominations", group: "UD Africa" },
+    { from: "Tell Them", to: "Tell Them Church", organization: "United Denominations", group: "UD Europe" },
+    { from: "Rose Of Sharon", to: "Rose of Sharon", organization: "United Denominations", group: "UD Europe" },
+    { from: "Precious Souls Namibia", to: "Precious Souls Church", organization: "United Denominations", group: "UD Africa" },
+    { from: "Precious Souls Church – Eswatini", to: "Precious Souls Church", organization: "United Denominations", group: "UD Africa" },
+    { from: "Precious Souls Swaziland", to: "Precious Souls Church", organization: "United Denominations", group: "UD Africa" },
+    { from: "Grace Internationale Sahel - Burkina Faso", to: "Grace Internationale Sahel", organization: "United Denominations", group: "UD Africa" },
+    { from: "Grace Internationale Sahel - Mali", to: "Grace Internationale Sahel", organization: "United Denominations", group: "UD Africa" },
+    { from: "Grace Internationale Sahel - Niger", to: "Grace Internationale Sahel", organization: "United Denominations", group: "UD Africa" },
+    { from: "Grace Internationale Sahel - Chad", to: "Grace Internationale Sahel", organization: "United Denominations", group: "UD Africa" },
+    { from: "La Belle Eglise Gabon", to: "La Belle Église", organization: "United Denominations", group: "UD Africa" },
+    { from: "La Belle Église Car", to: "La Belle Église", organization: "United Denominations", group: "UD Africa" },
+    { from: "Serious Christian Church Lesotho", to: "Serious Christian Church", organization: "United Denominations", group: "UD Africa" },
+    { from: 'Jesus Gefunden', to: 'Jesus Gefunden', organization: 'First Love', group: 'First Love' },
+    { from: 'First Love Church', to: 'First Love Church', organization: 'First Love', group: 'First Love', onlyOrganization: 'United Denominations' }] }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -307,6 +326,17 @@ export function syncRoll(state, people, version) {
     next.profiles = (next.profiles || []).map(p => users.has(p.id) && p.role === 'pastor' ? { ...p, role: 'bishop' } : p);
     // Off every bishop's list of pastors.
     next.rosters = (next.rosters || []).filter(x => !users.has(x.pastorId) && !(name && normalName(x.name || '') === name));
+  }
+  for (const fix of fixes) for (const { from, to, organization, group, onlyOrganization } of fix.renameDenominations || []) {
+    const moved = { denomination: to, organization, group };
+    for (const p of [...people, ...(next.extraReferences || [])]) {
+      const o = next.overrides[p.id] || {};
+      if ((o.denomination ?? p.denomination) !== from) continue;
+      if (onlyOrganization && (o.organization ?? p.organization) !== onlyOrganization) continue;
+      next.overrides[p.id] = { ...o, ...moved, _officeFields: [...new Set([...(o._officeFields || []), 'denomination', 'organization', 'group'])] };
+    }
+    next.extraReferences = (next.extraReferences || []).map(p => p.denomination === from && (!onlyOrganization || p.organization === onlyOrganization) ? { ...p, ...moved } : p);
+    next.registrations = (next.registrations || []).map(r => (r.data?.denomination === from || (!r.data?.denomination && r.data?.church === from)) && (!onlyOrganization || r.data?.organization === onlyOrganization) ? { ...r, data: { ...r.data, ...moved, ...(r.data.church === from ? { church: to } : {}) } } : r);
   }
   for (const fix of fixes) if (fix.renameDenomination) {
     const { from, to, organization, group } = fix.renameDenomination;
