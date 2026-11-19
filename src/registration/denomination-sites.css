@@ -75,8 +75,8 @@
 .denom-person-open .denom-person-copy p{min-height:0;margin-bottom:4px}
 .denom-person-open .denom-person-bishop{color:var(--denom-ink)}
 .denom-person-years{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:10px}
-.denom-person-years span{display:inline-flex;padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--denom-accent) 12%,#fff);color:var(--denom-accent);font-size:11px;font-weight:700;white-space:nowrap}
+.denom-person-years span{display:inline-flex;padding:5px 12px;border-radius:999px;background:color-mix(in srgb,var(--denom-accent) 12%,#fff);color:var(--denom-accent);font-size:16px!important;font-weight:700;white-space:nowrap;line-height:1.3}
 .denom-single-bishop .denom-person-open{height:auto;min-height:140px}
 .denom-single-bishop .denom-person-open .denom-person-copy{display:flex;flex-direction:column;align-items:flex-start}
 .denom-single-bishop .denom-person-open .denom-person-copy p{text-align:left}
-@media(max-width:760px){.denom-person-years span{font-size:9px;padding:3px 8px}.denom-single-bishop .denom-person-open{min-height:118px}}
+@media(max-width:760px){.denom-person-years span{font-size:13px!important;padding:4px 10px}.denom-single-bishop .denom-person-open{min-height:118px}}

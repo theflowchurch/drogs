@@ -68,17 +68,24 @@ function MinisterPortrait({ person, full = false }) {
 }
 // Office, 19 Nov: everything about a minister shows on their card, as on the
 // Order of Bishops pages; nothing to click. A bishop's card gives the years
-// appointed and consecrated; a pastor's the year appointed and their bishop.
+// appointed, ordained and consecrated; a pastor's the year appointed (and
+// ordained, for a Reverend) and their bishop.
 function MinisterGrid({ list }) {
   return <div className="denom-grid">{list.map(person => <article className="denom-person denom-person-open" key={person.id} aria-label={person.name}>
     <div className="denom-person-photo"><MinisterPortrait person={person}/></div>
     <div className="denom-person-copy"><small>{ministerDisplayTitle(person)}</small><h3>{person.name}</h3>
       {placeOf(person) && <p>{placeOf(person)}</p>}
       {person.role === 'pastor' && person.bishop && <p className="denom-person-bishop">Bishop · {person.bishop}</p>}
-      {(person.yearAppointed || (person.role === 'bishop' && person.yearConsecrated)) && <div className="denom-person-years">
-        {person.yearAppointed && <span>Appointed {person.yearAppointed}</span>}
-        {person.role === 'bishop' && person.yearConsecrated && <span>Consecrated {person.yearConsecrated}</span>}
-      </div>}
+      {(() => {
+        // Office, 19 Nov: a Reverend's or Lady Reverend's year of ordination too, and a bishop's when we hold it.
+        const ordained = (person.role === 'bishop' || /rev/i.test(person.title || '')) && person.yearOrdained;
+        const consecrated = person.role === 'bishop' && person.yearConsecrated;
+        return (person.yearAppointed || ordained || consecrated) ? <div className="denom-person-years">
+          {person.yearAppointed && <span>Appointed {person.yearAppointed}</span>}
+          {ordained && <span>Ordained {ordained}</span>}
+          {consecrated && <span>Consecrated {consecrated}</span>}
+        </div> : null;
+      })()}
     </div>
   </article>)}</div>;
 }

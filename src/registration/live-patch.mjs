@@ -41,12 +41,14 @@ export function patchBishop(entry, live) {
   if (o.yearConsecrated !== undefined) out.consecrated = p.yearConsecrated;
   if (o.yearAppointed !== undefined) out.appointed = p.yearAppointed;
   else if (!out.appointed && (p?.yearAppointed || base.yearAppointed)) out.appointed = p?.yearAppointed || base.yearAppointed; // office, 19 Nov: the roster's year when the page has none
+  if (o.yearOrdained !== undefined) out.ordained = p.yearOrdained;
+  else if (!out.ordained && (p?.yearOrdained || base.yearOrdained)) out.ordained = p?.yearOrdained || base.yearOrdained;
   if (p.photo) out.photo = p.photo; // a portrait the office uploaded
   if (o.country !== undefined && entry.country !== undefined) out.country = p.country;
   return out;
 }
 
-const cardOf = p => ({ name: p.name, rosterId: p.id, bishop: true, church: p.denomination || '', title: p.title || 'Bishop', image: p.image || '', photo: p.photo || '', consecrated: p.yearConsecrated || '', appointed: p.yearAppointed || '', country: p.country || '' });
+const cardOf = p => ({ name: p.name, rosterId: p.id, bishop: true, church: p.denomination || '', title: p.title || 'Bishop', image: p.image || '', photo: p.photo || '', consecrated: p.yearConsecrated || '', appointed: p.yearAppointed || '', ordained: p.yearOrdained || '', country: p.country || '' });
 
 // The Order of Bishops / Councils groups with the office's changes. A bishop the
 // office added or made a bishop joins the group (or line) where bishops of the

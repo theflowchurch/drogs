@@ -1,8 +1,9 @@
 import data from './ministry-organisations.json' with { type: 'json' };
-// Office, 19 Nov: each bishop's year of appointment beside their consecration
-// on the Order of Bishops cards, from the roster (rosterId -> year). Made from
-// reference-people.json; the live page fills newer years from the roster.
-import APPOINTED from './bishop-appointed.json' with { type: 'json' };
+// Office, 19 Nov: each bishop's years appointed and ordained beside their
+// consecration on the Order of Bishops cards, from the roster (rosterId ->
+// { a: appointed, o: ordained }). Made from reference-people.json; the live
+// page fills newer years from the roster.
+import YEARS from './bishop-years.json' with { type: 'json' };
 
 // The ministry's organisations as presented in the THREE.ORG documentary:
 // church, outreach and para-church groups, each council listing the people in
@@ -98,7 +99,7 @@ export const DEFAULT_LAYOUT = { order: ORDER, initials: INITIALS, names: OWN_NAM
 export function buildDirectory(d = data) {
   const L = { ...DEFAULT_LAYOUT, ...(d.layout || {}) };
 const formalName = (o, g) => L.names[g.slug] || `The Bishops of ${g.name.replace(/^The /, 'the ')}`;
-const withYear = p => p.appointed || !APPOINTED[p.rosterId] ? p : { ...p, appointed: APPOINTED[p.rosterId] };
+const withYear = p => { const y = YEARS[p.rosterId]; return !y ? p : { ...p, ...(!p.appointed && y.a ? { appointed: y.a } : {}), ...(!p.ordained && y.o ? { ordained: y.o } : {}) }; };
 const groupsOfSection = o => (o.directoryGroups?.length
   ? o.directoryGroups.filter(g => g.slug && g.name)
   : [{ slug: o.slug, name: o.name, people: sectionsOf(o).flatMap(s => s.people) }]).map(g => ({ ...g, people: g.people.map(withYear) }));

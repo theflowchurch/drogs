@@ -41,6 +41,7 @@ function Card({ person }) {
       <strong>{person.name}</strong>
       <span>{person.role || person.church}</span>
       {person.appointed && <em>Appointed {person.appointed}</em>}
+      {person.ordained && <em>Ordained {person.ordained}</em>}
       {person.consecrated && <em>Consecrated {person.consecrated}</em>}
     </div>
   </article>;

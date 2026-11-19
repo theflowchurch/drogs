@@ -43,8 +43,9 @@ function Bishop({ person }) {
       <strong>{person.name}</strong>
       {person.role && <span>{person.role}</span>}
       {person.church && !person.hideChurch && !(person.role && person.councilLabel) && !(person.role || '').toLowerCase().includes(person.church.toLowerCase()) && <span className="org-member-church">{person.church}</span>}
-      {(person.appointed || person.consecrated) && <span className="org-years">
+      {(person.appointed || person.ordained || person.consecrated) && <span className="org-years">
         {person.appointed && <span className="org-consecrated">Appointed {person.appointed}</span>}
+        {person.ordained && <span className="org-consecrated">Ordained {person.ordained}</span>}
         {person.consecrated && <span className="org-consecrated">Consecrated {person.consecrated}</span>}
       </span>}
     </div>
