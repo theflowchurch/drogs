@@ -243,11 +243,12 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "everythingbyprayercenter",
-    "name": "Everything By Prayer Center",
-    "shortName": "Everything By Prayer Center",
+    "path": "everythingbyprayerchurch",
+    "name": "Everything By Prayer Church",
+    "shortName": "Everything By Prayer Church",
     "subtitle": "",
     "denominations": [
+      "Everything By Prayer Church",
       "Everything By Prayer Center"
     ],
     "logo": "assets/denominations/everything-by-prayer-church.png",
@@ -737,11 +738,12 @@
     "directoryHeading": "Licensed Ministers in Good Standing"
   },
   {
-    "path": "pleasantsurprise",
-    "name": "Pleasant Surprise",
-    "shortName": "Pleasant Surprise",
+    "path": "pleasantsurprisechurchinternational",
+    "name": "Pleasant Surprise Church International",
+    "shortName": "Pleasant Surprise Church International",
     "subtitle": "",
     "denominations": [
+      "Pleasant Surprise Church International",
       "Pleasant Surprise"
     ],
     "logo": "assets/denominations/pleasant-surprise-cleaned.webp",

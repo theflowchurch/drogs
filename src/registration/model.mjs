@@ -228,6 +228,10 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   // Office, 19 Nov: one denomination each, whatever the country; everyone
   // keeps their own city and country. Jesus Gefunden and First Love Church
   // Zimbabwe are First Love, not United Denominations.
+  // Office, 19 Nov: the full names, with church pages at the new addresses.
+  { id: 'full-church-names-2026-11-19', renameDenominations: [
+    { from: "Pleasant Surprise", to: "Pleasant Surprise Church International", organization: "United Denominations", group: "UD Europe" },
+    { from: "Everything By Prayer Center", to: "Everything By Prayer Church", organization: "United Denominations", group: "UD Africa" }] },
   { id: 'one-denomination-each-2026-11-19', renameDenominations: [
     { from: "Strong Christian Church South Africa", to: "Strong Christian Church", organization: "United Denominations", group: "UD Africa" },
     { from: "Tell Them", to: "Tell Them Church", organization: "United Denominations", group: "UD Europe" },

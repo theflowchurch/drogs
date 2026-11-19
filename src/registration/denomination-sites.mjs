@@ -9,9 +9,9 @@ const CHURCH_SITES = {
     name: 'Lighthouse Chapel International', shortName: 'Lighthouse Chapel', subtitle: 'International',
     denominations: ['Lighthouse Chapel International'], logo: 'assets/denominations/lighthouse-chapel.webp', accent: '#786133', directoryAction: 'Explore our ministers', directoryHeading: 'Find a minister',
   },
-  pleasantsurprise: {
-    homeConcept: 1,
-    name: 'Pleasant Surprise Church International', shortName: 'Pleasant Surprise', subtitle: 'Church International',
+  pleasantsurprisechurchinternational: {
+    homeConcept: 1, visualStyle: 'pleasantsurprise',
+    name: 'Pleasant Surprise Church International', shortName: 'Pleasant Surprise Church International', subtitle: '',
     denominations: ['Pleasant Surprise', 'Pleasant Surprise Church International'], logo: 'assets/denominations/pleasant-surprise-cleaned.webp', accent: '#49305b', directoryAction: 'Meet our bishops & pastors', directoryHeading: 'Meet our ministers.',
   },
   gochurch: {

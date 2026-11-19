@@ -19,7 +19,7 @@ export default function DenominationHome({ site, concept = 1 }) {
       <div className="denom-home-copy">{mark}<p className="denom-kicker">MINISTERIAL DIRECTORY</p><ChurchName config={config}/><p className="denom-home-description">The bishops and pastors licensed to minister<br/>{' '} within Lighthouse Chapel International.</p>{link}</div>
       <div className="lighthouse-horizon" aria-hidden="true"><span/><i/><span/></div>
     </section>}
-    {site === 'pleasantsurprise' && concept === 1 && <section className="pleasant-flow">
+    {site === 'pleasantsurprisechurchinternational' && concept === 1 && <section className="pleasant-flow">
       <div className="pleasant-ribbon pleasant-ribbon-one landing-motion" aria-hidden="true"/><div className="pleasant-ribbon pleasant-ribbon-two landing-motion" aria-hidden="true"/>
       <div className="pleasant-hero-top"><span className="denom-kicker">MINISTERIAL DIRECTORY</span></div>
       <div className="denom-home-copy"><ChurchName config={config}/><p className="denom-home-description">Directory of licensed bishops and pastors within<br/>{' '} Pleasant Surprise Church International.</p>{link}</div>
@@ -44,13 +44,13 @@ export default function DenominationHome({ site, concept = 1 }) {
       <div className="night-seal">{mark}<span>LICENSED MINISTERS</span></div>
       <div className="night-bottom"><div><ChurchName config={config}/></div><div><p className="denom-home-description">Meet the bishops and pastors<br/>{' '} licensed to minister within our church.</p>{link}</div></div>
     </section>}
-    {site === 'pleasantsurprise' && concept === 2 && <section className="pleasant-bloom">
+    {site === 'pleasantsurprisechurchinternational' && concept === 2 && <section className="pleasant-bloom">
       <div className="bloom-flower landing-motion" aria-hidden="true">{Array.from({length:8},(_,i)=><i key={i} style={{'--petal':i}}/>)}</div>
       <div className="bloom-top"><span>MINISTERIAL DIRECTORY</span><span>LICENSED MINISTERS</span></div>
       <div className="denom-home-copy">{mark}<p className="denom-kicker">THE MINISTRY OF</p><ChurchName config={config}/><p className="denom-home-description">Meet the bishops and pastors<br/>{' '} of Pleasant Surprise Church International.</p>{link}</div>
       <span className="bloom-dot bloom-dot-one landing-motion" aria-hidden="true"/><span className="bloom-dot bloom-dot-two landing-motion" aria-hidden="true"/>
     </section>}
-    {site === 'pleasantsurprise' && concept === 3 && <section className="pleasant-arch">
+    {site === 'pleasantsurprisechurchinternational' && concept === 3 && <section className="pleasant-arch">
       <div className="pleasant-arch-main"><div className="arch-lines landing-motion" aria-hidden="true"><i/><i/><i/></div><p className="denom-kicker">PLEASANT SURPRISE · CHURCH INTERNATIONAL</p><div className="denom-home-copy"><ChurchName config={config}/></div><span className="arch-bottom-label">LICENSED MINISTERS</span></div>
       <div className="pleasant-arch-side">{mark}<p className="denom-home-description">The bishops and pastors<br/>{' '} of our church.</p>{link}<span className="arch-side-label">MEET OUR MINISTERS <Arrow/></span></div>
     </section>}
