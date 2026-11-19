@@ -48,7 +48,7 @@ export const DENOMINATIONS = {
     "Loyalty House International",
     "Makarios City Church",
     "Makarios Western North",
-    "Malawi",
+    "First Love Malawi",
     "Mustard Seed Chapel International",
     "Onction Internationale Benin",
     "Pacific Islands Missionary Church",
