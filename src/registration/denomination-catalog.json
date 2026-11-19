@@ -1065,11 +1065,12 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "seychelles",
-    "name": "Seychelles",
-    "shortName": "Seychelles",
+    "path": "firstloveseychelles",
+    "name": "First Love Seychelles",
+    "shortName": "First Love Seychelles",
     "subtitle": "",
     "denominations": [
+      "First Love Seychelles",
       "Seychelles"
     ],
     "logo": "",

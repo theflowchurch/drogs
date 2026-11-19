@@ -485,16 +485,6 @@
                   "country": "Mozambique"
                 },
                 {
-                  "name": "Nee Nunoo",
-                  "rosterId": "BO128",
-                  "bishop": true,
-                  "church": "Seychelles",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/nee-nunoo-625f8a59.webp",
-                  "consecrated": "2026",
-                  "country": "Seychelles"
-                },
-                {
                   "name": "Jeffrey Kwame Ocran",
                   "rosterId": "B89",
                   "bishop": true,
@@ -1379,6 +1369,15 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/kristoffer-odoi-yemoh-57d10fe1.webp",
                   "consecrated": "2017"
+                },
+                {
+                  "name": "Nee Nunoo",
+                  "rosterId": "BO128",
+                  "bishop": true,
+                  "church": "First Love Seychelles",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/nee-nunoo-625f8a59.webp",
+                  "consecrated": "2026"
                 }
               ],
               "slug": "united-islands"

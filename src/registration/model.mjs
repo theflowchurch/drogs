@@ -210,7 +210,12 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   { id: 'joy-bruce-mother-2026-11-19', setFields: [{ id: 'B323', fields: { title: 'Mother' } }] },
   // Office, 19 Nov: the denomination "Malawi" is First Love Malawi, a United
   // Denominations church in UD Africa (despite its name, not First Love).
-  { id: 'first-love-malawi-2026-11-19', renameDenomination: { from: 'Malawi', to: 'First Love Malawi', organization: 'United Denominations', group: 'UD Africa' } }];
+  { id: 'first-love-malawi-2026-11-19', renameDenomination: { from: 'Malawi', to: 'First Love Malawi', organization: 'United Denominations', group: 'UD Africa' } },
+  // Office, 19 Nov: the denomination "Seychelles" is First Love Seychelles, a
+  // United Denominations church in United Islands.
+  // Pastor Almudena Andeme Nguema Mondoho (Equatorial Guinea) stays with her
+  // bishop Oreal Valerius Lartey's church, United Cities.
+  { id: 'first-love-seychelles-2026-11-19', setFields: [{ id: 'Sa9ac3d2c', fields: { denomination: 'United Cities', organization: 'United Denominations', group: 'UD Africa' } }], renameDenomination: { from: 'Seychelles', to: 'First Love Seychelles', organization: 'United Denominations', group: 'United Islands' } }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;

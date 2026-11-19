@@ -89,7 +89,8 @@ export const DENOMINATIONS = {
     "West End City Churches",
     "If I Live I Live For You Church Int",
     "Together Forever Church Int",
-    "Why Worry Church Int"
+    "Why Worry Church Int",
+    "First Love Seychelles"
   ],
   "FLOW": [],
   "HJC": [],
