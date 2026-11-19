@@ -14,7 +14,6 @@ export default function PublicInformation({ slug }) {
           <span className="reg-brand-mark"><img src={`${base}/assets/brand/castle-blue.png`} alt="" /></span>
           <strong>Kuriake Castle</strong>
         </a>
-        <a className="reg-text" href={`${base}/directory/`}>Directory ↗</a>
       </header>
       <div className="reg-information-layout">
         <aside className="reg-information-sidebar">
