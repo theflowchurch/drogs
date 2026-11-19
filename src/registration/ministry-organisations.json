@@ -1298,15 +1298,6 @@
                   "consecrated": "2012"
                 },
                 {
-                  "name": "Victor Collins Asabere",
-                  "rosterId": "B186",
-                  "bishop": true,
-                  "church": "Eschatos",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/victor-collins-asabere-bfdb3c57.webp",
-                  "consecrated": "2017"
-                },
-                {
                   "name": "Philip Asante",
                   "rosterId": "B155",
                   "bishop": true,
@@ -1677,6 +1668,15 @@
                   "church": "Eschatos",
                   "title": "Bishop",
                   "image": "assets/organisations/people/allan-opiyo-159533ae.webp"
+                },
+                {
+                  "name": "Victor Collins Asabere",
+                  "rosterId": "B186",
+                  "bishop": true,
+                  "church": "Eschatos",
+                  "title": "Bishop",
+                  "image": "assets/organisations/people/victor-collins-asabere-bfdb3c57.webp",
+                  "consecrated": "2017"
                 }
               ],
               "slug": "eschatos"
