@@ -47,7 +47,7 @@ export const CASTLE_EVENTS = [
   {
     slug: 'thanksgiving', title: 'Thanksgiving & Dedication Services', short: 'Giving thanks to God for milestones and blessings.',
     lead: 'Mark a church anniversary, the dedication of a child or a family milestone with a service of thanksgiving.',
-    offer: ['Child dedications and naming ceremonies', 'Church and ministry anniversaries', 'Family thanksgiving services', 'Building and project dedications', 'Receptions after the service'],
+    offer: ['Child dedications and naming ceremonies', 'Church and ministry anniversaries', 'Family thanksgiving services', 'Receptions after the service'],
     note: 'Services are led by your own licensed minister, or one can be arranged for you.',
   },
 ];
