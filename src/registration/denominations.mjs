@@ -75,7 +75,6 @@ export const DENOMINATIONS = {
     "The Mega Church – Nachal Cathedral",
     "True Son Chapel International",
     "United Cities",
-    "United Islands",
     "Victoire Internationale",
     "West End City Churches",
     "If I Live I Live For You Church Int",

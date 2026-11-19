@@ -204,3 +204,14 @@ html:has(.kc-site){scroll-behavior:smooth}
 .kc-about.kc-screen .kc-next{grid-column:1/-1}
 @media(max-width:760px){.kc-next{bottom:14px}}
 @media (prefers-reduced-motion:reduce){.kc-next i{animation:none}}
+
+/* Office, 19 Nov: the whole Declaration in its section, scrolled within. */
+.kc-declaration-text{max-height:min(58vh,560px)!important;overflow-y:auto;padding:4px 28px 4px 0;margin-bottom:0;scrollbar-color:var(--kc-gold) #ffffff14;scrollbar-width:thin}
+.kc-declaration-text:after{display:none}
+.kc-declaration-text:focus{outline:1px solid var(--kc-gold);outline-offset:8px}
+.kc-declaration-text h2,.kc-declaration-text h3{color:#fff;font-family:'KC Serif',serif;font-weight:500;margin:30px 0 14px;line-height:1.3}
+.kc-declaration-text h2{font-size:18px;letter-spacing:.02em;margin-top:0}
+.kc-declaration-text h3{font-size:20px;color:var(--kc-gold-soft)}
+.kc-declaration-text p{font-family:'KC Sans',sans-serif!important;font-weight:400!important;font-size:16.5px!important;line-height:1.7!important;color:#d9dce2!important;margin:0 0 16px!important}
+.kc-declaration-text strong{color:#fff}
+@media(max-width:760px){.kc-declaration-text{max-height:62vh!important;padding-right:14px}}

@@ -1187,21 +1187,6 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "unitedislands",
-    "name": "United Islands",
-    "shortName": "United Islands",
-    "subtitle": "",
-    "denominations": [
-      "United Islands"
-    ],
-    "logo": "",
-    "homeLayout": "zen",
-    "visualStyle": "gochurch",
-    "accent": "#42554d",
-    "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
     "path": "victoireinternationale",
     "name": "Victoire Internationale",
     "shortName": "Victoire Internationale",

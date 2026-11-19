@@ -5,7 +5,12 @@
 import { useEffect, useRef, useState } from "react";
 import { CASTLE_EVENTS, castleEvent } from "./castle-events.mjs";
 import { CASTLE_NEWS, castleNews } from "./castle-news.mjs";
+import { renderMarkdown } from "./Docs";
+import { LEGAL_PAGES } from "./legal.mjs";
 import "./castle-site.css";
+
+// The Declaration without its page title (the section has its own).
+const DECLARATION_TEXT = LEGAL_PAGES.find((p) => p.slug === "declaration").markdown.replace(/^# .*\n+/, "");
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const href = (path = "") => `${base}/${path ? `${path}/` : ""}`;
@@ -104,11 +109,8 @@ export function CastleHome() {
     <section className="kc-declaration kc-screen" id="declaration" aria-labelledby="kc-declaration-title">
       <div className="kc-declaration-inner">
         <h2 id="kc-declaration-title">Our Declaration</h2>
-        <div className="kc-declaration-text">
-          <p>We, the members of a voluntary global fellowship, being united in common faith, doctrine, and mission, and acting in a spirit of mutual respect and cooperation, do hereby issue this statement of shared principles to define the nature of our relationship and to safeguard the autonomy of each intranational denomination, national denomination, or group of Christian ministry.</p>
-          <p>This document affirms our commitment to a voluntary, non-hierarchical fellowship of independent, self-governing national or intranational bodies and groups of churches, bound together by shared theology and a collective mission to share the gospel worldwide.</p>
-        </div>
-        <a className="kc-button" href={href("declaration")}>View more <span aria-hidden="true">→</span></a>
+        {/* Office, 19 Nov: the whole Declaration here, read by scrolling within it. */}
+        <div className="kc-declaration-text" tabIndex={0} aria-label="The Kuriake Castle Declaration" dangerouslySetInnerHTML={{ __html: renderMarkdown(DECLARATION_TEXT) }} />
       </div>
       <Next to="ceremonies" label="Events" light />
     </section>

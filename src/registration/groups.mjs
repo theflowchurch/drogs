@@ -86,7 +86,6 @@ export const GROUPS = {
     "denominations": [
       "Favourite Child Church",
       "Pacific Islands Missionary Church",
-      "United Islands",
       "First Love Church Seychelles"
     ]
   },

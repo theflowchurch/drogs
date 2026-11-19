@@ -1301,7 +1301,7 @@
                   "name": "Victor Collins Asabere",
                   "rosterId": "B186",
                   "bishop": true,
-                  "church": "United Islands",
+                  "church": "Eschatos",
                   "title": "Bishop",
                   "image": "assets/organisations/people/victor-collins-asabere-bfdb3c57.webp",
                   "consecrated": "2017"
@@ -3148,8 +3148,8 @@
           "people": [],
           "directoryGroups": [
             {
-              "slug": "healing-jesus-council",
-              "name": "The Healing Jesus Council",
+              "slug": "healing-jesus",
+              "name": "Healing Jesus",
               "people": [
                 {
                   "name": "Prince Addae",
@@ -3299,12 +3299,12 @@
               ]
             },
             {
-              "slug": "flow-council",
-              "name": "The FLOW Council",
+              "slug": "flow",
+              "name": "FLOW",
               "people": [
                 {
                   "name": "Nina Masuku",
-                  "role": "FLOW Council Chairperson",
+                  "role": "FLOW Chairperson",
                   "leader": true,
                   "image": "assets/organisations/people/nina-masuku-e8af9b54.webp",
                   "rosterId": "B334",
@@ -3424,8 +3424,8 @@
               ]
             },
             {
-              "slug": "dhmm-council",
-              "name": "The DHMM Council",
+              "slug": "dhmm",
+              "name": "DHMM",
               "people": [
                 {
                   "name": "Mary-Chloe Rea",
@@ -3435,7 +3435,7 @@
                   "title": "Mother",
                   "image": "assets/organisations/people/mary-chloe-rea-d7dff6de.webp",
                   "consecrated": "2020",
-                  "role": "DHMM Council Chairperson",
+                  "role": "DHMM Chairperson",
                   "leader": true
                 },
                 {
@@ -3446,7 +3446,7 @@
                   "title": "Mother",
                   "image": "assets/organisations/people/serena-ariana-ababio-c30f15a8.webp",
                   "consecrated": "2020",
-                  "role": "DHMM Council Chairperson",
+                  "role": "DHMM Chairperson",
                   "leader": true
                 },
                 {
@@ -3841,12 +3841,12 @@
               ]
             },
             {
-              "slug": "makarios-council",
-              "name": "The Makarios Council",
+              "slug": "makarios-ministers",
+              "name": "Makarios Ministers",
               "people": [
                 {
                   "name": "Toss Mills-Odoi",
-                  "role": "Makarios Council Chairperson",
+                  "role": "Makarios Ministers Chairperson",
                   "leader": true,
                   "image": "assets/organisations/people/toss-mills-odoi.webp",
                   "rosterId": "B321",
@@ -3903,7 +3903,7 @@
           "directoryGroups": [
             {
               "slug": "affiliated-denomination-bishops",
-              "name": "The Affiliated Denomination Bishops",
+              "name": "Affiliated Denominations",
               "people": [
                 {
                   "name": "Andrew Adotei Pappoe Jnr",

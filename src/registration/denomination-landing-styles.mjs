@@ -74,7 +74,6 @@ export const LANDING_STYLES = [
   ['heraldry', 'Heraldry', 'Heraldic shield and banner'],
   ['triptych', 'Triptych', 'Three hinged altarpiece panels'],
   ['vigil', 'Vigil', 'Candlelit warm darkness', true],
-  ['zen', 'Zen', 'Vast whitespace and a single brush circle'],
   ['billboard', 'Billboard', 'Huge type cropped by the frame'],
   ['echo', 'Echo', 'Outlined name repeated in echoes'],
   ['compass', 'Compass', 'Concentric rings spreading like a signal', true],

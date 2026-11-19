@@ -189,7 +189,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
       // 19 Nov: a bishop chooses their Order groups and brings a new denomination
       // with its logo; it all goes public 30 minutes after they save.
       const logo = await upload(bishop, 'logo');
-      const changed = await call('action', bishop.cookie, { name: 'update', payload: { photoConfirmed: true, organization: 'United Denominations', denomination: 'Grace City Church Test', newDenomination: 'Grace City Church Test', newDenominationGroup: 'UD Ghana', newDenominationLogo: logo, orderGroups: [{ slug: 'ud-ghana-central', role: '' }, { slug: 'flow-council', role: 'Treasurer' }] } });
+      const changed = await call('action', bishop.cookie, { name: 'update', payload: { photoConfirmed: true, organization: 'United Denominations', denomination: 'Grace City Church Test', newDenomination: 'Grace City Church Test', newDenominationGroup: 'UD Ghana', newDenominationLogo: logo, orderGroups: [{ slug: 'ud-ghana-central', role: '' }, { slug: 'flow', role: 'Treasurer' }] } });
       assert.equal(changed.status, 200, JSON.stringify(changed.data));
       const wait = (await call('public-directory')).data;
       assert.ok(!(wait.catalog.denominations['United Denominations'] || []).includes('Grace City Church Test'), 'not public for 30 minutes');
@@ -199,7 +199,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
       assert.ok(live.catalog.denominations['United Denominations'].includes('Grace City Church Test'), 'on everyone\'s list');
       assert.ok(live.catalog.groups['UD Ghana'].denominations.includes('Grace City Church Test'));
       assert.equal(live.catalog.added['Grace City Church Test'].logo, logo);
-      assert.deepEqual(live.orderChoices.B1, [{ slug: 'ud-ghana-central', role: '' }, { slug: 'flow-council', role: 'Treasurer' }]);
+      assert.deepEqual(live.orderChoices.B1, [{ slug: 'ud-ghana-central', role: '' }, { slug: 'flow', role: 'Treasurer' }]);
       assert.equal(live.overrides.B1.denomination, 'Grace City Church Test', 'the record follows');
       const media = await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(logo)}`, { headers: { origin: config.origin } }));
       assert.equal(media.status, 200, 'the logo is public');

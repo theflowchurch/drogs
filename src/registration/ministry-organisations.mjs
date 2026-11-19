@@ -57,11 +57,11 @@ const ORDER = ['1965-committee', 'ud-senex-council', 'first-love-senex-council',
   // Office, 17 Nov: the Affiliated Denomination Bishops, after the Para-Church Bishops.
   'affiliated-denomination-bishops'];
 // The initials these groups are known by, shown after a dash (office, 10 Nov).
-const INITIALS = { 'ud-africa': 'UD AF', 'ud-ghana-west': 'UD GHW', 'ud-ghana-east': 'UD GHE', 'ud-ghana-central': 'UD GHC', 'ud-europe': 'UD EU', 'ud-north-america': 'UD NA', 'united-jesus': 'UJ', 'united-islands': 'UI', ursc: 'URSC', 'healing-jesus-council': 'HJC', 'affiliated-denomination-bishops': 'AD' };
+const INITIALS = { 'ud-africa': 'UD AF', 'ud-ghana-west': 'UD GHW', 'ud-ghana-east': 'UD GHE', 'ud-ghana-central': 'UD GHC', 'ud-europe': 'UD EU', 'ud-north-america': 'UD NA', 'united-jesus': 'UJ', 'united-islands': 'UI', ursc: 'URSC', 'healing-jesus': 'HJC', 'affiliated-denomination-bishops': 'AD' };
 // Office, 9 Nov: every box reads "The Bishops of …" (a council keeps its
 // "the": "The Bishops of the Adjutancy"); Emeritus and Para-Church read
 // "The Emeritus Bishops" and "The Para-Church Bishops".
-const OWN_NAMES = { emeritus: 'The Emeritus Bishops', 'affiliated-denomination-bishops': 'The Affiliated Denomination Bishops' };
+const OWN_NAMES = { emeritus: 'The Emeritus Bishops', 'affiliated-denomination-bishops': 'Affiliated Denominations' };
 const bishopKey = p => p.rosterId || p.name;
 const countOf = people => new Set(people.map(bishopKey)).size;
 // Muted deep tones (office, 9 Nov), a different one for each box, all dark
@@ -71,9 +71,9 @@ export const COLOURS = ['#1f3a5f', '#6b2737', '#2f5233', '#4a3f6b', '#1f5357', '
 // chairpersons keep their role. Church groups, the 1965 Committee and the
 // Emeritus Bishops still show each bishop's church.
 const COUNCIL_LABEL = { 'ud-senex-council': 'UD Senex Council', 'first-love-senex-council': 'First Love Senex Council', adjutancy: 'Adjutancy',
-  'healing-jesus-council': 'Healing Jesus', 'flow-council': 'FLOW', 'dhmm-council': 'DHMM', 'general-schools-board': 'General Schools Board',
+  'healing-jesus': 'Healing Jesus', flow: 'FLOW', dhmm: 'DHMM', 'general-schools-board': 'General Schools Board',
   'general-hospitals-board': 'General Hospitals Board', 'general-orphanage-board': 'General Orphanage Board', 'radio-ministry': 'Radio Ministry',
-  'construction-estate-management-board': 'Construction & Estate Management Board', 'abmtc-board': 'ABMTC Board', 'makarios-council': 'Makarios Council' };
+  'construction-estate-management-board': 'Construction & Estate Management Board', 'abmtc-board': 'ABMTC Board', 'makarios-ministers': 'Makarios Ministers' };
 const ONE_BOX = { [PARA_CHURCH]: 'The Para-Church Bishops', [FIRST_LOVE]: 'The Bishops of First Love Movement' };
 // "The Bishops of the Pacific Islands Missionary Church".
 const WITH_THE = new Set(['Pacific Islands Missionary Church']);

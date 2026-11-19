@@ -185,6 +185,12 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   // Three bishops on the Order of Bishops whose records said otherwise (office, 19 Nov).
   { id: 'three-bishops-2026-11-19', makeBishops: ['PN2177b36054d9', 'P5088'],
     addRecords: [{ id: 'Xstanleyoseibonsu', role: 'bishop', name: 'Stanley Osei-Bonsu', title: 'Bishop', gender: 'male', organization: 'United Denominations', denomination: 'Deep Love Church International', group: 'UD Europe', image: 'assets/organisations/people/stanley-osei-bonsu.webp', yearConsecrated: '2026', city: '', country: '' }] },
+  // Office, 19 Nov: Bishop Victor Collins Asabere and the Suriname pastors move
+  // from United Islands to Eschatos; United Islands is a group only now.
+  { id: 'united-islands-to-eschatos-2026-11-19', renameDenominations: [{ from: 'United Islands', to: 'Eschatos', organization: 'United Denominations', group: 'Eschatos' }] },
+  // Office, 19 Nov: the groups' names as the office writes them: Healing Jesus,
+  // FLOW, DHMM, Makarios Ministers and Affiliated Denominations.
+  { id: 'group-names-2026-11-19', setFields: ['BA1', 'BA2', 'BA3', 'BA4'].map(id => ({ id, fields: { group: 'Affiliated Denominations' } })) },
   // Office, 19 Nov: Bishops Heywood Osei-Bonsu and Allan David Opiyo show in
   // their red bishop's jacket on their church pages too.
   { id: 'new-bishops-red-portraits-2026-11-19', setFields: [
