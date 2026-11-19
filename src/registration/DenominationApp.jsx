@@ -128,7 +128,8 @@ function DenominationDirectory({ site }) {
   const config = denominationSite(site);
   // A simple directory (asked for by the church) lists everyone with no search, filters or counts.
   const simple = Boolean(config.simpleDirectory);
-  const count = n => simple ? null : <span>{n}</span>;
+  // Every church shows its totals at the start of each section (office, 19 Nov), simple layout or not.
+  const count = n => <span className="denom-section-count">{n.toLocaleString()}</span>;
   const update = (key, value) => { setFilter(f => ({ ...f, [key]: value })); setLimit(48); };
   const reset = () => { setFilter({ q: '', city: '', gender: '' }); setLimit(48); };
   return <main className="denom-directory">

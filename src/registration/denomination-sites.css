@@ -62,3 +62,5 @@
 /* Members sign in on their church's own site, as on the central site. */
 .denom-header-actions{display:flex;align-items:center;gap:22px}.denom-site .denom-signin{display:inline-flex;align-items:center;min-height:38px;padding:8px 18px;border-radius:999px;background:var(--brand,var(--denom-accent));color:#fff!important;font-size:12px;font-weight:700;letter-spacing:.3px;white-space:nowrap}.denom-signin:hover{filter:brightness(1.1)}
 @media(max-width:700px){.denom-header-actions .denom-header-label{display:none}.denom-signin{min-height:34px;padding:7px 14px;font-size:11px}}
+/* The section totals (office, 19 Nov): a clear badge beside "Bishops" and "Pastors". */
+.denom-site .denom-minister-section>h2 .denom-section-count{font-family:inherit!important;font-size:1.15em!important;font-weight:800!important;line-height:1!important;letter-spacing:-.5px!important;padding:0!important;min-width:0!important;height:auto!important;border-radius:0!important;background:none!important;color:var(--denom-accent,#1f3a5f)!important;display:inline!important}
