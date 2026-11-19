@@ -100,7 +100,6 @@ export function CastleEventPage({ slug }) {
     <Hero small eyebrow="Kuriake Castle · Events" title={e.title} lead={e.lead} />
     <section className="kc-event">
       <div className="kc-event-main">
-        <p className="kc-eyebrow">What we offer</p>
         <ul className="kc-offer">{e.offer.map((o) => <li key={o}>{o}</li>)}</ul>
         <a className="kc-back" href={`${href()}#ceremonies`}>← All events</a>
       </div>
