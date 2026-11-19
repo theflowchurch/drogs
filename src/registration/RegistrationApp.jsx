@@ -32,7 +32,7 @@ import { ORGANIZATION_SITES, FLOW_GROUPS, peopleForSite, siteCatalog, siteOfOrga
 import * as api from "./client";
 import { signupBishopChoices } from './signup-bishops.mjs';
 import { denominationSite, churchPlacement, inChurch, churchOfDenomination, churchHref } from './denomination-sites.mjs';
-import { fellowshipOf, fellowshipSignupPath } from './fellowship.mjs';
+import { fellowshipOf, fellowshipSignupPath, FELLOWSHIPS } from './fellowship.mjs';
 import { FELLOWSHIP_DEMOS } from './fellowship-demo.mjs';
 import { LegalFooter } from "./Docs";
 import { DENOMINATIONS } from "./denominations.mjs";
@@ -730,6 +730,15 @@ export default function RegistrationApp({
   );
   const memberOrganization = current?.data?.organization || profile?.organization ||
     [...(state?.registrations || [])].filter(r => r.userId === actor?.id).sort((a, b) => b.year - a.year)[0]?.data?.organization;
+  // The right fellowship's page (office, 19 Nov): a pastor who signs in on the bishops' page is taken
+  // to the pastors' page, and a bishop on the pastors' page to the bishops', so the banner fits them.
+  const memberRole = current?.data?.role || profile?.role ||
+    [...(state?.registrations || [])].filter(r => r.userId === actor?.id).sort((a, b) => b.year - a.year)[0]?.data?.role;
+  useEffect(() => {
+    if (!fellowship || isOffice || demo || !memberRole || memberRole === fellowship.role) return;
+    const right = Object.values(FELLOWSHIPS).find((f) => f.role === memberRole);
+    if (right) location.replace(`${fellowshipSignupPath(base, right)}${location.hash}`);
+  }, [fellowship, isOffice, demo, memberRole]);
   const scoped = (state?.registrations || []).filter(
     (r) => r.year === Number(year),
   );
