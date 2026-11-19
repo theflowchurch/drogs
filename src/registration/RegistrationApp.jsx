@@ -96,6 +96,9 @@ import DataExport from "./DataExport.jsx";
 import people from "./reference-people.json";
 import { rosterFrom, publicRosterFrom } from "./live-roster.mjs";
 import PageStructure from "./PageStructure.jsx";
+import OrderGroupsPicker from "./OrderGroupsPicker.jsx";
+import { orderGroupsOf } from "./order-choices.mjs";
+import { ORGANISATIONS as ORDER_STRUCTURE } from "./ministry-organisations.mjs";
 const RosterContext = createContext(people);
 import { photoProgress, photoTask, PHOTO_REASONS } from './photo-progress.mjs';
 import { snapshotSync, changedFields } from './snapshot-sync.mjs';
@@ -282,6 +285,11 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
       )}
       <Field label="Country where you currently serve"><Choice value={f.country} options={countries} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
       <Field label="City"><input value={f.city} onChange={(e) => set("city", e.target.value)} /></Field>
+      {d.role === "bishop" && (
+        <Field label="Your groups on the Order of Bishops" wide>
+          <OrderGroupsPicker structure={state.pageStructure || ORDER_STRUCTURE} value={f.orderGroups ?? d.orderGroups ?? orderGroupsOf(state.pageStructure || ORDER_STRUCTURE, d.referenceId)} onChange={(v) => setF((x) => ({ ...x, orderGroups: v }))} />
+        </Field>
+      )}
       {d.role === "pastor" && (
         <Field label="Your bishop" wide hint={changedBishop ? "After you save, you will wait as unclaimed until this bishop confirms you. They will be emailed." : "To change your bishop, press Change and search for them. The new bishop will need to confirm you."}>
           <BishopSearch choices={bishops} value={f.bishopId} onPick={pickBishop} />
@@ -2041,8 +2049,8 @@ function RegistrationForm({
       if (key === "organization") {
         next.denomination = "";
         if (d.bishopId && (state.bishops || []).find((b) => b.id === d.bishopId)?.organization !== value) { next.bishopId = ""; next.bishopFirstName = ""; next.bishopLastName = ""; }
-        // FLOW is an online fellowship: its members are listed as Online, Ghana.
-        if (value === "FLOW") { next.city = "Online"; next.country = "Ghana"; }
+        // FLOW's members are listed in Accra, Ghana (office, 19 Nov).
+        if (value === "FLOW") { next.city = "Accra"; next.country = "Ghana"; }
       }
       if (key === "firstName" || key === "lastName")
         next.name = [next.firstName, next.lastName].filter(Boolean).join(" ");
@@ -2365,6 +2373,11 @@ function RegistrationForm({
                     autoComplete="off"
                   />
                 </Field>
+                {data.role === "bishop" && (
+                  <Field label="Your groups on the Order of Bishops" wide>
+                    <OrderGroupsPicker structure={state.pageStructure || ORDER_STRUCTURE} value={data.orderGroups ?? orderGroupsOf(state.pageStructure || ORDER_STRUCTURE, data.referenceId)} onChange={(v) => set("orderGroups", v)} />
+                  </Field>
+                )}
                 {data.role === "pastor" && (
                   <Field label="Your bishop" wide hint={data.organization === "FLOW"
                     ? "Mother Nina Masuku is currently the available bishop for FLOW."

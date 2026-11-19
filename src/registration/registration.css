@@ -4350,3 +4350,13 @@ input[type="date"] {
 .reg-information-layout.reg-information-standalone{grid-template-columns:minmax(0,860px);justify-content:center}
 /* Office, 19 Nov: a saved change goes public 30 minutes later. */
 .reg-pending-public{margin:14px 0;padding:12px 16px;border-radius:10px;background:#fff7e6;border:1px solid #f0d9a8;color:#5a4410;font-size:15px}
+/* Office, 19 Nov: a bishop's groups on the Order of Bishops pages. */
+.reg-order-groups{display:grid;gap:10px}
+.reg-order-section{border:1px solid var(--line,#dcd8cc);border-radius:10px;background:#fff}
+.reg-order-section>summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;font-weight:600}
+.reg-order-section>summary b{font-size:13px;color:#1e5a3a;background:#e7f3ec;border-radius:999px;padding:2px 10px}
+.reg-order-options{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 18px;padding:4px 16px 14px}
+.reg-order-option{display:grid;gap:6px;padding:6px 0}
+.reg-order-option label{display:flex;gap:10px;align-items:flex-start;font-size:15px;cursor:pointer}
+.reg-order-option input[type=checkbox]{width:18px;height:18px;margin-top:2px;flex:none}
+.reg-order-role{margin-left:28px;padding:8px 10px;border:1px solid var(--line,#dcd8cc);border-radius:8px;font-size:14px}

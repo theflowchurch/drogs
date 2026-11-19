@@ -1,3 +1,4 @@
+import { cleanOrderGroups } from './order-choices.mjs';
 import { DENOMINATIONS } from "./denominations.mjs";
 import { GROUPS } from "./groups.mjs";
 import { LOGOS } from "./logos.mjs";
@@ -534,7 +535,20 @@ export const publicOverlay = (state) => ({
   // pastors' boxes (admin › Bishops and pastors pages); null keeps the published ones.
   pageStructure: state.pageStructure || null,
   pastorBoxes: state.pastorBoxes || null,
+  // Bishops' own choice of groups (19 Nov), once their change is public.
+  orderChoices: orderChoicesOf(state),
 });
+function orderChoicesOf(state) {
+  const approved = new Set((state.profiles || []).filter((p) => p.role === "bishop" && p.bishopApproved).map((p) => p.id));
+  const out = {};
+  for (const r of state.registrations || []) {
+    if (r.year !== state.year || r.status === "draft" || !approved.has(r.userId)) continue;
+    const d = publicData(r);
+    if (d?.role !== "bishop" || !Array.isArray(d.orderGroups)) continue;
+    out[d.referenceId || `u:${r.userId}`] = d.orderGroups;
+  }
+  return out;
+}
 // A member's own details flow back onto their original-data record, so the
 // office always sees the current number, city and denomination.
 const referenceField = k => ['firstName', 'lastName'].includes(k) ? 'name' : k === 'church' ? 'branch' : k;
@@ -786,6 +800,8 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
     referenceId: /^[A-Za-z]{1,2}[A-Za-z0-9]{1,14}$/.test(String(p.referenceId || "")) ? p.referenceId : "",
     bishopFirstName: String(p.bishopFirstName || "").trim(),
     bishopLastName: String(p.bishopLastName || "").trim(),
+    // A bishop's own groups on the Order of Bishops pages, each with an optional role (19 Nov).
+    orderGroups: p.role === "bishop" ? cleanOrderGroups(p.orderGroups) : undefined,
     // When the person agreed to the public listing (ISO time); kept as a record.
     consentedAt: Number.isFinite(Date.parse(p.consentedAt)) ? new Date(p.consentedAt).toISOString() : "",
   };

@@ -1,3 +1,4 @@
+import { applyOrderChoices } from './order-choices.mjs';
 import { overlayReferences } from './model.mjs';
 // Office, 17 Nov: every public page follows the office's corrections the way the
 // main directory does. The pages are built ahead of time from the roll; once
@@ -20,6 +21,7 @@ export function liveRoll(referencePeople, publicData) {
     logos: publicData.catalog?.logos || {}, // the office's church logos (Denominations tab)
     structure: publicData.pageStructure || null, // the office's Order of Bishops structure, if edited
     pastorBoxes: publicData.pastorBoxes || null, // the office's pastors' boxes, if edited
+    orderChoices: publicData.orderChoices || {}, // bishops' own groups (19 Nov)
   };
 }
 
@@ -99,6 +101,8 @@ export function patchGroups(groups, live) {
     if (!placed) { const slug = `office-${String(p.denomination || p.group || p.organization || 'other').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`; let g = out.find(x => x.slug === slug); if (!g) { g = { slug, name: `The Bishops of ${p.denomination || p.group || p.organization || 'Other Churches'}`, section: 'office', people: [], initials: '', colour: out[out.length % out.length]?.colour || '#1f3a5f' }; out.push(g); } g.people.push(card); placed = true; }
     shown.add(p.id);
   }
+  // Bishops who chose their own groups (19 Nov) stand exactly there.
+  applyOrderChoices(out, live.orderChoices, id => { const p = live.byId.get(id); return p && p.role === 'bishop' ? cardOf(p) : null; });
   const key = p => p.rosterId || p.name;
   const countOf = list => new Set(list.map(key)).size;
   for (const g of out) g.count = countOf(g.parts ? g.parts.flatMap(p => p.people) : g.all || g.people);
