@@ -26,8 +26,8 @@ export const CASTLE_NEWS = [
     links: [['Read the Declaration', 'declaration']],
   },
   {
-    slug: 'check-a-bishop-or-pastor',
-    title: 'Check a bishop or pastor',
+    slug: 'search-our-register',
+    title: 'Search our register',
     summary: 'Anyone can check whether a bishop or pastor is licensed and in good standing.',
     image: 'assets/news/check.webp',
     body: [
