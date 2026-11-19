@@ -193,7 +193,10 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
     { id: 'B41', fields: { title: 'Archbishop' } }, { id: 'B86', fields: { title: 'Archbishop' } },
     { id: 'B121', fields: { title: 'Archbishop' } }, { id: 'B49', fields: { title: 'Archbishop' } },
     { id: 'B194', fields: { yearConsecrated: '2019' } }] },
-  { id: 'flow-accra-ghana-2026-11-19', flowAccra: true }];
+  { id: 'flow-accra-ghana-2026-11-19', flowAccra: true },
+  // Joshua Heward-Mills's current record is the office's newer one (his first,
+  // B194, is hidden): consecrated 2019 goes on it too (office, 19 Nov).
+  { id: 'joshua-2019-current-record-2026-11-19', setFields: [{ id: 'Xd4988f0d7a', fields: { yearConsecrated: '2019' } }] }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
