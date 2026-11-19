@@ -16,7 +16,7 @@ export const CASTLE_NEWS = [
   {
     slug: 'kuriake-castle-declaration',
     title: 'The Kuriake Castle Declaration',
-    summary: 'Our Declaration took effect on 15 September 2026.',
+    summary: 'The shared principles of our fellowship of denominations and groups.',
     image: 'assets/news/declaration.webp',
     body: [
       'The Kuriake Castle Declaration took effect on 15 September 2026. It sets out the nature of the fellowship between the denominations and groups that take part in Kuriake Castle.',
