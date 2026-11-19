@@ -12,8 +12,8 @@ const href = (path = "") => `${base}/${path ? `${path}/` : ""}`;
 // Office, 19 Nov: the main information only.
 const ROLE = [
   ["Licensing", "We issue annual licences to bishops and pastors across the denominations we serve."],
-  ["Roll of Good Standing", "Our annual register lists ministers who are licensed and in good standing."],
-  ["Verification", "Check whether a bishop or pastor holds a current licence and is in good standing."],
+  ["Roll of Good Standing", "Our annual register lists bishops and pastors who hold valid licences and are in good standing."],
+  ["Verification", "Verify whether a bishop or pastor holds a valid licence and is currently in good standing."],
 ];
 
 function Mark({ size = 30 }) {
@@ -79,8 +79,8 @@ export function CastleHome() {
       <div className="kc-about-photo"><img src={`${base}/assets/brand/castle-night.webp`} alt="Kuriake Castle at night" loading="lazy" /></div>
       <div className="kc-about-copy">
         <h2 id="kc-authority-title">About Us</h2>
-        <p>Kuriake Castle is an ecclesiastical monument in Ghana and home to the headquarters of churches and missions. Its Licensing Authority serves more than sixty denominations worldwide.</p>
-        <p>We license bishops and pastors and maintain the annual Roll of Good Standing, so churches and members of the public can check a minister’s current standing.</p>
+        <p>Kuriake Castle is an ecclesiastical monument in Ghana and serves as the headquarters of churches and missions. Its Licensing Authority oversees more than sixty denominations worldwide.</p>
+        <p>We issue annual licences to bishops and pastors and maintain the Roll of Good Standing, allowing churches and members of the public to verify a minister’s current standing.</p>
         <ul className="kc-role-list">{ROLE.map(([t, d]) => <li key={t}><b>{t}</b><span>{d}</span></li>)}</ul>
       </div>
     </section>
