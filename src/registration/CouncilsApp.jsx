@@ -5,7 +5,7 @@ import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
 import { LiveGroups, useGroups, useLiveFocus, Photo as LivePhoto } from './OrganisationsApp';
 import GoodStandingNotice from './GoodStandingNotice';
-import { StandingTick, useGoodStanding, LiveStandingKey } from './GoodStandingTick';
+import { StandingTick, useGoodStanding } from './GoodStandingTick';
 import BishopAccess from './BishopAccess';
 import NightGlobe from './NightGlobe';
 import GroupThumbs from './GroupThumbs';
@@ -198,7 +198,6 @@ function CouncilsPage({ bishops }) {
       {!group && <Search value={query} onChange={setQuery} label="Search groups" inputRef={search}/>}
       <ThemeSwitch day={day} onToggle={toggle}/>
     </Title></header>
-    <LiveStandingKey className="tx-standing-key"/>
     <main className="tx-main">
       {group ? <>
         {group.parts && !group.straight && !part ? <SubContents group={group} variant={variant}/> : <Group key={(part || group).slug} group={group} part={part}/>}

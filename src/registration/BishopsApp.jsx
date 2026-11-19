@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Masthead, Photo } from './OrganisationsApp';
 import { DIRECTORY_GROUPS, allBishopsOf, buildDirectory } from './ministry-organisations.mjs';
 import useLiveRoll from './useLiveRoll';
-import { StandingTick, useGoodStanding, LiveStandingKey } from './GoodStandingTick';
+import { StandingTick, useGoodStanding } from './GoodStandingTick';
 import { patchGroups } from './live-patch.mjs';
 import { bishopEntries, pastorEntries, setOfficeLogos } from './public-entries.mjs';
 import './denomination-sites.css';
@@ -80,7 +80,6 @@ export default function BishopsApp({ bishops: published, kind = 'bishop', masthe
   const visible = useMemo(() => shown.slice(0, limit), [shown, limit]);
   return <div className="denom-site org-site bl-site" id="top">
     <Masthead count={false} {...masthead}/>
-    <LiveStandingKey/>
     <main className="org-main bl-main">
       <div className="bl-tools">
         <label className="bl-search"><span className="sr-only">Search {noun}s</span>

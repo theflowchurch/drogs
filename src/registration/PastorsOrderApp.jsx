@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Masthead } from './OrganisationsApp';
 import { Card, Detail } from './BishopsApp';
 import GoodStandingNotice from './GoodStandingNotice';
-import { LiveStandingKey } from './GoodStandingTick';
 import useLiveRoll from './useLiveRoll';
 import { pastorEntries, pastorGroups, setOfficeLogos } from './public-entries.mjs';
 import { COLOURS } from './ministry-organisations.mjs';
@@ -64,7 +63,6 @@ export default function PastorsOrderApp({ groups: published, total: publishedTot
   const group = useMemo(() => groups.find(g => g.slug === slug) || null, [groups, slug]);
   return <div className="denom-site org-site" id="top">
     <Masthead sub="Worldwide Fellowship of Pastors" total={total} noun="Pastors"/>
-    <LiveStandingKey/>
     <main className="org-main">
       {group ? <>
         <Group key={group.slug} group={group} onOpen={setOpen}/>

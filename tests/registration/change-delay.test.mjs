@@ -53,3 +53,25 @@ test('a bishop adds a denomination with its logo; once live it is on the list, i
   assert.throws(() => applyAction(emptyState(), bishop, 'submit', profile({ organization: 'United Denominations', denomination: 'Brand New Church', newDenomination: 'Brand New Church' }), undefined, refs), /which group/);
   assert.throws(() => applyAction(emptyState(), { id: 'p9', email: 'p@example.com' }, 'submit', { ...profile({ organization: 'United Denominations', denomination: 'Brand New Church', newDenomination: 'Brand New Church' }), role: 'pastor', name: 'Pat Pastor', firstName: 'Pat', lastName: 'Pastor', email: 'p@example.com', bishopId: 'B1' }, undefined, refs), /Select a denomination/);
 });
+
+// Office, 19 Nov: the registration deadline hides everyone not in good standing
+// from the public pages (records kept), closes registration, and can be lifted.
+test('the registration deadline shows only those in good standing, and can be lifted', async () => {
+  const m = await import('../../src/registration/model.mjs');
+  const people = [{ id: 'B1', role: 'bishop', name: 'Ann Bishop' }, { id: 'B2', role: 'bishop', name: 'Ben Bishop' }];
+  const office = { id: 'o', email: 'office@example.com', office: true };
+  let s = m.emptyState();
+  assert.deepEqual(m.publicOverlay(s, people).hidden, []);
+  s = m.applyAction(s, office, 'applyDeadline', { kept: 0, removed: 2 }, undefined, people);
+  assert.equal(s.deadline.applied, true);
+  assert.equal(m.signupOf(s).closed, true);
+  assert.deepEqual(m.publicOverlay(s, people).hidden.sort(), ['B1', 'B2']);
+  s = m.applyAction(s, office, 'liftDeadline', { reopen: false }, undefined, people);
+  assert.deepEqual(m.publicOverlay(s, people).hidden, []);
+  assert.equal(m.signupOf(s).closed, true);
+  s = m.applyAction(s, office, 'applyDeadline', {}, undefined, people);
+  s = m.applyAction(s, office, 'liftDeadline', { reopen: true }, undefined, people);
+  assert.equal(m.signupOf(s).closed, false);
+  assert.equal(s.deadline.applied, false);
+  assert.throws(() => m.applyAction(s, { id: 'x', email: 'x@example.com' }, 'applyDeadline', {}, undefined, people));
+});

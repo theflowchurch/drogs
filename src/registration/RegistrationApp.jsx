@@ -1691,6 +1691,8 @@ const ACTION_LABELS = {
                   rollSync: "Structure and records aligned with the new roll",
                   setFees: "Fees changed",
                   setSignup: "Sign-up paused or reopened",
+                  applyDeadline: "Registration deadline applied",
+                  liftDeadline: "Registration deadline lifted",
                   broadcast: "Email sent to members",
                   apiKeyCreated: "API key created",
                   apiKeyRevoked: "API key revoked",
@@ -1718,7 +1720,7 @@ function detailWords(detail, state) {
 function MyActivity({ state, actor }) {
   const mine = (state.audit || [])
     .filter((a) => a.actor === actor.id || a.target === actor.id)
-    .filter((a) => !["save", "choosePhoto", "apiKeyCreated", "apiKeyRevoked", "setCatalog", "setFees", "setSignup", "broadcast", "openYear", "editReference", "hideReference", "deleteReference", "addReference"].includes(a.action))
+    .filter((a) => !["save", "choosePhoto", "apiKeyCreated", "apiKeyRevoked", "setCatalog", "setFees", "setSignup", "applyDeadline", "liftDeadline", "broadcast", "openYear", "editReference", "hideReference", "deleteReference", "addReference"].includes(a.action))
     .slice()
     .reverse()
     .slice(0, 50);

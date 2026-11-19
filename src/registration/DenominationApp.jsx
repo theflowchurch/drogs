@@ -5,7 +5,7 @@ import { placeOf } from './model.mjs';
 import PortraitImage from './PortraitImage';
 import DenominationTexture from './DenominationTexture';
 import LicensedMinisterNotice from './LicensedMinisterNotice';
-import { StandingTick, StandingKey } from './GoodStandingTick';
+import { StandingTick } from './GoodStandingTick';
 import DenominationHome from './DenominationHome';
 import { landingStyle } from './denomination-landing-styles.mjs';
 import { portraitStyle } from '../runtime/portrait-framing';
@@ -137,7 +137,6 @@ function DenominationDirectory({ site }) {
     {error && <div className="denom-load-error" role="alert"><p>{data ? 'The latest update could not be loaded. ' : ''}{error}</p><button className="denom-nav-button" type="button" onClick={retry}>Try again</button></div>}
     {!data && !error && <div className="denom-loading" role="status">Loading ministers…</div>}
     {data && <>
-      {ordered.some(p => p.goodStanding) && <StandingKey year={data.year}/>}
       {sections.bishops.length > 0 && <section className="denom-minister-section" aria-label="Bishops"><h2>{sections.bishops.length === 1 ? 'Bishop' : 'Bishops'} {count(sections.bishops.length)}</h2><MinisterGrid list={sections.bishops} year={data.year}/></section>}
       {sections.pastors.length > 0 && <section className="denom-minister-section" aria-label="Pastors"><h2>{sections.pastors.length === 1 ? 'Pastor' : 'Pastors'} {count(sections.pastors.length)}</h2><MinisterGrid list={sections.pastors.slice(0, limit)} year={data.year}/>{sections.pastors.length > limit && <button type="button" className="denom-nav-button denom-more" onClick={() => setLimit(n => n + 48)}>Show more pastors <Arrow/></button>}</section>}
       {!ordered.length && <div className="denom-loading"><h2>{filter.q || filter.city || filter.gender ? 'No ministers match' : 'No ministers listed'}</h2><p>{filter.q || filter.city || filter.gender ? 'Try another name or clear the filters.' : 'There are currently no ministers listed for this denomination.'}</p>{(filter.q || filter.city || filter.gender) && <button type="button" className="denom-nav-button" onClick={reset}>Clear filters</button>}</div>}

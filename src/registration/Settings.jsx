@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import * as api from './client';
 // Office-managed integration settings. Saved values are never shown back; the
 // office sees only whether each one is set.
-import { catalogOf, feesOf, orgLabel, signupOf, SIGNUP_PAUSED } from './model.mjs';
+import { catalogOf, feesOf, orgLabel, signupOf, SIGNUP_PAUSED, overlayReferences } from './model.mjs';
+import { rosterFrom } from './live-roster.mjs';
 import { DENOMINATION_SITES, churchHref } from './denomination-sites.mjs';
 // Organizations, their denominations and the fees: editable lists saved as one action each.
 // Pause or reopen sign-up. Paused: new people cannot request a code or submit;
@@ -41,6 +42,42 @@ function SignupControl({ state, perform }) {
           : <button type="button" className="reg-secondary" onClick={() => perform('setSignup', { scope: d.scope, closed: true, notice: notes[d.scope] }, `${d.title} is paused.`)}>Pause {d.title.toLowerCase()}</button>}
       </div>
     </div>)}
+  </Category>;
+}
+// Office, 19 Nov: the registration deadline. Applying it closes registration and
+// shows only those in good standing on every public page; nobody's record is
+// deleted, so everyone can be put back. Reopening registration starts again.
+function DeadlineControl({ state, perform }) {
+  const applied = Boolean(state?.deadline?.applied);
+  const [confirming, setConfirming] = useState(false);
+  const roll = (state.roll || []).filter((r) => r.referenceId || r.id);
+  const listed = overlayReferences(rosterFrom(state, []), state);
+  const ok = new Set(roll.flatMap((r) => [r.referenceId, r.id]).filter(Boolean));
+  const kept = listed.filter((p) => ok.has(p.id)).length + roll.filter((r) => !r.referenceId).length;
+  const removed = listed.filter((p) => !ok.has(p.id)).length;
+  const when = applied && state.deadline.at ? new Date(state.deadline.at).toLocaleString() : '';
+  return <Category title="Registration deadline" summary={applied ? `Applied${when ? ` on ${when}` : ''}: only those in good standing are shown` : 'Not applied: everyone is shown, with a tick for those in good standing'}>
+    {applied ? <>
+      <p>The deadline is <b>applied</b>{when ? <> (since {when})</> : null}. Registration is closed and the public pages show only the bishops and pastors in good standing for {state.year}. Everyone else is still here in the office records.</p>
+      <div className="reg-form-actions">
+        <button type="button" className="reg-secondary" onClick={() => perform('liftDeadline', { reopen: false }, 'Everyone is back on the public pages. Registration stays closed.')}>Put everyone back</button>
+        <button type="button" className="reg-primary" onClick={() => perform('liftDeadline', { reopen: true }, 'Registration is open again and everyone is back on the public pages.')}>Reopen registration</button>
+      </div>
+      <p className="reg-small">Put everyone back shows everyone on the public pages again with registration still closed. Reopen registration does the same and opens registration, so people can register until the next deadline.</p>
+    </> : <>
+      <p>While the deadline is not applied, everyone is on the public pages and those in good standing for {state.year} have a green tick.</p>
+      <p>Applying the deadline <b>closes registration</b> and takes everyone <b>not</b> in good standing off every public page: the church pages, the Order pages, Councils and the registers. Their records stay here, and you can put them back at any time.</p>
+      <p className="reg-deadline-counts"><span><b>{kept.toLocaleString()}</b> in good standing stay on the pages</span>{listed.length > 0 && <span><b>{removed.toLocaleString()}</b> would be taken off</span>}</p>
+      {!confirming
+        ? <div className="reg-form-actions"><button type="button" className="reg-primary" onClick={() => setConfirming(true)}>Apply the deadline…</button></div>
+        : <div className="reg-deadline-confirm" role="alert">
+            <p><b>Are you sure?</b> Registration will close and {removed > 0 ? <><b>{removed.toLocaleString()}</b> people</> : 'everyone not in good standing'} will be taken off every public page now.</p>
+            <div className="reg-form-actions">
+              <button type="button" className="reg-secondary" onClick={() => setConfirming(false)}>Cancel</button>
+              <button type="button" className="reg-danger" onClick={() => { setConfirming(false); perform('applyDeadline', { kept, removed }, 'The deadline is applied. Only those in good standing are on the public pages.'); }}>Yes, apply the deadline</button>
+            </div>
+          </div>}
+    </>}
   </Category>;
 }
 function Structure({ state, perform, actor, show = ['groups', 'orgs', 'fees'] }) {
@@ -214,6 +251,7 @@ export default function Settings({ run, state, perform, actor }) {
   return <div className="reg-settings-list">
   <input type="search" className="reg-settings-search" aria-label="Search Settings" placeholder="Search Settings" value={query} onChange={e => setQuery(e.target.value)} />
   {state && perform && visible('signup') && <SignupControl state={state} perform={perform} />}
+  {state && perform && visible('signup') && <DeadlineControl state={state} perform={perform} />}
   {state && perform && visible('fees') && <Structure state={state} perform={perform} actor={actor} show={['fees']} />}
   {visible('links') && <Category title="Registration links" summary={`${links.length} links`} open={Boolean(query.trim())}>
     <ul className="reg-admin-list">{links.map(([label, path]) => <li key={path}><span><b>{label}</b><br /><a href={origin + path}>{origin + path}</a></span><button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button></li>)}</ul>

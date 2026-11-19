@@ -6,11 +6,6 @@ import useLiveRoll from './useLiveRoll';
 import './good-standing-tick.css';
 
 const EMPTY = new Set();
-export function LiveStandingKey({ className = '' }) {
-  const live = useLiveRoll();
-  if (!live?.goodStanding?.size) return null;
-  return <div className={`gs-key-row ${className}`}><StandingKey year={live.year || ''}/></div>;
-}
 // Who is in good standing, from the live roll (nobody until it has loaded).
 export function useGoodStanding() {
   const live = useLiveRoll();
@@ -22,8 +17,4 @@ export function StandingTick({ on, year = '' }) {
   return <i className="gs-tick" title={label} role="img" aria-label={label}>
     <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
   </i>;
-}
-// The key at the top of a list: what the tick means.
-export function StandingKey({ year = '', className = '' }) {
-  return <p className={`gs-key ${className}`}><StandingTick on year={year}/><span>In good standing{year ? ` for ${year}` : ''}</span></p>;
 }

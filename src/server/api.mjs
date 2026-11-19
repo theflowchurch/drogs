@@ -294,7 +294,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           // tab, including draft uploads. Individual review lists stay private.
           const progress = photoProgress(state, people);
           const { missingIds, replaceIds, ...photoTotals } = progress;
-          publicCache = { at: Date.now(), value: { rosterVersion, source: config.publicDirectory, photos: config.publicPhotos, photoProgress: photoTotals, photoGroups: photoProgressGroups(state, people, progress), roll: publicRoll(state, people), ...publicOverlay(state) } };
+          publicCache = { at: Date.now(), value: { rosterVersion, source: config.publicDirectory, photos: config.publicPhotos, photoProgress: photoTotals, photoGroups: photoProgressGroups(state, people, progress), roll: publicRoll(state, people), ...publicOverlay(state, people) } };
         }
         return json(publicCache.value, 200, { 'Cache-Control': 'public, max-age=30' });
       }

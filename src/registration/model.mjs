@@ -137,6 +137,9 @@ export const emptyState = () => ({
   extraReferences: [], // people added to the roster by hand
   // Pause new sign-ups (general door and the pastoral-appointments door separately); existing members carry on.
   signup: { closed: false, notice: "", appointments: { closed: false, notice: "" } },
+  // Office, 19 Nov: the registration deadline. While applied, the public pages show
+  // only those in good standing; every record stays for the office.
+  deadline: { applied: false, at: "", by: "" },
 });
 export const SIGNUP_PAUSED = "Registration is paused at the moment. Please check back later.";
 export const ENTRANCES = ["general", "appointments"];
@@ -551,11 +554,21 @@ export function withStanding(references, roll) {
   for (const r of roll) if (!seen.has(r.id) && !(r.referenceId && onRoll.has(r.referenceId))) out.push({ ...r, standing: true });
   return out;
 }
-export const publicOverlay = (state) => ({
+// Office, 19 Nov: everyone in good standing for the year (record ids and account ids).
+export const goodStandingIds = (state, people) => new Set(publicRoll(state, people).flatMap((r) => [r.id, r.referenceId]).filter(Boolean));
+export const deadlineOf = (state) => ({ applied: Boolean(state?.deadline?.applied), at: String(state?.deadline?.at || ""), by: String(state?.deadline?.by || "") });
+// Who the deadline takes off the public pages: everyone on our lists not in good standing.
+export function deadlineHidden(state, people) {
+  if (!deadlineOf(state).applied || !people) return [];
+  const ok = goodStandingIds(state, people);
+  return [...people, ...(state.extraReferences || [])].map((p) => p.id).filter((id) => id && !ok.has(id));
+}
+export const publicOverlay = (state, people) => ({
   year: state.year,
   signup: signupOf(state),
   catalog: catalogOf(state),
-  hidden: state.hidden || [],
+  hidden: [...new Set([...(state.hidden || []), ...deadlineHidden(state, people)])],
+  deadline: deadlineOf(state),
   overrides: Object.fromEntries(Object.entries(state.overrides || {}).map(([k, v]) => [k, scrubContacts(v)])),
   extraReferences: (state.extraReferences || []).map(scrubContacts),
   // The office's edits to the Order of Bishops / Councils structure and the
@@ -1872,6 +1885,20 @@ export function applyAction(
     if (!(bishop > 0 && pastor > 0 && Number.isInteger(bishop) && Number.isInteger(pastor))) throw Error("Enter whole-dollar amounts above zero.");
     detail = { fees: [feesOf(state), { bishop, pastor }] };
     state.fees = { bishop, pastor };
+  } else if (action === "applyDeadline") {
+    // Office, 19 Nov: registration closes and the public pages show only those in good standing.
+    office();
+    const current = signupOf(state);
+    state.deadline = { applied: true, at: new Date().toISOString(), by: actor.email || "" };
+    state.signup = { ...current, closed: true, notice: current.notice || "Registration is closed for this year." };
+    detail = { kept: Number(payload.kept) || 0, removed: Number(payload.removed) || 0 };
+  } else if (action === "liftDeadline") {
+    // Everyone back on the public pages; reopening registration starts the year's ticks again.
+    office();
+    const current = signupOf(state);
+    state.deadline = { applied: false, at: "", by: "" };
+    if (payload.reopen) state.signup = { ...current, closed: false };
+    detail = { reopen: Boolean(payload.reopen) };
   } else if (action === "setSignup") {
     office();
     const next = { closed: Boolean(payload.closed), notice: String(payload.notice || "").trim().slice(0, 500) };
