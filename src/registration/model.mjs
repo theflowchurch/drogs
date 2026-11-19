@@ -228,6 +228,12 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   // Office, 19 Nov: one denomination each, whatever the country; everyone
   // keeps their own city and country. Jesus Gefunden and First Love Church
   // Zimbabwe are First Love, not United Denominations.
+  // Office, 19 Nov: Bishops Joel and Sara Lanita Obuobisa and the Papua New
+  // Guinea pastors (under Bishop John Boffah) move from United Islands to
+  // Pacific Islands Missionary Church; Bishop Victor Collins Asabere and his
+  // Suriname pastors stay in United Islands.
+  { id: 'united-islands-to-pacific-islands-2026-11-19', splitDenomination: { from: 'United Islands', organization: 'United Denominations', group: 'United Islands',
+    byBishop: { B92: 'Pacific Islands Missionary Church', B179: 'Pacific Islands Missionary Church', B94: 'Pacific Islands Missionary Church' } } },
   // Office, 19 Nov: the full names, with church pages at the new addresses.
   { id: 'full-church-names-2026-11-19', renameDenominations: [
     { from: "Pleasant Surprise", to: "Pleasant Surprise Church International", organization: "United Denominations", group: "UD Europe" },

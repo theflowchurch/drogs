@@ -1290,7 +1290,7 @@
                 {
                   "name": "Joel Obuobisa",
                   "rosterId": "B92",
-                  "church": "United Islands",
+                  "church": "Pacific Islands Missionary Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/joel-obuobisa.webp",
                   "bishop": true,
@@ -1337,7 +1337,7 @@
                   "name": "Sara Lanita Obuobisa",
                   "rosterId": "B179",
                   "bishop": true,
-                  "church": "United Islands",
+                  "church": "Pacific Islands Missionary Church",
                   "title": "Episcopal Sister",
                   "image": "assets/organisations/people/sara-lanita-obuobisa-265d6c60.webp",
                   "consecrated": "2022"
@@ -2556,7 +2556,7 @@
                   "image": "assets/organisations/people/joel-obuobisa.webp",
                   "rosterId": "B92",
                   "bishop": true,
-                  "church": "United Islands",
+                  "church": "Pacific Islands Missionary Church",
                   "title": "Bishop",
                   "consecrated": "2012"
                 },
