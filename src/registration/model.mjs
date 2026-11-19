@@ -199,7 +199,13 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   { id: 'joshua-2019-current-record-2026-11-19', setFields: [{ id: 'Xd4988f0d7a', fields: { yearConsecrated: '2019' } }] },
   // Justice Gaisie is a bishop now (office, 19 Nov): one record, his bishop
   // record. His old Rev. record is hidden and anything linked to it moves over.
-  { id: 'justice-gaisie-one-record-2026-11-19', retire: [{ id: 'P2498', into: 'Xc63d313fea' }] }];
+  { id: 'justice-gaisie-one-record-2026-11-19', retire: [{ id: 'P2498', into: 'Xc63d313fea' }] },
+  // Office, 19 Nov: the three UK bishops are bishops only, each in his own
+  // church under UD Europe, no longer Pleasant Surprise or anyone's pastor.
+  { id: 'uk-bishops-own-churches-2026-11-19', onlyBishop: ['P177', 'P823', 'P2265'], setFields: [
+    { id: 'P177', fields: { role: 'bishop', title: 'Bishop', bishop: '', organization: 'United Denominations', group: 'UD Europe', denomination: 'Together Forever Church Int' } },
+    { id: 'P823', fields: { role: 'bishop', title: 'Bishop', bishop: '', organization: 'United Denominations', group: 'UD Europe', denomination: 'Why Worry Church Int' } },
+    { id: 'P2265', fields: { role: 'bishop', title: 'Bishop', bishop: '', organization: 'United Denominations', group: 'UD Europe', denomination: 'If I Live I Live For You Church Int' } }] }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -274,6 +280,15 @@ export function syncRoll(state, people, version) {
     if (!next.hidden.includes(id)) next.hidden = [...next.hidden, id];
     next.profiles = (next.profiles || []).map(p => p.referenceId === id ? { ...p, referenceId: into } : p);
     next.registrations = (next.registrations || []).map(r => r.data?.referenceId === id ? { ...r, data: { ...r.data, referenceId: into } } : r);
+  }
+  for (const fix of fixes) for (const id of fix.onlyBishop || []) {
+    if (!ids.has(id)) continue;
+    const users = new Set([...(next.profiles || []).filter(p => p.referenceId === id).map(p => p.id), ...(next.registrations || []).filter(r => r.data?.referenceId === id).map(r => r.userId)]);
+    const name = normalName((people.find(p => p.id === id) || {}).name || '');
+    next.registrations = (next.registrations || []).map(r => users.has(r.userId) ? { ...r, data: { ...r.data, role: 'bishop', title: r.data?.role === 'pastor' ? '' : r.data?.title, bishopId: '', bishopFirstName: '', bishopLastName: '' } } : r);
+    next.profiles = (next.profiles || []).map(p => users.has(p.id) && p.role === 'pastor' ? { ...p, role: 'bishop' } : p);
+    // Off every bishop's list of pastors.
+    next.rosters = (next.rosters || []).filter(x => !users.has(x.pastorId) && !(name && normalName(x.name || '') === name));
   }
   for (const fix of fixes) for (const rec of fix.addRecords || [])
     if (!(next.extraReferences || []).some(x => x.id === rec.id || (x.role === rec.role && normalName(x.name) === normalName(rec.name))))
