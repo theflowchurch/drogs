@@ -981,7 +981,7 @@ export default function RegistrationApp({
         churchConfig && !church.organization ?
         <Empty title="Registration is not open on this site yet">Please contact the office to register with {churchConfig.name}.</Empty> :
         churchConfig && current?.data?.organization && !inChurch(church, current.data) ?
-        <Empty title="Open your church’s site"><a className="reg-primary" href={churchOfDenomination(current.data.denomination) ? `${base}/${churchOfDenomination(current.data.denomination)}/signup/` : sitePath(siteOfOrganization(current.data.organization), "signup", base)}>Continue to your church’s site →</a></Empty> :
+        <Empty title="Open your church’s site"><a className="reg-primary" href={churchOfDenomination(current.data.denomination) ? churchHref(churchOfDenomination(current.data.denomination), "signup", base) : sitePath(siteOfOrganization(current.data.organization), "signup", base)}>Continue to your church’s site →</a></Empty> :
         site && memberOrganization && siteOfOrganization(memberOrganization) !== site ?
         <Empty title="Open your organization’s site"><a className="reg-primary" href={sitePath(siteOfOrganization(memberOrganization), "signup", base)}>Continue to {ORGANIZATION_SITES[siteOfOrganization(memberOrganization)]?.name || "Kuriake Castle"} →</a></Empty> :
         <div className={`reg-shell ${sidebarHidden ? "sidebar-collapsed" : ""}`}>
