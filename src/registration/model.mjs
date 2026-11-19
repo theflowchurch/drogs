@@ -196,7 +196,10 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   { id: 'flow-accra-ghana-2026-11-19', flowAccra: true },
   // Joshua Heward-Mills's current record is the office's newer one (his first,
   // B194, is hidden): consecrated 2019 goes on it too (office, 19 Nov).
-  { id: 'joshua-2019-current-record-2026-11-19', setFields: [{ id: 'Xd4988f0d7a', fields: { yearConsecrated: '2019' } }] }];
+  { id: 'joshua-2019-current-record-2026-11-19', setFields: [{ id: 'Xd4988f0d7a', fields: { yearConsecrated: '2019' } }] },
+  // Justice Gaisie is a bishop now (office, 19 Nov): one record, his bishop
+  // record. His old Rev. record is hidden and anything linked to it moves over.
+  { id: 'justice-gaisie-one-record-2026-11-19', retire: [{ id: 'P2498', into: 'Xc63d313fea' }] }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -265,6 +268,12 @@ export function syncRoll(state, people, version) {
       next.overrides[p.id] = { ...o, ...place, _officeFields: [...new Set([...(o._officeFields || []), 'city', 'country'])] };
     }
     next.registrations = (next.registrations || []).map(r => r.data?.organization === 'FLOW' ? { ...r, data: { ...r.data, ...place } } : r);
+  }
+  for (const fix of fixes) for (const { id, into } of fix.retire || []) {
+    if (!ids.has(id) || !ids.has(into)) continue;
+    if (!next.hidden.includes(id)) next.hidden = [...next.hidden, id];
+    next.profiles = (next.profiles || []).map(p => p.referenceId === id ? { ...p, referenceId: into } : p);
+    next.registrations = (next.registrations || []).map(r => r.data?.referenceId === id ? { ...r, data: { ...r.data, referenceId: into } } : r);
   }
   for (const fix of fixes) for (const rec of fix.addRecords || [])
     if (!(next.extraReferences || []).some(x => x.id === rec.id || (x.role === rec.role && normalName(x.name) === normalName(rec.name))))

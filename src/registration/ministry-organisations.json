@@ -763,11 +763,12 @@
                 },
                 {
                   "name": "Justice Gaisie",
-                  "rosterId": "P2498",
+                  "rosterId": "Xc63d313fea",
                   "bishop": true,
                   "church": "Anagkazo Assemblies",
                   "title": "Bishop",
-                  "appointed": "2008",
+                  "appointed": "2003",
+                  "consecrated": "2021",
                   "image": "assets/organisations/people/justice-gaisie.webp"
                 },
                 {
