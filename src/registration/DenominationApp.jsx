@@ -5,6 +5,7 @@ import { placeOf } from './model.mjs';
 import PortraitImage from './PortraitImage';
 import DenominationTexture from './DenominationTexture';
 import LicensedMinisterNotice from './LicensedMinisterNotice';
+import { StandingTick, StandingKey } from './GoodStandingTick';
 import DenominationHome from './DenominationHome';
 import { landingStyle } from './denomination-landing-styles.mjs';
 import { portraitStyle } from '../runtime/portrait-framing';
@@ -70,9 +71,9 @@ function MinisterPortrait({ person, full = false }) {
 // Order of Bishops pages; nothing to click. A bishop's card gives the years
 // appointed, ordained and consecrated; a pastor's the year appointed (and
 // ordained, for a Reverend) and their bishop.
-function MinisterGrid({ list }) {
+function MinisterGrid({ list, year = '' }) {
   return <div className="denom-grid">{list.map(person => <article className="denom-person denom-person-open" key={person.id} aria-label={person.name}>
-    <div className="denom-person-photo"><MinisterPortrait person={person}/></div>
+    <div className="denom-person-photo gs-host"><MinisterPortrait person={person}/><StandingTick on={person.goodStanding} year={year}/></div>
     <div className="denom-person-copy"><small>{ministerDisplayTitle(person)}</small><h3>{person.name}</h3>
       {placeOf(person) && <p>{placeOf(person)}</p>}
       {person.role === 'pastor' && person.bishop && <p className="denom-person-bishop">Bishop · {person.bishop}</p>}
@@ -136,8 +137,9 @@ function DenominationDirectory({ site }) {
     {error && <div className="denom-load-error" role="alert"><p>{data ? 'The latest update could not be loaded. ' : ''}{error}</p><button className="denom-nav-button" type="button" onClick={retry}>Try again</button></div>}
     {!data && !error && <div className="denom-loading" role="status">Loading ministers…</div>}
     {data && <>
-      {sections.bishops.length > 0 && <section className="denom-minister-section" aria-label="Bishops"><h2>{sections.bishops.length === 1 ? 'Bishop' : 'Bishops'} {count(sections.bishops.length)}</h2><MinisterGrid list={sections.bishops}/></section>}
-      {sections.pastors.length > 0 && <section className="denom-minister-section" aria-label="Pastors"><h2>{sections.pastors.length === 1 ? 'Pastor' : 'Pastors'} {count(sections.pastors.length)}</h2><MinisterGrid list={sections.pastors.slice(0, limit)}/>{sections.pastors.length > limit && <button type="button" className="denom-nav-button denom-more" onClick={() => setLimit(n => n + 48)}>Show more pastors <Arrow/></button>}</section>}
+      {ordered.some(p => p.goodStanding) && <StandingKey year={data.year}/>}
+      {sections.bishops.length > 0 && <section className="denom-minister-section" aria-label="Bishops"><h2>{sections.bishops.length === 1 ? 'Bishop' : 'Bishops'} {count(sections.bishops.length)}</h2><MinisterGrid list={sections.bishops} year={data.year}/></section>}
+      {sections.pastors.length > 0 && <section className="denom-minister-section" aria-label="Pastors"><h2>{sections.pastors.length === 1 ? 'Pastor' : 'Pastors'} {count(sections.pastors.length)}</h2><MinisterGrid list={sections.pastors.slice(0, limit)} year={data.year}/>{sections.pastors.length > limit && <button type="button" className="denom-nav-button denom-more" onClick={() => setLimit(n => n + 48)}>Show more pastors <Arrow/></button>}</section>}
       {!ordered.length && <div className="denom-loading"><h2>{filter.q || filter.city || filter.gender ? 'No ministers match' : 'No ministers listed'}</h2><p>{filter.q || filter.city || filter.gender ? 'Try another name or clear the filters.' : 'There are currently no ministers listed for this denomination.'}</p>{(filter.q || filter.city || filter.gender) && <button type="button" className="denom-nav-button" onClick={reset}>Clear filters</button>}</div>}
     </>}
     <LicensedMinisterNotice open={config.openLicenseNotice}/>

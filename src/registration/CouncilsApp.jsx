@@ -5,6 +5,7 @@ import PortraitImage from './PortraitImage';
 import useGroupFocus from './useGroupFocus';
 import { LiveGroups, useGroups, useLiveFocus, Photo as LivePhoto } from './OrganisationsApp';
 import GoodStandingNotice from './GoodStandingNotice';
+import { StandingTick, useGoodStanding, LiveStandingKey } from './GoodStandingTick';
 import BishopAccess from './BishopAccess';
 import NightGlobe from './NightGlobe';
 import GroupThumbs from './GroupThumbs';
@@ -34,8 +35,9 @@ function Photo({ person }) {
 }
 
 function Card({ person }) {
+  const gs = useGoodStanding();
   return <article className="tx-card">
-    <div className="tx-card-photo"><Photo person={person}/></div>
+    <div className="tx-card-photo gs-host"><Photo person={person}/><StandingTick on={gs.has(person.rosterId)} year={gs.year}/></div>
     <div className="tx-card-text">
       <small className="tx-card-title">{person.title || 'Bishop'}</small>
       <strong>{person.name}</strong>
@@ -196,6 +198,7 @@ function CouncilsPage({ bishops }) {
       {!group && <Search value={query} onChange={setQuery} label="Search groups" inputRef={search}/>}
       <ThemeSwitch day={day} onToggle={toggle}/>
     </Title></header>
+    <LiveStandingKey className="tx-standing-key"/>
     <main className="tx-main">
       {group ? <>
         {group.parts && !group.straight && !part ? <SubContents group={group} variant={variant}/> : <Group key={(part || group).slug} group={group} part={part}/>}

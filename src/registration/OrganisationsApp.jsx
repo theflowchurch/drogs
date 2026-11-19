@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import useGroupFocus from './useGroupFocus';
 import GroupThumbs from './GroupThumbs';
 import GoodStandingNotice from './GoodStandingNotice';
+import { StandingTick, useGoodStanding, LiveStandingKey } from './GoodStandingTick';
 import BishopAccess from './BishopAccess';
 import { portraitStyle } from '../runtime/portrait-framing';
 import './denomination-sites.css';
@@ -36,8 +37,9 @@ export function Photo({ person, large = false }) {
 }
 
 function Bishop({ person }) {
+  const gs = useGoodStanding();
   return <article className="org-member">
-    <div className="org-member-photo"><Photo person={person}/></div>
+    <div className="org-member-photo gs-host"><Photo person={person}/><StandingTick on={gs.has(person.rosterId)} year={gs.year}/></div>
     <div className="org-member-text">
       <small>{person.title || 'Bishop'}</small>
       <strong>{person.name}</strong>
@@ -156,6 +158,7 @@ function OrganisationsPage({ slug, bishops, fromAddress }) {
   const variant = 'all';
   return <div className="denom-site org-site" id="top">
     <Masthead bishops={bishops}/>
+    <LiveStandingKey/>
     <main className="org-main">
       {group ? <>
         {group.parts && !group.straight && !part ? <SubContents group={group} variant={variant}/> : <Group group={group} part={part}/>}

@@ -22,6 +22,9 @@ export function liveRoll(referencePeople, publicData) {
     structure: publicData.pageStructure || null, // the office's Order of Bishops structure, if edited
     pastorBoxes: publicData.pastorBoxes || null, // the office's pastors' boxes, if edited
     orderChoices: publicData.orderChoices || {}, // bishops' own groups (19 Nov)
+    // Office, 19 Nov: everyone in good standing (their record and their account), for the tick.
+    goodStanding: new Set((publicData.roll || []).flatMap(r => [r.id, r.referenceId]).filter(Boolean)),
+    year: publicData.year || '',
   };
 }
 

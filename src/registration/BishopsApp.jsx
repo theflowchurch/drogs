@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Masthead, Photo } from './OrganisationsApp';
 import { DIRECTORY_GROUPS, allBishopsOf, buildDirectory } from './ministry-organisations.mjs';
 import useLiveRoll from './useLiveRoll';
+import { StandingTick, useGoodStanding, LiveStandingKey } from './GoodStandingTick';
 import { patchGroups } from './live-patch.mjs';
 import { bishopEntries, pastorEntries, setOfficeLogos } from './public-entries.mjs';
 import './denomination-sites.css';
@@ -14,8 +15,9 @@ import './organisations.css';
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 export function Card({ person, onOpen, fallback }) {
+  const gs = useGoodStanding();
   return <button type="button" className="org-member bl-card" onClick={() => onOpen(person)} aria-haspopup="dialog">
-    <span className="org-member-photo"><Photo person={person}/></span>
+    <span className="org-member-photo gs-host"><Photo person={person}/><StandingTick on={gs.has(person.rosterId)} year={gs.year}/></span>
     <span className="org-member-text">
       <small>{person.title || fallback}</small>
       <strong>{person.name}</strong>
@@ -78,6 +80,7 @@ export default function BishopsApp({ bishops: published, kind = 'bishop', masthe
   const visible = useMemo(() => shown.slice(0, limit), [shown, limit]);
   return <div className="denom-site org-site bl-site" id="top">
     <Masthead count={false} {...masthead}/>
+    <LiveStandingKey/>
     <main className="org-main bl-main">
       <div className="bl-tools">
         <label className="bl-search"><span className="sr-only">Search {noun}s</span>
