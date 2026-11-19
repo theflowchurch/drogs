@@ -205,7 +205,9 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   { id: 'uk-bishops-own-churches-2026-11-19', onlyBishop: ['P177', 'P823', 'P2265'], setFields: [
     { id: 'P177', fields: { role: 'bishop', title: 'Bishop', bishop: '', organization: 'United Denominations', group: 'UD Europe', denomination: 'Together Forever Church Int' } },
     { id: 'P823', fields: { role: 'bishop', title: 'Bishop', bishop: '', organization: 'United Denominations', group: 'UD Europe', denomination: 'Why Worry Church Int' } },
-    { id: 'P2265', fields: { role: 'bishop', title: 'Bishop', bishop: '', organization: 'United Denominations', group: 'UD Europe', denomination: 'If I Live I Live For You Church Int' } }] }];
+    { id: 'P2265', fields: { role: 'bishop', title: 'Bishop', bishop: '', organization: 'United Denominations', group: 'UD Europe', denomination: 'If I Live I Live For You Church Int' } }] },
+  // Office, 19 Nov: Joy Bruce (First Love) is a Mother, not an Episcopal Sister.
+  { id: 'joy-bruce-mother-2026-11-19', setFields: [{ id: 'B323', fields: { title: 'Mother' } }] }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
