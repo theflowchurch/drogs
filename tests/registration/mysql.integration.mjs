@@ -185,6 +185,25 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('order-access', `${passed.cookie}; ${bishop.cookie}`)).data.status, 'payment', 'confirmed but the fee not yet confirmed: not in good standing (19 Nov)');
     assert.equal((await call('action', office.cookie, { name: 'markPaid', payload: { userId: bishop.data.id, paid: true, note: 'Cash at the office' } })).status, 200);
     assert.equal((await call('order-access', `${passed.cookie}; ${bishop.cookie}`)).data.step, 'ok', 'a confirmed bishop gets in');
+    {
+      // 19 Nov: a bishop chooses their Order groups and brings a new denomination
+      // with its logo; it all goes public 30 minutes after they save.
+      const logo = await upload(bishop, 'logo');
+      const changed = await call('action', bishop.cookie, { name: 'update', payload: { photoConfirmed: true, organization: 'United Denominations', denomination: 'Grace City Church Test', newDenomination: 'Grace City Church Test', newDenominationGroup: 'UD Ghana', newDenominationLogo: logo, orderGroups: [{ slug: 'ud-ghana-central', role: '' }, { slug: 'flow-council', role: 'Treasurer' }] } });
+      assert.equal(changed.status, 200, JSON.stringify(changed.data));
+      const wait = (await call('public-directory')).data;
+      assert.ok(!(wait.catalog.denominations['United Denominations'] || []).includes('Grace City Church Test'), 'not public for 30 minutes');
+      assert.equal(wait.orderChoices?.B1, undefined);
+      assert.equal(await api.applyDue(Date.now() + 31 * 60000), 1, 'applied once the 30 minutes are up');
+      const live = (await call('public-directory?fresh=1')).data;
+      assert.ok(live.catalog.denominations['United Denominations'].includes('Grace City Church Test'), 'on everyone\'s list');
+      assert.ok(live.catalog.groups['UD Ghana'].denominations.includes('Grace City Church Test'));
+      assert.equal(live.catalog.added['Grace City Church Test'].logo, logo);
+      assert.deepEqual(live.orderChoices.B1, [{ slug: 'ud-ghana-central', role: '' }, { slug: 'flow-council', role: 'Treasurer' }]);
+      assert.equal(live.overrides.B1.denomination, 'Grace City Church Test', 'the record follows');
+      const media = await api(new Request(`${config.origin}/api/registration/media/blob?path=${encodeURIComponent(logo)}`, { headers: { origin: config.origin } }));
+      assert.equal(media.status, 200, 'the logo is public');
+    }
     assert.equal((await call('order-access', bishop.cookie)).data.step, 'code', 'a member still needs the password');
     assert.equal((await call('order-access', 'kc_order=9999999999999.0000; ' + bishop.cookie)).data.step, 'code', 'a forged pass is refused');
     {

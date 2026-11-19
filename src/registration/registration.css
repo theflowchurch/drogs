@@ -4367,3 +4367,5 @@ input[type="date"] {
 .reg-new-logo img{width:64px;height:64px;object-fit:contain;border:1px solid var(--line,#dcd8cc);border-radius:10px;background:#fff}
 .reg-similar{margin:0;padding:10px 12px;border-radius:8px;background:#fff7e6;font-size:14px}
 .reg-similar .reg-text{margin-left:8px;font-weight:700}
+.reg-order-option label{display:flex!important;flex-direction:row!important;align-items:center!important}
+.reg-order-option input[type=checkbox]{width:18px!important;min-width:18px;height:18px!important;margin:0!important;padding:0!important;order:-1;flex:none}

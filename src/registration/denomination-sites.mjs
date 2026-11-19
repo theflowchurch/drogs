@@ -39,7 +39,7 @@ export function liveChurchFrom(catalog, path) {
   const logo = a.logo || catalog?.logos?.[name] || '';
   return { ...STANDARD_PRESENTATION, name, shortName: name, subtitle: '', denominations: [name], organization: a.organization,
     logo: logo ? (logo.startsWith('assets/') ? logo : `api/registration/media/blob?path=${encodeURIComponent(logo)}`) : '',
-    accent: '#1f3a5f', directoryAction: 'View bishops and pastors', directoryHeading: STANDARD_DIRECTORY_HEADING, live: true };
+    accent: '#1f3a5f', homeLayout: 'quiet', visualStyle: 'gochurch', directoryAction: 'View bishops and pastors', directoryHeading: STANDARD_DIRECTORY_HEADING, live: true }; // a calm shared design until it has its own
 }
 // The page for such a church registers itself before it draws.
 export const registerLiveChurch = (path, config) => { if (config && !DENOMINATION_SITES[path]) DENOMINATION_SITES[path] = config; };
