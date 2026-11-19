@@ -49,5 +49,7 @@ test('a bishop adds a denomination with its logo; once live it is on the list, i
   assert.equal(t.registrations[0].data.denomination, 'Tell Them Church');
   assert.equal(t.registrations[0].data.newDenomination, '');
   // Pastors cannot add one.
+  // A new denomination says which group it is under (when its organization has groups).
+  assert.throws(() => applyAction(emptyState(), bishop, 'submit', profile({ organization: 'United Denominations', denomination: 'Brand New Church', newDenomination: 'Brand New Church' }), undefined, refs), /which group/);
   assert.throws(() => applyAction(emptyState(), { id: 'p9', email: 'p@example.com' }, 'submit', { ...profile({ organization: 'United Denominations', denomination: 'Brand New Church', newDenomination: 'Brand New Church' }), role: 'pastor', name: 'Pat Pastor', firstName: 'Pat', lastName: 'Pastor', email: 'p@example.com', bishopId: 'B1' }, undefined, refs), /Select a denomination/);
 });

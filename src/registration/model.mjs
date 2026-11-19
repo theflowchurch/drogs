@@ -849,7 +849,9 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
       const same = denominations.find((d) => normalName(d) === normalName(q.newDenomination));
       if (same) { q.denomination = same; q.newDenomination = ""; q.newDenominationGroup = ""; q.newDenominationLogo = ""; }
       else if (q.newDenomination.length < 3) throw Error("Enter the full name of your denomination.");
-      if (q.newDenominationGroup && catalog.groups && !catalog.groups[q.newDenominationGroup]) q.newDenominationGroup = "";
+      const orgGroups = Object.entries(catalog.groups || {}).filter(([, g]) => g.organization === q.organization).map(([n]) => n);
+      if (q.newDenominationGroup && !orgGroups.includes(q.newDenominationGroup)) q.newDenominationGroup = "";
+      if (q.newDenomination && orgGroups.length && !q.newDenominationGroup) throw Error("Choose which group your denomination is under.");
     } else { q.newDenomination = ""; q.newDenominationGroup = ""; q.newDenominationLogo = ""; }
     if (denominations.length && !denominations.includes(q.denomination) && !q.newDenomination)
       throw Error("Select a denomination listed under your organization.");

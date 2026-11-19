@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import * as api from "./client";
-import { normalName } from "./model.mjs";
+import { normalName, orgLabel } from "./model.mjs";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 export const NEW_DENOMINATION = "__new__";
@@ -29,11 +29,12 @@ export default function NewDenomination({ value, organization, catalog, actor, o
         <input required maxLength={80} value={value.newDenomination || ""} onChange={(e) => onChange({ newDenomination: e.target.value })} placeholder="e.g. Grace City Church" />
       </label>
       {similar.length > 0 && <p className="reg-similar" role="status">Is it one of these? {similar.map((d) => <button key={d} type="button" className="reg-text" onClick={() => onPick(d)}>{d}</button>)}</p>}
-      {groups.length > 0 && <label className="reg-field-label">Group
-        <select value={value.newDenominationGroup || ""} onChange={(e) => onChange({ newDenominationGroup: e.target.value })}>
-          <option value="">Choose…</option>{groups.map((g) => <option key={g}>{g}</option>)}
+      {/* Office, 19 Nov: a bishop adding a denomination always says which group it is under. */}
+      {groups.length > 0 ? <label className="reg-field-label">Which group is it under?
+        <select required value={value.newDenominationGroup || ""} onChange={(e) => onChange({ newDenominationGroup: e.target.value })}>
+          <option value="">Choose a group…</option>{groups.map((g) => <option key={g}>{g}</option>)}
         </select>
-      </label>}
+      </label> : <p className="reg-field-label">Group<span className="reg-fixed-group">{orgLabel(organization) || "Choose an organization above first"}</span></p>}
       <div className="reg-field-label">Logo
         <div className="reg-new-logo">
           {value.newDenominationLogo && <img src={logoUrl(value.newDenominationLogo)} alt="" />}
