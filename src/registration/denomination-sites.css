@@ -64,3 +64,6 @@
 @media(max-width:700px){.denom-header-actions .denom-header-label{display:none}.denom-signin{min-height:34px;padding:7px 14px;font-size:11px}}
 /* The section totals (office, 19 Nov): a clear badge beside "Bishops" and "Pastors". */
 .denom-site .denom-minister-section>h2 .denom-section-count{font-family:inherit!important;font-size:1.15em!important;font-weight:800!important;line-height:1!important;letter-spacing:-.5px!important;padding:0!important;min-width:0!important;height:auto!important;border-radius:0!important;background:none!important;color:var(--denom-accent,#1f3a5f)!important;display:inline!important}
+/* Sign up beside Sign in on every church page (office, 19 Nov): the same button, outlined. */
+.denom-header-actions{display:flex;align-items:center;gap:10px}
+.denom-site .denom-signup{background:transparent!important;color:var(--denom-ink)!important;box-shadow:inset 0 0 0 1.5px currentColor!important}
