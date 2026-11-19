@@ -220,7 +220,10 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   // pastors: Bata City State Church (Bishop Kwabena Asamoah Jnr, Josie Marie
   // Asamoah) and Malabo City State Church (Bishop Oreal Valerius Lartey).
   { id: 'equatorial-guinea-two-churches-2026-11-19', splitDenomination: { from: 'Equatorial Guinea', organization: 'United Denominations', group: 'UD Africa',
-    byBishop: { B117: 'Bata City State Church', B101: 'Bata City State Church', B146: 'Malabo City State Church' } } }];
+    byBishop: { B117: 'Bata City State Church', B101: 'Bata City State Church', B146: 'Malabo City State Church' } } },
+  // Office, 19 Nov: both names carry the word Church.
+  { id: 'first-love-church-malawi-2026-11-19', renameDenomination: { from: 'First Love Malawi', to: 'First Love Church Malawi', organization: 'United Denominations', group: 'UD Africa' } },
+  { id: 'first-love-church-seychelles-2026-11-19', renameDenomination: { from: 'First Love Seychelles', to: 'First Love Church Seychelles', organization: 'United Denominations', group: 'United Islands' } }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;

@@ -48,7 +48,7 @@ export const DENOMINATIONS = {
     "Loyalty House International",
     "Makarios City Church",
     "Makarios Western North",
-    "First Love Malawi",
+    "First Love Church Malawi",
     "Mustard Seed Chapel International",
     "Onction Internationale Benin",
     "Pacific Islands Missionary Church",
@@ -90,7 +90,7 @@ export const DENOMINATIONS = {
     "If I Live I Live For You Church Int",
     "Together Forever Church Int",
     "Why Worry Church Int",
-    "First Love Seychelles",
+    "First Love Church Seychelles",
     "Bata City State Church",
     "Malabo City State Church"
   ],

@@ -713,11 +713,12 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "firstlovemalawi",
-    "name": "First Love Malawi",
-    "shortName": "First Love Malawi",
+    "path": "firstlovechurchmalawi",
+    "name": "First Love Church Malawi",
+    "shortName": "First Love Church Malawi",
     "subtitle": "",
     "denominations": [
+      "First Love Church Malawi",
       "First Love Malawi",
       "Malawi"
     ],
@@ -1080,11 +1081,12 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "firstloveseychelles",
-    "name": "First Love Seychelles",
-    "shortName": "First Love Seychelles",
+    "path": "firstlovechurchseychelles",
+    "name": "First Love Church Seychelles",
+    "shortName": "First Love Church Seychelles",
     "subtitle": "",
     "denominations": [
+      "First Love Church Seychelles",
       "First Love Seychelles",
       "Seychelles"
     ],

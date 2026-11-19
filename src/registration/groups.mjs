@@ -42,7 +42,7 @@ export const GROUPS = {
       "La Belle Eglise Gabon",
       "La Belle Église Car",
       "Libreville City State",
-      "First Love Malawi",
+      "First Love Church Malawi",
       "Onction Internationale Benin",
       "Poimen Church Gambia",
       "Poimen Church Senegal-Gambia",
@@ -97,7 +97,7 @@ export const GROUPS = {
       "Favourite Child Church",
       "Pacific Islands Missionary Church",
       "United Islands",
-      "First Love Seychelles"
+      "First Love Church Seychelles"
     ]
   },
   "United Jesus": {
