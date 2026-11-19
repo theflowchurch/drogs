@@ -70,6 +70,7 @@ export default function PastorsOrderApp({ groups: published, total: publishedTot
       </> : <nav id="contents" className="org-contents" aria-label="Contents">{groups.map(g => <Box key={g.slug} group={g}/>)}</nav>}
       {!group && <GoodStandingNotice className="org-good-standing"/>}
     </main>
+    <footer className="org-footer"><span/><a className="org-footer-link" href={`${base}/declaration/`}>Kuriake Castle Declaration</a></footer>
     {open && <Detail person={open} onClose={() => setOpen(null)} fallback="Pastor"/>}
   </div>;
 }

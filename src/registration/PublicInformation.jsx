@@ -22,7 +22,7 @@ export default function PublicInformation({ slug }) {
           <nav aria-label="Information pages">
             {LEGAL_PAGES.map(item => <a key={item.slug} href={`${base}/${item.slug}/`} aria-current={item.slug === slug ? 'page' : undefined}>{item.label}</a>)}
           </nav>
-          <p className="reg-information-date">Effective date<br />{POLICY_DATE}</p>
+          <p className="reg-information-date">{page.slug === 'declaration' ? 'Approved' : 'Effective date'}<br />{page.date || POLICY_DATE}</p>
         </aside>
         <main id="main-content" className="reg-docs reg-information-content">
           <article dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }} />

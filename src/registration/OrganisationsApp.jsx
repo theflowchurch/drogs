@@ -162,6 +162,6 @@ function OrganisationsPage({ slug, bishops, fromAddress }) {
       </> : <Contents/>}
       {!group && <GoodStandingNotice className="org-good-standing"/>}
     </main>
-    <footer className="org-footer"><span>Updated {data.updated}</span></footer>
+    <footer className="org-footer"><span>Updated {data.updated}</span><a className="org-footer-link" href={`${base}/declaration/`}>Kuriake Castle Declaration</a></footer>
   </div>;
 }

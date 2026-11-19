@@ -485,3 +485,4 @@
 .tx-bishop-access .bishop-access-signin{color:var(--ink,inherit);border:1px solid var(--line-2);background:var(--glass)}
 .tx-bishop-access .bishop-access-signup{color:#14223d;background:#c9a95c;border:1px solid #c9a95c}
 .tx-bishop-access a:hover{filter:brightness(1.08)}
+.tx-footer-link{color:inherit;font-weight:600}

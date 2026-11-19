@@ -202,6 +202,6 @@ function CouncilsPage({ bishops }) {
       </> : <Contents query={query} search={search}/>}
       {!group && <GoodStandingNotice className="tx-good-standing"/>}
     </main>
-    <footer className="tx-footer"><span>Updated {data.updated}</span><span className="tx-mono">{live.total != null ? `${live.total} bishops · ` : ''}{live.groups.length} groups</span></footer>
+    <footer className="tx-footer"><span>Updated {data.updated}</span><span className="tx-mono">{live.total != null ? `${live.total} bishops · ` : ''}{live.groups.length} groups</span><a className="tx-footer-link" href={`${base}/declaration/`}>Kuriake Castle Declaration</a></footer>
   </div>;
 }

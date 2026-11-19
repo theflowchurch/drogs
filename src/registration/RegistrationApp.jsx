@@ -931,6 +931,7 @@ export default function RegistrationApp({
             <span className="reg-enter-arrow" aria-hidden="true">→</span>
           </a>
           {site && <GoodStandingNotice compact />}
+          {site && <a className="reg-declaration-link" href={`${base}/declaration/`}>Read the Kuriake Castle Declaration <span aria-hidden="true">→</span></a>}
         </section>
       ) : !gate ? (
         <Gate

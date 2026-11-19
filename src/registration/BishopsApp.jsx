@@ -88,6 +88,7 @@ export default function BishopsApp({ bishops: published, kind = 'bishop', masthe
       {visible.length > 0 && <section className="bl-letter bl-all"><div className="org-members">{visible.map(p => <Card key={p.rosterId || p.name} person={p} onOpen={setOpen} fallback={fallback}/>)}</div></section>}
       {limit < shown.length && <div ref={more} className="bl-more"><button type="button" className="bl-more-button" onClick={() => setLimit(n => n + STEP)}>Show more</button></div>}
     </main>
+    <footer className="org-footer"><span/><a className="org-footer-link" href={`${base}/declaration/`}>Kuriake Castle Declaration</a></footer>
     {open && <Detail person={open} onClose={() => setOpen(null)} fallback={fallback}/>}
   </div>;
 }

@@ -502,3 +502,5 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
    (wrapping on a narrow card). */
 .org-years{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .org-years .org-consecrated{margin-top:0}
+/* Office, 19 Nov: the Kuriake Castle Declaration in every footer. */
+.org-footer-link{color:#f1dfae;text-decoration:none;font-weight:600}.org-footer-link:hover{text-decoration:underline}

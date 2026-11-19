@@ -4343,3 +4343,6 @@ input[type="date"] {
 /* Sign-in / sign-up box (19 Nov): the account area is its own layer (isolation), so while a box is
    open that layer sits above the sticky banner — the box's title and close button are never under it. */
 .reg-account:has(.reg-overlay) { z-index: 40; }
+/* Office, 19 Nov: the Kuriake Castle Declaration from the main sites' front pages. */
+.reg-account.signin a.reg-declaration-link,.reg-declaration-link{position:relative;z-index:2;display:inline-flex;gap:8px;align-items:center;margin-top:14px;color:#f1dfae;font-weight:600;font-size:15px;text-decoration:none;border-bottom:1px solid #f1dfae80;padding-bottom:2px}
+.reg-account.signin a.reg-declaration-link:hover,.reg-declaration-link:hover{color:#fff;border-color:#fff}
