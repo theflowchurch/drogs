@@ -41,7 +41,7 @@ export const CASTLE_EVENTS = [
   {
     slug: 'retreats', title: 'Retreats & Prayer Gatherings', short: 'Time apart for prayer, rest and renewal.',
     lead: 'Quiet days, prayer retreats and times of renewal for ministers, leaders and congregations.',
-    offer: ['Ministers’ and leaders’ retreats', 'Prayer and fasting days', 'Quiet days and reflection', 'Church and ministry team retreats', 'Overnight and multi-day gatherings on request'],
+    offer: ['Ministers’ and leaders’ retreats', 'Prayer and fasting days', 'Quiet days and reflection', 'Church and ministry team retreats'],
     note: 'Retreats can be shaped around your group’s own programme of prayer and teaching.',
   },
   {
