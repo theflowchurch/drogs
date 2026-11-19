@@ -497,3 +497,8 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
   .org-council .org-group-part .org-part-heading .org-count{margin-left:0;font-size:12px;padding:3px 10px}
   .org-council .org-group-part>.org-members{padding:16px 14px 18px}
 }
+
+/* Office, 19 Nov: the year appointed and the year consecrated, side by side
+   (wrapping on a narrow card). */
+.org-years{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.org-years .org-consecrated{margin-top:0}

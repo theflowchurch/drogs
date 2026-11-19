@@ -1,4 +1,8 @@
 import data from './ministry-organisations.json' with { type: 'json' };
+// Office, 19 Nov: each bishop's year of appointment beside their consecration
+// on the Order of Bishops cards, from the roster (rosterId -> year). Made from
+// reference-people.json; the live page fills newer years from the roster.
+import APPOINTED from './bishop-appointed.json' with { type: 'json' };
 
 // The ministry's organisations as presented in the THREE.ORG documentary:
 // church, outreach and para-church groups, each council listing the people in
@@ -94,10 +98,11 @@ export const DEFAULT_LAYOUT = { order: ORDER, initials: INITIALS, names: OWN_NAM
 export function buildDirectory(d = data) {
   const L = { ...DEFAULT_LAYOUT, ...(d.layout || {}) };
 const formalName = (o, g) => L.names[g.slug] || `The Bishops of ${g.name.replace(/^The /, 'the ')}`;
-const groupsOfSection = o => o.directoryGroups?.length
+const withYear = p => p.appointed || !APPOINTED[p.rosterId] ? p : { ...p, appointed: APPOINTED[p.rosterId] };
+const groupsOfSection = o => (o.directoryGroups?.length
   ? o.directoryGroups.filter(g => g.slug && g.name)
-  : [{ slug: o.slug, name: o.name, people: sectionsOf(o).flatMap(s => s.people) }];
-const labelled = g => (L.labels[g.slug] ? { ...g, people: g.people.map(p => ({ ...p, church: L.labels[g.slug] })) } : g);
+  : [{ slug: o.slug, name: o.name, people: sectionsOf(o).flatMap(s => s.people) }]).map(g => ({ ...g, people: g.people.map(withYear) }));
+const labelled = g => (L.labels[g.slug] ? { ...g, people: g.people.map(p => ({ ...p, church: L.labels[g.slug], councilLabel: true })) } : g);
 // "The Bishop of Kenya" when a group has one bishop (office, 10 Nov).
 const singular = g => (g.people?.length && countOf(g.people) === 1 ? { ...g, name: g.name.replace(/^The Bishops of /, 'The Bishop of ') } : g);
 const withInitials = g => singular(labelled({ ...g, initials: L.initials[g.slug] || '' }));

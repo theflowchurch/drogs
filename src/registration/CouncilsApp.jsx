@@ -40,7 +40,8 @@ function Card({ person }) {
       <small className="tx-card-title">{person.title || 'Bishop'}</small>
       <strong>{person.name}</strong>
       <span>{person.role || person.church}</span>
-      {person.consecrated ? <em>Consecrated {person.consecrated}</em> : person.appointed && <em>Appointed {person.appointed}</em>}
+      {person.appointed && <em>Appointed {person.appointed}</em>}
+      {person.consecrated && <em>Consecrated {person.consecrated}</em>}
     </div>
   </article>;
 }

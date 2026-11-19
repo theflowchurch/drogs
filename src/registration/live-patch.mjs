@@ -40,6 +40,7 @@ export function patchBishop(entry, live) {
   if (o.denomination !== undefined && (!entry.church || entry.church === base.denomination)) out.church = p.denomination;
   if (o.yearConsecrated !== undefined) out.consecrated = p.yearConsecrated;
   if (o.yearAppointed !== undefined) out.appointed = p.yearAppointed;
+  else if (!out.appointed && (p?.yearAppointed || base.yearAppointed)) out.appointed = p?.yearAppointed || base.yearAppointed; // office, 19 Nov: the roster's year when the page has none
   if (p.photo) out.photo = p.photo; // a portrait the office uploaded
   if (o.country !== undefined && entry.country !== undefined) out.country = p.country;
   return out;
