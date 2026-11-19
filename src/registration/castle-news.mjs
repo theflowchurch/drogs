@@ -8,8 +8,8 @@ export const CASTLE_NEWS = [
     image: 'assets/news/renewal.webp',
     body: [
       'Renewal for 2027 is now open. Every bishop and pastor who wishes to remain on the Roll of Good Standing must renew their licence each year.',
-      'You can renew online through your church’s page or the Kuriake Castle registration page. You will need your details, a recent photo in official attire, and the annual fee.',
-      'Pastors are confirmed by their bishop. Once your registration and fee have been confirmed, your name appears on the Roll of Good Standing for 2027.',
+      'You can renew online through your church’s page or the Kuriake Castle registration page. You will need your details and a recent photo in official attire.',
+      'Pastors are confirmed by their bishop. Once your registration has been confirmed, your name appears on the Roll of Good Standing for 2027.',
     ],
     links: [],
   },
