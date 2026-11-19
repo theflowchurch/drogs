@@ -23,7 +23,7 @@ export const CASTLE_EVENTS = [
   {
     slug: 'meetings', title: 'Meetings', short: 'Board, committee and leadership meetings.',
     lead: 'Private, well-appointed rooms for church boards, committees and leadership teams to meet, pray and decide.',
-    offer: ['Board and committee rooms', 'Leadership and planning sessions', 'Half-day and full-day bookings', 'Refreshments and catering', 'Discreet, confidential surroundings'],
+    offer: ['Board and committee rooms', 'Leadership and planning sessions', 'Discreet, confidential surroundings'],
     note: 'Regular meetings can be booked as a series.',
   },
   {
