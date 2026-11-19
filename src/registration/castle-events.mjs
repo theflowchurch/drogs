@@ -29,7 +29,7 @@ export const CASTLE_EVENTS = [
   {
     slug: 'ecclesiasticalmeetings', title: 'Ecclesiastical Meetings & Councils', short: 'Synods, councils and convocations of the church.',
     lead: 'The castle is home to the headquarters of many churches and missions, and a natural meeting place for the councils that govern them.',
-    offer: ['Synods, councils and general assemblies', 'Bishops’ councils and episcopal gatherings', 'Convocations of clergy', 'Inter-denominational consultations', 'Formal proceedings with minutes and records'],
+    offer: ['Synods, councils and general assemblies', 'Bishops’ councils and episcopal gatherings', 'Convocations of clergy'],
     note: 'Ecclesiastical bodies served by the licensing authority are welcome to hold their councils here.',
   },
   {
