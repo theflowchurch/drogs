@@ -185,6 +185,11 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   // Three bishops on the Order of Bishops whose records said otherwise (office, 19 Nov).
   { id: 'three-bishops-2026-11-19', makeBishops: ['PN2177b36054d9', 'P5088'],
     addRecords: [{ id: 'Xstanleyoseibonsu', role: 'bishop', name: 'Stanley Osei-Bonsu', title: 'Bishop', gender: 'male', organization: 'United Denominations', denomination: 'Deep Love Church International', group: 'UD Europe', image: 'assets/organisations/people/stanley-osei-bonsu.webp', yearConsecrated: '2026', city: '', country: '' }] },
+  // Office, 19 Nov: Bishops Heywood Osei-Bonsu and Allan David Opiyo show in
+  // their red bishop's jacket on their church pages too.
+  { id: 'new-bishops-red-portraits-2026-11-19', setFields: [
+    { id: 'P5088', fields: { image: 'assets/organisations/people/heywood-osei-bonsu.webp' } },
+    { id: 'PN2177b36054d9', fields: { image: 'assets/organisations/people/allan-opiyo-159533ae.webp' } }] },
   // Confirmed pastors whose line on their bishop's list is missing get it back, once (Walter Woelle, 19 Nov).
   { id: 'heal-bishop-lists-2026-11-19', healLists: true },
   // Office, 19 Nov: the Adjutancy's four archbishops (Eddie Fabin, Jacob
@@ -776,7 +781,9 @@ export function overlayReferences(references, state) {
   for (const p of references) {
     const o = overrides[p.id];
     if (o?.deleted || hidden.has(p.id)) continue;
-    out.push(canonicalPerson(o ? { ...p, ...Object.fromEntries(REFERENCE_FIELDS.filter((f) => o[f] !== undefined).map((f) => [f, o[f]])) } : p));
+    // Office, 19 Nov: a portrait of ours the office chose (e.g. a new bishop's red jacket).
+    const image = typeof o?.image === 'string' && o.image.startsWith('assets/') ? { image: o.image } : {};
+    out.push(canonicalPerson(o ? { ...p, ...Object.fromEntries(REFERENCE_FIELDS.filter((f) => o[f] !== undefined).map((f) => [f, o[f]])), ...image } : p));
   }
   for (const p of state?.extraReferences || []) if (!hidden.has(p.id) && !overrides[p.id]?.deleted) out.push(canonicalPerson(p));
   // A corrected bishop name keeps the same identity and pastors. Derive the
