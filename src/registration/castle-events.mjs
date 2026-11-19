@@ -16,7 +16,7 @@ export const CASTLE_EVENTS = [
   },
   {
     slug: 'conferences', title: 'Conferences', short: 'Gatherings for ministry, leadership and teaching.',
-    lead: 'Host church conferences, leadership summits and ministers’ gatherings in a setting built for the work of the church.',
+    lead: 'Hosts church conferences, leadership summits and ministers’ gatherings.',
     offer: ['Main sessions and plenary gatherings', 'Breakout rooms for workshops and seminars', 'Sound, projection and recording on request', 'Registration support and welcome for delegates', 'Hospitality and refreshments between sessions'],
     note: 'Tell us the expected number of delegates and the days you need, and the office will advise on availability.',
   },
