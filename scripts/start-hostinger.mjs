@@ -80,8 +80,11 @@ deadlines.unref();
 // Automatic photos (19 Nov): anything not yet edited, or a failed edit to retry, hourly.
 const photos = setInterval(() => api.autoPhotos.sweep().catch(error => console.error('Automatic photos failed:', error?.message || error)), 3600000);
 photos.unref();
+// Members' saved changes go public 30 minutes later (19 Nov). Checked every minute.
+const dueChanges = setInterval(() => api.applyDue().catch(error => console.error('Applying saved changes failed:', error?.message || error)), 60000);
+dueChanges.unref();
 setTimeout(() => api.sweepDeadlines().catch(error => console.error('Bishop deadline check failed:', error?.message || error)), 60000).unref();
 for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => {
-  clearInterval(cleanup); clearInterval(deadlines); clearInterval(photos);
+  clearInterval(cleanup); clearInterval(deadlines); clearInterval(photos); clearInterval(dueChanges);
   server.close(async () => { await pool.end(); await app.close(); process.exit(0); });
 });

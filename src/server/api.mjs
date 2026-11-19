@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
 import { ENQUIRY_KINDS } from '../registration/castle-events.mjs';
 import { createAutoPhoto, testGeminiKey } from './auto-photo.mjs';
-import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline } from '../registration/model.mjs';
+import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline, applyDueChanges } from '../registration/model.mjs';
 import { canonicalPersonName } from '../registration/name-corrections.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit, digest, checkPassword } from './auth.mjs';
@@ -167,6 +167,20 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
     if (reminded || removed) console.log(`Bishop deadline: ${reminded} reminded, ${removed} removed`);
     return { reminded, removed };
   }
+  // Office, 19 Nov: members' saved changes go public 30 minutes later. Checked every minute.
+  async function applyDue(now = Date.now()) {
+    const n = await transaction(pool, async conn => {
+      const before = await readState(conn, true);
+      if (!before.registrations.some(r => r.publicAt && Date.parse(r.publicAt) <= now)) return 0;
+      const after = structuredClone(before);
+      const count = applyDueChanges(after, now);
+      if (count) await persistState(conn, before, after);
+      return count;
+    });
+    if (n) { publicCache.at = 0; console.log(`Saved changes now public: ${n}`); }
+    return n;
+  }
+  handle.applyDue = applyDue;
   handle.sweepDeadlines = sweepDeadlines;
   handle.autoPhotos = autoPhoto;
   handle.deadlineMail = deadlineMail;

@@ -4,6 +4,8 @@ import { readFileSync } from 'node:fs';
 import { liveRoll, patchGroups } from '../../src/registration/live-patch.mjs';
 import { DIRECTORY_GROUPS, allBishopsOf } from '../../src/registration/ministry-organisations.mjs';
 import { pastorEntries, pastorGroups } from '../../src/registration/public-entries.mjs';
+// Older tests expect a saved change on the record at once; the 30-minute delay (19 Nov) has its own test.
+import { setChangeDelay } from '../../src/registration/model.mjs'; setChangeDelay(0);
 
 // Office, 17 Nov: every public page follows what the office does on the admin page.
 const people = JSON.parse(readFileSync('src/registration/reference-people.json', 'utf8'));

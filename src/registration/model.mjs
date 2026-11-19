@@ -660,6 +660,45 @@ export function reconcileSubmittedState(source, people) {
   state.photoReviews = Object.fromEntries(Object.entries(state.photoReviews || {}).filter(([id]) => byId.has(id)));
   return { state, summary };
 }
+// Office, 19 Nov: what a member saves goes public 30 minutes later, so a
+// mistake can be put right first. Until then the public pages show what was
+// there before (shownData); the record's public fields follow when it is due.
+export const CHANGE_DELAY_MS = 30 * 60 * 1000;
+let changeDelay = CHANGE_DELAY_MS;
+export const setChangeDelay = (ms) => { changeDelay = ms; }; // tests of older behaviour use 0
+export const changePending = (r, now = Date.now()) => Boolean(r?.publicAt) && Date.parse(r.publicAt) > now;
+export const publicData = (r, now = Date.now()) => changePending(r, now) ? r.shownData : r.data;
+function holdForPublic(state, r, previous, changed, now) {
+  if (!changeDelay) { syncReference(state, r, { changed }); addOwnDenomination(state, r); return; }
+  if (!r.publicAt) r.shownData = previous ? structuredClone(previous) : null;
+  r.publicAt = new Date(Date.parse(now) + changeDelay).toISOString();
+  r.pendingSync = changed === null || r.pendingSync === 'all' ? 'all' : [...new Set([...(r.pendingSync || []), ...changed])];
+}
+// Changes whose 30 minutes are up go onto the record (and a new denomination
+// onto the list). Returns how many registrations were brought up to date.
+export function applyDueChanges(state, now = Date.now()) {
+  let n = 0;
+  for (const r of state.registrations || []) {
+    if (!r.publicAt || Date.parse(r.publicAt) > now) continue;
+    syncReference(state, r, { changed: r.pendingSync === 'all' || !r.pendingSync ? null : r.pendingSync });
+    addOwnDenomination(state, r);
+    delete r.publicAt; delete r.shownData; delete r.pendingSync;
+    n++;
+  }
+  return n;
+}
+// A bishop's new denomination (19 Nov) joins the list, its group and its logo once it is live.
+function addOwnDenomination(state, r) {
+  const d = r.data || {};
+  const name = String(d.newDenomination || '').trim();
+  if (d.role !== 'bishop' || !name || d.denomination !== name || !d.organization) return;
+  const cat = structuredClone(catalogOf(state));
+  cat.denominations[d.organization] = [...new Set([...(cat.denominations[d.organization] || []), name])].sort((a, b) => a.localeCompare(b));
+  if (d.newDenominationGroup && cat.groups?.[d.newDenominationGroup]) cat.groups[d.newDenominationGroup].denominations = [...new Set([...cat.groups[d.newDenominationGroup].denominations, name])].sort((a, b) => a.localeCompare(b));
+  if (d.newDenominationLogo) cat.logos = { ...(cat.logos || {}), [name]: d.newDenominationLogo };
+  cat.added = { ...(cat.added || {}), [name]: { organization: d.organization, group: d.newDenominationGroup || '', by: r.userId, at: new Date().toISOString() } };
+  state.catalog = cat;
+}
 function syncReference(state, r, { byOffice = false, changed = null } = {}) {
   const id = r?.data?.referenceId;
   if (!id) return;
@@ -1158,8 +1197,8 @@ export function applyAction(
         detail = { autoApproved: ref.name, referenceId: ref.id };
       }
     }
-    // Only after the name check: the member's details then flow onto their original record.
-    if (action === "submit") syncReference(state, r);
+    // Only after the name check: the member's details then flow onto their original record, 30 minutes later.
+    if (action === "submit") holdForPublic(state, r, null, null, now);
   } else if (action === "update") {
     // A member keeps their own details current after submitting; status and
     // payment are untouched and the record stays linked.
@@ -1177,6 +1216,7 @@ export function applyAction(
       if (r.status === "confirmed") r.status = "unclaimed"; // a new bishop confirms them afresh
     }
     if (payload.photo && payload.photo !== r.data.photo && r.status === "confirmed") r.photoChangedAt = now; // the office re-checks a new photo on an approved person
+    const previous = r.data;
     r.data = { ...data, referenceId: r.data.referenceId, bishopId: newBishop ? data.bishopId : r.data.bishopId };
     if (profile) {
       profile.name = data.name;
@@ -1187,7 +1227,7 @@ export function applyAction(
     r.updatedAt = now;
     const wasData = source.registrations.find((x) => x.userId === actor.id && x.year === state.year)?.data || {};
     detail = Object.fromEntries(Object.keys(payload).filter((k) => k in r.data && JSON.stringify(r.data[k]) !== JSON.stringify(wasData[k])).map((k) => [k, r.data[k]]));
-    syncReference(state, r, { changed: Object.keys(payload) });
+    holdForPublic(state, r, previous, Object.keys(payload), now);
   } else if (action === "approveBishop") {
     office();
     const p = state.profiles.find((p) => p.id === payload.userId);
@@ -1859,6 +1899,8 @@ export function shownPhoto(reg, ref) {
 export const paymentConfirmed = (r) => Boolean(r?.manual) || r?.payment === "verified" || r?.payment === "waived";
 export const inGoodStanding = (r) => r?.status === "confirmed" && paymentConfirmed(r);
 export function publicRoll(state, people, year = state.year) {
+  // What the public may see: a change saved in the last 30 minutes is not shown yet.
+  state = { ...state, registrations: (state.registrations || []).map((r) => changePending(r) ? (r.shownData ? { ...r, data: r.shownData } : null) : r).filter(Boolean) };
   const byId = new Map(overlayReferences(people, state).map((p) => [p.id, p]));
   const bishopOf = (r) => state.profiles.find((p) => (p.referenceId || p.id) === r.data.bishopId && p.bishopApproved);
   return state.registrations

@@ -32,6 +32,8 @@ import {
   caps,
   inGoodStanding,
 } from "../../src/registration/model.mjs";
+// Older tests expect a saved change on the record at once; the 30-minute delay (19 Nov) has its own test.
+import { setChangeDelay } from '../../src/registration/model.mjs'; setChangeDelay(0);
 const bishop = { id: "b1", email: "bishop@example.com" },
   other = { id: "b2", email: "other@example.com" },
   pastor = { id: "p1", email: "john@example.com" },

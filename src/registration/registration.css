@@ -4348,3 +4348,5 @@ input[type="date"] {
 .reg-account.signin a.reg-declaration-link:hover,.reg-declaration-link:hover{color:#fff;border-color:#fff}
 /* Office, 19 Nov: the Declaration on its own, one centred column. */
 .reg-information-layout.reg-information-standalone{grid-template-columns:minmax(0,860px);justify-content:center}
+/* Office, 19 Nov: a saved change goes public 30 minutes later. */
+.reg-pending-public{margin:14px 0;padding:12px 16px;border-radius:10px;background:#fff7e6;border:1px solid #f0d9a8;color:#5a4410;font-size:15px}

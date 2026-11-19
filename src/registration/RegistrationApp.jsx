@@ -1898,6 +1898,7 @@ function Participant({
               <ProfileEditor current={current} state={state} actor={actor} perform={perform} onDone={() => setEditDetails(false)} />
             </Dialog>
           )}
+          {current?.publicAt && Date.parse(current.publicAt) > Date.now() && <p className="reg-pending-public" role="status">Your latest changes will appear on the public pages at <b>{new Date(current.publicAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</b>. Until then you can still correct them.</p>}
           <MyActivity state={state} actor={actor} />
         </section>
         <Payment
