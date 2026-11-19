@@ -193,3 +193,14 @@ html:has(.kc-site){scroll-behavior:smooth}
   .kc-declaration-text{max-height:300px}
   .kc-article{padding:110px 0 60px}.kc-article-links .kc-button{flex:1 1 100%}
 }
+
+/* Office, 19 Nov: the arrow to the next section. */
+.kc-screen{position:relative}
+.kc-next{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--kc-navy);font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.8}
+.kc-next:hover{opacity:1}
+.kc-next.is-light{color:#fff}
+.kc-next i{font-style:normal;font-size:22px;line-height:1;animation:kc-bob 1.8s ease-in-out infinite}
+@keyframes kc-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+.kc-about.kc-screen .kc-next{grid-column:1/-1}
+@media(max-width:760px){.kc-next{bottom:14px}}
+@media (prefers-reduced-motion:reduce){.kc-next i{animation:none}}

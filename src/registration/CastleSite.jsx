@@ -47,7 +47,7 @@ function Footer() {
     <div className="kc-footer-legal"><span>© {new Date().getFullYear()} Kuriake Castle</span></div>
   </footer>;
 }
-function Hero({ eyebrow, title, lead, children, video = false, small = false }) {
+function Hero({ eyebrow, title, lead, children, next = null, video = false, small = false }) {
   const ref = useRef(null);
   useEffect(() => { if (matchMedia("(prefers-reduced-motion: reduce)").matches) ref.current?.pause(); }, []);
   return <section className={`kc-hero ${small ? "is-small" : ""}`}>
@@ -62,7 +62,13 @@ function Hero({ eyebrow, title, lead, children, video = false, small = false }) 
       <p className="kc-lead">{lead}</p>
       {children}
     </div>
+    {next}
   </section>;
+}
+// Office, 19 Nov: a small arrow at the foot of each section naming the next
+// one, so visitors can tell there is more below.
+function Next({ to, label, light = false }) {
+  return <a className={`kc-next ${light ? "is-light" : ""}`} href={`#${to}`}><span>{label}</span><i aria-hidden="true">↓</i></a>;
 }
 function EventCards({ except = "" }) {
   return <div className="kc-cards">{CASTLE_EVENTS.filter((e) => e.slug !== except).map((e, i) => <a key={e.slug} className="kc-card" href={href(e.slug)}>
@@ -74,7 +80,7 @@ export function CastleHome() {
   return <div className="kc-site">
     <Nav />
     <Hero video eyebrow="Ecclesiastical Licensing Authority" title="Kuriake Castle"
-      lead="We are the licensing authority for the bishops and pastors in more than sixty denominations worldwide." />
+      lead="We are the licensing authority for the bishops and pastors in more than sixty denominations worldwide." next={<Next to="news" label="News" light />} />
     {/* Office, 19 Nov: news before About Us. */}
     <section className="kc-news kc-screen" id="news" aria-labelledby="kc-news-title">
       <div className="kc-section-head"><h2 id="kc-news-title">News</h2></div>
@@ -82,6 +88,7 @@ export function CastleHome() {
         <img src={`${base}/${n.image}`} alt="" loading="lazy" />
         <h3>{n.title}</h3><p>{n.summary}</p>
       </a>)}</div>
+      <Next to="authority" label="About Us" />
     </section>
     <section className="kc-about kc-screen" id="authority" aria-labelledby="kc-authority-title">
       <div className="kc-about-photo"><img src={`${base}/assets/brand/castle-night.webp`} alt="Kuriake Castle at night" loading="lazy" /></div>
@@ -91,6 +98,7 @@ export function CastleHome() {
         <p>We issue annual licences to bishops and pastors and maintain the Roll of Good Standing, allowing churches and members of the public to verify a minister’s current standing.</p>
         <ul className="kc-role-list">{ROLE.map(([t, d]) => <li key={t}><b>{t}</b><span>{d}</span></li>)}</ul>
       </div>
+      <Next to="declaration" label="Our Declaration" />
     </section>
     {/* Office, 19 Nov: the start of the Declaration, with the full text on its own page. */}
     <section className="kc-declaration kc-screen" id="declaration" aria-labelledby="kc-declaration-title">
@@ -102,6 +110,7 @@ export function CastleHome() {
         </div>
         <a className="kc-button" href={href("declaration")}>View more <span aria-hidden="true">→</span></a>
       </div>
+      <Next to="ceremonies" label="Events" light />
     </section>
     <section className="kc-ceremonies kc-screen" id="ceremonies" aria-labelledby="kc-ceremonies-title">
       <div className="kc-section-head"><p className="kc-eyebrow">At the castle</p><h2 id="kc-ceremonies-title">Events</h2></div>
