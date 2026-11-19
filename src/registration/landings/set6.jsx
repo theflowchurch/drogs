@@ -31,4 +31,10 @@ export default {
     <div className="beacon-mark">{p.mark}</div>
     <div className="beacon-copy">{p.label}{p.title}{p.description}{p.action}</div>
   </>,
+  // Malabo City State Church (office, 19 Nov): a harbour, the name above layered waves.
+  harbour: p => <>
+    <div className="harbour-waves" aria-hidden="true"><i/><i/><i/></div>
+    <div className="harbour-mark">{p.mark}</div>
+    <div className="harbour-copy">{p.label}{p.title}{p.description}{p.action}</div>
+  </>,
 };

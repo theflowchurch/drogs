@@ -214,8 +214,13 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   // Office, 19 Nov: the denomination "Seychelles" is First Love Seychelles, a
   // United Denominations church in United Islands.
   // Pastor Almudena Andeme Nguema Mondoho (Equatorial Guinea) stays with her
-  // bishop Oreal Valerius Lartey's church, United Cities.
-  { id: 'first-love-seychelles-2026-11-19', setFields: [{ id: 'Sa9ac3d2c', fields: { denomination: 'United Cities', organization: 'United Denominations', group: 'UD Africa' } }], renameDenomination: { from: 'Seychelles', to: 'First Love Seychelles', organization: 'United Denominations', group: 'United Islands' } }];
+  // bishop Oreal Valerius Lartey's church, Malabo City State Church.
+  { id: 'first-love-seychelles-2026-11-19', setFields: [{ id: 'Sa9ac3d2c', fields: { denomination: 'Malabo City State Church', organization: 'United Denominations', group: 'UD Africa' } }], renameDenomination: { from: 'Seychelles', to: 'First Love Seychelles', organization: 'United Denominations', group: 'United Islands' } },
+  // Office, 19 Nov: Equatorial Guinea is two churches, each with its bishops'
+  // pastors: Bata City State Church (Bishop Kwabena Asamoah Jnr, Josie Marie
+  // Asamoah) and Malabo City State Church (Bishop Oreal Valerius Lartey).
+  { id: 'equatorial-guinea-two-churches-2026-11-19', splitDenomination: { from: 'Equatorial Guinea', organization: 'United Denominations', group: 'UD Africa',
+    byBishop: { B117: 'Bata City State Church', B101: 'Bata City State Church', B146: 'Malabo City State Church' } } }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -310,6 +315,27 @@ export function syncRoll(state, people, version) {
     }
     next.extraReferences = (next.extraReferences || []).map(p => p.denomination === from ? { ...p, ...moved } : p);
     next.registrations = (next.registrations || []).map(r => r.data?.denomination === from || (!r.data?.denomination && r.data?.church === from) ? { ...r, data: { ...r.data, ...moved, ...(r.data.church === from ? { church: to } : {}) } } : r);
+  }
+  for (const fix of fixes) if (fix.splitDenomination) {
+    const { from, organization, group, byBishop } = fix.splitDenomination;
+    const all = [...people, ...(next.extraReferences || [])];
+    const eff = p => ({ ...p, ...(next.overrides[p.id] || {}) });
+    const byName = new Map(Object.entries(byBishop).map(([id, to]) => [normalName(eff(all.find(p => p.id === id) || {}).name || ''), to]));
+    const target = p => byBishop[p.id] || (p.role === 'pastor' ? byName.get(normalName(p.bishop || '')) : null);
+    const moved = new Map();
+    for (const raw of all) {
+      const p = eff(raw);
+      if (p.denomination !== from) continue;
+      const to = target(p);
+      if (!to) continue;
+      const o = next.overrides[raw.id] || {};
+      next.overrides[raw.id] = { ...o, denomination: to, organization, group, _officeFields: [...new Set([...(o._officeFields || []), 'denomination', 'organization', 'group'])] };
+      moved.set(raw.id, to);
+    }
+    next.registrations = (next.registrations || []).map(r => {
+      const to = moved.get(r.data?.referenceId) || ((r.data?.denomination === from || r.data?.church === from) && byName.get(normalName(`${r.data?.bishopFirstName || ''} ${r.data?.bishopLastName || ''}`)));
+      return to ? { ...r, data: { ...r.data, denomination: to, organization, group, ...(r.data.church === from ? { church: to } : {}) } } : r;
+    });
   }
   for (const fix of fixes) for (const rec of fix.addRecords || [])
     if (!(next.extraReferences || []).some(x => x.id === rec.id || (x.role === rec.role && normalName(x.name) === normalName(rec.name))))

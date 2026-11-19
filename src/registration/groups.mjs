@@ -61,7 +61,9 @@ export const GROUPS = {
       "Strong Christian Church South Africa",
       "Talanta International Tanzania",
       "United Cities",
-      "Victoire Internationale"
+      "Victoire Internationale",
+      "Bata City State Church",
+      "Malabo City State Church"
     ]
   },
   "UD Europe": {

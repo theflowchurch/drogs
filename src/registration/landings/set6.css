@@ -47,10 +47,25 @@
 .church-hero .beacon-mark .church-landing-logo{width:80%;height:auto}
 .church-hero .beacon-copy{position:relative;z-index:1;max-width:640px}
 .church-hero.church-style-beacon .denom-action{background:var(--brand,#3d3a70);border-color:var(--brand,#3d3a70)}
+/* harbour — Malabo City State Church */
+.church-hero.church-style-harbour{min-height:700px;padding:70px 7% 170px;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:56px;background:linear-gradient(180deg,#eef5f7 0,#dcebef 100%);position:relative;overflow:hidden}
+.church-hero .harbour-waves i{position:absolute;left:-10%;right:-10%;height:220px;border-radius:50% 50% 0 0/60px 60px 0 0}
+.church-hero .harbour-waves i:nth-child(1){bottom:-70px;background:#2e5f6e;opacity:.9}
+.church-hero .harbour-waves i:nth-child(2){bottom:-120px;left:-30%;background:#1f4652}
+.church-hero .harbour-waves i:nth-child(3){bottom:-160px;right:-35%;background:#163640}
+.church-hero .harbour-mark{position:relative;z-index:1;background:#fff;border-radius:18px;padding:26px;box-shadow:0 18px 40px rgba(22,54,64,.15)}
+.church-hero .harbour-mark .church-landing-logo{width:min(240px,55vw);height:auto}
+.church-hero .harbour-copy{position:relative;z-index:1;max-width:620px}
+.church-hero.church-style-harbour .denom-kicker{color:#2e5f6e;letter-spacing:4px}
+.church-hero.church-style-harbour .denom-church-name{color:#163640}
+.church-hero.church-style-harbour .denom-action{background:#163640;border-color:#163640;color:#fff}
 @media (max-width:800px){
-  .church-hero.church-style-compass,.church-hero.church-style-flame{grid-template-columns:1fr;padding:44px 16px;min-height:0}
+  .church-hero.church-style-compass,.church-hero.church-style-flame,.church-hero.church-style-harbour{grid-template-columns:1fr;padding:44px 16px;min-height:0}
   .church-hero .compass-mark,.church-hero .compass-copy,.church-hero .flame-mark,.church-hero .flame-copy{grid-column:1;grid-row:auto}
   .church-hero.church-style-cornerstone,.church-hero.church-style-hearth,.church-hero.church-style-beacon{padding:44px 16px;min-height:0}
   .church-hero .cornerstone-block,.church-hero .cornerstone-foot{padding:26px 22px}
   .church-hero .hearth-card{padding:32px 20px}
 }
+/* No logo yet: the name stands alone above the waves. */
+.church-hero.church-style-harbour.church-wordmark-only{grid-template-columns:1fr}
+.church-hero.church-style-harbour.church-wordmark-only .harbour-mark{display:none}

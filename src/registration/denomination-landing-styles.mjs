@@ -91,5 +91,6 @@ export const LANDING_STYLES = [
   ['hearth', 'Hearth', 'Warm overlapping circles'],
   ['flame', 'Flame', 'A rising flame of colour', true],
   ['beacon', 'Beacon', 'Rays of light behind a round seal'],
+  ['harbour', 'Harbour', 'Layered harbour waves beneath the name'],
 ].map(([id, name, description, dark = false]) => ({ id, name, description, dark }));
 export const landingStyle = id => LANDING_STYLES.find(style => style.id === id);

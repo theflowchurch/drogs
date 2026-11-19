@@ -198,17 +198,32 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "equatorialguinea",
-    "name": "Equatorial Guinea",
-    "shortName": "Equatorial Guinea",
-    "subtitle": "",
+    "path": "batacitystatechurch",
+    "name": "Bata City State Church",
+    "shortName": "Bata City State",
+    "subtitle": "Church",
     "denominations": [
-      "Equatorial Guinea"
+      "Bata City State Church"
     ],
     "logo": "",
     "homeLayout": "passport",
     "visualStyle": "pleasantsurprise",
     "accent": "#42554d",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "malabocitystatechurch",
+    "name": "Malabo City State Church",
+    "shortName": "Malabo City State",
+    "subtitle": "Church",
+    "denominations": [
+      "Malabo City State Church"
+    ],
+    "logo": "",
+    "homeLayout": "harbour",
+    "visualStyle": "gochurch",
+    "accent": "#2e5f6e",
     "directoryAction": "View bishops and pastors",
     "directoryHeading": "Licensed ministers"
   },
