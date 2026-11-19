@@ -27,7 +27,7 @@ function Nav({ solid = false }) {
     <button type="button" className="kc-menu" aria-expanded={open} aria-label="Menu" onClick={() => setOpen(!open)}><span /><span /></button>
     <nav aria-label="Main">
       <a href={`${href()}#authority`} onClick={() => setOpen(false)}>About Us</a>
-      <a href={`${href()}#ceremonies`} onClick={() => setOpen(false)}>Ceremonies &amp; Gatherings</a>
+      <a href={`${href()}#ceremonies`} onClick={() => setOpen(false)}>Events</a>
     </nav>
   </header>;
 }
@@ -38,7 +38,7 @@ function Footer() {
     <div className="kc-footer-top">
       <div className="kc-footer-brand"><Mark size={38} /><div><b>Kuriake Castle</b></div></div>
       <div className="kc-footer-cols kc-footer-one">
-        <div><h4>Ceremonies &amp; gatherings</h4><div className="kc-footer-events">{CASTLE_EVENTS.map((e) => <a key={e.slug} href={href(e.slug)}>{e.title}</a>)}</div></div>
+        <div><h4>Events</h4><div className="kc-footer-events">{CASTLE_EVENTS.map((e) => <a key={e.slug} href={href(e.slug)}>{e.title}</a>)}</div></div>
         <div className="kc-footer-declaration"><h4>Declaration</h4><a href={href("declaration")}>Kuriake Castle Declaration <span aria-hidden="true">→</span></a></div>
       </div>
     </div>
@@ -71,7 +71,7 @@ function EventCards({ except = "" }) {
 export function CastleHome() {
   return <div className="kc-site">
     <Nav />
-    <Hero video eyebrow="Ecclesiastical Licensing Authority · Ghana" title="Kuriake Castle"
+    <Hero video eyebrow="Ecclesiastical Licensing Authority" title="Kuriake Castle"
       lead="We are the licensing authority for the bishops and pastors in more than sixty denominations worldwide.">
       <div className="kc-hero-actions"><a className="kc-button" href="#authority">About Us <span aria-hidden="true">→</span></a></div>
     </Hero>
@@ -85,7 +85,7 @@ export function CastleHome() {
       </div>
     </section>
     <section className="kc-ceremonies" id="ceremonies" aria-labelledby="kc-ceremonies-title">
-      <div className="kc-section-head"><p className="kc-eyebrow">At the castle</p><h2 id="kc-ceremonies-title">Ceremonies &amp; gatherings</h2></div>
+      <div className="kc-section-head"><p className="kc-eyebrow">At the castle</p><h2 id="kc-ceremonies-title">Events</h2></div>
       <EventCards />
     </section>
     <Footer />
@@ -97,12 +97,12 @@ export function CastleEventPage({ slug }) {
   if (!e) return null;
   return <div className="kc-site">
     <Nav solid />
-    <Hero small eyebrow="Kuriake Castle · Ceremonies & gatherings" title={e.title} lead={e.lead} />
+    <Hero small eyebrow="Kuriake Castle · Events" title={e.title} lead={e.lead} />
     <section className="kc-event">
       <div className="kc-event-main">
         <p className="kc-eyebrow">What we offer</p>
         <ul className="kc-offer">{e.offer.map((o) => <li key={o}>{o}</li>)}</ul>
-        <a className="kc-back" href={`${href()}#ceremonies`}>← All ceremonies &amp; gatherings</a>
+        <a className="kc-back" href={`${href()}#ceremonies`}>← All events</a>
       </div>
     </section>
     <Footer />
