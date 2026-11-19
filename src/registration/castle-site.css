@@ -135,3 +135,24 @@
   .kc-steps{padding:32px 24px}
 }
 @media (prefers-reduced-motion:reduce){.kc-card,.kc-nav{transition:none}}
+
+/* Office, 19 Nov: a shorter site with the main information only. */
+.kc-about{padding:100px 0}
+.kc-role-list{list-style:none;margin:26px 0 0;padding:0;border-top:1px solid var(--kc-line)}
+.kc-role-list li{display:grid;grid-template-columns:200px 1fr;gap:18px;padding:16px 0;border-bottom:1px solid var(--kc-line)}
+.kc-role-list b{font-family:'KC Serif',serif;font-weight:500;font-size:19px;color:var(--kc-ink)}
+.kc-role-list span{color:var(--kc-muted)}
+.kc-card{min-height:150px;justify-content:space-between}
+.kc-card h3{margin:0 0 18px}
+.kc-event{grid-template-columns:1fr;padding:80px 0 30px}.kc-event-main{max-width:820px}
+.kc-back{display:inline-block;margin-top:28px;color:var(--kc-navy);font-weight:700;text-decoration:none}
+.kc-back:hover{text-decoration:underline}
+.kc-footer-one{flex:1;justify-content:flex-end}
+.kc-footer-events{display:grid;grid-template-columns:repeat(2,auto);column-gap:46px}
+@media(max-width:760px){
+  .kc-about{padding:64px 0}
+  .kc-role-list li{grid-template-columns:1fr;gap:4px}
+  .kc-card{min-height:0}.kc-card h3{margin:0 0 12px}
+  .kc-event{padding:56px 0 10px}
+  .kc-footer-events{grid-template-columns:1fr}
+}
