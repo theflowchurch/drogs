@@ -35,7 +35,7 @@ export const CASTLE_EVENTS = [
   {
     slug: 'consecrations', title: 'Consecrations & Ordinations', short: 'Setting apart bishops, pastors and ministers.',
     lead: 'Services of consecration, ordination and installation, held with the order and solemnity the occasion deserves.',
-    offer: ['Consecration of bishops', 'Ordination of reverends and pastors', 'Installation and commissioning services', 'Investiture with vestments and insignia', 'Licensing services for newly appointed ministers'],
+    offer: ['Consecration of bishops', 'Ordination of reverends and pastors', 'Installation and commissioning services', 'Licensing services for newly appointed ministers'],
     note: 'Those consecrated or ordained should register with the licensing authority so that they appear on the Roll of Good Standing.',
   },
   {
