@@ -156,3 +156,8 @@
   .kc-event{padding:56px 0 10px}
   .kc-footer-events{grid-template-columns:1fr}
 }
+/* Office, 19 Nov: the declaration beside the ceremonies in the footer. */
+.kc-footer-one{gap:70px}
+.kc-footer-declaration a{color:#fff;font-weight:600}
+.kc-footer-declaration a:hover{color:var(--kc-gold-soft)}
+@media(max-width:760px){.kc-footer-one{flex-direction:column;gap:34px}}
