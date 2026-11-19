@@ -50,13 +50,22 @@ function SignupControl({ state, perform }) {
 function DeadlineControl({ state, perform }) {
   const applied = Boolean(state?.deadline?.applied);
   const [confirming, setConfirming] = useState(false);
+  const saved = state?.deadline?.date || '';
+  const [date, setDate] = useState(saved);
+  useEffect(() => setDate(saved), [saved]);
+  const shown = saved ? new Date(`${saved}T12:00:00`).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) : '';
   const roll = (state.roll || []).filter((r) => r.referenceId || r.id);
   const listed = overlayReferences(rosterFrom(state, []), state);
   const ok = new Set(roll.flatMap((r) => [r.referenceId, r.id]).filter(Boolean));
   const kept = listed.filter((p) => ok.has(p.id)).length + roll.filter((r) => !r.referenceId).length;
   const removed = listed.filter((p) => !ok.has(p.id)).length;
   const when = applied && state.deadline.at ? new Date(state.deadline.at).toLocaleString() : '';
-  return <Category title="Registration deadline" summary={applied ? `Applied${when ? ` on ${when}` : ''}: only those in good standing are shown` : 'Not applied: everyone is shown, with a tick for those in good standing'}>
+  return <Category title="Registration deadline" summary={applied ? `Applied${when ? ` on ${when}` : ''}: only those in good standing are shown` : `${shown ? `Closes ${shown}` : 'No date set'} · not applied yet`}>
+    <div className="reg-deadline-date">
+      <label className="reg-field"><span>Deadline date</span><input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></label>
+      <button type="button" className="reg-secondary" disabled={date === saved} onClick={() => perform('setDeadlineDate', { date }, date ? 'Deadline date saved. The sign-up pages now show it.' : 'Deadline date removed.')}>{date ? 'Save date' : 'Remove date'}</button>
+    </div>
+    <p className="reg-small">{shown ? <>The sign-up pages say <b>Registration closes on {shown}</b>.</> : 'Set the date registration closes. It is shown on the sign-up pages.'} Nobody is taken off the pages until you press Apply the deadline.</p>
     {applied ? <>
       <p>The deadline is <b>applied</b>{when ? <> (since {when})</> : null}. Registration is closed and the public pages show only the bishops and pastors in good standing for {state.year}. Everyone else is still here in the office records.</p>
       <div className="reg-form-actions">

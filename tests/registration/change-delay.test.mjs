@@ -74,4 +74,10 @@ test('the registration deadline shows only those in good standing, and can be li
   assert.equal(m.signupOf(s).closed, false);
   assert.equal(s.deadline.applied, false);
   assert.throws(() => m.applyAction(s, { id: 'x', email: 'x@example.com' }, 'applyDeadline', {}, undefined, people));
+  // The date the office sets is shown publicly and kept through apply and reopen.
+  s = m.applyAction(s, office, 'setDeadlineDate', { date: '2027-01-31' }, undefined, people);
+  assert.equal(m.publicOverlay(s, people).deadline.date, '2027-01-31');
+  s = m.applyAction(s, office, 'applyDeadline', {}, undefined, people);
+  assert.equal(s.deadline.date, '2027-01-31');
+  assert.throws(() => m.applyAction(s, office, 'setDeadlineDate', { date: 'soon' }, undefined, people), /Choose a date/);
 });

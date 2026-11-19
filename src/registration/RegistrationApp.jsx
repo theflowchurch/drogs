@@ -921,6 +921,7 @@ export default function RegistrationApp({
           </button>
         </div>
       )}
+      {!office && <ClosingNotice />}
       {notice && (
         <div className="reg-alert success" role="status">
           {notice}
@@ -1485,6 +1486,14 @@ function AccountForm(props) {
   const mode = props.mode || (props.office ? "office" : props.signup ? "signup" : "signin");
   return !props.office && (api.passwordAuth() || demo) ? <PasswordForm key={mode} signup={mode === "signup"} onSwitch={props.onSwitch} run={props.run} busy={props.busy} onActor={props.onActor} /> : <CodeForm {...props} />;
 }
+// Office, 19 Nov: the date registration closes, set in Admin › Settings, shown on
+// the registration pages until the deadline is applied.
+function ClosingNotice() {
+  const [date, setDate] = useState("");
+  useEffect(() => { let live = true; api.publicSignupStatus().then((d) => { if (live && d?.deadline?.date && !d.deadline.applied) setDate(d.deadline.date); }).catch(() => {}); return () => { live = false; }; }, []);
+  if (!date) return null;
+  return <p className="reg-closes" role="note">Registration closes on <b>{longDate(date)}</b>.</p>;
+}
 // The office door (and a site with no password server) still uses the emailed code.
 function CodeForm({ office, signup = false, mode = office ? "office" : signup ? "signup" : "signin", run, busy, onActor }) {
   const [remember, setRemember] = useState(false);
@@ -1693,6 +1702,7 @@ const ACTION_LABELS = {
                   setSignup: "Sign-up paused or reopened",
                   applyDeadline: "Registration deadline applied",
                   liftDeadline: "Registration deadline lifted",
+                  setDeadlineDate: "Registration deadline date set",
                   broadcast: "Email sent to members",
                   apiKeyCreated: "API key created",
                   apiKeyRevoked: "API key revoked",
@@ -1720,7 +1730,7 @@ function detailWords(detail, state) {
 function MyActivity({ state, actor }) {
   const mine = (state.audit || [])
     .filter((a) => a.actor === actor.id || a.target === actor.id)
-    .filter((a) => !["save", "choosePhoto", "apiKeyCreated", "apiKeyRevoked", "setCatalog", "setFees", "setSignup", "applyDeadline", "liftDeadline", "broadcast", "openYear", "editReference", "hideReference", "deleteReference", "addReference"].includes(a.action))
+    .filter((a) => !["save", "choosePhoto", "apiKeyCreated", "apiKeyRevoked", "setCatalog", "setFees", "setSignup", "applyDeadline", "liftDeadline", "setDeadlineDate", "broadcast", "openYear", "editReference", "hideReference", "deleteReference", "addReference"].includes(a.action))
     .slice()
     .reverse()
     .slice(0, 50);

@@ -4387,3 +4387,6 @@ input[type="date"] {
 .reg-deadline-confirm{margin-top:12px;padding:14px 16px;border-radius:10px;background:#fff4f2;border:1px solid #f0c4bc}
 .reg-danger{background:#b42318;color:#fff;border:0;border-radius:8px;padding:10px 18px;font:inherit;font-weight:700;cursor:pointer}
 .reg-danger:hover{background:#912018}
+.reg-deadline-date{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin-bottom:6px}
+.reg-deadline-date .reg-field{margin:0;min-width:220px}
+.reg-closes{position:relative;z-index:30;margin:0;padding:10px 16px;text-align:center;background:#fff7e6;border-bottom:1px solid #f0d9a8;color:#5c4210;font-size:15px}

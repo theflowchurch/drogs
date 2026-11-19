@@ -139,7 +139,7 @@ export const emptyState = () => ({
   signup: { closed: false, notice: "", appointments: { closed: false, notice: "" } },
   // Office, 19 Nov: the registration deadline. While applied, the public pages show
   // only those in good standing; every record stays for the office.
-  deadline: { applied: false, at: "", by: "" },
+  deadline: { applied: false, at: "", by: "", date: "" },
 });
 export const SIGNUP_PAUSED = "Registration is paused at the moment. Please check back later.";
 export const ENTRANCES = ["general", "appointments"];
@@ -556,7 +556,7 @@ export function withStanding(references, roll) {
 }
 // Office, 19 Nov: everyone in good standing for the year (record ids and account ids).
 export const goodStandingIds = (state, people) => new Set(publicRoll(state, people).flatMap((r) => [r.id, r.referenceId]).filter(Boolean));
-export const deadlineOf = (state) => ({ applied: Boolean(state?.deadline?.applied), at: String(state?.deadline?.at || ""), by: String(state?.deadline?.by || "") });
+export const deadlineOf = (state) => ({ applied: Boolean(state?.deadline?.applied), at: String(state?.deadline?.at || ""), by: String(state?.deadline?.by || ""), date: String(state?.deadline?.date || "") });
 // Who the deadline takes off the public pages: everyone on our lists not in good standing.
 export function deadlineHidden(state, people) {
   if (!deadlineOf(state).applied || !people) return [];
@@ -1889,14 +1889,22 @@ export function applyAction(
     // Office, 19 Nov: registration closes and the public pages show only those in good standing.
     office();
     const current = signupOf(state);
-    state.deadline = { applied: true, at: new Date().toISOString(), by: actor.email || "" };
+    state.deadline = { ...deadlineOf(state), applied: true, at: new Date().toISOString(), by: actor.email || "" };
     state.signup = { ...current, closed: true, notice: current.notice || "Registration is closed for this year." };
     detail = { kept: Number(payload.kept) || 0, removed: Number(payload.removed) || 0 };
+  } else if (action === "setDeadlineDate") {
+    // Office, 19 Nov: the date registration closes, shown on the sign-up pages. Nobody is
+    // taken off the pages until the office applies the deadline.
+    office();
+    const date = String(payload.date || "").trim();
+    if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) throw Error("Choose a date.");
+    state.deadline = { ...deadlineOf(state), date };
+    detail = { date };
   } else if (action === "liftDeadline") {
     // Everyone back on the public pages; reopening registration starts the year's ticks again.
     office();
     const current = signupOf(state);
-    state.deadline = { applied: false, at: "", by: "" };
+    state.deadline = { ...deadlineOf(state), applied: false, at: "", by: "" };
     if (payload.reopen) state.signup = { ...current, closed: false };
     detail = { reopen: Boolean(payload.reopen) };
   } else if (action === "setSignup") {
