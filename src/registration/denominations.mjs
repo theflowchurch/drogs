@@ -86,7 +86,10 @@ export const DENOMINATIONS = {
     "United Cities",
     "United Islands",
     "Victoire Internationale",
-    "West End City Churches"
+    "West End City Churches",
+    "If I Live I Live For You Church Int",
+    "Together Forever Church Int",
+    "Why Worry Church Int"
   ],
   "FLOW": [],
   "HJC": [],
@@ -98,3 +101,7 @@ export const DENOMINATIONS = {
     "Revival House of Holy Fire Ministries"
   ]
 };
+
+// Office, 19 Nov: the three UK bishops' own churches (UD Europe). They have
+// no church site of their own yet.
+export const WITHOUT_CHURCH_SITE = ["If I Live I Live For You Church Int", "Together Forever Church Int", "Why Worry Church Int"];

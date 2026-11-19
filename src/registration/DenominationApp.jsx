@@ -66,32 +66,21 @@ function MinisterPortrait({ person, full = false }) {
   const style = Object.fromEntries(portraitStyle(media).split(';').filter(Boolean).map(pair => pair.split(':')));
   return <PortraitImage media={media} src={source} alt={person.name} className="denom-portrait" style={style} fallbackSrc={!full && !person.photo && person.image ? `${base}/${person.image}` : undefined} />;
 }
-function MinisterDialog({ person, onClose, onPrevious, onNext, position, total, counted = true }) {
-  const ref = useRef(null);
-  useEffect(() => { ref.current?.showModal(); }, []);
-  return <dialog className="denom-dialog" ref={ref} onCancel={onClose} onClick={e => { if (e.target === e.currentTarget) onClose(); }} onKeyDown={e => {
-    if (e.key === 'ArrowLeft' && onPrevious) { e.preventDefault(); onPrevious(); }
-    if (e.key === 'ArrowRight' && onNext) { e.preventDefault(); onNext(); }
-  }} aria-labelledby="denom-person-name">
-    <div className="denom-profile-toolbar"><span>MINISTER PROFILE{counted && ` · ${position} / ${total}`}</span><button type="button" className="denom-close" onClick={onClose} aria-label="Close profile">×</button></div>
-    <div className="denom-profile-layout"><div className="denom-profile-photo"><MinisterPortrait person={person} full /></div>
-      <div className="denom-profile-copy"><p className="denom-kicker">{ministerDisplayTitle(person)}</p><h2 id="denom-person-name">{person.name}</h2>
-        {placeOf(person) && <p>{placeOf(person)}</p>}
-        {person.role === 'pastor' && person.bishop && <p className="denom-profile-detail">Bishop · {person.bishop}</p>}
-      </div>
+// Office, 19 Nov: everything about a minister shows on their card, as on the
+// Order of Bishops pages; nothing to click. A bishop's card gives the years
+// appointed and consecrated; a pastor's the year appointed and their bishop.
+function MinisterGrid({ list }) {
+  return <div className="denom-grid">{list.map(person => <article className="denom-person denom-person-open" key={person.id} aria-label={person.name}>
+    <div className="denom-person-photo"><MinisterPortrait person={person}/></div>
+    <div className="denom-person-copy"><small>{ministerDisplayTitle(person)}</small><h3>{person.name}</h3>
+      {placeOf(person) && <p>{placeOf(person)}</p>}
+      {person.role === 'pastor' && person.bishop && <p className="denom-person-bishop">Bishop · {person.bishop}</p>}
+      {(person.yearAppointed || (person.role === 'bishop' && person.yearConsecrated)) && <div className="denom-person-years">
+        {person.yearAppointed && <span>Appointed {person.yearAppointed}</span>}
+        {person.role === 'bishop' && person.yearConsecrated && <span>Consecrated {person.yearConsecrated}</span>}
+      </div>}
     </div>
-    <nav className="denom-profile-navigation" aria-label="Minister profiles"><button type="button" className="denom-nav-button" onClick={onPrevious} disabled={!onPrevious} aria-label="Previous minister">← Previous</button><span>{counted && `${position} of ${total}`}</span><button type="button" className="denom-nav-button" onClick={onNext} disabled={!onNext} aria-label="Next minister">Next →</button></nav>
-  </dialog>;
-}
-function ProfileViewer({ list, selectedId, onSelect, counted }) {
-  const index = list.findIndex(p => p.id === selectedId), selected = list[index];
-  return selected && selected.standing !== false ? <MinisterDialog person={selected} onClose={() => onSelect(null)} position={index + 1} total={list.length} counted={counted} onPrevious={index > 0 ? () => onSelect(list[index - 1].id) : null} onNext={index < list.length - 1 ? () => onSelect(list[index + 1].id) : null}/> : null;
-}
-function MinisterGrid({ list, onOpen }) {
-  return <div className="denom-grid">{list.map(person => <button type="button" className="denom-person" key={person.id} onClick={() => onOpen(person.id)} aria-label={person.name}>
-    <div className="denom-person-photo"><MinisterPortrait person={person}/><span className="denom-card-arrow" aria-hidden="true"><Arrow/></span></div>
-    <div className="denom-person-copy"><small>{ministerDisplayTitle(person)}</small><h3>{person.name}</h3>{placeOf(person) && <p>{placeOf(person)}</p>}</div>
-  </button>)}</div>;
+  </article>)}</div>;
 }
 // Native disclosure + ordinary buttons retains keyboard and screen-reader access.
 function FilterMenu({ label, value, options, onChange }) {
@@ -121,7 +110,7 @@ function DirectoryFilters({ site, filter, cities, update, reset }) {
 }
 function DenominationDirectory({ site }) {
   const { data, error, list, retry } = useChurchRoster(site);
-  const [filter, setFilter] = useState({ q: '', city: '', gender: '' }), [limit, setLimit] = useState(48), [selectedId, setSelectedId] = useState(null);
+  const [filter, setFilter] = useState({ q: '', city: '', gender: '' }), [limit, setLimit] = useState(48);
   const sections = useMemo(() => ministerSections(list, filter), [list, filter]);
   const cities = useMemo(() => [...new Set(list.map(p => p.city).filter(Boolean))].sort((a, b) => a.localeCompare(b)), [list]);
   const ordered = [...sections.bishops, ...sections.pastors];
@@ -140,12 +129,11 @@ function DenominationDirectory({ site }) {
     {error && <div className="denom-load-error" role="alert"><p>{data ? 'The latest update could not be loaded. ' : ''}{error}</p><button className="denom-nav-button" type="button" onClick={retry}>Try again</button></div>}
     {!data && !error && <div className="denom-loading" role="status">Loading ministers…</div>}
     {data && <>
-      {sections.bishops.length > 0 && <section className={`denom-minister-section ${sections.bishops.length === 1 ? 'denom-single-bishop' : ''}`} aria-label="Bishops"><h2>Bishops {count(sections.bishops.length)}</h2><MinisterGrid list={sections.bishops} onOpen={setSelectedId}/></section>}
-      {sections.pastors.length > 0 && <section className="denom-minister-section" aria-label="Pastors"><h2>Pastors {count(sections.pastors.length)}</h2><MinisterGrid list={sections.pastors.slice(0, limit)} onOpen={setSelectedId}/>{sections.pastors.length > limit && <button type="button" className="denom-nav-button denom-more" onClick={() => setLimit(n => n + 48)}>Show more pastors <Arrow/></button>}</section>}
+      {sections.bishops.length > 0 && <section className={`denom-minister-section ${sections.bishops.length === 1 ? 'denom-single-bishop' : ''}`} aria-label="Bishops"><h2>Bishops {count(sections.bishops.length)}</h2><MinisterGrid list={sections.bishops}/></section>}
+      {sections.pastors.length > 0 && <section className="denom-minister-section" aria-label="Pastors"><h2>Pastors {count(sections.pastors.length)}</h2><MinisterGrid list={sections.pastors.slice(0, limit)}/>{sections.pastors.length > limit && <button type="button" className="denom-nav-button denom-more" onClick={() => setLimit(n => n + 48)}>Show more pastors <Arrow/></button>}</section>}
       {!ordered.length && <div className="denom-loading"><h2>{filter.q || filter.city || filter.gender ? 'No ministers match' : 'No ministers listed'}</h2><p>{filter.q || filter.city || filter.gender ? 'Try another name or clear the filters.' : 'There are currently no ministers listed for this denomination.'}</p>{(filter.q || filter.city || filter.gender) && <button type="button" className="denom-nav-button" onClick={reset}>Clear filters</button>}</div>}
     </>}
     <LicensedMinisterNotice open={config.openLicenseNotice}/>
-    <ProfileViewer list={ordered} selectedId={selectedId} onSelect={setSelectedId} counted={!simple}/>
   </main>;
 }
 export default function DenominationApp({ site, browse = false }) {

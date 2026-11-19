@@ -74,7 +74,10 @@ export const GROUPS = {
       "Mustard Seed Chapel International",
       "Pleasant Surprise",
       "Rose Of Sharon",
-      "Tell Them Church"
+      "Tell Them Church",
+      "If I Live I Live For You Church Int",
+      "Together Forever Church Int",
+      "Why Worry Church Int"
     ]
   },
   "UD North America": {
