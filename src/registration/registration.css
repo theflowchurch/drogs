@@ -4346,3 +4346,5 @@ input[type="date"] {
 /* Office, 19 Nov: the Kuriake Castle Declaration from the main sites' front pages. */
 .reg-account.signin a.reg-declaration-link,.reg-declaration-link{position:relative;z-index:2;display:inline-flex;gap:8px;align-items:center;margin-top:14px;color:#f1dfae;font-weight:600;font-size:15px;text-decoration:none;border-bottom:1px solid #f1dfae80;padding-bottom:2px}
 .reg-account.signin a.reg-declaration-link:hover,.reg-declaration-link:hover{color:#fff;border-color:#fff}
+/* Office, 19 Nov: the Declaration on its own, one centred column. */
+.reg-information-layout.reg-information-standalone{grid-template-columns:minmax(0,860px);justify-content:center}

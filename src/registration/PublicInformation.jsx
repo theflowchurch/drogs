@@ -15,7 +15,13 @@ export default function PublicInformation({ slug }) {
           <strong>Kuriake Castle</strong>
         </a>
       </header>
-      <div className="reg-information-layout">
+      {/* Office, 19 Nov: the Declaration stands on its own, with no links to the other pages and no date beside it. */}
+      {page.standalone ? <div className="reg-information-layout reg-information-standalone">
+        <main id="main-content" className="reg-docs reg-information-content">
+          <article dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }} />
+          <a className="reg-information-back" href={`${base}/`}>← Back to Kuriake Castle</a>
+        </main>
+      </div> : <div className="reg-information-layout">
         <aside className="reg-information-sidebar">
           <p className="reg-eyebrow">Kuriake Castle</p>
           <nav aria-label="Information pages">
@@ -27,8 +33,8 @@ export default function PublicInformation({ slug }) {
           <article dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }} />
           <a className="reg-information-back" href={`${base}/`}>← Back to Kuriake Castle</a>
         </main>
-      </div>
-      <LegalFooter />
+      </div>}
+      {!page.standalone && <LegalFooter />}
     </div>
   );
 }

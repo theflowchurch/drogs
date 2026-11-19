@@ -326,5 +326,5 @@ export const LEGAL_PAGES = [
   { slug: 'terms', label: 'Terms and conditions', title: 'Terms and conditions', description: 'Terms for the directory and annual registration services.', markdown: TERMS },
   { slug: 'refunds', label: 'Refund policy', title: 'Refund policy', description: 'How we review duplicate payments, incorrect charges and refund requests.', markdown: REFUNDS },
   { slug: 'cookies', label: 'Cookie policy', title: 'Cookie policy', description: 'Essential sign-in cookies, browser preferences and storage controls.', markdown: COOKIES },
-  { slug: 'declaration', label: 'Declaration', title: 'Kuriake Castle Declaration', date: '15 September 2026', description: 'The statement of declaration of Kuriake Castle, the fellowship of United Denominations, First Love Movement and the churches and groups founded by Dag Heward-Mills, approved on 15 September 2026.', markdown: DECLARATION },
+  { slug: 'declaration', label: 'Declaration', title: 'Kuriake Castle Declaration', standalone: true, description: 'The statement of declaration of Kuriake Castle, the fellowship of United Denominations, First Love Movement and the churches and groups founded by Dag Heward-Mills, approved on 15 September 2026.', markdown: DECLARATION },
 ];
