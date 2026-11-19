@@ -25,5 +25,8 @@ const nextConfig = {
   images: { unoptimized: true },
   poweredByHeader: false,
   reactStrictMode: true,
+  // Hostinger's build machine reports many CPUs but has limited memory; one
+  // page-building worker per CPU ran it out of memory (19 Nov), so use a few.
+  experimental: { cpus: 4 },
 };
 export default nextConfig;
