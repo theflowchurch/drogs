@@ -1,5 +1,5 @@
 // Office, 19 Nov: news on Kuriake Castle's main page, three short articles.
-// Each has its own page at /news/<slug>/.
+// Each has its own page at /news/<slug>/, with no links or buttons (office, 19 Nov).
 export const CASTLE_NEWS = [
   {
     slug: '2027-renewal',
@@ -23,7 +23,7 @@ export const CASTLE_NEWS = [
       'Kuriake Castle is a voluntary fellowship, united in faith, doctrine and mission. Each denomination and group keeps its own name and its own governing body, and manages its own leadership, property and finances.',
       'Kuriake Castle offers fellowship, encouragement and advice when it is asked for. It has no authority over the internal affairs of any denomination, group or local church.',
     ],
-    links: [['Read the Declaration', 'declaration']],
+    links: [],
   },
   {
     slug: 'search-our-register',
@@ -32,10 +32,10 @@ export const CASTLE_NEWS = [
     image: 'assets/news/check.webp',
     body: [
       'Churches and members of the public can check whether a bishop or pastor holds a valid licence and is in good standing.',
-      'Our registers list every bishop and pastor on the Roll of Good Standing, from A to Z. You can search by name.',
+      'The Roll of Good Standing is now out. Our registers list every bishop and pastor in good standing, from A to Z, and can be searched by name.',
       'A minister in good standing has renewed their licence for the current year and their registration has been confirmed. If a name is not on the register, the minister may not have renewed yet.',
     ],
-    links: [['Register of Bishops', 'licensingauthority/registerofbishopsingoodstanding'], ['Register of Pastors', 'licensingauthority/registerofpastorsingoodstanding']],
+    links: [],
   },
 ];
 export const castleNews = (slug) => CASTLE_NEWS.find((n) => n.slug === slug);

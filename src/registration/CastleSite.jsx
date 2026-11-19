@@ -150,7 +150,6 @@ export function CastleNewsPage({ slug }) {
       <img src={`${base}/${n.image}`} alt="" />
       {n.body.map((t) => <p key={t}>{t}</p>)}
       {n.links.length > 0 && <div className="kc-article-links">{n.links.map(([label, path]) => <a key={path} className="kc-button" href={href(path)}>{label} <span aria-hidden="true">→</span></a>)}</div>}
-      <a className="kc-back" href={`${href()}#news`}>← All news</a>
     </article>
     <Footer />
   </div>;
