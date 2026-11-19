@@ -11,6 +11,7 @@ import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import { paymentJson, createQuote, readQuote, checkoutReturnUrl, validateQuotedPayment } from './paystack.mjs';
 import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
+import { ENQUIRY_KINDS } from '../registration/castle-events.mjs';
 import { createAutoPhoto, testGeminiKey } from './auto-photo.mjs';
 import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline } from '../registration/model.mjs';
 import { canonicalPersonName } from '../registration/name-corrections.mjs';
@@ -301,6 +302,24 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         await rateLimit(pool, config, `support-public:${contact}`, 5, 600000);
         await rateLimit(pool, config, `support-public:${request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'all'}`, 10, 600000);
         return json(await support({ id: 'not signed in', email: contact, office: false }, { ...body, contact }));
+      }
+      // Enquiries from Kuriake Castle's own pages (office, 19 Nov): weddings, conferences and the rest,
+      // emailed to the office's address with the event in the subject; the reply goes to the person.
+      if (path === '/api/registration/enquiry' && method === 'POST') {
+        const body = await jsonBody(request);
+        const name = String(body?.name || '').trim().slice(0, 120), kind = String(body?.kind || '').trim();
+        const contact = emailAddress(body?.email);
+        const message = String(body?.message || '').trim();
+        if (name.length < 2) throw new HttpError(400, 'Please give your name.');
+        if (!ENQUIRY_KINDS.includes(kind)) throw new HttpError(400, 'Please choose what your enquiry is about.');
+        if (message.length < 5) throw new HttpError(400, 'Please tell us a little about your enquiry.');
+        if (message.length > 4000) throw new HttpError(400, 'Please shorten your message to 4,000 characters.');
+        await rateLimit(pool, config, `enquiry:${contact}`, 5, 3600000);
+        await rateLimit(pool, config, `enquiry:${request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'all'}`, 10, 3600000);
+        const line = (label, value) => (String(value || '').trim() ? `${label}: ${String(value).trim().slice(0, 200)}\n` : '');
+        const text = `New enquiry from the Kuriake Castle website\n\n${line('Enquiry', kind)}${line('Name', name)}${line('Email', contact)}${line('Phone', body?.phone)}${line('Organisation or church', body?.organisation)}${line('Preferred date', body?.date)}${line('Expected guests', body?.guests)}\n${message}\n\nReceived ${new Date().toISOString()}. Reply to this email to answer ${name}.`;
+        await mailer.sendMail(brandedMail({ from: config.from, to: config.support || config.admins.join(','), replyTo: contact, subject: `Enquiry: ${kind} — ${name}`, text }));
+        return json({ ok: true });
       }
       if (path === '/api/registration/settings/bootstrap' && method === 'POST') {
         await bootstrapSettings(config, pool, await jsonBody(request));

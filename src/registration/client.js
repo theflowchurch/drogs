@@ -250,6 +250,8 @@ export async function publicDirectory() {
 export const settingsAvailable = mysqlBackend;
 export const listSettings = () => server('settings');
 export const saveSettings = values => server('settings', { values });
+// Enquiries from Kuriake Castle's own pages (19 Nov). In the demo nothing is sent.
+export const enquire = (input) => mysqlBackend ? server("enquiry", input) : Promise.resolve({ ok: true, delivered: false });
 const SUPPORT_KEY = "drogs-registration-support";
 // In the demo nothing leaves the browser; the report is kept so the flow can be
 // checked end to end without pretending an email was sent.
