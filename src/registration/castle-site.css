@@ -161,3 +161,35 @@
 .kc-footer-declaration a{color:#fff;font-weight:600}
 .kc-footer-declaration a:hover{color:var(--kc-gold-soft)}
 @media(max-width:760px){.kc-footer-one{flex-direction:column;gap:34px}}
+
+/* Office, 19 Nov: news, the Declaration, and each section filling the screen
+   when chosen from the menu (only that section shows). */
+html:has(.kc-site){scroll-behavior:smooth}
+.kc-screen{min-height:100svh;scroll-margin-top:0;display:flex;flex-direction:column;justify-content:center;padding-top:110px!important;padding-bottom:70px!important;box-sizing:border-box}
+.kc-about.kc-screen{display:grid}
+.kc-news{background:#fff}
+.kc-news .kc-section-head{margin-bottom:40px}
+.kc-news-grid{width:min(1180px,90%);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.kc-news-card{display:flex;flex-direction:column;text-decoration:none;border-bottom:1px solid var(--kc-line);padding-bottom:22px}
+.kc-news-card img{width:100%;aspect-ratio:7/5;object-fit:cover;display:block;margin-bottom:24px;transition:opacity .2s}
+.kc-news-card h3{font-size:26px;margin-bottom:12px}
+.kc-news-card p{margin:0;color:var(--kc-muted);font-size:16px}
+.kc-news-card:hover h3{text-decoration:underline;text-underline-offset:4px}.kc-news-card:hover img{opacity:.9}
+.kc-declaration{background:var(--kc-deep);color:#fff}
+.kc-declaration-inner{width:min(860px,90%);margin:0 auto;text-align:center}
+.kc-declaration h2{font-size:clamp(36px,4.4vw,58px);margin-bottom:34px;color:#fff}
+.kc-declaration-text{position:relative;max-height:250px;overflow:hidden;margin-bottom:34px;text-align:left}
+.kc-declaration-text:after{content:'';position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(180deg,#09162a00,var(--kc-deep))}
+.kc-declaration-text p{font-family:'KC Serif',serif;font-weight:300;font-size:clamp(19px,1.8vw,23px);line-height:1.6;color:#e8e4da;margin:0 0 20px}
+.kc-article{width:min(820px,90%);margin:0 auto;padding:140px 0 90px}
+.kc-article h1{font-size:clamp(38px,5vw,62px);margin-bottom:34px}
+.kc-article img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;margin-bottom:38px}
+.kc-article>p:not(.kc-eyebrow){font-size:18px;color:#2c3546;margin:0 0 20px}
+.kc-article-links{display:flex;flex-wrap:wrap;gap:14px;margin:34px 0 10px}
+@media(max-width:1000px){.kc-news-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){
+  .kc-screen{padding-top:96px!important;padding-bottom:56px!important}
+  .kc-news-grid{grid-template-columns:1fr;gap:34px}
+  .kc-declaration-text{max-height:300px}
+  .kc-article{padding:110px 0 60px}.kc-article-links .kc-button{flex:1 1 100%}
+}

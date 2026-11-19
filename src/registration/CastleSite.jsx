@@ -4,6 +4,7 @@
 // (office, 19 Nov) no enquiry form.
 import { useEffect, useRef, useState } from "react";
 import { CASTLE_EVENTS, castleEvent } from "./castle-events.mjs";
+import { CASTLE_NEWS, castleNews } from "./castle-news.mjs";
 import "./castle-site.css";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
@@ -26,8 +27,9 @@ function Nav({ solid = false }) {
     <a className="kc-brand" href={href()}><Mark /><span><b>Kuriake Castle</b></span></a>
     <button type="button" className="kc-menu" aria-expanded={open} aria-label="Menu" onClick={() => setOpen(!open)}><span /><span /></button>
     <nav aria-label="Main">
-      <a href={`${href()}#authority`} onClick={() => setOpen(false)}>About Us</a>
-      <a href={`${href()}#ceremonies`} onClick={() => setOpen(false)}>Events</a>
+      {/* Office, 19 Nov: in the order they appear on the page. */}
+      {[["news", "News"], ["authority", "About Us"], ["declaration", "Declaration"], ["ceremonies", "Events"]].map(([id, label]) =>
+        <a key={id} href={`${href()}#${id}`} onClick={() => setOpen(false)}>{label}</a>)}
     </nav>
   </header>;
 }
@@ -72,10 +74,16 @@ export function CastleHome() {
   return <div className="kc-site">
     <Nav />
     <Hero video eyebrow="Ecclesiastical Licensing Authority" title="Kuriake Castle"
-      lead="We are the licensing authority for the bishops and pastors in more than sixty denominations worldwide.">
-      <div className="kc-hero-actions"><a className="kc-button" href="#authority">About Us <span aria-hidden="true">→</span></a></div>
-    </Hero>
-    <section className="kc-about" id="authority" aria-labelledby="kc-authority-title">
+      lead="We are the licensing authority for the bishops and pastors in more than sixty denominations worldwide." />
+    {/* Office, 19 Nov: news before About Us. */}
+    <section className="kc-news kc-screen" id="news" aria-labelledby="kc-news-title">
+      <div className="kc-section-head"><h2 id="kc-news-title">News</h2></div>
+      <div className="kc-news-grid">{CASTLE_NEWS.map((n) => <a key={n.slug} className="kc-news-card" href={href(`news/${n.slug}`)}>
+        <img src={`${base}/${n.image}`} alt="" loading="lazy" />
+        <h3>{n.title}</h3><p>{n.summary}</p>
+      </a>)}</div>
+    </section>
+    <section className="kc-about kc-screen" id="authority" aria-labelledby="kc-authority-title">
       <div className="kc-about-photo"><img src={`${base}/assets/brand/castle-night.webp`} alt="Kuriake Castle at night" loading="lazy" /></div>
       <div className="kc-about-copy">
         <h2 id="kc-authority-title">About Us</h2>
@@ -84,7 +92,18 @@ export function CastleHome() {
         <ul className="kc-role-list">{ROLE.map(([t, d]) => <li key={t}><b>{t}</b><span>{d}</span></li>)}</ul>
       </div>
     </section>
-    <section className="kc-ceremonies" id="ceremonies" aria-labelledby="kc-ceremonies-title">
+    {/* Office, 19 Nov: the start of the Declaration, with the full text on its own page. */}
+    <section className="kc-declaration kc-screen" id="declaration" aria-labelledby="kc-declaration-title">
+      <div className="kc-declaration-inner">
+        <h2 id="kc-declaration-title">Our Declaration</h2>
+        <div className="kc-declaration-text">
+          <p>We, the members of a voluntary global fellowship, being united in common faith, doctrine, and mission, and acting in a spirit of mutual respect and cooperation, do hereby issue this statement of shared principles to define the nature of our relationship and to safeguard the autonomy of each intranational denomination, national denomination, or group of Christian ministry.</p>
+          <p>This document affirms our commitment to a voluntary, non-hierarchical fellowship of independent, self-governing national or intranational bodies and groups of churches, bound together by shared theology and a collective mission to share the gospel worldwide.</p>
+        </div>
+        <a className="kc-button" href={href("declaration")}>View more <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+    <section className="kc-ceremonies kc-screen" id="ceremonies" aria-labelledby="kc-ceremonies-title">
       <div className="kc-section-head"><p className="kc-eyebrow">At the castle</p><h2 id="kc-ceremonies-title">Events</h2></div>
       <EventCards />
     </section>
@@ -104,6 +123,24 @@ export function CastleEventPage({ slug }) {
         <a className="kc-back" href={`${href()}#ceremonies`}>← All events</a>
       </div>
     </section>
+    <Footer />
+  </div>;
+}
+
+// Office, 19 Nov: one news article on its own page.
+export function CastleNewsPage({ slug }) {
+  const n = castleNews(slug);
+  if (!n) return null;
+  return <div className="kc-site">
+    <Nav solid />
+    <article className="kc-article">
+      <p className="kc-eyebrow">Kuriake Castle · News</p>
+      <h1>{n.title}</h1>
+      <img src={`${base}/${n.image}`} alt="" />
+      {n.body.map((t) => <p key={t}>{t}</p>)}
+      <div className="kc-article-links">{n.links.map(([label, path]) => <a key={path} className="kc-button" href={href(path)}>{label} <span aria-hidden="true">→</span></a>)}</div>
+      <a className="kc-back" href={`${href()}#news`}>← All news</a>
+    </article>
     <Footer />
   </div>;
 }
