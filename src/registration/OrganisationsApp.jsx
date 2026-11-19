@@ -150,7 +150,7 @@ function OrganisationsPage({ slug, bishops, fromAddress }) {
     <Masthead bishops={bishops}/>
     <main className="org-main">
       {group ? <>
-        {group.parts && !part ? <SubContents group={group} variant={variant}/> : <Group group={group} part={part}/>}
+        {group.parts && !group.flat && !part ? <SubContents group={group} variant={variant}/> : <Group group={group} part={part}/>}
         <div className="org-end-links"><a className="org-all-groups org-all-groups-end" href="#contents">← All Groups</a></div>
       </> : <Contents/>}
       {!group && <GoodStandingNotice className="org-good-standing"/>}
