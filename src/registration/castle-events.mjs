@@ -11,7 +11,7 @@ export const CASTLE_EVENTS = [
   {
     slug: 'funerals', title: 'Funerals & Memorial Services', short: 'Dignified services to honour a life of faith.',
     lead: 'A place of peace and dignity to give thanks for a life, comfort the bereaved and commend a loved one to God.',
-    offer: ['Funeral and burial services led by the family’s minister', 'Memorial and thanksgiving services', 'One-week, forty-day and anniversary remembrance services', 'Space for family gatherings and the receiving of guests', 'Order-of-service planning with the family'],
+    offer: ['Funeral and burial services led by the family’s minister', 'Memorial and thanksgiving services', 'Space for family gatherings and the receiving of guests', 'Order-of-service planning with the family'],
     note: 'Arrangements can often be made at short notice. Please contact the office as early as possible.',
   },
   {
