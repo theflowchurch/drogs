@@ -41,7 +41,8 @@ function Bishop({ person }) {
     <div className="org-member-text">
       <small>{person.title || 'Bishop'}</small>
       <strong>{person.name}</strong>
-      {person.role ? <span>{person.role}</span> : person.church && <span className="org-member-church">{person.church}</span>}
+      {person.role && <span>{person.role}</span>}
+      {person.church && !(person.role || '').toLowerCase().includes(person.church.toLowerCase()) && <span className="org-member-church">{person.church}</span>}
       {person.consecrated ? <span className="org-consecrated">Consecrated {person.consecrated}</span> : person.appointed && <span className="org-consecrated">Appointed {person.appointed}</span>}
     </div>
   </article>;
@@ -128,10 +129,13 @@ function Group({ group, part }) {
     <div className="org-back-row"><a className="org-all-groups" href="#contents">← All Groups</a></div>
     <GroupBox group={group} as="h2"/>
     <p className="org-group-total"><Count n={group.count}/></p>
-    {group.flat ? <div className="org-members">{flatPeople(group, part).map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div> : group.parts ? group.parts.map(s => <div className="org-group-part" key={s.slug} id={s.slug}>
-      <h3 className="org-part-heading"><Name group={s}/> <Count n={s.people.length}/></h3>
+    {group.flat ? <div className="org-members">{flatPeople(group, part).map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div> : group.parts ? group.parts.map(s => <section className="org-group-part" key={s.slug} id={s.slug} style={{ '--box': s.colour }} aria-labelledby={`${s.slug}-part`}>
+      {/* Office, 19 Nov: each church's or country's bishops sit in their own
+          panel under its heading band, so a heading never reads as the end of
+          the section above. */}
+      <h3 className="org-part-heading" id={`${s.slug}-part`}><span className="org-part-name"><Name group={s}/></span> <Count n={s.people.length}/></h3>
       <div className="org-members">{s.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>
-    </div>) : <div className="org-members">{group.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>}
+    </section>) : <div className="org-members">{group.people.map(p => <Bishop key={p.rosterId || p.name} person={p}/>)}</div>}
   </section>;
 }
 
@@ -150,7 +154,7 @@ function OrganisationsPage({ slug, bishops, fromAddress }) {
     <Masthead bishops={bishops}/>
     <main className="org-main">
       {group ? <>
-        {group.parts && !group.flat && !part ? <SubContents group={group} variant={variant}/> : <Group group={group} part={part}/>}
+        {group.parts && !group.straight && !part ? <SubContents group={group} variant={variant}/> : <Group group={group} part={part}/>}
         <div className="org-end-links"><a className="org-all-groups org-all-groups-end" href="#contents">← All Groups</a></div>
       </> : <Contents/>}
       {!group && <GoodStandingNotice className="org-good-standing"/>}

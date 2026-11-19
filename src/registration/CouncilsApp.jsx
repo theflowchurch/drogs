@@ -196,7 +196,7 @@ function CouncilsPage({ bishops }) {
     </Title></header>
     <main className="tx-main">
       {group ? <>
-        {group.parts && !group.flat && !part ? <SubContents group={group} variant={variant}/> : <Group key={(part || group).slug} group={group} part={part}/>}
+        {group.parts && !group.straight && !part ? <SubContents group={group} variant={variant}/> : <Group key={(part || group).slug} group={group} part={part}/>}
         <div className="tx-end"><a className="tx-back" href="#contents">← All Groups</a></div>
       </> : <Contents query={query} search={search}/>}
       {!group && <GoodStandingNotice className="tx-good-standing"/>}

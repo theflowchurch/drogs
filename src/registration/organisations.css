@@ -480,3 +480,20 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
 .bl-tools{justify-content:flex-end;margin:18px 0 0}
 .bl-more{display:flex;justify-content:center;padding:30px 0}
 .bl-more-button{font:inherit;font-size:18px;padding:10px 26px;border-radius:999px;border:2px solid var(--org-line);background:#fff;color:var(--org-navy);cursor:pointer}
+
+/* Office, 19 Nov: on a group with sections (First Love Movement, UD Africa)
+   each church's or country's bishops sit in their own panel, its heading a
+   coloured band across the top, with clear space between panels, so a
+   heading is never read as belonging to the section above. */
+.org-council .org-group-part{margin-top:56px;border:1px solid #e3d7bd;border-radius:14px;background:#fffdf8;box-shadow:0 6px 22px #14223d12;overflow:hidden}
+.org-council .org-group-part .org-part-heading{margin:0;padding:16px 26px;border:0;border-left:8px solid var(--org-gold);background:var(--box,var(--org-navy));color:#fff;font-size:clamp(24px,2.4vw,30px);justify-content:space-between}
+.org-council .org-group-part .org-part-heading .org-initials{color:#f1dfae}
+.org-council .org-group-part .org-part-heading .org-count{background:#ffffff26;color:#fff;border:1px solid #ffffff55;flex:none}
+.org-site .org-council .org-group-part .org-part-heading,.org-site .org-council .org-group-part .org-part-name{color:#fff}
+.org-council .org-group-part>.org-members{padding:24px 26px 28px}
+@media(max-width:700px){
+  .org-council .org-group-part{margin-top:36px}
+  .org-council .org-group-part .org-part-heading{padding:12px 14px;font-size:20px;line-height:1.2;gap:6px}
+  .org-council .org-group-part .org-part-heading .org-count{margin-left:0;font-size:12px;padding:3px 10px}
+  .org-council .org-group-part>.org-members{padding:16px 14px 18px}
+}

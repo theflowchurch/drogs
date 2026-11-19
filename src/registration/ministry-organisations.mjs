@@ -84,8 +84,9 @@ const BY_COUNTRY = new Set(['ud-africa']);
 // pages): the saved structure carries its own groups and, in layout, any of
 // these settings; anything it leaves out keeps the published value.
 // Office, 19 Nov: First Love Movement, UD Africa and URSC open straight to
-// one list of all their bishops, with no contents page of churches or
-// countries first. Their lines are kept so old addresses still open them.
+// their bishops, with no contents page of churches or countries first: URSC
+// as one list, the other two in clearly marked sections. Their lines are kept
+// so old addresses still open them.
 const STRAIGHT = [FIRST_LOVE, 'ud-africa', 'ursc'];
 export const DEFAULT_LAYOUT = { order: ORDER, initials: INITIALS, names: OWN_NAMES, labels: COUNCIL_LABEL, oneBox: ONE_BOX, byChurch: [...BY_CHURCH], byCountry: [...BY_COUNTRY], straight: STRAIGHT };
 // The Order of Bishops and Councils pages' groups, built from a structure: the
@@ -119,10 +120,10 @@ const allOrgs = d.groups.flatMap(group => group.organisations.map(organisation =
   : groupsOfSection(o).map(g => L.byChurch.includes(g.slug)
     ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byChurch(g, o), people: [], all: g.people, flat: true }
     : L.byCountry.includes(g.slug)
-      ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byCountry(g, o), people: [], all: g.people, large: true }
+      ? { slug: g.slug, name: formalName(o, g), section: o.slug, parts: byCountry(g, o), people: [], large: true }
       : { slug: g.slug, name: formalName(o, g), section: o.slug, people: g.people }))
   .map(withInitials)
-  .map(g => g.parts && L.straight.includes(g.slug) ? { ...g, flat: true, all: g.all || [...new Map(g.parts.flatMap(p => p.people).map(p => [bishopKey(p), p])).values()] } : g);
+  .map(g => g.parts && L.straight.includes(g.slug) ? { ...g, straight: true } : g);
   // Groups the office added go after the ones it has placed.
   const order = [...L.order, ...groups.map(g => g.slug).filter(x => !L.order.includes(x))];
   const directoryGroups = order.map(slug => groups.find(g => g.slug === slug))
