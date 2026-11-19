@@ -15,10 +15,15 @@ if(registrationKey){
 // site its address opens it through /orderofbishopsingoodstanding/new-group/.
 const { ORGANISATION_PAGES } = mysqlBackend ? await import('./src/registration/ministry-organisations.mjs') : { ORGANISATION_PAGES: [] };
 const builtPages = [...ORGANISATION_PAGES, 'signup', 'new-group'].map(s => s.replace(/[^a-z0-9-]/g, '')).join('|');
+// Church pages built with the site; any other church (one a bishop added, 19 Nov) is served by /newchurch/.
+const { DENOMINATION_SITES } = mysqlBackend ? await import('./src/registration/denomination-sites.mjs') : { DENOMINATION_SITES: {} };
+const builtChurches = Object.keys(DENOMINATION_SITES).map(s => s.replace(/[^a-z0-9]/g, '')).filter(Boolean).join('|') || 'none';
+const newChurch = `/:church((?!(?:${builtChurches})$)[a-z0-9]+)/rollofgoodstanding/licensingauthority`;
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   ...(mysqlBackend ? {
-    async rewrites() { return { beforeFiles: [{ source: `/orderofbishopsingoodstanding/:group((?!(?:${builtPages})(?:/|$))[a-z0-9]+(?:-[a-z0-9]+)*)/`, destination: '/orderofbishopsingoodstanding/new-group/' }] }; },
+    async rewrites() { return { beforeFiles: [{ source: `/orderofbishopsingoodstanding/:group((?!(?:${builtPages})(?:/|$))[a-z0-9]+(?:-[a-z0-9]+)*)/`, destination: '/orderofbishopsingoodstanding/new-group/' },
+      { source: `${newChurch}/`, destination: '/newchurch/' }, { source: `${newChurch}/directory/`, destination: '/newchurch/directory/' }, { source: `${newChurch}/signup/`, destination: '/signup/' }] }; },
   } : { output: 'export' }),
   trailingSlash: true,
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',

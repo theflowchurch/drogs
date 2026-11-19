@@ -29,6 +29,20 @@ export const STANDARD_DIRECTORY_HEADING = 'Licensed Ministers in Good Standing';
 export const DENOMINATION_SITES = Object.fromEntries(Object.entries(CHURCH_SITES)
   .map(([path, site]) => [path, { ...STANDARD_PRESENTATION, ...site, directoryHeading: STANDARD_DIRECTORY_HEADING }]));
 export const denominationSite = key => DENOMINATION_SITES[key] || null;
+// A denomination a bishop added (19 Nov) has no page built for it: its address is
+// the name in small letters, and the live site serves it from the live list.
+export const churchPathOf = name => String(name || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+export function liveChurchFrom(catalog, path) {
+  const entry = Object.entries(catalog?.added || {}).find(([name]) => churchPathOf(name) === path);
+  if (!entry) return null;
+  const [name, a] = entry;
+  const logo = a.logo || catalog?.logos?.[name] || '';
+  return { ...STANDARD_PRESENTATION, name, shortName: name, subtitle: '', denominations: [name], organization: a.organization,
+    logo: logo ? (logo.startsWith('assets/') ? logo : `api/registration/media/blob?path=${encodeURIComponent(logo)}`) : '',
+    accent: '#1f3a5f', directoryAction: 'View bishops and pastors', directoryHeading: STANDARD_DIRECTORY_HEADING, live: true };
+}
+// The page for such a church registers itself before it draws.
+export const registerLiveChurch = (path, config) => { if (config && !DENOMINATION_SITES[path]) DENOMINATION_SITES[path] = config; };
 // A church page's address (office, 19 Nov): kuriakecastle.org/<church>/rollofgoodstanding/licensingauthority/…
 export const CHURCH_ROOT = 'rollofgoodstanding/licensingauthority';
 export const churchHref = (path, sub = '', base = '') => `${base}/${path}/${CHURCH_ROOT}/${sub ? `${String(sub).replace(/^\/+|\/+$/g, '')}/` : ''}`;

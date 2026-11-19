@@ -28,3 +28,26 @@ test('a saved change waits 30 minutes before the public pages and the record sho
   assert.equal(publicRoll(s, refs)[0].city, 'Tema');
   assert.ok(!changePending(s.registrations[0]));
 });
+
+test('a bishop adds a denomination with its logo; once live it is on the list, in its group, and has a church page', async () => {
+  const { catalogOf } = await import('../../src/registration/model.mjs');
+  const { liveChurchFrom, churchPathOf } = await import('../../src/registration/denomination-sites.mjs');
+  const extra = { organization: 'United Denominations', denomination: 'Grace City Church Accra', newDenomination: 'Grace City Church Accra', newDenominationGroup: 'UD Ghana', newDenominationLogo: 'b1/logo/x.webp' };
+  let s = applyAction(emptyState(), bishop, 'submit', profile(extra), undefined, refs);
+  assert.equal(s.registrations[0].data.newDenomination, 'Grace City Church Accra');
+  assert.ok(!catalogOf(s).denominations['United Denominations'].includes('Grace City Church Accra'), 'not on the list before the 30 minutes');
+  applyDueChanges(s, Date.now() + CHANGE_DELAY_MS + 1000);
+  const cat = catalogOf(s);
+  assert.ok(cat.denominations['United Denominations'].includes('Grace City Church Accra'), 'pastors can now choose it');
+  assert.ok(cat.groups['UD Ghana'].denominations.includes('Grace City Church Accra'));
+  assert.equal(cat.logos['Grace City Church Accra'], 'b1/logo/x.webp');
+  const page = liveChurchFrom(cat, churchPathOf('Grace City Church Accra'));
+  assert.equal(page.name, 'Grace City Church Accra');
+  assert.match(page.logo, /media\/blob\?path=b1%2Flogo%2Fx\.webp/);
+  // An existing name (any capitals) is used as it is, not added twice.
+  const t = applyAction(emptyState(), bishop, 'submit', profile({ organization: 'United Denominations', denomination: 'tell them church', newDenomination: 'tell them church' }), undefined, refs);
+  assert.equal(t.registrations[0].data.denomination, 'Tell Them Church');
+  assert.equal(t.registrations[0].data.newDenomination, '');
+  // Pastors cannot add one.
+  assert.throws(() => applyAction(emptyState(), { id: 'p9', email: 'p@example.com' }, 'submit', { ...profile({ organization: 'United Denominations', denomination: 'Brand New Church', newDenomination: 'Brand New Church' }), role: 'pastor', name: 'Pat Pastor', firstName: 'Pat', lastName: 'Pastor', email: 'p@example.com', bishopId: 'B1' }, undefined, refs), /Select a denomination/);
+});

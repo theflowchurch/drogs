@@ -52,7 +52,8 @@ export function createStorage({ config, pool, client, logger = console }) {
   return {
     async upload(actor, bytes, contentType, kind) {
       if (!['portrait', 'receipt', 'logo'].includes(kind)) throw new HttpError(400, 'Invalid upload type.');
-      if (kind === 'logo' && !actor.office) throw new HttpError(403, 'Only the office uploads logos.');
+      // Bishops bring the logo of a new denomination (19 Nov); anyone else, the office only.
+      if (kind === 'logo' && !actor.office && !actor.id) throw new HttpError(403, 'Sign in to upload a logo.');
       await rateLimit(pool, config, `upload:${actor.apiKeyId || actor.id}`, actor.apiKeyId ? 500 : 30, 3600000);
       let body = await prepareImage(bytes, contentType);
       const receiptCheck = kind === 'receipt' ? await inspectReceipt(body) : null;

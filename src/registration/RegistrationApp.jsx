@@ -97,6 +97,7 @@ import people from "./reference-people.json";
 import { rosterFrom, publicRosterFrom } from "./live-roster.mjs";
 import PageStructure from "./PageStructure.jsx";
 import OrderGroupsPicker from "./OrderGroupsPicker.jsx";
+import NewDenomination, { NEW_DENOMINATION } from "./NewDenomination.jsx";
 import { orderGroupsOf } from "./order-choices.mjs";
 import { ORGANISATIONS as ORDER_STRUCTURE } from "./ministry-organisations.mjs";
 const RosterContext = createContext(people);
@@ -281,7 +282,19 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
       <Field label="WhatsApp number"><input value={f.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
       {(!site || site === "flow") && !church && <Field label={site === "flow" ? "Group" : "Organization"}><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{site === "flow" ? FLOW_GROUPS[o] : orgLabel(o)}</option>)}</select></Field>}
       {!church && denominations.length > 0 && (
-        <Field label="Denomination"><select value={f.denomination} onChange={(e) => set("denomination", e.target.value)}><option value="">Select</option>{denominations.map((x) => <option key={x} value={x}>{caps(x)}</option>)}</select></Field>
+        <Field label="Denomination" wide={Boolean(f.addingDenomination)}>
+          <select value={f.addingDenomination ? NEW_DENOMINATION : f.denomination} onChange={(e) => e.target.value === NEW_DENOMINATION
+            ? setF((x) => ({ ...x, addingDenomination: true, denomination: x.newDenomination || "" }))
+            : setF((x) => ({ ...x, addingDenomination: false, newDenomination: "", newDenominationGroup: "", newDenominationLogo: "", denomination: e.target.value }))}>
+            <option value="">Select</option>{denominations.map((x) => <option key={x} value={x}>{caps(x)}</option>)}
+            {d.role === "bishop" && <option value={NEW_DENOMINATION}>My denomination is not listed…</option>}
+          </select>
+          {d.role === "bishop" && f.addingDenomination && (
+            <NewDenomination value={f} organization={f.organization} catalog={catalog} actor={actor}
+              onChange={(patch) => setF((x) => ({ ...x, ...patch, denomination: patch.newDenomination ?? x.newDenomination ?? "" }))}
+              onPick={(name) => setF((x) => ({ ...x, addingDenomination: false, newDenomination: "", newDenominationGroup: "", newDenominationLogo: "", denomination: name }))} />
+          )}
+        </Field>
       )}
       <Field label="Country where you currently serve"><Choice value={f.country} options={countries} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
       <Field label="City"><input value={f.city} onChange={(e) => set("city", e.target.value)} /></Field>
@@ -2342,17 +2355,25 @@ function RegistrationForm({
                 </Field>
                 {church && <Field label="Denomination"><input value={caps(data.denomination || church.config.name)} readOnly /></Field>}
                 {!church && (catalog.denominations[data.organization] || []).length > 0 && (
-                  <Field label="Denomination">
+                  <Field label="Denomination" wide={Boolean(data.addingDenomination)}>
                     <select
-                      value={data.denomination}
-                      onChange={(e) => set("denomination", e.target.value)}
+                      value={data.addingDenomination ? NEW_DENOMINATION : data.denomination}
+                      onChange={(e) => e.target.value === NEW_DENOMINATION
+                        ? setData((d) => ({ ...d, addingDenomination: true, denomination: d.newDenomination || "", photoConfirmed: false }))
+                        : setData((d) => ({ ...d, addingDenomination: false, newDenomination: "", newDenominationGroup: "", newDenominationLogo: "", denomination: e.target.value, photoConfirmed: false }))}
                       required
                     >
                       <option value="">Select denomination</option>
                       {(catalog.denominations[data.organization] || []).map((d) => (
                         <option key={d} value={d}>{caps(d)}</option>
                       ))}
+                      {data.role === "bishop" && <option value={NEW_DENOMINATION}>My denomination is not listed…</option>}
                     </select>
+                    {data.role === "bishop" && data.addingDenomination && (
+                      <NewDenomination value={data} organization={data.organization} catalog={catalog} actor={actor}
+                        onChange={(patch) => setData((d) => ({ ...d, ...patch, denomination: patch.newDenomination ?? d.newDenomination ?? "", photoConfirmed: false }))}
+                        onPick={(name) => setData((d) => ({ ...d, addingDenomination: false, newDenomination: "", newDenominationGroup: "", newDenominationLogo: "", denomination: name, photoConfirmed: false }))} />
+                    )}
                   </Field>
                 )}
                 <Field label="Country where you currently serve">

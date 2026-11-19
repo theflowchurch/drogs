@@ -256,6 +256,12 @@ export function syncRoll(state, people, version) {
   for (const o of organizations) denominations[o] = new Set([...(DENOMINATIONS[o] || []), ...((saved?.denominations || {})[o] || [])]);
   const groups = {};
   for (const [name, g] of Object.entries({ ...(saved?.groups || {}), ...GROUPS })) groups[name] = { organization: g.organization, denominations: new Set([...((saved?.groups || {})[name]?.denominations || []), ...(GROUPS[name]?.denominations || [])]) };
+  // Denominations bishops added themselves (19 Nov) stay on the list.
+  for (const [name, a] of Object.entries(state.catalog?.added || {})) {
+    if (!denominations[a.organization]) { organizations.push(a.organization); denominations[a.organization] = new Set(); }
+    denominations[a.organization].add(name);
+    if (a.group && groups[a.group]) groups[a.group].denominations.add(name);
+  }
   for (const p of people) {
     if (!p.denomination || !p.organization) continue;
     if (!denominations[p.organization]) { organizations.push(p.organization); denominations[p.organization] = new Set(); }
@@ -268,7 +274,7 @@ export function syncRoll(state, people, version) {
   for (const [id, o] of Object.entries(state.overrides || {})) if (ids.has(id)) overrides[id] = { ...o };
   const next = {
     ...state,
-    catalog: { organizations, denominations: Object.fromEntries(Object.entries(denominations).map(([o, d]) => [o, [...d].sort((a, b) => a.localeCompare(b))])), groups: Object.fromEntries(Object.entries(groups).map(([n, g]) => [n, { organization: g.organization, denominations: [...g.denominations].sort((a, b) => a.localeCompare(b)) }])), logos: { ...LOGOS, ...(saved?.logos || {}) } },
+    catalog: { organizations, denominations: Object.fromEntries(Object.entries(denominations).map(([o, d]) => [o, [...d].sort((a, b) => a.localeCompare(b))])), groups: Object.fromEntries(Object.entries(groups).map(([n, g]) => [n, { organization: g.organization, denominations: [...g.denominations].sort((a, b) => a.localeCompare(b)) }])), logos: { ...LOGOS, ...Object.fromEntries(Object.entries(state.catalog?.added || {}).filter(([, a]) => a.logo).map(([n, a]) => [n, a.logo])), ...(saved?.logos || {}) }, ...(state.catalog?.added ? { added: state.catalog.added } : {}) },
     overrides,
     hidden: (state.hidden || []).filter((id) => ids.has(id)),
     rollSync: version,
@@ -710,7 +716,7 @@ function addOwnDenomination(state, r) {
   cat.denominations[d.organization] = [...new Set([...(cat.denominations[d.organization] || []), name])].sort((a, b) => a.localeCompare(b));
   if (d.newDenominationGroup && cat.groups?.[d.newDenominationGroup]) cat.groups[d.newDenominationGroup].denominations = [...new Set([...cat.groups[d.newDenominationGroup].denominations, name])].sort((a, b) => a.localeCompare(b));
   if (d.newDenominationLogo) cat.logos = { ...(cat.logos || {}), [name]: d.newDenominationLogo };
-  cat.added = { ...(cat.added || {}), [name]: { organization: d.organization, group: d.newDenominationGroup || '', by: r.userId, at: new Date().toISOString() } };
+  cat.added = { ...(cat.added || {}), [name]: { organization: d.organization, group: d.newDenominationGroup || '', logo: d.newDenominationLogo || '', by: r.userId, at: new Date().toISOString() } };
   state.catalog = cat;
 }
 function syncReference(state, r, { byOffice = false, changed = null } = {}) {
@@ -800,6 +806,10 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
     referenceId: /^[A-Za-z]{1,2}[A-Za-z0-9]{1,14}$/.test(String(p.referenceId || "")) ? p.referenceId : "",
     bishopFirstName: String(p.bishopFirstName || "").trim(),
     bishopLastName: String(p.bishopLastName || "").trim(),
+    // A bishop's new denomination (19 Nov): its name, group and logo.
+    newDenomination: p.role === "bishop" ? String(p.newDenomination || "").replace(/\s+/g, " ").trim().slice(0, 80) : "",
+    newDenominationGroup: p.role === "bishop" ? String(p.newDenominationGroup || "").trim().slice(0, 80) : "",
+    newDenominationLogo: p.role === "bishop" && /^[A-Za-z0-9_./:-]{1,512}$/.test(String(p.newDenominationLogo || "")) ? String(p.newDenominationLogo) : "",
     // A bishop's own groups on the Order of Bishops pages, each with an optional role (19 Nov).
     orderGroups: p.role === "bishop" ? cleanOrderGroups(p.orderGroups) : undefined,
     // When the person agreed to the public listing (ISO time); kept as a record.
@@ -833,7 +843,15 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
     if (!q.country || !q.city) throw Error("Enter your country and city.");
     if (!q.gender) throw Error("Select male or female.");
     const denominations = catalog.denominations[q.organization] || [];
-    if (denominations.length && !denominations.includes(q.denomination))
+    // A bishop may bring a denomination that is not on the list yet (19 Nov); one
+    // already listed (whatever the capitals or spacing) is used as it is.
+    if (q.newDenomination && q.denomination === q.newDenomination) {
+      const same = denominations.find((d) => normalName(d) === normalName(q.newDenomination));
+      if (same) { q.denomination = same; q.newDenomination = ""; q.newDenominationGroup = ""; q.newDenominationLogo = ""; }
+      else if (q.newDenomination.length < 3) throw Error("Enter the full name of your denomination.");
+      if (q.newDenominationGroup && catalog.groups && !catalog.groups[q.newDenominationGroup]) q.newDenominationGroup = "";
+    } else { q.newDenomination = ""; q.newDenominationGroup = ""; q.newDenominationLogo = ""; }
+    if (denominations.length && !denominations.includes(q.denomination) && !q.newDenomination)
       throw Error("Select a denomination listed under your organization.");
     if (!catalog.organizations.includes(q.organization))
       throw Error("Choose your organization.");
