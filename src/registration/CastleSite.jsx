@@ -95,17 +95,6 @@ const MEANINGS = [
   ["Licensing and registration", "the ecclesiastical licensing and registration process carried out at the castle, through which the Roll of Good Standing is kept."],
 ];
 const HOME_ABOUT = "Kuriake Castle brings together independent denominations and Christian ministry groups through shared faith, fellowship and mission. Each participating denomination or group retains its own leadership and responsibility for its churches and ministries.";
-// DRAFT, held (office, 20 Nov): the Licensing and Registration page waits for leadership to confirm the policy; its route is in drafts/licensing-page.jsx and nothing links to it.
-const LICENSING_LEAD = "Kuriake Castle’s licensing records ecclesiastical recognition within the fellowship. Each participating denomination or group retains authority over its own leadership appointments, governance, finances and operations.";
-const LICENSING_QA = [
-  ["What does a Kuriake Castle licence confirm?", "That a bishop or pastor serving in a participating denomination or group has registered for the year and been confirmed, and is recognised within the fellowship. It is not a government licence and gives no legal or statutory powers."],
-  ["Who can apply?", "Bishops and pastors, including reverends, who serve in a denomination or group participating in the fellowship. Licensing is for individual ministers; it is not a licence for a church, denomination or group."],
-  ["Who confirms and approves registration?", "A pastor’s bishop confirms that the pastor serves under them. A bishop’s registration is confirmed by the Kuriake Castle office, which also checks the records submitted."],
-  ["What is the Roll of Good Standing?", "The public register of bishops and pastors whose registration has been confirmed for the current year. Anyone can search it to check a minister’s standing within the fellowship."],
-  ["Why is renewal annual?", "So that the register stays current. Each year ministers confirm their details, and the Roll shows those confirmed for that year."],
-  ["What happens if a licence is not renewed?", "After the registration deadline, a minister who has not renewed no longer appears on the public Roll for that year. Their record is kept, and they return to the Roll once they renew and are confirmed."],
-  ["Does licensing give Kuriake Castle authority over a denomination or group?", "No. As the Declaration sets out, Kuriake Castle does not govern any denomination, group or local church. Each denomination or group appoints and removes its own leaders and manages its own governance, finances and operations."],
-];
 
 // Office, 20 Nov: the castle's purpose first, then its name, then the history
 // of Ghana's coastal castles and of Akuapem.
@@ -192,18 +181,6 @@ export function CastleToursPage() {
         <p>Visitors are welcome to tour Kuriake Castle and discover its place in the story of the church in Ghana.</p>
         <p>A visit takes you through the castle and its grounds in the Akuapem Mountains, with time to learn about its history, its purpose and the fellowship it serves.</p>
         <ul className="kc-offer"><li>Guided tours of the castle and its grounds</li><li>Visits for churches, schools and groups</li><li>Time for prayer and reflection</li></ul>
-      </div>
-    </section>
-  </TopicPage>;
-}
-export function CastleLicensingPage() {
-  return <TopicPage eyebrow="Kuriake Castle" title="Licensing and Registration" lead={LICENSING_LEAD}>
-    <section className="kc-licensing kc-page-body">
-      {LICENSING_QA.map(([q, a]) => <article key={q}><h2>{q}</h2><p>{a}</p></article>)}
-      <div className="kc-licensing-links">
-        <More to="signup">Register or renew online</More>
-        <More to="directory">Search the Roll of Good Standing</More>
-        <More to="declaration">Read the Declaration</More>
       </div>
     </section>
   </TopicPage>;
