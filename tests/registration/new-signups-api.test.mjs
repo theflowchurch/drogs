@@ -24,8 +24,11 @@ test('confirmed new sign-ups are listed for dashboards, but are not edited throu
   state.profiles.push({ id: 'u2', role: 'bishop', email: 'b@example.com' });
   state.registrations.push({ userId: 'u2', year: state.year, status: 'pending', payment: 'verified', submittedAt: '2026-11-19T10:00:00Z',
     data: { role: 'bishop', name: 'Grace New', firstName: 'Grace', lastName: 'New', title: 'Bishop', organization: 'FLOW', denomination: 'FLOW', city: 'Accra', country: 'Ghana', email: 'b@example.com' } });
+  // Paid, but the office has not confirmed her yet: not listed.
+  assert.equal(listedAndNewPeople(state, references).some((p) => p.name === 'Grace New'), false);
+  state.registrations[1].status = 'confirmed';
   const bishop = listedAndNewPeople(state, references).find((p) => p.name === 'Grace New');
-  assert.ok(bishop && bishop.id.startsWith('new:') && bishop.role === 'bishop', 'a new bishop whose payment is confirmed is listed too');
+  assert.ok(bishop && bishop.id.startsWith('new:') && bishop.role === 'bishop', 'a new bishop confirmed by the office, with the payment confirmed, is listed');
   // A receipt from another app waiting for the office: not listed yet.
   state.registrations[1].payment = 'pending';
   assert.equal(listedAndNewPeople(state, references).some((p) => p.name === 'Grace New'), false);
