@@ -3,7 +3,7 @@
 export const CASTLE_NEWS = [
   {
     slug: '2027-renewal',
-    title: '2027 renewal is now open',
+    title: 'Renewal of registration',
     summary: 'Bishops and pastors can now renew their licence for 2027 to remain on the Roll of Good Standing.',
     image: 'assets/news/renewal.webp',
     body: [
