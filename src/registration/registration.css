@@ -4405,3 +4405,17 @@ input[type="date"] {
 @media (max-width:700px){.reg-fellowship-kc{margin-left:8px;padding-left:8px;gap:3px}.reg-fellowship-kc img{height:22px}.reg-fellowship-kc span{font-size:6.5px;letter-spacing:.8px}.reg-fellowship-app .reg-header-right button,.reg-fellowship-app .reg-header-right a{white-space:nowrap}}
 @media (max-width:700px){.reg-fellowship-kc span{display:none}.reg-fellowship-kc{margin-left:6px;padding-left:8px}.reg-fellowship-kc img{height:24px}.reg-app.reg-fellowship-app .reg-brand-mark,.reg-app.reg-fellowship-app .reg-brand-mark img{height:30px;max-height:30px}.reg-app.reg-fellowship-app .reg-brand-mark img{max-width:92px}.reg-fellowship-app .reg-header-right{gap:8px}.reg-fellowship-app .reg-header-right .reg-signin-button{padding-left:14px;padding-right:14px}}
 @media (max-width:700px){.reg-fellowship-app .reg-header{gap:8px}.reg-fellowship-kc{margin-left:0}}
+/* Office, 20 Nov: a gold line on both sides of the title, and the logos centred on the sign-in page. */
+.reg-access-head>span{padding:0 0 0 16px;border-left:2px solid #c9a95c99}
+@media (max-width:520px){.reg-access-head>span{padding:0;border-left:0}}
+@media (min-width:701px){
+  .reg-fellowship-app .reg-header{position:sticky;justify-content:center}
+  .reg-fellowship-app .reg-brand strong{padding-left:16px;border-left:2px solid #c9a95c99;line-height:46px}
+  .reg-fellowship-app .reg-header .reg-header-right{position:absolute;right:4vw;top:50%;transform:translateY(-50%);margin-left:0}
+  .reg-fellowship-app .reg-header .reg-sidebar-toggle{position:absolute;left:4vw;top:50%;transform:translateY(-50%)}
+}
+/* Narrower screens: the centred logos and title on top, the buttons on a row beneath. */
+@media (min-width:701px) and (max-width:1299px){
+  .reg-fellowship-app .reg-header{height:auto;flex-wrap:wrap;row-gap:10px;padding-top:12px;padding-bottom:12px}
+  .reg-fellowship-app .reg-header .reg-header-right{position:static;transform:none;flex-basis:100%;justify-content:center}
+}
