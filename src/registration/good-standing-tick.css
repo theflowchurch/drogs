@@ -1,9 +1,9 @@
 /* Office, 19 Nov: the good-standing tick on a photo, and its key. */
 .gs-host{position:relative}
-.gs-tick.gs-tick{position:absolute!important;top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;z-index:3;display:flex!important;align-items:center;justify-content:center;width:34px!important;height:34px!important;min-width:0!important;margin:0!important;padding:0!important;border-radius:50%!important;background:#1e9e5a!important;border:3px solid #fff!important;box-shadow:0 2px 8px #0004;box-sizing:border-box}
-.gs-tick.gs-tick svg{position:static!important;width:18px!important;height:18px!important;margin:0!important}
+.gs-tick.gs-tick{position:absolute!important;top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;z-index:3;display:flex!important;align-items:center;justify-content:center;width:38px!important;height:38px!important;min-width:0!important;margin:0!important;padding:0!important;background:none!important;border:0!important;filter:drop-shadow(0 2px 4px #0005);box-sizing:border-box}
+.gs-tick.gs-tick svg{position:static!important;display:block;width:100%!important;height:100%!important;margin:0!important}
 .gs-key{display:inline-flex;align-items:center;gap:10px;margin:0 0 22px;padding:8px 16px 8px 10px;border-radius:999px;background:#e8f6ee;color:#14532d;font:600 15px/1.2 system-ui,sans-serif}
 .gs-key .gs-tick.gs-tick{position:static!important;width:24px!important;height:24px!important;border-width:2px!important;box-shadow:none}
 .gs-key .gs-tick.gs-tick svg{width:13px!important;height:13px!important}
-@media(max-width:600px){.gs-tick.gs-tick{top:7px!important;right:7px!important;width:28px!important;height:28px!important}.gs-tick.gs-tick svg{width:15px!important;height:15px!important}}
+@media(max-width:600px){.gs-tick.gs-tick{top:7px!important;right:7px!important;width:32px!important;height:32px!important}}
 .gs-key-row{display:flex;justify-content:center;padding:22px 5% 0}.gs-key-row .gs-key{margin:0}
