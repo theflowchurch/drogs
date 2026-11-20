@@ -97,7 +97,7 @@ A server operator can also issue a live key with `npm run api:key -- --name="Pho
 | Method and route | Input / result |
 | --- | --- |
 | `GET /api/v1/schema` | Machine-readable routes, fields, actions and limits. Requires a read or management permission. |
-| `GET /api/v1/people` | Current corrected directory records. Filters: `search`, `role`, `bishopId`, `organization`, `group`, `country`, `photoTask=missing/replace/ready`; `limit=1–500` and `after` paginate. Returns `data`, `total`, `nextCursor`. |
+| `GET /api/v1/people` | Current corrected directory records. Filters: `search`, `role`, `bishopId`, `organization`, `group`, `country`, `photoTask=missing/replace/ready`; `limit=1–500` and `after` paginate. Returns `data`, `total`, `nextCursor` and `deadlineApplied`. Before the registration deadline is applied this lists everyone; once the office applies it, only people in good standing for the year are listed, as on the website. |
 | `GET /api/v1/people/ID` | Current person plus `revision`; also returns an ETag. |
 | `POST /api/v1/people` | JSON `{"fields":{"name":"Full Name","role":"pastor"},"bishopId":"B39"}` adds a current directory record. Returns the new stable person ID and photo totals. |
 | `PATCH /api/v1/people/ID` | JSON `{"fields":{"name":"Correct Name","city":"Accra"},"bishopId":"TARGET_BISHOP_ID"}`. Omit `bishopId` to retain the supervisor. Only supplied fields change. |
@@ -107,6 +107,8 @@ A server operator can also issue a live key with `npm run api:key -- --name="Pho
 | `DELETE /api/v1/people/ID` | Soft-delete the directory record. A bishop with pastors must have those pastors moved first. |
 | `POST /api/v1/people/ID/restore` | Restore a soft-deleted record. |
 | `POST /api/v1/uploads?kind=portrait` | Upload raw portrait bytes and return `path` for an existing registration's `officeEdit` action. `kind=logo` is also supported. |
+
+Each person also carries `goodStanding` (true when their registration for the year is confirmed and paid) and `seal` (true when the green good-standing seal should be shown). Show the seal from `seal`: it is shown only while the deadline is not applied, because once it is applied everyone listed is in good standing. People who signed up new carry `newSignup: true`.
 
 Person fields: `name`, `role`, `title`, `gender`, `dob`, `organization`, `denomination`, `group`, `city`, `country`, `bishop`, `branch`, `yearAppointed`, `yearOrdained`, `yearConsecrated`, `photo`, `phone`, `email`. Use `bishopId` to move a pastor. Organization/group/denomination follow the selected bishop; linked registrations and pastor lists move together. Changing a bishop's organization/group/denomination updates their pastors too. Bishops cannot be assigned as pastors under other bishops.
 
