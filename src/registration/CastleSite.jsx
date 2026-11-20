@@ -83,10 +83,10 @@ function EventCards({ except = "" }) {
 // Office, 20 Nov: a short home page with a page for each topic, as on the
 // sites of other castles, cathedrals and licensing bodies.
 const ABOUT = [
-  "Kuriake Castle is a fellowship of churches and Christian ministries from many nations. Its members are united by a common faith, shared beliefs and one mission: to bring the gospel of Jesus Christ to the world.",
-  "The fellowship is built on mutual respect and cooperation. Taking part is voluntary, and every denomination and group in the fellowship is independent. Each one keeps its own name and identity, has its own leadership, and is responsible for the running of its own churches and ministries.",
-  "Kuriake Castle does not govern its member churches. Its role is to support them. It provides fellowship, spiritual encouragement and advice when they ask for it, and it brings ministers and churches together around their shared calling.",
-  "Kuriake Castle also keeps the Roll of Good Standing, a register of the bishops and pastors who serve within the fellowship. It allows churches and members of the public to confirm a minister’s standing each year.",
+  "Kuriake Castle is a fellowship of churches and Christian ministries from many nations. Its members are united by a common faith, shared beliefs and a single mission to bring the gospel of Jesus Christ to the world.",
+  "The fellowship is founded on mutual respect and cooperation. Participation is voluntary, and each denomination and group within the fellowship remains independent. Each retains its own name, identity and leadership, and is responsible for managing its own churches and ministries.",
+  "Kuriake Castle does not govern its member churches. Its role is to support them by providing fellowship, spiritual encouragement and guidance upon request, and by bringing ministers and churches together in their shared calling.",
+  "Kuriake Castle also maintains the Roll of Good Standing, a register of bishops and pastors who serve within the fellowship. The register allows churches and members of the public to verify a minister’s standing each year.",
 ];
 // Office, 20 Nov: the castle's purpose first, then its name, then the history
 // of Ghana's coastal castles and of Akuapem.
