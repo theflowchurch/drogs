@@ -132,7 +132,7 @@ function DenominationDirectory({ site }) {
   return <main className="denom-directory">
     <div className="denom-directory-heading"><div>{config.namedHeading
       ? <div className="denom-named-title">{config.logoHeading && config.logo && <a href={churchHref(site, '', base)} className="denom-named-logo" aria-label={`${config.name} home`}><img src={`${base}/${config.logo}`} alt="" style={config.logoScale ? { width: `${config.logoScale * 100}%`, height: `${config.logoScale * 100}%`, margin: "auto", borderRadius: 0 } : undefined}/></a>}<h1 className="denom-named-heading"><span>{config.name}</span><span>{config.directoryHeading}</span></h1></div>
-      : <><a className="denom-back" href={churchHref(site, '', base)}>← {config.shortName}</a><p className="denom-kicker">LICENSED BISHOPS & PASTORS</p><h1>{config.directoryHeading}</h1></>}</div>{data && !simple && <span className="denom-total"><strong>{ordered.length}</strong> ministers{(filter.q || filter.city || filter.gender) ? ' found' : ''}</span>}</div>
+      : <><p className="denom-kicker">LICENSED BISHOPS & PASTORS</p><h1>{config.directoryHeading}</h1></>}</div>{data && !simple && <span className="denom-total"><strong>{ordered.length}</strong> ministers{(filter.q || filter.city || filter.gender) ? ' found' : ''}</span>}</div>
     {!simple && <DirectoryFilters site={config.visualStyle || site} filter={filter} cities={cities} update={update} reset={reset}/>}
     {error && <div className="denom-load-error" role="alert"><p>{data ? 'The latest update could not be loaded. ' : ''}{error}</p><button className="denom-nav-button" type="button" onClick={retry}>Try again</button></div>}
     {!data && !error && <div className="denom-loading" role="status">Loading ministers…</div>}
