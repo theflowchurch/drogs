@@ -249,3 +249,10 @@ html:has(.kc-site){scroll-behavior:smooth}
 .kc-tours-copy .kc-offer{margin-top:24px}
 .kc-tours .kc-next{grid-column:1/-1}
 @media(max-width:1000px){.kc-castle-story{grid-template-columns:1fr;gap:18px}.kc-tours{grid-template-columns:1fr;gap:36px}}
+/* Office, 20 Nov: where the castle is, under the tours. */
+.kc-tours-where{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-top:22px;padding:16px 18px;background:#fff;border:1px solid var(--kc-line)}
+.kc-tours-where p{margin:0!important;color:var(--kc-ink)!important;font-size:15px;line-height:1.5}
+.kc-button.is-outline{background:transparent;color:var(--kc-navy)!important;border-color:var(--kc-navy);padding:11px 18px}
+.kc-button.is-outline:hover{background:var(--kc-navy);color:#fff!important}
+.kc-tours-map{grid-column:1/-1;width:100%;height:220px;border:0;filter:grayscale(.2)}
+@media(max-width:760px){.kc-tours-map{height:240px}}

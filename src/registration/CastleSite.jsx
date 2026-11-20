@@ -129,7 +129,13 @@ export function CastleHome() {
           <li>Visits for churches, schools and groups</li>
           <li>Time for prayer and reflection</li>
         </ul>
+        {/* Office, 20 Nov: where the castle is (its Google Maps place). */}
+        <div className="kc-tours-where">
+          <p><b>Kuriake Castle</b><br />Asesano, Akuapem North<br />Eastern Region, Ghana</p>
+          <a className="kc-button is-outline" href="https://maps.app.goo.gl/Z5px9mW4b3D9xxfh9" target="_blank" rel="noopener noreferrer">Get directions <span aria-hidden="true">→</span></a>
+        </div>
       </div>
+      <iframe className="kc-tours-map" title="Map showing Kuriake Castle" src="https://www.google.com/maps?q=5.8991703,-0.154918&z=15&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
       <Next to="declaration" label="Our Declaration" />
     </section>
     {/* Office, 19 Nov: the start of the Declaration, with the full text on its own page. */}
