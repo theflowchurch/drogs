@@ -486,3 +486,22 @@
 .tx-bishop-access .bishop-access-signup{color:#14223d;background:#c9a95c;border:1px solid #c9a95c}
 .tx-bishop-access a:hover{filter:brightness(1.08)}
 .tx-footer-link{color:inherit;font-weight:600}
+
+/* Office, 20 Nov: Kuriake Castle's logo on the other side of the title. */
+.tx-kc-logo{padding-left:24px;border-left:1px solid var(--line)}
+.tx-kc-logo img{height:46px;filter:drop-shadow(0 0 18px #5ee7ff30)}
+.tx-kc-logo span{font-size:11px;letter-spacing:2px}
+.tx-head.is-compact .tx-kc-logo img{height:30px}.tx-head.is-compact .tx-kc-logo span{display:none}
+.tx-day .tx-kc-logo img{filter:brightness(0) saturate(100%) invert(11%) sepia(24%) saturate(2230%) hue-rotate(196deg) brightness(92%) contrast(95%)}
+.tx-day .tx-kc-logo span{color:#14223d}
+@media(max-width:700px){.tx-head:not(.is-compact) .tx-kc-logo{padding-left:0;border-left:0}.tx-kc-logo img{height:34px}.tx-head.is-compact .tx-kc-logo{display:none}}
+/* With both logos: a smaller title so it fits on one line; on phones the logos side by side. */
+@media(min-width:701px){.tx-head .tx-sub{font-size:clamp(14px,1.25vw,19px);letter-spacing:2px;white-space:normal}.tx-head .tx-title{flex:1 1 auto}.tx-kc-logo{padding-left:20px}.tx-kc-logo img{height:40px}.tx-kc-logo span{font-size:10px}}
+@media(max-width:700px){
+  .tx-head:not(.is-compact){display:grid;grid-template-columns:auto auto;justify-content:center;align-items:center;column-gap:18px;row-gap:10px}
+  .tx-head:not(.is-compact) .tx-logo{grid-column:1;grid-row:1}
+  .tx-head:not(.is-compact) .tx-logo img{height:44px}
+  .tx-head:not(.is-compact) .tx-kc-logo{grid-column:2;grid-row:1;padding-left:18px;border-left:1px solid var(--line-2);align-self:stretch}
+  .tx-head:not(.is-compact) .tx-kc-logo img{height:30px}.tx-head:not(.is-compact) .tx-kc-logo span{font-size:9px;letter-spacing:1.5px}
+  .tx-head:not(.is-compact) .tx-title,.tx-head:not(.is-compact) .tx-head-tools{grid-column:1/-1}
+}

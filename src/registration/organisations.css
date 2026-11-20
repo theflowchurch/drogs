@@ -506,14 +506,20 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
 .org-footer-link{color:#f1dfae;text-decoration:none;font-weight:600}.org-footer-link:hover{text-decoration:underline}
 
 /* Office, 20 Nov: the Kuriake Castle logo on the right of the title, mirroring DHMM's. */
+.kc-side-logo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;line-height:0;flex-shrink:0}
+.kc-side-logo img{height:50px;width:auto}
+.kc-side-logo span{font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1;letter-spacing:2.5px;text-transform:uppercase;color:#fff;white-space:nowrap}
 .org-dhmm-text{padding-right:28px;border-right:2px solid #c9a95c99}
-.org-kc-logo{display:flex;flex-direction:column;align-items:center;gap:6px;line-height:0}
-.org-kc-logo img{height:50px;width:auto}
-.org-kc-logo span{font-family:var(--denom-display);font-size:15px;line-height:1;letter-spacing:2.5px;text-transform:uppercase;color:#fff;white-space:nowrap}
 .org-dhmm-head-bishops .org-bishop-access{position:static;transform:none;flex-basis:100%;justify-content:center}
 .org-dhmm-head-bishops{flex-wrap:wrap;row-gap:12px}
-@media(max-width:700px){
-  .org-dhmm-text{padding-right:0;border-right:0}
-  .org-kc-logo img{height:40px}.org-kc-logo span{font-size:13px}
-}
 @media(min-width:901px){.org-site:has(.is-compact) .org-kc-logo img{height:30px}.org-site:has(.is-compact) .org-kc-logo span{font-size:11px}}
+/* Phones: the two logos side by side on top, the title underneath. */
+@media(max-width:700px){
+  .org-dhmm-head{display:grid;grid-template-columns:auto auto;justify-content:center;align-items:center;column-gap:20px;row-gap:12px;padding:16px 5%}
+  .org-dhmm-logo{grid-column:1;grid-row:1}
+  .org-dhmm-logo img{height:46px}
+  .org-kc-logo{grid-column:2;grid-row:1;padding-left:20px;border-left:2px solid #c9a95c99;align-self:stretch}
+  .org-kc-logo img{height:32px}.org-kc-logo span{font-size:9.5px;letter-spacing:1.6px}
+  .org-dhmm-text{grid-column:1/-1;grid-row:2;padding-right:0;border-right:0}
+  .org-dhmm-head-bishops .org-bishop-access{grid-column:1/-1}
+}

@@ -4390,3 +4390,18 @@ input[type="date"] {
 .reg-deadline-date{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin-bottom:6px}
 .reg-deadline-date .reg-field{margin:0;min-width:220px}
 .reg-closes{position:relative;z-index:30;margin:0;padding:10px 16px;text-align:center;background:#fff7e6;border-bottom:1px solid #f0d9a8;color:#5c4210;font-size:15px}
+
+/* Office, 20 Nov: Kuriake Castle's logo on the sign-up pages and the password page. */
+.reg-fellowship-kc{display:flex;flex-direction:column;align-items:center;gap:4px;line-height:0;margin-left:16px;padding-left:16px;border-left:2px solid #c9a95c99;align-self:center}
+.reg-fellowship-kc img{height:34px;width:auto}
+.reg-fellowship-kc span{font:400 10px/1 Georgia,'Times New Roman',serif;letter-spacing:1.8px;text-transform:uppercase;color:#fff;white-space:nowrap}
+.reg-fellowship-app .reg-header .reg-brand{flex:0 0 auto}
+.reg-fellowship-app .reg-header .reg-header-right{margin-left:auto}
+@media (max-width:700px){.reg-fellowship-kc{margin-left:10px;padding-left:10px}.reg-fellowship-kc img{height:26px}.reg-fellowship-kc span{font-size:8px;letter-spacing:1.2px}}
+.reg-access-kc{display:flex;flex-direction:column;align-items:center;gap:5px;line-height:0;padding-left:16px;border-left:2px solid #c9a95c99}
+.reg-access-kc img{width:auto!important;height:38px!important}
+.reg-access-kc span{font:400 10px/1 Georgia,'Times New Roman',serif!important;letter-spacing:1.8px!important;text-transform:uppercase;color:#fff!important;white-space:nowrap}
+@media (max-width:520px){.reg-access-head{flex-wrap:wrap}.reg-access-head>span{order:3;flex-basis:100%;text-align:center}.reg-access-kc img{height:30px!important}}
+@media (max-width:700px){.reg-fellowship-kc{margin-left:8px;padding-left:8px;gap:3px}.reg-fellowship-kc img{height:22px}.reg-fellowship-kc span{font-size:6.5px;letter-spacing:.8px}.reg-fellowship-app .reg-header-right button,.reg-fellowship-app .reg-header-right a{white-space:nowrap}}
+@media (max-width:700px){.reg-fellowship-kc span{display:none}.reg-fellowship-kc{margin-left:6px;padding-left:8px}.reg-fellowship-kc img{height:24px}.reg-app.reg-fellowship-app .reg-brand-mark,.reg-app.reg-fellowship-app .reg-brand-mark img{height:30px;max-height:30px}.reg-app.reg-fellowship-app .reg-brand-mark img{max-width:92px}.reg-fellowship-app .reg-header-right{gap:8px}.reg-fellowship-app .reg-header-right .reg-signin-button{padding-left:14px;padding-right:14px}}
+@media (max-width:700px){.reg-fellowship-app .reg-header{gap:8px}.reg-fellowship-kc{margin-left:0}}
