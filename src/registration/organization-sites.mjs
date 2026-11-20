@@ -16,8 +16,9 @@ export const ORGANIZATION_SITES = {
     organizations: ['United Denominations'], logo: 'assets/brand/ud-logo.png',
     description: 'United Denominations originating from the Lighthouse Group of Churches.',
   },
+  // Office, 20 Nov: the FLOW umbrella site is /flowdenomination/; /flow/ is FLOW's church page.
   flow: {
-    path: 'flow',
+    path: 'flowdenomination',
     name: 'FLOW', shortName: 'FLOW',
     organizations: ['FLOW', 'HJC', 'DHMM'], logo: 'assets/brand/flow-logo-black.png', heroLogo: 'assets/brand/flow-logo.png',
     description: 'The bishops and pastors of FLOW, Healing Jesus Campaign and DHMM.',
@@ -27,7 +28,8 @@ export const FLOW_GROUPS = { FLOW: 'FLOW', HJC: 'Healing Jesus Campaign', DHMM: 
 // Keep the internal organization keys stable while public addresses change.
 export const organizationSiteKey = path => Object.keys(ORGANIZATION_SITES)
   .find(key => key === path || ORGANIZATION_SITES[key].path === path) || '';
-export const organizationSitePaths = [...new Set(Object.entries(ORGANIZATION_SITES).flatMap(([key, site]) => [site.path, key]))];
+// The old First Love and UD keys still open their sites (they redirect); FLOW's key is its church page now.
+export const organizationSitePaths = [...new Set(Object.entries(ORGANIZATION_SITES).flatMap(([key, site]) => key === 'flow' ? [site.path] : [site.path, key]))];
 export const siteOfOrganization = organization => Object.keys(ORGANIZATION_SITES)
   .find(key => ORGANIZATION_SITES[key].organizations.includes(organization)) || '';
 export const sitePath = (site, path = '', base = '') => `${base}${site ? `/${ORGANIZATION_SITES[organizationSiteKey(site)]?.path || site}` : ''}/${path ? `${path.replace(/^\/+|\/+$/g, '')}/` : ''}`;

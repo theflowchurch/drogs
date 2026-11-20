@@ -76,7 +76,7 @@ function MinisterGrid({ list, year = '' }) {
     <div className="denom-person-photo gs-host"><MinisterPortrait person={person}/><StandingTick on={person.goodStanding} year={year}/></div>
     <div className="denom-person-copy"><small>{ministerDisplayTitle(person)}</small><h3>{person.name}</h3>
       {placeOf(person) && <p>{placeOf(person)}</p>}
-      {person.role === 'pastor' && person.bishop && <p className="denom-person-bishop">Bishop · {person.bishop}</p>}
+      {person.role === 'pastor' && person.bishop && <p className="denom-person-bishop">Bishop – {person.bishop}</p>}
       {(() => {
         // Office, 19 Nov: a Reverend's or Lady Reverend's year of ordination too, and a bishop's when we hold it.
         const ordained = (person.role === 'bishop' || /rev/i.test(person.title || '')) && person.yearOrdained;

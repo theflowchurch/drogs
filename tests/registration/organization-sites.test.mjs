@@ -52,12 +52,12 @@ test('scoped catalogs follow saved admin denominations, paths include scope and 
   assert.equal(scoped.denominations['United Denominations'],undefined);
   assert.equal(sitePath('firstlove','signup/pastor','/preview'),'/preview/firstlovemovement/signup/pastor/');
   assert.equal(sitePath('','signup'),'/signup/');
-  assert.equal(sitePath('flow'),'/flow/');
+  assert.equal(sitePath('flow'),'/flowdenomination/');
   assert.equal(organizationAudit([b('a','First Love'),b('b','United Denominations')]).sharedDenominations.length,1);
 });
 
 test('new site addresses retain the same organization scopes and redirect old nested links', () => {
-  for (const [key, path] of [['firstlove','firstlovemovement'], ['ud','unitedenominations'], ['flow','flow']]) {
+  for (const [key, path] of [['firstlove','firstlovemovement'], ['ud','unitedenominations'], ['flow','flowdenomination']]) {
     assert.equal(organizationSiteKey(path), key);
     assert.equal(organizationSiteKey(key), key);
     assert.ok(organizationSitePaths.includes(path));

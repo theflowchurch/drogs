@@ -92,3 +92,5 @@
 .denom-title-total i{font-style:normal;font-weight:400}
 .denom-title-total i{white-space:nowrap}
 @media(max-width:700px){.denom-title-total{font-size:clamp(24px,7vw,30px);margin-top:.5em}}
+/* Office, 20 Nov: no location pin beside a pastor's bishop. */
+.denom-large-text .denom-person-copy p.denom-person-bishop:before{display:none}

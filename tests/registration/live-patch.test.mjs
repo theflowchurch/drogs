@@ -154,8 +154,8 @@ test('18 Nov: blank denominations come off records; FLOW registrations keep FLOW
   s = syncRoll(s, refs, 'v-blank');
   assert.equal(overlayReferences(refs, s)[0].denomination, 'FLOW');
   assert.equal(s.overrides.PF.city, 'Accra', 'other office fields stay');
-  assert.ok(DENOMINATION_SITES.flowdenomination, 'FLOW has a church page');
-  assert.deepEqual(denominationPeople({ referencePeople: refs, ...publicOverlay(s), roll: [] }, 'flowdenomination').map(p => p.id), ['PF']);
+  assert.ok(DENOMINATION_SITES.flow, 'FLOW has a church page');
+  assert.deepEqual(denominationPeople({ referencePeople: refs, ...publicOverlay(s), roll: [] }, 'flow').map(p => p.id), ['PF']);
   for (const path of ['heritagebaptistchurchglobal', 'loveeconomychurch', 'revivalhouseofholyfireministries', 'christvisionsanctuaryinternational']) assert.ok(DENOMINATION_SITES[path], path);
   // A pastor on our list who registers under a different church moves to that church's page.
   const refs2 = [{ id: 'P1', role: 'pastor', name: 'John Doe', organization: 'First Love', denomination: 'First Love Church' }];
