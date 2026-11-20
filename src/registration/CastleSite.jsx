@@ -40,7 +40,7 @@ function Footer() {
     <div className="kc-footer-top">
       <div className="kc-footer-brand"><Mark size={38} /><div><b>Kuriake Castle</b></div></div>
       <div className="kc-footer-cols kc-footer-one">
-        <div><h4>Explore</h4><div className="kc-footer-links">{[["about-us", "About Us"], ["the-castle", "The Castle"], ["tours", "Tours"], ["news", "News"]].map(([p, l]) => <a key={p} href={href(p)}>{l}</a>)}</div></div>
+        <div><h4>Explore</h4><div className="kc-footer-links">{[["about-us", "About Us"], ["the-castle", "The Castle"], ["tours", "Tours"], ["news", "News"], ["licensing", "Licensing and Registration"]].map(([p, l]) => <a key={p} href={href(p)}>{l}</a>)}</div></div>
         <div><h4>Events</h4><div className="kc-footer-events">{CASTLE_EVENTS.map((e) => <a key={e.slug} href={href(e.slug)}>{e.title}</a>)}</div></div>
         <div className="kc-footer-declaration"><h4>Declaration</h4><a href={href("declaration")}>Kuriake Castle Declaration <span aria-hidden="true">→</span></a></div>
         {/* Office, 20 Nov: where the castle is; the map opens Google Maps. */}
@@ -83,11 +83,30 @@ function EventCards({ except = "" }) {
 // Office, 20 Nov: a short home page with a page for each topic, as on the
 // sites of other castles, cathedrals and licensing bodies.
 const ABOUT = [
-  "Kuriake Castle is a fellowship of churches and Christian ministries from many nations. Its members are united by a common faith, shared beliefs and a single mission to bring the gospel of Jesus Christ to the world.",
+  "Kuriake Castle is a voluntary fellowship of independently governed denominations and Christian ministry groups from many nations. Those who take part are united by a common faith, shared beliefs and a single mission to bring the gospel of Jesus Christ to the world.",
   "The fellowship is founded on mutual respect and cooperation. Participation is voluntary, and each denomination and group within the fellowship remains independent. Each retains its own name, identity and leadership, and is responsible for managing its own churches and ministries.",
-  "Kuriake Castle does not govern its member churches. Its role is to support them by providing fellowship, spiritual encouragement and guidance upon request, and by bringing ministers and churches together in their shared calling.",
-  "Kuriake Castle also maintains the Roll of Good Standing, a register of bishops and pastors who serve within the fellowship. The register allows churches and members of the public to verify a minister’s standing each year.",
+  "Kuriake Castle does not govern the participating denominations and groups or their churches. Its role is to support them by providing fellowship, spiritual encouragement and guidance upon request, and by bringing ministers and churches together in their shared calling.",
+  "Kuriake Castle also keeps the Roll of Good Standing, a public register of bishops and pastors whose registration has been confirmed for the year. A pastor is confirmed by their bishop, and a bishop by the Kuriake Castle office. Inclusion on the Roll records recognition within the fellowship. It does not appoint anyone to church office: each denomination or group appoints and oversees its own leaders.",
 ];
+// Office, 20 Nov: the three ways the name is used, so none is mistaken for another.
+const MEANINGS = [
+  ["The fellowship", "the voluntary fellowship of participating denominations and groups described in the Declaration."],
+  ["The castle", "the building and grounds in the Akuapem Mountains of Ghana, where gatherings, services and tours take place."],
+  ["Licensing and registration", "the office at the castle that keeps the annual register of participating bishops and pastors, the Roll of Good Standing."],
+];
+const HOME_ABOUT = "Kuriake Castle brings together independent denominations and Christian ministry groups through shared faith, fellowship and mission. Each participating denomination or group retains its own leadership and responsibility for its churches and ministries.";
+// Office, 20 Nov: what licensing does and does not mean, in line with the Declaration.
+const LICENSING_LEAD = "Kuriake Castle’s licensing records ecclesiastical recognition within the fellowship. Each participating denomination or group retains authority over its own leadership appointments, governance, finances and operations.";
+const LICENSING_QA = [
+  ["What does a Kuriake Castle licence confirm?", "That a bishop or pastor serving in a participating denomination or group has registered for the year and been confirmed, and is recognised within the fellowship. It is not a government licence and gives no legal or statutory powers."],
+  ["Who can apply?", "Bishops and pastors, including reverends, who serve in a denomination or group participating in the fellowship. Licensing is for individual ministers; it is not a licence for a church, denomination or group."],
+  ["Who confirms and approves registration?", "A pastor’s bishop confirms that the pastor serves under them. A bishop’s registration is confirmed by the Kuriake Castle office, which also checks the records submitted."],
+  ["What is the Roll of Good Standing?", "The public register of bishops and pastors whose registration has been confirmed for the current year. Anyone can search it to check a minister’s standing within the fellowship."],
+  ["Why is renewal annual?", "So that the register stays current. Each year ministers confirm their details, and the Roll shows those confirmed for that year."],
+  ["What happens if a licence is not renewed?", "After the registration deadline, a minister who has not renewed no longer appears on the public Roll for that year. Their record is kept, and they return to the Roll once they renew and are confirmed."],
+  ["Does licensing give Kuriake Castle authority over a denomination or group?", "No. As the Declaration sets out, Kuriake Castle does not govern any denomination, group or local church. Each denomination or group appoints and removes its own leaders and manages its own governance, finances and operations."],
+];
+
 // Office, 20 Nov: the castle's purpose first, then its name, then the history
 // of Ghana's coastal castles and of Akuapem.
 const STORY = [
@@ -115,15 +134,21 @@ export function CastleHome() {
   return <div className="kc-site">
     <Nav />
     <Hero video eyebrow="A Castle for the Church" title="Kuriake Castle"
-      lead="A fellowship of churches and Christian ministries from many nations, in the Akuapem Mountains of Ghana." />
+      lead="A voluntary fellowship of independently governed denominations and Christian ministry groups from many nations, in the Akuapem Mountains of Ghana." />
     <section className="kc-home-news" aria-labelledby="kc-news-title">
       <div className="kc-home-head"><h2 id="kc-news-title">News</h2><More to="news">All news</More></div>
       <NewsCards />
     </section>
     <section className="kc-home-about" aria-labelledby="kc-about-title">
       <div className="kc-home-about-photo"><img src={`${base}/assets/brand/castle-night.webp`} alt="Kuriake Castle at night" loading="lazy" /></div>
-      <div><p className="kc-eyebrow">About Us</p><h2 id="kc-about-title">A fellowship of churches and ministries</h2>
-        <p>{ABOUT[0]}</p><More to="about-us">About Us</More></div>
+      <div><p className="kc-eyebrow">About Us</p><h2 id="kc-about-title">A fellowship of denominations and ministries</h2>
+        <p>{HOME_ABOUT}</p><More to="about-us">About Us</More></div>
+    </section>
+    <section className="kc-home-licensing" aria-labelledby="kc-licensing-title">
+      <p className="kc-eyebrow">Licensing and Registration</p>
+      <h2 id="kc-licensing-title">The Roll of Good Standing</h2>
+      <p>Kuriake Castle maintains a register of participating bishops and pastors through its ecclesiastical licensing and annual registration process.</p>
+      <More to="licensing">How licensing works</More>
     </section>
     <section className="kc-home-tiles" aria-label="Explore Kuriake Castle">
       <a className="kc-tile is-dark" href={href("the-castle")}><p className="kc-eyebrow">The Castle</p><h3>A Castle for the Church</h3><p>Ghana is known for its forts and castles. Kuriake Castle, in the Akuapem Mountains, is the first castle built for the church.</p><span className="kc-more">Read the story <span aria-hidden="true">→</span></span></a>
@@ -138,13 +163,18 @@ export function CastleAboutPage() {
   return <TopicPage eyebrow="Kuriake Castle" title="About Us">
     <section className="kc-about kc-page-body">
       <div className="kc-about-photo"><img src={`${base}/assets/brand/castle-night.webp`} alt="Kuriake Castle at night" loading="lazy" /></div>
-      <div className="kc-about-copy">{ABOUT.map((t) => <p key={t}>{t}</p>)}</div>
+      <div className="kc-about-copy">{ABOUT.map((t) => <p key={t}>{t}</p>)}
+        <More to="licensing">Licensing and Registration</More></div>
+    </section>
+    <section className="kc-meanings" aria-labelledby="kc-meanings-title">
+      <h2 id="kc-meanings-title">The name Kuriake Castle is used in three ways</h2>
+      <dl>{MEANINGS.map(([t, d]) => <div key={t}><dt>{t}</dt><dd>{d}</dd></div>)}</dl>
     </section>
   </TopicPage>;
 }
 export function CastleStoryPage() {
   return <TopicPage eyebrow="The Castle" title="A Castle for the Church" image="assets/brand/castle-hero-poster-bw.webp" bright
-    lead="Kuriake Castle was built in the Akuapem Mountains as a home for churches and missions. Ghana’s coastal castles were built for trade; for the first time, a castle has been built for the church. It is a place for worship and gathering, and the home of its Licensing Authority.">
+    lead="Kuriake Castle was built in the Akuapem Mountains as a home for churches and missions. Ghana’s coastal castles were built for trade; for the first time, a castle has been built for the church. It is a place for worship and gathering. The castle also houses the administration of the fellowship’s ecclesiastical licensing and registration process.">
     <section className="kc-name" aria-label="The name Kuriake">
       <p className="kc-eyebrow">The name</p>
       <p className="kc-name-big">Belonging to the Lord</p>
@@ -163,6 +193,18 @@ export function CastleToursPage() {
         <p>Visitors are welcome to tour Kuriake Castle and discover its place in the story of the church in Ghana.</p>
         <p>A visit takes you through the castle and its grounds in the Akuapem Mountains, with time to learn about its history, its purpose and the fellowship it serves.</p>
         <ul className="kc-offer"><li>Guided tours of the castle and its grounds</li><li>Visits for churches, schools and groups</li><li>Time for prayer and reflection</li></ul>
+      </div>
+    </section>
+  </TopicPage>;
+}
+export function CastleLicensingPage() {
+  return <TopicPage eyebrow="Kuriake Castle" title="Licensing and Registration" lead={LICENSING_LEAD}>
+    <section className="kc-licensing kc-page-body">
+      {LICENSING_QA.map(([q, a]) => <article key={q}><h2>{q}</h2><p>{a}</p></article>)}
+      <div className="kc-licensing-links">
+        <More to="signup">Register or renew online</More>
+        <More to="directory">Search the Roll of Good Standing</More>
+        <More to="declaration">Read the Declaration</More>
       </div>
     </section>
   </TopicPage>;
@@ -194,6 +236,7 @@ export function CastleEventPage({ slug }) {
     <section className="kc-event">
       <div className="kc-event-main">
         <ul className="kc-offer">{e.offer.map((o) => <li key={o}>{o}</li>)}</ul>
+        {e.licensing && <More to="licensing">About licensing and registration</More>}
         <a className="kc-back" href={href("events")}>← All events</a>
       </div>
     </section>

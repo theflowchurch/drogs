@@ -3,7 +3,7 @@
 // Office, 19 Nov: eight events combined into five, and "and" written out.
 export const CASTLE_EVENTS = [
   {
-    slug: 'weddings', title: 'Weddings, Thanksgiving and Dedications', short: 'Marriages, milestones and dedications in a setting of history and reverence.',
+    slug: 'weddings', licensing: true, title: 'Weddings, Thanksgiving and Dedications', short: 'Marriages, milestones and dedications in a setting of history and reverence.',
     lead: 'Celebrate the covenant of marriage, give thanks for a milestone or dedicate a child within the walls of an ecclesiastical castle, before God, family and the church.',
     offer: ['Wedding ceremonies officiated by a licensed bishop or pastor of your own denomination', 'A ceremony space and grounds for photographs', 'Receptions and wedding breakfasts', 'Pre-marriage counselling arranged with your officiating minister', 'Rehearsals and planning visits ahead of the day', 'Child dedications and naming ceremonies', 'Church and ministry anniversaries', 'Family thanksgiving services'],
     note: 'Services are led by your own licensed minister, who must be in good standing for the year of the service.',
@@ -22,15 +22,15 @@ export const CASTLE_EVENTS = [
   },
   {
     slug: 'meetings', title: 'Meetings and Councils', short: 'Board meetings, synods and councils of the church.',
-    lead: 'Private rooms for church boards, committees and leadership teams, and a meeting place for the synods and councils that govern the churches.',
+    lead: 'Private rooms for church boards, committees and leadership teams, and a meeting place for participating denominations’ and groups’ own synods and councils. The castle hosts these bodies; meeting here does not transfer any of their authority to Kuriake Castle.',
     offer: ['Board and committee rooms', 'Leadership and planning sessions', 'Synods, councils and general assemblies', 'Bishops’ councils and episcopal gatherings', 'Convocations of clergy', 'Discreet, confidential surroundings'],
     note: 'Regular meetings can be booked as a series.',
   },
   {
-    slug: 'consecrations', title: 'Consecrations and Ordinations', short: 'Setting apart bishops, pastors and ministers.',
-    lead: 'Services of consecration, ordination and installation, held with the order and solemnity the occasion deserves.',
+    slug: 'consecrations', licensing: true, title: 'Consecrations and Ordinations', short: 'Setting apart bishops, pastors and ministers.',
+    lead: 'Kuriake Castle provides a setting for consecration, ordination, installation and commissioning services held by participating denominations and groups. Appointments and authorisation remain the responsibility of the relevant denomination or group under its own governing arrangements.',
     offer: ['Consecration of bishops', 'Ordination of reverends and pastors', 'Installation and commissioning services', 'Licensing services for newly appointed ministers'],
-    note: 'Those consecrated or ordained should register with the licensing authority so that they appear on the Roll of Good Standing.',
+    note: 'Ministers consecrated or ordained by their denomination or group can register with Kuriake Castle to appear on the Roll of Good Standing.',
   },
 ];
 export const castleEvent = (slug) => CASTLE_EVENTS.find((e) => e.slug === slug) || null;

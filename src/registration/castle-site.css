@@ -310,3 +310,21 @@ html:has(.kc-site){scroll-behavior:smooth}
 .kc-history h2{font-size:clamp(26px,2.6vw,34px);margin-bottom:16px}
 .kc-history p{margin:0;color:#2c3546;line-height:1.75}
 @media(max-width:860px){.kc-history{grid-template-columns:1fr;gap:40px;padding-bottom:70px}.kc-name{padding:60px 6% 50px}}
+
+/* Office, 20 Nov: licensing on the home page, the three meanings, the licensing page. */
+.kc-home-licensing{width:min(820px,90%);margin:0 auto;padding:10px 0 100px;text-align:center}
+.kc-home-licensing h2{font-size:clamp(28px,3vw,40px);margin-bottom:16px}
+.kc-home-licensing p:not(.kc-eyebrow){color:var(--kc-muted);margin:0 auto 14px;max-width:640px}
+.kc-meanings{width:min(1180px,90%);margin:0 auto;padding:0 0 100px}
+.kc-meanings h2{font-size:clamp(26px,2.6vw,34px);margin-bottom:24px}
+.kc-meanings dl{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin:0}
+.kc-meanings dl>div{border-top:2px solid var(--kc-gold);padding-top:22px}
+.kc-meanings dt{font-weight:700;margin-bottom:8px}
+.kc-meanings dd{margin:0;color:var(--kc-muted);line-height:1.65}
+.kc-licensing{width:min(980px,90%);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:44px 56px}
+.kc-licensing article{border-top:2px solid var(--kc-gold);padding-top:24px}
+.kc-licensing h2{font-size:clamp(21px,2vw,26px);margin-bottom:12px}
+.kc-licensing p{margin:0;color:#2c3546;line-height:1.7}
+.kc-licensing-links{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:14px 36px}
+.kc-event-main .kc-more{display:flex;margin-top:24px}
+@media(max-width:860px){.kc-meanings dl,.kc-licensing{grid-template-columns:1fr;gap:30px}.kc-meanings{padding-bottom:70px}.kc-home-licensing{padding-bottom:70px}}

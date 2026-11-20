@@ -4,14 +4,15 @@ export const CASTLE_NEWS = [
   {
     slug: '2027-renewal',
     title: '2027 renewal is now open',
-    summary: 'Bishops and pastors can now renew their licence for 2027 to remain on the Roll of Good Standing.',
+    summary: 'Registration renewal for the 2027 Roll of Good Standing is now open to bishops and pastors participating in the fellowship.',
     image: 'assets/news/renewal.webp',
     body: [
-      'Renewal for 2027 is now open. Every bishop and pastor who wishes to remain on the Roll of Good Standing must renew their licence each year.',
+      'Registration renewal for the 2027 Roll of Good Standing is now open to bishops and pastors participating in the fellowship. Renewing each year keeps a minister’s licence current and their name on the Roll.',
       'You can renew online through your church’s page or the Kuriake Castle registration page. You will need your details and a recent photo in official attire.',
-      'Pastors are confirmed by their bishop. Once your registration has been confirmed, your name appears on the Roll of Good Standing for 2027.',
+      'A pastor’s bishop confirms that the pastor serves under them, and the Kuriake Castle office confirms each bishop. Once your registration has been confirmed, your name appears on the Roll of Good Standing for 2027.',
+      'Renewal is registration within the fellowship; it is not an appointment to church office, which remains with each denomination or group. If you do not renew, your name will not appear on the 2027 Roll after the registration deadline.',
     ],
-    links: [],
+    links: [['Renew online', 'signup'], ['Licensing and Registration', 'licensing']],
   },
   {
     // Office, 20 Nov: in place of the Declaration and register articles.
@@ -28,13 +29,13 @@ export const CASTLE_NEWS = [
   },
   {
     slug: 'our-fellowship-around-the-world',
-    title: 'Our fellowship around the world',
-    summary: 'Our churches and ministers serve in many nations across Africa, Europe, the Americas and the islands.',
+    title: 'The fellowship around the world',
+    summary: 'Churches and ministers participating in the fellowship serve in many nations across Africa, Europe, the Americas and the islands.',
     image: 'assets/news/fellowship.webp',
     body: [
-      'The fellowship of Kuriake Castle reaches far beyond Ghana. Its churches and ministers serve in more than a hundred countries.',
+      'The fellowship of Kuriake Castle reaches far beyond Ghana. Churches and ministers belonging to participating denominations and groups serve in more than a hundred countries.',
       'Bishops and pastors of the fellowship serve across Africa, Europe, North and South America, Asia and the Middle East, and on islands of the Caribbean and the Pacific.',
-      'Wherever they serve, they share one faith and one mission: to bring the gospel of Jesus Christ to the world.',
+      'The participating denominations and groups remain independently governed, united through shared faith, fellowship and mission: to bring the gospel of Jesus Christ to the world.',
     ],
     links: [],
   },
