@@ -256,3 +256,10 @@ html:has(.kc-site){scroll-behavior:smooth}
 .kc-button.is-outline:hover{background:var(--kc-navy);color:#fff!important}
 .kc-tours-map{grid-column:1/-1;width:100%;height:220px;border:0;filter:grayscale(.2)}
 @media(max-width:760px){.kc-tours-map{height:240px}}
+/* Office, 20 Nov: the castle's map in the footer; it opens Google Maps. */
+.kc-footer-visit p{margin:12px 0 0;font-size:14px;line-height:1.55}
+.kc-footer-map{position:relative;display:block!important;width:260px;max-width:100%;margin:0!important;border:1px solid #ffffff26;overflow:hidden}
+.kc-footer-map img{display:block;width:100%;height:auto;transition:transform .3s}
+.kc-footer-map span{position:absolute;left:0;right:0;bottom:0;padding:6px 10px;background:#09162acc;color:#fff;font-size:12.5px;font-weight:700;letter-spacing:.04em}
+.kc-footer-map:hover img{transform:scale(1.04)}
+.kc-map-credit{display:block;margin-top:8px;font-size:11px;color:#8b93a3}

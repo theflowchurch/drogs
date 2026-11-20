@@ -13,6 +13,7 @@ import "./castle-site.css";
 const DECLARATION_TEXT = LEGAL_PAGES.find((p) => p.slug === "declaration").markdown.replace(/^# .*\n+/, "");
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const MAP_URL = "https://maps.app.goo.gl/Z5px9mW4b3D9xxfh9";
 const href = (path = "") => `${base}/${path ? `${path}/` : ""}`;
 
 
@@ -41,6 +42,14 @@ function Footer() {
       <div className="kc-footer-cols kc-footer-one">
         <div><h4>Events</h4><div className="kc-footer-events">{CASTLE_EVENTS.map((e) => <a key={e.slug} href={href(e.slug)}>{e.title}</a>)}</div></div>
         <div className="kc-footer-declaration"><h4>Declaration</h4><a href={href("declaration")}>Kuriake Castle Declaration <span aria-hidden="true">→</span></a></div>
+        {/* Office, 20 Nov: where the castle is; the map opens Google Maps. */}
+        <div className="kc-footer-visit"><h4>Visit</h4>
+          <a className="kc-footer-map" href={MAP_URL} target="_blank" rel="noopener noreferrer" aria-label="Open Kuriake Castle in Google Maps">
+            <img src={`${base}/assets/brand/castle-map.webp`} alt="Map showing Kuriake Castle" width="280" height="160" loading="lazy" /><span>Open in Google Maps ↗</span>
+          </a>
+          <p>Asesano, Akuapem North<br />Eastern Region, Ghana</p>
+          <small className="kc-map-credit">Map © OpenStreetMap contributors</small>
+        </div>
       </div>
     </div>
     <div className="kc-footer-legal"><span>© {new Date().getFullYear()} Kuriake Castle</span></div>
@@ -129,13 +138,7 @@ export function CastleHome() {
           <li>Visits for churches, schools and groups</li>
           <li>Time for prayer and reflection</li>
         </ul>
-        {/* Office, 20 Nov: where the castle is (its Google Maps place). */}
-        <div className="kc-tours-where">
-          <p><b>Kuriake Castle</b><br />Asesano, Akuapem North<br />Eastern Region, Ghana</p>
-          <a className="kc-button is-outline" href="https://maps.app.goo.gl/Z5px9mW4b3D9xxfh9" target="_blank" rel="noopener noreferrer">Get directions <span aria-hidden="true">→</span></a>
-        </div>
       </div>
-      <iframe className="kc-tours-map" title="Map showing Kuriake Castle" src="https://www.google.com/maps?q=5.8991703,-0.154918&z=15&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
       <Next to="declaration" label="Our Declaration" />
     </section>
     {/* Office, 19 Nov: the start of the Declaration, with the full text on its own page. */}
