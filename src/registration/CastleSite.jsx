@@ -27,7 +27,7 @@ function Nav({ solid = false }) {
     <button type="button" className="kc-menu" aria-expanded={open} aria-label="Menu" onClick={() => setOpen(!open)}><span /><span /></button>
     <nav aria-label="Main">
       {/* Office, 19 Nov: in the order they appear on the page. */}
-      {[["news", "News"], ["authority", "About Us"], ["declaration", "Declaration"], ["ceremonies", "Events"]].map(([id, label]) =>
+      {[["news", "News"], ["authority", "About Us"], ["castle", "The Castle"], ["tours", "Tours"], ["declaration", "Declaration"], ["ceremonies", "Events"]].map(([id, label]) =>
         <a key={id} href={`${href()}#${id}`} onClick={() => setOpen(false)}>{label}</a>)}
     </nav>
   </header>;
@@ -98,6 +98,37 @@ export function CastleHome() {
         <p>The fellowship is built on mutual respect and cooperation. Taking part is voluntary, and every denomination and group in the fellowship is independent. Each one keeps its own name and identity, has its own leadership, and is responsible for the running of its own churches and ministries.</p>
         <p>Kuriake Castle does not govern its member churches. Its role is to support them. It provides fellowship, spiritual encouragement and advice when they ask for it, and it brings ministers and churches together around their shared calling.</p>
         <p>Kuriake Castle also keeps the Roll of Good Standing, a register of the bishops and pastors who serve within the fellowship. It allows churches and members of the public to confirm a minister’s standing each year.</p>
+      </div>
+      <Next to="castle" label="The Castle" />
+    </section>
+    {/* Office, 20 Nov: the castle's place in Ghana's history (Akuapem Mountains). */}
+    <section className="kc-castle kc-screen" id="castle" aria-labelledby="kc-castle-title">
+      <div className="kc-section-head">
+        <h2 id="kc-castle-title">A Castle for the Church</h2>
+        <p>Kuriake comes from the Greek <i>kuriakē</i>, meaning “belonging to the Lord”. It is the word from which the English word “church” comes.</p>
+      </div>
+      <div className="kc-castle-story">
+        <article><span className="kc-castle-num">I</span><h3>Ghana’s Forts and Castles</h3>
+          <p>Ghana is known around the world for its historic forts and castles. Built along the coast by European powers between 1482 and 1786, castles such as Elmina, Cape Coast and Christiansborg in Osu were centres of the gold trade and, later, the transatlantic slave trade. In 1979 they were listed together as a UNESCO World Heritage Site.</p></article>
+        <article><span className="kc-castle-num">II</span><h3>The Akuapem Mountains</h3>
+          <p>In 1835 the Basel Mission missionary Andreas Riis moved inland from the coast to Akropong, on the Akuapem ridge. The church he founded there was the first Presbyterian church in Ghana, and the Akuapem Mountains became one of the early homes of Christianity in the country.</p></article>
+        <article><span className="kc-castle-num">III</span><h3>A Castle for the Church</h3>
+          <p>Kuriake Castle stands in the Akuapem Mountains, where the missionaries came. Ghana’s coastal castles were built for trade. Kuriake Castle is, for the first time, a castle built for the church: a home for churches and missions, a place of worship and gathering, and the home of its Licensing Authority.</p></article>
+      </div>
+      <Next to="tours" label="Tours" light />
+    </section>
+    {/* Office, 20 Nov: tours of the castle, general for now. */}
+    <section className="kc-tours kc-screen" id="tours" aria-labelledby="kc-tours-title">
+      <div className="kc-tours-photo"><img src={`${base}/assets/brand/castle-hero-poster-bw.webp`} alt="Kuriake Castle" loading="lazy" /></div>
+      <div className="kc-tours-copy">
+        <h2 id="kc-tours-title">Tour the Castle</h2>
+        <p>Visitors are welcome to tour Kuriake Castle and discover its place in the story of the church in Ghana.</p>
+        <p>A visit takes you through the castle and its grounds in the Akuapem Mountains, with time to learn about its history, its purpose and the fellowship it serves.</p>
+        <ul className="kc-offer">
+          <li>Guided tours of the castle and its grounds</li>
+          <li>Visits for churches, schools and groups</li>
+          <li>Time for prayer and reflection</li>
+        </ul>
       </div>
       <Next to="declaration" label="Our Declaration" />
     </section>

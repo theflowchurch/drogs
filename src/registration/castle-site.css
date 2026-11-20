@@ -232,3 +232,20 @@ html:has(.kc-site){scroll-behavior:smooth}
 .kc-about .kc-role-list span{font-size:15px;line-height:1.55}
 @media(max-width:1000px){.kc-about.kc-screen{grid-template-columns:1fr}.kc-about .kc-about-photo img{aspect-ratio:4/3}}
 @media(max-width:760px){.kc-about .kc-role-list{grid-template-columns:1fr}.kc-about .kc-role-list li{border-bottom:1px solid var(--kc-line);padding:14px 0}}
+/* Office, 20 Nov: the castle's history, and tours. */
+.kc-castle{background:var(--kc-navy);color:#fff}
+.kc-castle .kc-section-head{margin-bottom:46px}
+.kc-castle .kc-section-head h2{color:#fff}
+.kc-castle .kc-section-head p:not(.kc-eyebrow){color:#c9ccd3}
+.kc-castle-story{width:min(1180px,90%);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.kc-castle-story article{padding:30px 28px 32px;border-top:2px solid var(--kc-gold);background:#ffffff0d}
+.kc-castle-num{display:block;font-family:'KC Serif',serif;color:var(--kc-gold-soft);font-size:18px;margin-bottom:16px}
+.kc-castle-story h3{font-size:24px;margin-bottom:12px;color:#fff}
+.kc-castle-story p{margin:0;color:#d4d7de;font-size:15.5px;line-height:1.65}
+.kc-tours{width:min(1180px,90%);margin:0 auto;display:grid!important;grid-template-columns:1.1fr 1fr;gap:64px;align-items:center;align-content:center}
+.kc-tours-photo img{display:block;width:100%;aspect-ratio:4/3.1;object-fit:cover}
+.kc-tours-copy h2{font-size:clamp(34px,3.8vw,52px);margin-bottom:22px}
+.kc-tours-copy p{color:var(--kc-muted);margin:0 0 16px}
+.kc-tours-copy .kc-offer{margin-top:24px}
+.kc-tours .kc-next{grid-column:1/-1}
+@media(max-width:1000px){.kc-castle-story{grid-template-columns:1fr;gap:18px}.kc-tours{grid-template-columns:1fr;gap:36px}}
