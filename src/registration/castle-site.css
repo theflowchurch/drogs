@@ -298,3 +298,15 @@ html:has(.kc-site){scroll-behavior:smooth}
 .kc-footer-one a{margin-bottom:10px}
 @media(max-width:1000px){.kc-footer-one{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.kc-footer-one{grid-template-columns:1fr;gap:32px!important}}
+/* Office, 20 Nov: A Castle for the Church: a brighter photo with the shade
+   behind the text only, the name on its own line, two history sections. */
+.kc-hero.is-bright .kc-hero-shade{background:linear-gradient(90deg,#09162ae6 0%,#09162ab3 38%,#09162a33 70%,#09162a00 100%),linear-gradient(180deg,#09162a80 0%,#09162a00 22%)}
+.kc-hero.is-bright .kc-lead{max-width:620px;color:#eef0f3}
+.kc-name{background:var(--kc-paper);padding:84px 5% 70px;text-align:center}
+.kc-name-big{font-family:'KC Serif',Georgia,serif;font-size:clamp(34px,4.4vw,58px);line-height:1.12;margin:0 0 18px;color:var(--kc-ink)}
+.kc-name-note{max-width:620px;margin:0 auto;color:var(--kc-muted);font-size:17px}
+.kc-history{width:min(1180px,90%);margin:0 auto;padding:20px 0 110px;display:grid;grid-template-columns:1fr 1fr;gap:56px}
+.kc-history article{border-top:2px solid var(--kc-gold);padding-top:30px}
+.kc-history h2{font-size:clamp(26px,2.6vw,34px);margin-bottom:16px}
+.kc-history p{margin:0;color:#2c3546;line-height:1.75}
+@media(max-width:860px){.kc-history{grid-template-columns:1fr;gap:40px;padding-bottom:70px}.kc-name{padding:60px 6% 50px}}

@@ -56,10 +56,10 @@ function Footer() {
     <div className="kc-footer-legal"><span>© {new Date().getFullYear()} Kuriake Castle</span></div>
   </footer>;
 }
-function Hero({ eyebrow, title, lead, children, next = null, video = false, small = false, image = "assets/brand/castle-night.webp" }) {
+function Hero({ eyebrow, title, lead, children, next = null, video = false, small = false, bright = false, image = "assets/brand/castle-night.webp" }) {
   const ref = useRef(null);
   useEffect(() => { if (matchMedia("(prefers-reduced-motion: reduce)").matches) ref.current?.pause(); }, []);
-  return <section className={`kc-hero ${small ? "is-small" : ""}`}>
+  return <section className={`kc-hero ${small ? "is-small" : ""} ${bright ? "is-bright" : ""}`}>
     {video ? <video ref={ref} className="kc-hero-media" autoPlay muted loop playsInline poster={`${base}/assets/brand/castle-night.webp`}>
       <source src={`${base}/assets/brand/castle-hero-night-b-1920.mp4`} media="(min-width: 1100px)" type="video/mp4" />
       <source src={`${base}/assets/brand/castle-hero-night-b-1280.mp4`} type="video/mp4" />
@@ -88,10 +88,11 @@ const ABOUT = [
   "Kuriake Castle does not govern its member churches. Its role is to support them. It provides fellowship, spiritual encouragement and advice when they ask for it, and it brings ministers and churches together around their shared calling.",
   "Kuriake Castle also keeps the Roll of Good Standing, a register of the bishops and pastors who serve within the fellowship. It allows churches and members of the public to confirm a minister’s standing each year.",
 ];
+// Office, 20 Nov: the castle's purpose first, then its name, then the history
+// of Ghana's coastal castles and of Akuapem.
 const STORY = [
-  ["I", "Ghana’s Forts and Castles", "Ghana is known around the world for its historic forts and castles. Built along the coast by European powers between 1482 and 1786, castles such as Elmina, Cape Coast and Christiansborg in Osu were centres of the gold trade and, later, the transatlantic slave trade. In 1979 they were listed together as a UNESCO World Heritage Site."],
-  ["II", "The Akuapem Mountains", "In 1835 the Basel Mission missionary Andreas Riis moved inland from the coast to Akropong, on the Akuapem ridge. The church he founded there was the first Presbyterian church in Ghana, and the Akuapem Mountains became one of the early homes of Christianity in the country."],
-  ["III", "A Castle for the Church", "Kuriake Castle stands in the Akuapem Mountains, where the missionaries came. Ghana’s coastal castles were built for trade. Kuriake Castle is, for the first time, a castle built for the church: a home for churches and missions, a place of worship and gathering, and the home of its Licensing Authority."],
+  ["Ghana’s Coastal Forts and Castles", "Ghana’s coastal forts and castles bear witness to centuries of trade, including the trade in gold and the transatlantic slave trade. Built by European powers between 1482 and 1786, they include Elmina Castle, Cape Coast Castle and Christiansborg Castle in Osu. Together they form a UNESCO World Heritage Site, listed in 1979."],
+  ["The Christian Heritage of Akuapem", "In 1835 the Basel Mission missionary Andreas Riis moved inland from the coast to Akropong, on the Akuapem Ridge. The church he founded there was the first Presbyterian church in Ghana, and Akropong became an important centre of the Basel Mission and of Presbyterian Christianity in the country. Today, Kuriake Castle stands in these same mountains."],
 ];
 const More = ({ to, children }) => <a className="kc-more" href={href(to)}>{children} <span aria-hidden="true">→</span></a>;
 function NewsCards({ list = CASTLE_NEWS }) {
@@ -101,10 +102,10 @@ function NewsCards({ list = CASTLE_NEWS }) {
   </a>)}</div>;
 }
 // One topic's own page: the small castle banner, then its content.
-function TopicPage({ eyebrow = "Kuriake Castle", title, lead = "", image, children }) {
+function TopicPage({ eyebrow = "Kuriake Castle", title, lead = "", image, bright = false, children }) {
   return <div className="kc-site">
     <Nav solid />
-    <Hero small eyebrow={eyebrow} title={title} lead={lead} image={image} />
+    <Hero small bright={bright} eyebrow={eyebrow} title={title} lead={lead} image={image} />
     {children}
     <Footer />
   </div>;
@@ -142,10 +143,15 @@ export function CastleAboutPage() {
   </TopicPage>;
 }
 export function CastleStoryPage() {
-  return <TopicPage eyebrow="The Castle" title="A Castle for the Church" image="assets/brand/castle-hero-poster-bw.webp"
-    lead="Kuriake comes from the Greek kuriakē, meaning “belonging to the Lord”. It is the word from which the English word “church” comes.">
-    <section className="kc-castle kc-page-body">
-      <div className="kc-castle-story">{STORY.map(([n, t, d]) => <article key={t}><span className="kc-castle-num">{n}</span><h3>{t}</h3><p>{d}</p></article>)}</div>
+  return <TopicPage eyebrow="The Castle" title="A Castle for the Church" image="assets/brand/castle-hero-poster-bw.webp" bright
+    lead="Kuriake Castle was built in the Akuapem Mountains as a home for churches and missions. Ghana’s coastal castles were built for trade; for the first time, a castle has been built for the church. It is a place for worship and gathering, and the home of its Licensing Authority.">
+    <section className="kc-name" aria-label="The name Kuriake">
+      <p className="kc-eyebrow">The name</p>
+      <p className="kc-name-big">Belonging to the Lord</p>
+      <p className="kc-name-note">Kuriake comes from the Greek <i>kuriakē</i>, meaning “belonging to the Lord”. It is the word from which the English word “church” comes.</p>
+    </section>
+    <section className="kc-history" aria-label="History">
+      {STORY.map(([t, d]) => <article key={t}><h2>{t}</h2><p>{d}</p></article>)}
     </section>
   </TopicPage>;
 }
