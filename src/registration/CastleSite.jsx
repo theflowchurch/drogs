@@ -88,12 +88,6 @@ const ABOUT = [
   "Kuriake Castle does not govern the participating denominations and groups or their churches. Its role is to support them by providing fellowship, spiritual encouragement and guidance upon request, and by bringing ministers and churches together in their shared calling.",
   "Kuriake Castle also maintains the Roll of Good Standing, a register of bishops and pastors who serve within the fellowship. The register allows churches and members of the public to verify a minister’s standing each year.",
 ];
-// Office, 20 Nov: the three ways the name is used, so none is mistaken for another.
-const MEANINGS = [
-  ["The fellowship", "the voluntary fellowship of participating denominations and groups, as described in the Declaration."],
-  ["The castle", "the building and grounds in the Akuapem Mountains of Ghana, where gatherings, services and tours take place."],
-  ["Licensing and registration", "the ecclesiastical licensing and registration process carried out at the castle, through which the Roll of Good Standing is kept."],
-];
 const HOME_ABOUT = "Kuriake Castle brings together independent denominations and Christian ministry groups through shared faith, fellowship and mission. Each participating denomination or group retains its own leadership and responsibility for its churches and ministries.";
 
 // Office, 20 Nov: the castle's purpose first, then its name, then the history
@@ -133,12 +127,6 @@ export function CastleHome() {
       <div><p className="kc-eyebrow">About Us</p><h2 id="kc-about-title">A fellowship of denominations and ministries</h2>
         <p>{HOME_ABOUT}</p><More to="about-us">About Us</More></div>
     </section>
-    <section className="kc-home-licensing" aria-labelledby="kc-licensing-title">
-      <p className="kc-eyebrow">Licensing and Registration</p>
-      <h2 id="kc-licensing-title">A register of bishops and pastors</h2>
-      <p>Kuriake Castle maintains a register of participating bishops and pastors through its ecclesiastical licensing and annual registration process.</p>
-      <More to="directory">Search the directory</More>
-    </section>
     <section className="kc-home-tiles" aria-label="Explore Kuriake Castle">
       <a className="kc-tile is-dark" href={href("the-castle")}><p className="kc-eyebrow">The Castle</p><h3>A Castle for the Church</h3><p>Ghana is known for its forts and castles. Kuriake Castle, in the Akuapem Mountains, is the first castle built for the church.</p><span className="kc-more">Read the story <span aria-hidden="true">→</span></span></a>
       <a className="kc-tile" href={href("tours")}><p className="kc-eyebrow">Tours</p><h3>Tour the Castle</h3><p>Visitors are welcome to tour the castle and its grounds and discover its place in the story of the church in Ghana.</p><span className="kc-more">Plan a visit <span aria-hidden="true">→</span></span></a>
@@ -153,10 +141,6 @@ export function CastleAboutPage() {
     <section className="kc-about kc-page-body">
       <div className="kc-about-photo"><img src={`${base}/assets/brand/castle-night.webp`} alt="Kuriake Castle at night" loading="lazy" /></div>
       <div className="kc-about-copy">{ABOUT.map((t) => <p key={t}>{t}</p>)}</div>
-    </section>
-    <section className="kc-meanings" aria-labelledby="kc-meanings-title">
-      <h2 id="kc-meanings-title">One name, used in three ways</h2>
-      <dl>{MEANINGS.map(([t, d]) => <div key={t}><dt>{t}</dt><dd>{d}</dd></div>)}</dl>
     </section>
   </TopicPage>;
 }
