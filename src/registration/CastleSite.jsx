@@ -99,8 +99,11 @@ export function CastleHome() {
       <div className="kc-about-photo"><img src={`${base}/assets/brand/castle-night.webp`} alt="Kuriake Castle at night" loading="lazy" /></div>
       <div className="kc-about-copy">
         <h2 id="kc-authority-title">About Us</h2>
-        <p>Kuriake Castle is an ecclesiastical monument in Ghana and serves as the headquarters of churches and missions. Its Licensing Authority oversees more than sixty denominations worldwide.</p>
-        <p>We issue annual licences to bishops and pastors and maintain the Roll of Good Standing, allowing churches and members of the public to verify a minister’s current standing.</p>
+        {/* Office, 20 Nov: About Us drawn from the Declaration, in general terms. */}
+        <p>Kuriake Castle is a fellowship of churches and Christian ministries from many nations. Its members are united by a common faith, shared beliefs and one mission: to bring the gospel of Jesus Christ to the world.</p>
+        <p>The fellowship is built on mutual respect and cooperation. Taking part is voluntary, and every denomination and group in the fellowship is independent. Each one keeps its own name and identity, has its own leadership, and is responsible for the running of its own churches and ministries.</p>
+        <p>Kuriake Castle does not govern its member churches. Its role is to support them. It provides fellowship, spiritual encouragement and advice when they ask for it, and it brings ministers and churches together around their shared calling.</p>
+        <p>Kuriake Castle also keeps the Roll of Good Standing, a register of the bishops and pastors who serve within the fellowship. It allows churches and members of the public to confirm a minister’s standing each year.</p>
         <ul className="kc-role-list">{ROLE.map(([t, d]) => <li key={t}><b>{t}</b><span>{d}</span></li>)}</ul>
       </div>
       <Next to="declaration" label="Our Declaration" />
