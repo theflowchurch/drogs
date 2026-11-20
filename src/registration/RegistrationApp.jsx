@@ -851,7 +851,7 @@ export default function RegistrationApp({
           {(site !== "flow" || churchConfig || fellowship) && <strong>{brand?.shortName || "Kuriake Castle"}</strong>}
         </a>
         {/* Office, 20 Nov: on the bishops' and pastors' sign-up, Kuriake Castle's logo beside the title. */}
-        {fellowship && <div className="kc-side-logo reg-fellowship-kc"><img src={`${base}/assets/brand/castle-white.png`} alt="Kuriake Castle" width="512" height="348"/><span>Kuriake Castle</span></div>}
+        {fellowship && <div className="kc-side-logo reg-fellowship-kc"><img src={`${base}/assets/brand/castle-white.png`} alt="Kuriake Castle" width="1200" height="464"/><span>Kuriake Castle</span></div>}
         <div className="reg-header-right">
           {gate && actor ? (
             <button className="reg-text" onClick={logout}>

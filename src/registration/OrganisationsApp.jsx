@@ -101,7 +101,7 @@ export function Masthead({ bishops = false, count = true, sub = 'Worldwide Fello
       <p className="org-dhmm-total">{line}{count && total != null && <> <span className="org-dhmm-dot" aria-hidden="true">·</span> <strong>{total.toLocaleString()}</strong> {noun}</>}</p>
     </div>
     {/* Office, 20 Nov: Kuriake Castle's logo on the other side, for now the castle mark. */}
-    <div className="kc-side-logo org-kc-logo"><img src={`${base}/assets/brand/castle-white.png`} alt="Kuriake Castle" width="512" height="348"/><span>Kuriake Castle</span></div>
+    <div className="kc-side-logo org-kc-logo"><img src={`${base}/assets/brand/castle-white.png`} alt="Kuriake Castle" width="1200" height="464"/><span>Kuriake Castle</span></div>
     {bishops && <BishopAccess className="org-bishop-access"/>}
   </header>;
 }

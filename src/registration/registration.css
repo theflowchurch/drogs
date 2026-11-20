@@ -4420,3 +4420,4 @@ input[type="date"] {
   .reg-fellowship-app .reg-header .reg-header-right{position:static;transform:none;margin-left:auto}
 }
 @media (min-width:701px) and (max-width:1023px){.reg-fellowship-app .reg-brand strong{display:none}}
+@media (max-width:700px){.reg-fellowship-kc img{height:17px}.reg-app.reg-fellowship-app .reg-brand-mark img{max-width:84px}}
