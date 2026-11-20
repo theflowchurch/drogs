@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import * as XLSX from 'xlsx';
-import { applyAction, directoryPeople, overlayReferences, normalName, parseDob, catalogOf, REFERENCE_FIELDS } from '../registration/model.mjs';
+import { applyAction, directoryPeople, overlayReferences, normalName, parseDob, catalogOf, REFERENCE_FIELDS, paymentConfirmed } from '../registration/model.mjs';
 import { nonPastoralRank, submittedSheetBanner, submittedBirthKeys } from '../../scripts/lib/submitted-sheet-authority.mjs';
 import { HttpError } from './auth.mjs';
 
@@ -8,7 +8,14 @@ export const managementPeople = (state, references) => directoryPeople({ ...stat
 // Office, 20 Nov: for reading, everyone on the directory, including people who signed
 // up new (not on our list) and are confirmed, so dashboards see them too (ids start
 // with "new:"). Changes through the API stay limited to listed people.
-export const listedAndNewPeople = (state, references) => directoryPeople({ ...state, hidden: [] }, references);
+// Office, 20 Nov: a new sign-up is listed once in good standing: a pastor confirmed by
+// their bishop with the payment confirmed; a bishop with the payment confirmed (Paystack
+// confirms at once; a receipt from another app waits for the office).
+export function listedAndNewPeople(state, references) {
+  const paidBishop = (r) => r.data?.role === 'bishop' && !r.data?.referenceId && r.status === 'pending' && paymentConfirmed(r);
+  const view = { ...state, hidden: [], registrations: (state.registrations || []).map((r) => paidBishop(r) ? { ...r, status: 'confirmed' } : r) };
+  return directoryPeople(view, references).filter((p) => !p.id.startsWith('new:') || paymentConfirmed(p.registration));
+}
 export const personRevision = person => createHash('sha256').update(JSON.stringify(person)).digest('hex');
 const domainAction = (...args) => { try { return applyAction(...args); } catch (error) { throw error instanceof HttpError ? error : new HttpError(400, error.message); } };
 const normalizedWords = value => normalName(value).split(' ').filter(Boolean).sort();
