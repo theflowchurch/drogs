@@ -125,20 +125,23 @@ function DenominationDirectory({ site }) {
   const config = denominationSite(site);
   // A simple directory (asked for by the church) lists everyone with no search, filters or counts.
   const simple = Boolean(config.simpleDirectory);
-  // Every church shows its totals at the start of each section (office, 19 Nov), simple layout or not.
-  const count = n => <span className="denom-section-count">{n.toLocaleString()}</span>;
+  // Office, 20 Nov: the total is on the title's last line, not beside each section.
+  // Office, 20 Nov: the church's total as the title's last line ("49 Bishops and Pastors"),
+  // in place of the numbers beside Bishops and Pastors.
+  const total = list.length;
+  const totalLine = data && total > 0 ? <strong className="denom-title-total"><b>{total.toLocaleString()}</b> <i>{total === 1 ? 'Bishop or Pastor' : 'Bishops and Pastors'}</i></strong> : null;
   const update = (key, value) => { setFilter(f => ({ ...f, [key]: value })); setLimit(48); };
   const reset = () => { setFilter({ q: '', city: '', gender: '' }); setLimit(48); };
   return <main className="denom-directory">
     <div className="denom-directory-heading"><div>{config.namedHeading
-      ? <div className="denom-named-title">{config.logoHeading && config.logo && <a href={churchHref(site, '', base)} className="denom-named-logo" aria-label={`${config.name} home`}><img src={`${base}/${config.logo}`} alt="" style={config.logoScale ? { width: `${config.logoScale * 100}%`, height: `${config.logoScale * 100}%`, margin: "auto", borderRadius: 0 } : undefined}/></a>}<h1 className="denom-named-heading"><span>{config.name}</span><span>{config.directoryHeading}</span></h1></div>
-      : <><p className="denom-kicker">LICENSED BISHOPS & PASTORS</p><h1>{config.directoryHeading}</h1></>}</div>{data && !simple && <span className="denom-total"><strong>{ordered.length}</strong> ministers{(filter.q || filter.city || filter.gender) ? ' found' : ''}</span>}</div>
+      ? <div className="denom-named-title">{config.logoHeading && config.logo && <a href={churchHref(site, '', base)} className="denom-named-logo" aria-label={`${config.name} home`}><img src={`${base}/${config.logo}`} alt="" style={config.logoScale ? { width: `${config.logoScale * 100}%`, height: `${config.logoScale * 100}%`, margin: "auto", borderRadius: 0 } : undefined}/></a>}<h1 className="denom-named-heading"><span>{config.name}</span><span>{config.directoryHeading}</span>{totalLine}</h1></div>
+      : <><p className="denom-kicker">LICENSED BISHOPS & PASTORS</p><h1>{config.directoryHeading}{totalLine}</h1></>}</div></div>
     {!simple && <DirectoryFilters site={config.visualStyle || site} filter={filter} cities={cities} update={update} reset={reset}/>}
     {error && <div className="denom-load-error" role="alert"><p>{data ? 'The latest update could not be loaded. ' : ''}{error}</p><button className="denom-nav-button" type="button" onClick={retry}>Try again</button></div>}
     {!data && !error && <div className="denom-loading" role="status">Loading ministers…</div>}
     {data && <>
-      {sections.bishops.length > 0 && <section className="denom-minister-section" aria-label="Bishops"><h2>{sections.bishops.length === 1 ? 'Bishop' : 'Bishops'} {count(sections.bishops.length)}</h2><MinisterGrid list={sections.bishops} year={data.year}/></section>}
-      {sections.pastors.length > 0 && <section className="denom-minister-section" aria-label="Pastors"><h2>{sections.pastors.length === 1 ? 'Pastor' : 'Pastors'} {count(sections.pastors.length)}</h2><MinisterGrid list={sections.pastors.slice(0, limit)} year={data.year}/>{sections.pastors.length > limit && <button type="button" className="denom-nav-button denom-more" onClick={() => setLimit(n => n + 48)}>Show more pastors <Arrow/></button>}</section>}
+      {sections.bishops.length > 0 && <section className="denom-minister-section" aria-label="Bishops"><h2>{sections.bishops.length === 1 ? 'Bishop' : 'Bishops'}</h2><MinisterGrid list={sections.bishops} year={data.year}/></section>}
+      {sections.pastors.length > 0 && <section className="denom-minister-section" aria-label="Pastors"><h2>{sections.pastors.length === 1 ? 'Pastor' : 'Pastors'}</h2><MinisterGrid list={sections.pastors.slice(0, limit)} year={data.year}/>{sections.pastors.length > limit && <button type="button" className="denom-nav-button denom-more" onClick={() => setLimit(n => n + 48)}>Show more pastors <Arrow/></button>}</section>}
       {!ordered.length && <div className="denom-loading"><h2>{filter.q || filter.city || filter.gender ? 'No ministers match' : 'No ministers listed'}</h2><p>{filter.q || filter.city || filter.gender ? 'Try another name or clear the filters.' : 'There are currently no ministers listed for this denomination.'}</p>{(filter.q || filter.city || filter.gender) && <button type="button" className="denom-nav-button" onClick={reset}>Clear filters</button>}</div>}
     </>}
     <LicensedMinisterNotice open={config.openLicenseNotice}/>

@@ -85,3 +85,10 @@
 .denom-site .denom-directory .denom-named-title{justify-content:flex-start;text-align:left}
 .denom-site .denom-directory h1.denom-named-heading{align-items:flex-start;text-align:left}
 .denom-named-logo{display:flex!important;align-items:center;justify-content:center;overflow:hidden}
+/* Office, 20 Nov: the total as the title's last line, spaced and lighter. */
+.denom-named-heading span:nth-child(2){color:var(--brand,var(--denom-accent))}
+.denom-title-total{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .28em;margin-top:.42em;font-size:clamp(40px,4.6vw,66px);line-height:1.02;letter-spacing:-.035em;color:var(--denom-ink)}
+.denom-title-total b{font-weight:800;color:var(--brand,var(--denom-accent))}
+.denom-title-total i{font-style:normal;font-weight:400}
+.denom-title-total i{white-space:nowrap}
+@media(max-width:700px){.denom-title-total{font-size:clamp(24px,7vw,30px);margin-top:.5em}}
