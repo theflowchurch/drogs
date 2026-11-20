@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import * as XLSX from 'xlsx';
-import { applyAction, directoryPeople, overlayReferences, normalName, parseDob, catalogOf, REFERENCE_FIELDS, paymentConfirmed } from '../registration/model.mjs';
+import { applyAction, directoryPeople, overlayReferences, normalName, parseDob, catalogOf, REFERENCE_FIELDS, paymentConfirmed, goodStandingIds, deadlineOf } from '../registration/model.mjs';
 import { nonPastoralRank, submittedSheetBanner, submittedBirthKeys } from '../../scripts/lib/submitted-sheet-authority.mjs';
 import { HttpError } from './auth.mjs';
 
@@ -11,8 +11,31 @@ export const managementPeople = (state, references) => directoryPeople({ ...stat
 // Office, 20 Nov: a new sign-up is listed once in good standing: a pastor confirmed by
 // their bishop, a new bishop confirmed by the office, and in both cases the payment
 // confirmed (Paystack confirms at once; a receipt from another app waits for the office).
-export const listedAndNewPeople = (state, references) =>
-  directoryPeople({ ...state, hidden: [] }, references).filter((p) => !p.id.startsWith('new:') || paymentConfirmed(p.registration));
+// Office, 20 Nov: dashboards follow the website. Before the registration deadline is
+// applied they get everyone, with the seal on those in good standing; once it is
+// applied they get only those in good standing, and no seal is needed; after "Put
+// everyone back" everyone returns, with the seal again.
+const standingCache = new WeakMap();
+export function standingOf(state, references) {
+  // Worked out once per state (a request reads many people); worked out again if the
+  // state was changed in place since.
+  const applied = deadlineOf(state).applied;
+  const key = `${applied}|${(state.audit || []).length}|${(state.registrations || []).length}|${(state.profiles || []).length}`;
+  let s = standingCache.get(state);
+  if (!s || s.key !== key) {
+    const ok = goodStandingIds(state, references);
+    const has = (p) => ok.has(p.id.startsWith('new:') ? `u:${p.id.slice(4)}` : p.id);
+    s = { key, applied, has, seal: (p) => !applied && has(p) };
+    standingCache.set(state, s);
+  }
+  return s;
+}
+export const listedAndNewPeople = (state, references) => {
+  const standing = standingOf(state, references);
+  return directoryPeople({ ...state, hidden: [] }, references)
+    .filter((p) => !p.id.startsWith('new:') || paymentConfirmed(p.registration))
+    .filter((p) => !standing.applied || standing.has(p));
+};
 export const personRevision = person => createHash('sha256').update(JSON.stringify(person)).digest('hex');
 const domainAction = (...args) => { try { return applyAction(...args); } catch (error) { throw error instanceof HttpError ? error : new HttpError(400, error.message); } };
 const normalizedWords = value => normalName(value).split(' ').filter(Boolean).sort();

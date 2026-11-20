@@ -5,7 +5,7 @@ import { readBody, jsonBody } from './api-body.mjs';
 import { prepareImage } from './storage.mjs';
 import { applyAction, directoryPeople, REFERENCE_FIELDS } from '../registration/model.mjs';
 import { photoProgress, photoKey, photoTask } from '../registration/photo-progress.mjs';
-import { managementPeople, listedAndNewPeople, personRevision, changePerson, importPastors, workbookPastors, annotateApiAudit } from './managed-people.mjs';
+import { managementPeople, listedAndNewPeople, standingOf, personRevision, changePerson, importPastors, workbookPastors, annotateApiAudit } from './managed-people.mjs';
 import { readSettings, writeSettings, describeSettings, applySettings } from './settings.mjs';
 
 export const MANAGEMENT_ACTIONS = ['addPerson','addRoster','approveBishop','assignBishop','carryRoster','choosePhoto','claim','deleteRegistration','editRoster','hideReference','linkReference','markPaid','moveRoster','officeEdit','openYear','removeRoster','restoreRoster','reviewBishop','reviewPayment','reviewPhoto','setCatalog','setFees','setSignup','setStatus','setVisibility'];
@@ -13,10 +13,11 @@ const writes = ['backend:write','people:write','photos:write','rosters:write'];
 const reply = (data, status=200, headers={}) => Response.json(data,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...headers}});
 const findPerson = (state, refs, id) => { const p = managementPeople(state, refs).find(p=>p.id===id);if(!p)throw new HttpError(404,'Current person not found.');return p; };
 const checkRevision = (request, p) => { const expected=request.headers.get('if-match');if(expected && expected.replace(/^"|"$/g,'')!==personRevision(p))throw new HttpError(409,'This person changed. Read the current record before retrying.'); };
-const responsePerson = (person,state,actor) => {
+const responsePerson = (person,state,actor,references) => {
+  const standing = references ? standingOf(state,references) : null;
   const privateDetails = actor?.apiScopes?.some(s=>['backend:read','backend:write','people:write'].includes(s));
   const fields = ['id','image','lay',...REFERENCE_FIELDS.filter(k=>privateDetails || !['dob','phone','email'].includes(k))];
-  return {...Object.fromEntries(fields.filter(k=>person[k]!==undefined).map(k=>[k,person[k]])),...(person.id.startsWith('new:')?{newSignup:true}:{}),revision:personRevision(person),...(person.role==='pastor'?{photoTask:photoTask(person,state)}:{})};
+  return {...Object.fromEntries(fields.filter(k=>person[k]!==undefined).map(k=>[k,person[k]])),...(person.id.startsWith('new:')?{newSignup:true}:{}),revision:personRevision(person),...(person.role==='pastor'?{photoTask:photoTask(person,state)}:{}),...(standing?{goodStanding:standing.has(person),seal:standing.seal(person)}:{})};
 };
 const bool = (url,key) => { const value=url.searchParams.get(key);if(value!==null&&!['true','false'].includes(value))throw new HttpError(400,`${key} must be true or false.`);return value==='true'; };
 const websiteSettings = new Set(['PUBLIC_DIRECTORY_SOURCE','PUBLIC_PHOTOS']);
@@ -106,13 +107,13 @@ export function createManagementApi({pool,config,storage,keys,people,invalidate}
         const total=data.length,limit=Number(url.searchParams.get('limit')||100),after=url.searchParams.get('after')||'';
         if(!Number.isInteger(limit)||limit<1||limit>500||after.length>100)throw new HttpError(400,'Use limit 1–500 and the returned cursor.');
         data.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);data=data.filter(p=>p.id>after);
-        return reply({data:data.slice(0,limit).map(p=>responsePerson(p,state,actor)),total,nextCursor:data.length>limit?data[limit-1].id:null});
+        return reply({data:data.slice(0,limit).map(p=>responsePerson(p,state,actor,people)),total,nextCursor:data.length>limit?data[limit-1].id:null,deadlineApplied:standingOf(state,people).applied});
       }
       if(method!=='POST')throw new HttpError(405,'Use GET or POST.');
       const actor=await keys.authenticate(request,'people:write'),input=await jsonBody(request);
       if(input.id!==undefined)throw new HttpError(400,'Use PATCH /people/ID to edit an existing person.');
       const result=await mutate(actor,async(before,conn)=>{if(input.fields?.photo)await assertPortrait(conn,input.fields.photo);return changePerson(before,actor,people,input);});
-      return reply({person:responsePerson(result.person,result.state,actor),photoProgress:result.progress},201);
+      return reply({person:responsePerson(result.person,result.state,actor,people),photoProgress:result.progress},201);
     }
     const matched=path.match(/^\/api\/v1\/people\/([^/]+)(?:\/(photo|restore))?$/);
     if(!matched)throw new HttpError(404,'API endpoint not found.');
@@ -129,21 +130,21 @@ export function createManagementApi({pool,config,storage,keys,people,invalidate}
         if(stored&&createHash('sha256').update(stored).digest('hex')===createHash('sha256').update(prepared).digest('hex')) {
           const state=await snapshot(),current=findPerson(state,people,id);checkRevision(request,current);
           if(photoKey(current)!==photoKey(previous))throw new HttpError(409,'A newer photo was added during this upload. Read the person again.');
-          return reply({unchanged:true,person:responsePerson(current,state,actor),photoProgress:photoProgress(state,people)});
+          return reply({unchanged:true,person:responsePerson(current,state,actor,people),photoProgress:photoProgress(state,people)});
         }
       }
       const photo=await storage.upload(actor,bytes,type,'portrait');
       const result=await mutate(actor,before=>{const current=findPerson(before,people,id);checkRevision(request,current);if(photoKey(current)!==photoKey(previous))throw new HttpError(409,'A newer photo was added during this upload. Read the person again before retrying.');return changePerson(before,actor,people,{id,fields:{photo}});});
-      return reply({person:responsePerson(result.person,result.state,actor),photoProgress:result.progress},201);
+      return reply({person:responsePerson(result.person,result.state,actor,people),photoProgress:result.progress},201);
     }
     if(operation==='restore') {
       if(method!=='POST')throw new HttpError(405,'Use POST.');
       const actor=await keys.authenticate(request,'people:write');const result=await mutate(actor,before=>{
         if(![...people,...(before.extraReferences||[])].some(p=>p.id===id))throw new HttpError(404,'Person not found.');
         return{state:applyAction(before,actor,'deleteReference',{referenceId:id,deleted:false},undefined,people)};
-      });return reply({person:responsePerson(findPerson(result.state,people,id),result.state,actor),photoProgress:result.progress});
+      });return reply({person:responsePerson(findPerson(result.state,people,id),result.state,actor,people),photoProgress:result.progress});
     }
-    if(method==='GET'){const actor=await keys.authenticate(request,['backend:read',...writes]);const state=await snapshot(),p=listedAndNewPeople(state,people).find(q=>q.id===id);if(!p)throw new HttpError(404,'Current person not found.');return reply({person:responsePerson(p,state,actor)},200,{ETag:`"${personRevision(p)}"`});}
+    if(method==='GET'){const actor=await keys.authenticate(request,['backend:read',...writes]);const state=await snapshot(),p=listedAndNewPeople(state,people).find(q=>q.id===id);if(!p)throw new HttpError(404,'Current person not found.');return reply({person:responsePerson(p,state,actor,people)},200,{ETag:`"${personRevision(p)}"`});}
     if(!['PATCH','DELETE'].includes(method))throw new HttpError(405,'Use GET, PATCH or DELETE.');
     if(id.startsWith('new:'))throw new HttpError(409,'This person signed up new and is not on the list yet. Link or add them in Admin first.');
     const actor=await keys.authenticate(request,'people:write'),input=method==='PATCH'?await jsonBody(request):{};
@@ -155,7 +156,7 @@ export function createManagementApi({pool,config,storage,keys,people,invalidate}
       }
       if(input.fields?.photo)await assertPortrait(conn,input.fields.photo);
       return changePerson(before,actor,people,{...input,id});
-    });return reply({...(result.person?{person:responsePerson(result.person,result.state,actor)}:{deleted:true,id}),photoProgress:result.progress});
+    });return reply({...(result.person?{person:responsePerson(result.person,result.state,actor,people)}:{deleted:true,id}),photoProgress:result.progress});
   };
 }
 async function assertPortrait(conn,path) {

@@ -9,7 +9,7 @@ const EMPTY = new Set();
 // Who is in good standing, from the live roll (nobody until it has loaded).
 export function useGoodStanding() {
   const live = useLiveRoll();
-  return { has: (id) => Boolean(id) && (live?.goodStanding || EMPTY).has(id), year: live?.year || '' };
+  return { has: (id) => Boolean(id) && !live?.deadlineApplied && (live?.goodStanding || EMPTY).has(id), year: live?.year || '' };
 }
 export function StandingTick({ on, year = '' }) {
   if (!on) return null;

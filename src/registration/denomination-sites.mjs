@@ -61,10 +61,11 @@ export function denominationPeople(snapshot, site, fallback = []) {
   // member uploads (their upload is copied onto the record for the office to check).
   const onRoll = new Map((snapshot?.roll || []).filter(r => r.referenceId).map(r => [r.referenceId, r]));
   const photoOf = p => { const r = onRoll.get(p.id); return r ? { photo: r.photo || '', image: r.photo ? '' : r.image || p.image || '' } : p.image ? { photo: '', image: p.image } : {}; };
-  const listed = all.filter(p => !p.unclaimed && names.has(normalName(p.denomination))).map(p => ({ ...p, ...photoOf(p), standing: true, goodStanding: onRoll.has(p.id) }));
+  const seal = !snapshot?.deadline?.applied; // office, 20 Nov: no seal once the deadline is applied
+  const listed = all.filter(p => !p.unclaimed && names.has(normalName(p.denomination))).map(p => ({ ...p, ...photoOf(p), standing: true, goodStanding: seal && onRoll.has(p.id) }));
   // Someone new (not on our lists) who registers and is confirmed joins their
   // church's page by the denomination they chose (17 Nov).
-  const newcomers = (snapshot?.roll || []).filter(r => !r.referenceId && names.has(normalName(r.denomination))).map(r => ({ ...r, standing: true, goodStanding: true }));
+  const newcomers = (snapshot?.roll || []).filter(r => !r.referenceId && names.has(normalName(r.denomination))).map(r => ({ ...r, standing: true, goodStanding: seal }));
   return [...listed, ...newcomers];
 }
 export const ministerSections = (people, { q = '', city = '', gender = '' } = {}) => {

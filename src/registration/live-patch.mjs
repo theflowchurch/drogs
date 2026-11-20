@@ -25,6 +25,8 @@ export function liveRoll(referencePeople, publicData) {
     // Office, 19 Nov: everyone in good standing (their record and their account), for the tick.
     goodStanding: new Set((publicData.roll || []).flatMap(r => [r.id, r.referenceId]).filter(Boolean)),
     year: publicData.year || '',
+    // Office, 20 Nov: once the deadline is applied everyone shown is in good standing, so no seal.
+    deadlineApplied: Boolean(publicData.deadline?.applied),
   };
 }
 
