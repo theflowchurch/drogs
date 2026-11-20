@@ -2043,8 +2043,8 @@ p {
   height: 26px;
   width: auto;
 }
-:root[data-theme="dark"] img[src$="castle-blue.png"] {
-  content: url("/assets/brand/castle-white.png");
+:root[data-theme="dark"] img[src$="castle-logo-blue.png"] {
+  content: url("/assets/brand/castle-logo-white.png");
 }
 .reg-gate-inner > img {
   height: 96px;

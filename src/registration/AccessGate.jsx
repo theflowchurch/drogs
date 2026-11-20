@@ -41,7 +41,7 @@ export default function AccessGate() {
     <header className="reg-access-head">
       <img src={`${base}/assets/organisations/dhmm-logo-white.webp`} alt="DHMM – Dag Heward-Mills Ministries" width="1200" height="396" />
       <span>{pastors ? 'WORLDWIDE FELLOWSHIP OF PASTORS' : 'WORLDWIDE FELLOWSHIP OF BISHOPS'}</span>
-      <div className="kc-side-logo reg-access-kc"><img src={`${base}/assets/brand/castle-white.png`} alt="Kuriake Castle" width="1200" height="464"/><span>Kuriake Castle</span></div>
+      <div className="kc-side-logo reg-access-kc"><img src={`${base}/assets/brand/castle-logo-white.png`} alt="Kuriake Castle" width="1200" height="464"/><span>Kuriake Castle</span></div>
     </header>
     <main className="reg-access-main">
       <section className="reg-card reg-access-card" aria-live="polite">

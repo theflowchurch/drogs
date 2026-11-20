@@ -846,12 +846,12 @@ export default function RegistrationApp({
         )}
         <a className="reg-brand" href={actor ? (office ? `${base}/admin/` : signupPath) : home} aria-label={brand?.shortName || "Kuriake Castle"}>
           {(!churchConfig || churchConfig.logo) && <span className="reg-brand-mark">
-            <img src={`${base}/${brand?.logo || "assets/brand/castle-blue.png"}`} alt="" />
+            <img src={`${base}/${brand?.logo || "assets/brand/castle-logo-blue.png"}`} alt="" />
           </span>}
           {(site !== "flow" || churchConfig || fellowship) && <strong>{brand?.shortName || "Kuriake Castle"}</strong>}
         </a>
         {/* Office, 20 Nov: on the bishops' and pastors' sign-up, Kuriake Castle's logo beside the title. */}
-        {fellowship && <div className="kc-side-logo reg-fellowship-kc"><img src={`${base}/assets/brand/castle-white.png`} alt="Kuriake Castle" width="1200" height="464"/><span>Kuriake Castle</span></div>}
+        {fellowship && <div className="kc-side-logo reg-fellowship-kc"><img src={`${base}/assets/brand/castle-logo-white.png`} alt="Kuriake Castle" width="1200" height="464"/><span>Kuriake Castle</span></div>}
         <div className="reg-header-right">
           {gate && actor ? (
             <button className="reg-text" onClick={logout}>
@@ -947,7 +947,7 @@ export default function RegistrationApp({
           )}
           <HeroVideo src={`${base}/assets/brand/castle-hero-night-b-{size}.mp4`} />
           <h1 className="reg-hero-title">
-            <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${siteConfig?.heroLogo || siteConfig?.logo || "assets/brand/castle-white.png"}`} alt={site === "flow" ? siteConfig.name : ""} />
+            <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${siteConfig?.heroLogo || siteConfig?.logo || "assets/brand/castle-logo-white.png"}`} alt={site === "flow" ? siteConfig.name : ""} />
             {site !== "flow" && (siteConfig?.name || "Kuriake Castle")}
           </h1>
           <a className="reg-enter" href={sitePath(site, "directory", base)}>
@@ -1378,7 +1378,7 @@ function Gate({ office, onEnter }) {
     <section className="reg-gate">
       <div className="reg-gate-glow" />
       <div className="reg-gate-inner">
-        <img src={`${base}/assets/brand/castle-white.png`} alt="" />
+        <img src={`${base}/assets/brand/castle-logo-white.png`} alt="" />
         <h1>
           <em>Kuriake Castle</em>
         </h1>
@@ -1633,7 +1633,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
           <div>
             <img
               className="reg-account-mark"
-              src={`${base}/assets/brand/castle-white.png`}
+              src={`${base}/assets/brand/castle-logo-white.png`}
               alt=""
             />
             <span className="reg-eyebrow">OFFICE ACCESS</span>
@@ -1653,7 +1653,7 @@ function Account({ office, signup = false, run, busy, onActor, open = false, onC
             <span className="reg-church-kicker">MINISTERIAL DIRECTORY</span>
             {config.name}
           </h1> : <h1 className="reg-hero-title">
-            <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${config?.heroLogo || config?.logo || "assets/brand/castle-white.png"}`} alt={site === "flow" ? config.name : ""} />
+            <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${config?.heroLogo || config?.logo || "assets/brand/castle-logo-white.png"}`} alt={site === "flow" ? config.name : ""} />
             {site !== "flow" && (config?.name || "Kuriake Castle")}
           </h1>}
           {open && (

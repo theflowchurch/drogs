@@ -70,7 +70,7 @@ function Title({ compact, children }) {
       <p className="tx-total"><span className="tx-dot" aria-hidden="true"/>Roll of Good Standing {useGroups().total != null && <><span className="tx-sep">·</span> <strong><CountUp to={useGroups().total}/></strong> Bishops</>}</p>
     </div>
     {/* Office, 20 Nov: Kuriake Castle's logo on the other side of the title. */}
-    <div className="kc-side-logo tx-kc-logo"><img src={`${base}/assets/brand/castle-white.png`} alt="Kuriake Castle" width="1200" height="464"/><span>Kuriake Castle</span></div>
+    <div className="kc-side-logo tx-kc-logo"><img src={`${base}/assets/brand/castle-logo-white.png`} alt="Kuriake Castle" width="1200" height="464"/><span>Kuriake Castle</span></div>
     {children && <div className="tx-head-tools">{children}</div>}
   </div>;
 }

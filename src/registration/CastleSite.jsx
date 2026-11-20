@@ -18,7 +18,7 @@ const href = (path = "") => `${base}/${path ? `${path}/` : ""}`;
 
 
 function Mark({ size = 30 }) {
-  return <img src={`${base}/assets/brand/castle-white.png`} alt="" width={Math.round(size * 2.6)} height={size} className="kc-mark" style={{ height: size, width: "auto" }} />;
+  return <img src={`${base}/assets/brand/castle-logo-white.png`} alt="" width={Math.round(size * 2.6)} height={size} className="kc-mark" style={{ height: size, width: "auto" }} />;
 }
 function Nav({ solid = false }) {
   const [open, setOpen] = useState(false), [scrolled, setScrolled] = useState(solid);

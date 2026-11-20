@@ -11,7 +11,7 @@ export default function PublicInformation({ slug }) {
     <div className="reg-app reg-information-page">
       <header className="reg-header">
         <a className="reg-brand" href={`${base}/`} aria-label="Kuriake Castle home">
-          <span className="reg-brand-mark"><img src={`${base}/assets/brand/castle-blue.png`} alt="" /></span>
+          <span className="reg-brand-mark"><img src={`${base}/assets/brand/castle-logo-blue.png`} alt="" /></span>
           <strong>Kuriake Castle</strong>
         </a>
       </header>
