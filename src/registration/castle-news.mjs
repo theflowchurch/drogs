@@ -11,7 +11,7 @@ export const CASTLE_NEWS = [
       'You can renew online through your church’s page or the Kuriake Castle registration page. You will need your details and a recent photo in official attire.',
       'Pastors are confirmed by their bishop. Once your registration has been confirmed, your name appears on the Roll of Good Standing for 2027.',
     ],
-    links: [['Renew online', 'signup']],
+    links: [],
   },
   {
     // Office, 20 Nov: in place of the Declaration and register articles.
