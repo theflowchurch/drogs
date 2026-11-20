@@ -263,3 +263,38 @@ html:has(.kc-site){scroll-behavior:smooth}
 .kc-footer-map span{position:absolute;left:0;right:0;bottom:0;padding:6px 10px;background:#09162acc;color:#fff;font-size:12.5px;font-weight:700;letter-spacing:.04em}
 .kc-footer-map:hover img{transform:scale(1.04)}
 .kc-map-credit{display:block;margin-top:8px;font-size:11px;color:#8b93a3}
+/* Office, 20 Nov: a short home page, and a page for each topic. */
+.kc-more{display:inline-flex;align-items:center;gap:8px;margin-top:6px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--kc-navy);text-decoration:none}
+.kc-more:hover{color:var(--kc-gold)}
+.kc-home-news{background:#fff;padding:96px 0 90px}
+.kc-home-head{width:min(1180px,90%);margin:0 auto 34px;display:flex;align-items:baseline;justify-content:space-between;gap:20px}
+.kc-home-head h2{font-size:clamp(34px,4vw,52px)}
+.kc-home-about{width:min(1180px,90%);margin:0 auto;padding:100px 0;display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.kc-home-about-photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.kc-home-about h2{font-size:clamp(32px,3.6vw,48px);margin-bottom:20px}
+.kc-home-about p:not(.kc-eyebrow){color:var(--kc-muted);margin:0 0 18px}
+.kc-home-tiles{display:grid;grid-template-columns:repeat(2,1fr)}
+.kc-tile{display:flex;flex-direction:column;gap:6px;min-height:340px;justify-content:flex-end;padding:56px 7%;text-decoration:none;background:var(--kc-cream);border-top:1px solid var(--kc-line);transition:background .25s}
+.kc-tile:nth-child(2){background:var(--kc-paper)}.kc-tile:nth-child(3){background:var(--kc-paper)}
+.kc-tile.is-dark{background:var(--kc-navy);color:#fff}.kc-tile.is-dark .kc-more{color:var(--kc-gold-soft)}
+.kc-tile h3{font-size:clamp(28px,3vw,40px);margin-bottom:6px}
+.kc-tile p:not(.kc-eyebrow){margin:0 0 14px;max-width:520px;color:var(--kc-muted)}.kc-tile.is-dark p:not(.kc-eyebrow){color:#c9ccd3}
+.kc-tile:hover h3{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
+.kc-page-body{padding-top:90px!important;padding-bottom:100px!important}
+.kc-about.kc-page-body{grid-template-columns:.82fr 1.18fr;gap:64px}
+.kc-castle.kc-page-body{padding-left:0;padding-right:0}
+.kc-tours.kc-page-body{display:grid!important}
+.kc-declaration-page{width:min(820px,90%);margin:0 auto}
+.kc-declaration-full h2{font-family:'KC Serif',serif;font-size:20px;line-height:1.4;margin:0 0 26px}
+.kc-declaration-full h3{font-family:'KC Serif',serif;font-size:24px;margin:36px 0 12px;color:var(--kc-navy)}
+.kc-declaration-full p{color:#2c3546;margin:0 0 16px;line-height:1.75}
+.kc-footer-links{display:flex;flex-direction:column}
+@media(max-width:1000px){.kc-home-about,.kc-about.kc-page-body{grid-template-columns:1fr;gap:36px}.kc-home-tiles{grid-template-columns:1fr}}
+@media(max-width:760px){.kc-home-news,.kc-home-about{padding:64px 0}.kc-tile{min-height:0;padding:44px 6%}.kc-page-body{padding-top:56px!important;padding-bottom:64px!important}}
+/* Office, 20 Nov: footer with the brand above and its columns side by side. */
+.kc-footer-top{flex-direction:column;gap:44px}
+.kc-footer-one{display:grid!important;grid-template-columns:.8fr 1.5fr 1fr 1.2fr;gap:44px!important;justify-content:stretch}
+.kc-footer-one .kc-footer-events{grid-template-columns:1fr;column-gap:0}
+.kc-footer-one a{margin-bottom:10px}
+@media(max-width:1000px){.kc-footer-one{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.kc-footer-one{grid-template-columns:1fr;gap:32px!important}}
