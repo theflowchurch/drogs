@@ -5,7 +5,7 @@ import { readBody, jsonBody } from './api-body.mjs';
 import { prepareImage } from './storage.mjs';
 import { applyAction, directoryPeople, REFERENCE_FIELDS } from '../registration/model.mjs';
 import { photoProgress, photoKey, photoTask } from '../registration/photo-progress.mjs';
-import { managementPeople, personRevision, changePerson, importPastors, workbookPastors, annotateApiAudit } from './managed-people.mjs';
+import { managementPeople, listedAndNewPeople, personRevision, changePerson, importPastors, workbookPastors, annotateApiAudit } from './managed-people.mjs';
 import { readSettings, writeSettings, describeSettings, applySettings } from './settings.mjs';
 
 export const MANAGEMENT_ACTIONS = ['addPerson','addRoster','approveBishop','assignBishop','carryRoster','choosePhoto','claim','deleteRegistration','editRoster','hideReference','linkReference','markPaid','moveRoster','officeEdit','openYear','removeRoster','restoreRoster','reviewBishop','reviewPayment','reviewPhoto','setCatalog','setFees','setSignup','setStatus','setVisibility'];
@@ -16,7 +16,7 @@ const checkRevision = (request, p) => { const expected=request.headers.get('if-m
 const responsePerson = (person,state,actor) => {
   const privateDetails = actor?.apiScopes?.some(s=>['backend:read','backend:write','people:write'].includes(s));
   const fields = ['id','image','lay',...REFERENCE_FIELDS.filter(k=>privateDetails || !['dob','phone','email'].includes(k))];
-  return {...Object.fromEntries(fields.filter(k=>person[k]!==undefined).map(k=>[k,person[k]])),revision:personRevision(person),...(person.role==='pastor'?{photoTask:photoTask(person,state)}:{})};
+  return {...Object.fromEntries(fields.filter(k=>person[k]!==undefined).map(k=>[k,person[k]])),...(person.id.startsWith('new:')?{newSignup:true}:{}),revision:personRevision(person),...(person.role==='pastor'?{photoTask:photoTask(person,state)}:{})};
 };
 const bool = (url,key) => { const value=url.searchParams.get(key);if(value!==null&&!['true','false'].includes(value))throw new HttpError(400,`${key} must be true or false.`);return value==='true'; };
 const websiteSettings = new Set(['PUBLIC_DIRECTORY_SOURCE','PUBLIC_PHOTOS']);
@@ -96,7 +96,7 @@ export function createManagementApi({pool,config,storage,keys,people,invalidate}
     }
     if(path==='/api/v1/people') {
       if(method==='GET') {
-        const actor=await keys.authenticate(request,['backend:read',...writes]);const state=await snapshot();let data=managementPeople(state,people);
+        const actor=await keys.authenticate(request,['backend:read',...writes]);const state=await snapshot();let data=listedAndNewPeople(state,people);
         const search=(url.searchParams.get('search')||'').trim().toLowerCase(), role=url.searchParams.get('role'), bishopId=url.searchParams.get('bishopId'), status=url.searchParams.get('photoTask');
         if(search)data=data.filter(p=>[p.name,p.bishop,p.city,p.country,p.branch].some(v=>String(v||'').toLowerCase().includes(search)));
         if(role){if(!['bishop','pastor'].includes(role))throw new HttpError(400,'Use role bishop or pastor.');data=data.filter(p=>p.role===role);}
@@ -143,8 +143,9 @@ export function createManagementApi({pool,config,storage,keys,people,invalidate}
         return{state:applyAction(before,actor,'deleteReference',{referenceId:id,deleted:false},undefined,people)};
       });return reply({person:responsePerson(findPerson(result.state,people,id),result.state,actor),photoProgress:result.progress});
     }
-    if(method==='GET'){const actor=await keys.authenticate(request,['backend:read',...writes]);const state=await snapshot(),p=findPerson(state,people,id);return reply({person:responsePerson(p,state,actor)},200,{ETag:`"${personRevision(p)}"`});}
+    if(method==='GET'){const actor=await keys.authenticate(request,['backend:read',...writes]);const state=await snapshot(),p=listedAndNewPeople(state,people).find(q=>q.id===id);if(!p)throw new HttpError(404,'Current person not found.');return reply({person:responsePerson(p,state,actor)},200,{ETag:`"${personRevision(p)}"`});}
     if(!['PATCH','DELETE'].includes(method))throw new HttpError(405,'Use GET, PATCH or DELETE.');
+    if(id.startsWith('new:'))throw new HttpError(409,'This person signed up new and is not on the list yet. Link or add them in Admin first.');
     const actor=await keys.authenticate(request,'people:write'),input=method==='PATCH'?await jsonBody(request):{};
     const result=await mutate(actor,async(before,conn)=>{
       const p=findPerson(before,people,id);checkRevision(request,p);

@@ -5,6 +5,10 @@ import { nonPastoralRank, submittedSheetBanner, submittedBirthKeys } from '../..
 import { HttpError } from './auth.mjs';
 
 export const managementPeople = (state, references) => directoryPeople({ ...state, hidden: [] }, references).filter(p => !p.id.startsWith('new:'));
+// Office, 20 Nov: for reading, everyone on the directory, including people who signed
+// up new (not on our list) and are confirmed, so dashboards see them too (ids start
+// with "new:"). Changes through the API stay limited to listed people.
+export const listedAndNewPeople = (state, references) => directoryPeople({ ...state, hidden: [] }, references);
 export const personRevision = person => createHash('sha256').update(JSON.stringify(person)).digest('hex');
 const domainAction = (...args) => { try { return applyAction(...args); } catch (error) { throw error instanceof HttpError ? error : new HttpError(400, error.message); } };
 const normalizedWords = value => normalName(value).split(' ').filter(Boolean).sort();
