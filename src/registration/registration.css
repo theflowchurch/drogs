@@ -4414,8 +4414,9 @@ input[type="date"] {
   .reg-fellowship-app .reg-header .reg-header-right{position:absolute;right:4vw;top:50%;transform:translateY(-50%);margin-left:0}
   .reg-fellowship-app .reg-header .reg-sidebar-toggle{position:absolute;left:4vw;top:50%;transform:translateY(-50%)}
 }
-/* Narrower screens: the centred logos and title on top, the buttons on a row beneath. */
+/* Narrower screens: one row, the logos and title on the left and the buttons on the right. */
 @media (min-width:701px) and (max-width:1299px){
-  .reg-fellowship-app .reg-header{height:auto;flex-wrap:wrap;row-gap:10px;padding-top:12px;padding-bottom:12px}
-  .reg-fellowship-app .reg-header .reg-header-right{position:static;transform:none;flex-basis:100%;justify-content:center}
+  .reg-fellowship-app .reg-header{justify-content:flex-start}
+  .reg-fellowship-app .reg-header .reg-header-right{position:static;transform:none;margin-left:auto}
 }
+@media (min-width:701px) and (max-width:1023px){.reg-fellowship-app .reg-brand strong{display:none}}
