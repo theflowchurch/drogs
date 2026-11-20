@@ -221,3 +221,14 @@ html:has(.kc-site){scroll-behavior:smooth}
 .kc-ceremonies .kc-card{flex:0 1 calc((100% - 40px)/3)}
 @media(max-width:1000px){.kc-ceremonies .kc-card{flex-basis:calc((100% - 20px)/2)}}
 @media(max-width:760px){.kc-ceremonies .kc-card{flex-basis:100%}}
+/* Office, 20 Nov: the longer About Us fits one screen: photo beside the text,
+   the three points in a row of three underneath. */
+.kc-about.kc-screen{grid-template-columns:.82fr 1.18fr;gap:28px 64px;align-items:center;align-content:center}
+.kc-about .kc-about-copy h2{font-size:clamp(32px,3.2vw,46px);margin-bottom:18px}
+.kc-about .kc-about-copy p:not(.kc-eyebrow){font-size:16px;line-height:1.6;margin:0 0 12px}
+.kc-about .kc-about-photo img{aspect-ratio:4/4.2}
+.kc-about .kc-role-list{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:0 40px;margin:8px 0 0;border-top:1px solid var(--kc-line)}
+.kc-about .kc-role-list li{grid-template-columns:1fr;gap:6px;padding:16px 0 4px;border-bottom:0}
+.kc-about .kc-role-list span{font-size:15px;line-height:1.55}
+@media(max-width:1000px){.kc-about.kc-screen{grid-template-columns:1fr}.kc-about .kc-about-photo img{aspect-ratio:4/3}}
+@media(max-width:760px){.kc-about .kc-role-list{grid-template-columns:1fr}.kc-about .kc-role-list li{border-bottom:1px solid var(--kc-line);padding:14px 0}}

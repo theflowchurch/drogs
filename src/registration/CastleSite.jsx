@@ -104,8 +104,8 @@ export function CastleHome() {
         <p>The fellowship is built on mutual respect and cooperation. Taking part is voluntary, and every denomination and group in the fellowship is independent. Each one keeps its own name and identity, has its own leadership, and is responsible for the running of its own churches and ministries.</p>
         <p>Kuriake Castle does not govern its member churches. Its role is to support them. It provides fellowship, spiritual encouragement and advice when they ask for it, and it brings ministers and churches together around their shared calling.</p>
         <p>Kuriake Castle also keeps the Roll of Good Standing, a register of the bishops and pastors who serve within the fellowship. It allows churches and members of the public to confirm a minister’s standing each year.</p>
-        <ul className="kc-role-list">{ROLE.map(([t, d]) => <li key={t}><b>{t}</b><span>{d}</span></li>)}</ul>
       </div>
+      <ul className="kc-role-list">{ROLE.map(([t, d]) => <li key={t}><b>{t}</b><span>{d}</span></li>)}</ul>
       <Next to="declaration" label="Our Declaration" />
     </section>
     {/* Office, 19 Nov: the start of the Declaration, with the full text on its own page. */}
