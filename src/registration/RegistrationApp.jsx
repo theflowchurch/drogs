@@ -1908,7 +1908,7 @@ function Participant({
             </p>
             {current.status === "unclaimed" && current.data.role === "pastor" && claimDeadline(current) && (
               <p className="reg-deadline" role="note">
-                <b>Your bishop must confirm you by {longDate(claimDeadline(current).slice(0, 10))}</b> ({daysLeft(claimDaysLeft(current))}). Please speak to your bishop and ask them to sign in and confirm you. If you are not confirmed by then, your registration and account will be removed.
+                <b>Your bishop must confirm you by {claimWhen(current)}</b> ({claimLeft(current)}). Please speak to your bishop and ask them to sign in and confirm you. If you are not confirmed by then, your registration and account will be removed.
               </p>
             )}
           </div>
@@ -2084,7 +2084,8 @@ function RegistrationForm({
       return next;
     });
   const fees = feesOf(state);
-  const steps = editing
+  // TEST (office, 21 Nov): a test account has no payment step.
+  const steps = editing || state.testAccount
     ? ["details", "review"]
     : ["details", "payment", "review"]; // bishops no longer list their pastors when registering (17 Nov)
   const review = step === "review";
@@ -2112,7 +2113,7 @@ function RegistrationForm({
   }
   async function send() {
     const ok = await run(async () => {
-      if (!editing && !paymentReady(mine)) throw Error("Complete your payment before confirming your registration.");
+      if (!editing && !state.testAccount && !paymentReady(mine)) throw Error("Complete your payment before confirming your registration.");
       await api.action(actor, editing ? "update" : "submit", { ...data, consentedAt: data.consentedAt || new Date().toISOString() });
       // The pastors and the payment proof gathered on the way are sent right after.
       if (!editing && rosterRows.length) await api.action(actor, "addRoster", { rows: rosterRows });
@@ -2553,7 +2554,10 @@ function RegistrationForm({
                 </button>
               </section>
               <ProfileDetails record={{ data }} directory={state.directory} />
-              {!editing && (
+              {!editing && state.testAccount && (
+                <section className="reg-review-block"><h3>Payment</h3><p className="reg-small">Test account: no payment needed.</p></section>
+              )}
+              {!editing && !state.testAccount && (
                 <section className="reg-review-block">
                   <h3>Payment</h3>
                   {mine?.payment === "verified" ? (
@@ -2804,6 +2808,9 @@ function BishopSearch({ choices, value, onPick }) {
   </div>;
 }
 const daysLeft = (n) => n === null ? "" : n <= 0 ? "due today" : n === 1 ? "1 day left" : `${n} days left`;
+// TEST (office, 21 Nov): a test account's bishop has 30 minutes, so the time and minutes are shown.
+const claimWhen = (r) => r.testAccount ? `${new Date(claimDeadline(r)).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} (test)` : longDate(claimDeadline(r).slice(0, 10));
+const claimLeft = (r) => { if (!r.testAccount) return daysLeft(claimDaysLeft(r)); const m = Math.max(0, Math.ceil((Date.parse(claimDeadline(r)) - Date.now()) / 60000)); return m === 1 ? "1 minute left" : `${m} minutes left`; };
 function BishopTodo({ state, actor, perform }) {
   const waiting = todoFor(state, actor).pastorsToConfirm;
   if (!waiting.length) return null;
@@ -2812,7 +2819,7 @@ function BishopTodo({ state, actor, perform }) {
     <p>{waiting.length === 1 ? "A pastor has" : `${waiting.length} pastors have`} registered and named you as their bishop. Confirm each one who is under you.</p>
     <ul className="reg-todo-list">{waiting.map((r) => <li key={r.userId}>
       <Portrait person={{ photo: r.data.photo, name: r.data.name }} className="reg-todo-photo" />
-      <span><b>{titleFor(r.data)} {r.data.name}</b><small>{[r.data.denomination || r.data.church, [r.data.city, r.data.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>{r.submittedAt && <small>Registered {shortDateTime(r.submittedAt)}</small>}{claimDeadline(r) && <small className="reg-todo-deadline">Confirm by {longDate(claimDeadline(r).slice(0, 10))} · {daysLeft(claimDaysLeft(r))}</small>}</span>
+      <span><b>{titleFor(r.data)} {r.data.name}</b><small>{[r.data.denomination || r.data.church, [r.data.city, r.data.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>{r.submittedAt && <small>Registered {shortDateTime(r.submittedAt)}</small>}{claimDeadline(r) && <small className="reg-todo-deadline">Confirm by {claimWhen(r)} · {claimLeft(r)}</small>}</span>
       <span className="reg-todo-actions">
         <button type="button" className="reg-primary" onClick={() => perform("claim", { userId: r.userId }, `${r.data.name} is confirmed under you.`)}>Confirm</button>
         <button type="button" className="reg-text danger" onClick={() => { if (confirm(`${r.data.name} is not your pastor? The office will find their bishop.`)) perform("declinePastor", { userId: r.userId }, "Sent back to the office."); }}>Not my pastor</button>
@@ -2824,7 +2831,7 @@ function OfficeTodo({ state, actor, onOpen, perform }) {
   const todo = todoFor(state, actor);
   const refById = new Map([...overlayReferences(people, state), ...(state.extraReferences || [])].map((p) => [p.id, p]));
   const groups = [
-    ["Pastors waiting for their bishop", "Unclaimed", todo.pastorsToConfirm, (r) => `under ${r.data.bishopName || "no bishop named"}${claimDeadline(r) ? ` · removed ${longDate(claimDeadline(r).slice(0, 10))} if not confirmed (${daysLeft(claimDaysLeft(r))})` : ""}`],
+    ["Pastors waiting for their bishop", "Unclaimed", todo.pastorsToConfirm, (r) => `under ${r.data.bishopName || "no bishop named"}${claimDeadline(r) ? ` · removed ${claimWhen(r)} if not confirmed (${claimLeft(r)})` : ""}`],
     ["Bishops waiting for approval", "Approvals", todo.bishopsToApprove, (r) => r.data.denomination || r.data.organization || ""],
     ["Receipts to check (money transfer app)", "Payments", todo.receiptsToCheck, (r) => `${titleCase(r.data.role)} · transaction ${r.transactionId || "not given"}`],
   ];

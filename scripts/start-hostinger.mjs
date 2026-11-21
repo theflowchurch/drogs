@@ -75,7 +75,8 @@ const cleanup = setInterval(async () => {
 }, 3600000);
 cleanup.unref();
 // The bishop's two-week deadline (19 Nov): reminders after a week, removal after two. Checked hourly.
-const deadlines = setInterval(() => api.sweepDeadlines().catch(error => console.error('Bishop deadline check failed:', error?.message || error)), 3600000);
+// Checked every minute (office, 21 Nov), so a test account's 30 minutes are kept to the minute.
+const deadlines = setInterval(() => api.sweepDeadlines().catch(error => console.error('Bishop deadline check failed:', error?.message || error)), 60000);
 deadlines.unref();
 // Automatic photos (19 Nov): anything not yet edited, or a failed edit to retry, hourly.
 const photos = setInterval(() => api.autoPhotos.sweep().catch(error => console.error('Automatic photos failed:', error?.message || error)), 3600000);

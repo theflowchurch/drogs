@@ -47,6 +47,23 @@ function SignupControl({ state, perform }) {
 // Office, 19 Nov: the registration deadline. Applying it closes registration and
 // shows only those in good standing on every public page; nobody's record is
 // deleted, so everyone can be put back. Reopening registration starts again.
+// TEST (office, 21 Nov): the email addresses used to test sign-up. Only these accounts
+// skip payment and have 30 minutes (not two weeks) for their bishop to confirm them.
+function TestAccounts({ state, perform }) {
+  const saved = (state?.testEmails || []).join('\n');
+  const [text, setText] = useState(saved);
+  useEffect(() => setText(saved), [saved]);
+  const n = (state?.testEmails || []).length;
+  return <Category title="Test accounts" summary={n ? `${n} test email${n === 1 ? '' : 's'}: no payment, 30 minutes for the bishop` : 'Off'}>
+    <p>Accounts that sign in with these email addresses are <b>test accounts</b>. They skip the payment step, and their bishop has <b>30 minutes</b> to confirm them instead of two weeks (a reminder email after 15 minutes; removed and emailed after 30). Everyone else signs up as normal.</p>
+    <label className="reg-field"><span>Test email addresses (one per line)</span><textarea rows={4} value={text} onChange={(e) => setText(e.target.value)} placeholder="test.pastor@example.com" /></label>
+    <div className="reg-form-actions">
+      <button type="button" className="reg-primary" disabled={text.trim() === saved.trim()} onClick={() => perform('setTestEmails', { emails: text }, 'Test email addresses saved.')}>Save</button>
+      {n > 0 && <button type="button" className="reg-secondary" onClick={() => perform('setTestEmails', { emails: '' }, 'Test accounts are off.')}>Turn test accounts off</button>}
+    </div>
+    <p className="reg-small">Add the email address before signing up with it. An account that already registered keeps the settings it had when it registered.</p>
+  </Category>;
+}
 function DeadlineControl({ state, perform }) {
   const applied = Boolean(state?.deadline?.applied);
   const [confirming, setConfirming] = useState(false);
@@ -261,6 +278,7 @@ export default function Settings({ run, state, perform, actor }) {
   <input type="search" className="reg-settings-search" aria-label="Search Settings" placeholder="Search Settings" value={query} onChange={e => setQuery(e.target.value)} />
   {state && perform && visible('signup') && <SignupControl state={state} perform={perform} />}
   {state && perform && visible('signup') && <DeadlineControl state={state} perform={perform} />}
+  {state && perform && visible('signup') && <TestAccounts state={state} perform={perform} />}
   {state && perform && visible('fees') && <Structure state={state} perform={perform} actor={actor} show={['fees']} />}
   {visible('links') && <Category title="Registration links" summary={`${links.length} links`} open={Boolean(query.trim())}>
     <ul className="reg-admin-list">{links.map(([label, path]) => <li key={path}><span><b>{label}</b><br /><a href={origin + path}>{origin + path}</a></span><button type="button" className="reg-text" onClick={() => navigator.clipboard?.writeText(origin + path).then(() => setCopied(path))}>{copied === path ? 'Copied' : 'Copy'}</button></li>)}</ul>

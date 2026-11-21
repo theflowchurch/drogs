@@ -140,7 +140,13 @@ export const emptyState = () => ({
   // Office, 19 Nov: the registration deadline. While applied, the public pages show
   // only those in good standing; every record stays for the office.
   deadline: { applied: false, at: "", by: "", date: "" },
+  // TEST (office, 21 Nov): email addresses used to test sign-up. Only these accounts
+  // skip payment and have 30 minutes (not two weeks) for their bishop to confirm them.
+  testEmails: [],
 });
+// TEST (office, 21 Nov): is this a test account (by the email it signs in with)?
+export const testEmailsOf = (state) => (Array.isArray(state?.testEmails) ? state.testEmails : []).map((e) => String(e || "").trim().toLowerCase()).filter(Boolean);
+export const isTestEmail = (state, email) => Boolean(email) && testEmailsOf(state).includes(String(email).trim().toLowerCase());
 export const SIGNUP_PAUSED = "Registration is paused at the moment. Please check back later.";
 export const ENTRANCES = ["general", "appointments"];
 export const entranceOf = (value) => (value === "appointments" ? "appointments" : "general");
@@ -941,16 +947,20 @@ export function bishopKeyed(state, key) {
 // to their bishop; when the two weeks pass, the registration and account are removed.
 export const CLAIM_DAYS = 14, CLAIM_REMINDER_DAYS = 7;
 const DAY_MS = 86400000;
+// TEST (office, 21 Nov): a test account's bishop has 30 minutes, with a reminder after 15.
+export const TEST_CLAIM_MS = 30 * 60000, TEST_REMINDER_MS = 15 * 60000;
+const claimMs = (r) => (r?.testAccount ? TEST_CLAIM_MS : CLAIM_DAYS * DAY_MS);
+const reminderMs = (r) => (r?.testAccount ? TEST_REMINDER_MS : CLAIM_REMINDER_DAYS * DAY_MS);
 // From submitting, or from the day the deadline started for those already waiting then; changing bishop does not restart it.
 const waitingFrom = (r) => Math.max(Date.parse(r?.submittedAt || r?.createdAt || "") || 0, Date.parse(r?.claimWaitFrom || "") || 0) || NaN;
-export const claimDeadline = (r) => { const t = waitingFrom(r); return Number.isFinite(t) ? new Date(t + CLAIM_DAYS * DAY_MS).toISOString() : ""; };
+export const claimDeadline = (r) => { const t = waitingFrom(r); return Number.isFinite(t) ? new Date(t + claimMs(r)).toISOString() : ""; };
 export const claimDaysLeft = (r, now = Date.now()) => { const d = Date.parse(claimDeadline(r)); return Number.isFinite(d) ? Math.max(0, Math.ceil((d - now) / DAY_MS)) : null; };
 export function claimDeadlines(state, now = Date.now()) {
   const waiting = (state.registrations || []).filter((r) => r.year === state.year && r.data?.role === "pastor" && r.status === "unclaimed" && !r.manual && Number.isFinite(waitingFrom(r)));
-  const due = (r, days) => now >= waitingFrom(r) + days * DAY_MS;
+  const due = (r, ms) => now >= waitingFrom(r) + ms;
   return {
-    remind: waiting.filter((r) => !r.claimReminderAt && due(r, CLAIM_REMINDER_DAYS) && !due(r, CLAIM_DAYS)),
-    expire: waiting.filter((r) => due(r, CLAIM_DAYS)),
+    remind: waiting.filter((r) => !r.claimReminderAt && due(r, reminderMs(r)) && !due(r, claimMs(r))),
+    expire: waiting.filter((r) => due(r, claimMs(r))),
   };
 }
 // Someone who registered as new may be on our list under a fuller or slightly
@@ -1254,6 +1264,11 @@ export function applyAction(
           ? "pending"
           : "unclaimed";
     if (action === "submit") r.submittedAt = now;
+    // TEST (office, 21 Nov): a test account skips payment and is marked as a test.
+    if (action === "submit" && isTestEmail(state, actor.email)) {
+      r.testAccount = true;
+      if (r.payment === "unpaid") { r.payment = "waived"; r.paymentMethod = "test"; r.amount = 0; }
+    }
     // A bishop already in the original data is approved on the spot: the linked
     // record must be a bishop, unclaimed by another account, and carry the same
     // name. Everyone else waits in Approvals for the Archbishop.
@@ -1892,6 +1907,14 @@ export function applyAction(
     state.deadline = { ...deadlineOf(state), applied: true, at: new Date().toISOString(), by: actor.email || "" };
     state.signup = { ...current, closed: true, notice: current.notice || "Registration is closed for this year." };
     detail = { kept: Number(payload.kept) || 0, removed: Number(payload.removed) || 0 };
+  } else if (action === "setTestEmails") {
+    // TEST (office, 21 Nov): the email addresses used for testing sign-up.
+    office();
+    const list = [...new Set(String(payload.emails || "").split(/[\s,;]+/).map((e) => e.trim().toLowerCase()).filter(Boolean))];
+    for (const e of list) if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) throw Error(`${e} is not an email address.`);
+    if (list.length > 20) throw Error("Use at most 20 test email addresses.");
+    detail = { testEmails: [testEmailsOf(state), list] };
+    state.testEmails = list;
   } else if (action === "setDeadlineDate") {
     // Office, 19 Nov: the date registration closes, shown on the sign-up pages. Nobody is
     // taken off the pages until the office applies the deadline.
@@ -2078,6 +2101,8 @@ export function visibleState(state, actor, references, people = references) {
     pageStructure: state.pageStructure || null,
     pastorBoxes: state.pastorBoxes || null,
     photoReviews: actor.office ? state.photoReviews || {} : {},
+    testEmails: actor.office ? testEmailsOf(state) : [],
+    testAccount: isTestEmail(state, actor.email),
   };
 }
 export const samePhone = (a, b) => {

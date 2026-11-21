@@ -1078,3 +1078,27 @@ test("the public registers live only under /licensingauthority/ (19 Nov): the ol
   assert.ok(existsSync("src/app/(portal)/licensingauthority/registerofpastorsingoodstanding/page.jsx"));
   for (const old of ["registerofbishopsingoodstanding", "registerofpastorsingoodstanding", "bishops"]) assert.ok(!existsSync(`src/app/(portal)/${old}/page.jsx`), old);
 });
+
+test("TEST accounts (21 Nov): only the test emails skip payment and get 30 minutes for their bishop", async () => {
+  const { claimDeadlines, claimDeadline, visibleState } = await import("../../src/registration/model.mjs");
+  const tester = { id: "t1", email: "test.pastor@example.com" }, real = { id: "r1", email: "real.pastor@example.com" };
+  let s = applyAction(emptyState(), office, "setTestEmails", { emails: "Test.Pastor@example.com\nsecond@example.com" });
+  assert.deepEqual(s.testEmails, ["test.pastor@example.com", "second@example.com"]);
+  assert.throws(() => applyAction(s, office, "setTestEmails", { emails: "not-an-email" }));
+  assert.throws(() => applyAction(s, tester, "setTestEmails", { emails: "" }), "only the office sets test emails");
+  s = applyAction(s, tester, "submit", profile(tester, "pastor", "Test Pastor"));
+  s = applyAction(s, real, "submit", profile(real, "pastor", "Real Pastor"));
+  const t = s.registrations.find(r => r.userId === "t1"), r = s.registrations.find(r => r.userId === "r1");
+  assert.equal(t.testAccount, true); assert.equal(t.payment, "waived", "a test account skips payment");
+  assert.equal(r.testAccount, undefined); assert.equal(r.payment, "unpaid", "everyone else still pays");
+  const start = Date.parse(t.submittedAt);
+  assert.equal(Date.parse(claimDeadline(t)) - start, 30 * 60000, "a test account's bishop has 30 minutes");
+  assert.equal(Date.parse(claimDeadline(r)) - Date.parse(r.submittedAt), 14 * 86400000, "everyone else keeps two weeks");
+  const at = (min) => claimDeadlines(s, start + min * 60000);
+  assert.deepEqual(at(10).remind, []);
+  assert.deepEqual(at(16).remind.map(x => x.userId), ["t1"], "a reminder after 15 minutes");
+  assert.deepEqual(at(31).expire.map(x => x.userId), ["t1"], "removed after 30 minutes; the real pastor is untouched");
+  assert.equal(visibleState(s, tester, []).testAccount, true);
+  assert.deepEqual(visibleState(s, tester, []).testEmails, [], "members never see the list");
+  assert.equal(visibleState(s, real, []).testAccount, false);
+});

@@ -121,7 +121,9 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
   // after one week the waiting pastor is reminded to speak to their bishop; when
   // the two weeks pass, their registration and account are removed and they are told.
   const longDay = iso => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
-  function deadlineMail(kind, { to, name, title, bishop, deadline }) {
+  function deadlineMail(kind, { to, name, title, bishop, deadline, test = false }) {
+    // TEST (office, 21 Nov): a test account's deadline is 30 minutes, so the time is given too.
+    const when = iso => test ? `${new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London' })} UK time on ${longDay(iso)}` : longDay(iso);
     const esc = v => String(v || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const site = config.origin.replace(/drogs\.dagministry\.org/, 'kuriakecastle.org');
     const signin = `${site}/orderofpastorsingoodstanding/signup/#signin`, signup = `${site}/orderofpastorsingoodstanding/signup/`;
@@ -130,13 +132,13 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
     const button = (href, label) => `<p style="margin:0 0 18px"><a href="${href}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">${label} →</a></p>`;
     if (kind === 'reminder') {
       const lines = [`Your registration on Kuriake Castle is still waiting for ${byBishop} to confirm you.`,
-        `Your bishop must confirm you by ${longDay(deadline)}. If you are not confirmed by then, your registration and account will be removed.`,
+        `Your bishop must confirm you by ${when(deadline)}. If you are not confirmed by then, your registration and account will be removed.`,
         'Please speak to your bishop and ask them to sign in to Kuriake Castle and confirm you. If you named the wrong bishop, sign in and change your bishop on your profile.'];
-      return brandedMail({ from: config.from, to, subject: `Reminder: your bishop must confirm you by ${longDay(deadline)}`,
+      return brandedMail({ from: config.from, to, subject: `Reminder: your bishop must confirm you by ${when(deadline)}`,
         text: `Dear ${dear},\n\n${lines.join('\n\n')}\n\nView my registration: ${signin}\n\nKuriake Castle`,
-        html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px">${esc(lines[0])}</p><p style="margin:0 0 12px;padding:12px 14px;background:#fff7e6;border:1px solid #f1c56b;border-radius:8px;color:#5c3d00"><b>Your bishop must confirm you by ${esc(longDay(deadline))}.</b> If you are not confirmed by then, your registration and account will be removed.</p><p style="margin:0 0 18px">${esc(lines[2])}</p>${button(signin, 'View my registration')}<p style="margin:0">Kuriake Castle</p>` });
+        html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px">${esc(lines[0])}</p><p style="margin:0 0 12px;padding:12px 14px;background:#fff7e6;border:1px solid #f1c56b;border-radius:8px;color:#5c3d00"><b>Your bishop must confirm you by ${esc(when(deadline))}.</b> If you are not confirmed by then, your registration and account will be removed.</p><p style="margin:0 0 18px">${esc(lines[2])}</p>${button(signin, 'View my registration')}<p style="margin:0">Kuriake Castle</p>` });
     }
-    const lines = [`Your registration on Kuriake Castle was not confirmed by ${byBishop} within two weeks, so your registration and account have been removed.`,
+    const lines = [`Your registration on Kuriake Castle was not confirmed by ${byBishop} within ${test ? '30 minutes' : 'two weeks'}, so your registration and account have been removed.`,
       'If you are still a pastor under this bishop, or under another bishop, please speak to them first and then create a new account and register again.'];
     return brandedMail({ from: config.from, to, subject: 'Your Kuriake Castle account has been removed',
       text: `Dear ${dear},\n\n${lines.join('\n\n')}\n\nRegister again: ${signup}\n\nIf you think this is a mistake, please contact the office.\n\nKuriake Castle`,
@@ -146,7 +148,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
     const state = await transaction(pool, conn => readState(conn, true));
     const { remind, expire } = claimDeadlines(state, now);
     const emailOf = async id => { const [[u]] = await pool.execute('SELECT email FROM dr_users WHERE id=?', [id]); return u?.email || ''; };
-    const who = r => ({ name: r.data.name, title: titleFor(r.data), bishop: titledBishop(state, r), deadline: claimDeadline(r) });
+    const who = r => ({ name: r.data.name, title: titleFor(r.data), bishop: titledBishop(state, r), deadline: claimDeadline(r), test: Boolean(r.testAccount) });
     let reminded = 0, removed = 0;
     for (const r of remind) {
       const to = await emailOf(r.userId);
