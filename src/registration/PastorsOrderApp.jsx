@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Masthead } from './OrganisationsApp';
-import { Card, Detail } from './BishopsApp';
+import { Card } from './BishopsApp';
 import GoodStandingNotice from './GoodStandingNotice';
 import useLiveRoll from './useLiveRoll';
 import { pastorEntries, pastorGroups, setOfficeLogos } from './public-entries.mjs';
@@ -26,7 +26,7 @@ function Box({ group, as: Tag = 'a' }) {
   </Tag>;
 }
 
-function Group({ group, onOpen }) {
+function Group({ group }) {
   const [limit, setLimit] = useState(STEP);
   const more = useRef(null);
   useEffect(() => {
@@ -39,7 +39,7 @@ function Group({ group, onOpen }) {
     <div className="org-back-row"><a className="org-all-groups" href="#contents">← All Groups</a></div>
     <Box group={group} as="h2"/>
     <p className="org-group-total"><span className="org-count">{plural(group.people.length).toLowerCase()}</span></p>
-    <div className="org-members">{group.people.slice(0, limit).map(p => <Card key={p.rosterId} person={p} onOpen={onOpen} fallback="Pastor"/>)}</div>
+    <div className="org-members">{group.people.slice(0, limit).map(p => <Card key={p.rosterId} person={p} fallback="Pastor" hideChurch/>)}</div>
     {limit < group.people.length && <div ref={more} className="bl-more"><button type="button" className="bl-more-button" onClick={() => setLimit(n => n + STEP)}>Show more</button></div>}
   </section>;
 }
@@ -54,7 +54,6 @@ export default function PastorsOrderApp({ groups: published, total: publishedTot
     return { groups: pastorGroups(entries, COLOURS, live.pastorBoxes).map(g => ({ ...g, people: g.people.map(({ denomination, ...p }) => p) })), total: entries.length };
   }, [live, published, publishedTotal]);
   const [slug, setSlug] = useState('');
-  const [open, setOpen] = useState(null);
   useEffect(() => {
     const read = () => { setSlug(decodeURIComponent(location.hash.slice(1))); window.scrollTo(0, 0); };
     read(); addEventListener('hashchange', read);
@@ -65,12 +64,11 @@ export default function PastorsOrderApp({ groups: published, total: publishedTot
     <Masthead sub="Worldwide Fellowship of Pastors" total={total} noun="Pastors"/>
     <main className="org-main">
       {group ? <>
-        <Group key={group.slug} group={group} onOpen={setOpen}/>
+        <Group key={group.slug} group={group}/>
         <div className="org-end-links"><a className="org-all-groups org-all-groups-end" href="#contents">← All Groups</a></div>
       </> : <nav id="contents" className="org-contents" aria-label="Contents">{groups.map(g => <Box key={g.slug} group={g}/>)}</nav>}
       {!group && <GoodStandingNotice className="org-good-standing"/>}
     </main>
     <footer className="org-footer"><span/><a className="org-footer-link" href={`${base}/declaration/`}>Kuriake Castle Declaration</a></footer>
-    {open && <Detail person={open} onClose={() => setOpen(null)} fallback="Pastor"/>}
   </div>;
 }

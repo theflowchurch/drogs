@@ -14,15 +14,24 @@ import './organisations.css';
 // card opens their church and the year they were consecrated.
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
-export function Card({ person, onOpen, fallback }) {
+// Office, 21 Nov: everything shows on the card, as on the church pages; nothing to click.
+export function Card({ person, fallback, hideChurch = false }) {
   const gs = useGoodStanding();
-  return <button type="button" className="org-member bl-card" onClick={() => onOpen(person)} aria-haspopup="dialog">
-    <span className="org-member-photo gs-host"><Photo person={person}/><StandingTick on={gs.has(person.rosterId)} year={gs.year}/></span>
-    <span className="org-member-text">
+  return <article className="org-member bl-card-open">
+    <div className="org-member-photo gs-host"><Photo person={person}/><StandingTick on={gs.has(person.rosterId)} year={gs.year}/></div>
+    <div className="org-member-text">
       <small>{person.title || fallback}</small>
       <strong>{person.name}</strong>
-    </span>
-  </button>;
+      {person.church && !hideChurch && <span className="bl-card-church">{person.logo && <img src={`${base}/${person.logo}`} alt=""/>}<span>{person.church}</span></span>}
+      {person.branch && <span className="bl-card-branch">{person.branch}</span>}
+      {person.bishop && <span className="bl-card-bishop">Bishop – {person.bishop}</span>}
+      {(person.appointed || person.ordained || person.consecrated) && <span className="org-years">
+        {person.appointed && <span className="org-consecrated">Appointed {person.appointed}</span>}
+        {person.ordained && <span className="org-consecrated">Ordained {person.ordained}</span>}
+        {person.consecrated && <span className="org-consecrated">Consecrated {person.consecrated}</span>}
+      </span>}
+    </div>
+  </article>;
 }
 
 export function Detail({ person, onClose, fallback }) {
@@ -61,7 +70,6 @@ export default function BishopsApp({ bishops: published, kind = 'bishop', masthe
     ? pastorEntries(live.people).map(({ denomination, ...p }) => p)
     : bishopEntries(allBishopsOf(patchGroups(live.structure ? buildDirectory(live.structure).groups : DIRECTORY_GROUPS, live).groups), live.byId); }, [live, published, kind]);
   const noun = kind === 'pastor' ? 'pastor' : 'bishop', fallback = kind === 'pastor' ? 'Pastor' : 'Bishop';
-  const [open, setOpen] = useState(null);
   const [query, setQuery] = useState('');
   const [limit, setLimit] = useState(STEP);
   const more = useRef(null);
@@ -87,10 +95,9 @@ export default function BishopsApp({ bishops: published, kind = 'bishop', masthe
         </label>
       </div>
       {!visible.length && <p className="bl-empty">No {noun} matches “{query}”.</p>}
-      {visible.length > 0 && <section className="bl-letter bl-all"><div className="org-members">{visible.map(p => <Card key={p.rosterId || p.name} person={p} onOpen={setOpen} fallback={fallback}/>)}</div></section>}
+      {visible.length > 0 && <section className="bl-letter bl-all"><div className="org-members">{visible.map(p => <Card key={p.rosterId || p.name} person={p} fallback={fallback}/>)}</div></section>}
       {limit < shown.length && <div ref={more} className="bl-more"><button type="button" className="bl-more-button" onClick={() => setLimit(n => n + STEP)}>Show more</button></div>}
     </main>
     <footer className="org-footer"><span/><a className="org-footer-link" href={`${base}/declaration/`}>Kuriake Castle Declaration</a></footer>
-    {open && <Detail person={open} onClose={() => setOpen(null)} fallback={fallback}/>}
   </div>;
 }

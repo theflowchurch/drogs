@@ -18,7 +18,7 @@ export function bishopEntries(list, rosterById) {
   return list.map(b => {
     const r = rosterById.get(b.rosterId);
     const church = (!b.church || COUNCILISH.test(b.church)) && r?.denomination ? r.denomination : b.church || r?.denomination || '';
-    return { rosterId: b.rosterId || '', name: b.name, title: b.title || 'Bishop', image: b.image || '', photo: b.photo || r?.photo || '', church, logo: churchLogo(church) || churchLogo(r?.denomination), consecrated: b.consecrated || r?.yearConsecrated || '', appointed: b.appointed || r?.yearAppointed || '' };
+    return { rosterId: b.rosterId || '', name: b.name, title: b.title || 'Bishop', image: b.image || '', photo: b.photo || r?.photo || '', church, logo: churchLogo(church) || churchLogo(r?.denomination), consecrated: b.consecrated || r?.yearConsecrated || '', appointed: b.appointed || r?.yearAppointed || '', ordained: b.ordained || r?.yearOrdained || '' };
   }).sort(byName);
 }
 
@@ -29,7 +29,11 @@ export function pastorEntries(people) {
   // Lay presidents are pastors (Reverends) who perform a bishop's role (office, 19 Nov): they are on the Order of Pastors.
   return people.filter(p => p.role === 'pastor' || p.title === 'Lay President').map(p => {
     const b = bishops.get(p.bishop);
-    return { rosterId: p.id, name: p.name, title: p.title || 'Pastor', image: p.image || '', photo: p.photo || '', denomination: p.denomination || '', details: [
+    // Office, 21 Nov: the same details, shown on the card itself.
+    const rev = /rev/i.test(p.title || '');
+    return { rosterId: p.id, name: p.name, title: p.title || 'Pastor', image: p.image || '', photo: p.photo || '', denomination: p.denomination || '',
+      church: p.denomination || '', logo: churchLogo(p.denomination), branch: p.branch || '', appointed: p.yearAppointed || '', ordained: rev ? p.yearOrdained || '' : '',
+      bishop: b ? b.name : p.bishop || '', details: [
       { label: 'Church', value: p.denomination, logo: churchLogo(p.denomination) },
       ...(p.branch ? [{ label: 'Branch', value: p.branch }] : []),
       /rev/i.test(p.title || '') ? { label: 'Ordained', value: p.yearOrdained || '' } : { label: 'Appointed', value: p.yearAppointed || '' },

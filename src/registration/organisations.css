@@ -523,3 +523,10 @@ a.org-sub-box:has(.gt-all){padding-top:6px;padding-bottom:6px}
   .org-dhmm-text{grid-column:1/-1;grid-row:2;padding-right:0;border-right:0}
   .org-dhmm-head-bishops .org-bishop-access{grid-column:1/-1}
 }
+
+/* Office, 21 Nov: the registers and the Order of Pastors show every detail on the card. */
+.bl-card-church{display:flex;align-items:center;gap:8px;margin-top:2px}
+.bl-card-church img{width:30px;height:30px;object-fit:contain;flex:none}
+.bl-card-branch{color:#5b574e!important}
+.bl-card-bishop{font-weight:600;color:var(--org-navy)!important}
+@media(max-width:700px){.bl-card-church img{width:24px;height:24px}}
