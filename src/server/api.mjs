@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
 import { ENQUIRY_KINDS } from '../registration/castle-events.mjs';
 import { createAutoPhoto, testGeminiKey } from './auto-photo.mjs';
-import { applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline, applyDueChanges } from '../registration/model.mjs';
+import { isTestEmail, applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline, applyDueChanges } from '../registration/model.mjs';
 import { canonicalPersonName } from '../registration/name-corrections.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit, digest, checkPassword } from './auth.mjs';
@@ -504,7 +504,8 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           if (name === 'payment') {
             await assertOwnedMedia(conn, actor, payload.proof, 'receipt');
           }
-          if (name === 'submit' && !inGhana(payload.country)) {
+          // TEST (office, 21 Nov): a test account has no payment step.
+          if (name === 'submit' && !inGhana(payload.country) && !isTestEmail(before, actor.email)) {
             const registration = before.registrations.find(r => r.userId === actor.id && r.year === before.year);
             if (!paymentReady(registration)) throw new HttpError(400, 'Upload and submit your payment receipt before continuing.');
           }
@@ -530,12 +531,13 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
               // A bishop on our list who has not registered yet is emailed at the address we hold for them.
               const listed = !bishop && people.find(p => p.id === r.data.bishopId && p.role === 'bishop');
               const listedRef = people.find(p => p.id === (bishop?.referenceId || r.data.bishopId) && p.role === 'bishop');
-              if (bishop) newPastor = { pastor: r.data, to: bishopReg?.data?.email || bishop.email || '', bishopName: canonicalPersonName(listedRef?.id, listedRef?.name || bishopReg?.data?.name || bishop.name || ''), bishopTitle: listedRef?.title || (bishopReg?.data ? titleFor(bishopReg.data) : 'Bishop'), bishopUser: bishop.id };
-              else if (listed?.email) newPastor = { pastor: r.data, to: listed.email, bishopName: canonicalPersonName(listed.id, listed.name), bishopTitle: listed.title || 'Bishop', bishopUser: '', unregistered: true };
+              if (bishop) newPastor = { test: Boolean(r.testAccount), pastor: r.data, to: bishopReg?.data?.email || bishop.email || '', bishopName: canonicalPersonName(listedRef?.id, listedRef?.name || bishopReg?.data?.name || bishop.name || ''), bishopTitle: listedRef?.title || (bishopReg?.data ? titleFor(bishopReg.data) : 'Bishop'), bishopUser: bishop.id };
+              else if (listed?.email) newPastor = { test: Boolean(r.testAccount), pastor: r.data, to: listed.email, bishopName: canonicalPersonName(listed.id, listed.name), bishopTitle: listed.title || 'Bishop', bishopUser: '', unregistered: true };
             }
           }
         });
-        if (newPastor) notifyBishop(newPastor).catch(error => logger.error?.('new-pastor email failed:', error?.message || error));
+        // TEST (office, 21 Nov): a test pastor's bishop is not emailed; only the pastor gets emails.
+        if (newPastor && !newPastor.test) notifyBishop(newPastor).catch(error => logger.error?.('new-pastor email failed:', error?.message || error));
         if (standing.length) tellStanding(standingState, standing).catch(() => {});
         if (['submit', 'update', 'officeEdit', 'choosePhoto', 'approveBishop'].includes(name)) autoPhoto.queue(); // the photo is checked and edited in the background (19 Nov)
         publicCache.at = 0; // office edits and pauses show on the public page at once
