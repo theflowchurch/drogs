@@ -10,9 +10,10 @@ const refs = [{ id: 'B1', role: 'bishop', name: 'Ama Bishop', organization: 'Fir
 
 test('a saved change waits 30 minutes before the public pages and the record show it', () => {
   let s = applyAction(emptyState(), bishop, 'submit', { ...profile(), referenceId: 'B1' }, undefined, refs);
-  assert.ok(changePending(s.registrations[0]), 'a new registration waits too');
-  assert.equal(s.overrides?.B1?.city, undefined, 'the record is not changed yet');
-  assert.equal(applyDueChanges(s, Date.now() + CHANGE_DELAY_MS + 1000), 1);
+  // Office, 21 Nov: a new registration that is confirmed (here a listed bishop,
+  // approved at once) goes live straight away, without the 30 minutes.
+  assert.equal(s.registrations[0].status, 'confirmed');
+  assert.ok(!changePending(s.registrations[0]), 'a confirmed new registration is live at once');
   assert.equal(s.overrides.B1.city, 'Accra');
   s.registrations[0].status = 'confirmed'; s.registrations[0].payment = 'verified';
   assert.equal(publicRoll(s, refs)[0].city, 'Accra');
@@ -80,4 +81,23 @@ test('the registration deadline shows only those in good standing, and can be li
   s = m.applyAction(s, office, 'applyDeadline', {}, undefined, people);
   assert.equal(s.deadline.date, '2027-01-31');
   assert.throws(() => m.applyAction(s, office, 'setDeadlineDate', { date: 'soon' }, undefined, people), /Choose a date/);
+});
+
+test('a new pastor waits until their bishop confirms them, then is live at once (21 Nov)', async () => {
+  const { publicRoll: roll } = await import('../../src/registration/model.mjs');
+  let s = applyAction(emptyState(), bishop, 'submit', { ...profile(), referenceId: 'B1' }, undefined, refs);
+  s.registrations[0].payment = 'verified';
+  const pastor = { id: 'np1', email: 'np@example.com' };
+  s = applyAction(s, pastor, 'submit', { ...profile(), role: 'pastor', firstName: 'New', lastName: 'Pastor', name: 'New Pastor', email: 'np@example.com', title: 'Pastor', bishopId: 'B1', bishopName: 'Ama Bishop', referenceId: undefined }, undefined, refs);
+  const r = s.registrations.find(x => x.userId === 'np1');
+  assert.ok(r, 'the pastor registered');
+  assert.equal(r.status, 'unclaimed', 'waits for the bishop');
+  {
+    assert.ok(changePending(r), 'waiting for the bishop: not public');
+    r.payment = 'verified';
+    s = applyAction(s, bishop, 'claim', { userId: 'np1' }, undefined, refs);
+  }
+  const after = s.registrations.find(x => x.userId === 'np1');
+  assert.equal(after.status, 'confirmed');
+  assert.ok(!changePending(after), 'confirmed: live at once, no 30 minutes');
 });

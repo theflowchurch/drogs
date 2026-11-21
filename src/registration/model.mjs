@@ -747,6 +747,18 @@ export function applyDueChanges(state, now = Date.now()) {
   }
   return n;
 }
+// Office, 21 Nov: a new sign-up goes live the moment they are confirmed (by their
+// bishop, or by the office for a bishop), on the website and for the dashboards,
+// without waiting out the 30 minutes. Only a first registration that was never
+// public is released; later edits by members keep their 30 minutes.
+function releaseConfirmedSignups(state) {
+  for (const r of state.registrations || []) {
+    if (r.status !== "confirmed" || !r.publicAt || r.shownData) continue;
+    syncReference(state, r, { changed: r.pendingSync === 'all' || !r.pendingSync ? null : r.pendingSync });
+    addOwnDenomination(state, r);
+    delete r.publicAt; delete r.shownData; delete r.pendingSync;
+  }
+}
 // A bishop's new denomination (19 Nov) joins the list, its group and its logo once it is live.
 function addOwnDenomination(state, r) {
   const d = r.data || {};
@@ -1949,6 +1961,7 @@ export function applyAction(
     state.year += 1;
   } else throw Error("Unknown action.");
   reconcile(state);
+  releaseConfirmedSignups(state);
   state.audit.push({
     id: makeId(),
     actor: actor.id,
