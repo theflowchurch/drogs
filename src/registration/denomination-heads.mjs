@@ -5,8 +5,10 @@
 // Office, 22 Nov: Ernest Addai-Duah heads Eschatos, Joel Obuobisa the Pacific Islands
 // Missionary Church, Kwame Adu-Gyamfi Pleasant Surprise, Frank Tawiah-Amissah Jesus Is
 // The Door, Joshua Dormediame the Poimen Church, Prince Charles Addae the Healing Jesus
-// Campaign and Kwabena Asamoah Jnr the Bata City State Church.
+// Campaign and Kwabena Asamoah Jnr the Bata City State Church; Kweku Amponsah heads
+// Candle In The Dark Church.
 export const DENOMINATION_HEADS = [
+ "Kweku Amponsah",
  "Ernest Addai-Duah",
  "Joel Obuobisa",
  "Kwame Adu-Gyamfi",
@@ -96,7 +98,6 @@ export const DENOMINATION_HEADS = [
  "Eric Lamptey",
  "Nee Nunoo",
  "Christian Assi Adoupo",
- "Kweku Amponsah",
  "King Bodom Appiagyei",
  "David Ofori Gyedu",
  "Isaac Ob Commey",
