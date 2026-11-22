@@ -21,3 +21,30 @@ test('church pages list the head bishop first', async () => {
   const people = [{ role: 'bishop', name: 'Aaron Able' }, { role: 'bishop', name: 'Frank Tawiah-Amissah' }, { role: 'bishop', name: 'Ben Brown' }];
   assert.deepEqual(ministerSections(people).bishops.map(p => p.name), ['Frank Tawiah-Amissah', 'Aaron Able', 'Ben Brown']);
 });
+test('22 Nov: a confirmed sign-up replaces the record\'s details; our photo stays unless role or church moved', async () => {
+  const { applyAction, applyDueChanges, emptyState, overlayReferences, shownPhoto, validateProfile } = await import('../../src/registration/model.mjs');
+  const actor = { id: 'u1', email: 'a@example.com' };
+  const refs = [{ id: 'B1', role: 'bishop', name: 'Ama Bishop', organization: 'First Love', denomination: 'First Love Church', city: 'Tema', branch: 'Old Branch', image: 'assets/portraits/B1.webp' }];
+  const form = { role: 'bishop', firstName: 'Ama', lastName: 'Bishop', gender: 'female', email: actor.email, phone: '+233201234567', dob: '1970-01-01', organization: 'First Love', denomination: 'First Love Church',
+    country: 'Ghana', city: 'Accra', church: 'New Branch', yearAppointed: '2001', yearOrdained: '2005', yearConsecrated: '2019', photo: 'u1/portrait/a.webp', photoConfirmed: true, consentedAt: '2026-11-22T00:00:00Z', referenceId: 'B1' };
+  assert.throws(() => validateProfile({ ...form, yearConsecrated: '' }, actor.email), /consecrated/);
+  assert.throws(() => validateProfile({ ...form, church: '' }, actor.email), /branch/);
+  let s = { ...emptyState(), overrides: { B1: { city: 'Kumasi', _officeFields: ['city'] } } };
+  s = applyAction(s, actor, 'submit', form, undefined, refs);
+  s.registrations[0].status = 'confirmed';
+  s = applyAction(s, actor, 'update', { city: 'Accra', church: 'New Branch', yearAppointed: '2001', yearOrdained: '2005', yearConsecrated: '2019', photoConfirmed: true }, undefined, refs);
+  const rec = () => overlayReferences(refs, s).find((p) => p.id === 'B1');
+  assert.equal(rec().city, 'Accra', 'their sign-up wins over an earlier office correction');
+  assert.equal(rec().branch, 'New Branch');
+  assert.equal(rec().yearConsecrated, '2019');
+  assert.equal(rec().image, 'assets/portraits/B1.webp', 'same role and church: our portrait stays');
+  assert.equal(shownPhoto(s.registrations[0], rec()).image, 'assets/portraits/B1.webp');
+  // moved to another church: their own photo
+  s.catalog = { organizations: ['First Love'], denominations: { 'First Love': ['First Love Church', 'Go Church'] } };
+  s = applyAction(s, actor, 'update', { denomination: 'Go Church', photoConfirmed: true }, undefined, refs);
+  applyDueChanges(s, Date.now() + 10 * 60 * 1000); // updates go live 5 minutes after saving
+  assert.equal(rec().denomination, 'Go Church');
+  assert.equal(rec().image, '', 'moved: not our portrait');
+  assert.equal(rec().photo, 'u1/portrait/a.webp');
+  assert.equal(shownPhoto(s.registrations[0], rec()).photo, 'u1/portrait/a.webp');
+});

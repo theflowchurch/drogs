@@ -14,7 +14,7 @@ test('FLOW offers only Mother Nina Masuku before her own annual registration', (
   const actor = { id: 'flow-pastor', email: 'flow-pastor@example.com' };
   const data = { role: 'pastor', firstName: 'Joshua', lastName: 'Example', name: 'Joshua Example', email: actor.email,
     organization: 'FLOW', country: 'Ghana', city: 'Online', phone: '+233201234567', dob: '1990-01-01', gender: 'male',
-    photo: 'flow-pastor/portrait/image.jpg', photoConfirmed: true, consentedAt: '2026-10-23T18:00:00.000Z',
+    photo: 'flow-pastor/portrait/image.jpg', church: "Grace", yearAppointed: "2010", yearOrdained: "2014", yearConsecrated: "2020", photoConfirmed: true, consentedAt: '2026-10-23T18:00:00.000Z',
     bishopId: choices[0].id, bishopFirstName: 'Nina', bishopLastName: 'Masuku' };
   let state = applyAction(emptyState(), actor, 'save', data);
   state = applyAction(state, actor, 'submit', state.registrations[0].data);

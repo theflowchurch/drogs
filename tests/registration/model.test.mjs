@@ -47,7 +47,7 @@ const profile = (actor, role = "pastor", name = "John Doe") => ({
   country: "Ghana",
   city: "Accra",
   gender: "male",
-  photoConfirmed: true,
+  church: "Grace", yearAppointed: "2010", yearOrdained: "2014", yearConsecrated: "2020", photoConfirmed: true,
   consentedAt: "2026-09-29T08:00:00.000Z",
   email: actor.email,
   phone: "+233201234567",
@@ -724,7 +724,7 @@ test("members update their own details any time; date of birth is fixed; correct
   const refs = [{ id: "B1", role: "bishop", name: "Ama Bishop", organization: "First Love", phone: "+233000000000" }];
   let s = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Ama Bishop"), referenceId: "B1" }, undefined, refs);
   assert.equal(s.overrides.B1.phone, "+233201234567", "the submitted number lands on the original record");
-  assert.equal(s.overrides.B1.name, undefined, "a member never renames the record");
+  assert.equal(s.overrides.B1.name, "Ama Bishop", "the record carries the name they signed up with (22 Nov)");
   s = applyAction(s, bishop, "update", { city: "Kumasi", phone: "+233 24 000 0000", dob: "1950-01-01", referenceId: "B2", photoConfirmed: true }, undefined, refs);
   assert.equal(s.registrations[0].data.referenceId, "B1", "a member cannot point their record at someone else");
   const r = s.registrations[0];

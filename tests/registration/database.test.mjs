@@ -66,7 +66,7 @@ test("PostgreSQL registration workflow enforces isolation, claims, payment locks
       denomination: "First Love Church",
       country: "Ghana",
       city: "Accra",
-      photoConfirmed: true,
+      church: "Grace", yearAppointed: "2010", yearOrdained: "2014", yearConsecrated: "2020", photoConfirmed: true,
   consentedAt: "2026-09-29T08:00:00.000Z",
       phone: who === "pastor" ? "+233201234567" : "+233209998888",
       dob: "1990-02-01",

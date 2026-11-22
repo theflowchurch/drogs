@@ -8,7 +8,7 @@ const CHANGE_DELAY_MS = 30 * 60 * 1000;
 // Office, 19 Nov: a member's saved change goes public 30 minutes later.
 const bishop = { id: 'b1', email: 'bishop@example.com' };
 const office = { id: 'o1', email: 'office@example.com', office: true };
-const profile = (extra = {}) => ({ role: 'bishop', name: 'Ama Bishop', firstName: 'Ama', lastName: 'Bishop', organization: 'First Love', denomination: 'First Love Church', country: 'Ghana', city: 'Accra', gender: 'male', dob: '1990-02-01', photoConfirmed: true, photo: 'b1/p.jpg', consentedAt: '2026-09-29T08:00:00.000Z', email: bishop.email, phone: '+233201234567', ...extra });
+const profile = (extra = {}) => ({ role: 'bishop', name: 'Ama Bishop', firstName: 'Ama', lastName: 'Bishop', organization: 'First Love', denomination: 'First Love Church', country: 'Ghana', city: 'Accra', gender: 'male', dob: '1990-02-01', church: "Grace", yearAppointed: "2010", yearOrdained: "2014", yearConsecrated: "2020", photoConfirmed: true, photo: 'b1/p.jpg', consentedAt: '2026-09-29T08:00:00.000Z', email: bishop.email, phone: '+233201234567', ...extra });
 const refs = [{ id: 'B1', role: 'bishop', name: 'Ama Bishop', organization: 'First Love', denomination: 'First Love Church', city: 'Accra', country: 'Ghana' }];
 
 test('with a delay switched on, a saved change waits before the public pages and the record show it', () => {

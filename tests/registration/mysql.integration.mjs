@@ -69,7 +69,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal(result.status, 201, JSON.stringify(result.data));
     return result.data.path;
   }
-  const profile = (photo, role = 'bishop') => ({ role, firstName: role === 'bishop' ? 'Test' : 'John', lastName: role === 'bishop' ? 'Bishop' : 'Doe', phone: '+233201234567', dob: '1990-01-01', country: 'Ghana', city: 'Accra', organization: 'First Love', denomination: 'First Love Church', photo, gender: 'male', photoConfirmed: true, consentedAt: '2026-09-29T08:00:00.000Z', bishopId: 'B1', bishopFirstName: 'Test', bishopLastName: 'Bishop' });
+  const profile = (photo, role = 'bishop') => ({ role, firstName: role === 'bishop' ? 'Test' : 'John', lastName: role === 'bishop' ? 'Bishop' : 'Doe', phone: '+233201234567', dob: '1990-01-01', country: 'Ghana', city: 'Accra', organization: 'First Love', denomination: 'First Love Church', photo, gender: 'male', church: "Grace", yearAppointed: "2010", yearOrdained: "2014", yearConsecrated: "2020", photoConfirmed: true, consentedAt: '2026-09-29T08:00:00.000Z', bishopId: 'B1', bishopFirstName: 'Test', bishopLastName: 'Bishop' });
   try {
     await migrate(pool); await migrate(pool); // Idempotent, preserves existing records.
     // Email and password (17 Nov): sign up, sign in, wrong password, no second account, reset by code.
@@ -194,7 +194,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
       // 19 Nov: a bishop chooses their Order groups and brings a new denomination
       // with its logo; it goes public 5 minutes after they save (22 Nov).
       const logo = await upload(bishop, 'logo');
-      const changed = await call('action', bishop.cookie, { name: 'update', payload: { photoConfirmed: true, organization: 'United Denominations', denomination: 'Grace City Church Test', newDenomination: 'Grace City Church Test', newDenominationGroup: 'UD Ghana', newDenominationLogo: logo, orderGroups: [{ slug: 'ud-ghana-central', role: '' }, { slug: 'flow', role: 'Treasurer' }] } });
+      const changed = await call('action', bishop.cookie, { name: 'update', payload: { church: "Grace", yearAppointed: "2010", yearOrdained: "2014", yearConsecrated: "2020", photoConfirmed: true, organization: 'United Denominations', denomination: 'Grace City Church Test', newDenomination: 'Grace City Church Test', newDenominationGroup: 'UD Ghana', newDenominationLogo: logo, orderGroups: [{ slug: 'ud-ghana-central', role: '' }, { slug: 'flow', role: 'Treasurer' }] } });
       assert.equal(changed.status, 200, JSON.stringify(changed.data));
       const wait = (await call('public-directory')).data;
       assert.ok(!(wait.catalog.denominations['United Denominations'] || []).includes('Grace City Church Test'), 'not public for 5 minutes');

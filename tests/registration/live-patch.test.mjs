@@ -161,7 +161,7 @@ test('18 Nov: blank denominations come off records; FLOW registrations keep FLOW
   const refs2 = [{ id: 'P1', role: 'pastor', name: 'John Doe', organization: 'First Love', denomination: 'First Love Church' }];
   const pastor = { id: 'u1', email: 'j@x.com' };
   let t = { ...emptyState(), profiles: [{ id: 'u1', role: 'pastor', name: 'John Doe', referenceId: 'P1' }],
-    registrations: [{ userId: 'u1', year: emptyState().year, status: 'confirmed', data: { role: 'pastor', name: 'John Doe', firstName: 'John', lastName: 'Doe', referenceId: 'P1', organization: 'First Love', denomination: 'First Love Church', country: 'Ghana', city: 'Accra', phone: '+233201234567', email: 'j@x.com', dob: '1990-01-01', gender: 'male', photo: 'u1/portrait/a.webp', photoConfirmed: true, bishopId: 'B1' } }] };
+    registrations: [{ userId: 'u1', year: emptyState().year, status: 'confirmed', data: { role: 'pastor', name: 'John Doe', firstName: 'John', lastName: 'Doe', referenceId: 'P1', organization: 'First Love', denomination: 'First Love Church', country: 'Ghana', city: 'Accra', phone: '+233201234567', email: 'j@x.com', dob: '1990-01-01', gender: 'male', photo: 'u1/portrait/a.webp', church: "Grace", yearAppointed: "2010", yearOrdained: "2014", yearConsecrated: "2020", photoConfirmed: true, bishopId: 'B1' } }] };
   t = applyAction(t, pastor, 'update', { denomination: 'Go Church', photoConfirmed: true }, undefined, refs2);
   const view = { referencePeople: refs2, ...publicOverlay(t), roll: [] };
   assert.deepEqual(denominationPeople(view, 'gochurch').map(p => p.id), ['P1'], 'now on Go Church');

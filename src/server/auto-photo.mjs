@@ -7,7 +7,7 @@
 import { readFile } from 'node:fs/promises';
 import sharp from 'sharp';
 import { uniformGroup, uniformPrompt, UNIFORMS } from '../registration/uniforms.mjs';
-import { titleFor, overlayReferences, likelyRecords, applyAction } from '../registration/model.mjs';
+import { titleFor, overlayReferences, likelyRecords, applyAction, recordMoved } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { applySettings } from './settings.mjs';
 
@@ -80,7 +80,8 @@ function sourceFor(r, refs) {
   const ref = r.data?.referenceId ? refs.get(r.data.referenceId) : null;
   if (ref?.photo && ref.photo !== r.data.photo) return null;
   if (r.photoByOffice) return null;
-  if (ref?.image) return { source: `asset:${ref.image}`, ours: true };
+  // Moved role or church (22 Nov): their own photo, not ours.
+  if (ref?.image && !recordMoved(r)) return { source: `asset:${ref.image}`, ours: true };
   return r.data?.photo ? { source: r.data.photo, ours: false } : null;
 }
 const groupOf = (r) => uniformGroup({ ...r.data, title: titleFor(r.data) });

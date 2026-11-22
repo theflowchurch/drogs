@@ -265,7 +265,10 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
   const site = useContext(OrganizationSiteContext);
   const church = useContext(ChurchContext);
   const catalog = siteCatalog(state.catalog || catalogOf(state), site);
-  const [f, setF] = useState({ gender: d.gender || "", title: d.title || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "", bishopFirstName: d.bishopFirstName || "", bishopLastName: d.bishopLastName || "" });
+  // Branch and years (office, 22 Nov): theirs, else what their existing record holds, for them to complete.
+  const [rec] = useState(() => (d.referenceId && overlayReferences(rosterFrom(state, people), state).find((x) => x.id === d.referenceId)) || {});
+  const [f, setF] = useState({ gender: d.gender || "", title: d.title || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "", bishopFirstName: d.bishopFirstName || "", bishopLastName: d.bishopLastName || "",
+    church: d.church || rec.branch || "", yearAppointed: String(d.yearAppointed || rec.yearAppointed || ""), yearOrdained: String(d.yearOrdained || rec.yearOrdained || ""), yearConsecrated: String(d.yearConsecrated || rec.yearConsecrated || "") });
   const [busyPhoto, setBusyPhoto] = useState(false), [problem, setProblem] = useState("");
   const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
   const countries = [...new Set([...overlayReferences(rosterFrom(state, people), state).map((x) => x.country), f.country].filter(Boolean))].sort();
@@ -298,6 +301,8 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
       )}
       <Field label="Country where you currently serve"><Choice value={f.country} options={countries} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
       <Field label="City"><input value={f.city} onChange={(e) => set("city", e.target.value)} /></Field>
+      <Field label="Branch" hint="The church or branch where you serve."><input maxLength={120} value={f.church} onChange={(e) => set("church", e.target.value)} /></Field>
+      <YearFields data={{ ...f, role: d.role, title: d.role === "pastor" ? titleFor({ ...d, ...f }) : f.title }} set={set} />
       {d.role === "bishop" && (
         <Field label="Your groups on the Order of Bishops" wide>
           <OrderGroupsPicker structure={state.pageStructure || ORDER_STRUCTURE} value={f.orderGroups ?? d.orderGroups ?? orderGroupsOf(state.pageStructure || ORDER_STRUCTURE, d.referenceId)} onChange={(v) => setF((x) => ({ ...x, orderGroups: v }))} />
@@ -1709,6 +1714,17 @@ const ACTION_LABELS = {
                   apiKeyCreated: "API key created",
                   apiKeyRevoked: "API key revoked",
 };
+// Year appointed for everyone; year ordained for bishops and Reverends; year consecrated for bishops (office, 22 Nov).
+export const needsOrdained = (d) => d.role === "bishop" || /rev/i.test(d.title || "");
+const thisYear = new Date().getFullYear();
+function YearFields({ data, set }) {
+  const year = (k, label) => <Field label={label}><input required inputMode="numeric" pattern="(19|20)[0-9]{2}" maxLength={4} placeholder="e.g. 2015" value={data[k] || ""} onChange={(e) => set(k, e.target.value.replace(/[^0-9]/g, "").slice(0, 4))} title={`A four-digit year, 1940 to ${thisYear}`} /></Field>;
+  return <>
+    {year("yearAppointed", "Year appointed")}
+    {needsOrdained(data) && year("yearOrdained", "Year ordained")}
+    {data.role === "bishop" && year("yearConsecrated", "Year consecrated")}
+  </>;
+}
 const FIELD_LABELS = { firstName: "First name", lastName: "Last name", name: "Name", role: "Ministerial category", gender: "Gender", dob: "Date of birth", title: "Title", organization: "Organization", denomination: "Denomination", group: "Group", country: "Country", city: "City", branch: "Branch", church: "Church / branch", yearAppointed: "Year appointed", yearOrdained: "Year ordained", yearConsecrated: "Year consecrated", phone: "WhatsApp number", email: "Email", bishopId: "Bishop", bishopFirstName: "Bishop first name", bishopLastName: "Bishop surname", photo: "Photo", amount: "Amount", currency: "Currency", status: "Status", subject: "Subject", recipients: "Recipients", audience: "Audience", autoApproved: "Matched original record", closed: "Paused", notice: "Message" };
 // What an audit entry changed, in words: "City: Kumasi · WhatsApp number: +233…".
 function detailWords(detail, state) {
@@ -2006,6 +2022,9 @@ function RegistrationForm({
         phone: "",
         dob: "",
         church: "",
+        yearAppointed: "",
+        yearOrdained: "",
+        yearConsecrated: "",
         organization: church ? church.organization : site === "flow" ? "" : siteConfig?.organizations[0] || "",
         photo: "",
         bishopId: "",
@@ -2042,6 +2061,9 @@ function RegistrationForm({
       const next = { ...d, referenceId: ref.id, name: ref.name, firstName: parts.given, lastName: parts.surname, photoConfirmed: false };
       if (!d.country && ref.country) next.country = ref.country;
       if (!d.city && ref.city) next.city = ref.city;
+      // Office, 22 Nov: what we hold is filled in for them to check and correct.
+      if (!d.church && ref.branch) next.church = ref.branch;
+      for (const k of ["yearAppointed", "yearOrdained", "yearConsecrated"]) if (!d[k] && ref[k]) next[k] = String(ref[k]);
       if (!church && (!d.organization || site) && catalog.organizations.includes(ref.organization)) next.organization = ref.organization;
       // Older records shout their denomination in capitals; match it to the list by normalised name.
       const listed = (catalog.denominations[next.organization] || []).find((d) => normalName(d) === normalName(ref.denomination));
@@ -2409,6 +2431,11 @@ function RegistrationForm({
                     autoComplete="off"
                   />
                 </Field>
+                {/* Office, 22 Nov: branch and years are asked of everyone, so the records are complete. */}
+                <Field label="Branch" hint="The church or branch where you serve.">
+                  <input required maxLength={120} value={data.church || ""} onChange={(e) => set("church", e.target.value)} autoComplete="off" />
+                </Field>
+                <YearFields data={data} set={set} />
                 {data.role === "bishop" && (
                   <Field label="Your groups on the Order of Bishops" wide>
                     <OrderGroupsPicker structure={state.pageStructure || ORDER_STRUCTURE} value={data.orderGroups ?? orderGroupsOf(state.pageStructure || ORDER_STRUCTURE, data.referenceId)} onChange={(v) => set("orderGroups", v)} />

@@ -788,16 +788,40 @@ function addOwnDenomination(state, r) {
   cat.added = { ...(cat.added || {}), [name]: { organization: d.organization, group: d.newDenominationGroup || '', logo: d.newDenominationLogo || '', by: r.userId, at: new Date().toISOString() } };
   state.catalog = cat;
 }
+// The record follows what the person gives (office, 22 Nov): once confirmed, their
+// sign-up and later updates replace the record's details, even ones the office
+// corrected before (the office can correct them again). Only the fields they
+// changed are written on an update. Our portrait stays while their role and
+// church match the record we hold; otherwise their own photo is used.
+export const recordMoved = (r) => Boolean(r?.recordFor && r.recordFor === r.data?.referenceId &&
+  (r.recordRole !== r.data.role || normalName(r.recordDenomination || '') !== normalName(r.data.denomination || '')));
 function syncReference(state, r, { byOffice = false, changed = null } = {}) {
   const id = r?.data?.referenceId;
   if (!id) return;
   const d = r.data;
   const owned = officeFields(state, id), wanted = changed && new Set(changed.map(referenceField));
-  const values = { ...(byOffice ? { name: d.name, role: d.role, gender: d.gender, dob: d.dob, title: d.title, branch: d.church } : {}), city: d.city, country: d.country, denomination: d.denomination || undefined, organization: d.organization, phone: d.phone, email: d.email, photo: d.photo }; // a blank denomination never wipes the record's
-  // A member's own upload never goes onto the record (17 Nov): it is for the office to check.
-  const fields = Object.fromEntries(Object.entries(values).filter(([k, v]) => v !== undefined && (!wanted || wanted.has(k)) && (k === 'photo' ? byOffice : byOffice || !owned.has(k))));
+  if (wanted?.has('denomination') || wanted?.has('organization')) wanted.add('group');
+  const moved = !byOffice && recordMoved(r);
+  const group = d.denomination ? groupOf(catalogOf(state), { ...d, group: '' }) : '';
+  const blank = v => v === undefined || v === null || String(v).trim() === '';
+  const values = { name: d.name, role: byOffice ? d.role : undefined, gender: d.gender, dob: d.dob, title: d.title || undefined, branch: d.church,
+    yearAppointed: d.yearAppointed, yearOrdained: d.yearOrdained, yearConsecrated: d.yearConsecrated,
+    city: d.city, country: d.country, denomination: d.denomination || undefined, organization: d.organization, group: group || undefined,
+    phone: d.phone, email: d.email, photo: byOffice || moved ? d.photo : undefined }; // a blank never wipes what the record holds
+  const fields = Object.fromEntries(Object.entries(values).filter(([k, v]) => !blank(v) && (!wanted || wanted.has(k) || (k === 'photo' && moved))));
   if (byOffice) for (const k of Object.keys(fields)) if (k !== 'photo') owned.add(k);
-  state.overrides = { ...(state.overrides || {}), [id]: { ...(state.overrides?.[id] || {}), ...fields, _officeFields: [...owned] } };
+  const o = { ...(state.overrides?.[id] || {}), ...fields, _officeFields: [...owned] };
+  if (!byOffice) { if (moved) o.memberPhoto = true; else if (o.memberPhoto) { delete o.memberPhoto; if (o.photo === d.photo) delete o.photo; } }
+  state.overrides = { ...(state.overrides || {}), [id]: o };
+}
+// Which record a linked person is, as it stood when they linked to it: so a later
+// move of role or church can be told from the record's own (office, 22 Nov).
+function noteRecord(state, r, references) {
+  const id = r?.data?.referenceId;
+  if (!id || r.recordFor === id || !references?.length) return;
+  const rec = overlayReferences(references, state).find((p) => p.id === id);
+  if (!rec) return;
+  Object.assign(r, { recordFor: id, recordRole: rec.role, recordDenomination: rec.denomination || '' });
 }
 function renameOverseer(state, references, before, after) {
   if (!before || before === after) return;
@@ -837,6 +861,7 @@ export function overlayReferences(references, state) {
     if (o?.deleted || hidden.has(p.id)) continue;
     // Office, 19 Nov: a portrait of ours the office chose (e.g. a new bishop's red jacket).
     const image = typeof o?.image === 'string' && o.image.startsWith('assets/') ? { image: o.image } : {};
+    if (o?.memberPhoto && o.photo) image.image = ''; // moved role or church: their own photo (22 Nov)
     out.push(canonicalPerson(o ? { ...p, ...Object.fromEntries(REFERENCE_FIELDS.filter((f) => o[f] !== undefined).map((f) => [f, o[f]])), ...image } : p));
   }
   for (const p of state?.extraReferences || []) if (!hidden.has(p.id) && !overrides[p.id]?.deleted) out.push(canonicalPerson(p));
@@ -867,7 +892,11 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
     phone: String(p.phone || "").trim(),
     email: registrationEmail(email, p.email),
     dob: p.dob || "",
-    church: String(p.church || "").trim(),
+    church: String(p.church || "").replace(/\s+/g, " ").trim().slice(0, 120),
+    // Office, 22 Nov: the years everyone gives at sign-up (ordained: bishops and Reverends; consecrated: bishops).
+    yearAppointed: String(p.yearAppointed || "").trim(),
+    yearOrdained: p.role === "bishop" || /rev/i.test(p.title || "") ? String(p.yearOrdained || "").trim() : "",
+    yearConsecrated: p.role === "bishop" ? String(p.yearConsecrated || "").trim() : "",
     organization: p.organization || "",
     photo: p.photo || "",
     gender: ["male", "female"].includes(p.gender) ? p.gender : "",
@@ -913,6 +942,14 @@ export function validateProfile(p, email, { draft = false, catalog = { organizat
     if (q.organization === "FLOW") { q.city = FLOW_CITY; q.country = FLOW_COUNTRY; } // FLOW is in Accra, Ghana (office, 19 Nov)
     if (!q.country || !q.city) throw Error("Enter your country and city.");
     if (!q.gender) throw Error("Select male or female.");
+    if (!q.church) throw Error("Enter your branch.");
+    const year = (k, label, need) => {
+      if (!need) return;
+      if (!/^(19|20)\d{2}$/.test(q[k]) || +q[k] < 1940 || +q[k] > new Date().getUTCFullYear()) throw Error(`Enter the year you were ${label} (four digits, e.g. 2015).`);
+    };
+    year("yearAppointed", "appointed", true);
+    year("yearOrdained", "ordained", q.role === "bishop" || /rev/i.test(p.title || ""));
+    year("yearConsecrated", "consecrated", q.role === "bishop");
     const denominations = catalog.denominations[q.organization] || [];
     // A bishop may bring a denomination that is not on the list yet (19 Nov); one
     // already listed (whatever the capitals or spacing) is used as it is.
@@ -1285,6 +1322,7 @@ export function applyAction(
     // the draft was created. A verified payment keeps its original amount.
     if (r.payment === "unpaid") r.amount = feesOf(state)[data.role];
     r.data = data;
+    noteRecord(state, r, references);
     r.updatedAt = now;
     r.status =
       action === "save"
@@ -2058,7 +2096,7 @@ export function shownPhoto(reg, ref) {
   if (ref?.photo && !copiedUpload) return { photo: ref.photo, image: '' };
   // The automatic edit (19 Nov): a new person's upload, or our photo in the uniform of the details they gave.
   if (reg?.autoPhoto && !reg?.photoByOffice) return { photo: reg.autoPhoto, image: '' }; // any choice the office made wins
-  const ours = ref?.image || '';
+  const ours = recordMoved(reg) ? '' : ref?.image || ''; // moved role or church: their own photo (22 Nov)
   if (ours && !officePicked) return { photo: '', image: ours };
   return { photo: reg?.data?.photo || '', image: ours };
 }
@@ -2106,7 +2144,12 @@ export function publicRoll(state, people, year = state.year) {
           "",
         city: d.city,
         country: d.country,
-        branch: ref?.branch || "",
+        branch: ref?.branch || d.church || "",
+        // Office, 22 Nov: the years and gender they gave, where the record has none.
+        gender: ref?.gender || d.gender || "",
+        yearAppointed: ref?.yearAppointed || d.yearAppointed || "",
+        yearOrdained: ref?.yearOrdained || d.yearOrdained || "",
+        yearConsecrated: ref?.yearConsecrated || d.yearConsecrated || "",
         // Someone not on our list shows the bishop they registered under (19 Nov).
         bishop: ref?.bishop || (r.data.role === "pastor" ? canonicalBishopName(bishopKeyed(state, r.data.bishopId)?.name || r.data.bishopName || "") : ""),
         // Our photo first; the member's upload only when we hold none or the office picks it.
@@ -2232,14 +2275,17 @@ export function directoryPeople(state, references, year = state.year) {
       d = registration ? registrationDetails(state, registration.data, p.id) : null;
     return {
       ...p,
-      ...(d ? Object.fromEntries(REFERENCE_FIELDS.filter(k => k !== 'photo' && d[k] !== undefined).map(k => [k, d[k]])) : {}),
+      // A blank in what they sent never hides what the record holds (a bishop's title, say).
+      ...(d ? Object.fromEntries(REFERENCE_FIELDS.filter(k => k !== 'photo' && d[k] !== undefined && String(d[k]).trim() !== '').map(k => [k, d[k]])) : {}),
+      branch: d?.church || p.branch || "",
       email: d?.email ?? row?.email ?? p.email ?? state.contacts?.[p.id]?.email,
       phone: d?.phone ?? row?.phone ?? p.phone ?? state.contacts?.[p.id]?.phone,
       city: d?.city || p.city,
       country: d?.country || p.country,
       denomination: d?.denomination || p.denomination,
       // The office's "which photo" choice applies everywhere, not only on the public roll.
-      photo: p.photo || (p.image && !(registration?.displayPhoto === "upload" && registration?.photoByOffice) ? "" : d?.photo || draftPhotos.get(p.id) || ""),
+      ...(recordMoved(registration) && !p.photo ? { image: "" } : {}), // moved role or church: their own photo (22 Nov)
+      photo: p.photo || (p.image && !recordMoved(registration) && !(registration?.displayPhoto === "upload" && registration?.photoByOffice) ? "" : d?.photo || draftPhotos.get(p.id) || ""),
       recorded: { email: state.contacts?.[p.id]?.email ?? p.email, phone: state.contacts?.[p.id]?.phone ?? p.phone },
       updated: Boolean(registration || row?.referenceConfirmedAt),
       updatedAt:
@@ -2268,6 +2314,13 @@ export function directoryPeople(state, references, year = state.year) {
       photo: shownPhoto(r, null).photo || r.data.photo, // the edited photo when there is one (19 Nov)
       // The bishop they registered under (19 Nov): they are not on our list, so it is not recorded there.
       bishop: r.data.role === "pastor" ? canonicalBishopName(bishopKeyed(state, r.data.bishopId)?.name || r.data.bishopName || "") : "",
+      // Office, 22 Nov: everything they gave reaches Admin and the API.
+      gender: r.data.gender || "",
+      dob: r.data.dob || "",
+      branch: r.data.church || "",
+      yearAppointed: r.data.yearAppointed || "",
+      yearOrdained: r.data.yearOrdained || "",
+      yearConsecrated: r.data.yearConsecrated || "",
       email: r.data.email,
       phone: r.data.phone,
       recorded: null,
