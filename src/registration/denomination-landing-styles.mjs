@@ -47,7 +47,6 @@ export const LANDING_STYLES = [
   ['neon', 'Neon', 'Glowing neon sign at night', true],
   ['folder', 'Folder', 'Manila file folder with tabs'],
   ['timeline', 'Timeline', 'Vertical timeline rail'],
-  ['corkboard', 'Corkboard', 'Pinned cards on cork'],
   ['hardcover', 'Hardcover', 'Clothbound book cover and spine', true],
   ['plaque', 'Plaque', 'Engraved brass plaque', true],
   ['halftone', 'Halftone', 'Pop-art halftone dots'],

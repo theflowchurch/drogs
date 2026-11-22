@@ -273,7 +273,11 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
     { from: "La Belle Église Car", to: "La Belle Église", organization: "United Denominations", group: "UD Africa" },
     { from: "Serious Christian Church Lesotho", to: "Serious Christian Church", organization: "United Denominations", group: "UD Africa" },
     { from: 'Jesus Gefunden', to: 'Jesus Gefunden', organization: 'First Love', group: 'First Love' },
-    { from: 'First Love Church', to: 'First Love Church', organization: 'First Love', group: 'First Love', onlyOrganization: 'United Denominations' }] }];
+    { from: 'First Love Church', to: 'First Love Church', organization: 'First Love', group: 'First Love', onlyOrganization: 'United Denominations' }] },
+  // Office, 22 Nov: Poimen Church Gambia and Poimen Church Senegal-Gambia were one church twice: now "Poimen Church".
+  { id: 'poimen-church-2026-11-22', renameDenominations: [
+    { from: 'Poimen Church Gambia', to: 'Poimen Church', organization: 'United Denominations', group: 'UD Africa' },
+    { from: 'Poimen Church Senegal-Gambia', to: 'Poimen Church', organization: 'United Denominations', group: 'UD Africa' }] }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -429,6 +433,15 @@ export function syncRoll(state, people, version) {
     const id = r.data?.referenceId || state.profiles?.find(p => p.id === r.userId)?.referenceId;
     const o = id && next.overrides[id];
     if (o?.photo && r.data?.photo && o.photo === r.data.photo && String(o.photo).startsWith(`${r.userId}/`)) { const { photo, ...rest } = o; next.overrides[id] = rest; }
+  }
+  // Office, 22 Nov: a church name joined into another stops being offered once nobody carries it.
+  {
+    const old = new Set(OFFICE_FIXES.flatMap(f => [...(f.renameDenominations || []), ...(f.renameDenomination ? [f.renameDenomination] : [])]).filter(r => r.from !== r.to).map(r => r.from));
+    const used = new Set([...people, ...(next.extraReferences || [])].map(p => (next.overrides[p.id] || {}).denomination ?? p.denomination));
+    for (const r of next.registrations || []) used.add(r.data?.denomination);
+    const keep = d => !old.has(d) || used.has(d);
+    next.catalog.denominations = Object.fromEntries(Object.entries(next.catalog.denominations).map(([o, d]) => [o, d.filter(keep)]));
+    next.catalog.groups = Object.fromEntries(Object.entries(next.catalog.groups).map(([n, g]) => [n, { ...g, denominations: g.denominations.filter(keep) }]));
   }
   if (fixes.length) next.officeFixes = [...(state.officeFixes || []), ...fixes.map(f => f.id)];
   const dropped = Object.keys(state.overrides || {}).length - Object.keys(overrides).length;

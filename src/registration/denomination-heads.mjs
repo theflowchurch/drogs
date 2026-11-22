@@ -232,11 +232,11 @@ export const HEAD_CHURCHES = {
   "Onction Internationale Benin"
  ],
  "Edward Botwe": [
-  "Poimen Church Gambia",
-  "Poimen Church Senegal-Gambia"
+  "Poimen Church",
+  "Poimen Church"
  ],
  "Joshua Dormediame": [
-  "Poimen Church Senegal-Gambia"
+  "Poimen Church"
  ],
  "Abednego Nyarkoh Mensah": [
   "Praia City State Church"

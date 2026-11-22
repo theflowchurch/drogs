@@ -754,33 +754,20 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "poimenchurchgambia",
-    "name": "Poimen Church Gambia",
-    "shortName": "Poimen Church Gambia",
+    "path": "poimenchurch",
+    "name": "Poimen Church",
+    "shortName": "Poimen Church",
     "subtitle": "",
     "denominations": [
-      "Poimen Church Gambia"
+      "Poimen Church",
+      "Poimen Church Gambia",
+      "Poimen Church Senegal-Gambia"
     ],
     "logo": "assets/denominations/poimen-church.png",
     "homeLayout": "timeline",
     "visualStyle": "gochurch",
     "accent": "#327032",
     "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "poimenchurchsenegalgambia",
-    "name": "Poimen Church Senegal-Gambia",
-    "shortName": "Poimen Church Senegal-Gambia",
-    "subtitle": "",
-    "denominations": [
-      "Poimen Church Senegal-Gambia"
-    ],
-    "logo": "assets/denominations/poimen-church.png",
-    "homeLayout": "corkboard",
-    "visualStyle": "lighthousechapelinternational",
-    "accent": "#327032",
-    "directoryAction": "View licensed ministers",
     "directoryHeading": "Licensed ministers"
   },
   {
