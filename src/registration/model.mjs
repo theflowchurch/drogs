@@ -277,7 +277,9 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   // Office, 22 Nov: Poimen Church Gambia and Poimen Church Senegal-Gambia were one church twice: now "Poimen Church".
   { id: 'poimen-church-2026-11-22', renameDenominations: [
     { from: 'Poimen Church Gambia', to: 'Poimen Church', organization: 'United Denominations', group: 'UD Africa' },
-    { from: 'Poimen Church Senegal-Gambia', to: 'Poimen Church', organization: 'United Denominations', group: 'UD Africa' }] }];
+    { from: 'Poimen Church Senegal-Gambia', to: 'Poimen Church', organization: 'United Denominations', group: 'UD Africa' }] },
+  // Office, 22 Nov: Nacanieli Lawevuso and Nacanieli Fomilo are one pastor (same photo): he is Nacanieli Fomilo.
+  { id: 'nacanieli-fomilo-one-record-2026-11-22', retire: [{ id: 'P3191', into: 'Sa28b2989' }] }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
