@@ -4,7 +4,7 @@ import publishedStructure from './ministry-organisations.json';
 import { DEFAULT_LAYOUT, buildDirectory, ORGANISATION_PAGES } from './ministry-organisations.mjs';
 import { overlayReferences } from './model.mjs';
 import { rosterFrom } from './live-roster.mjs';
-import { pastorEntries, pastorGroups } from './public-entries.mjs';
+import { orderEntries, pastorGroups } from './public-entries.mjs';
 import referencePeople from './reference-people.json';
 
 // Admin › Bishops and pastors pages (office, 17 Nov): everything the Order of
@@ -130,7 +130,7 @@ function PastorBoxes({ state, perform }) {
   useEffect(() => setBoxes(clone(state.pastorBoxes || { names: {}, merge: {}, order: [] })), [state.pastorBoxes]);
   const dirty = JSON.stringify(boxes) !== JSON.stringify(saved);
   const roster = useMemo(() => overlayReferences(rosterFrom(state, referencePeople), state), [state.referencePeople, state.overrides, state.extraReferences, state.hidden]);
-  const entries = useMemo(() => pastorEntries(roster), [roster]);
+  const entries = useMemo(() => orderEntries(roster), [roster]);
   const shown = pastorGroups(entries, ['#000'], boxes);
   const churches = [...new Set(entries.map(p => p.denomination || 'Other'))].sort((a, b) => a.localeCompare(b));
   const moveBox = (d, dir) => { const order = shown.map(g => g.denomination); const i = order.indexOf(d); setBoxes({ ...boxes, order: swap(order, i, i + dir) }); };

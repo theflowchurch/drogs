@@ -4,7 +4,7 @@ import { Masthead } from './OrganisationsApp';
 import { Card } from './BishopsApp';
 import GoodStandingNotice from './GoodStandingNotice';
 import useLiveRoll from './useLiveRoll';
-import { pastorEntries, pastorGroups, setOfficeLogos } from './public-entries.mjs';
+import { orderEntries, pastorGroups, setOfficeLogos } from './public-entries.mjs';
 import { COLOURS } from './ministry-organisations.mjs';
 import './denomination-sites.css';
 import './organisations.css';
@@ -50,7 +50,7 @@ export default function PastorsOrderApp({ groups: published, total: publishedTot
   const { groups, total } = useMemo(() => {
     if (!live) return { groups: published, total: null }; // the total waits for the live roll, so it never changes on screen
     setOfficeLogos(live.logos);
-    const entries = pastorEntries(live.people);
+    const entries = orderEntries(live.people);
     return { groups: pastorGroups(entries, COLOURS, live.pastorBoxes).map(g => ({ ...g, people: g.people.map(({ denomination, ...p }) => p) })), total: entries.length };
   }, [live, published, publishedTotal]);
   const [slug, setSlug] = useState('');
