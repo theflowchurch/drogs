@@ -64,3 +64,19 @@ test('the dashboards follow the registration deadline, like the website', () => 
   const back = { ...before, deadline: { applied: false, at: '', by: '', date: '' } };
   assert.deepEqual(listedAndNewPeople(back, references).map((p) => p.name).sort(), ['Ann Bishop', 'Paul Notrenewed', 'Walter Woelle'], 'put everyone back: everyone returns');
 });
+
+// Office, 22 Nov: the dashboards can see who is confirmed and who is still waiting.
+test('each person says whether they are confirmed, waiting for their bishop or not registered', async () => {
+  const { registrationStatus } = await import('../../src/server/managed-people.mjs');
+  assert.deepEqual(registrationStatus({}), { status: 'not_registered', confirmed: false, paymentConfirmed: false });
+  assert.deepEqual(registrationStatus({ registration: { status: 'unclaimed', payment: 'waived' } }), { status: 'waiting_for_bishop', confirmed: false, paymentConfirmed: true });
+  assert.deepEqual(registrationStatus({ registration: { status: 'pending', payment: 'verified' } }), { status: 'waiting_for_office', confirmed: false, paymentConfirmed: true });
+  assert.deepEqual(registrationStatus({ registration: { status: 'confirmed', payment: 'unpaid' } }), { status: 'confirmed', confirmed: true, paymentConfirmed: false });
+  // A listed pastor who signed up and is waiting for their bishop is listed, marked as waiting.
+  const references = [{ id: 'B1', role: 'bishop', name: 'Ann Bishop', organization: 'FLOW', denomination: 'FLOW' }, { id: 'P9', role: 'pastor', name: 'Prince Test', organization: 'FLOW', denomination: 'FLOW', bishop: 'Ann Bishop' }];
+  const state = emptyState();
+  state.profiles = [{ id: 'u9', role: 'pastor', email: 'p@example.com', referenceId: 'P9' }];
+  state.registrations = [{ userId: 'u9', year: state.year, status: 'unclaimed', payment: 'waived', submittedAt: '2026-11-21T23:17:00Z', data: { role: 'pastor', referenceId: 'P9', name: 'Prince Test', firstName: 'Prince', lastName: 'Test', organization: 'FLOW', denomination: 'FLOW', bishopId: 'B1', email: 'p@example.com' } }];
+  const prince = listedAndNewPeople(state, references).find(p => p.id === 'P9');
+  assert.equal(registrationStatus(prince).status, 'waiting_for_bishop');
+});

@@ -38,6 +38,9 @@ test('a bishop adds a denomination with its logo; once live it is on the list, i
   assert.equal(s.registrations[0].data.newDenomination, 'Grace City Church Accra');
   assert.ok(!catalogOf(s).denominations['United Denominations'].includes('Grace City Church Accra'), 'not on the list before the 30 minutes');
   applyDueChanges(s, Date.now() + CHANGE_DELAY_MS + 1000);
+  // Office, 22 Nov: nothing reaches the public pages until the bishop is confirmed.
+  assert.ok(!catalogOf(s).denominations['United Denominations'].includes('Grace City Church Accra'), 'not before the office confirms the bishop');
+  s = applyAction(s, office, 'approveBishop', { userId: bishop.id }, undefined, refs);
   const cat = catalogOf(s);
   assert.ok(cat.denominations['United Denominations'].includes('Grace City Church Accra'), 'pastors can now choose it');
   assert.ok(cat.groups['UD Ghana'].denominations.includes('Grace City Church Accra'));
@@ -100,4 +103,16 @@ test('a new pastor waits until their bishop confirms them, then is live at once 
   const after = s.registrations.find(x => x.userId === 'np1');
   assert.equal(after.status, 'confirmed');
   assert.ok(!changePending(after), 'confirmed: live at once, no 30 minutes');
+});
+
+test('a member linked to a listed record changes nothing public until confirmed (22 Nov)', () => {
+  const people = [...refs, { id: 'P5', role: 'pastor', name: 'Prince Test', organization: 'First Love', denomination: 'First Love Church', city: 'Kumasi', country: 'Ghana', bishop: 'Ama Bishop' }];
+  let s = applyAction(emptyState(), bishop, 'submit', { ...profile(), referenceId: 'B1' }, undefined, people);
+  const pastor = { id: 'pp5', email: 'prince@example.com' };
+  s = applyAction(s, pastor, 'submit', { ...profile(), role: 'pastor', firstName: 'Prince', lastName: 'Test', name: 'Prince Test', title: 'Pastor', email: pastor.email, city: 'Tema', bishopId: 'B1', referenceId: 'P5' }, undefined, people);
+  assert.equal(s.registrations.find(r => r.userId === 'pp5').status, 'unclaimed');
+  applyDueChanges(s, Date.now() + CHANGE_DELAY_MS + 1000);
+  assert.notEqual(s.overrides?.P5?.city, 'Tema', 'unconfirmed: the record keeps its city');
+  s = applyAction(s, bishop, 'claim', { userId: 'pp5' }, undefined, people);
+  assert.equal(s.overrides.P5.city, 'Tema', 'confirmed: the record follows at once');
 });

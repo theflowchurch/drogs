@@ -30,6 +30,13 @@ export function standingOf(state, references) {
   }
   return s;
 }
+// Office, 22 Nov: where each person's registration for the year stands, for the dashboards.
+const STATUS = { unclaimed: 'waiting_for_bishop', pending: 'waiting_for_office', confirmed: 'confirmed', denied: 'declined', removed: 'declined' };
+export function registrationStatus(person) {
+  const r = person?.registration;
+  if (!r || r.status === 'draft') return { status: 'not_registered', confirmed: false, paymentConfirmed: false };
+  return { status: STATUS[r.status] || r.status, confirmed: r.status === 'confirmed', paymentConfirmed: paymentConfirmed(r) };
+}
 export const listedAndNewPeople = (state, references) => {
   const standing = standingOf(state, references);
   return directoryPeople({ ...state, hidden: [] }, references)

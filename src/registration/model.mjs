@@ -740,6 +740,9 @@ export function applyDueChanges(state, now = Date.now()) {
   let n = 0;
   for (const r of state.registrations || []) {
     if (!r.publicAt || Date.parse(r.publicAt) > now) continue;
+    // Office, 22 Nov: nothing a member sends reaches the public pages until they are
+    // confirmed (by their bishop, or the office for a bishop); it waits until then.
+    if (r.status !== "confirmed") continue;
     syncReference(state, r, { changed: r.pendingSync === 'all' || !r.pendingSync ? null : r.pendingSync });
     addOwnDenomination(state, r);
     delete r.publicAt; delete r.shownData; delete r.pendingSync;
@@ -753,7 +756,7 @@ export function applyDueChanges(state, now = Date.now()) {
 // public is released; later edits by members keep their 30 minutes.
 function releaseConfirmedSignups(state) {
   for (const r of state.registrations || []) {
-    if (r.status !== "confirmed" || !r.publicAt || r.shownData) continue;
+    if (r.status !== "confirmed" || !r.publicAt || (r.shownData && Date.parse(r.publicAt) > Date.now())) continue;
     syncReference(state, r, { changed: r.pendingSync === 'all' || !r.pendingSync ? null : r.pendingSync });
     addOwnDenomination(state, r);
     delete r.publicAt; delete r.shownData; delete r.pendingSync;

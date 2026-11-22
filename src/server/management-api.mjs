@@ -5,7 +5,7 @@ import { readBody, jsonBody } from './api-body.mjs';
 import { prepareImage } from './storage.mjs';
 import { applyAction, directoryPeople, REFERENCE_FIELDS } from '../registration/model.mjs';
 import { photoProgress, photoKey, photoTask } from '../registration/photo-progress.mjs';
-import { managementPeople, listedAndNewPeople, standingOf, personRevision, changePerson, importPastors, workbookPastors, annotateApiAudit } from './managed-people.mjs';
+import { managementPeople, listedAndNewPeople, standingOf, registrationStatus, personRevision, changePerson, importPastors, workbookPastors, annotateApiAudit } from './managed-people.mjs';
 import { readSettings, writeSettings, describeSettings, applySettings } from './settings.mjs';
 
 export const MANAGEMENT_ACTIONS = ['addPerson','addRoster','approveBishop','assignBishop','carryRoster','choosePhoto','claim','deleteRegistration','editRoster','hideReference','linkReference','markPaid','moveRoster','officeEdit','openYear','removeRoster','restoreRoster','reviewBishop','reviewPayment','reviewPhoto','setCatalog','setFees','setSignup','setStatus','setVisibility'];
@@ -17,7 +17,7 @@ const responsePerson = (person,state,actor,references) => {
   const standing = references ? standingOf(state,references) : null;
   const privateDetails = actor?.apiScopes?.some(s=>['backend:read','backend:write','people:write'].includes(s));
   const fields = ['id','image','lay',...REFERENCE_FIELDS.filter(k=>privateDetails || !['dob','phone','email'].includes(k))];
-  return {...Object.fromEntries(fields.filter(k=>person[k]!==undefined).map(k=>[k,person[k]])),...(person.id.startsWith('new:')?{newSignup:true}:{}),revision:personRevision(person),...(person.role==='pastor'?{photoTask:photoTask(person,state)}:{}),...(standing?{goodStanding:standing.has(person),seal:standing.seal(person)}:{})};
+  return {...Object.fromEntries(fields.filter(k=>person[k]!==undefined).map(k=>[k,person[k]])),...(person.id.startsWith('new:')?{newSignup:true}:{}),revision:personRevision(person),...(person.role==='pastor'?{photoTask:photoTask(person,state)}:{}),...(standing?{goodStanding:standing.has(person),seal:standing.seal(person)}:{}),confirmation:registrationStatus(person)};
 };
 const bool = (url,key) => { const value=url.searchParams.get(key);if(value!==null&&!['true','false'].includes(value))throw new HttpError(400,`${key} must be true or false.`);return value==='true'; };
 const websiteSettings = new Set(['PUBLIC_DIRECTORY_SOURCE','PUBLIC_PHOTOS']);
@@ -104,6 +104,7 @@ export function createManagementApi({pool,config,storage,keys,people,invalidate}
         if(bishopId){const b=findPerson(state,people,bishopId);if(b.role!=='bishop')throw new HttpError(400,'Choose a bishopId.');data=data.filter(p=>p.bishop===b.name);}
         if(status){if(!['missing','replace','ready'].includes(status))throw new HttpError(400,'Use photoTask missing, replace or ready.');data=data.filter(p=>p.role==='pastor'&&photoTask(p,state).status===status);}
         for(const k of ['organization','group','country'])if(url.searchParams.has(k))data=data.filter(p=>p[k]===url.searchParams.get(k));
+        if(url.searchParams.has('confirmed')){const want=bool(url,'confirmed');data=data.filter(p=>registrationStatus(p).confirmed===want);} // office, 22 Nov
         const total=data.length,limit=Number(url.searchParams.get('limit')||100),after=url.searchParams.get('after')||'';
         if(!Number.isInteger(limit)||limit<1||limit>500||after.length>100)throw new HttpError(400,'Use limit 1–500 and the returned cursor.');
         data.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);data=data.filter(p=>p.id>after);
