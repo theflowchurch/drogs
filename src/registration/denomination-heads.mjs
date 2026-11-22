@@ -2,7 +2,12 @@
 // office's list of denomination leaders by country). They come first in their
 // church's box, the one with the most pastors first; then the other bishops, then
 // the pastors, each A to Z. Bishops sit in their own denomination's box.
+// Office, 22 Nov: Ernest Addai-Duah heads Eschatos, Joel Obuobisa the Pacific Islands
+// Missionary Church and Kwame Adu-Gyamfi Pleasant Surprise.
 export const DENOMINATION_HEADS = [
+ "Ernest Addai-Duah",
+ "Joel Obuobisa",
+ "Kwame Adu-Gyamfi",
  "Joshua Heward-Mills",
  "Dennis Agyei-Gyan",
  "Phillippa-Marka Coker",
@@ -32,7 +37,6 @@ export const DENOMINATION_HEADS = [
  "Gustav Offei-Manu",
  "Napoleon Essien",
  "Clement Asante",
- "Kwame Adu-Gyamfi",
  "Francis Philip Asamoah",
  "Luke Akwasi Frimpong Mensah",
  "Abraham Nii Ayi Aryee",
@@ -83,7 +87,6 @@ export const DENOMINATION_HEADS = [
  "Harry Dodd",
  "Patrick Bruce",
  "Farrell N K A Bruce",
- "Ernest Addai-Duah",
  "Eric Lamptey",
  "Nee Nunoo",
  "Christian Assi Adoupo",
@@ -126,7 +129,6 @@ export const DENOMINATION_HEADS = [
  "Peter Mokganya",
  "George Aferi Obeng",
  "Mcivin Afetseng Mafora",
- "Joel Obuobisa",
  "Schwarts Kobina Ankrah",
  "Prince Charles Addae"
 ];
