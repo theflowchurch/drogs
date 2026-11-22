@@ -721,9 +721,10 @@ export function reconcileSubmittedState(source, people) {
   return { state, summary };
 }
 // Office, 19 Nov: what a member saved went public 30 minutes later. Office, 22 Nov:
-// every change now goes live at once, as soon as the person is confirmed (until
-// then nothing they send reaches the public pages; it follows when they are confirmed).
-export const CHANGE_DELAY_MS = 0;
+// a new registration goes live the moment it is confirmed; a confirmed member's
+// later updates go live 5 minutes after they save (checked every minute). Nothing
+// a member sends reaches the public pages before they are confirmed.
+export const CHANGE_DELAY_MS = 5 * 60 * 1000;
 let changeDelay = CHANGE_DELAY_MS;
 export const setChangeDelay = (ms) => { changeDelay = ms; }; // tests of older behaviour use 0
 export const changePending = (r, now = Date.now()) => Boolean(r?.publicAt) && Date.parse(r.publicAt) > now;

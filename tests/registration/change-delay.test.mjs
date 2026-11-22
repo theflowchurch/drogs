@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { emptyState, applyAction, applyDueChanges, publicRoll, changePending, setChangeDelay } from '../../src/registration/model.mjs';
+import { emptyState, applyAction, applyDueChanges, publicRoll, changePending, setChangeDelay, CHANGE_DELAY_MS as DEFAULT_DELAY } from '../../src/registration/model.mjs';
 // Office, 22 Nov: changes now go live at once (no delay). The older 30-minute
 // behaviour is still tested here with the delay switched back on.
 const CHANGE_DELAY_MS = 30 * 60 * 1000;
@@ -32,16 +32,21 @@ test('with a delay switched on, a saved change waits before the public pages and
   assert.equal(s.overrides.B1.city, 'Tema');
   assert.equal(publicRoll(s, refs)[0].city, 'Tema');
   assert.ok(!changePending(s.registrations[0]));
-  setChangeDelay(0);
+  setChangeDelay(DEFAULT_DELAY);
 });
 
-test('every change a confirmed member makes is live at once (22 Nov)', () => {
+test('a new confirmed registration is live at once; later updates follow 5 minutes after saving (22 Nov)', async () => {
+  const { CHANGE_DELAY_MS: delay } = await import('../../src/registration/model.mjs');
+  assert.equal(delay, 5 * 60 * 1000);
   let s = applyAction(emptyState(), bishop, 'submit', { ...profile(), referenceId: 'B1' }, undefined, refs);
   s.registrations[0].payment = 'verified';
-  assert.equal(publicRoll(s, refs)[0].city, 'Accra');
+  assert.equal(publicRoll(s, refs)[0].city, 'Accra', 'confirmed at once: live at once');
   s = applyAction(s, bishop, 'update', { city: 'Kumasi', photoConfirmed: true }, undefined, refs);
-  assert.equal(publicRoll(s, refs)[0].city, 'Kumasi', 'the public sees the change at once');
-  assert.equal(s.overrides.B1.city, 'Kumasi', 'and the record follows at once');
+  assert.equal(publicRoll(s, refs)[0].city, 'Accra', 'an update waits');
+  assert.equal(applyDueChanges(s, Date.now() + 4 * 60000), 0, 'not after 4 minutes');
+  assert.equal(applyDueChanges(s, Date.now() + 5 * 60000 + 1000), 1, 'after 5 minutes');
+  assert.equal(publicRoll(s, refs)[0].city, 'Kumasi');
+  assert.equal(s.overrides.B1.city, 'Kumasi', 'and the record follows');
 });
 
 test('a bishop adds a denomination with its logo; once live it is on the list, in its group, and has a church page', async () => {

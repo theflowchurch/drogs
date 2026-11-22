@@ -192,11 +192,13 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('order-access', `${passed.cookie}; ${bishop.cookie}`)).data.step, 'ok', 'a confirmed bishop gets in');
     {
       // 19 Nov: a bishop chooses their Order groups and brings a new denomination
-      // with its logo; it all goes public at once (22 Nov: no delay).
+      // with its logo; it goes public 5 minutes after they save (22 Nov).
       const logo = await upload(bishop, 'logo');
       const changed = await call('action', bishop.cookie, { name: 'update', payload: { photoConfirmed: true, organization: 'United Denominations', denomination: 'Grace City Church Test', newDenomination: 'Grace City Church Test', newDenominationGroup: 'UD Ghana', newDenominationLogo: logo, orderGroups: [{ slug: 'ud-ghana-central', role: '' }, { slug: 'flow', role: 'Treasurer' }] } });
       assert.equal(changed.status, 200, JSON.stringify(changed.data));
-      assert.equal(await api.applyDue(Date.now() + 31 * 60000), 0, 'nothing left waiting: it went live at once');
+      const wait = (await call('public-directory')).data;
+      assert.ok(!(wait.catalog.denominations['United Denominations'] || []).includes('Grace City Church Test'), 'not public for 5 minutes');
+      assert.equal(await api.applyDue(Date.now() + 6 * 60000), 1, 'applied once the 5 minutes are up');
       const live = (await call('public-directory?fresh=1')).data;
       assert.ok(live.catalog.denominations['United Denominations'].includes('Grace City Church Test'), 'on everyone\'s list');
       assert.ok(live.catalog.groups['UD Ghana'].denominations.includes('Grace City Church Test'));
