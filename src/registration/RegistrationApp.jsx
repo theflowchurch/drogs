@@ -3848,11 +3848,12 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
   // Built once per data load, not per render: the people, then the bishop → pastor index (the
   // expensive matching), then the lit/dark flags which are the only part the face switch changes.
   const people = useMemo(() => (data.source === "roll" ? data.roll : overlayReferences(publicRosterFrom(data, fallback), data)), [data.referencePeople, fallback, data.source, data.roll, data.catalog, data.year, data.hidden, data.overrides, data.extraReferences]);
-  const index = useMemo(() => new Map([...pastorsByBishop(peopleForSite(people, site).filter(p => inChurch(church, p)))].map(([id, qs]) => [id, qs.map((q) => q.id)])), [people, site, church]);
+  // New sign-ups (not on our list) are part of the roll, so they join their bishop's group too (22 Nov).
+  const base = useMemo(() => (data.source !== "roll" && data.photos === "confirmed" ? withStanding(people, data.roll || []) : people), [people, data.source, data.photos, data.roll]);
+  const index = useMemo(() => new Map([...pastorsByBishop(peopleForSite(base, site).filter(p => inChurch(church, p)))].map(([id, qs]) => [id, qs.map((q) => q.id)])), [base, site, church]);
   const list = useMemo(() => {
-    const base = data.source !== "roll" && data.photos === "confirmed" ? withStanding(people, data.roll || []) : people;
     return peopleForSite(base, site).filter(p => inChurch(church, p)).map((p) => ({ ...p, denomination: caps(p.denomination), ...(data.catalog ? { denominationListed: denominationListed(data.catalog, p) } : {}) }));
-  }, [people, data.source, data.photos, data.roll, data.catalog, site, church]);
+  }, [base, data.catalog, site, church]);
   const [role, setRole] = useState(fixedRole || (site && !embedded ? "pastor" : null)),
     [q, setQ] = useState("");
   const legend = data.photos === "confirmed" && (
