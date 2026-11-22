@@ -1961,6 +1961,27 @@ export function applyAction(
     office();
     if (Number(payload.year) !== state.year + 1)
       throw Error("The next cycle must be the following year.");
+    // Office, 22 Nov: everyone who signed up new this year and was in good standing
+    // becomes an existing record before the year moves on, so they stay on every page
+    // (without the seal until they register again) like everyone already on our list.
+    const kept = [];
+    for (const p of directoryPeople(state, references)) {
+      if (!p.id.startsWith("new:") || !inGoodStanding(p.registration)) continue;
+      const r = p.registration, d = r.data || {};
+      const id = `X${makeId().replace(/-/g, "").slice(0, 10)}`;
+      state.extraReferences = [...(state.extraReferences || []), {
+        id, role: p.role, name: p.name, title: p.title || (p.role === "bishop" ? "Bishop" : "Pastor"), gender: d.gender || "", dob: d.dob || "",
+        organization: p.organization || "", denomination: p.denomination || "", denominationLogo: "", group: p.group || "",
+        city: p.city || "", country: p.country || "", branch: d.church || "", image: "", photo: p.photo || "",
+        email: p.email || "", phone: p.phone || "", yearAppointed: d.yearAppointed || "", yearOrdained: d.yearOrdained || "", yearConsecrated: d.yearConsecrated || "",
+        ...(p.role === "pastor" && p.bishop ? { bishop: p.bishop } : {}),
+      }];
+      const profile = state.profiles.find((x) => x.id === r.userId);
+      if (profile) profile.referenceId = id;
+      r.data = { ...d, referenceId: id };
+      kept.push(id);
+    }
+    detail = { keptAsRecords: kept.length };
     state.year += 1;
   } else throw Error("Unknown action.");
   reconcile(state);
