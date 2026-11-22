@@ -6,8 +6,10 @@
 // Missionary Church, Kwame Adu-Gyamfi Pleasant Surprise, Frank Tawiah-Amissah Jesus Is
 // The Door, Joshua Dormediame the Poimen Church, Prince Charles Addae the Healing Jesus
 // Campaign and Kwabena Asamoah Jnr the Bata City State Church; Kweku Amponsah heads
-// Candle In The Dark Church and Benjamin Kwapong Lokko Lighthouse City Churches.
+// Candle In The Dark Church, Benjamin Kwapong Lokko Lighthouse City Churches and
+// Kingsley Gyasi Makarios City Church.
 export const DENOMINATION_HEADS = [
+ "Kingsley Gyasi",
  "Benjamin Kwapong Lokko",
  "Kweku Amponsah",
  "Ernest Addai-Duah",
