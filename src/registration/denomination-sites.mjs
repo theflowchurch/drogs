@@ -1,5 +1,6 @@
 import { normalName, overlayReferences, isLay, bySurname, byMinisterTitle, titleFor } from './model.mjs';
 import { publicRosterFrom } from './live-roster.mjs';
+import { headFirst } from './denomination-heads.mjs';
 import denominationCatalog from './denomination-catalog.json' with { type: 'json' };
 
 const CHURCH_SITES = {
@@ -72,7 +73,8 @@ export const ministerSections = (people, { q = '', city = '', gender = '' } = {}
   const words = normalName(q).split(' ').filter(Boolean);
   const matches = people.filter(p => (!city || p.city === city) && (!gender || p.gender === gender) && words.every(w => normalName(`${p.name} ${p.city || ''} ${p.country || ''} ${p.branch || ''}`).includes(w)));
   return {
-    bishops: matches.filter(p => p.role === 'bishop' && !isLay(p)).sort(bySurname),
+    // Office, 22 Nov: the church's head bishop first (as on the Order of Pastors), then A to Z.
+    bishops: matches.filter(p => p.role === 'bishop' && !isLay(p)).sort(headFirst(bySurname)),
     pastors: matches.filter(p => p.role === 'pastor' || isLay(p)).sort(byMinisterTitle),
   };
 };

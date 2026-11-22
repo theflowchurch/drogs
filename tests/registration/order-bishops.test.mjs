@@ -16,3 +16,8 @@ test('Order of Pastors: head, then bishops, then pastors; the register keeps pas
   assert.equal(order.find(p => p.rosterId === 'b3').denomination, 'Fruitferos Internacional Guinea Bissau');
   assert.deepEqual(pastorEntries(people).map(p => p.rosterId).sort(), ['p1', 'p2']);
 });
+test('church pages list the head bishop first', async () => {
+  const { ministerSections } = await import('../../src/registration/denomination-sites.mjs');
+  const people = [{ role: 'bishop', name: 'Aaron Able' }, { role: 'bishop', name: 'Frank Tawiah-Amissah' }, { role: 'bishop', name: 'Ben Brown' }];
+  assert.deepEqual(ministerSections(people).bishops.map(p => p.name), ['Frank Tawiah-Amissah', 'Aaron Able', 'Ben Brown']);
+});

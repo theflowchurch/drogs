@@ -528,3 +528,7 @@ export const HEAD_CHURCHES = {
   "Healing Jesus Campaign"
  ]
 };
+// A church's head first (the order above), then everyone else as `rest` sorts them.
+const headKey = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]+/g, ' ').trim();
+const HEAD_AT = new Map(DENOMINATION_HEADS.map((n, i) => [headKey(n), i]));
+export const headFirst = rest => (a, b) => (HEAD_AT.get(headKey(a.name)) ?? Infinity) - (HEAD_AT.get(headKey(b.name)) ?? Infinity) || rest(a, b);
