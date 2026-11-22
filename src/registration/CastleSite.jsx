@@ -28,7 +28,7 @@ function Nav({ solid = false }) {
     <button type="button" className="kc-menu" aria-expanded={open} aria-label="Menu" onClick={() => setOpen(!open)}><span /><span /></button>
     <nav aria-label="Main">
       {/* Office, 20 Nov: each opens its own page. */}
-      {[["about-us", "About Us"], ["the-castle", "The Castle"], ["tours", "Tours"], ["events", "Events"], ["news", "News"], ["declaration", "Declaration"]].map(([path, label]) =>
+      {[["about-us", "About Us"], ["the-castle", "The Castle"], ["tours", "Tours"], ["events", "Events"], ["news", "News"]].map(([path, label]) =>
         <a key={path} href={href(path)}>{label}</a>)}
     </nav>
   </header>;
