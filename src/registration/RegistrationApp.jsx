@@ -3478,7 +3478,7 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
   const catalog = state.catalog || catalogOf(state);
   const d = r.data;
   const initial = useRef(null);
-  const begin = () => { initial.current = { firstName: d.firstName || "", lastName: d.lastName || "", title: d.title || "", gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", phone: d.phone || "", dob: d.dob || "", country: d.country || "", city: d.city || "", church: d.church || "", email: d.email || "", bishopId: d.bishopId || "", bishopFirstName: d.bishopFirstName || "", bishopLastName: d.bishopLastName || "", role: d.role }; setForm(initial.current); setOpen(true); };
+  const begin = () => { initial.current = { firstName: d.firstName || "", lastName: d.lastName || "", title: d.title || "", gender: d.gender || "", organization: d.organization || "", denomination: d.denomination || "", phone: d.phone || "", dob: d.dob || "", country: d.country || "", city: d.city || "", church: d.church || "", yearAppointed: d.yearAppointed || "", yearOrdained: d.yearOrdained || "", yearConsecrated: d.yearConsecrated || "", email: d.email || "", bishopId: d.bishopId || "", bishopFirstName: d.bishopFirstName || "", bishopLastName: d.bishopLastName || "", role: d.role }; setForm(initial.current); setOpen(true); };
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
   const save = () => perform("officeEdit", { userId: r.userId, data: changedFields(initial.current, form) }, "Details updated.").then((ok) => ok && setOpen(false));
   const statuses = d.role === "bishop" ? ["confirmed", "pending", "denied"] : ["confirmed", "unclaimed", "removed"];
@@ -3540,6 +3540,10 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
           <Field label="Country"><TextChoice value={form.country} options={[...new Set(roster.map((x) => x.country).filter(Boolean))].sort()} onChange={(v) => set("country", v)} /></Field>
           <Field label="City"><input value={form.city} onChange={(e) => set("city", e.target.value)} /></Field>
           <Field label="Church / branch"><input value={form.church} onChange={(e) => set("church", e.target.value)} /></Field>
+          {/* The years, as for a listed record (22 Nov). */}
+          <Field label="Year appointed"><input inputMode="numeric" value={form.yearAppointed} onChange={(e) => set("yearAppointed", e.target.value)} /></Field>
+          {needsOrdained(form) && <Field label="Year ordained"><input inputMode="numeric" value={form.yearOrdained} onChange={(e) => set("yearOrdained", e.target.value)} /></Field>}
+          {form.role === "bishop" && <Field label="Year consecrated"><input inputMode="numeric" value={form.yearConsecrated} onChange={(e) => set("yearConsecrated", e.target.value)} /></Field>}
           {form.role === "pastor" && (
             <>
               <Field label="Bishop"><Choice value={form.bishopId} options={bishops.map((b) => b.id)} labelOf={(id) => bishops.find((b) => b.id === id)?.name || id} onChange={(v) => set("bishopId", v)} blank="None" /></Field>
@@ -3589,7 +3593,7 @@ function ReferenceEditor({ person: p, state, perform, actor }) {
   const unique = (list) => [...new Set(list.filter(Boolean))].sort();
   const denominations = form && unique([...(catalog.denominations[form.organization] || []), ...roster.filter((x) => x.organization === form.organization).map((x) => x.denomination)]);
   const countries = unique(roster.map((x) => x.country));
-  const bishops = unique(roster.filter((x) => x.role === "bishop" && !x.deleted).map((x) => x.name));
+  const bishops = unique([...roster.filter((x) => x.role === "bishop" && !x.deleted).map((x) => x.name), ...(state.bishops || []).map((b) => b.name)]); // new bishops too (22 Nov)
   return (
     <section className="reg-office-editor">
       <h3>Office tools · original record</h3>
@@ -3646,7 +3650,7 @@ function AddPersonForm({ state, mode, perform, onDone, actor }) {
   const roster = overlayReferences(rosterFrom(state, people), state);
   const unique = (list) => [...new Set(list.filter(Boolean))].sort();
   const countries = unique(roster.map((x) => x.country));
-  const bishopNames = unique(roster.filter((x) => x.role === "bishop").map((x) => x.name));
+  const bishopNames = unique([...roster.filter((x) => x.role === "bishop").map((x) => x.name), ...(state.bishops || []).map((b) => b.name)]); // new bishops too (22 Nov)
   const choose = (e) => {
     const next = e.target.files?.[0]; e.target.value = "";
     if (!next) return;
@@ -3849,7 +3853,13 @@ function PublicDirectory({ data, embedded = false, role: fixedRole = null }) {
   // expensive matching), then the lit/dark flags which are the only part the face switch changes.
   const people = useMemo(() => (data.source === "roll" ? data.roll : overlayReferences(publicRosterFrom(data, fallback), data)), [data.referencePeople, fallback, data.source, data.roll, data.catalog, data.year, data.hidden, data.overrides, data.extraReferences]);
   // New sign-ups (not on our list) are part of the roll, so they join their bishop's group too (22 Nov).
-  const base = useMemo(() => (data.source !== "roll" && data.photos === "confirmed" ? withStanding(people, data.roll || []) : people), [people, data.source, data.photos, data.roll]);
+  const base = useMemo(() => {
+    if (data.source === "roll") return people;
+    if (data.photos === "confirmed") return withStanding(people, data.roll || []);
+    // Every photo shown: the new sign-ups on the roll still join the list (22 Nov).
+    const ids = new Set(people.map((p) => p.id));
+    return [...people, ...(data.roll || []).filter((r) => !r.referenceId || !ids.has(r.referenceId)).map((r) => ({ ...r, standing: true }))];
+  }, [people, data.source, data.photos, data.roll]);
   const index = useMemo(() => new Map([...pastorsByBishop(peopleForSite(base, site).filter(p => inChurch(church, p)))].map(([id, qs]) => [id, qs.map((q) => q.id)])), [base, site, church]);
   const list = useMemo(() => {
     return peopleForSite(base, site).filter(p => inChurch(church, p)).map((p) => ({ ...p, denomination: caps(p.denomination), ...(data.catalog ? { denominationListed: denominationListed(data.catalog, p) } : {}) }));

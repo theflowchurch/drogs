@@ -64,6 +64,27 @@ export function annotateApiAudit(state, actor, from) {
   for (const entry of state.audit.slice(from)) Object.assign(entry, { apiKeyId: actor.apiKeyId, apiKeyName: actor.apiKeyName });
   return state;
 }
+// Office, 22 Nov: new sign-ups are handled like our records. Everyone the office can
+// look up, edit, place under a bishop or check for duplicates: our records and the
+// confirmed new sign-ups (ids "new:<account>"), whose changes go to their registration.
+export const everyonePeople = (state, references) => directoryPeople({ ...state, hidden: [] }, references);
+const accountOf = id => String(id).startsWith('new:') ? String(id).slice(4) : null;
+// A bishop's key on a pastor's registration: their record, or their account if new.
+// The account a bishop's list rows belong to.
+const bishopAccountOf = (state, b) => accountOf(b.id) || state.profiles.find(p => p.referenceId === b.id)?.id || b.id;
+const bishopKeyOf = (state, b) => accountOf(b.id) ? (state.profiles.find(p => p.id === accountOf(b.id))?.referenceId || accountOf(b.id)) : b.id;
+function changeNewPerson(state, actor, references, previous, fields, overseer) {
+  const data = {};
+  if (fields.name !== undefined) { const parts = fields.name.split(/\s+/); data.firstName = parts.slice(0, -1).join(' ') || parts[0]; data.lastName = parts.length > 1 ? parts.at(-1) : ''; }
+  for (const k of ['title', 'gender', 'organization', 'denomination', 'phone', 'dob', 'country', 'city', 'email', 'yearAppointed', 'yearOrdained', 'yearConsecrated', 'photo', 'role']) if (fields[k] !== undefined) data[k] = fields[k];
+  if (fields.branch !== undefined) data.church = fields.branch;
+  if (overseer) { const [first, ...last] = overseer.name.split(' '); Object.assign(data, { bishopId: bishopKeyOf(state, overseer), bishopFirstName: first, bishopLastName: last.join(' ') }); }
+  const from = state.audit.length;
+  let before = state;
+  if (overseer) { before = structuredClone(state); for (const row of before.rosters.filter(x => x.pastorId === accountOf(previous.id) && x.year === before.year)) row.bishopId = bishopAccountOf(before, overseer); }
+  const next = domainAction(before, actor, 'officeEdit', { userId: accountOf(previous.id), data }, undefined, references);
+  return { state: annotateApiAudit(next, actor, from), person: everyonePeople(next, references).find(p => p.id === previous.id) };
+}
 export function changePerson(state, actor, references, { id, fields: input = {}, bishopId, allowDuplicate = false }) {
   if (!input || Array.isArray(input) || typeof input !== 'object') throw new HttpError(400, 'Supply a fields object.');
   const unknown = Object.keys(input).filter(k => !REFERENCE_FIELDS.includes(k));
@@ -73,7 +94,7 @@ export function changePerson(state, actor, references, { id, fields: input = {},
     return [k, String(v ?? '').trim()];
   }));
   if (typeof allowDuplicate !== 'boolean') throw new HttpError(400, 'allowDuplicate must be boolean.');
-  const current = managementPeople(state, references), previous = id && current.find(p => p.id === id);
+  const current = everyonePeople(state, references), previous = id && current.find(p => p.id === id);
   if (id && !previous) throw new HttpError(404, 'Current person not found.');
   if (fields.dob) {
     const dob = parseDob(fields.dob);
@@ -108,6 +129,7 @@ export function changePerson(state, actor, references, { id, fields: input = {},
     const duplicates = possibleDuplicates(current, effective, id);
     if (duplicates.length) throw new HttpError(409, `Possible duplicate: ${duplicates.map(p => `${p.name} (${p.id})`).join(', ')}. Update that referenceId, supply a distinct birthday, or explicitly set allowDuplicate for a confirmed namesake.`);
   }
+  if (previous && accountOf(previous.id)) return changeNewPerson(state, actor, references, previous, fields, overseer);
   let next = state;
   const from = state.audit.length;
   if (!id) {
@@ -119,9 +141,9 @@ export function changePerson(state, actor, references, { id, fields: input = {},
     const linked = new Set(next.profiles.filter(p => p.referenceId === id).map(p => p.id));
     for (const r of next.registrations.filter(r => r.data.referenceId === id || linked.has(r.userId))) {
       const [first, ...last] = overseer.name.split(' ');
-      Object.assign(r.data, { bishopId: overseer.id, bishopName: overseer.name, bishopFirstName: first, bishopLastName: last.join(' ') });
+      Object.assign(r.data, { bishopId: bishopKeyOf(next, overseer), bishopName: overseer.name, bishopFirstName: first, bishopLastName: last.join(' ') });
     }
-    for (const row of next.rosters.filter(r => r.referenceId === id || linked.has(r.pastorId))) row.bishopId = overseer.id;
+    for (const row of next.rosters.filter(r => r.referenceId === id || linked.has(r.pastorId))) row.bishopId = bishopAccountOf(next, overseer);
   }
   if (previous?.role === 'bishop' && ['organization','group','denomination'].some(k => fields[k] !== undefined && fields[k] !== previous[k])) {
     // Changing a bishop's organization changes the whole current oversight,
@@ -129,7 +151,7 @@ export function changePerson(state, actor, references, { id, fields: input = {},
     for (const child of current.filter(p => p.role === 'pastor' && p.bishop === previous.name))
       next = changePerson(next, actor, references, { id: child.id, bishopId: id, fields: {} }).state;
   }
-  return { state: annotateApiAudit(next, actor, from), person: managementPeople(next, references).find(p => p.id === id) };
+  return { state: annotateApiAudit(next, actor, from), person: everyonePeople(next, references).find(p => p.id === id) };
 }
 
 const columnAliases = {
@@ -181,13 +203,13 @@ export function workbookPastors(bytes) {
 }
 export function importPastors(state, actor, references, { bishopId, rows, allowNew = false, moveExisting = false }) {
   if (!Array.isArray(rows) || !rows.length || rows.length > 500) throw new HttpError(400, 'Supply 1–500 pastor rows.');
-  const bishop = managementPeople(state, references).find(p => p.id === bishopId && p.role === 'bishop');
+  const bishop = everyonePeople(state, references).find(p => p.id === bishopId && p.role === 'bishop');
   if (!bishop) throw new HttpError(400, 'Choose a current bishopId.');
   const outcomes = []; let next = structuredClone(state);
   for (const [index, raw] of rows.entries()) {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new HttpError(400, `Invalid row ${index+1}.`);
     const { referenceId, ...fields } = raw;
-    const current = managementPeople(next, references);
+    const current = everyonePeople(next, references);
     if (fields.role === 'bishop' || current.some(p => p.role === 'bishop' && normalName(p.name) === normalName(fields.name))) {
       outcomes.push({ row: index+1, name: fields.name, status: 'skipped', reason: 'Bishops are never imported as pastors' }); continue;
     }

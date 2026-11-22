@@ -37,6 +37,18 @@ const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-
 // Place each bishop who chose groups exactly where they chose (live pages).
 // groups: the patched page groups; choices: { personId: [{ slug, role }] };
 // cardFor(personId) builds a card for someone not yet on the page.
+// A card into a group: a group shown by country or by church takes it on the
+// bishop's own country or church line (made if new), like everyone listed there.
+export function putInGroup(g, card) {
+  if (g.parts) {
+    const key = g.large ? norm(card.country) : norm(card.church);
+    let part = g.parts.find((p) => p.slug === `${g.slug}-${key}`) || (key && g.parts.find((p) => norm(p.name).endsWith(key)));
+    if (!part) { part = { slug: `${g.slug}-${key || 'other'}`, name: `The Bishops of ${g.large ? card.country || 'Other' : card.church || 'Other'}`, people: [], colour: g.parts[0]?.colour }; g.parts.push(part); }
+    part.people.push(card); if (g.all) g.all.push(card);
+    return;
+  }
+  (g.all || g.people).push(card);
+}
 export function applyOrderChoices(groups, choices, cardFor) {
   if (!choices || !Object.keys(choices).length) return groups;
   const lists = (g) => [g.people || [], ...(g.all ? [g.all] : []), ...(g.parts || []).map((p) => p.people)];
@@ -56,15 +68,7 @@ export function applyOrderChoices(groups, choices, cardFor) {
       const label = peers.find((p) => p.councilLabel);
       const card = { ...(before || base), role: role || '', ...(label ? { church: label.church, councilLabel: true } : before ? {} : { councilLabel: false }) };
       if (g.parts && g.slug !== slug) { g.parts.find((p) => p.slug === slug).people.push(card); if (g.all) g.all.push(card); continue; }
-      if (g.parts) {
-        // A group shown by country or by church: the bishop's own country or church line.
-        const key = g.large ? norm(card.country) : norm(card.church);
-        let part = g.parts.find((p) => p.slug === `${g.slug}-${key}`) || g.parts.find((p) => norm(p.name).endsWith(key));
-        if (!part) { part = { slug: `${g.slug}-${key || 'other'}`, name: `The Bishops of ${g.large ? card.country || 'Other' : card.church || 'Other'}`, people: [], colour: g.parts[0]?.colour }; g.parts.push(part); }
-        part.people.push(card); if (g.all) g.all.push(card);
-        continue;
-      }
-      (g.all || g.people).push(card);
+      putInGroup(g, card);
     }
   }
   const key = (p) => p.rosterId || p.name;

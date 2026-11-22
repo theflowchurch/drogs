@@ -24,8 +24,9 @@ const COLUMNS = [
   ["yearAppointed", "Year Appointed", (p) => p.yearAppointed || ""],
   ["yearOrdained", "Year Ordained", (p) => p.yearOrdained || ""],
   ["yearConsecrated", "Year Consecrated", (p) => (p.role === "bishop" ? p.yearConsecrated || "" : "")],
-  ["photo", "Photo on File", (p) => (p.image || p.registration?.data?.photo ? "Yes" : "No")],
-  ["photoUrl", "Photo Link", (p) => (p.image ? `${location.origin}/${p.image}` : "")],
+  ["photo", "Photo on File", (p) => (p.image || p.photo || p.registration?.data?.photo ? "Yes" : "No")],
+  // A photo held for an account (new sign-ups, office uploads) links through the media address (22 Nov).
+  ["photoUrl", "Photo Link", (p) => (p.image ? `${location.origin}/${p.image}` : p.photo ? `${location.origin}/api/registration/media/blob?path=${encodeURIComponent(p.photo)}` : "")],
   ["registered", "Registered This Year", (p) => (p.registration ? "Yes" : "No")],
   ["status", "Registration Status", (p) => p.registration?.status || ""],
   ["id", "Record ID", (p) => p.id],

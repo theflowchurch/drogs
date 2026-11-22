@@ -19,7 +19,7 @@ test('confirmed new sign-ups are listed for dashboards, but are not edited throu
   assert.ok(walter, 'the new sign-up is listed');
   assert.ok(walter.id.startsWith('new:'));
   assert.equal(walter.organization, 'FLOW');
-  assert.equal(managementPeople(state, references).some((p) => p.name === 'Walter Woelle'), false, 'changes stay limited to listed people');
+  assert.equal(managementPeople(state, references).some((p) => p.name === 'Walter Woelle'), false, 'the listed-records view leaves him out; everyonePeople has him (22 Nov)');
   // A bishop who signs up new is listed in the same way.
   state.profiles.push({ id: 'u2', role: 'bishop', email: 'b@example.com' });
   state.registrations.push({ userId: 'u2', year: state.year, status: 'pending', payment: 'verified', submittedAt: '2026-11-19T10:00:00Z',
@@ -107,4 +107,34 @@ test('starting the next year keeps this year\'s new sign-ups as existing records
   assert.ok(listed.includes('Walter Woelle'), 'still on the dashboard in the new year');
   assert.equal(standingOf(state, references).has({ id: walter.id }), false, 'no seal until they register for the new year');
   assert.equal(publicRoll(state, references).length, 0);
+});
+
+// Office, 22 Nov: new sign-ups are handled like our records through the API too.
+test('the API edits, moves and deletes a new sign-up as it would a listed record', async () => {
+  const { changePerson, everyonePeople } = await import('../../src/server/managed-people.mjs');
+  const { applyAction } = await import('../../src/registration/model.mjs');
+  const references = [{ id: 'B1', role: 'bishop', name: 'Ann Bishop', organization: 'FLOW', denomination: 'FLOW' }];
+  const state = emptyState();
+  state.catalog = { organizations: ['FLOW'], denominations: { FLOW: [] } };
+  state.profiles = [{ id: 'u1', role: 'pastor', email: 'w@example.com' }, { id: 'u2', role: 'bishop', name: 'Grace New', email: 'g@example.com', bishopApproved: true }];
+  state.registrations = [
+    { userId: 'u2', year: state.year, status: 'confirmed', payment: 'verified', data: { role: 'bishop', name: 'Grace New', firstName: 'Grace', lastName: 'New', gender: 'female', title: '', organization: 'FLOW', denomination: 'FLOW', city: 'Accra', country: 'Ghana', email: 'g@example.com' } },
+    { userId: 'u1', year: state.year, status: 'confirmed', payment: 'verified', data: { role: 'pastor', name: 'Walter Woelle', firstName: 'Walter', lastName: 'Woelle', gender: 'male', organization: 'FLOW', denomination: 'FLOW', city: 'Accra', country: 'Ghana', bishopId: 'u2', email: 'w@example.com' } }];
+  state.rosters = [{ id: 'r1', bishopId: 'u2', year: state.year, name: 'Walter Woelle', status: 'active', pastorId: 'u1' }];
+  const office = { id: 'office', office: true, email: 'office@example.com' };
+  // A new pastor's bishop is found like a listed one (by the new bishop's id).
+  assert.equal(everyonePeople(state, references).find((p) => p.id === 'new:u1').bishop, 'Grace New');
+  // An edit (with years and branch) goes to his registration.
+  const out = changePerson(state, office, references, { id: 'new:u1', fields: { city: 'Tema', branch: 'Tema Branch', yearAppointed: '2019' } });
+  assert.equal(out.person.city, 'Tema');
+  assert.equal(out.person.branch, 'Tema Branch');
+  assert.equal(out.person.yearAppointed, '2019');
+  // Moving him under another bishop (one of ours, with an account) is recorded on his registration.
+  out.state.profiles.push({ id: 'u3', role: 'bishop', name: 'Ann Bishop', referenceId: 'B1', bishopApproved: true, email: 'a@example.com' });
+  out.state.registrations.push({ userId: 'u3', year: state.year, status: 'confirmed', payment: 'verified', data: { role: 'bishop', name: 'Ann Bishop', referenceId: 'B1', organization: 'FLOW', denomination: 'FLOW', email: 'a@example.com' } });
+  const moved = changePerson(out.state, office, references, { id: 'new:u1', bishopId: 'B1', fields: {} });
+  assert.equal(moved.state.registrations[1].data.bishopId, 'B1');
+  // Deleting removes the registration.
+  const after = applyAction(out.state, office, 'deleteRegistration', { userId: 'u1' }, undefined, references);
+  assert.equal(everyonePeople(after, references).some((p) => p.id === 'new:u1'), false);
 });

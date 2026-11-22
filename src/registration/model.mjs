@@ -601,12 +601,14 @@ export const publicOverlay = (state, people) => ({
 });
 function orderChoicesOf(state) {
   const approved = new Set((state.profiles || []).filter((p) => p.role === "bishop" && p.bishopApproved).map((p) => p.id));
+  const refOf = new Map((state.profiles || []).map((p) => [p.id, p.referenceId]));
   const out = {};
-  for (const r of state.registrations || []) {
-    if (r.year !== state.year || r.status === "draft" || !approved.has(r.userId)) continue;
+  // Their latest year's choice: a choice carries into the next year until they register again (22 Nov).
+  for (const r of [...(state.registrations || [])].sort((a, b) => a.year - b.year)) {
+    if (r.year > state.year || r.status === "draft" || !approved.has(r.userId)) continue;
     const d = publicData(r);
     if (d?.role !== "bishop" || !Array.isArray(d.orderGroups)) continue;
-    out[d.referenceId || `u:${r.userId}`] = d.orderGroups;
+    out[d.referenceId || refOf.get(r.userId) || `u:${r.userId}`] = d.orderGroups;
   }
   return out;
 }
@@ -1001,6 +1003,11 @@ export const submittedBishop = (state, p) =>
         (r) => r.userId === p.id && r.year === state.year && r.status !== "draft",
       ),
   );
+// A new pastor's bishop by the name on the bishop's record, as for a listed pastor (22 Nov).
+function overseerName(state, byId, d) {
+  const b = bishopKeyed(state, d.bishopId);
+  return canonicalBishopName((b?.referenceId && byId.get(b.referenceId)?.name) || byId.get(d.bishopId)?.name || b?.name || d.bishopName || "");
+}
 export function bishopKeyed(state, key) {
   return state.profiles.find(
     (p) => (p.referenceId || p.id) === key && submittedBishop(state, p),
@@ -1740,7 +1747,8 @@ export function applyAction(
     office();
     const r = registration();
     if (!r) throw Error("Select a registration.");
-    const EDITABLE = ["firstName", "lastName", "title", "gender", "organization", "denomination", "church", "phone", "dob", "country", "city", "email", "bishopId", "bishopFirstName", "bishopLastName", "referenceId", "photo", "role"];
+    const EDITABLE = ["firstName", "lastName", "title", "gender", "organization", "denomination", "church", "yearAppointed", "yearOrdained", "yearConsecrated", "phone", "dob", "country", "city", "email", "bishopId", "bishopFirstName", "bishopLastName", "referenceId", "photo", "role"];
+    for (const k of ["yearAppointed", "yearOrdained", "yearConsecrated"]) if (payload.data?.[k] && !/^(19|20)\d{2}$/.test(String(payload.data[k]).trim())) throw Error("Enter a four-digit year or leave it blank.");
     const incoming = Object.fromEntries(Object.entries(payload.data || {}).filter(([k, v]) => EDITABLE.includes(k) && v !== undefined));
     const merged = { ...r.data, ...incoming };
     if (!["bishop", "pastor"].includes(merged.role)) throw Error("Choose Bishop or Pastor.");
@@ -2140,10 +2148,7 @@ export function publicRoll(state, people, year = state.year) {
         organization: d.organization,
         denomination: state.overrides?.[r.data.referenceId]?._officeFields?.includes('denomination') ? d.denomination : d.denomination || d.church || ref?.denomination || "",
         group: ref?.group || groupOf(catalogOf(state), d),
-        denominationLogo:
-          ref?.denominationLogo ||
-          ({ FLOW: "assets/brand/flow-logo.png", HJC: "assets/brand/hjc-logo.png", DHMM: "assets/brand/dhmm-logo-black.png" })[r.data.organization] ||
-          "",
+        denominationLogo: ref?.denominationLogo || "", // their church's logo comes from the catalogue, as for everyone listed (22 Nov)
         city: d.city,
         country: d.country,
         branch: ref?.branch || d.church || "",
@@ -2153,7 +2158,7 @@ export function publicRoll(state, people, year = state.year) {
         yearOrdained: ref?.yearOrdained || d.yearOrdained || "",
         yearConsecrated: ref?.yearConsecrated || d.yearConsecrated || "",
         // Someone not on our list shows the bishop they registered under (19 Nov).
-        bishop: ref?.bishop || (r.data.role === "pastor" ? canonicalBishopName(bishopKeyed(state, r.data.bishopId)?.name || r.data.bishopName || "") : ""),
+        bishop: ref?.bishop || (r.data.role === "pastor" ? overseerName(state, byId, r.data) : ""),
         // Our photo first; the member's upload only when we hold none or the office picks it.
         ...shownPhoto(r, ref),
         referenceId: r.data.referenceId || "",
@@ -2315,7 +2320,7 @@ export function directoryPeople(state, references, year = state.year) {
       group: groupOf(catalogOf(state), r.data),
       photo: shownPhoto(r, null).photo || r.data.photo, // the edited photo when there is one (19 Nov)
       // The bishop they registered under (19 Nov): they are not on our list, so it is not recorded there.
-      bishop: r.data.role === "pastor" ? canonicalBishopName(bishopKeyed(state, r.data.bishopId)?.name || r.data.bishopName || "") : "",
+      bishop: r.data.role === "pastor" ? overseerName(state, new Map(references.map((p) => [p.id, p])), r.data) : "",
       // Office, 22 Nov: everything they gave reaches Admin and the API.
       gender: r.data.gender || "",
       dob: r.data.dob || "",

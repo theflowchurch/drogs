@@ -1,4 +1,4 @@
-import { applyOrderChoices } from './order-choices.mjs';
+import { applyOrderChoices, putInGroup } from './order-choices.mjs';
 import { overlayReferences } from './model.mjs';
 // Office, 17 Nov: every public page follows the office's corrections the way the
 // main directory does. The pages are built ahead of time from the roll; once
@@ -90,18 +90,22 @@ export function patchGroups(groups, live) {
   }
   const churchOf = id => (live.byId.get(id) || live.baseById.get(id) || {}).denomination;
   const orgOf = id => (live.byId.get(id) || live.baseById.get(id) || {}).organization;
-  for (const p of live.people.filter(p => p.role === 'bishop' && !p.lay && p.title !== 'Lay President' && !shown.has(p.id))) {
+  // New sign-ups are placed exactly as the listed bishops are (office, 22 Nov); one who chose
+  // their own groups at sign-up stands only there (below), with no box of their own here.
+  const chose = new Set(Object.entries(live.orderChoices || {}).filter(([, g]) => g?.length).map(([id]) => id));
+  for (const p of live.people.filter(p => p.role === 'bishop' && !p.lay && p.title !== 'Lay President' && !shown.has(p.id) && !chose.has(p.id))) {
     const card = cardOf(p);
     const sameChurch = list => list.some(e => e.rosterId && churchOf(e.rosterId) === p.denomination && orgOf(e.rosterId) === p.organization);
     let placed = false;
     const home = p.organization === 'First Love' ? 'first-love-church' : p.organization === 'United Denominations' ? 'united-denominations' : '';
     for (const g of [...out.filter(g => g.section === home), ...out.filter(g => g.section !== home)]) {
       if (placed || ['councils', 'para-church'].includes(g.section)) continue;
+      if (g.large && g.parts && (g.parts.some(x => sameChurch(x.people)))) { putInGroup(g, card); placed = true; continue; } // by country (UD Africa)
       const part = (g.parts || []).find(x => sameChurch(x.people));
       if (part) { part.people.push(card); if (g.all) g.all.push(card); placed = true; }
       else if (sameChurch(g.people) || (g.all && sameChurch(g.all))) { if (g.all) g.all.push(card); else g.people.push(card); placed = true; }
     }
-    if (!placed) { const g = out.find(g => p.group && g.name.toLowerCase().includes(p.group.toLowerCase())); if (g) { (g.all || g.people).push(card); placed = true; } }
+    if (!placed) { const g = out.find(g => p.group && g.name.toLowerCase().includes(p.group.toLowerCase())); if (g) { putInGroup(g, card); placed = true; } }
     // A church new to these pages gets its own box at the end.
     if (!placed) { const slug = `office-${String(p.denomination || p.group || p.organization || 'other').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`; let g = out.find(x => x.slug === slug); if (!g) { g = { slug, name: `The Bishops of ${p.denomination || p.group || p.organization || 'Other Churches'}`, section: 'office', people: [], initials: '', colour: out[out.length % out.length]?.colour || '#1f3a5f' }; out.push(g); } g.people.push(card); placed = true; }
     shown.add(p.id);
