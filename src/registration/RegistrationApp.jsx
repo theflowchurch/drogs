@@ -2809,7 +2809,7 @@ function BishopSearch({ choices, value, onPick }) {
 }
 const daysLeft = (n) => n === null ? "" : n <= 0 ? "due today" : n === 1 ? "1 day left" : `${n} days left`;
 // TEST (office, 21 Nov): a test account's bishop has 30 minutes, so the time and minutes are shown.
-const claimWhen = (r) => r.testAccount ? `${new Date(claimDeadline(r)).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} (test)` : longDate(claimDeadline(r).slice(0, 10));
+const claimWhen = (r) => r.testAccount ? `${new Date(claimDeadline(r)).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })} GMT (test)` : longDate(claimDeadline(r).slice(0, 10));
 const claimLeft = (r) => { if (!r.testAccount) return daysLeft(claimDaysLeft(r)); const m = Math.max(0, Math.ceil((Date.parse(claimDeadline(r)) - Date.now()) / 60000)); return m === 1 ? "1 minute left" : `${m} minutes left`; };
 function BishopTodo({ state, actor, perform }) {
   const waiting = todoFor(state, actor).pastorsToConfirm;

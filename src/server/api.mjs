@@ -122,8 +122,8 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
   // the two weeks pass, their registration and account are removed and they are told.
   const longDay = iso => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
   function deadlineMail(kind, { to, name, title, bishop, deadline, test = false }) {
-    // TEST (office, 21 Nov): a test account's deadline is 30 minutes, so the time is given too.
-    const when = iso => test ? `${new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London' })} UK time on ${longDay(iso)}` : longDay(iso);
+    // TEST (office, 21 Nov): a test account's deadline is 30 minutes, so the time is given too, in GMT.
+    const when = iso => test ? `${new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} GMT on ${longDay(iso)}` : longDay(iso); // times in GMT (office, 22 Nov)
     const esc = v => String(v || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const site = config.origin.replace(/drogs\.dagministry\.org/, 'kuriakecastle.org');
     const signin = `${site}/orderofpastorsingoodstanding/signup/#signin`, signup = `${site}/orderofpastorsingoodstanding/signup/`;
