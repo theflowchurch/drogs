@@ -35,7 +35,8 @@ const STATUS = { unclaimed: 'waiting_for_bishop', pending: 'waiting_for_office',
 export function registrationStatus(person) {
   const r = person?.registration;
   if (!r || r.status === 'draft') return { status: 'not_registered', confirmed: false, paymentConfirmed: false };
-  return { status: STATUS[r.status] || r.status, confirmed: r.status === 'confirmed', paymentConfirmed: paymentConfirmed(r) };
+  return { status: STATUS[r.status] || r.status, confirmed: r.status === 'confirmed', paymentConfirmed: paymentConfirmed(r),
+    year: r.year, registeredAt: r.submittedAt || null, payment: r.payment || 'unpaid', paymentMethod: r.paymentMethod || '', amount: r.amount ?? null };
 }
 export const listedAndNewPeople = (state, references) => {
   const standing = standingOf(state, references);

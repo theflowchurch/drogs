@@ -17,7 +17,7 @@ const responsePerson = (person,state,actor,references) => {
   const standing = references ? standingOf(state,references) : null;
   const privateDetails = actor?.apiScopes?.some(s=>['backend:read','backend:write','people:write'].includes(s));
   const fields = ['id','image','lay',...REFERENCE_FIELDS.filter(k=>privateDetails || !['dob','phone','email'].includes(k))];
-  return {...Object.fromEntries(fields.filter(k=>person[k]!==undefined).map(k=>[k,person[k]])),...(person.id.startsWith('new:')?{newSignup:true}:{}),revision:personRevision(person),...(person.role==='pastor'?{photoTask:photoTask(person,state)}:{}),...(standing?{goodStanding:standing.has(person),seal:standing.seal(person)}:{}),confirmation:registrationStatus(person)};
+  return {...Object.fromEntries(fields.filter(k=>person[k]!==undefined).map(k=>[k,person[k]])),...(person.id.startsWith('new:')?{newSignup:true}:{}),revision:personRevision(person),...(person.role==='pastor'?{photoTask:photoTask(person,state)}:{}),...(standing?{goodStanding:standing.has(person),seal:standing.seal(person)}:{}),confirmation:(c=>privateDetails?c:{status:c.status,confirmed:c.confirmed,paymentConfirmed:c.paymentConfirmed})(registrationStatus(person))};
 };
 const bool = (url,key) => { const value=url.searchParams.get(key);if(value!==null&&!['true','false'].includes(value))throw new HttpError(400,`${key} must be true or false.`);return value==='true'; };
 const websiteSettings = new Set(['PUBLIC_DIRECTORY_SOURCE','PUBLIC_PHOTOS']);

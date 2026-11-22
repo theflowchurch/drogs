@@ -720,16 +720,16 @@ export function reconcileSubmittedState(source, people) {
   state.photoReviews = Object.fromEntries(Object.entries(state.photoReviews || {}).filter(([id]) => byId.has(id)));
   return { state, summary };
 }
-// Office, 19 Nov: what a member saves goes public 30 minutes later, so a
-// mistake can be put right first. Until then the public pages show what was
-// there before (shownData); the record's public fields follow when it is due.
-export const CHANGE_DELAY_MS = 30 * 60 * 1000;
+// Office, 19 Nov: what a member saved went public 30 minutes later. Office, 22 Nov:
+// every change now goes live at once, as soon as the person is confirmed (until
+// then nothing they send reaches the public pages; it follows when they are confirmed).
+export const CHANGE_DELAY_MS = 0;
 let changeDelay = CHANGE_DELAY_MS;
 export const setChangeDelay = (ms) => { changeDelay = ms; }; // tests of older behaviour use 0
 export const changePending = (r, now = Date.now()) => Boolean(r?.publicAt) && Date.parse(r.publicAt) > now;
 export const publicData = (r, now = Date.now()) => changePending(r, now) ? r.shownData : r.data;
 function holdForPublic(state, r, previous, changed, now) {
-  if (!changeDelay) { syncReference(state, r, { changed }); addOwnDenomination(state, r); return; }
+  if (!changeDelay && r.status === "confirmed") { syncReference(state, r, { changed }); addOwnDenomination(state, r); return; }
   if (!r.publicAt) r.shownData = previous ? structuredClone(previous) : null;
   r.publicAt = new Date(Date.parse(now) + changeDelay).toISOString();
   r.pendingSync = changed === null || r.pendingSync === 'all' ? 'all' : [...new Set([...(r.pendingSync || []), ...changed])];

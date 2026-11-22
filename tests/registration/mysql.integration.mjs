@@ -162,6 +162,11 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('auth/me', both, undefined, door('member'))).data, null);
     const bishopPhoto = await upload(bishop), pastorPhoto = await upload(pastor);
     assert.equal(objects.size, 2);
+    // 22 Nov: everyone pays before submitting, in every country (Ghana too).
+    assert.equal((await call('action', bishop.cookie, { name: 'save', payload: profile(bishopPhoto) })).status, 200);
+    assert.equal((await call('action', bishop.cookie, { name: 'submit', payload: profile(bishopPhoto) })).status, 400, 'a registration in Ghana cannot skip the payment either');
+    const bishopReceipt = await upload(bishop, 'receipt');
+    assert.equal((await call('action', bishop.cookie, { name: 'payment', payload: { proof: bishopReceipt, nonrefundable: true, transactionId: 'TX-TEST-B001' } })).status, 200);
     let r = await call('action', bishop.cookie, { name: 'submit', payload: { ...profile(bishopPhoto), office: true } });
     assert.equal(r.status, 200, JSON.stringify(r.data));
     assert.equal((await call('action', bishop.cookie, { name: 'approveBishop', payload: { userId: bishop.data.id, office: true } })).status, 400);
@@ -187,14 +192,11 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('order-access', `${passed.cookie}; ${bishop.cookie}`)).data.step, 'ok', 'a confirmed bishop gets in');
     {
       // 19 Nov: a bishop chooses their Order groups and brings a new denomination
-      // with its logo; it all goes public 30 minutes after they save.
+      // with its logo; it all goes public at once (22 Nov: no delay).
       const logo = await upload(bishop, 'logo');
       const changed = await call('action', bishop.cookie, { name: 'update', payload: { photoConfirmed: true, organization: 'United Denominations', denomination: 'Grace City Church Test', newDenomination: 'Grace City Church Test', newDenominationGroup: 'UD Ghana', newDenominationLogo: logo, orderGroups: [{ slug: 'ud-ghana-central', role: '' }, { slug: 'flow', role: 'Treasurer' }] } });
       assert.equal(changed.status, 200, JSON.stringify(changed.data));
-      const wait = (await call('public-directory')).data;
-      assert.ok(!(wait.catalog.denominations['United Denominations'] || []).includes('Grace City Church Test'), 'not public for 30 minutes');
-      assert.equal(wait.orderChoices?.B1, undefined);
-      assert.equal(await api.applyDue(Date.now() + 31 * 60000), 1, 'applied once the 30 minutes are up');
+      assert.equal(await api.applyDue(Date.now() + 31 * 60000), 0, 'nothing left waiting: it went live at once');
       const live = (await call('public-directory?fresh=1')).data;
       assert.ok(live.catalog.denominations['United Denominations'].includes('Grace City Church Test'), 'on everyone\'s list');
       assert.ok(live.catalog.groups['UD Ghana'].denominations.includes('Grace City Church Test'));
@@ -233,6 +235,8 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     assert.equal((await call('action', pastor.cookie, { name: 'submit', payload: { ...profile(pastorPhoto, 'pastor'), country: 'United States' } })).status, 400, 'international registration cannot bypass the required payment receipt');
     assert.equal((await call('upload?kind=receipt', pastor.cookie, undefined, { method: 'POST', headers: { origin: config.origin, cookie: pastor.cookie, 'content-type': 'image/png' }, body: image })).status, 400, 'blank images cannot be uploaded as payment receipts');
     assert.equal((await call(`media?path=${pastorPhoto}`, bishop.cookie)).status, 403, 'draft stays private');
+    const earlyReceipt = await upload(pastor, 'receipt');
+    assert.equal((await call('action', pastor.cookie, { name: 'payment', payload: { proof: earlyReceipt, nonrefundable: true, transactionId: 'TX-TEST-0000' } })).status, 200);
     assert.equal((await call('action', pastor.cookie, { name: 'submit', payload: profile(pastorPhoto, 'pastor') })).status, 200);
     assert.equal((await call(`media?path=${pastorPhoto}`, bishop.cookie)).status, 200);
     assert.equal((await call(`media?path=${pastorPhoto}`, stranger.cookie)).status, 403);
@@ -272,7 +276,7 @@ test('MySQL + private R2 transport: real persistence, authentication, scope, rol
     const standingMails = mails.filter(m => /You are now in good standing/.test(m.subject));
     assert.equal(standingMails.filter(m => m.to === 'pastor@example.com').length, 1, 'the pastor is told once they are in good standing');
     assert.match(standingMails.find(m => m.to === 'pastor@example.com').text, /has confirmed you, and the office has confirmed your payment/);
-    assert.ok(!standingMails.some(m => m.to === 'bishop@example.com'), 'a bishop marked paid by the office (not a receipt) gets no good-standing email');
+    assert.equal(standingMails.filter(m => m.to === 'bishop@example.com').length, 1, 'a bishop who paid with a receipt is told once (22 Nov: everyone pays before submitting)');
     // 17 Nov: a pastor may change their bishop on their profile; they wait again and the new bishop (not yet registered) is emailed at the address we hold.
     const changed = await call('action', pastor.cookie, { name: 'update', payload: { ...profile(pastorPhoto, 'pastor'), bishopId: 'B2', bishopFirstName: 'Abraham Nii Ayi', bishopLastName: 'Aryee' } });
     assert.equal(changed.status, 200);

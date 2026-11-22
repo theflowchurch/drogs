@@ -2,11 +2,20 @@ import mysql from 'mysql2/promise';
 import { readFile } from 'node:fs/promises';
 import { emptyState } from '../registration/model.mjs';
 export const createPool = config => mysql.createPool({ ...config.db, connectionLimit: 5, waitForConnections: true, queueLimit: 100 });
-export async function transaction(pool, fn) {
-  const conn = await pool.getConnection();
-  try { await conn.beginTransaction(); const result = await fn(conn); await conn.commit(); return result; }
-  catch (error) { await conn.rollback(); throw error; }
-  finally { conn.release(); }
+// Office, 22 Nov: two saves at the same moment can deadlock now that changes go
+// live at once; MySQL undoes one of them, and it is simply run again (up to 3 tries).
+const RETRY = new Set(['ER_LOCK_DEADLOCK', 'ER_LOCK_WAIT_TIMEOUT']);
+export async function transaction(pool, fn, tries = 3) {
+  for (let attempt = 1; ; attempt++) {
+    const conn = await pool.getConnection();
+    try { await conn.beginTransaction(); const result = await fn(conn); await conn.commit(); return result; }
+    catch (error) {
+      await conn.rollback().catch(() => {});
+      if (!RETRY.has(error?.code) || attempt >= tries) throw error;
+    }
+    finally { conn.release(); }
+    await new Promise((r) => setTimeout(r, 20 * attempt + Math.random() * 30));
+  }
 }
 export async function migrate(pool) {
   for (const name of ['001_registration.sql', '002_api_keys.sql', '003_account_activity.sql', '004_media_blobs.sql', '005_config.sql', '006_office.sql', '007_passwords.sql', '008_login_failures.sql']) {

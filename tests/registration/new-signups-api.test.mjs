@@ -69,9 +69,11 @@ test('the dashboards follow the registration deadline, like the website', () => 
 test('each person says whether they are confirmed, waiting for their bishop or not registered', async () => {
   const { registrationStatus } = await import('../../src/server/managed-people.mjs');
   assert.deepEqual(registrationStatus({}), { status: 'not_registered', confirmed: false, paymentConfirmed: false });
-  assert.deepEqual(registrationStatus({ registration: { status: 'unclaimed', payment: 'waived' } }), { status: 'waiting_for_bishop', confirmed: false, paymentConfirmed: true });
-  assert.deepEqual(registrationStatus({ registration: { status: 'pending', payment: 'verified' } }), { status: 'waiting_for_office', confirmed: false, paymentConfirmed: true });
-  assert.deepEqual(registrationStatus({ registration: { status: 'confirmed', payment: 'unpaid' } }), { status: 'confirmed', confirmed: true, paymentConfirmed: false });
+  const pick = (o) => ({ status: o.status, confirmed: o.confirmed, paymentConfirmed: o.paymentConfirmed });
+  assert.deepEqual(pick(registrationStatus({ registration: { status: 'unclaimed', payment: 'waived' } })), { status: 'waiting_for_bishop', confirmed: false, paymentConfirmed: true });
+  assert.deepEqual(pick(registrationStatus({ registration: { status: 'pending', payment: 'verified' } })), { status: 'waiting_for_office', confirmed: false, paymentConfirmed: true });
+  assert.deepEqual(pick(registrationStatus({ registration: { status: 'confirmed', payment: 'unpaid', paymentMethod: 'paystack', submittedAt: 'x', year: 2027, amount: 20 } })), { status: 'confirmed', confirmed: true, paymentConfirmed: false });
+  assert.equal(registrationStatus({ registration: { status: 'confirmed', payment: 'verified', paymentMethod: 'paystack', submittedAt: '2026-11-22T00:00:00Z', year: 2027, amount: 20 } }).paymentMethod, 'paystack');
   // A listed pastor who signed up and is waiting for their bishop is listed, marked as waiting.
   const references = [{ id: 'B1', role: 'bishop', name: 'Ann Bishop', organization: 'FLOW', denomination: 'FLOW' }, { id: 'P9', role: 'pastor', name: 'Prince Test', organization: 'FLOW', denomination: 'FLOW', bishop: 'Ann Bishop' }];
   const state = emptyState();

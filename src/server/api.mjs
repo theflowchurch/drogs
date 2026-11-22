@@ -20,7 +20,7 @@ import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit, digest, 
 import { randomInt } from 'node:crypto';
 import { assertOwnedMedia, assignedPortrait, canReadMedia } from './storage.mjs';
 import { photoProgress, photoProgressGroups } from '../registration/photo-progress.mjs';
-import { inGhana, paymentReady } from '../registration/manual-payments.mjs';
+import { paymentReady } from '../registration/manual-payments.mjs';
 // The roster the browser gets has no contact details; the server merges them back for its own use (office views, broadcasts, matching).
 const contacts = JSON.parse(await readFile(new URL('../../data/reference-contacts.json', import.meta.url), 'utf8'));
 const rosterFile = await readFile(new URL('../registration/reference-people.json', import.meta.url), 'utf8');
@@ -504,8 +504,9 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           if (name === 'payment') {
             await assertOwnedMedia(conn, actor, payload.proof, 'receipt');
           }
-          // TEST (office, 21 Nov): a test account has no payment step.
-          if (name === 'submit' && !inGhana(payload.country) && !isTestEmail(before, actor.email)) {
+          // Office, 22 Nov: everyone pays before submitting, in every country (Ghana too);
+          // only a test account has no payment step.
+          if (name === 'submit' && !isTestEmail(before, actor.email)) {
             const registration = before.registrations.find(r => r.userId === actor.id && r.year === before.year);
             if (!paymentReady(registration)) throw new HttpError(400, 'Upload and submit your payment receipt before continuing.');
           }

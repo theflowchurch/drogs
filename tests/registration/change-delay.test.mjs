@@ -1,6 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { emptyState, applyAction, applyDueChanges, publicRoll, changePending, CHANGE_DELAY_MS } from '../../src/registration/model.mjs';
+import { emptyState, applyAction, applyDueChanges, publicRoll, changePending, setChangeDelay } from '../../src/registration/model.mjs';
+// Office, 22 Nov: changes now go live at once (no delay). The older 30-minute
+// behaviour is still tested here with the delay switched back on.
+const CHANGE_DELAY_MS = 30 * 60 * 1000;
 
 // Office, 19 Nov: a member's saved change goes public 30 minutes later.
 const bishop = { id: 'b1', email: 'bishop@example.com' };
@@ -8,7 +11,8 @@ const office = { id: 'o1', email: 'office@example.com', office: true };
 const profile = (extra = {}) => ({ role: 'bishop', name: 'Ama Bishop', firstName: 'Ama', lastName: 'Bishop', organization: 'First Love', denomination: 'First Love Church', country: 'Ghana', city: 'Accra', gender: 'male', dob: '1990-02-01', photoConfirmed: true, photo: 'b1/p.jpg', consentedAt: '2026-09-29T08:00:00.000Z', email: bishop.email, phone: '+233201234567', ...extra });
 const refs = [{ id: 'B1', role: 'bishop', name: 'Ama Bishop', organization: 'First Love', denomination: 'First Love Church', city: 'Accra', country: 'Ghana' }];
 
-test('a saved change waits 30 minutes before the public pages and the record show it', () => {
+test('with a delay switched on, a saved change waits before the public pages and the record show it', () => {
+  setChangeDelay(CHANGE_DELAY_MS);
   let s = applyAction(emptyState(), bishop, 'submit', { ...profile(), referenceId: 'B1' }, undefined, refs);
   // Office, 21 Nov: a new registration that is confirmed (here a listed bishop,
   // approved at once) goes live straight away, without the 30 minutes.
@@ -28,6 +32,16 @@ test('a saved change waits 30 minutes before the public pages and the record sho
   assert.equal(s.overrides.B1.city, 'Tema');
   assert.equal(publicRoll(s, refs)[0].city, 'Tema');
   assert.ok(!changePending(s.registrations[0]));
+  setChangeDelay(0);
+});
+
+test('every change a confirmed member makes is live at once (22 Nov)', () => {
+  let s = applyAction(emptyState(), bishop, 'submit', { ...profile(), referenceId: 'B1' }, undefined, refs);
+  s.registrations[0].payment = 'verified';
+  assert.equal(publicRoll(s, refs)[0].city, 'Accra');
+  s = applyAction(s, bishop, 'update', { city: 'Kumasi', photoConfirmed: true }, undefined, refs);
+  assert.equal(publicRoll(s, refs)[0].city, 'Kumasi', 'the public sees the change at once');
+  assert.equal(s.overrides.B1.city, 'Kumasi', 'and the record follows at once');
 });
 
 test('a bishop adds a denomination with its logo; once live it is on the list, in its group, and has a church page', async () => {
@@ -96,7 +110,7 @@ test('a new pastor waits until their bishop confirms them, then is live at once 
   assert.ok(r, 'the pastor registered');
   assert.equal(r.status, 'unclaimed', 'waits for the bishop');
   {
-    assert.ok(changePending(r), 'waiting for the bishop: not public');
+    assert.equal(publicRoll(s, refs).some(x => x.name === 'New Pastor'), false, 'waiting for the bishop: not public');
     r.payment = 'verified';
     s = applyAction(s, bishop, 'claim', { userId: 'np1' }, undefined, refs);
   }
