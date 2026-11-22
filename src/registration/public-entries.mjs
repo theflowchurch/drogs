@@ -70,7 +70,8 @@ const plain = d => d.replace(/^The /, '');
 // The office can rename a box, fold one church's pastors into another's box,
 // and set the boxes' order (admin › Bishops and pastors pages); the rest stay A to Z.
 export function pastorGroups(entries, colours, boxes = null) {
-  const merge = boxes?.merge || {}, names = boxes?.names || {}, order = boxes?.order || [];
+  // Office, 22 Nov: the Poimen Church of Senegal and the Gambia is one box, "Poimen Church" (the office's own box settings come on top).
+  const merge = { 'Poimen Church Senegal-Gambia': 'Poimen Church Gambia', ...boxes?.merge }, names = { 'Poimen Church Gambia': 'The Pastors of Poimen Church', ...boxes?.names }, order = boxes?.order || [];
   const boxOf = p => { let d = p.denomination || 'Other'; for (let i = 0; i < 5 && merge[d]; i++) d = merge[d]; return d; };
   const rank = d => { const i = order.indexOf(d); return i < 0 ? Infinity : i; };
   return [...new Set(entries.map(boxOf))]

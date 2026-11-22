@@ -3,11 +3,17 @@
 // church's box, the one with the most pastors first; then the other bishops, then
 // the pastors, each A to Z. Bishops sit in their own denomination's box.
 // Office, 22 Nov: Ernest Addai-Duah heads Eschatos, Joel Obuobisa the Pacific Islands
-// Missionary Church and Kwame Adu-Gyamfi Pleasant Surprise.
+// Missionary Church, Kwame Adu-Gyamfi Pleasant Surprise, Frank Tawiah-Amissah Jesus Is
+// The Door, Joshua Dormediame the Poimen Church, Prince Charles Addae the Healing Jesus
+// Campaign and Kwabena Asamoah Jnr the Bata City State Church.
 export const DENOMINATION_HEADS = [
  "Ernest Addai-Duah",
  "Joel Obuobisa",
  "Kwame Adu-Gyamfi",
+ "Frank Tawiah-Amissah",
+ "Joshua Dormediame",
+ "Prince Charles Addae",
+ "Kwabena Asamoah Jnr",
  "Joshua Heward-Mills",
  "Dennis Agyei-Gyan",
  "Phillippa-Marka Coker",
@@ -90,7 +96,6 @@ export const DENOMINATION_HEADS = [
  "Eric Lamptey",
  "Nee Nunoo",
  "Christian Assi Adoupo",
- "Joshua Dormediame",
  "Kweku Amponsah",
  "King Bodom Appiagyei",
  "David Ofori Gyedu",
@@ -129,8 +134,7 @@ export const DENOMINATION_HEADS = [
  "Peter Mokganya",
  "George Aferi Obeng",
  "Mcivin Afetseng Mafora",
- "Schwarts Kobina Ankrah",
- "Prince Charles Addae"
+ "Schwarts Kobina Ankrah"
 ];
 // The churches each is listed as leading, as the office's list names them.
 export const HEAD_CHURCHES = {
