@@ -273,8 +273,8 @@ html:has(.kc-site){scroll-behavior:smooth}
 .kc-home-about-photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
 .kc-home-about h2{font-size:clamp(32px,3.6vw,48px);margin-bottom:20px}
 .kc-home-about p:not(.kc-eyebrow){color:var(--kc-muted);margin:0 0 18px}
-.kc-home-tiles{display:grid;grid-template-columns:repeat(2,1fr)}
-.kc-tile{display:flex;flex-direction:column;gap:6px;min-height:340px;justify-content:flex-end;padding:56px 7%;text-decoration:none;background:var(--kc-cream);border-top:1px solid var(--kc-line);transition:background .25s}
+.kc-home-tiles{display:grid;grid-template-columns:repeat(3,1fr)}
+.kc-tile{display:flex;flex-direction:column;gap:6px;min-height:340px;justify-content:flex-end;padding:56px 9%;text-decoration:none;background:var(--kc-cream);border-top:1px solid var(--kc-line);transition:background .25s}
 .kc-tile:nth-child(2){background:var(--kc-paper)}.kc-tile:nth-child(3){background:var(--kc-paper)}
 .kc-tile.is-dark{background:var(--kc-navy);color:#fff}.kc-tile.is-dark .kc-more{color:var(--kc-gold-soft)}
 .kc-tile h3{font-size:clamp(28px,3vw,40px);margin-bottom:6px}

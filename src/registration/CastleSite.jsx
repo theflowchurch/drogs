@@ -131,7 +131,6 @@ export function CastleHome() {
       <a className="kc-tile is-dark" href={href("the-castle")}><p className="kc-eyebrow">The Castle</p><h3>A Castle for the Church</h3><p>Ghana is known for its forts and castles. Kuriake Castle, in the Akuapem Mountains, is the first castle built for the church.</p><span className="kc-more">Read the story <span aria-hidden="true">→</span></span></a>
       <a className="kc-tile" href={href("tours")}><p className="kc-eyebrow">Tours</p><h3>Tour the Castle</h3><p>Visitors are welcome to tour the castle and its grounds and discover its place in the story of the church in Ghana.</p><span className="kc-more">Plan a visit <span aria-hidden="true">→</span></span></a>
       <a className="kc-tile" href={href("events")}><p className="kc-eyebrow">Events</p><h3>Events at the Castle</h3><p>Weddings, funerals, conferences, councils, consecrations and ordinations.</p><span className="kc-more">See the events <span aria-hidden="true">→</span></span></a>
-      <a className="kc-tile is-dark" href={href("declaration")}><p className="kc-eyebrow">Declaration</p><h3>Our Declaration</h3><p>The shared principles of our fellowship of denominations and groups.</p><span className="kc-more">Read the Declaration <span aria-hidden="true">→</span></span></a>
     </section>
     <Footer />
   </div>;
