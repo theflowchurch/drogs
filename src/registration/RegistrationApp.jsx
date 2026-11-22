@@ -5266,6 +5266,11 @@ function History({ state, records, office, actor, year, perform }) {
             records will not be deleted. {state.year} closes to new submissions; bishops
             reconfirm their pastor lists and everyone registers and pays for the new year.
           </p>
+          <p>
+            Everyone who signed up new in {state.year} and is in good standing becomes an
+            existing record, so they stay on every page. The green seal then shows only for
+            those who register for {state.year + 1}.
+          </p>
           <button className="reg-secondary" onClick={() => setNext(false)}>Cancel</button>{" "}
           <button
             className="reg-primary"
