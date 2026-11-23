@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
 import { ENQUIRY_KINDS } from '../registration/castle-events.mjs';
 import { createAutoPhoto, testGeminiKey } from './auto-photo.mjs';
-import { isTestEmail, applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline, applyDueChanges } from '../registration/model.mjs';
+import { isTestEmail, applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline, applyDueChanges, isArchbishop, newBishopWaiting } from '../registration/model.mjs';
 import { canonicalPersonName } from '../registration/name-corrections.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit, digest, checkPassword } from './auth.mjs';
@@ -73,6 +73,20 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px"><b>${esc(who)}</b>${where ? `, based in ${esc(where)},` : ''} has registered on Kuriake Castle and identified you as their supervising bishop.</p><p style="margin:0 0 18px">${esc(ask)}</p><p style="margin:0 0 18px"><a href="${link}" style="background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">${button} →</a></p><p style="margin:0 0 12px">If you recognise this pastor, select <b>Confirm Pastor</b>. If the pastor is not under your oversight, select <b>Not My Pastor</b>.</p><p style="margin:0 0 12px">Thank you for helping us maintain accurate pastoral records.</p><p style="margin:0">Kuriake Castle</p>` }));
   }
 
+  // Office, 22 Nov: a new bishop (not on our records) has signed up. The office and
+  // every Archbishop in good standing are emailed to sign in and confirm them.
+  async function notifyNewBishop({ bishop, archbishops }) {
+    const esc = v => String(v || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const who = `${bishop.name}`.trim();
+    const church = [bishop.denomination, [bishop.city, bishop.country].filter(Boolean).join(', ')].filter(Boolean).join(' · ');
+    const link = `${config.origin.replace(/drogs\.dagministry\.org/, 'kuriakecastle.org')}/orderofbishopsingoodstanding/signup/#signin`;
+    const send = (to, dear) => mailer.sendMail(brandedMail({ from: config.from, to, subject: `New bishop to confirm: ${who}`,
+      text: `Dear ${dear},\n\n${who}${church ? ` (${church})` : ''} has registered on Kuriake Castle as a bishop. They are not on our records yet, so they need to be confirmed.\n\nSign in to review and confirm them: ${link}\n\nIf they are not a bishop, select Not a bishop and give the reason.\n\nKuriake Castle`,
+      html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px"><b>${esc(who)}</b>${church ? ` (${esc(church)})` : ''} has registered on Kuriake Castle as a bishop. They are not on our records yet, so they need to be confirmed.</p><p style="margin:0 0 18px"><a href="${esc(link)}" style="display:inline-block;background:#13324c;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Sign In to Review</a></p><p style="margin:0">If they are not a bishop, select <b>Not a bishop</b> and give the reason.</p>` }))
+      .catch(error => logger.error?.('new-bishop email failed:', error?.message || error));
+    await send(config.admins.join(','), 'Office');
+    for (const a of archbishops) if (a.email) await send(a.email, `Archbishop ${String(a.name).trim().split(/\s+/)[0] || ''}`.trim());
+  }
   // A pastor's bishop with their own title (office, 19 Nov): Mother, Episcopal Sister or Bishop.
   function titledBishop(state, r) {
     const bishop = bishopKeyed(state, r.data.bishopId);
@@ -497,7 +511,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           await assertOwnedMedia(pool, actor, payload.proof, 'receipt');
           payload.receiptCheck = await storage.receiptReport(payload.proof);
         }
-        let reviewed = null, newPastor = null, standing = [], standingState = null;
+        let reviewed = null, newPastor = null, newBishop = null, standing = [], standingState = null;
         await transaction(pool, async conn => {
           const before = await readState(conn, true);
           if (['save', 'submit', 'update'].includes(name) && payload.photo && !assignedPortrait(before, actor, payload.photo)) await assertOwnedMedia(conn, actor, payload.photo, 'portrait');
@@ -520,6 +534,10 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           standingState = after;
           await persistState(conn, before, after);
           if (name === 'reviewBishop') reviewed = after.registrations.find(r => r.userId === payload.userId && r.year === after.year);
+          if (name === 'submit') {
+            const r = after.registrations.find(x => x.userId === actor.id && x.year === after.year);
+            if (r && !r.testAccount && newBishopWaiting(after, r)) newBishop = { bishop: r.data, archbishops: after.profiles.filter(p => isArchbishop(after, p.id)).map(p => { const reg = after.registrations.find(x => x.userId === p.id && x.year === after.year); return { name: reg?.data?.name || p.name, email: reg?.data?.email || p.email || '' }; }) };
+          }
           // A pastor who has just registered under a registered bishop: that bishop is told (17 Nov).
           // ... or has just changed to a different bishop on their profile.
           const was = before.registrations.find(x => x.userId === actor.id && x.year === before.year);
@@ -538,6 +556,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           }
         });
         // TEST (office, 21 Nov): a test pastor's bishop is not emailed; only the pastor gets emails.
+        if (newBishop) notifyNewBishop(newBishop).catch(() => {});
         if (newPastor && !newPastor.test) notifyBishop(newPastor).catch(error => logger.error?.('new-pastor email failed:', error?.message || error));
         if (standing.length) tellStanding(standingState, standing).catch(() => {});
         if (['submit', 'update', 'officeEdit', 'choosePhoto', 'approveBishop'].includes(name)) autoPhoto.queue(); // the photo is checked and edited in the background (19 Nov)

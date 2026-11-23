@@ -1058,10 +1058,28 @@ export function likelyRecords(state, references, r) {
     return true;
   });
 }
+// Office, 22 Nov: a bishop on our records is confirmed on signing up (and paying); a
+// new bishop (not on our records) is confirmed by the office or by one of the four
+// Archbishops, once that Archbishop has registered and is in good standing.
+export function isArchbishop(state, actorId) {
+  const p = (state.profiles || []).find((x) => x.id === actorId && x.role === "bishop" && x.bishopApproved && x.referenceId);
+  if (!p) return false;
+  const title = state.overrides?.[p.referenceId]?.title ?? (state.extraReferences || []).find((x) => x.id === p.referenceId)?.title;
+  if (title !== "Archbishop") return false;
+  return inGoodStanding((state.registrations || []).find((x) => x.userId === actorId && x.year === state.year));
+}
+// A new bishop waiting for confirmation.
+export const newBishopWaiting = (state, r) => r?.year === state.year && r.data?.role === "bishop" && r.status === "pending" && !r.data?.referenceId
+  && !(state.profiles || []).find((p) => p.id === r.userId)?.bishopDecision;
+const PRIVATE_DATA = ["dob", "phone", "email"];
 export function todoFor(state, actor) {
   const year = state.year, mine = (state.registrations || []).filter(r => r.year === year);
   const pastorsToConfirm = mine.filter(r => r.data?.role === 'pastor' && r.status === 'unclaimed' && r.userId !== actor?.id);
-  if (!actor?.office) return { pastorsToConfirm, bishopsToApprove: [], receiptsToCheck: [], possibleDuplicates: [], total: pastorsToConfirm.length };
+  if (!actor?.office) {
+    // An Archbishop sees the new bishops waiting (only they are given them).
+    const bishopsToApprove = mine.filter(r => r.data?.role === 'bishop' && r.status === 'pending' && r.userId !== actor?.id);
+    return { pastorsToConfirm, bishopsToApprove, receiptsToCheck: [], possibleDuplicates: [], total: pastorsToConfirm.length + bishopsToApprove.length };
+  }
   const bishopsToApprove = mine.filter(r => r.data?.role === 'bishop' && r.status === 'pending');
   const receiptsToCheck = mine.filter(r => r.payment === 'pending' && r.proof && r.status !== 'denied');
   const possibleDuplicates = mine.filter(r => r.possibleRecord && !r.data?.referenceId);
@@ -1392,9 +1410,10 @@ export function applyAction(
     detail = Object.fromEntries(Object.keys(payload).filter((k) => k in r.data && JSON.stringify(r.data[k]) !== JSON.stringify(wasData[k])).map((k) => [k, r.data[k]]));
     holdForPublic(state, r, previous, Object.keys(payload), now);
   } else if (action === "approveBishop") {
-    office();
+    if (!actor.office && !isArchbishop(state, actor.id)) office(); // the office, or an Archbishop in good standing (22 Nov)
     const p = state.profiles.find((p) => p.id === payload.userId);
     const r = registration();
+    if (!actor.office && (!newBishopWaiting(state, r) || payload.referenceId || payload.userId === actor.id)) throw Error("An Archbishop confirms new bishops only.");
     if (p?.role !== "bishop" || !r || r.status === "draft")
       throw Error("Select a submitted bishop registration.");
     if (
@@ -1413,9 +1432,10 @@ export function applyAction(
     p.referenceId = payload.referenceId || r.data.referenceId || null;
     if (payload.referenceId) r.data.referenceId = payload.referenceId; // the office's link is authoritative
   } else if (action === "reviewBishop") {
-    office();
+    if (!actor.office && !isArchbishop(state, actor.id)) office(); // the office, or an Archbishop in good standing (22 Nov)
     const p = state.profiles.find((p) => p.id === payload.userId);
     const r = registration();
+    if (!actor.office && (!newBishopWaiting(state, r) || payload.referenceId || payload.userId === actor.id)) throw Error("An Archbishop confirms new bishops only.");
     if (p?.role !== "bishop" || !r || r.status === "draft")
       throw Error("Select a submitted bishop registration.");
     if (!["denied", "resubmit"].includes(payload.decision))
@@ -1710,6 +1730,9 @@ export function applyAction(
       r.possibleRecord = "";
       const p = state.profiles.find((x) => x.id === r.userId);
       if (p) p.referenceId = id;
+      // A bishop on our records is confirmed once linked, as on signing up (22 Nov).
+      const rec = (references || []).find((x) => x.id === id);
+      if (p && r.data.role === "bishop" && rec?.role === "bishop" && !p.bishopApproved && p.bishopDecision !== "denied") { p.bishopApproved = true; p.approvedAt = now; p.autoApproved = true; }
       syncReference(state, r);
       detail = { linked: id };
     }
@@ -2169,6 +2192,7 @@ export function publicRoll(state, people, year = state.year) {
 export function visibleState(state, actor, references, people = references) {
   // A floating pastor is shown only to the bishop they named (and the office).
   const me = state.profiles.find((p) => p.id === actor.id);
+  const archbishop = !actor.office && isArchbishop(state, actor.id);
   const scope = (r) =>
     actor.office ||
     r.userId === actor.id ||
@@ -2183,7 +2207,9 @@ export function visibleState(state, actor, references, people = references) {
   return {
     ...state,
     profiles: state.profiles.filter((p) => actor.office || p.id === actor.id),
-    registrations: state.registrations.filter(scope),
+    registrations: state.registrations.filter((r) => scope(r) || (archbishop && newBishopWaiting(state, r)))
+      .map((r) => (archbishop && !actor.office && r.userId !== actor.id && r.data?.role === "bishop" ? { ...r, proof: undefined, data: Object.fromEntries(Object.entries(r.data).filter(([k]) => !PRIVATE_DATA.includes(k))) } : r)),
+    archbishop,
     rosters: state.rosters.filter(
       (r) => actor.office || r.bishopId === actor.id,
     ),

@@ -3,7 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import sharp from 'sharp';
 import { randomUUID } from 'node:crypto';
 import { HttpError, rateLimit } from './auth.mjs';
-import { submittedBishop, inGoodStanding } from '../registration/model.mjs';
+import { submittedBishop, inGoodStanding, isArchbishop, newBishopWaiting } from '../registration/model.mjs';
 import { inspectReceipt } from './receipt-check.mjs';
 export async function prepareImage(bytes, contentType) {
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(contentType) || bytes.length > 5 * 1024 * 1024 || !bytes.length)
@@ -31,6 +31,8 @@ export function canReadMedia(state, actor, media) {
   if ((state.extraReferences || []).some(x => x.photo === key && !hidden.has(x.id) && !overrides[x.id]?.deleted)) return true;
   if (Object.entries(overrides).some(([id, o]) => o.photo === key && !o.deleted && !hidden.has(id))) return true;
   if (!actor) return false;
+  // An Archbishop sees the photo of a new bishop waiting for confirmation (22 Nov).
+  if (isArchbishop(state, actor.id) && state.registrations.some(r => newBishopWaiting(state, r) && r.data.photo === key)) return true;
   const profile = state.profiles.find(p => p.id === actor.id && p.role === 'bishop' && (p.bishopApproved || submittedBishop(state, p)));
   return Boolean(profile && state.registrations.some(r => r.status !== 'draft' && r.data.role === 'pastor' &&
     r.data.photo === media.object_key && r.data.bishopId === (profile.referenceId || profile.id)));

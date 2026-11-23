@@ -2838,10 +2838,27 @@ const daysLeft = (n) => n === null ? "" : n <= 0 ? "due today" : n === 1 ? "1 da
 // TEST (office, 21 Nov): a test account's bishop has 30 minutes, so the time and minutes are shown.
 const claimWhen = (r) => r.testAccount ? `${new Date(claimDeadline(r)).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })} GMT (test)` : longDate(claimDeadline(r).slice(0, 10));
 const claimLeft = (r) => { if (!r.testAccount) return daysLeft(claimDaysLeft(r)); const m = Math.max(0, Math.ceil((Date.parse(claimDeadline(r)) - Date.now()) / 60000)); return m === 1 ? "1 minute left" : `${m} minutes left`; };
+// An Archbishop's new bishops to confirm (office, 22 Nov).
+function NewBishopsTodo({ state, actor, perform }) {
+  const waiting = todoFor(state, actor).bishopsToApprove;
+  if (!waiting.length) return null;
+  return <section className="reg-card reg-todo" aria-labelledby="todo-new-bishops">
+    <h2 id="todo-new-bishops">New bishops to confirm <b className="reg-todo-count">{waiting.length}</b></h2>
+    <p>{waiting.length === 1 ? "A bishop who is not on our records has" : `${waiting.length} bishops who are not on our records have`} registered. As an Archbishop, please confirm each one you know to be a bishop.</p>
+    <ul className="reg-todo-list">{waiting.map((r) => <li key={r.userId}>
+      <Portrait person={{ photo: r.data.photo, name: r.data.name }} className="reg-todo-photo" />
+      <span><b>{titleFor(r.data)} {r.data.name}</b><small>{[r.data.denomination || r.data.church, [r.data.city, r.data.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small>{r.submittedAt && <small>Registered {shortDateTime(r.submittedAt)}</small>}</span>
+      <span className="reg-todo-actions">
+        <button type="button" className="reg-primary" onClick={() => { if (confirm(`Confirm ${r.data.name} as a bishop? They will appear on the Order of Bishops once their payment is confirmed.`)) perform("approveBishop", { userId: r.userId }, `${r.data.name} is confirmed as a bishop.`); }}>Confirm</button>
+        <button type="button" className="reg-text danger" onClick={() => { const note = prompt(`Why is ${r.data.name} not confirmed? They will be emailed this.`); if (note && note.trim()) perform("reviewBishop", { userId: r.userId, decision: "denied", note: note.trim() }, "Not confirmed. They have been told why."); }}>Not a bishop</button>
+      </span>
+    </li>)}</ul>
+  </section>;
+}
 function BishopTodo({ state, actor, perform }) {
   const waiting = todoFor(state, actor).pastorsToConfirm;
-  if (!waiting.length) return null;
-  return <section className="reg-card reg-todo" aria-labelledby="todo-bishop">
+  if (!waiting.length) return <NewBishopsTodo state={state} actor={actor} perform={perform} />;
+  return <><NewBishopsTodo state={state} actor={actor} perform={perform} /><section className="reg-card reg-todo" aria-labelledby="todo-bishop">
     <h2 id="todo-bishop">To do <b className="reg-todo-count">{waiting.length}</b></h2>
     <p>{waiting.length === 1 ? "A pastor has" : `${waiting.length} pastors have`} registered and named you as their bishop. Confirm each one who is under you.</p>
     <ul className="reg-todo-list">{waiting.map((r) => <li key={r.userId}>
@@ -2852,7 +2869,7 @@ function BishopTodo({ state, actor, perform }) {
         <button type="button" className="reg-text danger" onClick={() => { if (confirm(`${r.data.name} is not your pastor? The office will find their bishop.`)) perform("declinePastor", { userId: r.userId }, "Sent back to the office."); }}>Not my pastor</button>
       </span>
     </li>)}</ul>
-  </section>;
+  </section></>;
 }
 function OfficeTodo({ state, actor, onOpen, perform }) {
   const todo = todoFor(state, actor);
