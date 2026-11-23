@@ -7,7 +7,7 @@
 import { readFile } from 'node:fs/promises';
 import sharp from 'sharp';
 import { uniformGroup, uniformPrompt, UNIFORMS } from '../registration/uniforms.mjs';
-import { titleFor, overlayReferences, likelyRecords, applyAction, recordMoved } from '../registration/model.mjs';
+import { titleFor, overlayReferences, likelyRecords, applyAction, recordMoved, namesAlike } from '../registration/model.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { applySettings } from './settings.mjs';
 
@@ -107,6 +107,17 @@ export async function testGeminiKey({ fetcher = fetch, key }) {
   const edited = await editPortrait({ fetcher, key, photo: await sharp(photo).resize({ width: 400 }).toBuffer(), group: 'pastor-male-ud' });
   return { ok: true, bytes: edited.length };
 }
+// Office, 22 Nov (Joshua Gbafa was listed twice until linked by hand): a sign-up with
+// exactly one likely record of ours is that person when nothing else could be meant:
+// a bishop with a close name in the same organisation, or a pastor with a close name
+// under the same bishop. Two or more candidates are left for the office to choose.
+export function clearMatch(found, r) {
+  if (found.length !== 1) return null;
+  const p = found[0], d = r.data || {};
+  if (p.role !== d.role || !namesAlike(p.name, d.name)) return null;
+  if (d.role === 'bishop') return p;
+  return p.bishop && d.bishopName && namesAlike(p.bishop, d.bishopName) ? p : null;
+}
 export function createAutoPhoto({ pool, config, storage, references = [], fetcher = fetch, logger = console }) {
   let refs = new Map(references.map((p) => [p.id, p]));
   const running = new Set();
@@ -168,6 +179,7 @@ export function createAutoPhoto({ pool, config, storage, references = [], fetche
           if (ours && await samePersonPhotos({ fetcher, key: config.geminiKey, a: ours, b: upload }).catch(() => false)) { match = p; break; }
         }
       }
+      if (!match) match = clearMatch(found, r); // office, 22 Nov: one clear match is linked without the photo check
       await transaction(pool, async (conn) => {
         const before = await readState(conn, true);
         const x = before.registrations.find((y) => y.userId === r.userId && y.year === r.year);

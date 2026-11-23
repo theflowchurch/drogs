@@ -48,3 +48,13 @@ test('22 Nov: a confirmed sign-up replaces the record\'s details; our photo stay
   assert.equal(rec().photo, 'u1/portrait/a.webp');
   assert.equal(shownPhoto(s.registrations[0], rec()).photo, 'u1/portrait/a.webp');
 });
+test('22 Nov: a sign-up with one clear match on our list is linked to it; two candidates wait for the office', async () => {
+  const { clearMatch } = await import('../../src/server/auto-photo.mjs');
+  const joshua = { id: 'S7f891fda', role: 'pastor', name: 'Joshua Korsi Gbafa', bishop: 'Nely Nina Masuku', organization: 'FLOW' };
+  const r = { data: { role: 'pastor', name: 'Joshua Gbafa', bishopName: 'Nina Masuku', organization: 'FLOW' } };
+  assert.equal(clearMatch([joshua], r)?.id, 'S7f891fda');
+  assert.equal(clearMatch([joshua, { ...joshua, id: 'X2' }], r), null, 'two candidates: the office decides');
+  assert.equal(clearMatch([{ ...joshua, bishop: 'Someone Else' }], r), null, 'another bishop: not linked');
+  const bishop = { id: 'B9', role: 'bishop', name: 'Kodwo K Orleans-Lindsay' };
+  assert.equal(clearMatch([bishop], { data: { role: 'bishop', name: 'Kodwo Orleans-Lindsay' } })?.id, 'B9');
+});
