@@ -264,7 +264,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (path === '/api/registration/auth/signup' && method === 'POST') {
         const { email, password, entrance, remember } = await jsonBody(request);
         const address = emailAddress(email);
-        if (mode !== 'office' && blockMatch(await transaction(pool, conn => readState(conn)), { email: address }).block) return blockedResponse(config);
+        if (blockMatch(await transaction(pool, conn => readState(conn)), { email: address }).block) return blockedResponse(config);
         const pause = pauseFor(await transaction(pool, conn => readState(conn)), entrance);
         if (pause.closed) throw new HttpError(403, pause.notice || SIGNUP_PAUSED);
         const session = await auth.signupWithPassword(address, password, remember === true);
