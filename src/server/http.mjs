@@ -11,6 +11,13 @@ export function requestHandler({ origin, api, nextHandler }) {
     // Report-only first: Next.js needs inline scripts/styles; the rate service is the only third party.
     res.setHeader('Content-Security-Policy-Report-Only', "default-src 'self'; img-src 'self' data: blob: https:; script-src 'self' 'unsafe-inline' https://js.paystack.co; style-src 'self' 'unsafe-inline'; connect-src 'self' https://open.er-api.com https://api.paystack.co https://*.r2.cloudflarestorage.com; frame-src https://checkout.paystack.com https://js.paystack.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
     const path = (req.url || '/').split('?')[0];
+    // Office, 24 Nov: a browser shut out as a blocked person gets nothing but this, on every
+    // page. The office's own pages still open, so the office can never lock itself out.
+    const cookies = String(req.headers.cookie || '');
+    if (/(?:^|;\s*)kc_sv=1(?:;|$)/.test(cookies) && !path.startsWith('/admin') && !(path.startsWith('/api/') && /kc_office=/.test(cookies))) {
+      res.writeHead(503, { 'Content-Type': 'text/plain', 'Cache-Control': 'no-store' });
+      return res.end('Service Unavailable');
+    }
     // kuriakecastle.org is the only public address; the earlier domain sends people there.
     const host = String(req.headers.host || '').split(':')[0];
     if (host === 'drogs.dagministry.org' && !path.startsWith('/api/')) {

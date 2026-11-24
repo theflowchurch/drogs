@@ -2886,6 +2886,20 @@ function OfficeTodo({ state, actor, onOpen, perform }) {
       <ul>{list.slice(0, 6).map((r) => <li key={r.userId}><b>{r.data.name}</b> <small>{note(r)}</small></li>)}{list.length > 6 && <li><small>and {list.length - 6} more</small></li>}</ul>
       <button type="button" className="reg-text" onClick={() => onOpen(view)}>Open {title.toLowerCase().replace(/ \(.*\)/, "")} →</button>
     </div>)}</div>}
+    {todo.heldPeople.length > 0 && <div className="reg-todo-group reg-dupes">
+      <h3>Possible blocked people <b>{todo.heldPeople.length}</b></h3>
+      <p className="reg-small">Their name is close to someone on your Blocked people list (Settings). They are held off the pages until you decide.</p>
+      <ul>{todo.heldPeople.map((r) => { const b = (state.blocked || []).find((x) => x.id === r.blockHold); return <li key={r.userId} className="reg-dupe">
+        <span className="reg-dupe-pair">
+          <span><Portrait person={{ photo: r.data.photo, name: r.data.name }} /><b>{r.data.name}</b><small>Registered · {[r.data.denomination, [r.data.city, r.data.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ")}</small></span>
+          <span><b>{b?.name || "On the list"}</b><small>Blocked list{b?.note ? ` · ${b.note}` : ""}</small></span>
+        </span>
+        {perform && <span className="reg-todo-actions">
+          <button type="button" className="reg-primary" onClick={() => perform("allowHeld", { userId: r.userId }, `${r.data.name} is allowed.`)}>Not the same person: allow</button>
+          <button type="button" className="reg-text danger" onClick={() => { if (confirm(`Block ${r.data.name}? The site will stop working for them.`)) perform("blockHeld", { userId: r.userId }, `${r.data.name} is blocked.`); }}>Same person: block</button>
+        </span>}
+      </li>; })}</ul>
+    </div>}
     {todo.possibleDuplicates.length > 0 && <div className="reg-todo-group reg-dupes">
       <h3>Possible duplicates <b>{todo.possibleDuplicates.length}</b></h3>
       <p className="reg-small">These people registered as new, but we may already have them on our list under a fuller or slightly different name. Link keeps their new details and the photo we have.</p>

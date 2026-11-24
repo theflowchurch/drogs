@@ -87,3 +87,25 @@ test('22 Nov: an Archbishop in good standing confirms new bishops; a bishop on o
   s = applyAction(s, office, 'approveBishop', { userId: 'b2' }, undefined, refs);
   assert.equal(s.profiles.find((p) => p.id === 'b2').bishopApproved, true);
 });
+test('24 Nov: blocked people are refused at sign-up; close names are held for the office', async () => {
+  const { applyAction, emptyState, blockMatch, inGoodStanding, todoFor, visibleState } = await import('../../src/registration/model.mjs');
+  const office = { id: 'o', office: true, email: 'o@example.com' };
+  let s = applyAction(emptyState(), office, 'setBlocked', { blocked: [{ name: 'Kwame Example', email: 'kwame@example.com', phone: '+233 24 000 0000' }] });
+  assert.ok(blockMatch(s, { name: 'Example Kwame' }).block, 'same name in any order');
+  assert.ok(blockMatch(s, { name: 'Someone Else', email: 'KWAME@example.com' }).block, 'same email');
+  assert.ok(blockMatch(s, { name: 'Someone Else', phone: '024 000 0000' }).block, 'same number');
+  assert.ok(blockMatch(s, { name: 'Kwame Exampel' }).hold, 'a close name is held');
+  assert.deepEqual(blockMatch(s, { name: 'Ama Owusu' }), {});
+  const form = (first, last, email) => ({ role: 'pastor', firstName: first, lastName: last, gender: 'male', email, phone: '+233201234567', dob: '1980-01-01', organization: 'First Love', denomination: 'First Love Church', country: 'Ghana', city: 'Accra', church: 'Accra', yearAppointed: '2010', photo: 'p.webp', photoConfirmed: true, bishopId: 'B1' });
+  assert.throws(() => applyAction(s, { id: 'u1', email: 'x@example.com' }, 'save', form('Kwame', 'Example', 'x@example.com')), /BLOCKED/);
+  s = applyAction(s, { id: 'u2', email: 'y@example.com' }, 'save', form('Kwame', 'Exampel', 'y@example.com'));
+  const r = s.registrations.find((x) => x.userId === 'u2');
+  assert.ok(r.blockHold, 'held');
+  assert.equal(inGoodStanding({ ...r, status: 'confirmed', payment: 'verified' }), false, 'held: not on the pages');
+  assert.equal(todoFor(s, office).heldPeople.length, 0, 'a draft is not on the to-do yet');
+  assert.deepEqual(visibleState(s, { id: 'u2', email: 'y@example.com' }, []).blocked, [], 'the list is the office\'s alone');
+  r.status = 'unclaimed';
+  assert.equal(todoFor(s, office).heldPeople.length, 1);
+  s = applyAction(s, office, 'allowHeld', { userId: 'u2' });
+  assert.equal(s.registrations.find((x) => x.userId === 'u2').blockHold, '');
+});

@@ -49,6 +49,30 @@ function SignupControl({ state, perform }) {
 // deleted, so everyone can be put back. Reopening registration starts again.
 // TEST (office, 21 Nov): the email addresses used to test sign-up. Only these accounts
 // skip payment and have 30 minutes (not two weeks) for their bishop to confirm them.
+// Blocked people (office, 24 Nov): one per line, "Name, email, WhatsApp number, note"
+// (only the name is needed). Kept by the office alone; never shown to anyone else.
+const blockLine = (b) => [b.name, b.email, b.phone, b.note].map((v) => String(v || '').replace(/,/g, ' ')).join(', ').replace(/(, )+$/, '');
+function BlockedPeople({ state, perform }) {
+  const list = state?.blocked || [];
+  const saved = list.map(blockLine).join('\n');
+  const [text, setText] = useState(saved);
+  useEffect(() => setText(saved), [saved]);
+  const parse = () => text.split('\n').map((l) => l.trim()).filter(Boolean).map((l) => {
+    const parts = l.split(',').map((x) => x.trim());
+    const email = parts.find((x) => /@/.test(x)) || '', phone = parts.find((x) => /^\+?[\d\s()-]{7,}$/.test(x)) || '';
+    const rest = parts.filter((x) => x !== email && x !== phone);
+    const old = list.find((b) => blockLine(b) === l);
+    return { id: old?.id, addedAt: old?.addedAt, name: rest[0] || '', email, phone, note: rest.slice(1).join(', ') };
+  });
+  return <Category title="Blocked people" summary={list.length ? `${list.length} ${list.length === 1 ? 'person' : 'people'}` : 'None'}>
+    <p>People who are not part of the fellowship, or who left, and may try to sign up. Someone who signs up with <b>the same name</b> (in any order), <b>email</b> or <b>WhatsApp number</b> is refused, and the site stops working on their device without explanation. A name that is only <b>close</b> is held for you to check under <b>To do</b>.</p>
+    <label className="reg-field"><span>One person per line: name, then email, WhatsApp number and a note if you have them</span><textarea rows={8} value={text} onChange={(e) => setText(e.target.value)} placeholder="Kwame Example, kwame@example.com, +233 24 000 0000, left in 2025" /></label>
+    <div className="reg-form-actions">
+      <button type="button" className="reg-primary" disabled={text.trim() === saved.trim()} onClick={() => perform('setBlocked', { blocked: parse() }, 'Blocked people saved.')}>Save</button>
+    </div>
+    <p className="reg-small">This list is seen only by the office. Anyone already registered who matches is dealt with as soon as you save.</p>
+  </Category>;
+}
 function TestAccounts({ state, perform }) {
   const saved = (state?.testEmails || []).join('\n');
   const [text, setText] = useState(saved);
@@ -278,6 +302,7 @@ export default function Settings({ run, state, perform, actor }) {
   <input type="search" className="reg-settings-search" aria-label="Search Settings" placeholder="Search Settings" value={query} onChange={e => setQuery(e.target.value)} />
   {state && perform && visible('signup') && <SignupControl state={state} perform={perform} />}
   {state && perform && visible('signup') && <DeadlineControl state={state} perform={perform} />}
+  {state && perform && visible('signup') && <BlockedPeople state={state} perform={perform} />}
   {state && perform && visible('signup') && <TestAccounts state={state} perform={perform} />}
   {state && perform && visible('fees') && <Structure state={state} perform={perform} actor={actor} show={['fees']} />}
   {visible('links') && <Category title="Registration links" summary={`${links.length} links`} open={Boolean(query.trim())}>

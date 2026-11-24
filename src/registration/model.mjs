@@ -143,6 +143,7 @@ export const emptyState = () => ({
   // TEST (office, 21 Nov): email addresses used to test sign-up. Only these accounts
   // skip payment and have 30 minutes (not two weeks) for their bishop to confirm them.
   testEmails: [],
+  blocked: [], // people refused at sign-up (office, 24 Nov)
 });
 // TEST (office, 21 Nov): is this a test account (by the email it signs in with)?
 export const testEmailsOf = (state) => (Array.isArray(state?.testEmails) ? state.testEmails : []).map((e) => String(e || "").trim().toLowerCase()).filter(Boolean);
@@ -1078,12 +1079,13 @@ export function todoFor(state, actor) {
   if (!actor?.office) {
     // An Archbishop sees the new bishops waiting (only they are given them).
     const bishopsToApprove = mine.filter(r => r.data?.role === 'bishop' && r.status === 'pending' && r.userId !== actor?.id);
-    return { pastorsToConfirm, bishopsToApprove, receiptsToCheck: [], possibleDuplicates: [], total: pastorsToConfirm.length + bishopsToApprove.length };
+    return { pastorsToConfirm, bishopsToApprove, receiptsToCheck: [], possibleDuplicates: [], heldPeople: [], total: pastorsToConfirm.length + bishopsToApprove.length };
   }
   const bishopsToApprove = mine.filter(r => r.data?.role === 'bishop' && r.status === 'pending');
   const receiptsToCheck = mine.filter(r => r.payment === 'pending' && r.proof && r.status !== 'denied');
   const possibleDuplicates = mine.filter(r => r.possibleRecord && !r.data?.referenceId);
-  return { pastorsToConfirm, bishopsToApprove, receiptsToCheck, possibleDuplicates, total: pastorsToConfirm.length + bishopsToApprove.length + receiptsToCheck.length + possibleDuplicates.length };
+  const heldPeople = mine.filter(r => r.blockHold && r.status !== 'draft');
+  return { pastorsToConfirm, bishopsToApprove, receiptsToCheck, possibleDuplicates, heldPeople, total: pastorsToConfirm.length + bishopsToApprove.length + receiptsToCheck.length + possibleDuplicates.length + heldPeople.length };
 }
 export const registeredBishops = (state) =>
   state.profiles
@@ -1120,6 +1122,32 @@ const wordsAlike = (a, b) =>
   (a.length === 1 && b.startsWith(a));
 // Two names are alike when every word of the shorter one has a close match in
 // the longer, in any order: "Nina Masuko" ~ "Nely Nina Masuku", "Masuku Nina".
+// Blocked people (office, 24 Nov): people who are not part of the fellowship, or who
+// left, and may try to sign up. The same name (in any order), email or WhatsApp number
+// is refused, and that browser is shut out of the site with no explanation; a name that
+// is only close is held for the office to allow or block. The list is the office's alone.
+export const blockedOf = (state) => (Array.isArray(state?.blocked) ? state.blocked : []);
+const phoneKey = (v) => String(v || "").replace(/\D/g, "").slice(-9);
+const sameWords = (a, b) => { const x = normalName(a).split(" ").filter(Boolean).sort().join(" "); return Boolean(x) && x === normalName(b).split(" ").filter(Boolean).sort().join(" "); };
+export function blockMatch(state, who = {}) {
+  let hold = null;
+  for (const b of blockedOf(state)) {
+    if (b.email && who.email && String(b.email).trim().toLowerCase() === String(who.email).trim().toLowerCase()) return { block: b };
+    if (b.phone && who.phone && phoneKey(b.phone).length >= 7 && phoneKey(b.phone) === phoneKey(who.phone)) return { block: b };
+    if (b.name && who.name && sameWords(b.name, who.name)) return { block: b };
+    if (!hold && b.name && who.name && namesAlike(b.name, who.name)) hold = b;
+  }
+  return hold ? { hold } : {};
+}
+export const BLOCKED = "BLOCKED";
+const blockedError = () => Object.assign(new Error(BLOCKED), { code: BLOCKED });
+// What a registration's details say: refused, held for the office, or clear.
+function checkBlocked(state, r, profile, data) {
+  const m = blockMatch(state, data);
+  if (m.block) { if (profile) profile.blocked = true; throw blockedError(); }
+  if (m.hold && r && (r.blockCleared || []).indexOf(m.hold.id) < 0) r.blockHold = m.hold.id;
+  else if (r && !m.hold) r.blockHold = "";
+}
 export function namesAlike(a, b) {
   const x = normalName(a).split(" ").filter(Boolean),
     y = normalName(b).split(" ").filter(Boolean);
@@ -1348,6 +1376,7 @@ export function applyAction(
     // An unpaid draft follows the displayed fee if the office changed it since
     // the draft was created. A verified payment keeps its original amount.
     if (r.payment === "unpaid") r.amount = feesOf(state)[data.role];
+    checkBlocked(state, r, profile, data);
     r.data = data;
     noteRecord(state, r, references);
     r.updatedAt = now;
@@ -1397,6 +1426,7 @@ export function applyAction(
       if (r.status === "confirmed") r.status = "unclaimed"; // a new bishop confirms them afresh
     }
     if (payload.photo && payload.photo !== r.data.photo && r.status === "confirmed") r.photoChangedAt = now; // the office re-checks a new photo on an approved person
+    checkBlocked(state, r, profile, data);
     const previous = r.data;
     r.data = { ...data, referenceId: r.data.referenceId, bishopId: newBishop ? data.bishopId : r.data.bishopId };
     if (profile) {
@@ -2007,6 +2037,33 @@ export function applyAction(
     state.deadline = { ...deadlineOf(state), applied: true, at: new Date().toISOString(), by: actor.email || "" };
     state.signup = { ...current, closed: true, notice: current.notice || "Registration is closed for this year." };
     detail = { kept: Number(payload.kept) || 0, removed: Number(payload.removed) || 0 };
+  } else if (action === "setBlocked") {
+    office();
+    const list = (Array.isArray(payload.blocked) ? payload.blocked : []).map((b) => ({
+      id: String(b.id || makeId()), name: String(b.name || "").replace(/\s+/g, " ").trim().slice(0, 120), email: String(b.email || "").trim().toLowerCase().slice(0, 200),
+      phone: String(b.phone || "").trim().slice(0, 40), note: String(b.note || "").trim().slice(0, 300), addedAt: b.addedAt || now,
+    })).filter((b) => b.name || b.email || b.phone);
+    if (list.length > 2000) throw Error("Keep the list under 2,000 people.");
+    for (const b of list) if (b.name && b.name.split(" ").length < 2) throw Error(`Give a first and last name for ${b.name}.`);
+    detail = { blocked: list.length };
+    state.blocked = list;
+    // Anyone already registered under a listed name, email or number is dealt with now.
+    for (const r of state.registrations || []) {
+      if (!r.data || r.year !== state.year) continue;
+      const p = state.profiles.find((x) => x.id === r.userId);
+      const m = blockMatch(state, { ...r.data, email: r.data.email || p?.email });
+      if (m.block) { if (p) p.blocked = true; r.blocked = true; }
+      else if (m.hold && (r.blockCleared || []).indexOf(m.hold.id) < 0) r.blockHold = m.hold.id;
+      else r.blockHold = "";
+    }
+  } else if (action === "allowHeld" || action === "blockHeld") {
+    // The office decides about someone held as a possible blocked person.
+    office();
+    const r = registration();
+    if (!r?.blockHold) throw Error("Select someone held for a check.");
+    if (action === "allowHeld") { r.blockCleared = [...new Set([...(r.blockCleared || []), r.blockHold])]; r.blockHold = ""; }
+    else { const p = state.profiles.find((x) => x.id === r.userId); if (p) p.blocked = true; r.blocked = true; r.blockHold = ""; }
+    detail = { name: r.data?.name };
   } else if (action === "setTestEmails") {
     // TEST (office, 21 Nov): the email addresses used for testing sign-up.
     office();
@@ -2136,7 +2193,7 @@ export function shownPhoto(reg, ref) {
 // Good standing (office, 19 Nov): confirmed, and the fee confirmed. Paystack is
 // confirmed at once; a receipt from a money-transfer app waits for the office.
 export const paymentConfirmed = (r) => Boolean(r?.manual) || r?.payment === "verified" || r?.payment === "waived";
-export const inGoodStanding = (r) => r?.status === "confirmed" && paymentConfirmed(r);
+export const inGoodStanding = (r) => r?.status === "confirmed" && paymentConfirmed(r) && !r?.blockHold && !r?.blocked; // held as a possible blocked person: not until the office allows them
 export function publicRoll(state, people, year = state.year) {
   // What the public may see: a change saved in the last 30 minutes is not shown yet.
   state = { ...state, registrations: (state.registrations || []).map((r) => changePending(r) ? (r.shownData ? { ...r, data: r.shownData } : null) : r).filter(Boolean) };
@@ -2229,6 +2286,7 @@ export function visibleState(state, actor, references, people = references) {
     pastorBoxes: state.pastorBoxes || null,
     photoReviews: actor.office ? state.photoReviews || {} : {},
     testEmails: actor.office ? testEmailsOf(state) : [],
+    blocked: actor.office ? blockedOf(state) : [],
     testAccount: isTestEmail(state, actor.email),
   };
 }

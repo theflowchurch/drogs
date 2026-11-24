@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { brandedMail } from './mail.mjs';
 import { ENQUIRY_KINDS } from '../registration/castle-events.mjs';
 import { createAutoPhoto, testGeminiKey } from './auto-photo.mjs';
-import { isTestEmail, applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline, applyDueChanges, isArchbishop, newBishopWaiting } from '../registration/model.mjs';
+import { isTestEmail, applyAction, visibleState, publicRoll, attireExample, publicOverlay, broadcastRecipients, BROADCAST_AUDIENCES, signupOf, pauseFor, SIGNUP_PAUSED, feesOf, bishopKeyed, titleFor, inGoodStanding, claimDeadlines, claimDeadline, applyDueChanges, isArchbishop, newBishopWaiting, blockMatch, BLOCKED } from '../registration/model.mjs';
 import { canonicalPersonName } from '../registration/name-corrections.mjs';
 import { transaction, readState, persistState } from './database.mjs';
 import { HttpError, emailAddress, sessionCookie, officeDoor, rateLimit, digest, checkPassword } from './auth.mjs';
@@ -44,6 +44,11 @@ async function paystackMinimum(state, actor, currency, fetcher) {
   return Math.floor(usd * rate * 0.97 * 100);
 }
 const json = (value, status = 200, headers = {}) => Response.json(value, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...headers } });
+// Office, 24 Nov: a blocked person's browser is shut out of the whole site with no
+// explanation (the web server answers every page with "Service Unavailable").
+export const BLOCK_COOKIE = 'kc_sv';
+const blockedResponse = (config) => new Response('Service Unavailable', { status: 503, headers: { 'Content-Type': 'text/plain', 'Cache-Control': 'no-store',
+  'Set-Cookie': `${BLOCK_COOKIE}=1; HttpOnly; SameSite=Lax; Path=/; Max-Age=315360000${config.secure ? '; Secure' : ''}` } });
 export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch, logger = console }) {
   let publicCache = { at: 0, value: null };
   let paymentRate = { at: 0, value: 0 };
@@ -259,6 +264,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (path === '/api/registration/auth/signup' && method === 'POST') {
         const { email, password, entrance, remember } = await jsonBody(request);
         const address = emailAddress(email);
+        if (mode !== 'office' && blockMatch(await transaction(pool, conn => readState(conn)), { email: address }).block) return blockedResponse(config);
         const pause = pauseFor(await transaction(pool, conn => readState(conn)), entrance);
         if (pause.closed) throw new HttpError(403, pause.notice || SIGNUP_PAUSED);
         const session = await auth.signupWithPassword(address, password, remember === true);
@@ -267,6 +273,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       }
       if (path === '/api/registration/auth/login' && method === 'POST') {
         const { email, password, remember } = await jsonBody(request);
+        if (blockMatch(await transaction(pool, conn => readState(conn)), { email: emailAddress(email) }).block) return blockedResponse(config);
         const session = await auth.loginWithPassword(emailAddress(email), password, remember === true);
         await auth.signOut(request);
         return json(session.actor, 200, { 'Set-Cookie': sessionCookie(config, session.token, session.maxAge, false) });
@@ -280,6 +287,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (path === '/api/registration/auth/request' && method === 'POST') {
         const { email, mode, entrance, church } = await jsonBody(request);
         const address = emailAddress(email);
+        if (mode !== 'office' && blockMatch(await transaction(pool, conn => readState(conn)), { email: address }).block) return blockedResponse(config);
         if (!['signin', 'office', 'reset'].includes(mode)) {
           // Paused sign-up turns new people away at the first step; existing accounts still sign in.
           const [[known]] = await pool.execute('SELECT 1 FROM dr_users WHERE email=?', [address]);
@@ -357,6 +365,10 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         return json({ ok: true });
       }
       const actor = await auth.actor(request);
+      if (actor && !actor.office) {
+        const st = await transaction(pool, conn => readState(conn));
+        if (st.profiles.some(p => p.id === actor.id && p.blocked) || blockMatch(st, { email: actor.email }).block) return blockedResponse(config);
+      }
       if (path === '/api/registration/auth/me' && method === 'GET') return json(actor);
       // Portraits on the public directory may be fetched without a session; the media route checks each one.
       if (!actor && !path.startsWith('/api/registration/media')) throw new HttpError(401, 'Please sign in again.');
@@ -512,7 +524,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
           payload.receiptCheck = await storage.receiptReport(payload.proof);
         }
         let reviewed = null, newPastor = null, newBishop = null, standing = [], standingState = null;
-        await transaction(pool, async conn => {
+        try { await transaction(pool, async conn => {
           const before = await readState(conn, true);
           if (['save', 'submit', 'update'].includes(name) && payload.photo && !assignedPortrait(before, actor, payload.photo)) await assertOwnedMedia(conn, actor, payload.photo, 'portrait');
           if (name === 'payment') {
@@ -528,7 +540,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
             throw new HttpError(400, 'Choose a listed bishop reference.');
           let after;
           try { after = applyAction(before, actor, name, payload, undefined, people); }
-          catch (error) { throw new HttpError(400, error.message); }
+          catch (error) { if (error?.code === BLOCKED) throw error; throw new HttpError(400, error.message); }
           standing = newlyStanding(before, after);
           for (const r of standing) r.standingMailAt = new Date().toISOString();
           standingState = after;
@@ -554,7 +566,19 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
               else if (listed?.email) newPastor = { test: Boolean(r.testAccount), pastor: r.data, to: listed.email, bishopName: canonicalPersonName(listed.id, listed.name), bishopTitle: listed.title || 'Bishop', bishopUser: '', unregistered: true };
             }
           }
-        });
+        }); } catch (error) {
+          if (error?.code !== BLOCKED) throw error;
+          // Refused (office, 24 Nov): the account is marked, and this browser is shut out.
+          await transaction(pool, async conn => {
+            const before = await readState(conn, true), after = structuredClone(before);
+            let p = after.profiles.find(x => x.id === actor.id);
+            if (!p) { p = { id: actor.id, role: payload?.role === 'bishop' ? 'bishop' : 'pastor', name: '', email: actor.email, bishopApproved: false, referenceId: null }; after.profiles.push(p); }
+            p.blocked = true;
+            for (const r of after.registrations.filter(r => r.userId === actor.id)) r.blocked = true;
+            await persistState(conn, before, after);
+          });
+          return blockedResponse(config);
+        }
         // TEST (office, 21 Nov): a test pastor's bishop is not emailed; only the pastor gets emails.
         if (newBishop) notifyNewBishop(newBishop).catch(() => {});
         if (newPastor && !newPastor.test) notifyBishop(newPastor).catch(error => logger.error?.('new-pastor email failed:', error?.message || error));
