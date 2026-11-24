@@ -1,0 +1,295 @@
+diff --git a/API.md b/API.md
+index 81dd21b5..3fd99d81 100644
+--- a/API.md
++++ b/API.md
+@@ -1,6 +1,6 @@
+ # Kuriake Castle data API
+ 
+-Office users create keys in `/admin` → **API keys**. Keys are issued by DROGS and used by CLI agents and other servers to read or manage the data their permissions allow. They are not Cloudflare credentials and never grant database or storage administration access.
++Office users create keys in `/rollofgoodstandingadmin` → **API keys**. Keys are issued by DROGS and used by CLI agents and other servers to read or manage the data their permissions allow. They are not Cloudflare credentials and never grant database or storage administration access.
+ 
+ Choose a separate key for each connected app, a descriptive name, permissions, and a lifetime of 1–365 days or **never** (the UI offers 7, 30, 90, 365 or Never expires; a never-expiring key can still be revoked). The full key is shown only at creation. MySQL stores a keyed hash, public prefix and metadata. Office users can revoke keys. Removing the issuing email from `ADMIN_EMAILS` also disables its keys. Changing `SESSION_SECRET` invalidates all keys and login sessions.
+ 
+@@ -55,7 +55,7 @@ The preserved older Supabase API documentation is in [LEGACY_API.md](LEGACY_API.
+ 
+ `GET /api/v1/backend/accounts?search=EMAIL_OR_NAME&page=1` returns account signup/last-login dates, recorded login count, role, office access and current-cycle registration status (50 per page, with total). `GET /api/v1/backend/logins?user=USER_ID&before=CURSOR` returns successful email-verified login events, newest first, 50 per page. Omit `user` for all accounts. Both require `backend:read`. No OTPs or session credentials are exposed.
+ 
+-Office admins can also use **Accounts** in `/admin` to search accounts and view their login histories. Apply migration `003_account_activity.sql` before deploying this version. Existing accounts have unknown signup dates; historical login activity cannot be reconstructed. Tracking starts with this release.
++Office admins can also use **Accounts** in `/rollofgoodstandingadmin` to search accounts and view their login histories. Apply migration `003_account_activity.sql` before deploying this version. Existing accounts have unknown signup dates; historical login activity cannot be reconstructed. Tracking starts with this release.
+ 
+ 
+ ## Management API for CLI agents
+diff --git a/scripts/create-management-key.mjs b/scripts/create-management-key.mjs
+index 8e9c39ff..3817ebb3 100644
+--- a/scripts/create-management-key.mjs
++++ b/scripts/create-management-key.mjs
+@@ -1,13 +1,13 @@
+-// Run on the deployed server with its normal environment, or create a key in /admin/.
++// Run on the deployed server with its normal environment, or create a key in /rollofgoodstandingadmin/.
+ import { mkdir, open } from 'node:fs/promises';
+ import { resolve, dirname } from 'node:path';
+ import { configuration } from '../src/server/config.mjs';
+ import { createPool } from '../src/server/database.mjs';
+ import { createKeyService } from '../src/server/api-keys.mjs';
+-if(process.argv.includes('--help')){console.log('Create a key in /admin/ → API keys, or run on the server: npm run api:key -- --name=Agent --days=90');process.exit(0);}
++if(process.argv.includes('--help')){console.log('Create a key in /rollofgoodstandingadmin/ → API keys, or run on the server: npm run api:key -- --name=Agent --days=90');process.exit(0);}
+ const args=Object.fromEntries(process.argv.slice(2).map(arg=>{const n=arg.indexOf('=');if(!arg.startsWith('--')||n<0)throw Error('Use --name=value arguments.');return[arg.slice(2,n),arg.slice(n+1)];}));
+ if(args.help!==undefined){console.log('Run on the server: node scripts/create-management-key.mjs --name="Photo CLI agent" --days=90 --output=.private/photo-agent-key.json [--email=APPROVED_OFFICE_EMAIL]');process.exit(0);}
+-if(!process.env.DB_HOST||!process.env.SESSION_SECRET){console.error('Create a live key in https://kuriakecastle.org/admin/ → API keys → Access: Full access — read, write and edit. This server-only issuer requires the deployed application environment.');process.exit(1);}
++if(!process.env.DB_HOST||!process.env.SESSION_SECRET){console.error('Create a live key in https://kuriakecastle.org/rollofgoodstandingadmin/ → API keys → Access: Full access — read, write and edit. This server-only issuer requires the deployed application environment.');process.exit(1);}
+ const config=configuration(),pool=createPool(config);let handle;
+ try{
+  const email=(args.email||config.admins[0]).toLowerCase();if(!config.admins.includes(email))throw Error('Choose a configured office email.');
+diff --git a/scripts/drogs-cli.mjs b/scripts/drogs-cli.mjs
+index dada243b..b1c0f1ab 100644
+--- a/scripts/drogs-cli.mjs
++++ b/scripts/drogs-cli.mjs
+@@ -18,7 +18,7 @@ Set DROGS_API_KEY to an admin-issued key. DROGS_API_URL defaults to https://kuri
+ Import previews by default; --apply commits the whole validated batch. No existing pastors are deleted by imports.`;
+ if(!command||command==='help'||options.help){console.log(help);process.exit(0);}
+ try{
+- const token=process.env.DROGS_API_KEY;if(!token)throw Error('Set DROGS_API_KEY to your live management key. Create it in /admin/ → API keys.');
++ const token=process.env.DROGS_API_KEY;if(!token)throw Error('Set DROGS_API_KEY to your live management key. Create it in /rollofgoodstandingadmin/ → API keys.');
+  const base=new URL(process.env.DROGS_API_URL||'https://kuriakecastle.org');if(base.protocol!=='https:'&&!(base.protocol==='http:'&&['localhost','127.0.0.1'].includes(base.hostname)))throw Error('Use HTTPS for the API URL.');
+  const headers={authorization:`Bearer ${token}`,...(options.revision?{'if-match':String(options.revision)}:{})};let path,method='GET',body;
+  const json=async()=>{if(!options.json||options.json===true)throw Error('Supply --json=/path/to/file.json.');return JSON.parse(await readFile(options.json,'utf8'));};
+diff --git a/scripts/start-hostinger.mjs b/scripts/start-hostinger.mjs
+index 34cf6777..6037bec5 100644
+--- a/scripts/start-hostinger.mjs
++++ b/scripts/start-hostinger.mjs
+@@ -38,10 +38,10 @@ await migrate(pool); // idempotent: creates any missing dr_ tables
+ await pool.query('SELECT current_year FROM dr_settings WHERE id=1');
+ await applySettings(config, pool); // saved settings (office emails included) apply before anything acts on them
+ if (await launchReset(pool, config)) console.log('Launch reset applied: member accounts and records cleared; original data, structure and settings kept.');
+-// The transport is created per message so mail settings saved in /admin/ apply at once.
++// The transport is created per message so mail settings saved in /rollofgoodstandingadmin/ apply at once.
+ const { sendViaResend } = await import('../src/server/resend-mail.mjs');
+ // Resend's HTTPS API when a Resend key is saved (the host blocks the SMTP route); otherwise SMTP.
+-// If Resend rejects the key saved in /admin/ and hPanel holds a different
++// If Resend rejects the key saved in /rollofgoodstandingadmin/ and hPanel holds a different
+ // RESEND_API_KEY, that one is used and saved, so a wrong saved key cannot lock
+ // the office out of the emailed sign-in code.
+ const sendResend = async message => {
+@@ -66,7 +66,7 @@ await app.prepare();
+ const nextHandler = app.getRequestHandler();
+ const server = createServer(requestHandler({ origin: config.origin, api, nextHandler }));
+ server.requestTimeout = 30000;
+-server.listen(port, '0.0.0.0', () => console.log(`Kuriake Castle server listening on port ${port}; admin: ${config.origin}/admin`));
++server.listen(port, '0.0.0.0', () => console.log(`Kuriake Castle server listening on port ${port}; admin: ${config.origin}/rollofgoodstandingadmin/`));
+ // Periodic deletion is limited to expired authentication records, never registrations/media.
+ const cleanup = setInterval(async () => {
+   try {
+diff --git a/src/app/(office)/admin/page.jsx b/src/app/(office)/admin/page.jsx
+deleted file mode 100644
+index 25909dac..00000000
+--- a/src/app/(office)/admin/page.jsx
++++ /dev/null
+@@ -1,2 +0,0 @@
+-import RegistrationApp from '../../../registration/RegistrationApp';
+-export default function Administration(){return <RegistrationApp office/>}
+diff --git a/src/app/(office)/rollofgoodstandingadmin/page.jsx b/src/app/(office)/rollofgoodstandingadmin/page.jsx
+new file mode 100644
+index 00000000..93b8ff0b
+--- /dev/null
++++ b/src/app/(office)/rollofgoodstandingadmin/page.jsx
+@@ -0,0 +1,4 @@
++import RegistrationApp from '../../../registration/RegistrationApp';
++// Office, 24 Nov: a long address that is not linked from the main site, and not found by search engines.
++export const metadata = { robots: { index: false, follow: false } };
++export default function Administration(){return <RegistrationApp office/>}
+diff --git a/src/app/(portal)/directory/page.jsx b/src/app/(portal)/directory/page.jsx
+deleted file mode 100644
+index 9e97266d..00000000
+--- a/src/app/(portal)/directory/page.jsx
++++ /dev/null
+@@ -1,2 +0,0 @@
+-import RegistrationApp from '../../../registration/RegistrationApp';
+-export default function Browse(){return <RegistrationApp browse/>}
+diff --git a/src/app/(portal)/rollofgoodstandingdirectory/page.jsx b/src/app/(portal)/rollofgoodstandingdirectory/page.jsx
+new file mode 100644
+index 00000000..df2b35dc
+--- /dev/null
++++ b/src/app/(portal)/rollofgoodstandingdirectory/page.jsx
+@@ -0,0 +1,4 @@
++import RegistrationApp from '../../../registration/RegistrationApp';
++// Office, 24 Nov: a long address that is not linked from the main site, and not found by search engines.
++export const metadata = { robots: { index: false, follow: false } };
++export default function Browse(){return <RegistrationApp browse/>}
+diff --git a/src/registration/Docs.jsx b/src/registration/Docs.jsx
+index 0b40e1a6..3321a49e 100644
+--- a/src/registration/Docs.jsx
++++ b/src/registration/Docs.jsx
+@@ -57,7 +57,7 @@ export default function Docs({ markdown = docs.markdown, office = true }) {
+           <span className="reg-brand-mark"><img src={`${base}/assets/brand/castle-logo-blue.png`} alt="" /></span>
+           <strong>Kuriake Castle</strong>
+         </a>
+-        <div className="reg-header-right">{office ? <a className="reg-text" href={`${base}/admin/`}>Office ↗</a> : <a className="reg-text" href={`${base}/directory/`}>Directory ↗</a>}</div>
++        <div className="reg-header-right">{office ? <a className="reg-text" href={`${base}/rollofgoodstandingadmin/`}>Office ↗</a> : <a className="reg-text" href={`${base}/rollofgoodstandingdirectory/`}>Directory ↗</a>}</div>
+       </header>
+       <main className="reg-docs" dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }} />
+       <LegalFooter />
+diff --git a/src/registration/RegistrationApp.jsx b/src/registration/RegistrationApp.jsx
+index ed863e35..9d156ed9 100644
+--- a/src/registration/RegistrationApp.jsx
++++ b/src/registration/RegistrationApp.jsx
+@@ -849,7 +849,7 @@ export default function RegistrationApp({
+             </svg>
+           </button>
+         )}
+-        <a className="reg-brand" href={actor ? (office ? `${base}/admin/` : signupPath) : home} aria-label={brand?.shortName || "Kuriake Castle"}>
++        <a className="reg-brand" href={actor ? (office ? `${base}/rollofgoodstandingadmin/` : signupPath) : home} aria-label={brand?.shortName || "Kuriake Castle"}>
+           {(!churchConfig || churchConfig.logo) && <span className="reg-brand-mark">
+             <img src={`${base}/${brand?.logo || "assets/brand/castle-logo-blue.png"}`} alt="" />
+           </span>}
+@@ -955,7 +955,7 @@ export default function RegistrationApp({
+             <img className={site ? "reg-organization-hero-logo" : ""} src={`${base}/${siteConfig?.heroLogo || siteConfig?.logo || "assets/brand/castle-logo-white.png"}`} alt={site === "flow" ? siteConfig.name : ""} />
+             {site !== "flow" && (siteConfig?.name || "Kuriake Castle")}
+           </h1>
+-          <a className="reg-enter" href={sitePath(site, "directory", base)}>
++          <a className="reg-enter" href={site ? sitePath(site, "directory", base) : `${base}/rollofgoodstandingdirectory/`}>
+             <span className="reg-shimmer">View All Bishops and Pastors in Good Standing</span>
+             <span className="reg-enter-arrow" aria-hidden="true">→</span>
+           </a>
+diff --git a/src/registration/Settings.jsx b/src/registration/Settings.jsx
+index 817d775c..b0afea13 100644
+--- a/src/registration/Settings.jsx
++++ b/src/registration/Settings.jsx
+@@ -252,7 +252,7 @@ export default function Settings({ run, state, perform, actor }) {
+   useEffect(() => { run(reload); }, []);
+   const changed = Object.entries(values).filter(([, v]) => v !== undefined);
+   const origin = typeof window === 'undefined' ? 'https://kuriakecastle.org' : window.location.origin;
+-  const links = [['Public roll', '/directory/'], ['Sign in', '/signup/#signin'], ['Sign up as a bishop', '/signup/bishop/'], ['Sign up as a pastor', '/signup/pastor/'], ['Pastoral appointments', '/appointments/'], ['Office sign in', '/admin/'], ['API documentation', '/docs/']];
++  const links = [['Public roll', '/rollofgoodstandingdirectory/'], ['Sign in', '/signup/#signin'], ['Sign up as a bishop', '/signup/bishop/'], ['Sign up as a pastor', '/signup/pastor/'], ['Pastoral appointments', '/appointments/'], ['Office sign in', '/admin/'], ['API documentation', '/docs/']];
+   const CATEGORIES = [
+     ['Email', 'Sign-in emails, bulk emails and issue reports', ['RESEND_API_KEY', 'SMTP_FROM', 'SUPPORT_EMAIL']],
+     ['Payments', 'Paystack card and mobile money payments', ['PAYSTACK_PUBLIC_KEY', 'PAYSTACK_SECRET_KEY']],
+diff --git a/src/registration/api-docs.json b/src/registration/api-docs.json
+index eb1620ec..0852a274 100644
+--- a/src/registration/api-docs.json
++++ b/src/registration/api-docs.json
+@@ -1 +1 @@
+-{"markdown":"# Kuriake Castle data API\n\nOffice users create keys in `/admin` → **API keys**. Keys are issued by DROGS and used by CLI agents and other servers to read or manage the data their permissions allow. They are not Cloudflare credentials and never grant database or storage administration access.\n\nChoose a separate key for each connected app, a descriptive name, permissions, and a lifetime of 1–365 days or **never** (the UI offers 7, 30, 90, 365 or Never expires; a never-expiring key can still be revoked). The full key is shown only at creation. MySQL stores a keyed hash, public prefix and metadata. Office users can revoke keys. Removing the issuing email from `ADMIN_EMAILS` also disables its keys. Changing `SESSION_SECRET` invalidates all keys and login sessions.\n\nThis document is also published at https://kuriakecastle.org/docs/.\n\nSend requests to the same domain as the registration app:\n\n```sh\ncurl 'https://kuriakecastle.org/api/v1/registrations?year=2027&limit=50' \\\n  -H 'Authorization: Bearer YOUR_DROGS_API_KEY'\n```\n\nKeep API keys in the calling server's environment, not frontend JavaScript, URLs or public repositories. These endpoints do not use browser cookies and do not provide cross-origin browser access.\n\n| Permission | Endpoint | Data |\n| --- | --- | --- |\n| `backend:read` | `GET /api/v1/backend/*` | Complete application data as detailed below; also permits the limited endpoints. This is selected by default for new keys. |\n| `registrations:read` | `GET /api/v1/registrations` | Submitted annual registrations, including pending/unclaimed records; names, role, email, phone, country, city, organization, denomination, bishop reference, status and portrait path. No drafts, birth dates, payment details or receipts. |\n| `rosters:read` | `GET /api/v1/rosters` | Annual pastor list entries, including active/removed status, names, contact details, church and supervising bishop. No removal notes. |\n| `photos:read` | `GET /api/v1/photos?path=ENCODED_PATH` | A signed URL for a portrait attached to a submitted registration. No draft portraits, unattached uploads or receipts. |\n\nRegistration/list endpoints accept `year` (defaults to current registration cycle), `limit` (1–100; default 50), and `after` (the preceding response's `nextCursor`). Responses are `{data: [...], year: 2027, nextCursor: \"...\"}`; `nextCursor` is null when complete. Keep the same year while paging. The portrait path returned by registrations must be URL-encoded when requesting a photo link. Photo responses are `{url: \"...\", expiresIn: 3600}`. Previously issued image URLs remain valid until their own expiry even if the API key is revoked.\n\nKeys have a limit of 120 authorized requests per minute. Responses use `Cache-Control: no-store`. Errors are JSON with an `error` message: 401 missing/invalid/expired/revoked key; 403 missing scope; 404 unknown endpoint or inaccessible photo; 405 an unsupported method; 429 request limit; 503 provider/database failure. The original read endpoints accept GET only. The management endpoints below accept explicit write permissions. Read-only keys retain their existing restrictions. Keys cannot sign into the office, create other keys or call internal cookie-authenticated endpoints.\n\nApply `mysql/002_api_keys.sql` to an existing installation (or `npm run db:migrate`, which applies both migrations). The new table stores only API-key hashes and metadata. The underlying MySQL and R2 connections remain separate; photo links still require working Cloudflare credentials.\n\n## Complete backend read access\n\nWith `backend:read`, use these endpoints. All remain read-only:\n\n| Endpoint under `/api/v1/backend/` | Contents |\n| --- | --- |\n| `registrations` | Full stored registrations: drafts and submitted records, all form fields including birth dates, payment amounts/status, receipt paths, review information, and timestamps. |\n| `rosters` | Full pastor list entries, including status and removal notes. |\n| `profiles` | Full stored profiles. |\n| `users` | Account IDs and email addresses. |\n| `history` | All application audit entries. |\n| `media` | All tracked uploads, including draft/unattached portraits and receipts: object path, owner, type, size and creation time. |\n| `media-url?path=ENCODED_PATH` | A temporary signed link to any tracked upload, including receipts. |\n| `settings` | Current registration year, years with registrations, and fee amounts. |\n| `reference` | Organizations, denominations and reference bishops. |\n| `keys` | API-key metadata, scopes, creator, expiry, revocation and last use; never full tokens or hashes. |\n\nCollection endpoints accept `limit` and `after`. Registrations and rosters include **all years by default**, with optional `year` filtering. They return full stored JSON records rather than the limited projections of the original endpoints. Payments and review details are nested in registration records. Follow `nextCursor` until null, URL-encoding cursors and keeping the same filters. `settings`, `reference` and `media-url` are individual responses and do not paginate.\n\nThis access excludes authentication internals (passwords, OTPs, sessions and rate-limit hashes), environment variables and database/SMTP/Cloudflare secrets. The backend read permission provides no write, upload or deletion permissions. No key provides a SQL console or infrastructure administration. Existing restricted keys retain their scopes; issue a new key with `backend:read` to grant full application-data access.\n\nThe preserved older Supabase API documentation is in [LEGACY_API.md](LEGACY_API.md).\n\n## Accounts and successful logins\n\n`GET /api/v1/backend/accounts?search=EMAIL_OR_NAME&page=1` returns account signup/last-login dates, recorded login count, role, office access and current-cycle registration status (50 per page, with total). `GET /api/v1/backend/logins?user=USER_ID&before=CURSOR` returns successful email-verified login events, newest first, 50 per page. Omit `user` for all accounts. Both require `backend:read`. No OTPs or session credentials are exposed.\n\nOffice admins can also use **Accounts** in `/admin` to search accounts and view their login histories. Apply migration `003_account_activity.sql` before deploying this version. Existing accounts have unknown signup dates; historical login activity cannot be reconstructed. Tracking starts with this release.\n\n\n## Management API for CLI agents\n\nIn **Admin → API keys**, enter an application name, choose **Full access — read, write and edit** in **Access**, select an expiry, then create the key. Full access selects `backend:read` and `backend:write`. Copy the `drogs_live_…` token when it is shown. Existing keys are never upgraded automatically. Each key can be revoked independently.\n\n| Permission | Access |\n| --- | --- |\n| `backend:write` | All management routes and documented office actions. Pair with `backend:read` for complete backend reads. |\n| `people:write` | Find people, add and edit directory records, correct names and details, assign pastors, and remove or restore records. |\n| `photos:write` | Find people, upload/replace portraits, and read Photo tasks and totals. It cannot change names or assignments. |\n| `rosters:write` | Find people and preview/apply pastor spreadsheet imports. |\n\nThese routes write to the **same MySQL state as admin**. Changes appear in the original Castle directory and the First Love, UD and FLOW sites according to each person's organization. Clients refresh within 30 seconds or when the page regains focus. Names and other office corrections survive later submissions and roster deployments. Every write is audited with the issuing account and API-key ID/name; tokens are never put in audit entries.\n\n### CLI\n\nThe repository includes `scripts/drogs-cli.mjs`. Set the key in the agent's environment:\n\n```sh\nexport DROGS_API_KEY='YOUR_ADMIN_ISSUED_KEY'\nnode scripts/drogs-cli.mjs people --search='E.A.T Sackey'\nnode scripts/drogs-cli.mjs people --bishop=B39 --photo-task=missing\nnode scripts/drogs-cli.mjs progress\nnode scripts/drogs-cli.mjs photo PERSON_ID /path/to/portrait.jpg\nnode scripts/drogs-cli.mjs edit PERSON_ID --json=/path/to/corrections.json\nnode scripts/drogs-cli.mjs edit PERSON_ID --json=/path/to/corrections.json --bishop=B39\nnode scripts/drogs-cli.mjs add --json=/path/to/new-pastor.json --bishop=B39\nnode scripts/drogs-cli.mjs import /path/to/pastors.xlsx --bishop=B39 --allow-new\nnode scripts/drogs-cli.mjs import /path/to/pastors.xlsx --bishop=B39 --allow-new --apply\n```\n\nA corrections file contains only fields to change, for example `{\"name\":\"Correct Full Name\",\"city\":\"Accra\",\"country\":\"Ghana\"}`. A new-pastor file also needs `\"role\":\"pastor\"`. The CLI resizes images larger than 5 MB before uploading. To connect to a local test server, set `DROGS_API_URL`; the default is `https://kuriakecastle.org`.\n\nA server operator can also issue a live key with `npm run api:key -- --name=\"Photo CLI agent\" --days=90` using the deployed application environment. The token is written only to a private file with owner-only permissions. This is different from the preserved `api:key:legacy` Supabase preparation command, whose tokens are not live MySQL keys.\n\n### Directory and photos\n\n| Method and route | Input / result |\n| --- | --- |\n| `GET /api/v1/schema` | Machine-readable routes, fields, actions and limits. Requires a read or management permission. |\n| `GET /api/v1/people` | Current corrected directory records. Filters: `search`, `role`, `bishopId`, `organization`, `group`, `country`, `photoTask=missing/replace/ready`, `confirmed=true/false`; `limit=1–500` and `after` paginate. Returns `data`, `total`, `nextCursor` and `deadlineApplied`. Before the registration deadline is applied this lists everyone; once the office applies it, only people in good standing for the year are listed, as on the website. |\n| `GET /api/v1/people/ID` | Current person plus `revision`; also returns an ETag. |\n| `POST /api/v1/people` | JSON `{\"fields\":{\"name\":\"Full Name\",\"role\":\"pastor\"},\"bishopId\":\"B39\"}` adds a current directory record. Returns the new stable person ID and photo totals. |\n| `PATCH /api/v1/people/ID` | JSON `{\"fields\":{\"name\":\"Correct Name\",\"city\":\"Accra\"},\"bishopId\":\"TARGET_BISHOP_ID\"}`. Omit `bishopId` to retain the supervisor. Only supplied fields change. |\n| `PUT /api/v1/people/ID/photo` | Raw JPG, PNG or WebP bytes with the corresponding Content-Type, at most 5 MB; POST is also accepted. Upload and assignment happen in one request. |\n| `GET /api/v1/people/ID/photo` | The current portrait URL, or null when missing. |\n| `GET /api/v1/photo-progress` | The same missing/replacement/added/replaced totals as admin, plus `outstanding`, IDs and current task reasons. Requires backend read or photo write access. |\n| `DELETE /api/v1/people/ID` | Soft-delete the directory record. A bishop with pastors must have those pastors moved first. |\n| `POST /api/v1/people/ID/restore` | Restore a soft-deleted record. |\n| `POST /api/v1/uploads?kind=portrait` | Upload raw portrait bytes and return `path` for an existing registration's `officeEdit` action. `kind=logo` is also supported. |\n\nEach person also carries `goodStanding` (true when their registration for the year is confirmed and paid) and `seal` (true when the green good-standing seal should be shown). Show the seal from `seal`: it is shown only while the deadline is not applied, because once it is applied everyone listed is in good standing. People who signed up new carry `newSignup: true`.\n\nEach person also carries `confirmation`: `{\"status\":\"…\",\"confirmed\":true|false,\"paymentConfirmed\":true|false}` for the current registration year. `status` is `not_registered` (no registration this year), `waiting_for_bishop` (a pastor waiting for their bishop to confirm them), `waiting_for_office` (a bishop waiting for the office), `confirmed`, or `declined` (the bishop or office said no). `confirmed` is true only once the bishop (for a pastor) or the office (for a bishop) has confirmed them. It also gives `year`, `registeredAt`, `payment` (`unpaid`, `pending`, `verified`, `rejected` or `waived`), `paymentMethod` and `amount` (USD). Add `confirmed=true` or `confirmed=false` to `GET /api/v1/people` to list only those confirmed or not.\n\nPerson fields: `name`, `role`, `title`, `gender`, `dob`, `organization`, `denomination`, `group`, `city`, `country`, `bishop`, `branch`, `yearAppointed`, `yearOrdained`, `yearConsecrated`, `photo`, `phone`, `email`. Use `bishopId` to move a pastor. Organization/group/denomination follow the selected bishop; linked registrations and pastor lists move together. Changing a bishop's organization/group/denomination updates their pastors too. Bishops cannot be assigned as pastors under other bishops.\n\nSend birthdays as ISO `YYYY-MM-DD` or day/month/year. Birthdays and contacts are never exposed by the public directory. A possible duplicate name (including shortened names) with a compatible birthday returns **409** with the candidate IDs. Update the existing person by ID. For a confirmed distinct namesake, supply a different birthday or explicitly set `allowDuplicate:true` when adding/editing that individual.\n\nFor concurrent editing, send the person response's ETag as `If-Match`. A stale revision returns **409**. A portrait upload also refuses to replace a newer portrait uploaded while the request was running. Re-sending the same stored image is a no-op and does not falsely clear its replacement flag.\n\n```sh\ncurl -X PUT 'https://kuriakecastle.org/api/v1/people/PERSON_ID/photo' \\\n  -H \"Authorization: Bearer $DROGS_API_KEY\" \\\n  -H 'Content-Type: image/jpeg' --data-binary '@/path/to/portrait.jpg'\n```\n\nSuccessful person/photo changes include `photoProgress`. Adding a previously missing portrait decreases `missing`; changing the portrait associated with an old replacement review clears that old review and decreases `replace`. A new pastor added with a photo is ready immediately; they do not inflate the count of previously missing photos completed. Photo tasks may still be explicitly reviewed using the `reviewPhoto` action.\n\n### Import pastor spreadsheets\n\n`POST /api/v1/people/import` accepts JSON, XLSX or CSV. Imports preview by default. Apply with JSON `dryRun:false` or query `dryRun=false`. One batch is committed atomically; an invalid/ambiguous row writes **nothing**.\n\n```json\n{\n  \"bishopId\": \"B39\",\n  \"dryRun\": true,\n  \"allowNew\": true,\n  \"moveExisting\": false,\n  \"rows\": [\n    {\"referenceId\":\"CURRENT_PERSON_ID\",\"name\":\"Correct Full Name\",\"city\":\"Accra\"},\n    {\"name\":\"New Pastor Name\",\"gender\":\"female\",\"dob\":\"1990-05-17\"}\n  ]\n}\n```\n\nFor XLSX/CSV send the file body to `/api/v1/people/import?bishopId=B39&allowNew=true&dryRun=false` with `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` or `text/csv`. Recognized headers include Name/Full Name, First Name/Last Name, Reference ID, Rank/Title, Gender, DOB/Date of Birth, Email, Phone, Branch, City, Country and appointment/ordination years. Excel date cells retain their actual date. Bishop rows, repeated table banners, non-pastoral ranks and removed-pastors tabs are excluded.\n\nImports update exact current matches. New people require `allowNew:true`; a match under a different bishop requires `moveExisting:true`. Ambiguous names require `referenceId`. Imports never delete other pastors or use older office datasets. Limits: 500 pastor rows per batch; 5 MB for files, 256 KB for JSON. The response lists created, updated and skipped rows and projected/current photo totals. Upload photos by the returned person IDs after applying the sheet.\n\n### Other office data\n\n`POST /api/v1/actions` accepts `{\"name\":\"ACTION\",\"payload\":{…}}` with `backend:write`. `GET /api/v1/schema` lists supported actions. Examples include `officeEdit` for a registration, `reviewPhoto`, `setCatalog`, `setFees`, `setSignup`, annual pastor-list operations, approval and status changes. Person creation/edits use `/people`; payment-provider confirmation and message broadcasts are not exposed as generic actions.\n\n`GET /api/v1/settings` and `PATCH /api/v1/settings` read/change the website visibility settings `PUBLIC_DIRECTORY_SOURCE` and `PUBLIC_PHOTOS`, using `{\"values\":{…}}`. Catalog, fees and signup controls use actions. Keys do not expose or change office access credentials, authentication sessions, provider secrets or infrastructure.\n"}
+\ No newline at end of file
++{"markdown":"# Kuriake Castle data API\n\nOffice users create keys in `/rollofgoodstandingadmin` → **API keys**. Keys are issued by DROGS and used by CLI agents and other servers to read or manage the data their permissions allow. They are not Cloudflare credentials and never grant database or storage administration access.\n\nChoose a separate key for each connected app, a descriptive name, permissions, and a lifetime of 1–365 days or **never** (the UI offers 7, 30, 90, 365 or Never expires; a never-expiring key can still be revoked). The full key is shown only at creation. MySQL stores a keyed hash, public prefix and metadata. Office users can revoke keys. Removing the issuing email from `ADMIN_EMAILS` also disables its keys. Changing `SESSION_SECRET` invalidates all keys and login sessions.\n\nThis document is also published at https://kuriakecastle.org/docs/.\n\nSend requests to the same domain as the registration app:\n\n```sh\ncurl 'https://kuriakecastle.org/api/v1/registrations?year=2027&limit=50' \\\n  -H 'Authorization: Bearer YOUR_DROGS_API_KEY'\n```\n\nKeep API keys in the calling server's environment, not frontend JavaScript, URLs or public repositories. These endpoints do not use browser cookies and do not provide cross-origin browser access.\n\n| Permission | Endpoint | Data |\n| --- | --- | --- |\n| `backend:read` | `GET /api/v1/backend/*` | Complete application data as detailed below; also permits the limited endpoints. This is selected by default for new keys. |\n| `registrations:read` | `GET /api/v1/registrations` | Submitted annual registrations, including pending/unclaimed records; names, role, email, phone, country, city, organization, denomination, bishop reference, status and portrait path. No drafts, birth dates, payment details or receipts. |\n| `rosters:read` | `GET /api/v1/rosters` | Annual pastor list entries, including active/removed status, names, contact details, church and supervising bishop. No removal notes. |\n| `photos:read` | `GET /api/v1/photos?path=ENCODED_PATH` | A signed URL for a portrait attached to a submitted registration. No draft portraits, unattached uploads or receipts. |\n\nRegistration/list endpoints accept `year` (defaults to current registration cycle), `limit` (1–100; default 50), and `after` (the preceding response's `nextCursor`). Responses are `{data: [...], year: 2027, nextCursor: \"...\"}`; `nextCursor` is null when complete. Keep the same year while paging. The portrait path returned by registrations must be URL-encoded when requesting a photo link. Photo responses are `{url: \"...\", expiresIn: 3600}`. Previously issued image URLs remain valid until their own expiry even if the API key is revoked.\n\nKeys have a limit of 120 authorized requests per minute. Responses use `Cache-Control: no-store`. Errors are JSON with an `error` message: 401 missing/invalid/expired/revoked key; 403 missing scope; 404 unknown endpoint or inaccessible photo; 405 an unsupported method; 429 request limit; 503 provider/database failure. The original read endpoints accept GET only. The management endpoints below accept explicit write permissions. Read-only keys retain their existing restrictions. Keys cannot sign into the office, create other keys or call internal cookie-authenticated endpoints.\n\nApply `mysql/002_api_keys.sql` to an existing installation (or `npm run db:migrate`, which applies both migrations). The new table stores only API-key hashes and metadata. The underlying MySQL and R2 connections remain separate; photo links still require working Cloudflare credentials.\n\n## Complete backend read access\n\nWith `backend:read`, use these endpoints. All remain read-only:\n\n| Endpoint under `/api/v1/backend/` | Contents |\n| --- | --- |\n| `registrations` | Full stored registrations: drafts and submitted records, all form fields including birth dates, payment amounts/status, receipt paths, review information, and timestamps. |\n| `rosters` | Full pastor list entries, including status and removal notes. |\n| `profiles` | Full stored profiles. |\n| `users` | Account IDs and email addresses. |\n| `history` | All application audit entries. |\n| `media` | All tracked uploads, including draft/unattached portraits and receipts: object path, owner, type, size and creation time. |\n| `media-url?path=ENCODED_PATH` | A temporary signed link to any tracked upload, including receipts. |\n| `settings` | Current registration year, years with registrations, and fee amounts. |\n| `reference` | Organizations, denominations and reference bishops. |\n| `keys` | API-key metadata, scopes, creator, expiry, revocation and last use; never full tokens or hashes. |\n\nCollection endpoints accept `limit` and `after`. Registrations and rosters include **all years by default**, with optional `year` filtering. They return full stored JSON records rather than the limited projections of the original endpoints. Payments and review details are nested in registration records. Follow `nextCursor` until null, URL-encoding cursors and keeping the same filters. `settings`, `reference` and `media-url` are individual responses and do not paginate.\n\nThis access excludes authentication internals (passwords, OTPs, sessions and rate-limit hashes), environment variables and database/SMTP/Cloudflare secrets. The backend read permission provides no write, upload or deletion permissions. No key provides a SQL console or infrastructure administration. Existing restricted keys retain their scopes; issue a new key with `backend:read` to grant full application-data access.\n\nThe preserved older Supabase API documentation is in [LEGACY_API.md](LEGACY_API.md).\n\n## Accounts and successful logins\n\n`GET /api/v1/backend/accounts?search=EMAIL_OR_NAME&page=1` returns account signup/last-login dates, recorded login count, role, office access and current-cycle registration status (50 per page, with total). `GET /api/v1/backend/logins?user=USER_ID&before=CURSOR` returns successful email-verified login events, newest first, 50 per page. Omit `user` for all accounts. Both require `backend:read`. No OTPs or session credentials are exposed.\n\nOffice admins can also use **Accounts** in `/rollofgoodstandingadmin` to search accounts and view their login histories. Apply migration `003_account_activity.sql` before deploying this version. Existing accounts have unknown signup dates; historical login activity cannot be reconstructed. Tracking starts with this release.\n\n\n## Management API for CLI agents\n\nIn **Admin → API keys**, enter an application name, choose **Full access — read, write and edit** in **Access**, select an expiry, then create the key. Full access selects `backend:read` and `backend:write`. Copy the `drogs_live_…` token when it is shown. Existing keys are never upgraded automatically. Each key can be revoked independently.\n\n| Permission | Access |\n| --- | --- |\n| `backend:write` | All management routes and documented office actions. Pair with `backend:read` for complete backend reads. |\n| `people:write` | Find people, add and edit directory records, correct names and details, assign pastors, and remove or restore records. |\n| `photos:write` | Find people, upload/replace portraits, and read Photo tasks and totals. It cannot change names or assignments. |\n| `rosters:write` | Find people and preview/apply pastor spreadsheet imports. |\n\nThese routes write to the **same MySQL state as admin**. Changes appear in the original Castle directory and the First Love, UD and FLOW sites according to each person's organization. Clients refresh within 30 seconds or when the page regains focus. Names and other office corrections survive later submissions and roster deployments. Every write is audited with the issuing account and API-key ID/name; tokens are never put in audit entries.\n\n### CLI\n\nThe repository includes `scripts/drogs-cli.mjs`. Set the key in the agent's environment:\n\n```sh\nexport DROGS_API_KEY='YOUR_ADMIN_ISSUED_KEY'\nnode scripts/drogs-cli.mjs people --search='E.A.T Sackey'\nnode scripts/drogs-cli.mjs people --bishop=B39 --photo-task=missing\nnode scripts/drogs-cli.mjs progress\nnode scripts/drogs-cli.mjs photo PERSON_ID /path/to/portrait.jpg\nnode scripts/drogs-cli.mjs edit PERSON_ID --json=/path/to/corrections.json\nnode scripts/drogs-cli.mjs edit PERSON_ID --json=/path/to/corrections.json --bishop=B39\nnode scripts/drogs-cli.mjs add --json=/path/to/new-pastor.json --bishop=B39\nnode scripts/drogs-cli.mjs import /path/to/pastors.xlsx --bishop=B39 --allow-new\nnode scripts/drogs-cli.mjs import /path/to/pastors.xlsx --bishop=B39 --allow-new --apply\n```\n\nA corrections file contains only fields to change, for example `{\"name\":\"Correct Full Name\",\"city\":\"Accra\",\"country\":\"Ghana\"}`. A new-pastor file also needs `\"role\":\"pastor\"`. The CLI resizes images larger than 5 MB before uploading. To connect to a local test server, set `DROGS_API_URL`; the default is `https://kuriakecastle.org`.\n\nA server operator can also issue a live key with `npm run api:key -- --name=\"Photo CLI agent\" --days=90` using the deployed application environment. The token is written only to a private file with owner-only permissions. This is different from the preserved `api:key:legacy` Supabase preparation command, whose tokens are not live MySQL keys.\n\n### Directory and photos\n\n| Method and route | Input / result |\n| --- | --- |\n| `GET /api/v1/schema` | Machine-readable routes, fields, actions and limits. Requires a read or management permission. |\n| `GET /api/v1/people` | Current corrected directory records. Filters: `search`, `role`, `bishopId`, `organization`, `group`, `country`, `photoTask=missing/replace/ready`, `confirmed=true/false`; `limit=1–500` and `after` paginate. Returns `data`, `total`, `nextCursor` and `deadlineApplied`. Before the registration deadline is applied this lists everyone; once the office applies it, only people in good standing for the year are listed, as on the website. |\n| `GET /api/v1/people/ID` | Current person plus `revision`; also returns an ETag. |\n| `POST /api/v1/people` | JSON `{\"fields\":{\"name\":\"Full Name\",\"role\":\"pastor\"},\"bishopId\":\"B39\"}` adds a current directory record. Returns the new stable person ID and photo totals. |\n| `PATCH /api/v1/people/ID` | JSON `{\"fields\":{\"name\":\"Correct Name\",\"city\":\"Accra\"},\"bishopId\":\"TARGET_BISHOP_ID\"}`. Omit `bishopId` to retain the supervisor. Only supplied fields change. |\n| `PUT /api/v1/people/ID/photo` | Raw JPG, PNG or WebP bytes with the corresponding Content-Type, at most 5 MB; POST is also accepted. Upload and assignment happen in one request. |\n| `GET /api/v1/people/ID/photo` | The current portrait URL, or null when missing. |\n| `GET /api/v1/photo-progress` | The same missing/replacement/added/replaced totals as admin, plus `outstanding`, IDs and current task reasons. Requires backend read or photo write access. |\n| `DELETE /api/v1/people/ID` | Soft-delete the directory record. A bishop with pastors must have those pastors moved first. |\n| `POST /api/v1/people/ID/restore` | Restore a soft-deleted record. |\n| `POST /api/v1/uploads?kind=portrait` | Upload raw portrait bytes and return `path` for an existing registration's `officeEdit` action. `kind=logo` is also supported. |\n\nEach person also carries `goodStanding` (true when their registration for the year is confirmed and paid) and `seal` (true when the green good-standing seal should be shown). Show the seal from `seal`: it is shown only while the deadline is not applied, because once it is applied everyone listed is in good standing. People who signed up new carry `newSignup: true`.\n\nEach person also carries `confirmation`: `{\"status\":\"…\",\"confirmed\":true|false,\"paymentConfirmed\":true|false}` for the current registration year. `status` is `not_registered` (no registration this year), `waiting_for_bishop` (a pastor waiting for their bishop to confirm them), `waiting_for_office` (a bishop waiting for the office), `confirmed`, or `declined` (the bishop or office said no). `confirmed` is true only once the bishop (for a pastor) or the office (for a bishop) has confirmed them. It also gives `year`, `registeredAt`, `payment` (`unpaid`, `pending`, `verified`, `rejected` or `waived`), `paymentMethod` and `amount` (USD). Add `confirmed=true` or `confirmed=false` to `GET /api/v1/people` to list only those confirmed or not.\n\nPerson fields: `name`, `role`, `title`, `gender`, `dob`, `organization`, `denomination`, `group`, `city`, `country`, `bishop`, `branch`, `yearAppointed`, `yearOrdained`, `yearConsecrated`, `photo`, `phone`, `email`. Use `bishopId` to move a pastor. Organization/group/denomination follow the selected bishop; linked registrations and pastor lists move together. Changing a bishop's organization/group/denomination updates their pastors too. Bishops cannot be assigned as pastors under other bishops.\n\nSend birthdays as ISO `YYYY-MM-DD` or day/month/year. Birthdays and contacts are never exposed by the public directory. A possible duplicate name (including shortened names) with a compatible birthday returns **409** with the candidate IDs. Update the existing person by ID. For a confirmed distinct namesake, supply a different birthday or explicitly set `allowDuplicate:true` when adding/editing that individual.\n\nFor concurrent editing, send the person response's ETag as `If-Match`. A stale revision returns **409**. A portrait upload also refuses to replace a newer portrait uploaded while the request was running. Re-sending the same stored image is a no-op and does not falsely clear its replacement flag.\n\n```sh\ncurl -X PUT 'https://kuriakecastle.org/api/v1/people/PERSON_ID/photo' \\\n  -H \"Authorization: Bearer $DROGS_API_KEY\" \\\n  -H 'Content-Type: image/jpeg' --data-binary '@/path/to/portrait.jpg'\n```\n\nSuccessful person/photo changes include `photoProgress`. Adding a previously missing portrait decreases `missing`; changing the portrait associated with an old replacement review clears that old review and decreases `replace`. A new pastor added with a photo is ready immediately; they do not inflate the count of previously missing photos completed. Photo tasks may still be explicitly reviewed using the `reviewPhoto` action.\n\n### Import pastor spreadsheets\n\n`POST /api/v1/people/import` accepts JSON, XLSX or CSV. Imports preview by default. Apply with JSON `dryRun:false` or query `dryRun=false`. One batch is committed atomically; an invalid/ambiguous row writes **nothing**.\n\n```json\n{\n  \"bishopId\": \"B39\",\n  \"dryRun\": true,\n  \"allowNew\": true,\n  \"moveExisting\": false,\n  \"rows\": [\n    {\"referenceId\":\"CURRENT_PERSON_ID\",\"name\":\"Correct Full Name\",\"city\":\"Accra\"},\n    {\"name\":\"New Pastor Name\",\"gender\":\"female\",\"dob\":\"1990-05-17\"}\n  ]\n}\n```\n\nFor XLSX/CSV send the file body to `/api/v1/people/import?bishopId=B39&allowNew=true&dryRun=false` with `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` or `text/csv`. Recognized headers include Name/Full Name, First Name/Last Name, Reference ID, Rank/Title, Gender, DOB/Date of Birth, Email, Phone, Branch, City, Country and appointment/ordination years. Excel date cells retain their actual date. Bishop rows, repeated table banners, non-pastoral ranks and removed-pastors tabs are excluded.\n\nImports update exact current matches. New people require `allowNew:true`; a match under a different bishop requires `moveExisting:true`. Ambiguous names require `referenceId`. Imports never delete other pastors or use older office datasets. Limits: 500 pastor rows per batch; 5 MB for files, 256 KB for JSON. The response lists created, updated and skipped rows and projected/current photo totals. Upload photos by the returned person IDs after applying the sheet.\n\n### Other office data\n\n`POST /api/v1/actions` accepts `{\"name\":\"ACTION\",\"payload\":{…}}` with `backend:write`. `GET /api/v1/schema` lists supported actions. Examples include `officeEdit` for a registration, `reviewPhoto`, `setCatalog`, `setFees`, `setSignup`, annual pastor-list operations, approval and status changes. Person creation/edits use `/people`; payment-provider confirmation and message broadcasts are not exposed as generic actions.\n\n`GET /api/v1/settings` and `PATCH /api/v1/settings` read/change the website visibility settings `PUBLIC_DIRECTORY_SOURCE` and `PUBLIC_PHOTOS`, using `{\"values\":{…}}`. Catalog, fees and signup controls use actions. Keys do not expose or change office access credentials, authentication sessions, provider secrets or infrastructure.\n"}
+\ No newline at end of file
+diff --git a/src/registration/client.js b/src/registration/client.js
+index 0678a5f0..83043c3b 100644
+--- a/src/registration/client.js
++++ b/src/registration/client.js
+@@ -31,7 +31,7 @@ export function useLocalDemo(name, seed = []) {
+     if (seed.length) localStorage.setItem(name, JSON.stringify(seed.reduce((state, s) => applyAction(state, s.actor, s.action, s.payload, undefined, people), emptyState())));
+   } catch {}
+ }
+-// Which door this page is: member (/signup/) or office (/admin/). Sent with every
++// Which door this page is: member (/signup/) or office (/rollofgoodstandingadmin/). Sent with every
+ // request so the server reads the matching session cookie.
+ let door = "member";
+ export const setDoor = (office) => { door = office ? "office" : "member"; };
+diff --git a/src/server/auth.mjs b/src/server/auth.mjs
+index c00d5864..3bedad93 100644
+--- a/src/server/auth.mjs
++++ b/src/server/auth.mjs
+@@ -25,7 +25,7 @@ export async function checkPassword(password, stored) {
+ import { transaction } from './database.mjs';
+ export class HttpError extends Error { constructor(status, message) { super(message); this.status = status; } }
+ export const digest = (secret, text) => createHmac('sha256', secret).update(text).digest('hex');
+-// Member and office sessions live in separate cookies, so signing in at /admin/
++// Member and office sessions live in separate cookies, so signing in at /rollofgoodstandingadmin/
+ // never ends a member session open in the same browser (or the other way round).
+ // The page says which door it is through the X-Kc-Door header; requests without
+ // it (image tags) take whichever cookie is present, office first.
+@@ -63,7 +63,7 @@ export function createAuth({ pool, config, mailer }) {
+   // Twelve hours by default; thirty days when the person asks to stay signed in on this device.
+   const SESSION_MS = 43200000, REMEMBER_MS = 30 * 86400000;
+   // A session remembers which door it came through: only a sign-in made at
+-  // /admin/ carries office powers, so an office email signed in as a member
++  // /rollofgoodstandingadmin/ carries office powers, so an office email signed in as a member
+   // sees exactly what any member sees. The door travels as a cookie prefix.
+   const createSession = async (conn, user, remember = false, office = false) => {
+     const token = randomBytes(32).toString('hex'), ttl = remember ? REMEMBER_MS : SESSION_MS;
+diff --git a/src/server/auto-photo.mjs b/src/server/auto-photo.mjs
+index 365d6a4a..0b422014 100644
+--- a/src/server/auto-photo.mjs
++++ b/src/server/auto-photo.mjs
+@@ -198,7 +198,7 @@ export function createAutoPhoto({ pool, config, storage, references = [], fetche
+   }
+   // Everyone waiting for a look, one at a time (also retries earlier failures).
+   async function sweep() {
+-    await applySettings(config, pool).catch(() => {}); // a key saved in /admin/ applies at once
++    await applySettings(config, pool).catch(() => {}); // a key saved in /rollofgoodstandingadmin/ applies at once
+     {
+       const first = await transaction(pool, (conn) => readState(conn, true));
+       await checkDuplicates(first, [...overlayReferences(references, first), ...(first.extraReferences || [])]).catch((e) => logger.error('Duplicate check failed:', e?.message || e));
+diff --git a/src/server/settings.mjs b/src/server/settings.mjs
+index 31944f69..952cef11 100644
+--- a/src/server/settings.mjs
++++ b/src/server/settings.mjs
+@@ -1,7 +1,7 @@
+ import { createHash, timingSafeEqual } from 'node:crypto';
+ import { configuration } from './config.mjs';
+ import { HttpError, rateLimit } from './auth.mjs';
+-// Settings the office may change from /admin/ without touching the host's
++// Settings the office may change from /rollofgoodstandingadmin/ without touching the host's
+ // environment. Stored in dr_config and layered over process.env at runtime.
+ export const SETTINGS = [
+   ['RESEND_API_KEY', 'Resend API key', 'Outgoing email (sign-in codes, office reports) is sent through Resend when set.'],
+@@ -18,9 +18,9 @@ export const SETTINGS = [
+   ['R2_SECRET_ACCESS_KEY', 'R2 secret access key', ''],
+   ['PUBLIC_DIRECTORY_SOURCE', 'Public directory shows', '"original" (the existing roster, for now) or "roll" (only people confirmed this year).'],
+   ['PUBLIC_PHOTOS', 'Public directory photographs', '"confirmed" (a photograph appears only once the person is confirmed for this year; everyone else is a dark silhouette — the default) or "all" (every photograph shows).'],
+-  ['ADMIN_ACCESS_CODE', 'Office access code', 'The code typed at /admin/ before the email.'],
++  ['ADMIN_ACCESS_CODE', 'Office access code', 'The code typed at /rollofgoodstandingadmin/ before the email.'],
+   ['ORDER_ACCESS_CODE', 'Order pages password', 'Asked before the Order of Bishops, Order of Pastors and Councils pages open (then the person signs in and must be in good standing). Different from the office code.'],
+-  ['ADMIN_EMAILS', 'Office emails', 'Comma-separated. Only these addresses can sign in to /admin/; each sign-in is confirmed by an emailed code.'],
++  ['ADMIN_EMAILS', 'Office emails', 'Comma-separated. Only these addresses can sign in to /rollofgoodstandingadmin/; each sign-in is confirmed by an emailed code.'],
+ ];
+ const allowed = new Set(SETTINGS.map(([key]) => key));
+ export async function readSettings(pool) {
+diff --git a/src/server/storage.mjs b/src/server/storage.mjs
+index 144d8589..be13da2a 100644
+--- a/src/server/storage.mjs
++++ b/src/server/storage.mjs
+@@ -47,7 +47,7 @@ export async function assertOwnedMedia(conn, actor, path, kind) {
+ }
+ export function createStorage({ config, pool, client, logger = console }) {
+   const receiptReports = new Map();
+-  // Built per call so settings saved in /admin/ take effect without a restart.
++  // Built per call so settings saved in /rollofgoodstandingadmin/ take effect without a restart.
+   const s3 = () => client || new S3Client({ region: 'auto', endpoint: `https://${config.r2.account}.r2.cloudflarestorage.com`,
+     credentials: { accessKeyId: config.r2.accessKeyId, secretAccessKey: config.r2.secretAccessKey, ...(config.r2.sessionToken ? { sessionToken: config.r2.sessionToken } : {}) },
+     requestChecksumCalculation: 'WHEN_REQUIRED', responseChecksumValidation: 'WHEN_REQUIRED' });
+diff --git a/tests/registration/browser.py b/tests/registration/browser.py
+index 3089f056..b96ca155 100644
+--- a/tests/registration/browser.py
++++ b/tests/registration/browser.py
+@@ -12,7 +12,7 @@ with sync_playwright() as p:
+  page=context.new_page();errors=[]
+  page.on('pageerror',lambda e:errors.append(str(e)))
+  def open_account(email,office=False):
+-  page.goto(BASE+('/admin/' if office else ('/signup/bishop/' if 'bishop' in email else '/signup/pastor/')));page.wait_for_load_state('networkidle')  # sign-up lives only on the role pages
++  page.goto(BASE+('/rollofgoodstandingadmin/' if office else ('/signup/bishop/' if 'bishop' in email else '/signup/pastor/')));page.wait_for_load_state('networkidle')  # sign-up lives only on the role pages
+   if page.get_by_label('Access code').is_visible():
+    page.get_by_label('Access code').fill('1234');page.get_by_role('button',name='Enter →').click()
+   if not page.get_by_label('Email address',exact=True).is_visible() and page.get_by_role('button',name='Sign up',exact=True).is_visible():page.get_by_role('button',name='Sign up',exact=True).click()
+diff --git a/tests/registration/mysql-browser.py b/tests/registration/mysql-browser.py
+index 50bb8a4a..1eba7950 100644
+--- a/tests/registration/mysql-browser.py
++++ b/tests/registration/mysql-browser.py
+@@ -20,7 +20,7 @@ with sync_playwright() as p:
+     errors = []
+     page.on('pageerror', lambda error: errors.append(str(error)))
+     def login(admin=False):
+-        page.goto(BASE + ('/admin' if admin else '/signup/bishop/'))  # sign-up lives only on the role pages
++        page.goto(BASE + ('/rollofgoodstandingadmin/' if admin else '/signup/bishop/'))  # sign-up lives only on the role pages
+         # Wait for the controls below: video and quiet background refreshes
+         # do not define whether the member's form is ready to use.
+         expect(page.get_by_text('Demo ·', exact=False)).not_to_be_visible()
+@@ -91,7 +91,7 @@ with sync_playwright() as p:
+         assert page.url.rstrip('/') == BASE.rstrip('/'), page.url
+         page.set_viewport_size({'width':1440,'height':1050})
+         login(True)
+-        assert page.url.endswith('/admin/')
++        assert page.url.endswith('/rollofgoodstandingadmin/')
+         page.locator('.reg-nav').get_by_role('button',name=re.compile(r'^Review')).click(); page.locator('.reg-subnav').get_by_role('button',name=re.compile(r'^Approvals')).click()
+         page.get_by_role('button',name='Browser Bishop').click()
+         expect(page.get_by_text('Browser Bishop',exact=True).first).to_be_visible()
