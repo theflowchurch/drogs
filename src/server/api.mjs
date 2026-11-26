@@ -258,7 +258,11 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
       if (path === '/api/registration/auth/office-code' && method === 'POST') {
         const session = await auth.officeSignIn((await jsonBody(request)).code);
         await auth.signOut(request);
-        return json({ ok: true, actor: session.actor }, 200, { 'Set-Cookie': sessionCookie(config, session.token, session.maxAge, true) });
+        // The office's own browser is never shut out (26 Nov): signing in clears the mark.
+        const headers = new Headers({ 'Cache-Control': 'no-store', 'Content-Type': 'application/json' });
+        headers.append('Set-Cookie', sessionCookie(config, session.token, session.maxAge, true));
+        headers.append('Set-Cookie', `${BLOCK_COOKIE}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${config.secure ? '; Secure' : ''}`);
+        return new Response(JSON.stringify({ ok: true, actor: session.actor }), { status: 200, headers });
       }
       // Members: email and password (17 Nov). The emailed code is only for a reset.
       if (path === '/api/registration/auth/signup' && method === 'POST') {

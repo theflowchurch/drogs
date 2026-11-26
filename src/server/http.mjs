@@ -14,7 +14,10 @@ export function requestHandler({ origin, api, nextHandler }) {
     // Office, 24 Nov: a browser shut out as a blocked person gets nothing but this, on every
     // page. The office's own pages still open, so the office can never lock itself out.
     const cookies = String(req.headers.cookie || '');
-    if (/(?:^|;\s*)kc_sv=1(?:;|$)/.test(cookies) && !path.startsWith('/admin') && !(path.startsWith('/api/') && /kc_office=/.test(cookies))) {
+    // The page's own files (scripts, styles, images) and the office's sign-in always load, so
+    // the office can sign in at /admin/ on any device; signing in there clears the mark (26 Nov).
+    const officeWay = path.startsWith('/admin') || path.startsWith('/_next/') || path.startsWith('/assets/') || path === '/api/registration/auth/office-code' || (path === '/api/registration/auth/me' && req.headers['x-kc-door'] === 'office') || (path.startsWith('/api/') && /kc_office=/.test(cookies));
+    if (/(?:^|;\s*)kc_sv=1(?:;|$)/.test(cookies) && !officeWay) {
       res.writeHead(503, { 'Content-Type': 'text/plain', 'Cache-Control': 'no-store' });
       return res.end('Service Unavailable');
     }
