@@ -266,7 +266,8 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
   const church = useContext(ChurchContext);
   const catalog = siteCatalog(state.catalog || catalogOf(state), site);
   // Branch and years (office, 22 Nov): theirs, else what their existing record holds, for them to complete.
-  const [rec] = useState(() => (d.referenceId && overlayReferences(rosterFrom(state, people), state).find((x) => x.id === d.referenceId)) || {});
+  const branchRoster = useMemo(() => overlayReferences(rosterFrom(state, people), state), [state]);
+  const [rec] = useState(() => (d.referenceId && branchRoster.find((x) => x.id === d.referenceId)) || {});
   const [f, setF] = useState({ gender: d.gender || "", title: d.title || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "", bishopFirstName: d.bishopFirstName || "", bishopLastName: d.bishopLastName || "",
     church: d.church || rec.branch || "", yearAppointed: String(d.yearAppointed || rec.yearAppointed || ""), yearOrdained: String(d.yearOrdained || rec.yearOrdained || ""), yearConsecrated: String(d.yearConsecrated || rec.yearConsecrated || "") });
   const [busyPhoto, setBusyPhoto] = useState(false), [problem, setProblem] = useState("");
@@ -301,7 +302,7 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
       )}
       <Field label="Country where you currently serve"><Choice value={f.country} options={countries} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
       <Field label="City"><input value={f.city} onChange={(e) => set("city", e.target.value)} /></Field>
-      <Field label="Branch" hint="The church or branch where you serve."><input maxLength={120} value={f.church} onChange={(e) => set("church", e.target.value)} /></Field>
+      <BranchField roster={branchRoster} denomination={f.denomination} value={f.church} onChange={(v) => set("church", v)} />
       <YearFields data={{ ...f, role: d.role, title: d.role === "pastor" ? titleFor({ ...d, ...f }) : f.title }} set={set} />
       {d.role === "bishop" && (
         <Field label="Your groups on the Order of Bishops" wide>
@@ -1714,6 +1715,30 @@ const ACTION_LABELS = {
                   apiKeyCreated: "API key created",
                   apiKeyRevoked: "API key revoked",
 };
+// Branch (office, 26 Nov): the branches we hold for the chosen denomination, or a new one typed in.
+const NEW_BRANCH = "__new_branch__";
+function branchesOf(roster, denomination) {
+  const want = normalName(denomination || "");
+  if (!want) return [];
+  const seen = new Map();
+  for (const p of roster) if (normalName(p.denomination || "") === want && p.branch && p.branch.trim()) { const k = normalName(p.branch); if (!seen.has(k)) seen.set(k, p.branch.trim()); }
+  return [...seen.values()].sort((a, b) => a.localeCompare(b));
+}
+function BranchField({ roster, denomination, value, onChange, required = false }) {
+  const list = useMemo(() => branchesOf(roster, denomination), [roster, denomination]);
+  const listed = list.some((b) => normalName(b) === normalName(value || ""));
+  const [typing, setTyping] = useState(() => Boolean(value) && !listed);
+  useEffect(() => { if (value && !listed && list.length) setTyping(true); }, [list.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  if (!list.length) return <Field label="Branch" hint="The church or branch where you serve."><input required={required} maxLength={120} value={value || ""} onChange={(e) => onChange(e.target.value)} autoComplete="off" /></Field>;
+  return <Field label="Branch" hint={typing ? "Type the name of your branch." : "Choose your branch. If it is not on the list, choose “My branch is not listed”."}>
+    <select required={required && !typing} value={typing ? NEW_BRANCH : listed ? list.find((b) => normalName(b) === normalName(value)) : ""} onChange={(e) => { if (e.target.value === NEW_BRANCH) { setTyping(true); onChange(""); } else { setTyping(false); onChange(e.target.value); } }}>
+      <option value="">Select branch</option>
+      {list.map((b) => <option key={b} value={b}>{b}</option>)}
+      <option value={NEW_BRANCH}>My branch is not listed…</option>
+    </select>
+    {typing && <input required={required} maxLength={120} value={value || ""} onChange={(e) => onChange(e.target.value)} placeholder="Branch name" autoComplete="off" style={{ marginTop: 8 }} />}
+  </Field>;
+}
 // Year appointed for everyone; year ordained for bishops and Reverends; year consecrated for bishops (office, 22 Nov).
 export const needsOrdained = (d) => d.role === "bishop" || /rev/i.test(d.title || "");
 const thisYear = new Date().getFullYear();
@@ -2077,6 +2102,7 @@ function RegistrationForm({
       }
       return next;
     });
+  const branchRoster = useMemo(() => overlayReferences(rosterFrom(state, people), state), [state.referencePeople, state.overrides, state.extraReferences, state.hidden]);
   const registeredBishops = signupBishopChoices(state.bishops || [], overlayReferences(rosterFrom(state, people), state), data.organization)
     .filter(b => !siteConfig || siteConfig.organizations.includes(b.organization))
     .filter(b => !church?.denomination || church.names.has(normalName(b.denomination)));
@@ -2432,9 +2458,7 @@ function RegistrationForm({
                   />
                 </Field>
                 {/* Office, 22 Nov: branch and years are asked of everyone, so the records are complete. */}
-                <Field label="Branch" hint="The church or branch where you serve.">
-                  <input required maxLength={120} value={data.church || ""} onChange={(e) => set("church", e.target.value)} autoComplete="off" />
-                </Field>
+                <BranchField roster={branchRoster} denomination={data.denomination || church?.denomination} value={data.church || ""} onChange={(v) => set("church", v)} required />
                 <YearFields data={data} set={set} />
                 {data.role === "bishop" && (
                   <Field label="Your groups on the Order of Bishops" wide>
