@@ -18,12 +18,14 @@ const builtPages = [...ORGANISATION_PAGES, 'signup', 'new-group'].map(s => s.rep
 // Church pages built with the site; any other church (one a bishop added, 19 Nov) is served by /newchurch/.
 const { DENOMINATION_SITES } = mysqlBackend ? await import('./src/registration/denomination-sites.mjs') : { DENOMINATION_SITES: {} };
 const builtChurches = Object.keys(DENOMINATION_SITES).map(s => s.replace(/[^a-z0-9]/g, '')).filter(Boolean).join('|') || 'none';
-const newChurch = `/:church((?!(?:${builtChurches})$)[a-z0-9]+)/rollofgoodstanding/licensingauthority`;
+// Office, 26 Nov: the check must look past the church name to the next "/" (it used "$",
+// which never matched there), or every church, built or not, was sent to the shared pages.
+const newChurch = `/:church((?!(?:${builtChurches})(?:/|$))[a-z0-9]+)/rollofgoodstanding/licensingauthority`;
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   ...(mysqlBackend ? {
     async rewrites() { return { beforeFiles: [{ source: `/orderofbishopsingoodstanding/:group((?!(?:${builtPages})(?:/|$))[a-z0-9]+(?:-[a-z0-9]+)*)/`, destination: '/orderofbishopsingoodstanding/new-group/' },
-      { source: `${newChurch}/`, destination: '/newchurch/' }, { source: `${newChurch}/directory/`, destination: '/newchurch/directory/' }, { source: `${newChurch}/signup/`, destination: '/signup/' }] }; },
+      { source: `${newChurch}/`, destination: '/newchurch/' }, { source: `${newChurch}/directory/`, destination: '/newchurch/directory/' }, { source: `${newChurch}/signup/`, destination: '/newchurch/signup/' }] }; },
   } : { output: 'export' }),
   trailingSlash: true,
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
