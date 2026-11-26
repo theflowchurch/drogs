@@ -48,7 +48,7 @@ function SignupControl({ state, perform }) {
 // shows only those in good standing on every public page; nobody's record is
 // deleted, so everyone can be put back. Reopening registration starts again.
 // TEST (office, 21 Nov): the email addresses used to test sign-up. Only these accounts
-// skip payment and have 30 minutes (not two weeks) for their bishop to confirm them.
+// skip payment and have 30 minutes (not one week) for their bishop to confirm them.
 // Blocked people (office, 24 Nov): one per line, "Name, email, WhatsApp number, note"
 // (only the name is needed). Kept by the office alone; never shown to anyone else.
 const blockLine = (b) => [b.name, b.email, b.phone, b.note].map((v) => String(v || '').replace(/,/g, ' ')).join(', ').replace(/(, )+$/, '');
@@ -79,7 +79,7 @@ function TestAccounts({ state, perform }) {
   useEffect(() => setText(saved), [saved]);
   const n = (state?.testEmails || []).length;
   return <Category title="Test accounts" summary={n ? `${n} test email${n === 1 ? '' : 's'}: no payment, 30 minutes for the bishop` : 'Off'}>
-    <p>Accounts that sign in with these email addresses are <b>test accounts</b>. They skip the payment step, and their bishop has <b>30 minutes</b> to confirm them instead of two weeks (a reminder email after 15 minutes; removed and emailed after 30). Everyone else signs up as normal.</p>
+    <p>Accounts that sign in with these email addresses are <b>test accounts</b>. They skip the payment step, and their bishop has <b>30 minutes</b> to confirm them instead of one week (a reminder email after 15 minutes; removed and emailed after 30). Everyone else signs up as normal.</p>
     <label className="reg-field"><span>Test email addresses (one per line)</span><textarea rows={4} value={text} onChange={(e) => setText(e.target.value)} placeholder="test.pastor@example.com" /></label>
     <div className="reg-form-actions">
       <button type="button" className="reg-primary" disabled={text.trim() === saved.trim()} onClick={() => perform('setTestEmails', { emails: text }, 'Test email addresses saved.')}>Save</button>

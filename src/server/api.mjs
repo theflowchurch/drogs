@@ -136,9 +136,9 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
   }
   handle.standingMail = standingMail;
 
-  // The bishop's two-week deadline (office, 19 Nov). Run once a day by the server:
-  // after one week the waiting pastor is reminded to speak to their bishop; when
-  // the two weeks pass, their registration and account are removed and they are told.
+  // The bishop's one-week deadline (office, 19 Nov; one week from 26 Nov). Run by the server:
+  // after four days the waiting pastor is reminded to speak to their bishop; when
+  // the week passes, their registration and account are removed and they are told.
   const longDay = iso => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
   function deadlineMail(kind, { to, name, title, bishop, deadline, test = false }) {
     // TEST (office, 21 Nov): a test account's deadline is 30 minutes, so the time is given too, in GMT.
@@ -157,7 +157,7 @@ export function createApi({ pool, config, auth, storage, mailer, fetcher = fetch
         text: `Dear ${dear},\n\n${lines.join('\n\n')}\n\nView my registration: ${signin}\n\nKuriake Castle`,
         html: `<p style="margin:0 0 12px">Dear ${esc(dear)},</p><p style="margin:0 0 12px">${esc(lines[0])}</p><p style="margin:0 0 12px;padding:12px 14px;background:#fff7e6;border:1px solid #f1c56b;border-radius:8px;color:#5c3d00"><b>Your bishop must confirm you by ${esc(when(deadline))}.</b> If you are not confirmed by then, your registration and account will be removed.</p><p style="margin:0 0 18px">${esc(lines[2])}</p>${button(signin, 'View my registration')}<p style="margin:0">Kuriake Castle</p>` });
     }
-    const lines = [`Your registration on Kuriake Castle was not confirmed by ${byBishop} within ${test ? '30 minutes' : 'two weeks'}, so your registration and account have been removed.`,
+    const lines = [`Your registration on Kuriake Castle was not confirmed by ${byBishop} within ${test ? '30 minutes' : 'one week'}, so your registration and account have been removed.`,
       'If you are still a pastor under this bishop, or under another bishop, please speak to them first and then create a new account and register again.'];
     return brandedMail({ from: config.from, to, subject: 'Your Kuriake Castle account has been removed',
       text: `Dear ${dear},\n\n${lines.join('\n\n')}\n\nRegister again: ${signup}\n\nIf you think this is a mistake, please contact the office.\n\nKuriake Castle`,

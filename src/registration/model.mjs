@@ -141,7 +141,7 @@ export const emptyState = () => ({
   // only those in good standing; every record stays for the office.
   deadline: { applied: false, at: "", by: "", date: "" },
   // TEST (office, 21 Nov): email addresses used to test sign-up. Only these accounts
-  // skip payment and have 30 minutes (not two weeks) for their bishop to confirm them.
+  // skip payment and have 30 minutes (not one week) for their bishop to confirm them.
   testEmails: [],
   blocked: [], // people refused at sign-up (office, 24 Nov)
 });
@@ -281,6 +281,8 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
     { from: 'Poimen Church Senegal-Gambia', to: 'Poimen Church', organization: 'United Denominations', group: 'UD Africa' }] },
   // Office, 22 Nov: Nacanieli Lawevuso and Nacanieli Fomilo are one pastor (same photo): he is Nacanieli Fomilo.
   { id: 'nacanieli-fomilo-one-record-2026-11-22', retire: [{ id: 'P3191', into: 'Sa28b2989' }] },
+  // Office, 26 Nov: bishops have one week (not two) to confirm a waiting pastor.
+  { id: 'one-week-to-confirm-2026-11-26', oneWeekDeadline: true },
   // Office, 26 Nov: the United Reasonable Service Church group is now also a denomination.
   // Its 21 bishops and their pastors move to it; their old church becomes their branch.
   // Joel and Sara Obuobisa stay in Pacific Islands Missionary Church; the rest of
@@ -464,6 +466,17 @@ export function syncRoll(state, people, version) {
   if (fixes.some(f => f.freshDeadline)) {
     const start = new Date().toISOString();
     next.registrations = (next.registrations || []).map(r => r.data?.role === 'pastor' && r.status === 'unclaimed' && !r.claimWaitFrom ? { ...r, claimWaitFrom: start } : r);
+  }
+  // Office, 26 Nov: one week instead of two. Pastors already waiting keep whichever comes
+  // first, their old deadline or one week from today, so nobody is removed at once.
+  if (fixes.some(f => f.oneWeekDeadline)) {
+    const now = Date.now();
+    next.registrations = (next.registrations || []).map(r => {
+      if (r.data?.role !== 'pastor' || r.status !== 'unclaimed' || r.testAccount) return r;
+      const old = Math.max(Date.parse(r.submittedAt || r.createdAt || '') || 0, Date.parse(r.claimWaitFrom || '') || 0);
+      if (!old) return r;
+      return { ...r, claimWaitFrom: new Date(Math.min(old + 7 * 86400000, now)).toISOString() };
+    });
   }
   if (fixes.some(f => f.memberPhotos)) for (const r of state.registrations || []) {
     const id = r.data?.referenceId || state.profiles?.find(p => p.id === r.userId)?.referenceId;
@@ -1052,9 +1065,10 @@ export function bishopKeyed(state, key) {
 // waiting for approval, and receipts from money transfer apps to check (Paystack
 // payments confirm themselves). Works on the state the person can see.
 // The bishop's deadline (office, 19 Nov): a pastor waiting for their bishop has
-// two weeks from submitting. After one week they are reminded by email to speak
-// to their bishop; when the two weeks pass, the registration and account are removed.
-export const CLAIM_DAYS = 14, CLAIM_REMINDER_DAYS = 7;
+// one week from submitting (office, 26 Nov; it was two weeks). After four days they are
+// reminded by email to speak to their bishop; when the week passes, the registration and
+// account are removed.
+export const CLAIM_DAYS = 7, CLAIM_REMINDER_DAYS = 4;
 const DAY_MS = 86400000;
 // TEST (office, 21 Nov): a test account's bishop has 30 minutes, with a reminder after 15.
 export const TEST_CLAIM_MS = 30 * 60000, TEST_REMINDER_MS = 15 * 60000;
