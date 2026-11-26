@@ -2756,6 +2756,16 @@
               "name": "United Reasonable Service Church",
               "people": [
                 {
+                  "name": "Edwin Morgan Ogoe",
+                  "image": "assets/organisations/people/edwin-morgan-ogoe.webp",
+                  "rosterId": "B45",
+                  "bishop": true,
+                  "church": "United Reasonable Service Church",
+                  "title": "Bishop",
+                  "consecrated": "2012",
+                  "role": "URSC Leader"
+                },
+                {
                   "name": "Kweku Amonoo-Neizer",
                   "rosterId": "B121",
                   "bishop": true,
@@ -2808,15 +2818,6 @@
                   "title": "Bishop",
                   "image": "assets/organisations/people/andrew-kwaku-osei-296beaa4.webp",
                   "consecrated": "2021"
-                },
-                {
-                  "name": "Edwin Morgan Ogoe",
-                  "image": "assets/organisations/people/edwin-morgan-ogoe.webp",
-                  "rosterId": "B45",
-                  "bishop": true,
-                  "church": "United Reasonable Service Church",
-                  "title": "Bishop",
-                  "consecrated": "2012"
                 },
                 {
                   "name": "Bridgette Ogoe",
