@@ -596,6 +596,14 @@ export default function RegistrationApp({
   const brand = fellowship || churchConfig || siteConfig;
   const home = fellowship ? fellowshipSignupPath(base, fellowship) : churchConfig ? churchHref(churchPath, "", base) : sitePath(site, "", base);
   const signupPath = fellowship ? fellowshipSignupPath(base, fellowship) : churchConfig ? `${home}signup/` : sitePath(site, "signup", base);
+  // The page someone came from to sign in or sign up (office, 26 Nov), so signing out returns there.
+  useEffect(() => {
+    if (office) return;
+    try {
+      const from = document.referrer ? new URL(document.referrer) : null;
+      if (/\/signup(\/|$)/.test(location.pathname) && from && from.origin === location.origin && from.pathname !== location.pathname && !/\/(signup|access)(\/|$)/.test(from.pathname)) localStorage.setItem("kc-signin-from", from.pathname + from.search + from.hash);
+    } catch {}
+  }, [office]);
   const snapshots = useRef(null), publicSnapshots = useRef(null), saving = useRef(0);
   if (!snapshots.current) snapshots.current = snapshotSync(api.snapshot, data => {
     setState(data);
@@ -799,8 +807,9 @@ export default function RegistrationApp({
   async function logout() {
     await run(async () => {
       await api.signOut(office);
-      // Members land back on the public front page; the office returns to its gate.
-      if (!office) { location.assign(home); return; }
+      // Members go back to the page they came from to sign in (office, 26 Nov), else this site's front page;
+      // the office returns to its gate.
+      if (!office) { let back = ""; try { back = localStorage.getItem("kc-signin-from") || ""; localStorage.removeItem("kc-signin-from"); } catch {} location.assign(back || home); return; }
       setSigninOpen(false);
       setActor(null);
       setState(null);
