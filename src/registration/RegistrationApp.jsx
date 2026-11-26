@@ -1732,35 +1732,24 @@ function branchesOf(roster, denomination) {
   for (const p of roster) if (normalName(p.denomination || "") === want && p.branch && p.branch.trim()) { const k = normalName(p.branch); if (!seen.has(k)) seen.set(k, p.branch.trim()); }
   return [...seen.values()].sort((a, b) => a.localeCompare(b));
 }
+// A plain list of the chosen denomination's branches (office, 26 Nov), with "My branch is
+// not listed" first; choosing it opens a box below to type the branch, ready to type.
+const NEW_BRANCH = "__new_branch__";
 function BranchField({ roster, denomination, value, onChange, required = false }) {
   const list = useMemo(() => branchesOf(roster, denomination), [roster, denomination]);
   const listed = list.find((b) => normalName(b) === normalName(value || "")) || "";
   const [typing, setTyping] = useState(() => Boolean(value) && !listed);
-  const [q, setQ] = useState("");
   const own = useRef(null);
   useEffect(() => { if (typing) own.current?.focus(); }, [typing]);
   useEffect(() => { if (value && !listed && list.length) setTyping(true); }, [list.length]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!list.length) return <Field label="Branch" hint="The church or branch where you serve."><input required={required} maxLength={120} value={value || ""} onChange={(e) => onChange(e.target.value)} autoComplete="off" /></Field>;
-  const words = normalName(q).split(" ").filter(Boolean);
-  const found = words.length ? list.filter((b) => words.every((w) => normalName(b).includes(w))).slice(0, 10) : list.slice(0, 10);
-  const notListed = <button type="button" className="reg-text" onClick={() => { setTyping(true); onChange(q.trim()); setQ(""); }}><b>My branch is not listed</b> (type it in)</button>;
-  return <Field label="Branch" hint={typing ? "Type the name of your branch." : listed ? "" : "Start typing to find your branch."}>
-    <div className="reg-bishop-search">
-      {typing ? <>
-        <input ref={own} required={required} maxLength={120} value={value || ""} onChange={(e) => onChange(e.target.value)} placeholder="Type your branch name" aria-label="Your branch name" autoComplete="off" />
-        <button type="button" className="reg-text" onClick={() => { setTyping(false); onChange(""); }}>Choose from the list instead</button>
-      </> : listed ? <div className="reg-candidate chosen">
-        <div><b>{listed}</b><small>{caps(denomination)}</small></div>
-        <button type="button" className="reg-text" onClick={() => { onChange(""); setQ(""); }}>Change</button>
-      </div> : <>
-        <input type="search" required={required} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Start typing your branch" aria-label="Search for your branch" autoComplete="off" />
-        <ul className="reg-bishop-results reg-branch-results" role="listbox">
-          <li className="reg-branch-new">{notListed}</li>
-          {found.map((b) => <li key={b}><button type="button" onClick={() => { onChange(b); setQ(""); }}><span><b>{b}</b></span></button></li>)}
-          {words.length > 0 && !found.length && <li className="reg-small">No branch found with that name. Choose “My branch is not listed” above to type it in.</li>}
-        </ul>
-      </>}
-    </div>
+  return <Field label="Branch" hint={typing ? "Type the name of your branch in the box above." : "Choose your branch. If it is not on the list, choose “My branch is not listed”."}>
+    <select required={required && !typing} value={typing ? NEW_BRANCH : listed} onChange={(e) => { if (e.target.value === NEW_BRANCH) { setTyping(true); onChange(""); } else { setTyping(false); onChange(e.target.value); } }}>
+      <option value="">Select your branch</option>
+      <option value={NEW_BRANCH}>My branch is not listed (type it in)</option>
+      {list.map((b) => <option key={b} value={b}>{b}</option>)}
+    </select>
+    {typing && <input ref={own} required={required} maxLength={120} value={value || ""} onChange={(e) => onChange(e.target.value)} placeholder="Type your branch name" aria-label="Your branch name" autoComplete="off" style={{ marginTop: 8 }} />}
   </Field>;
 }
 // Year appointed for everyone; year ordained for bishops and Reverends; year consecrated for bishops (office, 22 Nov).
