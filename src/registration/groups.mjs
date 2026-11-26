@@ -105,14 +105,7 @@ export const GROUPS = {
   "Reasonable Service": {
     "organization": "United Denominations",
     "denominations": [
-      "Allos Mega Church",
-      "Anointed People International",
-      "Anointed Word Chapel Int",
-      "Glory Life Hope Center",
-      "Keep My Word Chapel International",
-      "The Mega Church – Grace Chapel",
-      "The Mega Church – Nachal Cathedral",
-      "True Son Chapel International"
+      "United Reasonable Service Church"
     ]
   }
 };

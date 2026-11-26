@@ -280,7 +280,14 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
     { from: 'Poimen Church Gambia', to: 'Poimen Church', organization: 'United Denominations', group: 'UD Africa' },
     { from: 'Poimen Church Senegal-Gambia', to: 'Poimen Church', organization: 'United Denominations', group: 'UD Africa' }] },
   // Office, 22 Nov: Nacanieli Lawevuso and Nacanieli Fomilo are one pastor (same photo): he is Nacanieli Fomilo.
-  { id: 'nacanieli-fomilo-one-record-2026-11-22', retire: [{ id: 'P3191', into: 'Sa28b2989' }] }];
+  { id: 'nacanieli-fomilo-one-record-2026-11-22', retire: [{ id: 'P3191', into: 'Sa28b2989' }] },
+  // Office, 26 Nov: the United Reasonable Service Church group is now also a denomination.
+  // Its 21 bishops and their pastors move to it; their old church becomes their branch.
+  // Joel and Sara Obuobisa stay in Pacific Islands Missionary Church; the rest of
+  // Machaneh and Makarios City Church stay where they are.
+  { id: 'ursc-denomination-2026-11-26', moveToDenomination: { to: 'United Reasonable Service Church', organization: 'United Denominations', group: 'Reasonable Service',
+    bishops: ['B121', 'B110', 'B155', 'B94', 'B113', 'B10', 'B45', 'B19', 'BO200', 'BO201', 'B39', 'B188', 'B324', 'B148', 'B327', 'BO207', 'BO208', 'BO202', 'B152', 'B138', 'B322'],
+    emptied: ['Allos Mega Church', 'Anointed People International', 'Anointed Word Chapel Int', 'Glory Life Hope Center', 'Keep My Word Chapel International', 'The Mega Church – Grace Chapel', 'The Mega Church – Nachal Cathedral', 'True Son Chapel International'] } }];
 const pendingFixes = (state) => OFFICE_FIXES.filter(f => !(state.officeFixes || []).includes(f.id));
 export function syncRoll(state, people, version) {
   if (state.rollSync === version && state.submittedSourceSync === 'submitted-only-v1' && !pendingFixes(state).length) return null;
@@ -371,6 +378,32 @@ export function syncRoll(state, people, version) {
     // Off every bishop's list of pastors.
     next.rosters = (next.rosters || []).filter(x => !users.has(x.pastorId) && !(name && normalName(x.name || '') === name));
   }
+  // A group of bishops becomes a denomination of its own (office, 26 Nov: United Reasonable
+  // Service Church): each listed bishop and every pastor under them moves to it, and the
+  // church they were in becomes their branch. Their registrations say the same.
+  for (const fix of fixes) if (fix.moveToDenomination) {
+    const { to, organization, group, bishops } = fix.moveToDenomination;
+    const all = [...people, ...(next.extraReferences || [])];
+    const eff = p => ({ ...p, ...(next.overrides[p.id] || {}) });
+    const ids = new Set(bishops), names = new Set(all.filter(p => ids.has(p.id)).map(p => normalName(eff(p).name)));
+    const moving = all.filter(p => ids.has(p.id) || (eff(p).role !== 'bishop' && names.has(normalName(eff(p).bishop || ''))));
+    const moved = new Set();
+    for (const raw of moving) {
+      const p = eff(raw);
+      if (p.denomination === to) continue;
+      const fields = { denomination: to, organization, group, ...(p.denomination ? { branch: p.denomination } : {}) };
+      const o = next.overrides[raw.id] || {};
+      next.overrides[raw.id] = { ...o, ...fields, _officeFields: [...new Set([...(o._officeFields || []), ...Object.keys(fields)])] };
+      next.extraReferences = (next.extraReferences || []).map(x => x.id === raw.id ? { ...x, ...fields } : x);
+      moved.add(raw.id);
+    }
+    const accounts = new Set((next.profiles || []).filter(p => ids.has(p.referenceId)).flatMap(p => [p.id, p.referenceId]));
+    next.registrations = (next.registrations || []).map(r => {
+      const d = r.data || {};
+      if (!(moved.has(d.referenceId) || ids.has(d.referenceId) || (d.role === 'pastor' && accounts.has(d.bishopId))) || d.denomination === to) return r;
+      return { ...r, data: { ...d, denomination: to, organization, group, church: d.denomination || d.church || '' } };
+    });
+  }
   for (const fix of fixes) for (const { from, to, organization, group, onlyOrganization } of fix.renameDenominations || []) {
     const moved = { denomination: to, organization, group };
     for (const p of [...people, ...(next.extraReferences || [])]) {
@@ -439,7 +472,7 @@ export function syncRoll(state, people, version) {
   }
   // Office, 22 Nov: a church name joined into another stops being offered once nobody carries it.
   {
-    const old = new Set(OFFICE_FIXES.flatMap(f => [...(f.renameDenominations || []), ...(f.renameDenomination ? [f.renameDenomination] : [])]).filter(r => r.from !== r.to).map(r => r.from));
+    const old = new Set([...OFFICE_FIXES.flatMap(f => [...(f.renameDenominations || []), ...(f.renameDenomination ? [f.renameDenomination] : [])]).filter(r => r.from !== r.to).map(r => r.from), ...OFFICE_FIXES.flatMap(f => f.moveToDenomination?.emptied || [])]);
     const used = new Set([...people, ...(next.extraReferences || [])].map(p => (next.overrides[p.id] || {}).denomination ?? p.denomination));
     for (const r of next.registrations || []) used.add(r.data?.denomination);
     const keep = d => !old.has(d) || used.has(d);

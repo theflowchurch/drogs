@@ -1298,24 +1298,6 @@
                   "consecrated": "2012"
                 },
                 {
-                  "name": "Philip Asante",
-                  "rosterId": "B155",
-                  "bishop": true,
-                  "church": "Pacific Islands Missionary Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/philip-asante-ecb27883.webp",
-                  "consecrated": "2026"
-                },
-                {
-                  "name": "John Boffah",
-                  "rosterId": "B94",
-                  "bishop": true,
-                  "church": "Pacific Islands Missionary Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/john-boffah-b782a0ec.webp",
-                  "consecrated": "2021"
-                },
-                {
                   "name": "John Yaw Frimpong",
                   "rosterId": "B95",
                   "bishop": true,
@@ -1332,24 +1314,6 @@
                   "title": "Episcopal Sister",
                   "image": "assets/organisations/people/sara-lanita-obuobisa-265d6c60.webp",
                   "consecrated": "2022"
-                },
-                {
-                  "name": "Andrew Kwaku Osei",
-                  "rosterId": "B10",
-                  "bishop": true,
-                  "church": "Pacific Islands Missionary Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/andrew-kwaku-osei-296beaa4.webp",
-                  "consecrated": "2021"
-                },
-                {
-                  "name": "Kristoffer Odoi Yemoh",
-                  "rosterId": "B113",
-                  "bishop": true,
-                  "church": "Pacific Islands Missionary Church",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/kristoffer-odoi-yemoh-57d10fe1.webp",
-                  "consecrated": "2017"
                 },
                 {
                   "name": "Nee Nunoo",
@@ -2459,16 +2423,6 @@
                   "consecrated": "2012"
                 },
                 {
-                  "name": "Kweku Amonoo-Neizer",
-                  "role": "Ceremonial Archbishop",
-                  "rosterId": "B121",
-                  "bishop": true,
-                  "church": "The Machaneh Church International",
-                  "title": "Archbishop",
-                  "image": "assets/organisations/people/kweku-amonoo-neizer.webp",
-                  "consecrated": "2021"
-                },
-                {
                   "name": "Emmanuel Sakyi",
                   "role": "Ceremonial Archbishop",
                   "image": "assets/organisations/people/emmanuel-sakyi.webp",
@@ -2516,15 +2470,6 @@
                   "consecrated": "2010"
                 },
                 {
-                  "name": "Edwin Morgan Ogoe",
-                  "image": "assets/organisations/people/edwin-morgan-ogoe.webp",
-                  "rosterId": "B45",
-                  "bishop": true,
-                  "church": "Anointed People International",
-                  "title": "Bishop",
-                  "consecrated": "2012"
-                },
-                {
                   "name": "Isaac O. B. Commey",
                   "image": "assets/organisations/people/isaac-o-b-commey-29d39eed.webp",
                   "rosterId": "B326",
@@ -2559,33 +2504,6 @@
                   "church": "Pacific Islands Missionary Church",
                   "title": "Bishop",
                   "consecrated": "2012"
-                },
-                {
-                  "name": "Emmanuel Nterful",
-                  "image": "assets/organisations/people/emmanuel-nterful.webp",
-                  "rosterId": "B324",
-                  "bishop": true,
-                  "church": "Keep My Word Chapel International",
-                  "title": "Bishop",
-                  "consecrated": "2010"
-                },
-                {
-                  "name": "Ishmael Sam",
-                  "image": "assets/organisations/people/ishmael-sam.webp",
-                  "rosterId": "B327",
-                  "bishop": true,
-                  "church": "True Son Chapel International",
-                  "title": "Bishop",
-                  "consecrated": "2010"
-                },
-                {
-                  "name": "Steve Asare",
-                  "image": "assets/organisations/people/steve-asare-bd18c700.webp",
-                  "rosterId": "BO202",
-                  "bishop": true,
-                  "church": "Allos Mega Church",
-                  "title": "Bishop",
-                  "consecrated": "2010"
                 }
               ]
             },
@@ -2694,17 +2612,6 @@
               "name": "The 1965 Committee",
               "people": [
                 {
-                  "name": "E. A. T. Sackey",
-                  "role": "1965 Committee Chairman",
-                  "leader": true,
-                  "image": "assets/organisations/people/e-a-t-sackey.webp",
-                  "rosterId": "B39",
-                  "bishop": true,
-                  "church": "Glory Life Hope Center",
-                  "title": "Bishop",
-                  "consecrated": "2006"
-                },
-                {
                   "name": "Adelaide Heward-Mills",
                   "image": "assets/organisations/people/adelaide-heward-mills-295cff99-z.webp",
                   "rosterId": "B4",
@@ -2732,33 +2639,6 @@
                   "consecrated": "2010"
                 },
                 {
-                  "name": "Eddy Addy",
-                  "image": "assets/organisations/people/eddy-addy.webp",
-                  "rosterId": "B322",
-                  "bishop": true,
-                  "church": "Anointed Word Chapel Int",
-                  "title": "Bishop",
-                  "consecrated": "2006"
-                },
-                {
-                  "name": "Kingsley Gyasi",
-                  "image": "assets/organisations/people/kingsley-gyasi.webp",
-                  "rosterId": "B110",
-                  "bishop": true,
-                  "church": "Makarios City Church",
-                  "title": "Bishop",
-                  "consecrated": "2010"
-                },
-                {
-                  "name": "Nassib Hage",
-                  "image": "assets/organisations/people/nassib-hage.webp",
-                  "rosterId": "B138",
-                  "bishop": true,
-                  "church": "The Mega Church – Nachal Cathedral",
-                  "title": "Bishop",
-                  "consecrated": "2017"
-                },
-                {
                   "name": "Simone Ademola",
                   "image": "assets/organisations/people/simone-ademola-f36e914b.webp",
                   "rosterId": "B182",
@@ -2766,15 +2646,6 @@
                   "church": "First Love Church",
                   "title": "Mother",
                   "consecrated": "2016"
-                },
-                {
-                  "name": "Patrick Bruce",
-                  "image": "assets/organisations/people/patrick-bruce.webp",
-                  "rosterId": "B152",
-                  "bishop": true,
-                  "church": "The Mega Church – Grace Chapel",
-                  "title": "Bishop",
-                  "consecrated": "2012"
                 },
                 {
                   "name": "Joy Bruce",
@@ -2795,7 +2666,7 @@
                   "name": "Kweku Amonoo-Neizer",
                   "rosterId": "B121",
                   "bishop": true,
-                  "church": "The Machaneh Church International",
+                  "church": "United Reasonable Service Church",
                   "title": "Archbishop",
                   "image": "assets/organisations/people/kweku-amonoo-neizer.webp",
                   "consecrated": "2021"
@@ -2804,7 +2675,7 @@
                   "name": "Kingsley Gyasi",
                   "rosterId": "B110",
                   "bishop": true,
-                  "church": "Makarios City Church",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/kingsley-gyasi.webp",
                   "consecrated": "2010"
@@ -2813,7 +2684,7 @@
                   "name": "Philip Asante",
                   "rosterId": "B155",
                   "bishop": true,
-                  "church": "Pacific Islands Missionary Church",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/philip-asante-ecb27883.webp",
                   "consecrated": "2026"
@@ -2822,7 +2693,7 @@
                   "name": "John Boffah",
                   "rosterId": "B94",
                   "bishop": true,
-                  "church": "Pacific Islands Missionary Church",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/john-boffah-b782a0ec.webp",
                   "consecrated": "2021"
@@ -2831,7 +2702,7 @@
                   "name": "Kristoffer Odoi Yemoh",
                   "rosterId": "B113",
                   "bishop": true,
-                  "church": "Pacific Islands Missionary Church",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/kristoffer-odoi-yemoh-57d10fe1.webp",
                   "consecrated": "2017"
@@ -2840,7 +2711,7 @@
                   "name": "Andrew Kwaku Osei",
                   "rosterId": "B10",
                   "bishop": true,
-                  "church": "Pacific Islands Missionary Church",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/andrew-kwaku-osei-296beaa4.webp",
                   "consecrated": "2021"
@@ -2850,7 +2721,7 @@
                   "image": "assets/organisations/people/edwin-morgan-ogoe.webp",
                   "rosterId": "B45",
                   "bishop": true,
-                  "church": "Anointed People International",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "consecrated": "2012"
                 },
@@ -2859,7 +2730,7 @@
                   "image": "assets/organisations/people/bridgette-ogoe.webp",
                   "rosterId": "B19",
                   "bishop": true,
-                  "church": "Anointed People International",
+                  "church": "United Reasonable Service Church",
                   "title": "Episcopal Sister",
                   "consecrated": "2022"
                 },
@@ -2867,7 +2738,7 @@
                   "name": "Samuel B Sawyerr",
                   "rosterId": "BO200",
                   "bishop": true,
-                  "church": "Anointed People International",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/samuel-b-sawyerr-f59fe23c.webp",
                   "consecrated": "2016"
@@ -2876,7 +2747,7 @@
                   "name": "Stephen Harry Sawyerr",
                   "rosterId": "BO201",
                   "bishop": true,
-                  "church": "Anointed People International",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/stephen-harry-sawyerr-bc6c3fe6.webp"
                 },
@@ -2885,7 +2756,7 @@
                   "image": "assets/organisations/people/e-a-t-sackey.webp",
                   "rosterId": "B39",
                   "bishop": true,
-                  "church": "Glory Life Hope Center",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "consecrated": "2006"
                 },
@@ -2893,7 +2764,7 @@
                   "name": "Ato Wilson",
                   "rosterId": "B188",
                   "bishop": true,
-                  "church": "Glory Life Hope Center",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/william-ato-wilson-490036ff.webp",
                   "consecrated": "2020"
@@ -2903,7 +2774,7 @@
                   "image": "assets/organisations/people/emmanuel-nterful.webp",
                   "rosterId": "B324",
                   "bishop": true,
-                  "church": "Keep My Word Chapel International",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "consecrated": "2010"
                 },
@@ -2911,7 +2782,7 @@
                   "name": "Paa Kwesi Nyarkoh",
                   "rosterId": "B148",
                   "bishop": true,
-                  "church": "Keep My Word Chapel International",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/paa-kwesi-nyarkoh-425aaf6d.webp",
                   "consecrated": "2023"
@@ -2921,7 +2792,7 @@
                   "image": "assets/organisations/people/ishmael-sam.webp",
                   "rosterId": "B327",
                   "bishop": true,
-                  "church": "True Son Chapel International",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "consecrated": "2010"
                 },
@@ -2929,7 +2800,7 @@
                   "name": "Mawusi Adagbe",
                   "rosterId": "BO207",
                   "bishop": true,
-                  "church": "True Son Chapel International",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "image": "assets/organisations/people/mawusi-adagbe-f166b0c0.webp",
                   "consecrated": "2016"
@@ -2938,7 +2809,7 @@
                   "name": "Olivia Adalena S K Sam",
                   "rosterId": "BO208",
                   "bishop": true,
-                  "church": "True Son Chapel International",
+                  "church": "United Reasonable Service Church",
                   "title": "Episcopal Sister",
                   "image": "assets/organisations/people/olivia-adalena-s-k-sam-2ab31548-z.webp",
                   "consecrated": "2022"
@@ -2948,7 +2819,7 @@
                   "image": "assets/organisations/people/steve-asare-bd18c700.webp",
                   "rosterId": "BO202",
                   "bishop": true,
-                  "church": "Allos Mega Church",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "consecrated": "2010"
                 },
@@ -2957,7 +2828,7 @@
                   "image": "assets/organisations/people/patrick-bruce.webp",
                   "rosterId": "B152",
                   "bishop": true,
-                  "church": "The Mega Church – Grace Chapel",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "consecrated": "2012"
                 },
@@ -2966,7 +2837,7 @@
                   "image": "assets/organisations/people/nassib-hage.webp",
                   "rosterId": "B138",
                   "bishop": true,
-                  "church": "The Mega Church – Nachal Cathedral",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "consecrated": "2017"
                 },
@@ -2975,7 +2846,7 @@
                   "image": "assets/organisations/people/eddy-addy.webp",
                   "rosterId": "B322",
                   "bishop": true,
-                  "church": "Anointed Word Chapel Int",
+                  "church": "United Reasonable Service Church",
                   "title": "Bishop",
                   "consecrated": "2006"
                 }
@@ -3084,15 +2955,6 @@
                   "consecrated": "2012"
                 },
                 {
-                  "name": "Samuel B Sawyerr",
-                  "rosterId": "BO200",
-                  "bishop": true,
-                  "church": "Anointed People International",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/samuel-b-sawyerr-f59fe23c.webp",
-                  "consecrated": "2016"
-                },
-                {
                   "name": "Amelia Aidoo",
                   "rosterId": "B9",
                   "bishop": true,
@@ -3100,15 +2962,6 @@
                   "title": "Episcopal Sister",
                   "image": "assets/organisations/people/amelia-aidoo-f285b70a.webp",
                   "consecrated": "2022"
-                },
-                {
-                  "name": "Ato Wilson",
-                  "rosterId": "B188",
-                  "bishop": true,
-                  "church": "Glory Life Hope Center",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/william-ato-wilson-490036ff.webp",
-                  "consecrated": "2020"
                 },
                 {
                   "name": "George Aferi Obeng",
@@ -3249,15 +3102,6 @@
                   "church": "United Cities",
                   "title": "Bishop",
                   "image": "assets/organisations/people/christian-assi-adoupo.webp",
-                  "consecrated": "2023"
-                },
-                {
-                  "name": "Paa Kwesi Nyarkoh",
-                  "rosterId": "B148",
-                  "bishop": true,
-                  "church": "Keep My Word Chapel International",
-                  "title": "Bishop",
-                  "image": "assets/organisations/people/paa-kwesi-nyarkoh-425aaf6d.webp",
                   "consecrated": "2023"
                 },
                 {
@@ -3591,15 +3435,6 @@
                   "church": "Healing Jesus Campaign",
                   "title": "Bishop",
                   "consecrated": "2017"
-                },
-                {
-                  "name": "Bridgette Ogoe",
-                  "image": "assets/organisations/people/bridgette-ogoe.webp",
-                  "rosterId": "B19",
-                  "bishop": true,
-                  "church": "Anointed People International",
-                  "title": "Episcopal Sister",
-                  "consecrated": "2022"
                 }
               ]
             },
@@ -3641,15 +3476,6 @@
                   "rosterId": "B149",
                   "bishop": true,
                   "church": "Jesus Is The Rock Church",
-                  "title": "Episcopal Sister",
-                  "consecrated": "2022"
-                },
-                {
-                  "name": "Bridgette Ogoe",
-                  "image": "assets/organisations/people/bridgette-ogoe.webp",
-                  "rosterId": "B19",
-                  "bishop": true,
-                  "church": "Anointed People International",
                   "title": "Episcopal Sister",
                   "consecrated": "2022"
                 }
@@ -3819,15 +3645,6 @@
                   "church": "East Mountain Churches",
                   "title": "Bishop",
                   "consecrated": "2021"
-                },
-                {
-                  "name": "Emmanuel Nterful",
-                  "image": "assets/organisations/people/emmanuel-nterful.webp",
-                  "rosterId": "B324",
-                  "bishop": true,
-                  "church": "Keep My Word Chapel International",
-                  "title": "Bishop",
-                  "consecrated": "2010"
                 },
                 {
                   "name": "Clarence Welds",

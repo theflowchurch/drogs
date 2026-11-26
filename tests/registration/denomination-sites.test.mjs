@@ -66,7 +66,7 @@ test('all denomination artwork exists and missing artwork stays unset',async()=>
 
 test('every denomination site has its own landing composition',async()=>{
  const {LANDING_STYLES}=await import('../../src/registration/denomination-landing-styles.mjs');
- assert.ok(LANDING_STYLES.length>=80); // one per church page; fewer after the office joined duplicate churches (19 Nov)assert.equal(new Set(LANDING_STYLES.map(s=>s.id)).size,LANDING_STYLES.length);
+ assert.ok(LANDING_STYLES.length>=70); // one per church page; fewer after the office joined duplicate churches (19 Nov) and made United Reasonable Service Church one denomination (26 Nov)assert.equal(new Set(LANDING_STYLES.map(s=>s.id)).size,LANDING_STYLES.length);
  const counts=new Map(LANDING_STYLES.map(s=>[s.id,0]));
  for(const config of Object.values(DENOMINATION_SITES))if(config.homeLayout)counts.set(config.homeLayout,counts.get(config.homeLayout)+1);
  for(const [id,count] of counts){assert.ok(count>=1,`Unused style ${id}`);assert.ok(count<=1,`More than one site uses ${id}`);}
@@ -76,14 +76,14 @@ test('a church site locks sign-up to its own organization and denomination and o
  const {churchPlacement,inChurch,churchOfDenomination}=await import('../../src/registration/denomination-sites.mjs');
  const {catalogOf}=await import('../../src/registration/model.mjs');
  const {FLOW_GROUPS}=await import('../../src/registration/organization-sites.mjs');
- const allos=churchPlacement(catalogOf(null),'allosmegachurch',FLOW_GROUPS);
- assert.equal(allos.organization,'United Denominations');assert.equal(allos.denomination,'Allos Mega Church');
+ const allos=churchPlacement(catalogOf(null),'unitedreasonableservicechurch',FLOW_GROUPS);
+ assert.equal(allos.organization,'United Denominations');assert.equal(allos.denomination,'United Reasonable Service Church');
  assert.ok(inChurch(allos,{denomination:'ALLOS MEGA CHURCH'}));assert.ok(!inChurch(allos,{denomination:'Go Church'}));
  assert.ok(inChurch(null,{denomination:'Go Church'}),'outside a church site nothing is filtered');
  const hjc=churchPlacement(catalogOf(null),'healingjesuscampaign',FLOW_GROUPS);
  assert.equal(hjc.organization,'HJC');assert.ok(inChurch(hjc,{organization:'HJC',denomination:''}));assert.ok(!inChurch(hjc,{organization:'FLOW'}));
- assert.equal(churchPlacement({organizations:[],denominations:{}},'allosmegachurch').organization,'','a church missing from the catalog stays closed');
- assert.equal(churchOfDenomination('Allos Mega Church'),'allosmegachurch');
+ assert.equal(churchPlacement({organizations:[],denominations:{}},'unitedreasonableservicechurch').organization,'','a church missing from the catalog stays closed');
+ assert.equal(churchOfDenomination('United Reasonable Service Church'),'unitedreasonableservicechurch');
 });
 
 test('every church page with a logo has a square browser-tab icon (wide logos are not squashed)', async () => {

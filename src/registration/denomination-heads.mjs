@@ -2,6 +2,8 @@
 // office's list of denomination leaders by country). They come first in their
 // church's box, the one with the most pastors first; then the other bishops, then
 // the pastors, each A to Z. Bishops sit in their own denomination's box.
+// Office, 26 Nov: Edwin Morgan Ogoe heads United Reasonable Service Church and Selasy
+// Mcsaint Makarios City Church (Kingsley Gyasi moved to United Reasonable Service Church).
 // Office, 22 Nov: Ernest Addai-Duah heads Eschatos, Joel Obuobisa the Pacific Islands
 // Missionary Church, Kwame Adu-Gyamfi Pleasant Surprise, Frank Tawiah-Amissah Jesus Is
 // The Door, Joshua Dormediame the Poimen Church, Prince Charles Addae the Healing Jesus
@@ -9,7 +11,8 @@
 // Candle In The Dark Church, Benjamin Kwapong Lokko Lighthouse City Churches and
 // Kingsley Gyasi Makarios City Church.
 export const DENOMINATION_HEADS = [
- "Kingsley Gyasi",
+ "Edwin Morgan Ogoe",
+ "Selasy Mcsaint",
  "Benjamin Kwapong Lokko",
  "Kweku Amponsah",
  "Ernest Addai-Duah",
@@ -39,7 +42,6 @@ export const DENOMINATION_HEADS = [
  "Wisdom Felix Ahiagah",
  "Patrick Inkoom",
  "Kobina Quansah",
- "Selasy Mcsaint",
  "Akwele Ivanna Kiruja",
  "Raymond Amarkyne",
  "Kent Njeru",
@@ -68,7 +70,6 @@ export const DENOMINATION_HEADS = [
  "Ebenezer Johnson",
  "Perpetua-Claire Ackuaku",
  "Norman Kwadwo Darkwa",
- "Edwin Morgan Ogoe",
  "E.A.T Sackey",
  "Armstrong Simpson Nartey",
  "Ishmael Sam",

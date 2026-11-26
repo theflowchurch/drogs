@@ -15,21 +15,6 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "allosmegachurch",
-    "name": "Allos Mega Church",
-    "shortName": "Allos Mega Church",
-    "subtitle": "",
-    "denominations": [
-      "Allos Mega Church"
-    ],
-    "logo": "assets/denominations/allos-international.webp",
-    "homeLayout": "marquee",
-    "visualStyle": "pleasantsurprise",
-    "accent": "#327051",
-    "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
     "path": "americanmissionarychurch",
     "name": "American Missionary Church",
     "shortName": "American Missionary Church",
@@ -77,34 +62,18 @@
     "logoScale": 0.9
   },
   {
-    "path": "anointedpeopleinternational",
-    "name": "Anointed People International",
-    "shortName": "Anointed People",
-    "subtitle": "International",
+    "path": "batacitystatechurch",
+    "name": "Bata City State Church",
+    "shortName": "Bata City State",
+    "subtitle": "Church",
     "denominations": [
-      "Anointed People International"
-    ],
-    "logo": "assets/denominations/anointed-people-international.png",
-    "homeLayout": "deco",
-    "visualStyle": "gochurch",
-    "accent": "#423270",
-    "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers",
-    "logoScale": 0.93
-  },
-  {
-    "path": "anointedwordchapelint",
-    "name": "Anointed Word Chapel Int",
-    "shortName": "Anointed Word Chapel Int",
-    "subtitle": "",
-    "denominations": [
-      "Anointed Word Chapel Int"
+      "Bata City State Church"
     ],
     "logo": "",
-    "homeLayout": "splitscreen",
-    "visualStyle": "lighthousechapelinternational",
+    "homeLayout": "passport",
+    "visualStyle": "pleasantsurprise",
     "accent": "#42554d",
-    "directoryAction": "View licensed ministers",
+    "directoryAction": "View bishops and pastors",
     "directoryHeading": "Licensed ministers"
   },
   {
@@ -153,6 +122,21 @@
     "directoryHeading": "Licensed ministers"
   },
   {
+    "path": "christvisionsanctuaryinternational",
+    "name": "Christ Vision Sanctuary International",
+    "shortName": "Christ Vision Sanctuary",
+    "subtitle": "International",
+    "denominations": [
+      "Christ Vision Sanctuary International"
+    ],
+    "logo": "assets/denominations/christvisionsanctuaryinternational.png",
+    "homeLayout": "beacon",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#3d3a70",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed Ministers in Good Standing"
+  },
+  {
     "path": "doublemegamissionarychurch",
     "name": "Double Mega Missionary Church",
     "shortName": "Double Mega Missionary Church",
@@ -198,36 +182,6 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "batacitystatechurch",
-    "name": "Bata City State Church",
-    "shortName": "Bata City State",
-    "subtitle": "Church",
-    "denominations": [
-      "Bata City State Church"
-    ],
-    "logo": "",
-    "homeLayout": "passport",
-    "visualStyle": "pleasantsurprise",
-    "accent": "#42554d",
-    "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "malabocitystatechurch",
-    "name": "Malabo City State Church",
-    "shortName": "Malabo City State",
-    "subtitle": "Church",
-    "denominations": [
-      "Malabo City State Church"
-    ],
-    "logo": "",
-    "homeLayout": "harbour",
-    "visualStyle": "gochurch",
-    "accent": "#2e5f6e",
-    "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
     "path": "eschatos",
     "name": "Eschatos",
     "shortName": "Eschatos",
@@ -259,6 +213,21 @@
     "directoryHeading": "Licensed ministers"
   },
   {
+    "path": "flow",
+    "name": "FLOW",
+    "shortName": "FLOW",
+    "subtitle": "",
+    "denominations": [
+      "FLOW"
+    ],
+    "logo": "assets/brand/flow-logo-black.png",
+    "homeLayout": "compass",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#1f3b6e",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed Ministers in Good Standing"
+  },
+  {
     "path": "favouritechildchurch",
     "name": "Favourite Child Church",
     "shortName": "Favourite Child Church",
@@ -285,6 +254,40 @@
     "homeLayout": "brutalist",
     "visualStyle": "gochurch",
     "accent": "#703232",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "firstlovechurchmalawi",
+    "name": "First Love Church Malawi",
+    "shortName": "First Love Church Malawi",
+    "subtitle": "",
+    "denominations": [
+      "First Love Church Malawi",
+      "First Love Malawi",
+      "Malawi"
+    ],
+    "logo": "",
+    "homeLayout": "arch",
+    "visualStyle": "gochurch",
+    "accent": "#42554d",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "firstlovechurchseychelles",
+    "name": "First Love Church Seychelles",
+    "shortName": "First Love Church Seychelles",
+    "subtitle": "",
+    "denominations": [
+      "First Love Church Seychelles",
+      "First Love Seychelles",
+      "Seychelles"
+    ],
+    "logo": "",
+    "homeLayout": "record",
+    "visualStyle": "gochurch",
+    "accent": "#42554d",
     "directoryAction": "Search the directory",
     "directoryHeading": "Licensed ministers"
   },
@@ -319,17 +322,17 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "glorylifehopecenter",
-    "name": "Glory Life Hope Center",
-    "shortName": "Glory Life Hope Center",
+    "path": "thegloriousmegachurch",
+    "name": "The Glorious Mega Church",
+    "shortName": "The Glorious Mega Church",
     "subtitle": "",
     "denominations": [
-      "Glory Life Hope Center"
+      "The Glorious Mega Church"
     ],
-    "logo": "",
-    "homeLayout": "ticket",
+    "logo": "assets/denominations/the-glorious-mega-church.png",
+    "homeLayout": "tapestry",
     "visualStyle": "lighthousechapelinternational",
-    "accent": "#42554d",
+    "accent": "#703232",
     "directoryAction": "View licensed ministers",
     "directoryHeading": "Licensed ministers"
   },
@@ -398,6 +401,21 @@
     "directoryAction": "View bishops and pastors",
     "directoryHeading": "Licensed ministers",
     "logoScale": 0.84
+  },
+  {
+    "path": "heritagebaptistchurchglobal",
+    "name": "Heritage Baptist Church Global",
+    "shortName": "Heritage Baptist",
+    "subtitle": "Church Global",
+    "denominations": [
+      "Heritage Baptist Church Global"
+    ],
+    "logo": "assets/denominations/heritagebaptistchurchglobal.png",
+    "homeLayout": "cornerstone",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#33506e",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed Ministers in Good Standing"
   },
   {
     "path": "itisagreatthingtoservethelord",
@@ -507,21 +525,6 @@
     "logoScale": 0.87
   },
   {
-    "path": "keepmywordchapelinternational",
-    "name": "Keep My Word Chapel International",
-    "shortName": "Keep My Word Chapel",
-    "subtitle": "International",
-    "denominations": [
-      "Keep My Word Chapel International"
-    ],
-    "logo": "",
-    "homeLayout": "magazine",
-    "visualStyle": "lighthousechapelinternational",
-    "accent": "#42554d",
-    "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
     "path": "labelleeglise",
     "name": "La Belle Église",
     "shortName": "La Belle Église",
@@ -615,6 +618,21 @@
     "directoryHeading": "Licensed ministers"
   },
   {
+    "path": "loveeconomychurch",
+    "name": "Love Economy Church",
+    "shortName": "Love Economy",
+    "subtitle": "Church",
+    "denominations": [
+      "Love Economy Church"
+    ],
+    "logo": "assets/denominations/loveeconomychurch.png",
+    "homeLayout": "hearth",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#7a2e3b",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed Ministers in Good Standing"
+  },
+  {
     "path": "loyaltyhouseinternational",
     "name": "Loyalty House International",
     "shortName": "Loyalty House International",
@@ -626,6 +644,36 @@
     "homeLayout": "seal",
     "visualStyle": "gochurch",
     "accent": "#323270",
+    "directoryAction": "Search the directory",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "themachanehchurchinternational",
+    "name": "The Machaneh Church International",
+    "shortName": "The Machaneh",
+    "subtitle": "Church International",
+    "denominations": [
+      "The Machaneh Church International"
+    ],
+    "logo": "assets/denominations/machaneh-church-international.png",
+    "homeLayout": "eclipse",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#707032",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "themakarioschurch",
+    "name": "The Makarios Church",
+    "shortName": "The Makarios Church",
+    "subtitle": "",
+    "denominations": [
+      "The Makarios Church"
+    ],
+    "logo": "assets/denominations/the-makarios-church.png",
+    "homeLayout": "constellation",
+    "visualStyle": "gochurch",
+    "accent": "#703242",
     "directoryAction": "Search the directory",
     "directoryHeading": "Licensed ministers"
   },
@@ -660,20 +708,33 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "firstlovechurchmalawi",
-    "name": "First Love Church Malawi",
-    "shortName": "First Love Church Malawi",
-    "subtitle": "",
+    "path": "malabocitystatechurch",
+    "name": "Malabo City State Church",
+    "shortName": "Malabo City State",
+    "subtitle": "Church",
     "denominations": [
-      "First Love Church Malawi",
-      "First Love Malawi",
-      "Malawi"
+      "Malabo City State Church"
     ],
     "logo": "",
-    "homeLayout": "arch",
+    "homeLayout": "harbour",
     "visualStyle": "gochurch",
-    "accent": "#42554d",
-    "directoryAction": "Search the directory",
+    "accent": "#2e5f6e",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "themegachurch",
+    "name": "The Mega Church",
+    "shortName": "The Mega Church",
+    "subtitle": "",
+    "denominations": [
+      "The Mega Church"
+    ],
+    "logo": "assets/denominations/the-mega-church.png",
+    "homeLayout": "watercolor",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#706132",
+    "directoryAction": "View licensed ministers",
     "directoryHeading": "Licensed ministers"
   },
   {
@@ -898,6 +959,21 @@
     "directoryHeading": "Licensed ministers"
   },
   {
+    "path": "revivalhouseofholyfireministries",
+    "name": "Revival House of Holy Fire Ministries",
+    "shortName": "Revival House",
+    "subtitle": "of Holy Fire Ministries",
+    "denominations": [
+      "Revival House of Holy Fire Ministries"
+    ],
+    "logo": "assets/denominations/revivalhouseofholyfireministries.png",
+    "homeLayout": "flame",
+    "visualStyle": "lighthousechapelinternational",
+    "accent": "#8a4a14",
+    "directoryAction": "View licensed ministers",
+    "directoryHeading": "Licensed Ministers in Good Standing"
+  },
+  {
     "path": "revivalinternational",
     "name": "Revival International",
     "shortName": "Revival International",
@@ -975,23 +1051,6 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "firstlovechurchseychelles",
-    "name": "First Love Church Seychelles",
-    "shortName": "First Love Church Seychelles",
-    "subtitle": "",
-    "denominations": [
-      "First Love Church Seychelles",
-      "First Love Seychelles",
-      "Seychelles"
-    ],
-    "logo": "",
-    "homeLayout": "record",
-    "visualStyle": "gochurch",
-    "accent": "#42554d",
-    "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
     "path": "straitgatechurchliberia",
     "name": "Strait Gate Church Liberia",
     "shortName": "Strait Gate Church Liberia",
@@ -1054,111 +1113,6 @@
     "directoryHeading": "Licensed ministers"
   },
   {
-    "path": "thegloriousmegachurch",
-    "name": "The Glorious Mega Church",
-    "shortName": "The Glorious Mega Church",
-    "subtitle": "",
-    "denominations": [
-      "The Glorious Mega Church"
-    ],
-    "logo": "assets/denominations/the-glorious-mega-church.png",
-    "homeLayout": "tapestry",
-    "visualStyle": "lighthousechapelinternational",
-    "accent": "#703232",
-    "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "themachanehchurchinternational",
-    "name": "The Machaneh Church International",
-    "shortName": "The Machaneh",
-    "subtitle": "Church International",
-    "denominations": [
-      "The Machaneh Church International"
-    ],
-    "logo": "assets/denominations/machaneh-church-international.png",
-    "homeLayout": "eclipse",
-    "visualStyle": "pleasantsurprise",
-    "accent": "#707032",
-    "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "themakarioschurch",
-    "name": "The Makarios Church",
-    "shortName": "The Makarios Church",
-    "subtitle": "",
-    "denominations": [
-      "The Makarios Church"
-    ],
-    "logo": "assets/denominations/the-makarios-church.png",
-    "homeLayout": "constellation",
-    "visualStyle": "gochurch",
-    "accent": "#703242",
-    "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "themegachurch",
-    "name": "The Mega Church",
-    "shortName": "The Mega Church",
-    "subtitle": "",
-    "denominations": [
-      "The Mega Church"
-    ],
-    "logo": "assets/denominations/the-mega-church.png",
-    "homeLayout": "watercolor",
-    "visualStyle": "lighthousechapelinternational",
-    "accent": "#706132",
-    "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "themegachurchgracechapel",
-    "name": "The Mega Church – Grace Chapel",
-    "shortName": "The Mega Church – Grace Chapel",
-    "subtitle": "",
-    "denominations": [
-      "The Mega Church – Grace Chapel"
-    ],
-    "logo": "assets/denominations/the-mega-church.png",
-    "homeLayout": "postcard",
-    "visualStyle": "pleasantsurprise",
-    "accent": "#706132",
-    "directoryAction": "View bishops and pastors",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "themegachurchnachalcathedral",
-    "name": "The Mega Church – Nachal Cathedral",
-    "shortName": "The Mega Church – Nachal Cathedral",
-    "subtitle": "",
-    "denominations": [
-      "The Mega Church – Nachal Cathedral"
-    ],
-    "logo": "assets/denominations/the-mega-church.png",
-    "homeLayout": "heraldry",
-    "visualStyle": "gochurch",
-    "accent": "#706132",
-    "directoryAction": "Search the directory",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "truesonchapelinternational",
-    "name": "True Son Chapel International",
-    "shortName": "True Son Chapel",
-    "subtitle": "International",
-    "denominations": [
-      "True Son Chapel International"
-    ],
-    "logo": "",
-    "homeLayout": "triptych",
-    "visualStyle": "lighthousechapelinternational",
-    "accent": "#42554d",
-    "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed ministers"
-  },
-  {
     "path": "unitedcities",
     "name": "United Cities",
     "shortName": "United Cities",
@@ -1170,6 +1124,29 @@
     "homeLayout": "vigil",
     "visualStyle": "pleasantsurprise",
     "accent": "#42554d",
+    "directoryAction": "View bishops and pastors",
+    "directoryHeading": "Licensed ministers"
+  },
+  {
+    "path": "unitedreasonableservicechurch",
+    "name": "United Reasonable Service Church",
+    "shortName": "United Reasonable Service Church",
+    "subtitle": "",
+    "denominations": [
+      "United Reasonable Service Church",
+      "Allos Mega Church",
+      "Anointed People International",
+      "Anointed Word Chapel Int",
+      "Glory Life Hope Center",
+      "Keep My Word Chapel International",
+      "The Mega Church – Grace Chapel",
+      "The Mega Church – Nachal Cathedral",
+      "True Son Chapel International"
+    ],
+    "logo": "assets/brand/ud-logo.png",
+    "homeLayout": "marquee",
+    "visualStyle": "pleasantsurprise",
+    "accent": "#327051",
     "directoryAction": "View bishops and pastors",
     "directoryHeading": "Licensed ministers"
   },
@@ -1202,80 +1179,5 @@
     "accent": "#703232",
     "directoryAction": "View bishops and pastors",
     "directoryHeading": "Licensed ministers"
-  },
-  {
-    "path": "flow",
-    "name": "FLOW",
-    "shortName": "FLOW",
-    "subtitle": "",
-    "denominations": [
-      "FLOW"
-    ],
-    "logo": "assets/brand/flow-logo-black.png",
-    "homeLayout": "compass",
-    "visualStyle": "lighthousechapelinternational",
-    "accent": "#1f3b6e",
-    "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed Ministers in Good Standing"
-  },
-  {
-    "path": "heritagebaptistchurchglobal",
-    "name": "Heritage Baptist Church Global",
-    "shortName": "Heritage Baptist",
-    "subtitle": "Church Global",
-    "denominations": [
-      "Heritage Baptist Church Global"
-    ],
-    "logo": "assets/denominations/heritagebaptistchurchglobal.png",
-    "homeLayout": "cornerstone",
-    "visualStyle": "lighthousechapelinternational",
-    "accent": "#33506e",
-    "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed Ministers in Good Standing"
-  },
-  {
-    "path": "loveeconomychurch",
-    "name": "Love Economy Church",
-    "shortName": "Love Economy",
-    "subtitle": "Church",
-    "denominations": [
-      "Love Economy Church"
-    ],
-    "logo": "assets/denominations/loveeconomychurch.png",
-    "homeLayout": "hearth",
-    "visualStyle": "lighthousechapelinternational",
-    "accent": "#7a2e3b",
-    "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed Ministers in Good Standing"
-  },
-  {
-    "path": "revivalhouseofholyfireministries",
-    "name": "Revival House of Holy Fire Ministries",
-    "shortName": "Revival House",
-    "subtitle": "of Holy Fire Ministries",
-    "denominations": [
-      "Revival House of Holy Fire Ministries"
-    ],
-    "logo": "assets/denominations/revivalhouseofholyfireministries.png",
-    "homeLayout": "flame",
-    "visualStyle": "lighthousechapelinternational",
-    "accent": "#8a4a14",
-    "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed Ministers in Good Standing"
-  },
-  {
-    "path": "christvisionsanctuaryinternational",
-    "name": "Christ Vision Sanctuary International",
-    "shortName": "Christ Vision Sanctuary",
-    "subtitle": "International",
-    "denominations": [
-      "Christ Vision Sanctuary International"
-    ],
-    "logo": "assets/denominations/christvisionsanctuaryinternational.png",
-    "homeLayout": "beacon",
-    "visualStyle": "lighthousechapelinternational",
-    "accent": "#3d3a70",
-    "directoryAction": "View licensed ministers",
-    "directoryHeading": "Licensed Ministers in Good Standing"
   }
 ]
