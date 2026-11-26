@@ -4421,3 +4421,10 @@ input[type="date"] {
 }
 @media (min-width:701px) and (max-width:1023px){.reg-fellowship-app .reg-brand strong{display:none}}
 @media (max-width:700px){.reg-fellowship-kc img{height:17px}.reg-app.reg-fellowship-app .reg-brand-mark img{max-width:84px}}
+
+/* Branch search (office, 26 Nov): one line per branch, "not listed" first and set apart. */
+.reg-branch-results li button { display: block; text-align: left; }
+.reg-branch-results li button span, .reg-branch-results li button b { display: inline; }
+.reg-branch-results .reg-branch-new button { background: rgba(30, 58, 138, .06); color: var(--accent, #1e3a8a); font-weight: 400; }
+.reg-branch-results .reg-branch-new button b { color: inherit; }
+.reg-branch-results li.reg-small { padding: 8px 10px; }
