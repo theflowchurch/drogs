@@ -2041,6 +2041,9 @@ function RegistrationForm({
   const siteConfig = ORGANIZATION_SITES[site];
   const catalog = siteCatalog(state.catalog || catalogOf(state), site);
   const matchingIndex = useMemo(() => referenceIndex(peopleForSite(overlayReferences(rosterFrom(state, people), state), site).filter(p => inChurch(church, p))), [site, church, state.referencePeople, state.overrides, state.extraReferences, state.hidden]);
+  // "Is this you?" looks through every record (office, 27 Nov): someone who moved to another church or
+  // organization signs up on their new church's page and still finds their old record, which then moves with them.
+  const everyoneIndex = useMemo(() => referenceIndex(overlayReferences(rosterFrom(state, people), state)), [state.referencePeople, state.overrides, state.extraReferences, state.hidden]);
   // Paystack checkout leaves the page; the pastors typed on the way are kept
   // for this tab so the person returns to the payment step with them.
   const checkoutDraftKey = `kc-checkout-draft:${state.year}:${actor.id}`;
@@ -2091,10 +2094,10 @@ function RegistrationForm({
   // the form is pre-filled with what Kuriake Castle already holds.
   const candidates = useMemo(() => {
     if (data.referenceId || dismissed || !data.firstName || !data.lastName) return [];
-    return referenceMatches(matchingIndex, { name: data.name, email: data.email, phone: data.phone }, data.role)
+    return referenceMatches(everyoneIndex, { name: data.name, email: data.email, phone: data.phone }, data.role)
       .slice(0, 3)
       .map((m) => m.reference);
-  }, [data.firstName, data.lastName, data.email, data.phone, data.role, data.referenceId, dismissed, matchingIndex]);
+  }, [data.firstName, data.lastName, data.email, data.phone, data.role, data.referenceId, dismissed, everyoneIndex]);
   const adopt = (ref) =>
     setData((d) => {
       // Photo and phone are never taken from the old record: both are asked for afresh.
@@ -2378,7 +2381,7 @@ function RegistrationForm({
                       </p>
                     ) : (
                       <>
-                        <p><b>Is this you?</b> We already have a record with this name. If it is you, choose <b>Yes, this is me</b> so your existing record and photo are kept.</p>
+                        <p><b>Is this you?</b> We already have a record with this name. If it is you, choose <b>Yes, this is me</b> so your existing record is updated instead of a new one being made.</p>
                         <div className="reg-candidates">
                           {candidates.map((ref) => (
                             <div key={ref.id} className="reg-candidate">
