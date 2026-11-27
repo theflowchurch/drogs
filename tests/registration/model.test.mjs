@@ -720,7 +720,7 @@ test("a bishop whose linked original record carries their name is approved on su
   t = applyAction(emptyState(), bishop, "submit", profile(bishop, "bishop", "Ama Bishop"), undefined, refs);
   assert.equal(t.registrations[0].status, "pending");
 });
-test("members update their own details any time; date of birth is fixed; corrections reach the original record", () => {
+test("members update their own details any time, date of birth too (27 Nov); corrections reach the original record", () => {
   const refs = [{ id: "B1", role: "bishop", name: "Ama Bishop", organization: "First Love", phone: "+233000000000" }];
   let s = applyAction(emptyState(), bishop, "submit", { ...profile(bishop, "bishop", "Ama Bishop"), referenceId: "B1" }, undefined, refs);
   assert.equal(s.overrides.B1.phone, "+233201234567", "the submitted number lands on the original record");
@@ -729,10 +729,10 @@ test("members update their own details any time; date of birth is fixed; correct
   assert.equal(s.registrations[0].data.referenceId, "B1", "a member cannot point their record at someone else");
   const r = s.registrations[0];
   assert.equal(r.data.city, "Kumasi");
-  assert.equal(r.data.dob, "1990-02-01", "date of birth cannot be changed by the member");
+  assert.equal(r.data.dob, "1950-01-01", "members may correct their date of birth (27 Nov)");
   assert.equal(s.overrides.B1.city, "Kumasi");
   assert.equal(s.overrides.B1.phone, "+233240000000");
-  assert.deepEqual(Object.keys(s.audit.at(-1).detail).sort(), ["city", "phone"]);
+  assert.deepEqual(Object.keys(s.audit.at(-1).detail).sort(), ["city", "dob", "phone"]);
   s = applyAction(s, bishop, "update", { firstName: "Someone", lastName: "Else", photoConfirmed: true });
   assert.equal(s.registrations[0].data.name, "Ama Bishop", "the name is fixed after submission");
 });
@@ -880,13 +880,15 @@ test("public directory: photos only for people on this year's roll", () => {
   assert.equal(withStanding(refs, []).filter((p) => p.standing).length, 0, "nobody on the roll: everyone dark");
 });
 
-test("gender is fixed after submission like name and date of birth", () => {
+test("members may correct their gender and date of birth after submission (27 Nov); the name stays", () => {
   let s = setup();
   s = applyAction(s, pastor, "submit", { ...profile(pastor), gender: "female" });
-  s = applyAction(s, pastor, "update", { gender: "male", city: "Kumasi", photoConfirmed: true });
+  s = applyAction(s, pastor, "update", { gender: "male", dob: "1985-05-05", city: "Kumasi", photoConfirmed: true });
   const r = s.registrations.find((x) => x.userId === pastor.id);
-  assert.equal(r.data.gender, "female");
+  assert.equal(r.data.gender, "male");
+  assert.equal(r.data.dob, "1985-05-05");
   assert.equal(r.data.city, "Kumasi");
+  assert.throws(() => applyAction(s, pastor, "update", { dob: "2020-01-01", photoConfirmed: true }), /under 16/, "a date of birth is still checked");
 });
 
 test("public roll helpers: surname order, supplied locations, capitals for denomination display", () => {

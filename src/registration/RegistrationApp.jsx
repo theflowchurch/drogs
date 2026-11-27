@@ -268,7 +268,7 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
   // Branch and years (office, 22 Nov): theirs, else what their existing record holds, for them to complete.
   const branchRoster = useMemo(() => overlayReferences(rosterFrom(state, people), state), [state]);
   const [rec] = useState(() => (d.referenceId && branchRoster.find((x) => x.id === d.referenceId)) || {});
-  const [f, setF] = useState({ gender: d.gender || "", title: d.title || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "", bishopFirstName: d.bishopFirstName || "", bishopLastName: d.bishopLastName || "",
+  const [f, setF] = useState({ gender: d.gender || "", dob: d.dob || "", title: d.title || "", organization: d.organization || "", denomination: d.denomination || "", country: d.country || "", city: d.city || "", phone: d.phone || "", bishopId: d.bishopId || "", bishopFirstName: d.bishopFirstName || "", bishopLastName: d.bishopLastName || "",
     church: d.church || rec.branch || "", yearAppointed: String(d.yearAppointed || rec.yearAppointed || ""), yearOrdained: String(d.yearOrdained || rec.yearOrdained || ""), yearConsecrated: String(d.yearConsecrated || rec.yearConsecrated || "") });
   const [busyPhoto, setBusyPhoto] = useState(false), [problem, setProblem] = useState("");
   const set = (k, v) => setF((x) => ({ ...x, [k]: v, ...(k === "organization" ? { denomination: "" } : {}) }));
@@ -281,7 +281,10 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
   const save = () => perform("update", { ...f, photoConfirmed: true }, "Your details were updated.").then((ok) => ok && onDone());
   return (
     <div className="reg-fields reg-office-form">
-      <p className="reg-field wide reg-small">Name: <b>{d.name}</b> · Date of birth: <b>{longDate(d.dob)}</b> · Gender: <b>{d.gender === "female" ? "Female" : "Male"}</b>. These were set when you registered. If any of them is incorrect, please let the office know.</p>
+      <p className="reg-field wide reg-small">Your name, {d.name}, was set when you registered. If it is incorrect, please let the office know.</p>
+      {/* Office, 27 Nov: members correct their own gender and date of birth. */}
+      <Field label="Gender"><select value={f.gender} onChange={(e) => set("gender", e.target.value)}><option value="male">Male</option><option value="female">Female</option></select></Field>
+      <Field label="Date of birth"><input type="date" min="1900-01-01" max={new Date(Date.now() - 86400000).toISOString().slice(0, 10)} value={f.dob} onChange={(e) => set("dob", e.target.value)} /></Field>
       {d.role === "pastor" && <Field label="Title"><select value={titleFor({ ...d, ...f })} onChange={(e) => set("title", e.target.value)}>{PASTOR_TITLES.filter((t) => t !== "Lady Rev." || f.gender === "female").map((t) => <option key={t}>{t}</option>)}</select></Field>}
       <Field label="WhatsApp number"><input value={f.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
       {(!site || site === "flow") && !church && <Field label={site === "flow" ? "Group" : "Organization"}><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{site === "flow" ? FLOW_GROUPS[o] : orgLabel(o)}</option>)}</select></Field>}

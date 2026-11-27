@@ -1467,7 +1467,8 @@ export function applyAction(
     );
     if (!r || r.status === "draft") throw Error("Submit your registration first.");
     // Name, date of birth and gender are fixed after submission (the office can correct them); a different bishop re-runs the match.
-    const data = validateProfile({ ...r.data, ...payload, role: r.data.role, dob: r.data.dob, gender: r.data.gender || payload.gender, firstName: r.data.firstName, lastName: r.data.lastName }, actor.email, { catalog });
+    // Office, 27 Nov: members may correct their gender and date of birth; the name stays as registered.
+    const data = validateProfile({ ...r.data, ...payload, role: r.data.role, dob: payload.dob || r.data.dob, gender: payload.gender || r.data.gender, firstName: r.data.firstName, lastName: r.data.lastName }, actor.email, { catalog });
     if (!data.photoConfirmed) throw Error("Confirm your photo before saving.");
     const newBishop = data.role === "pastor" && data.bishopId && data.bishopId !== r.data.bishopId;
     if (newBishop) {
