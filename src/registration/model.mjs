@@ -283,6 +283,8 @@ const OFFICE_FIXES = [{ id: 'restore-seven-2026-11-17', restore: ['Sb8c7d044', '
   { id: 'nacanieli-fomilo-one-record-2026-11-22', retire: [{ id: 'P3191', into: 'Sa28b2989' }] },
   // Office, 26 Nov: bishops have one week (not two) to confirm a waiting pastor.
   { id: 'one-week-to-confirm-2026-11-26', oneWeekDeadline: true },
+  // Office, 27 Nov: rebuild the structure once so Deep Love Church International (Stanley Osei-Bonsu) is in it.
+  { id: 'deep-love-in-structure-2026-11-27' },
   // Office, 26 Nov: the United Reasonable Service Church group is now also a denomination.
   // Its 21 bishops and their pastors move to it; their old church becomes their branch.
   // Joel and Sara Obuobisa stay in Pacific Islands Missionary Church; the rest of
@@ -308,7 +310,8 @@ export function syncRoll(state, people, version) {
     denominations[a.organization].add(name);
     if (a.group && groups[a.group]) groups[a.group].denominations.add(name);
   }
-  for (const p of people) {
+  // Records the office added (extraReferences) count too (office, 27 Nov: Stanley Osei-Bonsu's church).
+  for (const p of [...people, ...(state.extraReferences || [])]) {
     if (!p.denomination || !p.organization) continue;
     if (!denominations[p.organization]) { organizations.push(p.organization); denominations[p.organization] = new Set(); }
     if (p.organization !== "FLOW" && p.organization !== "HJC") denominations[p.organization].add(p.denomination);

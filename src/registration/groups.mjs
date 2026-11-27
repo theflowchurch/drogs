@@ -60,6 +60,7 @@ export const GROUPS = {
     "organization": "United Denominations",
     "denominations": [
       "Candle In The Dark Church",
+      "Deep Love Church International",
       "It Is A Great Thing To Serve The Lord",
       "Living Waters International",
       "Mustard Seed Chapel International",

@@ -81,6 +81,7 @@ export const DENOMINATIONS = {
   "DHMM": [],
   "Affiliated Denominations": [
     "Christ Vision Sanctuary International",
+    "Deep Love Church International",
     "Heritage Baptist Church Global",
     "Love Economy Church",
     "Revival House of Holy Fire Ministries"
