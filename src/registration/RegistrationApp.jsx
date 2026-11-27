@@ -264,7 +264,8 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
   const d = current.data;
   const site = useContext(OrganizationSiteContext);
   const church = useContext(ChurchContext);
-  const catalog = siteCatalog(state.catalog || catalogOf(state), site);
+  // Office, 27 Nov: on any page, members may move to any organization and church (the name stays).
+  const catalog = state.catalog || catalogOf(state);
   // Branch and years (office, 22 Nov): theirs, else what their existing record holds, for them to complete.
   const branchRoster = useMemo(() => overlayReferences(rosterFrom(state, people), state), [state]);
   const [rec] = useState(() => (d.referenceId && branchRoster.find((x) => x.id === d.referenceId)) || {});
@@ -287,8 +288,8 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
       <Field label="Date of birth"><input type="date" min="1900-01-01" max={new Date(Date.now() - 86400000).toISOString().slice(0, 10)} value={f.dob} onChange={(e) => set("dob", e.target.value)} /></Field>
       {d.role === "pastor" && <Field label="Title"><select value={titleFor({ ...d, ...f })} onChange={(e) => set("title", e.target.value)}>{PASTOR_TITLES.filter((t) => t !== "Lady Rev." || f.gender === "female").map((t) => <option key={t}>{t}</option>)}</select></Field>}
       <Field label="WhatsApp number"><input value={f.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
-      {(!site || site === "flow") && !church && <Field label={site === "flow" ? "Group" : "Organization"}><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{site === "flow" ? FLOW_GROUPS[o] : orgLabel(o)}</option>)}</select></Field>}
-      {!church && denominations.length > 0 && (
+      <Field label="Organization"><select value={f.organization} onChange={(e) => set("organization", e.target.value)}>{catalog.organizations.map((o) => <option key={o} value={o}>{orgLabel(o)}</option>)}</select></Field>
+      {denominations.length > 0 && (
         <Field label="Denomination" wide={Boolean(f.addingDenomination)}>
           <select value={f.addingDenomination ? NEW_DENOMINATION : f.denomination} onChange={(e) => e.target.value === NEW_DENOMINATION
             ? setF((x) => ({ ...x, addingDenomination: true, denomination: x.newDenomination || "" }))
@@ -303,7 +304,8 @@ function ProfileEditor({ current, state, actor, perform, onDone }) {
           )}
         </Field>
       )}
-      <Field label="Country where you currently serve"><Choice value={f.country} options={countries} onChange={(v) => set("country", v)} blank="Choose…" /></Field>
+      {/* Office, 27 Nov: any country, typed, with the ones we know suggested (people move countries). */}
+      <Field label="Country where you currently serve"><input list="kc-edit-countries" value={f.country} onChange={(e) => set("country", e.target.value)} autoComplete="off" /><datalist id="kc-edit-countries">{countries.map((c) => <option key={c} value={c} />)}</datalist></Field>
       <Field label="City"><input value={f.city} onChange={(e) => set("city", e.target.value)} /></Field>
       <BranchField roster={branchRoster} denomination={f.denomination} value={f.church} onChange={(v) => set("church", v)} />
       <YearFields data={{ ...f, role: d.role, title: d.role === "pastor" ? titleFor({ ...d, ...f }) : f.title }} set={set} />

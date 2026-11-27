@@ -109,3 +109,32 @@ test('24 Nov: blocked people are refused at sign-up; close names are held for th
   s = applyAction(s, office, 'allowHeld', { userId: 'u2' });
   assert.equal(s.registrations.find((x) => x.userId === 'u2').blockHold, '');
 });
+test('27 Nov: on their account members change everything but their name, organization and church included', async () => {
+  const { applyAction, emptyState } = await import('../../src/registration/model.mjs');
+  const me = { id: 'm1', email: 'ama@example.com' };
+  const form = { role: 'pastor', title: 'Pastor', firstName: 'Ama', lastName: 'Mensah', gender: 'female', email: me.email, phone: '+233244000000', dob: '1985-03-14', organization: 'United Denominations', denomination: 'Castle City Church', country: 'Ghana', city: 'Accra', church: 'Accra', yearAppointed: '2015', photo: 'm1/p.webp', photoConfirmed: true, consentedAt: '2026-11-27T00:00:00Z', bishopId: 'B1' };
+  let s = applyAction({ ...emptyState(), testEmails: [me.email] }, me, 'submit', form, undefined, []);
+  s = applyAction(s, me, 'update', { organization: 'First Love', denomination: 'First Love Church', city: 'Kumasi', church: 'Kumasi Branch', gender: 'female', dob: '1984-01-02', firstName: 'Someone', lastName: 'Else', photoConfirmed: true }, undefined, []);
+  const d = s.registrations[0].data;
+  assert.deepEqual([d.organization, d.denomination, d.city, d.church, d.dob], ['First Love', 'First Love Church', 'Kumasi', 'Kumasi Branch', '1984-01-02']);
+  assert.equal(d.name, 'Ama Mensah', 'the name only changes through the office');
+});
+test('27 Nov: a bishop who moves church, country and organization is moved on every page, in Admin and the API', async () => {
+  const { applyAction, applyDueChanges, emptyState, overlayReferences, directoryPeople } = await import('../../src/registration/model.mjs');
+  const { orderEntries, pastorGroups } = await import('../../src/registration/public-entries.mjs');
+  const { listedAndNewPeople } = await import('../../src/server/managed-people.mjs');
+  const refs = [{ id: 'B7', role: 'bishop', name: 'Kofi Mensah', title: 'Bishop', gender: 'male', organization: 'United Denominations', denomination: 'Castle City Church', group: 'UD Ghana', country: 'Ghana', city: 'Elmina', image: 'assets/portraits/B7.webp' }];
+  const me = { id: 'b7', email: 'kofi@example.com' };
+  const form = { role: 'bishop', firstName: 'Kofi', lastName: 'Mensah', gender: 'male', email: me.email, phone: '+233244000000', dob: '1975-03-14', organization: 'United Denominations', denomination: 'Castle City Church', country: 'Ghana', city: 'Elmina', church: 'Elmina', yearAppointed: '2001', yearOrdained: '2006', yearConsecrated: '2018', photo: 'b7/p.webp', photoConfirmed: true, consentedAt: '2026-11-27T00:00:00Z', referenceId: 'B7' };
+  let s = applyAction({ ...emptyState(), testEmails: [me.email] }, me, 'submit', form, undefined, refs);
+  assert.equal(s.registrations[0].status, 'confirmed', 'on our records: confirmed');
+  s = applyAction(s, me, 'update', { organization: 'First Love', denomination: 'First Love Church', country: 'Zambia', city: 'Lusaka', church: 'Lusaka Central', photoConfirmed: true }, undefined, refs);
+  applyDueChanges(s, Date.now() + 10 * 60000);
+  const rec = overlayReferences(refs, s).find((p) => p.id === 'B7');
+  assert.deepEqual([rec.organization, rec.denomination, rec.country, rec.city, rec.branch], ['First Love', 'First Love Church', 'Zambia', 'Lusaka', 'Lusaka Central'], 'the record (public pages) follows');
+  assert.ok(pastorGroups(orderEntries(overlayReferences(refs, s)), ['#000']).find((g) => g.denomination === 'First Love Church').people.some((p) => p.rosterId === 'B7'), "Order of Pastors: in the new church's box");
+  const admin = directoryPeople(s, refs).find((p) => p.id === 'B7');
+  assert.deepEqual([admin.denomination, admin.country], ['First Love Church', 'Zambia'], 'Admin');
+  const api = listedAndNewPeople(s, refs).find((p) => p.id === 'B7');
+  assert.deepEqual([api.denomination, api.country], ['First Love Church', 'Zambia'], 'API');
+});
