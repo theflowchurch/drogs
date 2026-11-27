@@ -3577,9 +3577,9 @@ function OfficeEditor({ registration: r, state, perform, actor }) {
       </div>
       <div className="reg-office-actions">
         <label className="reg-inline">Status
-          <select value={r.status} onChange={(e) => perform("setStatus", { userId: r.userId, status: e.target.value }, `Status set to ${statusLabel[e.target.value] || e.target.value}.`)}>
+{r.status === "draft" ? <b>Sign-up not finished (not submitted yet)</b> :           <select value={r.status} onChange={(e) => perform("setStatus", { userId: r.userId, status: e.target.value }, `Status set to ${statusLabel[e.target.value] || e.target.value}.`)}>
             {statuses.map((x) => <option key={x} value={x}>{statusLabel[x] || x}</option>)}
-          </select>
+          </select>}
         </label>
         {r.payment !== "verified" && <input className="reg-inline-input" placeholder="Payment note (e.g. cash, 12 Oct)" value={note} onChange={(e) => setNote(e.target.value)} />}
         {!confirmDelete ? (
@@ -4491,6 +4491,12 @@ const REVIEW_REASONS = [
 ];
 // Bishops waiting on the office, plus everyone (bishops and pastors) already
 // approved this year. Approved rows open read-only.
+// What a bishop in Approvals is waiting for, in plain words (office, 27 Nov).
+const approvalNeed = (r) => r.status === "draft"
+  ? (r.payment === "unpaid" ? "Sign-up not finished: not paid or submitted" : "Sign-up not finished: not submitted")
+  : r.status === "pending"
+    ? (r.payment === "pending" && r.proof ? "New bishop to confirm · receipt to check" : "New bishop: needs your confirmation")
+    : null;
 function BishopApprovals({ records, directory = [], state, actor, perform, canEdit }) {
   const references = overlayReferences(rosterFrom(state, people), state).filter(p => p.role === "bishop");
   const index = referenceIndex(references);
@@ -4503,11 +4509,15 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
     [q, setQ] = useState("");
   // The ticked reasons and the free note together make the message the bishop sees and is emailed.
   const message = [...reasons.map((r) => `• ${r}`), note.trim()].filter(Boolean).join("\n");
+  // Office, 27 Nov: a sign-up still in progress (not paid or not submitted) is never shown
+  // as waiting for the office: it has its own tab and no confirm button.
   const bucket = (r) =>
     r.status === "confirmed"
       ? "approved"
       : r.data.role !== "bishop"
         ? ""
+        : r.status === "draft"
+          ? "unfinished"
         : r.status === "denied"
           ? "denied"
           : r.resubmit
@@ -4520,11 +4530,11 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
       (!term || normalName(`${r.data.name} ${r.data.email} ${r.data.denomination || ""}`).includes(term)),
   );
   const selected = records.find((r) => r.userId === selectedId);
-  const reviewing = selected && selected.status !== "confirmed";
+  const reviewing = selected && selected.status !== "confirmed" && selected.status !== "draft";
   return (
     <>
       <div className="reg-switch" role="group" aria-label="Approvals">
-        {[["awaiting", "Awaiting approval"], ["resubmit", "Needs resubmission"], ["denied", "Denied"], ["approved", "Approved"]].map(([value, label]) => (
+        {[["awaiting", "Awaiting approval"], ["unfinished", "Sign-up not finished"], ["resubmit", "Needs resubmission"], ["denied", "Denied"], ["approved", "Approved"]].map(([value, label]) => (
           <button key={value} aria-pressed={view === value} className={view === value ? "active" : ""} onClick={() => setView(value)}>
             {label} <strong>{records.filter((r) => bucket(r) === value).length}</strong>
           </button>
@@ -4561,13 +4571,13 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
                   {state.profiles.find((p) => p.id === r.userId)?.autoApproved ? " · approved automatically: matched the submitted roster" : ""}
                 </p>
               </div>
-              <Badge status={r.status === "confirmed" ? "confirmed" : r.status === "denied" ? "denied" : "pending"}>{r.resubmit ? "Asked to resubmit" : null}</Badge>
+              <Badge status={r.status === "confirmed" ? "confirmed" : r.status === "denied" ? "denied" : r.status === "draft" ? "draft" : "pending"}>{r.resubmit ? "Asked to resubmit" : approvalNeed(r)}</Badge>
               <span>{r.status === "confirmed" ? "View →" : "Review →"}</span>
             </button>
           ))}
         </div>
       ) : (
-        <Empty title={term ? "Nobody matches that search" : view === "awaiting" ? "No bishops awaiting approval" : view === "denied" ? "No denied registrations" : view === "approved" ? "Nobody has been approved yet" : "Nobody is waiting to resubmit"}>
+        <Empty title={term ? "Nobody matches that search" : view === "awaiting" ? "No bishops awaiting approval" : view === "unfinished" ? "Nobody has a sign-up in progress" : view === "denied" ? "No denied registrations" : view === "approved" ? "Nobody has been approved yet" : "Nobody is waiting to resubmit"}>
           {view === "approved"
             ? "Bishops appear here once the office confirms them; pastors once their bishop confirms them."
             : "New bishop registrations that require approval will appear here."}
@@ -4575,6 +4585,7 @@ function BishopApprovals({ records, directory = [], state, actor, perform, canEd
       )}
       {selected && !reviewing && (
         <Dialog title={`${titleFor(selected.data)} ${selected.data.name}`} onClose={() => setSelectedId(null)}>
+          {selected.status === "draft" && <p className="reg-status-message unclaimed"><b>Sign-up not finished.</b> {selected.data.name} has started signing up but has not {selected.payment === "unpaid" ? "paid and " : ""}submitted yet, so there is nothing for the office to confirm. {selected.data.referenceId ? "They chose their existing record, so they will be confirmed automatically once they pay and submit." : "Once they pay and submit, a new bishop will appear under Awaiting approval."}</p>}
           <ProfileDetails record={selected} directory={directory} />
           {state && <OfficeEditor registration={selected} state={state} perform={perform} actor={actor} />}
         </Dialog>
