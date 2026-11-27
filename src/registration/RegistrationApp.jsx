@@ -2334,12 +2334,15 @@ function RegistrationForm({
                     ))}
                   </select>
                 </Field>}
+                {/* Office, 27 Nov: once they choose their existing record, the name is the record's;
+                    a change of name goes through the office. */}
                 <Field label="First name">
                   <input
                     required
                     maxLength={80}
                     value={data.firstName}
                     onChange={(e) => set("firstName", e.target.value)}
+                    readOnly={Boolean(data.referenceId)}
                     autoComplete="given-name"
                   />
                 </Field>
@@ -2349,9 +2352,11 @@ function RegistrationForm({
                     maxLength={80}
                     value={data.lastName}
                     onChange={(e) => set("lastName", e.target.value)}
+                    readOnly={Boolean(data.referenceId)}
                     autoComplete="family-name"
                   />
                 </Field>
+                {data.referenceId && <div className="reg-field wide reg-small" style={{ display: "block" }}>Your name is taken from your existing record. If it needs to change, please{" "}<button type="button" className="reg-text" style={{ display: "inline", padding: 0, font: "inherit", fontWeight: 600 }} onClick={() => contactOffice(`Please change my name on my record. It shows as ${data.name}; it should be: `)}>contact the office</button>.</div>}
                 <Field
                   label="Gender"
                 >
